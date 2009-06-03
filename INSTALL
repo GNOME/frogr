@@ -1,0 +1,9 @@
+Currently, these are the only instructions available:
+
+ $ ./autogen --datadir=$(pwd)/data --prefix=/tmp
+ $ make
+ $ make install
+ $ ./src/frogr
+
+This is just because of the extremely early stage f the project, of
+course in the future it will be improved :-).
