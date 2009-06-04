@@ -1,6 +1,11 @@
 /*
+ * frogr-facade.h -- Facade to interact with flickr services
+ *
+ * Copyright (C) 2009 Mario Sanchez Prada
+ * Authors: Mario Sanchez Prada <msanchez@igalia.com>
+ *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of version 2 of the GNU General Public
+ * modify it under the terms of version 3 of the GNU General Public
  * License as published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
@@ -14,6 +19,7 @@
  * Boston, MA 02111-1307, USA.
  *
  */
+
 #ifndef _FROGR_FACADE_H
 #define _FROGR_FACADE_H
 
