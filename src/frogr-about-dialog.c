@@ -30,6 +30,11 @@ static const gchar *authors[] = {
   NULL
 };
 
+static const gchar *artists[] = {
+  "Adrian Perez de Castro\n<the.lightman@gmail.com>",
+  NULL
+};
+
 static const gchar *appdescr = "A Flickr remote organizer for GNOME\n";
 static const gchar *copyright = "(c) 2009 Mario Sanchez Prada";
 static const gchar *website = "http://frogr.igalia.com/";
@@ -76,9 +81,13 @@ frogr_about_dialog_show (GtkWindow *parent)
 
   /* Show about dialog */
   gtk_show_about_dialog (GTK_WINDOW (parent),
-                         "name", PACKAGE, "authors", authors,
-                         "comments", appdescr, "copyright", copyright,
-                         "license", license, "version", VERSION,
+                         "name", PACKAGE,
+                         "authors", authors,
+                         "artists", artists,
+                         "comments", appdescr,
+                         "copyright", copyright,
+                         "license", license,
+                         "version", VERSION,
                          "website", "http://code.google.com/p/frogr",
                          "logo", logo,
                          "modal", TRUE,
