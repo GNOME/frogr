@@ -23,6 +23,8 @@
 #include <config.h>
 #include "frogr-about-dialog.h"
 
+#define ABOUT_DIALOG_ICON ICON48_DIR "/frogr.png"
+
 static const gchar *authors[] = {
   "Mario Sanchez Prada\n<msanchez@igalia.com>",
   NULL
@@ -65,6 +67,8 @@ _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
 void
 frogr_about_dialog_show (GtkWindow *parent)
 {
+  GdkPixbuf *logo = gdk_pixbuf_new_from_file (ABOUT_DIALOG_ICON, NULL);
+
   /* Install about dialog hooks */
   gtk_about_dialog_set_url_hook (_frogr_about_dialog_uri_hook, "", NULL);
   gtk_about_dialog_set_email_hook (_frogr_about_dialog_uri_hook, "mailto:",
@@ -75,6 +79,10 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "name", PACKAGE, "authors", authors,
                          "comments", appdescr, "copyright", copyright,
                          "license", license, "version", "0.1",
-                         /* "website", website, */
-                         "modal", TRUE, NULL);
+                         "website", "http://code.google.com/p/frogr",
+                         "logo", logo,
+                         "modal", TRUE,
+                         NULL);
+
+  g_object_unref (logo);
 }

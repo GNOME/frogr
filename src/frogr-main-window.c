@@ -33,11 +33,12 @@
 #define THUMBNAIL_MAX_WIDTH 100
 #define THUMBNAIL_MAX_HEIGHT 100
 
-
 #define PULSE_INTERVAL 125
 
 #define GTKBUILDER_FILE                                 \
   APP_DATA_DIR "/gtkbuilder/frogr-main-window.xml"
+
+#define MAIN_WINDOW_ICON PIXMAP_DIR "/frogr.xpm"
 
 enum {
   FILEPATH_COL,
@@ -358,6 +359,7 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
   gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), ITEM_WIDTH);
 
+  gtk_window_set_icon_from_file(GTK_WINDOW (fmainwin), MAIN_WINDOW_ICON, NULL);
   gtk_window_set_default_size (GTK_WINDOW (fmainwin),
                                MINIMUM_WINDOW_WIDTH,
                                MINIMUM_WINDOW_HEIGHT);

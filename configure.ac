@@ -36,6 +36,8 @@ PKG_CHECK_MODULES(Libcurl, libcurl >= 7.10)
 FROGR_CFLAGS="$FROGR_CFLAGS $Libcurl_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $Libcurl_LIBS"
 
+AC_SUBST(pixmapdir, "\${datadir}/icons")
+AC_SUBST(icon48dir, "\${datadir}/icons/hicolor/48x48/apps")
 AC_SUBST(FROGR_CFLAGS)
 AC_SUBST(FROGR_LIBS)
 

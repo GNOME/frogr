@@ -22,7 +22,8 @@ bin_PROGRAMS = frogr
 
 frogr_LDADD = $(FROGR_LIBS)
 
-frogr_CFLAGS = $(FROGR_CFLAGS) -DAPP_DATA_DIR=\"$(datadir)\"
+frogr_CFLAGS = $(FROGR_CFLAGS) -DAPP_DATA_DIR=\"$(datadir)\" \
+	-DPIXMAP_DIR=\"$(pixmapdir)\" -DICON48_DIR=\"$(icon48dir)\"
 
 frogr_LDFLAGS = -export-dynamic
 

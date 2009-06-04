@@ -33,6 +33,16 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src
 
+pixmap_DATA = $(srcdir)/data/icons/frogr.xpm
+icon24dir = $(datadir)/icons/hicolor/24x24/apps
+icon24_DATA = $(srcdir)/data/icons/hicolor/24x24/*
+icon48dir = $(datadir)/icons/hicolor/48x48/apps
+icon48_DATA = $(srcdir)/data/icons/hicolor/48x48/*
+icon128dir = $(datadir)/icons/hicolor/128x128/apps
+icon128_DATA = $(srcdir)/data/icons/hicolor/128x128/*
+iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
+iconscalable_DATA = $(srcdir)/data/icons/hicolor/scalable/*
+
 gtkbuilderdir = $(datadir)/gtkbuilder
 gtkbuilder_DATA = $(srcdir)/data/gtkbuilder/frogr-main-window.xml
 
