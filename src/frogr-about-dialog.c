@@ -48,8 +48,8 @@ static const gchar *license =
   "You should have received a copy of the GNU General\n"
   "Public License along with frogr. If not, see\n"
   "http://www.gnu.org/licenses/\n\n"
-  "This program uses flickr API (through libflickcurl),\n"
-  "but it's neither approved nor certified by flickr.";;
+  "This program uses flickr API through the libflickcurl\n"
+  "library, but it's neither approved nor certified by flickr.";;
 
 static void
 _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
