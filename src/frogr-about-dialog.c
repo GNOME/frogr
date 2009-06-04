@@ -78,7 +78,7 @@ frogr_about_dialog_show (GtkWindow *parent)
   gtk_show_about_dialog (GTK_WINDOW (parent),
                          "name", PACKAGE, "authors", authors,
                          "comments", appdescr, "copyright", copyright,
-                         "license", license, "version", "0.1",
+                         "license", license, "version", VERSION,
                          "website", "http://code.google.com/p/frogr",
                          "logo", logo,
                          "modal", TRUE,
