@@ -1,0 +1,67 @@
+Currently the code is in a very early stage so it does just the most
+basic thing I could think of: upload pictures to a Flickr account.
+
+However, there are many plans for this app and so many features I'd
+love to see implemented in the short or mid term, classified in two
+groups depending on the scope of the application, which can be:
+
+ - frogr as just a flickr uploader for GNOME (initial stage)
+ - frogr as a flickr manager for GNOME (afterwards)
+
+TODO list for the uploader:
+===========================
+
+ * Store configuration issues locally, such as the Flickr username and
+   the required artifacts to use the REST API (auth token and frob).
+
+ * Add a "Settings" new dialog to allow the user preselect some useful
+   and common options (e.g. always upload public pictures by default).
+
+ * New "details dialog" to allow setting pictures properties before
+   uploading: description, tags, license, visibility...
+
+ * Allow setting common properties for several pictures at once.
+
+ * Show extra information when uploading, for instance a "x/y"-like
+   text over the progress bar telling how many pictures were uploaded.
+
+ * Add a "Cancel" button, to allow interrupting an uploading process
+   without having to quit the application, as it is right now :-)
+
+ * Allow adding pictures by just selecting its folder.
+
+ * Add drag & drop support.
+
+ * Allow pre-selecting the target album for a picture before uploading.
+
+ * Improve the authorization dialog.
+
+ * etc...
+
+
+TODO list for the manager:
+==========================
+
+ * Allow replacing pictures.
+
+ * Allow editing properties for pictures already uploaded.
+
+ * Allow managing albums properties.
+
+ * etc...
+
+
+As you can see there is a lot of room for new ideas or even
+modifications of the current ones :-). The lists from above are just
+the result of a quick brainstorming with myself trying to figure out
+the next steps to be done in this application and write them down,
+thinking of perhaps some helpful soul apart me which could want to get
+dirty with some of them :-).
+
+Anyway, if you have an idea / proposal / criticism do not hesitate to
+tell about. It will be helpful and appreciated for sure. See the
+README file for more information about how to get in contact and
+become part of the development of this project.
+
+Thanks!
+

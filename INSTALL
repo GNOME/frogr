@@ -1,4 +1,5 @@
-Currently, these are the only instructions available:
+Currently, these are the only instructions available to compile and
+try the application:
 
  $ ./autogen --datadir=$(pwd)/data --prefix=/tmp
  $ make

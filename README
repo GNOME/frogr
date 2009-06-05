@@ -1,4 +1,55 @@
 frogr - A Flickr Remote Organizer for GNOME
 -------------------------------------------
 
-TODO
+Frogr intends to be a complete GNOME application to remotely manage a
+flickr account from the desktop.
+
+To get the source, please checkout the git repository at gitorious:
+
+    git clone git://gitorious.org/frogr/mainline.git
+
+To work properly, frogr needs some libraries to be installed first::
+
+ - glib (version 2.16 or higher)
+ - gtk+ (version 2.12 or higher)
+ - flickcurl (version 1.0 or higher)
+ - libxml (version 2.6.8 or higher)
+ - libcurl (version 7.10 or higher)
+
+-------------------------------------------
+
+frogr is (c) 2009 Mario Sanchez Prada
+http://code.google.com/p/frogr
+
+See AUTHORS file for details on authors
+
+frogr is Free Software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 3 as
+published by the Free Software Foundation.
+
+frogr is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the COPYING file for more details.
+
+frogr uses the Flickcurl library to interact with the flickr REST
+API. Flickcurl is (C) 2007-2008, David Beckett http://www.dajobe.org/
+triple licensed as LGPL 2.1 / GPL 2 / Apache 2.0.
+http://librdf.org/flickcurl
+
+-------------------------------------------
+
+Website: http://code.google.com/p/frogr
+
+Source: http://gitorious.org/~msanchez
+
+Mailing lists:
+
+  General discussion:
+    http://groups.google.com/group/frogr-users
+
+  Technical discussion:
+   http://groups.google.com/group/frogr-devel
+
+Author's blog: http://blogs.igalia.com/msanchez
