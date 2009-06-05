@@ -38,7 +38,7 @@
 #define GTKBUILDER_FILE                                 \
   APP_DATA_DIR "/gtkbuilder/frogr-main-window.xml"
 
-#define MAIN_WINDOW_ICON(_s)  PIXMAP_DIR "/hicolor/" _s "/apps/frogr.png"
+#define MAIN_WINDOW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
 
 
 enum {

@@ -33,11 +33,18 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src
 
+pixmapdir = $(datadir)/data/icons/frogr.xpm
 pixmap_DATA = $(srcdir)/data/icons/frogr.xpm
+icon16dir = $(datadir)/icons/hicolor/16x16/apps
+icon16_DATA = $(srcdir)/data/icons/hicolor/16x16/*
 icon24dir = $(datadir)/icons/hicolor/24x24/apps
 icon24_DATA = $(srcdir)/data/icons/hicolor/24x24/*
+icon32dir = $(datadir)/icons/hicolor/32x32/apps
+icon32_DATA = $(srcdir)/data/icons/hicolor/32x32/*
 icon48dir = $(datadir)/icons/hicolor/48x48/apps
 icon48_DATA = $(srcdir)/data/icons/hicolor/48x48/*
+icon64dir = $(datadir)/icons/hicolor/64x64/apps
+icon64_DATA = $(srcdir)/data/icons/hicolor/64x64/*
 icon128dir = $(datadir)/icons/hicolor/128x128/apps
 icon128_DATA = $(srcdir)/data/icons/hicolor/128x128/*
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps

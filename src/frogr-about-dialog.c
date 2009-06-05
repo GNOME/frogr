@@ -23,7 +23,7 @@
 #include <config.h>
 #include "frogr-about-dialog.h"
 
-#define ABOUT_DIALOG_ICON ICON48_DIR "/frogr.png"
+#define ABOUT_DIALOG_ICON ICONS_DIR "/hicolor/48x48/apps/frogr.png"
 
 static const gchar *authors[] = {
   "Mario Sanchez Prada\n<msanchez@igalia.com>",
