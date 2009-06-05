@@ -38,7 +38,8 @@
 #define GTKBUILDER_FILE                                 \
   APP_DATA_DIR "/gtkbuilder/frogr-main-window.xml"
 
-#define MAIN_WINDOW_ICON PIXMAP_DIR "/frogr.xpm"
+#define MAIN_WINDOW_ICON(_s)  PIXMAP_DIR "/hicolor/" _s "/apps/frogr.png"
+
 
 enum {
   FILEPATH_COL,
@@ -328,6 +329,7 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   GtkWidget *icon_view;
   GtkWidget *progress_bar;
   gboolean authorized;
+  GList *icons;
 
   /* Save a reference to the controller */
   priv -> controller = frogr_controller_get_instance ();
@@ -359,7 +361,23 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
   gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), ITEM_WIDTH);
 
-  gtk_window_set_icon_from_file(GTK_WINDOW (fmainwin), MAIN_WINDOW_ICON, NULL);
+  /* Provide a default icon list in several sizes */
+  icons = g_list_prepend (NULL,
+      gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("128x128"), NULL));
+  icons = g_list_prepend (icons,
+      gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("64x64"), NULL));
+  icons = g_list_prepend (icons,
+      gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("48x48"), NULL));
+  icons = g_list_prepend (icons,
+      gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("32x32"), NULL));
+  icons = g_list_prepend (icons,
+      gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("24x24"), NULL));
+  icons = g_list_prepend (icons,
+      gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("16x16"), NULL));
+  gtk_window_set_default_icon_list (icons);
+  g_list_foreach (icons, (GFunc) g_object_unref, NULL);
+  g_list_free (icons);
+
   gtk_window_set_default_size (GTK_WINDOW (fmainwin),
                                MINIMUM_WINDOW_WIDTH,
                                MINIMUM_WINDOW_HEIGHT);
