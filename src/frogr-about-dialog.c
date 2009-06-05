@@ -31,7 +31,7 @@ static const gchar *authors[] = {
 };
 
 static const gchar *artists[] = {
-  "Adrian Perez de Castro\n<the.lightman@gmail.com>",
+  "Adrian Perez de Castro\n<aperez@igalia.com>",
   NULL
 };
 
