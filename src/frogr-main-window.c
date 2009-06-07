@@ -43,7 +43,8 @@
 
 enum {
   FILEPATH_COL,
-  PIXBUF_COL
+  PIXBUF_COL,
+  FPICTURE_COL
 };
 
 #define FROGR_MAIN_WINDOW_GET_PRIVATE(object)                   \
@@ -60,6 +61,7 @@ typedef struct _FrogrMainWindowPrivate {
   GtkWidget *upload_button;
   GtkWidget *auth_button;
   GtkTreeModel *model;
+  GSList *fpictures_list;
 } FrogrMainWindowPrivate;
 
 
@@ -70,6 +72,7 @@ _add_picture_to_icon_view (FrogrMainWindow *fmainwin,
                            const gchar *filepath)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  FrogrPicture *fpicture;
   GdkPixbuf *pixbuf;
   GdkPixbuf *scaled_pixbuf;
   GtkTreeIter iter;
@@ -77,6 +80,7 @@ _add_picture_to_icon_view (FrogrMainWindow *fmainwin,
   int height;
   int new_width;
   int new_height;
+  gchar *filename;
 
   pixbuf = gdk_pixbuf_new_from_file (filepath, NULL);
   width = gdk_pixbuf_get_width (pixbuf);
@@ -99,14 +103,21 @@ _add_picture_to_icon_view (FrogrMainWindow *fmainwin,
                                            new_height,
                                            GDK_INTERP_TILES);
 
+  /* Add to internal list */
+  filename = g_path_get_basename (filepath);
+  fpicture = frogr_picture_new (filename, filepath, FALSE);
+  priv -> fpictures_list = g_slist_append (priv -> fpictures_list, fpicture);
+
+  /* Add to GtkIconView */
   gtk_list_store_append (GTK_LIST_STORE (priv -> model), &iter);
   gtk_list_store_set (GTK_LIST_STORE (priv -> model), &iter,
                       FILEPATH_COL, filepath,
                       PIXBUF_COL, scaled_pixbuf,
+                      FPICTURE_COL, fpicture,
                       -1);
-
-  /* Free original pixbuf */
+  /* Free memory */
   g_object_unref (pixbuf);
+  g_free (filename);
 }
 
 static void
@@ -119,16 +130,18 @@ _update_ui (FrogrMainWindow *fmainwin)
   state = frogr_controller_get_state (priv -> controller);
   if (state ==  FROGR_CONTROLLER_UPLOADING)
     {
-      gtk_widget_set_sensitive (priv -> upload_button, FALSE);
       gtk_widget_set_sensitive (priv -> auth_button, FALSE);
+      gtk_widget_set_sensitive (priv -> upload_button, FALSE);
     }
   else
     {
       gboolean authorized;
 
       authorized = frogr_controller_is_authorized (priv -> controller);
-      gtk_widget_set_sensitive (priv -> upload_button, authorized);
       gtk_widget_set_sensitive (priv -> auth_button, !authorized);
+      gtk_widget_set_sensitive (priv -> upload_button,
+                                authorized && priv -> fpictures_list);
+
     }
 }
 
@@ -161,12 +174,12 @@ _on_add_button_clicked (GtkButton *widget,
 
   if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
     {
-      GSList *filenames;
+      GSList *filepaths;
       GSList *item;
 
       /* Add selected pictures to icon view area */
-      filenames = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
-      for (item = filenames; item; item = g_slist_next (item))
+      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
+      for (item = filepaths; item; item = g_slist_next (item))
         {
           gchar *filepath = (gchar *)(item -> data);
 
@@ -174,9 +187,12 @@ _on_add_button_clicked (GtkButton *widget,
           _add_picture_to_icon_view (fmainwin, filepath);
         }
 
+      /* Update UI */
+      _update_ui (fmainwin);
+
       /* Free memory */
-      g_slist_foreach (filenames, (GFunc)g_free, NULL);
-      g_slist_free (filenames);
+      g_slist_foreach (filepaths, (GFunc)g_free, NULL);
+      g_slist_free (filepaths);
     }
 
   /* Close dialog */
@@ -196,14 +212,27 @@ _on_remove_button_clicked (GtkButton *widget,
   selected_items = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv -> icon_view));
   for (item = selected_items; item; item = g_list_next (item))
     {
+      FrogrPicture *fpicture;
       GtkTreePath *path;
       GtkTreeIter iter;
 
-      /* Remove selected element */
+      /* Get needed information */
       path = (GtkTreePath *)(item -> data);
       gtk_tree_model_get_iter (priv -> model, &iter, path);
+      gtk_tree_model_get (priv -> model,
+                          &iter,
+                          FPICTURE_COL, &fpicture,
+                          -1);
+
+      /* Remove from the internal list */
+      priv -> fpictures_list = g_slist_remove (priv -> fpictures_list, fpicture);
+
+      /* Remove from the GtkIconView */
       gtk_list_store_remove (GTK_LIST_STORE (priv -> model), &iter);
     }
+
+  /* Update UI */
+  _update_ui (fmainwin);
 
   /* Free */
   g_list_foreach (selected_items, (GFunc)gtk_tree_path_free, NULL);
@@ -228,48 +257,13 @@ _on_upload_button_clicked (GtkButton *widget,
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-  GtkTreeIter iter;
-  GSList *fpictures = NULL;
-  gboolean valid = FALSE;
-
-  /* Build a simple list of pictures */
-  valid = gtk_tree_model_get_iter_first (priv -> model, &iter);
-  while (valid)
-    {
-      gchar *filepath;
-
-      /* Get needed information */
-      gtk_tree_model_get (priv -> model,
-                          &iter,
-                          FILEPATH_COL, &filepath,
-                          -1);
-
-      if (filepath)
-        {
-          g_debug ("File chosen! %s", filepath);
-
-          /* Build a new picture to be uploaded */
-          gchar *filename = g_path_get_basename (filepath);
-
-          FrogrPicture *fpicture =
-            frogr_picture_new (filename,
-                               filepath,
-                               FALSE);
-
-          /* Add picture */
-          fpictures = g_slist_append (fpictures, fpicture);
-
-          /* Free */
-          g_free (filepath);
-          g_free (filename);
-        }
-
-      /* Iterate over the nex element */
-      valid = gtk_tree_model_iter_next (priv -> model, &iter);
-    }
 
   /* Upload pictures */
-  frogr_controller_upload_pictures (priv -> controller, fpictures);
+  if (priv -> fpictures_list != NULL)
+    {
+      frogr_controller_upload_pictures (priv -> controller,
+                                        priv -> fpictures_list);
+    }
 }
 
 void
@@ -317,7 +311,12 @@ static void
 _frogr_main_window_finalize (GObject *object)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (object);
+
+  /* Free memory */
   g_object_unref (priv -> controller);
+  g_slist_foreach (priv -> fpictures_list, (GFunc)g_free, NULL);
+  g_slist_free (priv -> fpictures_list);
+
   G_OBJECT_CLASS(frogr_main_window_parent_class) -> finalize (object);
 }
 
@@ -366,12 +365,18 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   priv -> auth_button = auth_button;
 
   /* Initialize model */
-  priv -> model = GTK_TREE_MODEL (gtk_list_store_new (2, G_TYPE_STRING, GDK_TYPE_PIXBUF));
+  priv -> model = GTK_TREE_MODEL (gtk_list_store_new (3,
+                                                      G_TYPE_STRING,
+                                                      GDK_TYPE_PIXBUF,
+                                                      G_TYPE_POINTER));
   gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), priv -> model);
   gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), PIXBUF_COL);
   gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view), GTK_SELECTION_MULTIPLE);
   gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
   gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), ITEM_WIDTH);
+
+  /* Init list of pictures */
+  priv -> fpictures_list = NULL;
 
   /* Provide a default icon list in several sizes */
   icons = g_list_prepend (NULL,
