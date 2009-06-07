@@ -272,6 +272,18 @@ _on_upload_button_clicked (GtkButton *widget,
   frogr_controller_upload_pictures (priv -> controller, gfpictures);
 }
 
+void
+_on_icon_view_item_activated (GtkIconView *iconview,
+                              GtkTreePath *path,
+                              gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
+
+  /* Delegate on controller and update UI */
+  frogr_controller_show_details_dialog (priv -> controller);
+}
+
 gboolean
 _on_main_window_delete_event (GtkWidget *widget,
                               GdkEvent *event,

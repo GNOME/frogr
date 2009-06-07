@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue Jun  2 23:38:34 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Jun  7 16:12:45 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="main_window">
     <property name="title" translatable="yes">frogr</property>
@@ -78,6 +78,7 @@
               <widget class="GtkIconView" id="icon_view">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <signal name="item_activated" handler="_on_icon_view_item_activated"/>
               </widget>
             </child>
           </widget>
