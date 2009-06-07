@@ -269,6 +269,7 @@ _upload_pictures_thread (gpointer data)
     }
 
   /* Free memory */
+  g_slist_foreach (fpictures, (GFunc)g_object_unref, NULL);
   g_slist_free (fpictures);
   g_slice_free (_upload_pictures_st, up_st);
 
@@ -289,18 +290,26 @@ frogr_facade_upload_pictures (FrogrFacade *ffacade,
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
   _upload_pictures_st *up_st;
 
-  /* Check authorization */
-  if (!flickcurl_get_auth_token (priv -> fcurl))
+  /* Check if the list of pictures is not empty */
+  if (fpictures != NULL)
     {
-      g_debug ("Not authorized yet");
-      return;
+      /* Check authorization */
+      if (!flickcurl_get_auth_token (priv -> fcurl))
+        {
+          g_debug ("Not authorized yet");
+          return;
+        }
+
+      /* Add references */
+      g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
+
+      /* Create structure to pass to the thread */
+      up_st = g_slice_new (_upload_pictures_st);
+      up_st -> ffacade = ffacade;
+      up_st -> fpictures = g_slist_copy (fpictures);
+
+      /* Initiate the process in another thread */
+      g_thread_create ((GThreadFunc)_upload_pictures_thread,
+                       up_st, FALSE, NULL);
     }
-
-  up_st = g_slice_new (_upload_pictures_st);
-  up_st -> ffacade = ffacade;
-  up_st -> fpictures = fpictures;
-
-  /* Initiate the process in another thread */
-  g_thread_create ((GThreadFunc)_upload_pictures_thread,
-                   up_st, FALSE, NULL);
 }
