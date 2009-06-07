@@ -229,7 +229,7 @@ _on_upload_button_clicked (GtkButton *widget,
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
   GtkTreeIter iter;
-  GSList *gfpictures = NULL;
+  GSList *fpictures = NULL;
   gboolean valid = FALSE;
 
   /* Build a simple list of pictures */
@@ -251,13 +251,13 @@ _on_upload_button_clicked (GtkButton *widget,
           /* Build a new picture to be uploaded */
           gchar *filename = g_path_get_basename (filepath);
 
-          FrogrPicture *gfpicture =
+          FrogrPicture *fpicture =
             frogr_picture_new (filename,
                                filepath,
                                FALSE);
 
           /* Add picture */
-          gfpictures = g_slist_append (gfpictures, gfpicture);
+          fpictures = g_slist_append (fpictures, fpicture);
 
           /* Free */
           g_free (filepath);
@@ -269,7 +269,7 @@ _on_upload_button_clicked (GtkButton *widget,
     }
 
   /* Upload pictures */
-  frogr_controller_upload_pictures (priv -> controller, gfpictures);
+  frogr_controller_upload_pictures (priv -> controller, fpictures);
 }
 
 void
