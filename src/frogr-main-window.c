@@ -273,9 +273,18 @@ _on_icon_view_item_activated (GtkIconView *iconview,
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
+  GtkTreeIter iter;
+  FrogrPicture *fpicture;
+
+  gtk_tree_model_get_iter (priv -> model, &iter, path);
+  gtk_tree_model_get (priv -> model,
+                      &iter,
+                      FPICTURE_COL, &fpicture,
+                      -1);
 
   /* Delegate on controller and update UI */
-  frogr_controller_show_details_dialog (priv -> controller);
+  g_object_ref (fpicture);
+  frogr_controller_show_details_dialog (priv -> controller, fpicture);
 }
 
 gboolean

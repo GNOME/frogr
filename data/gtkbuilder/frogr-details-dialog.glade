@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Jun  7 16:46:35 2009 -->
+<!--Generated with glade3 3.4.5 on Tue Jun  9 00:23:22 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="details-dialog">
     <property name="border_width">5</property>
@@ -26,7 +26,10 @@
                     <property name="height_request">100</property>
                     <property name="visible">True</property>
                     <child>
-                      <placeholder/>
+                      <widget class="GtkImage" id="picture_img">
+                        <property name="visible">True</property>
+                        <property name="stock">gtk-missing-image</property>
+                      </widget>
                     </child>
                   </widget>
                   <packing>
@@ -39,7 +42,7 @@
                     <property name="n_rows">3</property>
                     <property name="n_columns">2</property>
                     <child>
-                      <widget class="GtkEntry" id="entry3">
+                      <widget class="GtkEntry" id="tags_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </widget>
@@ -87,7 +90,7 @@
                         <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                         <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
                         <child>
-                          <widget class="GtkTextView" id="textview1">
+                          <widget class="GtkTextView" id="description_tview">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </widget>
@@ -114,7 +117,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkEntry" id="entry1">
+                      <widget class="GtkEntry" id="title_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </widget>
@@ -204,7 +207,7 @@
                 <property name="receives_default">True</property>
                 <property name="label" translatable="yes">gtk-ok</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
+                <property name="response_id">-5</property>
               </widget>
               <packing>
                 <property name="position">1</property>

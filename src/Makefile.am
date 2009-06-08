@@ -28,16 +28,18 @@ frogr_CFLAGS = $(FROGR_CFLAGS) -DAPP_DATA_DIR=\"$(datadir)\" \
 frogr_LDFLAGS = -export-dynamic
 
 frogr_SOURCES = \
-	main.c \
-	frogr-main-window.h \
-	frogr-main-window.c \
-	frogr-auth-dialog.h \
-	frogr-auth-dialog.c \
-	frogr-about-dialog.h \
 	frogr-about-dialog.c \
-	frogr-controller.h \
+	frogr-about-dialog.h \
+	frogr-auth-dialog.c \
+	frogr-auth-dialog.h \
 	frogr-controller.c \
-	frogr-picture.h \
-	frogr-picture.c \
+	frogr-controller.h \
+	frogr-details-dialog.c \
+	frogr-details-dialog.h \
+	frogr-facade.c \
 	frogr-facade.h \
-	frogr-facade.c
+	frogr-main-window.c \
+	frogr-main-window.h \
+	frogr-picture.c \
+	frogr-picture.h \
+	main.c

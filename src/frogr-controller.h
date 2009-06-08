@@ -25,6 +25,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include "frogr-picture.h"
 
 G_BEGIN_DECLS
 
@@ -62,7 +63,8 @@ gboolean frogr_controller_quit_app (FrogrController *fcontroller);
 
 void frogr_controller_show_about_dialog (FrogrController *fcontroller);
 void frogr_controller_show_auth_dialog (FrogrController *fcontroller);
-void frogr_controller_show_details_dialog (FrogrController *fcontroller);
+void frogr_controller_show_details_dialog (FrogrController *fcontroller,
+                                           FrogrPicture *fpicture);
 
 void frogr_controller_open_authorization_url (FrogrController *fcontroller);
 gboolean frogr_controller_complete_authorization (FrogrController *fcontroller);

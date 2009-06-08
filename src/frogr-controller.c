@@ -27,9 +27,7 @@
 #include "frogr-main-window.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-about-dialog.h"
-
-#define GTKBUILDER_DETAILS_DIALOG_FILE                                 \
-  APP_DATA_DIR "/gtkbuilder/frogr-details-dialog.xml"
+#include "frogr-details-dialog.h"
 
 G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
 
@@ -198,25 +196,14 @@ frogr_controller_show_auth_dialog (FrogrController *fcontroller)
 }
 
 void
-frogr_controller_show_details_dialog (FrogrController *fcontroller)
+frogr_controller_show_details_dialog (FrogrController *fcontroller,
+                                      FrogrPicture *fpicture)
 {
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
-  GtkBuilder *builder;
-  GtkWidget *dialog;
-
-  /* Create widgets */
-  builder = gtk_builder_new ();
-  gtk_builder_add_from_file (builder,
-                             GTKBUILDER_DETAILS_DIALOG_FILE,
-                             NULL);
-
-  dialog = GTK_WIDGET (gtk_builder_get_object (builder, "details-dialog"));
-  gtk_window_set_transient_for (GTK_WINDOW (dialog), priv -> mainwin);
-
-  /* Show the dialog */
-  gtk_widget_show_all (dialog);
+  /* Run the details dialog */
+  frogr_details_dialog_show (GTK_WINDOW (priv -> mainwin), fpicture);
 }
 
 void
