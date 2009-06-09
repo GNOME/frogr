@@ -188,8 +188,8 @@ frogr_picture_set_filepath (FrogrPicture *fpicture,
   priv -> filepath = g_strdup (filepath);
 }
 
-GSList *
-frogr_picture_get_tags (FrogrPicture *fpicture)
+const GSList *
+frogr_picture_get_tags_list (FrogrPicture *fpicture)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
@@ -209,7 +209,7 @@ frogr_picture_get_tags (FrogrPicture *fpicture)
 }
 
 const gchar *
-frogr_picture_get_tags_string (FrogrPicture *fpicture)
+frogr_picture_get_tags (FrogrPicture *fpicture)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 

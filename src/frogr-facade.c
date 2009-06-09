@@ -219,7 +219,7 @@ _upload_pictures_thread (gpointer data)
       const gchar *title = frogr_picture_get_title (fpicture);
       const gchar *filepath = frogr_picture_get_filepath (fpicture);
       const gchar *description = frogr_picture_get_description (fpicture);
-      const gchar *tags = frogr_picture_get_tags_string (fpicture);
+      const gchar *tags = frogr_picture_get_tags (fpicture);
       gboolean is_public = frogr_picture_is_public (fpicture);
       gboolean is_friend = frogr_picture_is_friend (fpicture);
       gboolean is_family = frogr_picture_is_family (fpicture);

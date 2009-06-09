@@ -65,7 +65,7 @@ frogr_details_dialog_show (GtkWindow *parent, FrogrPicture *fpicture)
   filepath = (gchar *)frogr_picture_get_filepath (fpicture);
   title = (gchar *)frogr_picture_get_title (fpicture);
   description = (gchar *)frogr_picture_get_description (fpicture);
-  tags = (gchar *)frogr_picture_get_tags_string (fpicture);
+  tags = (gchar *)frogr_picture_get_tags (fpicture);
 
   if (title != NULL)
     gtk_entry_set_text (GTK_ENTRY (title_entry), title);

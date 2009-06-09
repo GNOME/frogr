@@ -70,8 +70,8 @@ const gchar *frogr_picture_get_filepath (FrogrPicture *fpicture);
 void frogr_picture_set_filepath (FrogrPicture *fpicture,
                                  const gchar *filepath);
 
-GSList *frogr_picture_get_tags (FrogrPicture *fpicture);
-const gchar *frogr_picture_get_tags_string (FrogrPicture *fpicture);
+const GSList *frogr_picture_get_tags_list (FrogrPicture *fpicture);
+const gchar *frogr_picture_get_tags (FrogrPicture *fpicture);
 void frogr_picture_set_tags (FrogrPicture *fpicture,
                              const gchar *tags_string);
 
