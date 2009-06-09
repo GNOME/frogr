@@ -37,7 +37,7 @@ static const gchar *artists[] = {
 
 static const gchar *appdescr = "A Flickr remote organizer for GNOME\n";
 static const gchar *copyright = "(c) 2009 Mario Sanchez Prada";
-static const gchar *website = "http://frogr.igalia.com/";
+static const gchar *website = "http://code.google.com/p/frogr";
 static const gchar *license =
   "frogr is free software: you can redistribute\n"
   "it and/or modify it under the terms of the GNU\n"
@@ -88,7 +88,7 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "copyright", copyright,
                          "license", license,
                          "version", VERSION,
-                         "website", "http://code.google.com/p/frogr",
+                         "website", website,
                          "logo", logo,
                          "modal", TRUE,
                          NULL);
