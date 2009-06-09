@@ -61,12 +61,13 @@ frogr_details_dialog_show (GtkWindow *parent, FrogrPicture *fpicture)
   picture_img = GTK_WIDGET (gtk_builder_get_object (builder, "picture_img"));
   text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (desc_tview));
 
-  /* Fill in with data */
+  /* Retrieve needed data */
   filepath = (gchar *)frogr_picture_get_filepath (fpicture);
   title = (gchar *)frogr_picture_get_title (fpicture);
   description = (gchar *)frogr_picture_get_description (fpicture);
   tags = (gchar *)frogr_picture_get_tags (fpicture);
 
+  /* Fill in with data */
   if (title != NULL)
     gtk_entry_set_text (GTK_ENTRY (title_entry), title);
 
@@ -93,12 +94,14 @@ frogr_details_dialog_show (GtkWindow *parent, FrogrPicture *fpicture)
       new_width = (float)new_height * width / height;
     }
 
+  /* Scale the pixbuf to its best size */
   scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
                                            new_width, new_height,
                                            GDK_INTERP_TILES);
-  g_object_unref (pixbuf);
 
+  /* Set resized pixbuf and free memory */
   gtk_image_set_from_pixbuf (GTK_IMAGE (picture_img), scaled_pixbuf);
+  g_object_unref (pixbuf);
   g_object_unref (scaled_pixbuf);
 
   /* Show the dialog */

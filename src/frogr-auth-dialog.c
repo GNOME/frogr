@@ -65,7 +65,7 @@ frogr_auth_dialog_show (GtkWindow *parent)
       vbox = GTK_DIALOG (dialog) -> vbox;
       gtk_box_pack_start (GTK_BOX (vbox), info_label, FALSE, FALSE, 6);
 
-      /* Show the dialog */
+      /* Run the dialog */
       gtk_widget_show_all (dialog);
       do
         {
