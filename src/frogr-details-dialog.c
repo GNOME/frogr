@@ -39,6 +39,9 @@ frogr_details_dialog_show (GtkWindow *parent, FrogrPicture *fpicture)
   GtkWidget *desc_tview;
   GtkWidget *tags_entry;
   GtkWidget *picture_img;
+  GtkWidget *public_cb;
+  GtkWidget *friend_cb;
+  GtkWidget *family_cb;
   GtkTextBuffer *text_buffer;
   GdkPixbuf *pixbuf, *scaled_pixbuf;
   gchar *filepath = NULL;
@@ -48,6 +51,9 @@ frogr_details_dialog_show (GtkWindow *parent, FrogrPicture *fpicture)
   gint width, new_width;
   gint height, new_height;
   gint response;
+  gboolean is_public;
+  gboolean is_friend;
+  gboolean is_family;
 
   /* Create widgets */
   builder = gtk_builder_new ();
@@ -60,12 +66,18 @@ frogr_details_dialog_show (GtkWindow *parent, FrogrPicture *fpicture)
   tags_entry = GTK_WIDGET (gtk_builder_get_object (builder, "tags_entry"));
   picture_img = GTK_WIDGET (gtk_builder_get_object (builder, "picture_img"));
   text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (desc_tview));
+  public_cb = GTK_WIDGET (gtk_builder_get_object (builder, "public_cbutton"));
+  friend_cb = GTK_WIDGET (gtk_builder_get_object (builder, "friend_cbutton"));
+  family_cb = GTK_WIDGET (gtk_builder_get_object (builder, "family_cbutton"));
 
   /* Retrieve needed data */
   filepath = (gchar *)frogr_picture_get_filepath (fpicture);
   title = (gchar *)frogr_picture_get_title (fpicture);
   description = (gchar *)frogr_picture_get_description (fpicture);
   tags = (gchar *)frogr_picture_get_tags (fpicture);
+  is_public = frogr_picture_is_public (fpicture);
+  is_friend = frogr_picture_is_friend (fpicture);
+  is_family = frogr_picture_is_family (fpicture);
 
   /* Fill in with data */
   if (title != NULL)
@@ -76,6 +88,10 @@ frogr_details_dialog_show (GtkWindow *parent, FrogrPicture *fpicture)
 
   if (tags != NULL)
     gtk_entry_set_text (GTK_ENTRY (tags_entry), tags);
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (public_cb), is_public);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (friend_cb), is_friend);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (family_cb), is_family);
 
   /* Build the image */
   pixbuf = gdk_pixbuf_new_from_file (filepath, NULL);
@@ -109,29 +125,41 @@ frogr_details_dialog_show (GtkWindow *parent, FrogrPicture *fpicture)
   gtk_widget_show_all (dialog);
 
   /* Run the dialog */
-   /* XXX: Actually implement this as needed, now it's just a placeholder */
-  response = gtk_dialog_run (GTK_DIALOG (dialog));
-  if (response == GTK_RESPONSE_OK)
+  /* XXX: Actually implement this as needed, now it's just a placeholder */
+  do
     {
-      GtkTextIter start;
-      GtkTextIter end;
+      response = gtk_dialog_run (GTK_DIALOG (dialog));
+      if (response == GTK_RESPONSE_OK)
+        {
+          GtkTextIter start;
+          GtkTextIter end;
 
-      /* Save data */
-      title = (gchar *)gtk_entry_get_text (GTK_ENTRY (title_entry));
-      tags = (gchar *)gtk_entry_get_text (GTK_ENTRY (tags_entry));
+          /* Save data */
+          title = (gchar *)gtk_entry_get_text (GTK_ENTRY (title_entry));
+          tags = (gchar *)gtk_entry_get_text (GTK_ENTRY (tags_entry));
 
-      gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (text_buffer), &start, &end);
-      description = (gchar *)gtk_text_buffer_get_text (GTK_TEXT_BUFFER (text_buffer),
-                                                       &start, &end, FALSE);
-      if (title != NULL)
-          frogr_picture_set_title (fpicture, title);
+          gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (text_buffer), &start, &end);
+          description = (gchar *)gtk_text_buffer_get_text (GTK_TEXT_BUFFER (text_buffer),
+                                                           &start, &end, FALSE);
 
-      if (description != NULL)
-        frogr_picture_set_description (fpicture, description);
+          is_public = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (public_cb));
+          is_friend = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (friend_cb));
+          is_family = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (family_cb));
 
-      if (tags != NULL)
-        frogr_picture_set_tags (fpicture, tags);
-    }
+          if (title != NULL)
+            frogr_picture_set_title (fpicture, title);
+
+          if (description != NULL)
+            frogr_picture_set_description (fpicture, description);
+
+          if (tags != NULL)
+            frogr_picture_set_tags (fpicture, tags);
+
+          frogr_picture_set_public (fpicture, is_public);
+          frogr_picture_set_friend (fpicture, is_friend);
+          frogr_picture_set_family (fpicture, is_family);
+        }
+    } while (response > GTK_RESPONSE_NONE); /* ugly gtkbuilder hack */
 
   /* Destroy the dialog */
   gtk_widget_destroy (GTK_WIDGET (dialog));

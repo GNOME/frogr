@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue Jun  9 08:10:55 2009 -->
+<!--Generated with glade3 3.4.5 on Tue Jun  9 23:24:34 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="details-dialog">
     <property name="border_width">5</property>
@@ -11,7 +11,7 @@
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
-      <widget class="GtkVBox" id="dialog-vbox">
+      <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
         <property name="spacing">2</property>
         <child>
@@ -137,7 +137,7 @@
               <widget class="GtkHBox" id="hbox5">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkCheckButton" id="checkbutton1">
+                  <widget class="GtkCheckButton" id="public_cbutton">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="label" translatable="yes">Public</property>
@@ -147,9 +147,8 @@
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="checkbutton2">
+                  <widget class="GtkCheckButton" id="family_cbutton">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="label" translatable="yes">Family</property>
                     <property name="response_id">0</property>
@@ -160,9 +159,8 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="checkbutton3">
+                  <widget class="GtkCheckButton" id="friend_cbutton">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="label" translatable="yes">Friend</property>
                     <property name="response_id">0</property>
@@ -195,7 +193,7 @@
                 <property name="receives_default">True</property>
                 <property name="label" translatable="yes">gtk-cancel</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
+                <property name="response_id">-6</property>
               </widget>
             </child>
             <child>
