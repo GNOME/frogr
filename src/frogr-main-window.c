@@ -323,7 +323,7 @@ _frogr_main_window_finalize (GObject *object)
 
   /* Free memory */
   g_object_unref (priv -> controller);
-  g_slist_foreach (priv -> fpictures_list, (GFunc)g_free, NULL);
+  g_slist_foreach (priv -> fpictures_list, (GFunc)g_object_unref, NULL);
   g_slist_free (priv -> fpictures_list);
 
   G_OBJECT_CLASS(frogr_main_window_parent_class) -> finalize (object);
