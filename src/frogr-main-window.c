@@ -76,10 +76,10 @@ _add_picture_to_icon_view (FrogrMainWindow *fmainwin,
   GdkPixbuf *pixbuf;
   GdkPixbuf *scaled_pixbuf;
   GtkTreeIter iter;
-  int width;
-  int height;
-  int new_width;
-  int new_height;
+  gint width;
+  gint height;
+  gint new_width;
+  gint new_height;
   gchar *filename;
 
   pixbuf = gdk_pixbuf_new_from_file (filepath, NULL);
