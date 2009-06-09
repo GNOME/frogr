@@ -76,13 +76,8 @@ static void
 _frogr_controller_finalize (GObject* object)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (object);
-
-  fcontroller_instance = NULL;
-  if (priv -> mainwin)
-    {
-      g_object_unref (priv -> mainwin);
-      priv -> mainwin = NULL;
-    }
+  g_object_unref (priv -> mainwin);
+  g_object_unref (priv -> facade);
 
   G_OBJECT_CLASS (frogr_controller_parent_class) -> finalize (object);
 }
@@ -309,7 +304,8 @@ frogr_controller_notify_pictures_uploaded (FrogrController *fcontroller,
   g_free (photos_ids_str);
   g_strfreev (str_array);
   g_slist_foreach (photos_ids, (GFunc)g_free, NULL);
-  g_slist_free (photos_ids);}
+  g_slist_free (photos_ids);
+}
 
 FrogrControllerState
 frogr_controller_get_state (FrogrController *fcontroller)

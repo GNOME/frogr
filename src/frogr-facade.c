@@ -28,9 +28,8 @@
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
 
-#define FROGR_FACADE_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), \
-                                                                      FROGR_FACADE_TYPE, \
-                                                                      FrogrFacadePrivate))
+#define FROGR_FACADE_GET_PRIVATE(object) \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_FACADE_TYPE, FrogrFacadePrivate))
 
 G_DEFINE_TYPE (FrogrFacade, frogr_facade, G_TYPE_OBJECT);
 
@@ -39,7 +38,6 @@ typedef struct _FrogrFacadePrivate FrogrFacadePrivate;
 struct _FrogrFacadePrivate
 {
   FrogrController *controller;
-  gboolean authorized;
   flickcurl *fcurl;
   gchar *frob;
   gchar *auth_token;
@@ -51,7 +49,15 @@ struct _FrogrFacadePrivate
 static void
 frogr_facade_finalize (GObject* object)
 {
-  /* call super class */
+  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (object);
+
+  /* Free memory */
+  g_object_unref (priv -> controller);
+  flickcurl_free (priv -> fcurl);
+  g_free (priv -> frob);
+  g_free (priv -> auth_token);
+
+  /* Call superclass */
   G_OBJECT_CLASS (frogr_facade_parent_class) -> finalize(object);
 }
 
@@ -69,21 +75,12 @@ frogr_facade_init (FrogrFacade *ffacade)
 {
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
 
-  /* default values */
-  priv -> controller = frogr_controller_get_instance ();
-  priv -> fcurl = NULL;
+  /* Set default values */
+  priv -> auth_token = NULL;
   priv -> frob = NULL;
-  priv -> authorized = FALSE;
-}
 
-
-/* Public API */
-
-FrogrFacade *
-frogr_facade_new (void)
-{
-  FrogrFacade *ffacade = g_object_new(FROGR_FACADE_TYPE, NULL);
-  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
+  /* Get controller */
+  priv -> controller = frogr_controller_get_instance ();
 
   /* Init flickcurl */
   flickcurl_init();
@@ -92,8 +89,15 @@ frogr_facade_new (void)
   /* Set API key and shared secret */
   flickcurl_set_api_key(priv -> fcurl, API_KEY);
   flickcurl_set_shared_secret(priv -> fcurl, SHARED_SECRET);
+}
 
-  return ffacade;
+
+/* Public API */
+
+FrogrFacade *
+frogr_facade_new (void)
+{
+  return FROGR_FACADE (g_object_new(FROGR_FACADE_TYPE, NULL));
 }
 
 gchar *
@@ -105,6 +109,7 @@ frogr_facade_get_authorization_url (FrogrFacade *ffacade)
   gchar *frob = flickcurl_auth_getFrob (priv -> fcurl);
   gchar *auth_url = NULL;
 
+  /* Get auth url */
   if (frob)
     {
       gchar *sign_str;
@@ -134,7 +139,7 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
   g_return_if_fail(FROGR_IS_FACADE (ffacade));
 
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-  gchar *auth_token;
+  gchar *auth_token = NULL;
 
   /* Check if frob value is present */
   if (!priv -> frob)
@@ -150,10 +155,9 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
       /* Set and save the auth token */
       flickcurl_set_auth_token(priv -> fcurl, auth_token);
       priv -> auth_token = auth_token;
-      priv -> authorized = TRUE;
     }
 
-  return priv -> authorized;
+  return (auth_token != NULL);
 }
 
 gboolean
@@ -162,26 +166,27 @@ frogr_facade_is_authorized (FrogrFacade *ffacade)
   g_return_if_fail(FROGR_IS_FACADE (ffacade));
 
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-  return priv -> authorized;
+  return (flickcurl_get_auth_token (priv -> fcurl) != NULL);
 }
 
 typedef struct {
   FrogrFacade *ffacade;
   GSList *photos_ids;
-} _notify_pictures_uploaded_st;
+} notify_pictures_uploaded_st;
 
 static gboolean
 _notify_pictures_uploaded (gpointer data)
 {
-  _notify_pictures_uploaded_st *npu_st = (_notify_pictures_uploaded_st *) data;
+  notify_pictures_uploaded_st *npu_st = (notify_pictures_uploaded_st *) data;
   FrogrFacade *ffacade = npu_st -> ffacade;
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
   GSList *photos_ids = npu_st -> photos_ids;
 
+  /* Notify the controller */
   frogr_controller_notify_pictures_uploaded (priv -> controller, photos_ids);
 
   /* Free memory */
-  g_slice_free (_notify_pictures_uploaded_st, npu_st);
+  g_slice_free (notify_pictures_uploaded_st, npu_st);
 
   return FALSE;
 }
@@ -189,29 +194,30 @@ _notify_pictures_uploaded (gpointer data)
 typedef struct {
   FrogrFacade *ffacade;
   GSList *fpictures;
-} _upload_pictures_st;
+} upload_pictures_st;
 
 static void
 _upload_pictures_thread (gpointer data)
 {
   g_return_if_fail (data != NULL);
 
-  _upload_pictures_st *up_st = (_upload_pictures_st *) data;
+  upload_pictures_st *up_st = (upload_pictures_st *) data;
   FrogrFacade *ffacade = up_st -> ffacade;
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-  _notify_pictures_uploaded_st *npu_st;
+  notify_pictures_uploaded_st *npu_st;
 
   GSList *fpictures = up_st -> fpictures;
   GSList *item;
   GSList *photos_ids;
 
   /* Check authorization */
-  if (!flickcurl_get_auth_token (priv -> fcurl))
+  if (!frogr_facade_is_authorized (ffacade))
     {
       g_debug ("Not authorized yet");
       return;
     }
 
+  /* Upload pictures and gather photos ID's */
   photos_ids = NULL;
   for (item = fpictures; item; item = g_slist_next (item))
     {
@@ -264,17 +270,16 @@ _upload_pictures_thread (gpointer data)
       }
 
       /* Free memory */
-      g_object_unref (fpicture);
       g_slice_free (flickcurl_upload_params, uparams);
     }
 
   /* Free memory */
   g_slist_foreach (fpictures, (GFunc)g_object_unref, NULL);
   g_slist_free (fpictures);
-  g_slice_free (_upload_pictures_st, up_st);
+  g_slice_free (upload_pictures_st, up_st);
 
   /* At last, just tell the ui to change its state */
-  npu_st = g_slice_new (_notify_pictures_uploaded_st);
+  npu_st = g_slice_new (notify_pictures_uploaded_st);
   npu_st -> ffacade = ffacade;
   npu_st -> photos_ids = photos_ids;
 
@@ -288,13 +293,13 @@ frogr_facade_upload_pictures (FrogrFacade *ffacade,
   g_return_if_fail(FROGR_IS_FACADE (ffacade));
 
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-  _upload_pictures_st *up_st;
+  upload_pictures_st *up_st;
 
   /* Check if the list of pictures is not empty */
   if (fpictures != NULL)
     {
       /* Check authorization */
-      if (!flickcurl_get_auth_token (priv -> fcurl))
+      if (!frogr_facade_is_authorized (ffacade))
         {
           g_debug ("Not authorized yet");
           return;
@@ -304,7 +309,7 @@ frogr_facade_upload_pictures (FrogrFacade *ffacade,
       g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
 
       /* Create structure to pass to the thread */
-      up_st = g_slice_new (_upload_pictures_st);
+      up_st = g_slice_new (upload_pictures_st);
       up_st -> ffacade = ffacade;
       up_st -> fpictures = g_slist_copy (fpictures);
 

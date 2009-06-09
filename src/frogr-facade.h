@@ -51,7 +51,7 @@ struct _FrogrFacadeClass
 
 GType frogr_facade_get_type(void) G_GNUC_CONST;
 
-/* Constructors / destructor */
+/* Constructor */
 FrogrFacade *frogr_facade_new (void);
 
 /* Use cases */
