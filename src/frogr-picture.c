@@ -24,9 +24,8 @@
 
 #define TAGS_DELIMITER " "
 
-#define FROGR_PICTURE_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), \
-                                                                       FROGR_PICTURE_TYPE, \
-                                                                       FrogrPicturePrivate))
+#define FROGR_PICTURE_GET_PRIVATE(object) \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_PICTURE_TYPE, FrogrPicturePrivate))
 
 G_DEFINE_TYPE (FrogrPicture, frogr_picture, G_TYPE_OBJECT);
 
@@ -37,8 +36,8 @@ struct _FrogrPicturePrivate
   gchar *title;
   gchar *description;
   gchar *filepath;
-  GSList *tags_list;
   gchar *tags_string;
+  GSList *tags_list;
 
   gboolean is_public;
   gboolean is_friend;
@@ -85,8 +84,8 @@ frogr_picture_init (FrogrPicture *fpicture)
   priv -> title = NULL;
   priv -> description = NULL;
   priv -> filepath = NULL;
-  priv -> tags_list = NULL;
   priv -> tags_string = NULL;
+  priv -> tags_list = NULL;
 
   priv -> is_public = FALSE;
   priv -> is_friend = FALSE;
@@ -133,6 +132,7 @@ frogr_picture_set_title (FrogrPicture *fpicture,
                          const gchar *title)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
+  g_return_if_fail(title != NULL);
 
   FrogrPicturePrivate *priv = \
     FROGR_PICTURE_GET_PRIVATE (fpicture);
@@ -185,6 +185,7 @@ frogr_picture_set_filepath (FrogrPicture *fpicture,
   FrogrPicturePrivate *priv = \
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
+  g_free (priv -> filepath);
   priv -> filepath = g_strdup (filepath);
 }
 
@@ -195,17 +196,8 @@ frogr_picture_get_tags_list (FrogrPicture *fpicture)
 
   FrogrPicturePrivate *priv = \
     FROGR_PICTURE_GET_PRIVATE (fpicture);
-  GSList *new_list = NULL;
-  GSList *item = NULL;
 
-  for (item = priv -> tags_list; item; item = g_slist_next (item))
-    {
-      gchar *tag = (gchar *)item -> data;
-      if (tag)
-        new_list = g_slist_prepend (new_list, g_strdup (tag));
-    }
-
-  return g_slist_reverse (new_list);
+  return priv -> tags_list;
 }
 
 const gchar *
@@ -233,6 +225,10 @@ frogr_picture_set_tags (FrogrPicture *fpicture,
   g_slist_free (priv -> tags_list);
   priv -> tags_list = NULL;
 
+  /* Reset previous tags string */
+  g_free (priv -> tags_string);
+  priv -> tags_string = NULL;
+
   /* Build the new tags list */
   if (tags_string)
     {
@@ -240,6 +236,7 @@ frogr_picture_set_tags (FrogrPicture *fpicture,
 
       /* Now create a new list of tags from the tags string */
       stripped_tags = g_strstrip (g_strdup (tags_string));
+
       if (!g_str_equal (stripped_tags, ""))
         {
           gchar **tags_array = NULL;
@@ -249,18 +246,17 @@ frogr_picture_set_tags (FrogrPicture *fpicture,
           tags_array = g_strsplit (stripped_tags, TAGS_DELIMITER, -1);
           for (i = 0; tags_array[i]; i++)
             {
+              /* Add tag to the tags list */
               new_list = g_slist_prepend (new_list, g_strdup (tags_array[i]));
             }
           priv -> tags_list = g_slist_reverse (new_list);
 
           g_strfreev (tags_array);
         }
-      g_free (stripped_tags);
-    }
 
-  /* Update string version */
-  g_free (priv -> tags_string);
-  priv -> tags_string = g_strdup (tags_string);
+      /* Set the tags_string value */
+      priv -> tags_string = stripped_tags;
+    }
 }
 
 gboolean
@@ -308,7 +304,6 @@ frogr_picture_set_friend (FrogrPicture *fpicture,
 
   priv -> is_friend = friend;
 }
-
 
 gboolean
 frogr_picture_is_family (FrogrPicture *fpicture)
