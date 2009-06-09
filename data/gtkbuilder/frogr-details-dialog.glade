@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue Jun  9 00:23:22 2009 -->
+<!--Generated with glade3 3.4.5 on Tue Jun  9 08:10:55 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="details-dialog">
     <property name="border_width">5</property>
@@ -22,8 +22,6 @@
                 <property name="visible">True</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment1">
-                    <property name="width_request">100</property>
-                    <property name="height_request">100</property>
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkImage" id="picture_img">
@@ -42,43 +40,25 @@
                     <property name="n_rows">3</property>
                     <property name="n_columns">2</property>
                     <child>
-                      <widget class="GtkEntry" id="tags_entry">
+                      <widget class="GtkEntry" id="title_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
                         <property name="y_padding">6</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label3">
+                      <widget class="GtkLabel" id="label1">
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
                         <property name="xpad">6</property>
-                        <property name="label" translatable="yes">Tags:</property>
+                        <property name="label" translatable="yes">Title:</property>
+                        <property name="ellipsize">PANGO_ELLIPSIZE_END</property>
                       </widget>
                       <packing>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
-                        <property name="y_padding">6</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label2">
-                        <property name="visible">True</property>
-                        <property name="xalign">1</property>
-                        <property name="yalign">0</property>
-                        <property name="xpad">6</property>
-                        <property name="label" translatable="yes">Description:</property>
-                        <property name="wrap_mode">PANGO_WRAP_WORD_CHAR</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
                         <property name="y_padding">6</property>
                       </packing>
                     </child>
@@ -105,25 +85,43 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label1">
+                      <widget class="GtkLabel" id="label2">
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
+                        <property name="yalign">0</property>
                         <property name="xpad">6</property>
-                        <property name="label" translatable="yes">Title:</property>
-                        <property name="ellipsize">PANGO_ELLIPSIZE_END</property>
+                        <property name="label" translatable="yes">Description:</property>
+                        <property name="wrap_mode">PANGO_WRAP_WORD_CHAR</property>
                       </widget>
                       <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
                         <property name="y_padding">6</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkEntry" id="title_entry">
+                      <widget class="GtkLabel" id="label3">
+                        <property name="visible">True</property>
+                        <property name="xalign">1</property>
+                        <property name="xpad">6</property>
+                        <property name="label" translatable="yes">Tags:</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">2</property>
+                        <property name="bottom_attach">3</property>
+                        <property name="y_padding">6</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkEntry" id="tags_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
+                        <property name="top_attach">2</property>
+                        <property name="bottom_attach">3</property>
                         <property name="y_padding">6</property>
                       </packing>
                     </child>
