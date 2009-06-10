@@ -105,7 +105,7 @@ _add_picture_to_icon_view (FrogrMainWindow *fmainwin,
 
   /* Add to internal list */
   filename = g_path_get_basename (filepath);
-  fpicture = frogr_picture_new (filename, filepath, FALSE);
+  fpicture = frogr_picture_new (filepath, filename, FALSE);
   priv -> fpictures_list = g_slist_append (priv -> fpictures_list, fpicture);
 
   /* Add to GtkIconView */

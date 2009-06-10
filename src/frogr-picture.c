@@ -33,9 +33,9 @@ G_DEFINE_TYPE (FrogrPicture, frogr_picture, G_TYPE_OBJECT);
 typedef struct _FrogrPicturePrivate FrogrPicturePrivate;
 struct _FrogrPicturePrivate
 {
+  gchar *filepath;
   gchar *title;
   gchar *description;
-  gchar *filepath;
   gchar *tags_string;
   GSList *tags_list;
 
@@ -53,9 +53,9 @@ frogr_picture_finalize (GObject* object)
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
 
   /* free strings */
+  g_free (priv -> filepath);
   g_free (priv -> title);
   g_free (priv -> description);
-  g_free (priv -> filepath);
   g_free (priv -> tags_string);
 
   /* free GSList of tags */
@@ -81,9 +81,9 @@ frogr_picture_init (FrogrPicture *fpicture)
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   /* Default values */
+  priv -> filepath = NULL;
   priv -> title = NULL;
   priv -> description = NULL;
-  priv -> filepath = NULL;
   priv -> tags_string = NULL;
   priv -> tags_list = NULL;
 
@@ -96,25 +96,47 @@ frogr_picture_init (FrogrPicture *fpicture)
 /* Public API */
 
 FrogrPicture *
-frogr_picture_new (const gchar *title,
-                   const gchar *filepath,
+frogr_picture_new (const gchar *filepath,
+                   const gchar *title,
                    gboolean public)
 {
-  g_return_val_if_fail (title, NULL);
   g_return_val_if_fail (filepath, NULL);
+  g_return_val_if_fail (title, NULL);
 
-  FrogrPicture *fpicture = g_object_new(FROGR_TYPE_PICTURE, NULL);
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (fpicture);
-
-  priv -> title = g_strdup (title);
-  priv -> filepath = g_strdup (filepath);
-  priv -> is_public = public;
-
-  return fpicture;
+  GObject *new = g_object_new(FROGR_TYPE_PICTURE,
+                              "filepath", filepath,
+                              "title", title,
+                              "is-public", public,
+                              NULL);
+  return FROGR_PICTURE (new);
 }
 
 
 /* Data Managing functions */
+
+const gchar *
+frogr_picture_get_filepath (FrogrPicture *fpicture)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(fpicture), NULL);
+
+  FrogrPicturePrivate *priv = \
+    FROGR_PICTURE_GET_PRIVATE (fpicture);
+
+  return (const gchar *)priv -> filepath;
+}
+
+void
+frogr_picture_set_filepath (FrogrPicture *fpicture,
+                            const gchar *filepath)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(fpicture));
+
+  FrogrPicturePrivate *priv = \
+    FROGR_PICTURE_GET_PRIVATE (fpicture);
+
+  g_free (priv -> filepath);
+  priv -> filepath = g_strdup (filepath);
+}
 
 const gchar *
 frogr_picture_get_title (FrogrPicture *fpicture)
@@ -163,30 +185,6 @@ frogr_picture_set_description (FrogrPicture *fpicture,
 
   g_free (priv -> description);
   priv -> description = g_strdup (description);
-}
-
-const gchar *
-frogr_picture_get_filepath (FrogrPicture *fpicture)
-{
-  g_return_val_if_fail(FROGR_IS_PICTURE(fpicture), NULL);
-
-  FrogrPicturePrivate *priv = \
-    FROGR_PICTURE_GET_PRIVATE (fpicture);
-
-  return (const gchar *)priv -> filepath;
-}
-
-void
-frogr_picture_set_filepath (FrogrPicture *fpicture,
-                            const gchar *filepath)
-{
-  g_return_if_fail(FROGR_IS_PICTURE(fpicture));
-
-  FrogrPicturePrivate *priv = \
-    FROGR_PICTURE_GET_PRIVATE (fpicture);
-
-  g_free (priv -> filepath);
-  priv -> filepath = g_strdup (filepath);
 }
 
 const GSList *
