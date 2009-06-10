@@ -36,6 +36,8 @@ TODO list for the uploader:
 
  * Improve the authorization dialog.
 
+ * Add contextual menu for right click on a picture (GtkIconView).
+
  * etc...
 
 
