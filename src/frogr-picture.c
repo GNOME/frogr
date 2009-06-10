@@ -25,7 +25,7 @@
 #define TAGS_DELIMITER " "
 
 #define FROGR_PICTURE_GET_PRIVATE(object) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_PICTURE_TYPE, FrogrPicturePrivate))
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_TYPE_PICTURE, FrogrPicturePrivate))
 
 G_DEFINE_TYPE (FrogrPicture, frogr_picture, G_TYPE_OBJECT);
 
@@ -103,7 +103,7 @@ frogr_picture_new (const gchar *title,
   g_return_val_if_fail (title, NULL);
   g_return_val_if_fail (filepath, NULL);
 
-  FrogrPicture *fpicture = g_object_new(FROGR_PICTURE_TYPE, NULL);
+  FrogrPicture *fpicture = g_object_new(FROGR_TYPE_PICTURE, NULL);
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   priv -> title = g_strdup (title);
