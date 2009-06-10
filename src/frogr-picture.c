@@ -44,11 +44,100 @@ struct _FrogrPicturePrivate
   gboolean is_family;
 };
 
+/* Properties */
+enum  {
+  PROP_0,
+  PROP_FILEPATH,
+  PROP_TITLE,
+  PROP_DESCRIPTION,
+  PROP_TAGS_STRING,
+  PROP_IS_PUBLIC,
+  PROP_IS_FAMILY,
+  PROP_IS_FRIEND
+};
 
 /* Private API */
 
 static void
-frogr_picture_finalize (GObject* object)
+_frogr_picture_set_property (GObject *object,
+                             guint prop_id,
+                             const GValue *value,
+                             GParamSpec *pspec)
+{
+  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
+
+  switch (prop_id)
+    {
+    case PROP_FILEPATH:
+      g_free (priv -> filepath);
+      priv -> filepath = g_value_dup_string (value);
+      break;
+    case PROP_TITLE:
+      g_free (priv -> title);
+      priv -> title = g_value_dup_string (value);
+      break;
+    case PROP_DESCRIPTION:
+      g_free (priv -> description);
+      priv -> description = g_value_dup_string (value);
+      break;
+    case PROP_TAGS_STRING:
+      g_free (priv -> tags_string);
+      priv -> tags_string = g_value_dup_string (value);
+      break;
+    case PROP_IS_PUBLIC:
+      priv -> is_public = g_value_get_boolean (value);
+      break;
+    case PROP_IS_FAMILY:
+      priv -> is_family = g_value_get_boolean (value);
+      break;
+    case PROP_IS_FRIEND:
+      priv -> is_friend = g_value_get_boolean (value);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static void
+_frogr_picture_get_property (GObject *object,
+                             guint prop_id,
+                             GValue *value,
+                             GParamSpec *pspec)
+{
+  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
+
+  switch (prop_id)
+    {
+    case PROP_FILEPATH:
+      g_value_set_string (value, priv -> filepath);
+      break;
+    case PROP_TITLE:
+      g_value_set_string (value, priv -> title);
+      break;
+    case PROP_DESCRIPTION:
+      g_value_set_string (value, priv -> description);
+      break;
+    case PROP_TAGS_STRING:
+      g_value_set_string (value, priv -> tags_string);
+      break;
+    case PROP_IS_PUBLIC:
+      g_value_set_boolean (value, priv -> is_public);
+      break;
+    case PROP_IS_FAMILY:
+      g_value_set_boolean (value, priv -> is_family);
+      break;
+    case PROP_IS_FRIEND:
+      g_value_set_boolean (value, priv -> is_friend);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static void
+_frogr_picture_finalize (GObject* object)
 {
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
 
@@ -71,8 +160,69 @@ frogr_picture_class_init(FrogrPictureClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
 
-  obj_class -> finalize = frogr_picture_finalize;
-  g_type_class_add_private (obj_class, sizeof (FrogrPicturePrivate));
+  /* GtkObject signals */
+  obj_class->set_property = _frogr_picture_set_property;
+  obj_class->get_property = _frogr_picture_get_property;
+  obj_class -> finalize = _frogr_picture_finalize;
+
+  /* Install properties */
+  g_object_class_install_property (obj_class,
+                                   PROP_FILEPATH,
+                                   g_param_spec_string ("filepath",
+							"filepath",
+							"Full filepath for the picture",
+							NULL,
+							G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_TITLE,
+                                   g_param_spec_string ("title",
+							"title",
+							"Picture's title",
+							NULL,
+							G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_DESCRIPTION,
+                                   g_param_spec_string ("description",
+							"description",
+							"Picture's description",
+							NULL,
+							G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_TAGS_STRING,
+                                   g_param_spec_string ("tags-string",
+							"tags-string",
+							"List of tags separated "
+                                                        "with blanks between them",
+							NULL,
+							G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_IS_PUBLIC,
+                                   g_param_spec_boolean ("is-public",
+                                                         "is-public",
+                                                         "Whether the picture "
+                                                         "is public or not",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_IS_FAMILY,
+                                   g_param_spec_boolean ("is-family",
+                                                         "is-family",
+                                                         "Whether the picture "
+                                                         "will be seen by "
+                                                         "relatives or not",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_IS_FRIEND,
+                                   g_param_spec_boolean ("is-friend",
+                                                         "is-friend",
+                                                         "Whether the picture "
+                                                         "will be seen by "
+                                                         "friends or not",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE));
+
+ g_type_class_add_private (obj_class, sizeof (FrogrPicturePrivate));
 }
 
 static void
