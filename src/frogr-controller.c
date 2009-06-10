@@ -196,9 +196,11 @@ frogr_controller_show_details_dialog (FrogrController *fcontroller,
 {
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+  FrogrDetailsDialog *dialog;
 
   /* Run the details dialog */
-  frogr_details_dialog_show (GTK_WINDOW (priv -> mainwin), fpicture);
+  dialog = frogr_details_dialog_new (GTK_WINDOW (priv -> mainwin), fpicture);
+  frogr_details_dialog_show (dialog);
 }
 
 void
