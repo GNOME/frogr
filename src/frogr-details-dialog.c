@@ -41,7 +41,8 @@ typedef struct _FrogrDetailsDialogPrivate {
   GtkWidget *title_entry;
   GtkWidget *desc_tview;
   GtkWidget *tags_entry;
-  GtkWidget *public_cb;
+  GtkWidget *public_rb;
+  GtkWidget *private_rb;
   GtkWidget *friend_cb;
   GtkWidget *family_cb;
   GtkTextBuffer *text_buffer;
@@ -56,6 +57,19 @@ enum  {
 };
 
 /* Private API */
+
+static void
+_update_ui (FrogrDetailsDialog *fdetailsdialog)
+{
+  FrogrDetailsDialogPrivate *priv =
+    FROGR_DETAILS_DIALOG_GET_PRIVATE (fdetailsdialog);
+  gboolean active;
+
+  /* Adjust sensitiveness for check buttons */
+  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> public_rb));
+  gtk_widget_set_sensitive (priv -> friend_cb, !active);
+  gtk_widget_set_sensitive (priv -> family_cb, !active);
+}
 
 static GdkPixbuf *
 _get_scaled_pixbuf (const gchar *filepath)
@@ -128,7 +142,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
   if (tags != NULL)
     gtk_entry_set_text (GTK_ENTRY (priv -> tags_entry), tags);
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv -> public_cb),
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv -> public_rb),
                                 is_public);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv -> friend_cb),
                                 is_friend);
@@ -139,6 +153,9 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
   pixbuf = _get_scaled_pixbuf (filepath);
   gtk_image_set_from_pixbuf (GTK_IMAGE (priv -> picture_img), pixbuf);
   g_object_unref (pixbuf);
+
+  /* Update UI */
+  _update_ui (fdetailsdialog);
 }
 
 static gboolean
@@ -185,11 +202,21 @@ _save_data (FrogrDetailsDialog *fdetailsdialog)
     (gchar *)gtk_text_buffer_get_text (GTK_TEXT_BUFFER (priv -> text_buffer),
                                        &start, &end, FALSE);
   is_public =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> public_cb));
-  is_friend =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> friend_cb));
-  is_family =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> family_cb));
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> public_rb));
+
+  if (!is_public)
+    {
+      is_friend =
+        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> friend_cb));
+      is_family =
+        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> family_cb));
+    }
+  else
+    {
+      /* This data is not used for public images */
+      is_friend = FALSE;
+      is_family = FALSE;
+    }
 
   /* validate dialog */
   if (_validate_dialog_data (fdetailsdialog))
@@ -225,6 +252,18 @@ _save_data (FrogrDetailsDialog *fdetailsdialog)
 
   /* Return result */
   return result;
+}
+
+/* Event handlers */
+
+void
+_on_public_rbutton_toggled (GtkToggleButton *tbutton,
+                            gpointer data)
+{
+  FrogrDetailsDialog *fdetailsdialog = FROGR_DETAILS_DIALOG (data);
+
+  /* Just update the UI */
+  _update_ui (fdetailsdialog);
 }
 
 static void
@@ -327,14 +366,19 @@ frogr_details_dialog_init (FrogrDetailsDialog *fdetailsdialog)
     GTK_WIDGET (gtk_builder_get_object (builder, "tags_entry"));
   priv -> text_buffer =
     gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv -> desc_tview));
-  priv -> public_cb =
-    GTK_WIDGET (gtk_builder_get_object (builder, "public_cbutton"));
+  priv -> public_rb =
+    GTK_WIDGET (gtk_builder_get_object (builder, "public_rbutton"));
+  priv -> private_rb =
+    GTK_WIDGET (gtk_builder_get_object (builder, "private_rbutton"));
   priv -> friend_cb =
     GTK_WIDGET (gtk_builder_get_object (builder, "friend_cbutton"));
   priv -> family_cb =
     GTK_WIDGET (gtk_builder_get_object (builder, "family_cbutton"));
   priv -> picture_img =
     GTK_WIDGET (gtk_builder_get_object (builder, "picture_img"));
+
+  /* Connect signals */
+  gtk_builder_connect_signals (builder, fdetailsdialog);
 
   /* Show the UI */
   gtk_widget_show_all (GTK_WIDGET(fdetailsdialog));
@@ -378,8 +422,7 @@ frogr_details_dialog_show (FrogrDetailsDialog *fdetailsdialog)
       if (response == GTK_RESPONSE_OK)
         saved =_save_data (fdetailsdialog);
 
-    } while ((response > GTK_RESPONSE_NONE)   /* ugly gtkbuilder hack */
-             || ((response == GTK_RESPONSE_OK) && !saved));
+    } while ((response == GTK_RESPONSE_OK) && !saved);
 
   /* Destroy the dialog */
   gtk_widget_destroy (GTK_WIDGET (fdetailsdialog));
