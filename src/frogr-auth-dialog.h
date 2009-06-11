@@ -27,7 +27,30 @@
 
 G_BEGIN_DECLS
 
-void frogr_auth_dialog_show (GtkWindow *parent);
+#define FROGR_TYPE_AUTH_DIALOG           (frogr_auth_dialog_get_type())
+#define FROGR_AUTH_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_AUTH_DIALOG, FrogrAuthDialog))
+#define FROGR_AUTH_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_AUTH_DIALOG, FrogrAuthDialogClass))
+#define FROGR_IS_AUTH_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_AUTH_DIALOG))
+#define FROGR_IS_AUTH_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_AUTH_DIALOG))
+#define FROGR_AUTH_DIALOG_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_AUTH_DIALOG, FrogrAuthDialogClass))
+
+typedef struct _FrogrAuthDialog        FrogrAuthDialog;
+typedef struct _FrogrAuthDialogClass   FrogrAuthDialogClass;
+
+struct _FrogrAuthDialogClass
+{
+  GtkDialogClass parent_class;
+};
+
+struct _FrogrAuthDialog
+{
+  GtkDialog parent;
+};
+
+GType frogr_auth_dialog_get_type (void) G_GNUC_CONST;
+
+FrogrAuthDialog *frogr_auth_dialog_new (GtkWindow *parent);
+void frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog);
 
 G_END_DECLS
 

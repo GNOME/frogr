@@ -33,54 +33,103 @@ static gchar *auth_text =
   "Press on 'Complete' to start using " PACKAGE_NAME " once you've "
   "authorized it in your flickr account.";
 
-void
-frogr_auth_dialog_show (GtkWindow *parent)
+#define FROGR_AUTH_DIALOG_GET_PRIVATE(object)                   \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                          \
+                                FROGR_TYPE_AUTH_DIALOG,         \
+                                FrogrAuthDialogPrivate))
+
+G_DEFINE_TYPE (FrogrAuthDialog, frogr_auth_dialog, GTK_TYPE_DIALOG);
+
+typedef struct _FrogrAuthDialogPrivate {
+  FrogrController *controller;
+  GtkWidget *info_label;
+  GtkWidget *button;
+} FrogrAuthDialogPrivate;
+
+
+/* Private API */
+
+static void
+_frogr_auth_dialog_finalize (GObject *object)
 {
-  FrogrController *controller = frogr_controller_get_instance ();
-  if (!frogr_controller_is_authorized (controller))
+  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (object);
+  g_object_unref (priv -> controller);
+  G_OBJECT_CLASS(frogr_auth_dialog_parent_class) -> finalize (object);
+}
+
+static void
+frogr_auth_dialog_class_init (FrogrAuthDialogClass *klass)
+{
+  GObjectClass *obj_class = (GObjectClass *)klass;
+  obj_class -> finalize = _frogr_auth_dialog_finalize;
+  g_type_class_add_private (obj_class, sizeof (FrogrAuthDialogPrivate));
+}
+
+static void
+frogr_auth_dialog_init (FrogrAuthDialog *fauthdialog)
+{
+  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (fauthdialog);
+  GtkWidget *vbox;
+
+  /* Get controller */
+  priv -> controller = frogr_controller_get_instance ();
+
+  /* Create widgets */
+  priv -> button = gtk_dialog_add_button (GTK_DIALOG (fauthdialog),
+                                          "Continue",
+                                          GTK_RESPONSE_ACCEPT);
+  /* Add labels */
+  priv -> info_label = gtk_label_new (unauth_text);
+  gtk_label_set_line_wrap (GTK_LABEL (priv -> info_label), TRUE);
+
+  vbox = GTK_DIALOG (fauthdialog) -> vbox;
+  gtk_box_pack_start (GTK_BOX (vbox), priv -> info_label, FALSE, FALSE, 6);
+
+  /* Show the UI */
+  gtk_widget_show_all (GTK_WIDGET(fauthdialog));
+}
+
+/* Public API */
+
+FrogrAuthDialog *
+frogr_auth_dialog_new (GtkWindow *parent)
+{
+  GObject *new = g_object_new (FROGR_TYPE_AUTH_DIALOG,
+                               "title", "Authorize Frogr",
+                               "modal", TRUE,
+                               "transient-for", parent,
+                               "resizable", FALSE,
+                               "has-separator", FALSE,
+                               NULL);
+  return FROGR_AUTH_DIALOG (new);
+}
+
+void
+frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
+{
+  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (fauthdialog);
+
+  if (!frogr_controller_is_authorized (priv -> controller))
     {
-      GtkWidget *dialog;
-      GtkWidget *vbox;
-      GtkWidget *info_label;
-      GtkWidget *button;
       gboolean authorizing = FALSE;
       gboolean authorized = FALSE;
       gint response = 0;
 
-      dialog = gtk_dialog_new ();
-      gtk_window_set_title (GTK_WINDOW (dialog), "Authorize frogr");
-      gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-      gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-      gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (parent));
-      gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-
-      /* Add buttons */
-      button = gtk_dialog_add_button (GTK_DIALOG (dialog),
-                                      "Continue",
-                                      GTK_RESPONSE_ACCEPT);
-      /* Add labels */
-      info_label = gtk_label_new (unauth_text);
-      gtk_label_set_line_wrap (GTK_LABEL (info_label), TRUE);
-
-      vbox = GTK_DIALOG (dialog) -> vbox;
-      gtk_box_pack_start (GTK_BOX (vbox), info_label, FALSE, FALSE, 6);
-
       /* Run the dialog */
-      gtk_widget_show_all (dialog);
       do
         {
-          response = gtk_dialog_run (GTK_DIALOG (dialog));
+          response = gtk_dialog_run (GTK_DIALOG (fauthdialog));
           if (response == GTK_RESPONSE_ACCEPT && !authorizing)
             {
-              frogr_controller_open_authorization_url (controller);
+              frogr_controller_open_authorization_url (priv -> controller);
               authorizing = TRUE;
 
-              gtk_button_set_label (GTK_BUTTON (button), "Complete");
-              gtk_label_set_text (GTK_LABEL (info_label), auth_text);
+              gtk_button_set_label (GTK_BUTTON (priv -> button), "Complete");
+              gtk_label_set_text (GTK_LABEL (priv -> info_label), auth_text);
             }
           else if (response == GTK_RESPONSE_ACCEPT)
             {
-              if (frogr_controller_complete_authorization (controller))
+              if (frogr_controller_complete_authorization (priv -> controller))
                 {
                   /* Everything went fine */
                   authorized = TRUE;
@@ -90,7 +139,7 @@ frogr_auth_dialog_show (GtkWindow *parent)
                 {
                   /* An error happened */
                   GtkWidget *msg_dialog;
-                  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (dialog),
+                  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (fauthdialog),
                                                        GTK_DIALOG_MODAL,
                                                        GTK_MESSAGE_ERROR,
                                                        GTK_BUTTONS_OK,
@@ -104,18 +153,15 @@ frogr_auth_dialog_show (GtkWindow *parent)
                   /* Restore values if reached */
                   authorizing = FALSE;
                   authorized = FALSE;
-                  gtk_button_set_label (GTK_BUTTON (button), "Continue");
-                  gtk_label_set_text (GTK_LABEL (info_label), unauth_text);
+                  gtk_button_set_label (GTK_BUTTON (priv -> button), "Continue");
+                  gtk_label_set_text (GTK_LABEL (priv -> info_label), unauth_text);
                   g_debug ("Authorization not completed");
                 }
             }
 
         } while (!authorized && (response == GTK_RESPONSE_ACCEPT));
-
-      /* Destroy the dialog */
-      gtk_widget_destroy (GTK_WIDGET (dialog));
     }
 
-  /* Release controller */
-  g_object_unref (controller);
+  /* Destroy the dialog */
+  gtk_widget_destroy (GTK_WIDGET (fauthdialog));
 }
