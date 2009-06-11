@@ -141,6 +141,23 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
   g_object_unref (pixbuf);
 }
 
+static gboolean
+_validate_dialog_data (FrogrDetailsDialog *fdetailsdialog)
+{
+  FrogrDetailsDialogPrivate *priv =
+    FROGR_DETAILS_DIALOG_GET_PRIVATE (fdetailsdialog);
+  gchar *title;
+
+  /* Mandatory fields */
+  title = (gchar *)gtk_entry_get_text (GTK_ENTRY (priv -> title_entry));
+
+  if ((title == NULL) || g_str_equal (g_strstrip (title), ""))
+    return FALSE;
+
+  /* Validated if reached */
+  return TRUE;
+}
+
 
 static void
 _frogr_details_dialog_set_property (GObject *object,
@@ -279,21 +296,24 @@ frogr_details_dialog_show (FrogrDetailsDialog *fdetailsdialog)
     FROGR_DETAILS_DIALOG_GET_PRIVATE (fdetailsdialog);
 
   gint response;
-  gchar *title = NULL;
-  gchar *description = NULL;
-  gchar *tags = NULL;
-  gboolean is_public;
-  gboolean is_friend;
-  gboolean is_family;
+  gboolean validated;;
 
-  /* Fill with data and run the dialog */
-  /* XXX: Actually implement this as needed, now it's just a placeholder */
+  /* Fill with data */
   _fill_dialog_with_data (fdetailsdialog);
+
+  /* Run the dialog */
   do
     {
+      validated = FALSE;
       response = gtk_dialog_run (GTK_DIALOG (fdetailsdialog));
       if (response == GTK_RESPONSE_OK)
         {
+          gchar *title = NULL;
+          gchar *description = NULL;
+          gchar *tags = NULL;
+          gboolean is_public;
+          gboolean is_friend;
+          gboolean is_family;
           GtkTextIter start;
           GtkTextIter end;
 
@@ -313,20 +333,37 @@ frogr_details_dialog_show (FrogrDetailsDialog *fdetailsdialog)
           is_family =
             gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> family_cb));
 
-          if (title != NULL)
-            frogr_picture_set_title (priv -> fpicture, title);
+          /* validate dialog */
+          if (validated = _validate_dialog_data (fdetailsdialog))
+            {
+              frogr_picture_set_title (priv -> fpicture, title ? title : "");
+              frogr_picture_set_description (priv -> fpicture,
+                                             description ? description : "");
+              frogr_picture_set_tags (priv -> fpicture, tags ? tags : "");
 
-          if (description != NULL)
-            frogr_picture_set_description (priv -> fpicture, description);
+              frogr_picture_set_public (priv -> fpicture, is_public);
+              frogr_picture_set_friend (priv -> fpicture, is_friend);
+              frogr_picture_set_family (priv -> fpicture, is_family);
+            }
+          else
+            {
+              /* Show alert */
+              GtkWindow *parent_win =
+                gtk_window_get_transient_for (GTK_WINDOW (fdetailsdialog));
 
-          if (tags != NULL)
-            frogr_picture_set_tags (priv -> fpicture, tags);
-
-          frogr_picture_set_public (priv -> fpicture, is_public);
-          frogr_picture_set_friend (priv -> fpicture, is_friend);
-          frogr_picture_set_family (priv -> fpicture, is_family);
+              GtkWidget *dialog =
+                gtk_message_dialog_new (parent_win,
+                                        GTK_DIALOG_MODAL,
+                                        GTK_MESSAGE_WARNING,
+                                        GTK_BUTTONS_CLOSE,
+                                        "Missing data required");
+              /* Run alert dialog */
+              gtk_dialog_run (GTK_DIALOG (dialog));
+              gtk_widget_destroy (dialog);
+            }
         }
-    } while (response > GTK_RESPONSE_NONE); /* ugly gtkbuilder hack */
+    } while ((response > GTK_RESPONSE_NONE) ||  /* ugly gtkbuilder hack */
+             ((response == GTK_RESPONSE_OK) && !validated));
 
   /* Destroy the dialog */
   gtk_widget_destroy (GTK_WIDGET (fdetailsdialog));
