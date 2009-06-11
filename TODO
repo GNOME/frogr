@@ -38,6 +38,8 @@ TODO list for the uploader:
 
  * Add contextual menu for right click on a picture (GtkIconView).
 
+ * Reimplement authorization dialog as a GtkMessageDialog
+
  * etc...
 
 
