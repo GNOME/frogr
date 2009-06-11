@@ -185,7 +185,7 @@ frogr_controller_show_auth_dialog (FrogrController *fcontroller)
 {
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
-  FrogrDetailsDialog *dialog;
+  FrogrAuthDialog *dialog;
 
   /* Run the about dialog */
   dialog = frogr_auth_dialog_new (GTK_WINDOW (priv -> mainwin));
