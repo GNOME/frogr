@@ -146,6 +146,7 @@ _update_ui (FrogrMainWindow *fmainwin)
 }
 
 /* Event handlers */
+
 void
 _on_add_button_clicked (GtkButton *widget,
                         gpointer data)
