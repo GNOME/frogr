@@ -17,9 +17,6 @@ TODO list for the uploader:
  * Add a "Settings" new dialog to allow the user preselect some useful
    and common options (e.g. always upload public pictures by default).
 
- * New "details dialog" to allow setting pictures properties before
-   uploading: description, tags, license, visibility...
-
  * Allow setting common properties for several pictures at once.
 
  * Show extra information when uploading, for instance a "x/y"-like
