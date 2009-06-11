@@ -27,8 +27,8 @@
 #define GTKBUILDER_FILE                                 \
   APP_DATA_DIR "/gtkbuilder/frogr-details-dialog.xml"
 
-#define PICTURE_WIDTH 100
-#define PICTURE_HEIGHT 100
+#define PICTURE_WIDTH 150
+#define PICTURE_HEIGHT 150
 
 #define FROGR_DETAILS_DIALOG_GET_PRIVATE(object)                   \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                          \
@@ -353,6 +353,7 @@ frogr_details_dialog_new (GtkWindow *parent, FrogrPicture *fpicture)
                                "modal", TRUE,
                                "picture", fpicture,
                                "transient-for", parent,
+                               "resizable", FALSE,
                                NULL);
   return FROGR_DETAILS_DIALOG (new);
 }
