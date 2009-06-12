@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Jun 11 23:52:36 2009 -->
+<!--Generated with glade3 3.4.5 on Fri Jun 12 16:28:57 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="details-dialog">
     <property name="border_width">5</property>
@@ -17,15 +17,20 @@
         <child>
           <widget class="GtkVBox" id="main-vbox">
             <property name="visible">True</property>
+            <property name="border_width">6</property>
             <child>
               <widget class="GtkHBox" id="hbox1">
                 <property name="visible">True</property>
+                <property name="spacing">12</property>
                 <child>
                   <widget class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
+                    <property name="spacing">18</property>
                     <child>
                       <widget class="GtkAlignment" id="alignment1">
                         <property name="visible">True</property>
+                        <property name="top_padding">6</property>
+                        <property name="left_padding">6</property>
                         <child>
                           <widget class="GtkViewport" id="viewport1">
                             <property name="visible">True</property>
@@ -40,18 +45,16 @@
                           </widget>
                         </child>
                       </widget>
-                      <packing>
-                        <property name="padding">6</property>
-                      </packing>
                     </child>
                     <child>
                       <widget class="GtkAlignment" id="alignment2">
                         <property name="visible">True</property>
-                        <property name="bottom_padding">12</property>
-                        <property name="left_padding">12</property>
+                        <property name="bottom_padding">6</property>
+                        <property name="left_padding">24</property>
                         <child>
                           <widget class="GtkVBox" id="vbox2">
                             <property name="visible">True</property>
+                            <property name="spacing">12</property>
                             <child>
                               <widget class="GtkRadioButton" id="public_rbutton">
                                 <property name="visible">True</property>
@@ -63,13 +66,11 @@
                                 <property name="group">private_rbutton</property>
                                 <signal name="toggled" handler="_on_public_rbutton_toggled"/>
                               </widget>
-                              <packing>
-                                <property name="padding">6</property>
-                              </packing>
                             </child>
                             <child>
                               <widget class="GtkVBox" id="vbox3">
                                 <property name="visible">True</property>
+                                <property name="spacing">6</property>
                                 <child>
                                   <widget class="GtkRadioButton" id="private_rbutton">
                                     <property name="visible">True</property>
@@ -79,17 +80,15 @@
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
                                   </widget>
-                                  <packing>
-                                    <property name="padding">6</property>
-                                  </packing>
                                 </child>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment3">
                                     <property name="visible">True</property>
-                                    <property name="left_padding">24</property>
+                                    <property name="left_padding">12</property>
                                     <child>
                                       <widget class="GtkVBox" id="vbox4">
                                         <property name="visible">True</property>
+                                        <property name="spacing">6</property>
                                         <child>
                                           <widget class="GtkCheckButton" id="family_cbutton">
                                             <property name="visible">True</property>
@@ -109,7 +108,6 @@
                                           </widget>
                                           <packing>
                                             <property name="expand">False</property>
-                                            <property name="padding">6</property>
                                             <property name="position">1</property>
                                           </packing>
                                         </child>
@@ -132,31 +130,16 @@
                       </widget>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="padding">6</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
                   </widget>
-                  <packing>
-                    <property name="padding">6</property>
-                  </packing>
                 </child>
                 <child>
                   <widget class="GtkTable" id="table1">
                     <property name="visible">True</property>
                     <property name="n_rows">3</property>
                     <property name="n_columns">2</property>
-                    <child>
-                      <widget class="GtkEntry" id="title_entry">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                      </widget>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
                     <child>
                       <widget class="GtkLabel" id="label1">
                         <property name="visible">True</property>
@@ -166,6 +149,47 @@
                         <property name="ellipsize">PANGO_ELLIPSIZE_END</property>
                       </widget>
                       <packing>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label2">
+                        <property name="visible">True</property>
+                        <property name="xalign">1</property>
+                        <property name="yalign">0</property>
+                        <property name="xpad">6</property>
+                        <property name="label" translatable="yes">Description:</property>
+                        <property name="wrap_mode">PANGO_WRAP_WORD_CHAR</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label3">
+                        <property name="visible">True</property>
+                        <property name="xalign">1</property>
+                        <property name="xpad">6</property>
+                        <property name="label" translatable="yes">Tags:</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">2</property>
+                        <property name="bottom_attach">3</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkEntry" id="title_entry">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
@@ -191,33 +215,6 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label2">
-                        <property name="visible">True</property>
-                        <property name="xalign">1</property>
-                        <property name="yalign">0</property>
-                        <property name="xpad">6</property>
-                        <property name="label" translatable="yes">Description:</property>
-                        <property name="wrap_mode">PANGO_WRAP_WORD_CHAR</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label3">
-                        <property name="visible">True</property>
-                        <property name="xalign">1</property>
-                        <property name="xpad">6</property>
-                        <property name="label" translatable="yes">Tags:</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
                       <widget class="GtkEntry" id="tags_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -232,7 +229,6 @@
                     </child>
                   </widget>
                   <packing>
-                    <property name="padding">6</property>
                     <property name="position">1</property>
                   </packing>
                 </child>

@@ -83,7 +83,8 @@ frogr_auth_dialog_init (FrogrAuthDialog *fauthdialog)
   gtk_label_set_line_wrap (GTK_LABEL (priv -> info_label), TRUE);
 
   vbox = GTK_DIALOG (fauthdialog) -> vbox;
-  gtk_box_pack_start (GTK_BOX (vbox), priv -> info_label, FALSE, FALSE, 6);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_box_pack_start (GTK_BOX (vbox), priv -> info_label, FALSE, FALSE, 0);
 
   /* Show the UI */
   gtk_widget_show_all (GTK_WIDGET(fauthdialog));
