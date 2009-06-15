@@ -269,7 +269,7 @@ frogr_picture_get_filepath (FrogrPicture *fpicture)
 {
   g_return_val_if_fail(FROGR_IS_PICTURE(fpicture), NULL);
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   return (const gchar *)priv -> filepath;
@@ -281,7 +281,7 @@ frogr_picture_set_filepath (FrogrPicture *fpicture,
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   g_free (priv -> filepath);
@@ -293,7 +293,7 @@ frogr_picture_get_title (FrogrPicture *fpicture)
 {
   g_return_val_if_fail(FROGR_IS_PICTURE(fpicture), NULL);
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   return (const gchar *)priv -> title;
@@ -306,7 +306,7 @@ frogr_picture_set_title (FrogrPicture *fpicture,
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
   g_return_if_fail(title != NULL);
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   g_free (priv -> title);
@@ -318,7 +318,7 @@ frogr_picture_get_description (FrogrPicture *fpicture)
 {
   g_return_val_if_fail(FROGR_IS_PICTURE(fpicture), NULL);
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   return (const gchar *)priv -> description;
@@ -330,7 +330,7 @@ frogr_picture_set_description (FrogrPicture *fpicture,
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   g_free (priv -> description);
@@ -342,7 +342,7 @@ frogr_picture_get_tags_list (FrogrPicture *fpicture)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   return priv -> tags_list;
@@ -353,7 +353,7 @@ frogr_picture_get_tags (FrogrPicture *fpicture)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   return priv -> tags_string;
@@ -365,7 +365,7 @@ frogr_picture_set_tags (FrogrPicture *fpicture,
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   /* First remove all the previous tags list */
@@ -412,7 +412,7 @@ frogr_picture_is_public (FrogrPicture *fpicture)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   return priv -> is_public;
@@ -424,7 +424,7 @@ frogr_picture_set_public (FrogrPicture *fpicture,
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   priv -> is_public = public;
@@ -435,7 +435,7 @@ frogr_picture_is_friend (FrogrPicture *fpicture)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   return priv -> is_friend;
@@ -447,7 +447,7 @@ frogr_picture_set_friend (FrogrPicture *fpicture,
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   priv -> is_friend = friend;
@@ -458,7 +458,7 @@ frogr_picture_is_family (FrogrPicture *fpicture)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   return priv -> is_family;
@@ -470,7 +470,7 @@ frogr_picture_set_family (FrogrPicture *fpicture,
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-  FrogrPicturePrivate *priv = \
+  FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   priv -> is_family = family;
