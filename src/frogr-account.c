@@ -322,7 +322,7 @@ frogr_account_set_public (FrogrAccount *faccount,
 }
 
 gboolean
-frogr_account_get_family (FrogrAccount *faccount)
+frogr_account_get_private_family (FrogrAccount *faccount)
 {
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
 
@@ -331,8 +331,8 @@ frogr_account_get_family (FrogrAccount *faccount)
 }
 
 void
-frogr_account_set_family (FrogrAccount *faccount,
-                        gboolean family)
+frogr_account_set_private_family (FrogrAccount *faccount,
+                                  gboolean family)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
 
@@ -341,7 +341,7 @@ frogr_account_set_family (FrogrAccount *faccount,
 }
 
 gboolean
-frogr_account_get_friends (FrogrAccount *faccount)
+frogr_account_get_private_friends (FrogrAccount *faccount)
 {
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
 
@@ -350,8 +350,8 @@ frogr_account_get_friends (FrogrAccount *faccount)
 }
 
 void
-frogr_account_set_friends (FrogrAccount *faccount,
-                        gboolean friends)
+frogr_account_set_private_friends (FrogrAccount *faccount,
+                                   gboolean friends)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
 
