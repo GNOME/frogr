@@ -454,13 +454,11 @@ frogr_config_get_account (FrogrConfig *fconfig,
        item = g_list_next (item))
     {
       FrogrAccount *faccount = FROGR_ACCOUNT (item -> data);
-      gchar *tmp = frogr_account_get_username (faccount);
+      const gchar *tmp = frogr_account_get_username (faccount);
       if (g_str_equal (tmp, username))
         {
-          g_free (tmp);
           return faccount;
         }
-      g_free (tmp);
     }
 
   return NULL;

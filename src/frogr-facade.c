@@ -40,6 +40,7 @@ G_DEFINE_TYPE (FrogrFacade, frogr_facade, G_TYPE_OBJECT);
 typedef struct _FrogrFacadePrivate FrogrFacadePrivate;
 struct _FrogrFacadePrivate
 {
+  FrogrConfig *config;
   FrogrController *controller;
   flickcurl *fcurl;
 };
@@ -53,6 +54,7 @@ frogr_facade_finalize (GObject* object)
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (object);
 
   /* Free memory */
+  g_object_unref (priv -> config);
   g_object_unref (priv -> controller);
   flickcurl_free (priv -> fcurl);
 
@@ -73,8 +75,11 @@ static void
 frogr_facade_init (FrogrFacade *ffacade)
 {
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-  FrogrConfig *fconfig = frogr_config_get_instance ();
+  FrogrAccount *faccount;
   gchar *token;
+
+  /* Get config */
+  priv -> config = frogr_config_get_instance ();
 
   /* Get controller */
   priv -> controller = frogr_controller_get_instance ();
@@ -88,7 +93,9 @@ frogr_facade_init (FrogrFacade *ffacade)
   flickcurl_set_shared_secret(priv -> fcurl, SHARED_SECRET);
 
   /* If available, set token */
-  if ((token = frogr_account_get_token (frogr_config_get_default_account (fconfig))) != NULL)
+  faccount = frogr_config_get_default_account (priv -> config);
+  token = (gchar *)frogr_account_get_token (faccount);
+  if (token != NULL)
     {
       flickcurl_set_auth_token (priv->fcurl, token);
       g_free (token);
@@ -150,7 +157,8 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
   gchar *frob = NULL;
 
   /* Check if frob value is present */
-  if ((frob = frogr_account_get_frob (faccount)) == NULL)
+  frob = frogr_account_get_frob (faccount);
+  if (frob == NULL)
     {
       g_debug ("No frob defined");
       return;
