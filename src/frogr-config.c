@@ -68,7 +68,6 @@ _xml_node_to_boolean (const xmlNodePtr node)
   return result;
 }
 
-
 static FrogrAccount*
 _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
 {
@@ -115,14 +114,14 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
   if (frob != NULL && token != NULL && username != NULL)
     {
       faccount = g_object_new (FROGR_ACCOUNT_TYPE,
-                              "frob",     (const gchar*) frob,
-                              "token",    (const gchar*) token,
-                              "username", (const gchar*) username,
-                              "enabled",  enabled,
-                              "public",   public,
-                              "family",   family,
-                              "friends",  friends,
-                              NULL);
+                               "frob",     (const gchar*) frob,
+                               "token",    (const gchar*) token,
+                               "username", (const gchar*) username,
+                               "enabled",  enabled,
+                               "public",   public,
+                               "family",   family,
+                               "friends",  friends,
+                               NULL);
     }
 
   if (frob != NULL) xmlFree (frob);
@@ -131,7 +130,6 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
 
   return FROGR_ACCOUNT (faccount);
 }
-
 
 static void
 _frogr_config_load_accounts (FrogrConfig *fconfig, const gchar *config_dir)
@@ -194,7 +192,6 @@ _frogr_config_load_accounts (FrogrConfig *fconfig, const gchar *config_dir)
   xmlCleanupParser ();
 }
 
-
 static void
 _frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir)
 {
@@ -207,7 +204,6 @@ _frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir)
 
   _frogr_config_load_accounts (fconfig, config_dir);
 }
-
 
 static xmlNodePtr
 _xml_add_string_child (xmlNodePtr   parent,
@@ -236,7 +232,6 @@ _xml_add_string_child (xmlNodePtr   parent,
   return node;
 }
 
-
 static xmlNodePtr
 _xml_add_boolean_child (xmlNodePtr   parent,
                         const gchar *xml_name,
@@ -259,7 +254,6 @@ _xml_add_boolean_child (xmlNodePtr   parent,
 
   return node;
 }
-
 
 static gboolean
 _frogr_config_save_accounts (FrogrConfig *fconfig)
@@ -302,13 +296,12 @@ _frogr_config_save_accounts (FrogrConfig *fconfig)
                                "frogr", "accounts.xml", NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
-      g_critical ("Unable to open '%s' for saving", xml_path);
-      retval = FALSE;
+    g_critical ("Unable to open '%s' for saving", xml_path);
+    retval = FALSE;
   }
 
   return retval;
 }
-
 
 gboolean
 frogr_config_save (FrogrConfig *fconfig)
@@ -323,9 +316,6 @@ frogr_config_save (FrogrConfig *fconfig)
   return _frogr_config_save_accounts (fconfig);
 }
 
-
-
-
 static void
 _frogr_config_finalize (GObject *object)
 {
@@ -337,7 +327,6 @@ _frogr_config_finalize (GObject *object)
   /* Call superclass */
   G_OBJECT_CLASS (frogr_config_parent_class) -> finalize (object);
 }
-
 
 static GObject*
 _frogr_config_constructor (GType                  type,
@@ -357,7 +346,6 @@ _frogr_config_constructor (GType                  type,
   return g_object_ref (instance);
 }
 
-
 static void
 frogr_config_class_init (FrogrConfigClass *klass)
 {
@@ -368,7 +356,6 @@ frogr_config_class_init (FrogrConfigClass *klass)
   obj_class -> constructor = _frogr_config_constructor;
   obj_class -> finalize    = _frogr_config_finalize;
 }
-
 
 static void
 frogr_config_init (FrogrConfig *fconfig)
@@ -391,9 +378,6 @@ frogr_config_init (FrogrConfig *fconfig)
   g_free (config_dir);
 }
 
-
-
-
 FrogrConfig*
 frogr_config_get_instance (void)
 {
@@ -404,15 +388,12 @@ frogr_config_get_instance (void)
   return FROGR_CONFIG (g_object_ref (conf));
 }
 
-
-
 FrogrAccount*
 frogr_config_get_default_account (FrogrConfig *fconfig)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (fconfig), NULL);
   return frogr_config_get_account (fconfig, NULL);
 }
-
 
 void
 frogr_config_add_account (FrogrConfig  *fconfig,
@@ -428,7 +409,6 @@ frogr_config_add_account (FrogrConfig  *fconfig,
   priv -> accounts = g_list_prepend (priv -> accounts,
                                      g_object_ref (faccount));
 }
-
 
 FrogrAccount*
 frogr_config_get_account (FrogrConfig *fconfig,
@@ -463,5 +443,3 @@ frogr_config_get_account (FrogrConfig *fconfig,
 
   return NULL;
 }
-
-

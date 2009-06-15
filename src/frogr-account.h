@@ -40,13 +40,13 @@ typedef struct _FrogrAccountClass FrogrAccountClass;
 
 struct _FrogrAccount
 {
-	GObject parent_instance;
+  GObject parent_instance;
 };
 
 
 struct _FrogrAccountClass
 {
-	GObjectClass parent_class;
+  GObjectClass parent_class;
 };
 
 
@@ -54,35 +54,35 @@ GType frogr_account_get_type(void) G_GNUC_CONST;
 
 FrogrAccount* frogr_account_new (const gchar *first_property, ...);
 
-gchar* frogr_account_get_frob (FrogrAccount *faccount);
-void   frogr_account_set_frob (FrogrAccount *faccount,
-                               const gchar *frob);
+const gchar* frogr_account_get_frob (FrogrAccount *faccount);
+void frogr_account_set_frob (FrogrAccount *faccount,
+                             const gchar *frob);
 
-gchar* frogr_account_get_token (FrogrAccount *faccount);
-void   frogr_account_set_token (FrogrAccount *faccount,
-                                const gchar *token);
+const gchar* frogr_account_get_token (FrogrAccount *faccount);
+void frogr_account_set_token (FrogrAccount *faccount,
+                              const gchar *token);
 
-gchar* frogr_account_get_username (FrogrAccount *faccount);
-void   frogr_account_set_username (FrogrAccount *faccount,
-                                   const gchar *username);
+const gchar* frogr_account_get_username (FrogrAccount *faccount);
+void frogr_account_set_username (FrogrAccount *faccount,
+                                 const gchar *username);
 
 gboolean frogr_account_get_enabled (FrogrAccount *faccount);
-void     frogr_account_set_enabled (FrogrAccount *faccount,
-                                    gboolean value);
+void frogr_account_set_enabled (FrogrAccount *faccount,
+                                gboolean value);
 
 gboolean frogr_account_get_public (FrogrAccount *faccount);
-void     frogr_account_set_public (FrogrAccount *faccount,
-                                   gboolean value);
+void frogr_account_set_public (FrogrAccount *faccount,
+                               gboolean value);
 
 gboolean frogr_account_get_private_family (FrogrAccount *faccount);
-void     frogr_account_set_private_family (FrogrAccount *faccount,
-                                           gboolean value);
+void frogr_account_set_private_family (FrogrAccount *faccount,
+                                       gboolean value);
 
 gboolean frogr_account_get_private_friends (FrogrAccount *faccount);
-void     frogr_account_set_private_friends (FrogrAccount *faccount,
-                                            gboolean value);
+void frogr_account_set_private_friends (FrogrAccount *faccount,
+                                        gboolean value);
 
 G_END_DECLS
 
-#endif /* !_FROGR_ACCOUNT_H */
+#endif /* FROGR_ACCOUNT_H */
 

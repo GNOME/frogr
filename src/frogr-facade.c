@@ -157,7 +157,7 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
   gchar *frob = NULL;
 
   /* Check if frob value is present */
-  frob = frogr_account_get_frob (faccount);
+  frob = (gchar *)frogr_account_get_frob (faccount);
   if (frob == NULL)
     {
       g_debug ("No frob defined");

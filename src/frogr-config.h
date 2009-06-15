@@ -51,7 +51,6 @@ struct _FrogrConfigClass
 };
 
 
-
 GType frogr_config_get_type (void) G_GNUC_CONST;
 
 FrogrConfig* frogr_config_get_instance (void);
