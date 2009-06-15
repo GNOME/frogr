@@ -109,7 +109,9 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
    */
   if (frob != NULL && token != NULL && username != NULL)
     {
-      faccount = frogr_account_new_with_params (frob, token, username,
+      faccount = frogr_account_new_with_params ((const gchar *)frob,
+                                                (const gchar *)token,
+                                                (const gchar *)username,
                                                 public, family, friends);
     }
 

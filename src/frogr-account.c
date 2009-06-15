@@ -228,9 +228,9 @@ frogr_account_new_with_params (const gchar *frob,
   g_return_val_if_fail (username, NULL);
 
   GObject *new = g_object_new (FROGR_TYPE_ACCOUNT,
-                               "frob",     (const gchar *) frob,
-                               "token",    (const gchar *) token,
-                               "username", (const gchar *) username,
+                               "frob",     frob,
+                               "token",    token,
+                               "username", username,
                                "public",   public,
                                "family",   family,
                                "friends",  friends,
