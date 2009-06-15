@@ -20,10 +20,13 @@
  *
  */
 
+#include <string.h>
 #include <flickcurl.h>
 #include "frogr-facade.h"
 #include "frogr-controller.h"
 #include "frogr-picture.h"
+#include "frogr-config.h"
+#include "frogr-account.h"
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
@@ -39,8 +42,6 @@ struct _FrogrFacadePrivate
 {
   FrogrController *controller;
   flickcurl *fcurl;
-  gchar *frob;
-  gchar *auth_token;
 };
 
 
@@ -54,8 +55,6 @@ frogr_facade_finalize (GObject* object)
   /* Free memory */
   g_object_unref (priv -> controller);
   flickcurl_free (priv -> fcurl);
-  g_free (priv -> frob);
-  g_free (priv -> auth_token);
 
   /* Call superclass */
   G_OBJECT_CLASS (frogr_facade_parent_class) -> finalize(object);
@@ -74,10 +73,8 @@ static void
 frogr_facade_init (FrogrFacade *ffacade)
 {
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-
-  /* Set default values */
-  priv -> auth_token = NULL;
-  priv -> frob = NULL;
+  FrogrConfig *fconfig = frogr_config_get_instance ();
+  gchar *token;
 
   /* Get controller */
   priv -> controller = frogr_controller_get_instance ();
@@ -89,6 +86,13 @@ frogr_facade_init (FrogrFacade *ffacade)
   /* Set API key and shared secret */
   flickcurl_set_api_key(priv -> fcurl, API_KEY);
   flickcurl_set_shared_secret(priv -> fcurl, SHARED_SECRET);
+
+  /* If available, set token */
+  if ((token = frogr_account_get_token (frogr_config_get_default_account (fconfig))) != NULL)
+    {
+      flickcurl_set_auth_token (priv->fcurl, token);
+      g_free (token);
+    }
 }
 
 
@@ -109,6 +113,7 @@ frogr_facade_get_authorization_url (FrogrFacade *ffacade)
   gchar *frob = flickcurl_auth_getFrob (priv -> fcurl);
   gchar *auth_url = NULL;
 
+
   /* Get auth url */
   if (frob)
     {
@@ -116,7 +121,8 @@ frogr_facade_get_authorization_url (FrogrFacade *ffacade)
       gchar *api_sig;
 
       /* Save frob value */
-      priv -> frob = frob;
+      frogr_account_set_frob (frogr_config_get_default_account (frogr_config_get_instance ()),
+                              frob);
 
       /* Build the authorization url */
       sign_str = g_strdup_printf ("%sapi_key%sfrob%spermswrite",
@@ -138,23 +144,25 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
 {
   g_return_if_fail(FROGR_IS_FACADE (ffacade));
 
+  FrogrAccount *faccount = frogr_config_get_default_account (frogr_config_get_instance ());
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
   gchar *auth_token = NULL;
+  gchar *frob = NULL;
 
   /* Check if frob value is present */
-  if (!priv -> frob)
+  if ((frob = frogr_account_get_frob (faccount)) == NULL)
     {
       g_debug ("No frob defined");
       return;
     }
 
   /* Get auth token */
-  auth_token = flickcurl_auth_getToken (priv -> fcurl, priv -> frob);
+  auth_token = flickcurl_auth_getToken (priv -> fcurl, frob);
   if (auth_token)
     {
       /* Set and save the auth token */
       flickcurl_set_auth_token(priv -> fcurl, auth_token);
-      priv -> auth_token = auth_token;
+      frogr_account_set_token (faccount, auth_token);
     }
 
   return (auth_token != NULL);
