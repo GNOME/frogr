@@ -27,7 +27,7 @@
 
 
 #define FROGR_CONFIG_GET_PRIVATE(object) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_CONFIG_TYPE, FrogrConfigPrivate))
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_TYPE_CONFIG, FrogrConfigPrivate))
 
 
 G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT);
@@ -114,7 +114,7 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
    */
   if (frob != NULL && token != NULL && username != NULL)
     {
-      faccount = g_object_new (FROGR_ACCOUNT_TYPE,
+      faccount = g_object_new (FROGR_TYPE_ACCOUNT,
                                "frob",     (const gchar*) frob,
                                "token",    (const gchar*) token,
                                "username", (const gchar*) username,
@@ -385,7 +385,7 @@ frogr_config_init (FrogrConfig *fconfig)
 FrogrConfig*
 frogr_config_get_instance (void)
 {
-  return FROGR_CONFIG (g_object_new (FROGR_CONFIG_TYPE, NULL));
+  return FROGR_CONFIG (g_object_new (FROGR_TYPE_CONFIG, NULL));
 }
 
 FrogrAccount*
@@ -423,7 +423,7 @@ frogr_config_get_account (FrogrConfig *fconfig,
 
   if (priv -> accounts == NULL)
     {
-      frogr_config_add_account (fconfig, g_object_new (FROGR_ACCOUNT_TYPE, NULL));
+      frogr_config_add_account (fconfig, g_object_new (FROGR_TYPE_ACCOUNT, NULL));
     }
 
   if (username == NULL)

@@ -25,7 +25,7 @@
 
 
 #define FROGR_ACCOUNT_GET_PRIVATE(object) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_ACCOUNT_TYPE, FrogrAccountPrivate))
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_TYPE_ACCOUNT, FrogrAccountPrivate))
 
 G_DEFINE_TYPE (FrogrAccount, frogr_account, G_TYPE_OBJECT);
 

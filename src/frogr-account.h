@@ -27,12 +27,12 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_ACCOUNT_TYPE            (frogr_account_get_type())
-#define FROGR_IS_ACCOUNT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_ACCOUNT_TYPE))
-#define FROGR_IS_ACCOUNT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE(klass,  FROGR_ACCOUNT_TYPE))
-#define FROGR_ACCOUNT(obj)            (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_ACCOUNT_TYPE, FrogrAccount))
-#define FROGR_ACCOUNT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST(klass,  FROGR_ACCOUNT_TYPE, FrogrAccountClass))
-#define FROGR_ACCOUNT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS(obj,  FROGR_ACCOUNT_TYPE, FrogrAccountClass))
+#define FROGR_TYPE_ACCOUNT            (frogr_account_get_type())
+#define FROGR_IS_ACCOUNT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_ACCOUNT))
+#define FROGR_IS_ACCOUNT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE(klass,  FROGR_TYPE_ACCOUNT))
+#define FROGR_ACCOUNT(obj)            (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_ACCOUNT, FrogrAccount))
+#define FROGR_ACCOUNT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST(klass,  FROGR_TYPE_ACCOUNT, FrogrAccountClass))
+#define FROGR_ACCOUNT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS(obj,  FROGR_TYPE_ACCOUNT, FrogrAccountClass))
 
 typedef struct _FrogrAccount      FrogrAccount;
 typedef struct _FrogrAccountClass FrogrAccountClass;

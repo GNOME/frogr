@@ -28,12 +28,12 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_CONFIG_TYPE            (frogr_config_get_type())
-#define FROGR_IS_CONFIG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_CONFIG_TYPE))
-#define FROGR_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE(klass,  FROGR_CONFIG_TYPE))
-#define FROGR_CONFIG(obj)            (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_CONFIG_TYPE, FrogrConfig))
-#define FROGR_CONFIG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST(klass,  FROGR_CONFIG_TYPE, FrogrConfigClass))
-#define FROGR_CONFIG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS(obj,  FROGR_CONFIG_TYPE, FrogrConfigClass))
+#define FROGR_TYPE_CONFIG            (frogr_config_get_type())
+#define FROGR_IS_CONFIG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_CONFIG))
+#define FROGR_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE(klass,  FROGR_TYPE_CONFIG))
+#define FROGR_CONFIG(obj)            (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_CONFIG, FrogrConfig))
+#define FROGR_CONFIG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST(klass,  FROGR_TYPE_CONFIG, FrogrConfigClass))
+#define FROGR_CONFIG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS(obj,  FROGR_TYPE_CONFIG, FrogrConfigClass))
 
 typedef struct _FrogrConfig        FrogrConfig;
 typedef struct _FrogrConfigClass   FrogrConfigClass;
