@@ -151,7 +151,7 @@ _frogr_config_load_accounts (FrogrConfig *fconfig, const gchar *config_dir)
 
   if (xml == NULL)
     {
-      g_warning ("Could not load '%s/accounts.xml'", config_dir);
+      g_debug ("Could not load '%s/accounts.xml'", config_dir);
       return;
     }
 
