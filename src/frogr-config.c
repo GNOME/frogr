@@ -78,7 +78,6 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
   xmlChar *frob = NULL;
   xmlChar *token = NULL;
   xmlChar *username = NULL;
-  gboolean enabled = TRUE;
   gboolean public = FALSE;
   gboolean family = FALSE;
   gboolean friends = FALSE;
@@ -98,8 +97,6 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
         token = xmlNodeGetContent (node);
       else if (xmlStrcmp (node->name, (const xmlChar*) "username") == 0)
         username = xmlNodeGetContent (node);
-      else if (xmlStrcmp (node->name, (const xmlChar*) "enabled") == 0)
-        enabled = _xml_node_to_boolean (node);
       else if (xmlStrcmp (node->name, (const xmlChar*) "public") == 0)
         public = _xml_node_to_boolean (node);
       else if (xmlStrcmp (node->name, (const xmlChar*) "family") == 0)
@@ -118,7 +115,6 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
                                "frob",     (const gchar*) frob,
                                "token",    (const gchar*) token,
                                "username", (const gchar*) username,
-                               "enabled",  enabled,
                                "public",   public,
                                "family",   family,
                                "friends",  friends,
@@ -284,7 +280,6 @@ _frogr_config_save_accounts (FrogrConfig *fconfig)
       _xml_add_string_child (node, "frob", account, "frob");
       _xml_add_string_child (node, "token", account, "token");
       _xml_add_string_child (node, "username", account, "username");
-      _xml_add_boolean_child (node, "enabled", account, "enabled");
 
       _xml_add_boolean_child (node, "public", account, "public");
       _xml_add_boolean_child (node, "family", account, "family");

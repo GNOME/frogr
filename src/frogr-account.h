@@ -66,21 +66,17 @@ const gchar* frogr_account_get_username (FrogrAccount *faccount);
 void frogr_account_set_username (FrogrAccount *faccount,
                                  const gchar *username);
 
-gboolean frogr_account_get_enabled (FrogrAccount *faccount);
-void frogr_account_set_enabled (FrogrAccount *faccount,
-                                gboolean value);
-
 gboolean frogr_account_get_public (FrogrAccount *faccount);
 void frogr_account_set_public (FrogrAccount *faccount,
-                               gboolean value);
+                               gboolean public);
 
 gboolean frogr_account_get_private_family (FrogrAccount *faccount);
 void frogr_account_set_private_family (FrogrAccount *faccount,
-                                       gboolean value);
+                                       gboolean family);
 
 gboolean frogr_account_get_private_friends (FrogrAccount *faccount);
 void frogr_account_set_private_friends (FrogrAccount *faccount,
-                                        gboolean value);
+                                        gboolean friends);
 
 G_END_DECLS
 

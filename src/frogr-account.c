@@ -38,7 +38,6 @@ struct _FrogrAccountPrivate
   gchar *token;
   gchar *username;
 
-  gboolean enabled;
   gboolean public;
   gboolean family;
   gboolean friends;
@@ -51,7 +50,6 @@ enum {
   PROP_FROB,
   PROP_TOKEN,
   PROP_USERNAME,
-  PROP_ENABLED,
   PROP_PUBLIC,
   PROP_FAMILY,
   PROP_FRIENDS,
@@ -80,9 +78,6 @@ _frogr_account_set_property (GObject      *object,
   case PROP_USERNAME:
     g_free (priv -> username);
     priv -> username = g_value_dup_string (value);
-    break;
-  case PROP_ENABLED:
-    priv -> enabled = g_value_get_boolean (value);
     break;
   case PROP_PUBLIC:
     priv -> public = g_value_get_boolean (value);
@@ -116,9 +111,6 @@ _frogr_account_get_property (GObject    *object,
     break;
   case PROP_USERNAME:
     g_value_set_string (value, priv -> username);
-    break;
-  case PROP_ENABLED:
-    g_value_set_boolean (value, priv -> enabled);
     break;
   case PROP_PUBLIC:
     g_value_set_boolean (value, priv -> public);
@@ -181,13 +173,6 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_USERNAME, pspec);
 
-  pspec = g_param_spec_boolean ("enabled",
-                                "Whether the account is enabled",
-                                "Get/set enabled status",
-                                TRUE,
-                                G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_ENABLED, pspec);
-
   pspec = g_param_spec_boolean ("public",
                                 "Whether photos are public by default",
                                 "Get/set private by default",
@@ -218,7 +203,6 @@ frogr_account_init (FrogrAccount *faccount)
   priv -> frob = NULL;
   priv -> token = NULL;
   priv -> username = NULL;
-  priv -> enabled = TRUE;
   priv -> public = FALSE;
   priv -> family = FALSE;
   priv -> friends = FALSE;
@@ -285,25 +269,6 @@ frogr_account_set_username (FrogrAccount *faccount,
 
   g_free (priv -> username);
   priv -> username = g_strdup (username);
-}
-
-gboolean
-frogr_account_get_enabled (FrogrAccount *faccount)
-{
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  return priv -> enabled;
-}
-
-void
-frogr_account_set_enabled (FrogrAccount *faccount,
-                        gboolean enabled)
-{
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  priv -> enabled = enabled;
 }
 
 gboolean
