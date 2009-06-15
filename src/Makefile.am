@@ -44,4 +44,6 @@ frogr_SOURCES = \
 	frogr-picture.h \
 	frogr-account.c \
 	frogr-account.h \
+	frogr-config.c \
+	frogr-config.h \
 	main.c
