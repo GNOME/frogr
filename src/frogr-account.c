@@ -227,121 +227,138 @@ frogr_account_init (FrogrAccount *faccount)
 const gchar*
 frogr_account_get_frob (FrogrAccount *faccount)
 {
-  gchar *value;
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);
-  g_object_get (faccount, "frob", &value, NULL);
-  return value;
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  return (const gchar *)priv -> frob;
 }
 
 void
 frogr_account_set_frob (FrogrAccount *faccount,
-                        const gchar        *value)
+                        const gchar *frob)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-  g_return_if_fail (value != NULL);
-  g_object_set (faccount, "frob", value, NULL);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+
+  g_free (priv -> frob);
+  priv -> frob = g_strdup (frob);
 }
 
 const gchar*
 frogr_account_get_token (FrogrAccount *faccount)
 {
-  gchar *value;
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);
-  g_object_get (faccount, "token", &value, NULL);
-  return value;
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  return (const gchar *)priv -> token;
 }
 
 void
 frogr_account_set_token (FrogrAccount *faccount,
-                         const gchar        *value)
+                        const gchar *token)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-  g_return_if_fail (value != NULL);
-  g_object_set (faccount, "token", value, NULL);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+
+  g_free (priv -> token);
+  priv -> token = g_strdup (token);
 }
 
 const gchar*
 frogr_account_get_username (FrogrAccount *faccount)
 {
-  gchar *value;
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);
-  g_object_get (faccount, "username", &value, NULL);
-  return value;
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  return (const gchar *)priv -> username;
 }
 
 void
 frogr_account_set_username (FrogrAccount *faccount,
-                            const gchar        *value)
+                        const gchar *username)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-  g_return_if_fail (value != NULL);
-  g_object_set (faccount, "username", value, NULL);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+
+  g_free (priv -> username);
+  priv -> username = g_strdup (username);
 }
 
 gboolean
 frogr_account_get_enabled (FrogrAccount *faccount)
 {
-  gboolean value;
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-  g_object_get (faccount, "enabled", &value, NULL);
-  return value;
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  return priv -> enabled;
 }
 
 void
 frogr_account_set_enabled (FrogrAccount *faccount,
-                           gboolean            value)
+                        gboolean enabled)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-  g_object_set (faccount, "enabled", value, NULL);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  priv -> enabled = enabled;
 }
 
 gboolean
 frogr_account_get_public (FrogrAccount *faccount)
 {
-  gboolean value;
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-  g_object_get (faccount, "public", &value, NULL);
-  return value;
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  return priv -> public;
 }
 
 void
 frogr_account_set_public (FrogrAccount *faccount,
-                          gboolean            value)
+                        gboolean public)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-  g_object_set (faccount, "public", value, NULL);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  priv -> public = public;
 }
 
 gboolean
 frogr_account_get_family (FrogrAccount *faccount)
 {
-  gboolean value;
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-  g_object_get (faccount, "family", &value, NULL);
-  return value;
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  return priv -> family;
 }
 
 void
 frogr_account_set_family (FrogrAccount *faccount,
-                          gboolean            value)
+                        gboolean family)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-  g_object_set (faccount, "family", value, NULL);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  priv -> family = family;
 }
 
 gboolean
 frogr_account_get_friends (FrogrAccount *faccount)
 {
-  gboolean value;
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-  g_object_get (faccount, "friends", &value, NULL);
-  return value;
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  return priv -> friends;
 }
 
 void
 frogr_account_set_friends (FrogrAccount *faccount,
-                           gboolean            value)
+                        gboolean friends)
 {
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-  g_object_set (faccount, "friends", value, NULL);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  priv -> friends = friends;
 }
