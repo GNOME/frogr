@@ -76,7 +76,7 @@ frogr_facade_init (FrogrFacade *ffacade)
 {
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
   FrogrAccount *faccount;
-  gchar *token;
+  const gchar *token;
 
   /* Get config */
   priv -> config = frogr_config_get_instance ();
@@ -94,11 +94,10 @@ frogr_facade_init (FrogrFacade *ffacade)
 
   /* If available, set token */
   faccount = frogr_config_get_default_account (priv -> config);
-  token = (gchar *)frogr_account_get_token (faccount);
+  token = frogr_account_get_token (faccount);
   if (token != NULL)
     {
       flickcurl_set_auth_token (priv->fcurl, token);
-      g_free (token);
     }
 }
 
