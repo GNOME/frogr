@@ -208,7 +208,38 @@ frogr_account_init (FrogrAccount *faccount)
   priv -> friends = FALSE;
 }
 
-const gchar*
+FrogrAccount *
+frogr_account_new (void)
+{
+  GObject *new = g_object_new (FROGR_TYPE_ACCOUNT, NULL);
+  return FROGR_ACCOUNT (new);
+}
+
+FrogrAccount *
+frogr_account_new_with_params (const gchar *frob,
+                               const gchar *token,
+                               const gchar *username,
+                               gboolean public,
+                               gboolean family,
+                               gboolean friends)
+{
+  g_return_val_if_fail (frob, NULL);
+  g_return_val_if_fail (token, NULL);
+  g_return_val_if_fail (username, NULL);
+
+  GObject *new = g_object_new (FROGR_TYPE_ACCOUNT,
+                               "frob",     (const gchar *) frob,
+                               "token",    (const gchar *) token,
+                               "username", (const gchar *) username,
+                               "public",   public,
+                               "family",   family,
+                               "friends",  friends,
+                               NULL);
+
+  return FROGR_ACCOUNT (new);
+}
+
+const gchar *
 frogr_account_get_frob (FrogrAccount *faccount)
 {
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);
@@ -229,7 +260,7 @@ frogr_account_set_frob (FrogrAccount *faccount,
   priv -> frob = g_strdup (frob);
 }
 
-const gchar*
+const gchar *
 frogr_account_get_token (FrogrAccount *faccount)
 {
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);
@@ -250,7 +281,7 @@ frogr_account_set_token (FrogrAccount *faccount,
   priv -> token = g_strdup (token);
 }
 
-const gchar*
+const gchar *
 frogr_account_get_username (FrogrAccount *faccount)
 {
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);

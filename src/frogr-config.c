@@ -25,7 +25,6 @@
 #include <string.h>
 #include <errno.h>
 
-
 #define FROGR_CONFIG_GET_PRIVATE(object) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_TYPE_CONFIG, FrogrConfigPrivate))
 
@@ -72,9 +71,8 @@ _xml_node_to_boolean (const xmlNodePtr node)
 static FrogrAccount*
 _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
 {
+  FrogrAccount *faccount = NULL;
   xmlNodePtr node;
-  GObject *faccount = NULL;
-
   xmlChar *frob = NULL;
   xmlChar *token = NULL;
   xmlChar *username = NULL;
@@ -111,14 +109,8 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
    */
   if (frob != NULL && token != NULL && username != NULL)
     {
-      faccount = g_object_new (FROGR_TYPE_ACCOUNT,
-                               "frob",     (const gchar*) frob,
-                               "token",    (const gchar*) token,
-                               "username", (const gchar*) username,
-                               "public",   public,
-                               "family",   family,
-                               "friends",  friends,
-                               NULL);
+      faccount = frogr_account_new_with_params (frob, token, username,
+                                                public, family, friends);
     }
 
   if (frob != NULL) xmlFree (frob);
@@ -418,7 +410,9 @@ frogr_config_get_account (FrogrConfig *fconfig,
 
   if (priv -> accounts == NULL)
     {
-      frogr_config_add_account (fconfig, g_object_new (FROGR_TYPE_ACCOUNT, NULL));
+      FrogrAccount *faccount = frogr_account_new ();
+      frogr_config_add_account (fconfig, faccount);
+      g_object_unref (faccount);
     }
 
   if (username == NULL)
