@@ -40,6 +40,7 @@ struct _FrogrConfigPrivate
   GList *accounts;
 };
 
+static FrogrConfig *_instance = NULL;
 
 static gboolean
 _xml_node_to_boolean (const xmlNodePtr node)
@@ -329,21 +330,24 @@ _frogr_config_finalize (GObject *object)
 }
 
 static GObject*
-_frogr_config_constructor (GType                  type,
-                           guint                  n_params,
-                           GObjectConstructParam *params)
+_frogr_config_constructor (GType type,
+                           guint n_construct_properties,
+                           GObjectConstructParam *construct_properties)
 {
-  static GObject *instance = NULL;
+  GObject *object;
 
-  if (instance == NULL)
+  if (!_instance)
     {
-      GObjectClass *klass = g_type_class_peek (FROGR_CONFIG_TYPE);
-      GObjectClass *parent_class = g_type_class_peek_parent (klass);
-      instance = G_OBJECT_CLASS (parent_class) -> constructor (type,
-                                                               n_params,
-                                                               params);
+      object =
+        G_OBJECT_CLASS (frogr_config_parent_class) -> constructor (type,
+                                                                   n_construct_properties,
+                                                                   construct_properties);
+      _instance = FROGR_CONFIG (object);
     }
-  return g_object_ref (instance);
+  else
+    object = G_OBJECT (g_object_ref (G_OBJECT (_instance)));
+
+  return object;
 }
 
 static void
@@ -381,11 +385,7 @@ frogr_config_init (FrogrConfig *fconfig)
 FrogrConfig*
 frogr_config_get_instance (void)
 {
-  static GObject *conf = NULL;
-
-  if (conf == NULL) conf = g_object_new (FROGR_CONFIG_TYPE, NULL);
-
-  return FROGR_CONFIG (g_object_ref (conf));
+  return FROGR_CONFIG (g_object_new (FROGR_CONFIG_TYPE, NULL));
 }
 
 FrogrAccount*

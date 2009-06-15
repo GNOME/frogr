@@ -46,7 +46,7 @@ struct _FrogrControllerPrivate
   gboolean app_running;
 };
 
-static FrogrController *fcontroller_instance = NULL;
+static FrogrController *_instance = NULL;
 
 
 /* Private API */
@@ -58,16 +58,16 @@ _frogr_controller_constructor (GType type,
 {
   GObject *object;
 
-  if (!fcontroller_instance)
+  if (!_instance)
     {
       object =
         G_OBJECT_CLASS (frogr_controller_parent_class) -> constructor (type,
                                                                        n_construct_properties,
                                                                        construct_properties);
-      fcontroller_instance = FROGR_CONTROLLER (object);
+      _instance = FROGR_CONTROLLER (object);
     }
   else
-    object = G_OBJECT (g_object_ref (G_OBJECT (fcontroller_instance)));
+    object = G_OBJECT (g_object_ref (G_OBJECT (_instance)));
 
   return object;
 }
