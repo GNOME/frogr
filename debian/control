@@ -1,0 +1,14 @@
+Source: frogr
+Section: graphics
+Priority: optional
+Maintainer: Alberto Garcia <agarcia@igalia.com>
+Build-Depends: cdbs, debhelper (>= 7), libflickcurl-dev, libcurl4-gnutls-dev, libgnome2-dev, libgtk2.0-dev, libxml2-dev
+Standards-Version: 3.7.3
+Homepage: http://code.google.com/p/frogr/
+
+Package: frogr
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Flickr manager for GNOME
+ Frogr intends to be a complete GNOME application to remotely manage a
+ flickr account from the desktop.
