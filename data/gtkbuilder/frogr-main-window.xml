@@ -1,168 +1,157 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Jun  7 16:12:45 2009 -->
-<glade-interface>
-  <widget class="GtkWindow" id="main_window">
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkWindow" id="main_window">
     <property name="title" translatable="yes">frogr</property>
     <child>
-      <widget class="GtkVBox" id="main_window_vbox">
+      <object class="GtkVBox" id="main_window_vbox">
         <property name="visible">True</property>
         <property name="spacing">6</property>
         <child>
-          <widget class="GtkMenuBar" id="menubar1">
+          <object class="GtkMenuBar" id="menubar1">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkMenuItem" id="menuitem1">
+              <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_File</property>
                 <property name="use_underline">True</property>
-                <child>
-                  <widget class="GtkMenu" id="menu1">
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="quit_menu_item">
+                      <object class="GtkImageMenuItem" id="quit_menu_item">
+                        <property name="label">_Quit</property>
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">_Quit</property>
                         <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
                         <signal name="activate" handler="_on_quit_menu_item_activate"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="menu-item-image1">
-                            <property name="stock">gtk-quit</property>
-                          </widget>
-                        </child>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="menuitem4">
+              <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
-                <child>
-                  <widget class="GtkMenu" id="menu3">
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu3">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="about_menu_item">
+                      <object class="GtkImageMenuItem" id="about_menu_item">
+                        <property name="label">_About</property>
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">_About</property>
                         <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
                         <signal name="activate" handler="_on_about_menu_item_activate"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="menu-item-image2">
-                            <property name="stock">gtk-about</property>
-                          </widget>
-                        </child>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkScrolledWindow" id="scrolled_window">
+          <object class="GtkScrolledWindow" id="scrolled_window">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <property name="shadow_type">etched-in</property>
             <child>
-              <widget class="GtkIconView" id="icon_view">
+              <object class="GtkIconView" id="icon_view">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="item_activated" handler="_on_icon_view_item_activated"/>
-              </widget>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox1">
+          <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkButton" id="add_button">
+              <object class="GtkButton" id="add_button">
+                <property name="label" translatable="yes">gtk-add</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-add</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
                 <signal name="clicked" handler="_on_add_button_clicked"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="padding">6</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="remove_button">
+              <object class="GtkButton" id="remove_button">
+                <property name="label" translatable="yes">gtk-remove</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-remove</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
                 <signal name="clicked" handler="_on_remove_button_clicked"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="position">3</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkProgressBar" id="progress_bar">
+              <object class="GtkProgressBar" id="progress_bar">
                 <property name="visible">True</property>
-                <property name="text" translatable="yes"></property>
-              </widget>
+              </object>
               <packing>
                 <property name="padding">6</property>
                 <property name="position">4</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="upload_button">
+              <object class="GtkButton" id="upload_button">
+                <property name="label" translatable="yes">Upload</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Upload</property>
-                <property name="response_id">0</property>
                 <signal name="clicked" handler="_on_upload_button_clicked"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="padding">6</property>
-                <property name="pack_type">GTK_PACK_END</property>
+                <property name="pack_type">end</property>
                 <property name="position">2</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="auth_button">
+              <object class="GtkButton" id="auth_button">
+                <property name="label" translatable="yes">Authorize</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Authorize</property>
-                <property name="response_id">0</property>
                 <signal name="clicked" handler="_on_auth_button_clicked"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="padding">6</property>
-                <property name="pack_type">GTK_PACK_END</property>
+                <property name="pack_type">end</property>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
@@ -170,7 +159,7 @@
             <property name="position">3</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>

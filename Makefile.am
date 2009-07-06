@@ -53,11 +53,3 @@ iconscalable_DATA = $(srcdir)/data/icons/hicolor/scalable/apps/*
 gtkbuilderdir = $(datadir)/gtkbuilder
 gtkbuilder_DATA = $(srcdir)/data/gtkbuilder/frogr-main-window.xml \
 	$(srcdir)/data/gtkbuilder/frogr-details-dialog.xml
-
-data/gtkbuilder/frogr-main-window.xml: $(srcdir)/data/gtkbuilder/frogr-main-window.glade
-	gtk-builder-convert $(srcdir)/data/gtkbuilder/frogr-main-window.glade \
-	$(srcdir)/data/gtkbuilder/frogr-main-window.xml
-
-data/gtkbuilder/frogr-details-dialog.xml: $(srcdir)/data/gtkbuilder/frogr-details-dialog.glade
-	gtk-builder-convert $(srcdir)/data/gtkbuilder/frogr-details-dialog.glade \
-	$(srcdir)/data/gtkbuilder/frogr-details-dialog.xml
