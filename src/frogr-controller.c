@@ -217,8 +217,7 @@ frogr_controller_open_authorization_url (FrogrController *fcontroller)
   if (auth_url)
     {
       /* Open url in the default application */
-      /* FIXME: Use gtk_show_uri with gtk 2.14 or newer */
-      gnome_url_show (auth_url);
+      gtk_show_uri (NULL, auth_url, GDK_CURRENT_TIME, NULL);
       g_free (auth_url);
     }
 }
@@ -300,8 +299,7 @@ frogr_controller_notify_pictures_uploaded (FrogrController *fcontroller,
   g_debug ("Opening edition url: %s\n", edition_url);
 
   /* Redirect to URL for setting more properties about the pictures */
-  /* FIXME: Use gtk_show_uri with gtk 2.14 or newer */
-  gnome_url_show (edition_url);
+  gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
 
   /* Free memory */
   g_free (edition_url);

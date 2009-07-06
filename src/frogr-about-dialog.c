@@ -64,10 +64,7 @@ _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
                               gpointer data)
 {
   gchar *uri = g_strconcat (data, link, NULL);
-
-  /* FIXME: Use gtk_show_uri with gtk 2.14 or newer */
-  gnome_url_show (uri);
-
+  gtk_show_uri (NULL, uri, GDK_CURRENT_TIME, NULL);
   g_free (uri);
 }
 
