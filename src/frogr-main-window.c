@@ -57,11 +57,13 @@ G_DEFINE_TYPE (FrogrMainWindow, frogr_main_window, GTK_TYPE_WINDOW);
 typedef struct _FrogrMainWindowPrivate {
   FrogrController *controller;
   GtkWidget *icon_view;
+  GtkWidget *status_bar;
   GtkWidget *progress_bar;
   GtkWidget *upload_button;
   GtkWidget *auth_button;
   GtkTreeModel *model;
   GSList *fpictures_list;
+  guint sb_context_id;
 } FrogrMainWindowPrivate;
 
 
@@ -130,6 +132,7 @@ _update_ui (FrogrMainWindow *fmainwin)
   state = frogr_controller_get_state (priv -> controller);
   if (state ==  FROGR_CONTROLLER_UPLOADING)
     {
+      gtk_widget_show (priv -> progress_bar);
       gtk_widget_set_sensitive (priv -> auth_button, FALSE);
       gtk_widget_set_sensitive (priv -> upload_button, FALSE);
     }
@@ -141,7 +144,7 @@ _update_ui (FrogrMainWindow *fmainwin)
       gtk_widget_set_sensitive (priv -> auth_button, !authorized);
       gtk_widget_set_sensitive (priv -> upload_button,
                                 authorized && priv -> fpictures_list);
-
+      gtk_widget_hide (priv -> progress_bar);
     }
 }
 
@@ -348,6 +351,7 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   GtkWidget *auth_button;
   GtkWidget *upload_button;
   GtkWidget *icon_view;
+  GtkWidget *status_bar;
   GtkWidget *progress_bar;
   gboolean authorized;
   GList *icons;
@@ -365,14 +369,18 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
   priv -> icon_view = icon_view;
 
-  progress_bar = GTK_WIDGET (gtk_builder_get_object (builder, "progress_bar"));
-  priv -> progress_bar = progress_bar;
+  status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
+  priv -> status_bar = status_bar;
 
   upload_button = GTK_WIDGET (gtk_builder_get_object (builder, "upload_button"));
   priv -> upload_button = upload_button;
 
   auth_button = GTK_WIDGET (gtk_builder_get_object (builder, "auth_button"));
   priv -> auth_button = auth_button;
+
+  progress_bar = gtk_progress_bar_new ();
+  gtk_box_pack_start (GTK_BOX (status_bar), progress_bar, FALSE, FALSE, 6);
+  priv -> progress_bar = progress_bar;
 
   /* Initialize model */
   priv -> model = GTK_TREE_MODEL (gtk_list_store_new (3,
@@ -409,6 +417,11 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
                                MINIMUM_WINDOW_WIDTH,
                                MINIMUM_WINDOW_HEIGHT);
 
+  /* Init status bar */
+  priv -> sb_context_id =
+    gtk_statusbar_get_context_id (GTK_STATUSBAR (priv -> status_bar),
+                                  "Uploading pictures");
+
   /* Connect signals */
   g_signal_connect (G_OBJECT (fmainwin), "destroy",
                     G_CALLBACK (gtk_main_quit),
@@ -421,8 +434,8 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   gtk_builder_connect_signals (builder, fmainwin);
 
   /* Show the UI */
-  _update_ui (fmainwin);
   gtk_widget_show_all (GTK_WIDGET(fmainwin));
+  _update_ui (fmainwin);
 
   g_object_unref (G_OBJECT (builder));
 }
@@ -465,6 +478,12 @@ frogr_main_window_notify_state_changed (FrogrMainWindow *fmainwin)
   state = frogr_controller_get_state (priv -> controller);
   if (state ==  FROGR_CONTROLLER_UPLOADING)
     {
+      /* Update status bar message */
+      gtk_statusbar_push (GTK_STATUSBAR (priv -> status_bar),
+                          priv -> sb_context_id,
+                          "Uploading pictures...");
+
+      /* Start pulsing activity in the progress bar */
       g_timeout_add (PULSE_INTERVAL,
                      (GSourceFunc)_pulse_activity_progress_bar,
                      fmainwin);
@@ -473,6 +492,8 @@ frogr_main_window_notify_state_changed (FrogrMainWindow *fmainwin)
     {
       /* Return progress bar to normal mode if not uploading anymore */
       g_object_set (priv -> progress_bar, "activity-mode", FALSE, NULL);
+      gtk_statusbar_pop (GTK_STATUSBAR (priv -> status_bar),
+                         priv -> sb_context_id);
     }
 
   /* Update UI */
