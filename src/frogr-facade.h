@@ -25,6 +25,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include "frogr-picture.h"
 
 G_BEGIN_DECLS
 
@@ -58,9 +59,10 @@ FrogrFacade *frogr_facade_new (void);
 gchar *frogr_facade_get_authorization_url (FrogrFacade *ffacade);
 gboolean frogr_facade_complete_authorization (FrogrFacade *ffacade);
 gboolean frogr_facade_is_authorized (FrogrFacade *ffacade);
-
-void frogr_facade_upload_pictures (FrogrFacade *gffacade,
-                                   GSList *fpictures);
+void frogr_facade_upload_picture (FrogrFacade *ffacade,
+                                  FrogrPicture *fpicture,
+                                  GFunc callback,
+                                  gpointer data);
 
 G_END_DECLS
 
