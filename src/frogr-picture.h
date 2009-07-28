@@ -58,6 +58,10 @@ FrogrPicture *frogr_picture_new (const gchar *filepath,
 
 /* Data managing methods */
 
+const gchar *frogr_picture_get_id (FrogrPicture *fpicture);
+void frogr_picture_set_id (FrogrPicture *fpicture,
+                           const gchar *id);
+
 const gchar *frogr_picture_get_title (FrogrPicture *fpicture);
 void frogr_picture_set_title (FrogrPicture *fpicture,
                               const gchar *title);

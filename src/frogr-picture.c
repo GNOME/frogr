@@ -33,6 +33,7 @@ G_DEFINE_TYPE (FrogrPicture, frogr_picture, G_TYPE_OBJECT);
 typedef struct _FrogrPicturePrivate FrogrPicturePrivate;
 struct _FrogrPicturePrivate
 {
+  gchar *id;
   gchar *filepath;
   gchar *title;
   gchar *description;
@@ -47,6 +48,7 @@ struct _FrogrPicturePrivate
 /* Properties */
 enum  {
   PROP_0,
+  PROP_ID,
   PROP_FILEPATH,
   PROP_TITLE,
   PROP_DESCRIPTION,
@@ -68,6 +70,10 @@ _frogr_picture_set_property (GObject *object,
 
   switch (prop_id)
     {
+    case PROP_ID:
+      g_free (priv -> id);
+      priv -> id = g_value_dup_string (value);
+      break;
     case PROP_FILEPATH:
       g_free (priv -> filepath);
       priv -> filepath = g_value_dup_string (value);
@@ -109,6 +115,9 @@ _frogr_picture_get_property (GObject *object,
 
   switch (prop_id)
     {
+    case PROP_ID:
+      g_value_set_string (value, priv -> id);
+      break;
     case PROP_FILEPATH:
       g_value_set_string (value, priv -> filepath);
       break;
@@ -142,6 +151,7 @@ _frogr_picture_finalize (GObject* object)
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
 
   /* free strings */
+  g_free (priv -> id);
   g_free (priv -> filepath);
   g_free (priv -> title);
   g_free (priv -> description);
@@ -166,6 +176,14 @@ frogr_picture_class_init(FrogrPictureClass *klass)
   obj_class -> finalize = _frogr_picture_finalize;
 
   /* Install properties */
+  g_object_class_install_property (obj_class,
+                                   PROP_ID,
+                                   g_param_spec_string ("id",
+							"id",
+							"Photo ID from flickr",
+							NULL,
+							G_PARAM_READWRITE));
+
   g_object_class_install_property (obj_class,
                                    PROP_FILEPATH,
                                    g_param_spec_string ("filepath",
@@ -231,6 +249,7 @@ frogr_picture_init (FrogrPicture *fpicture)
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (fpicture);
 
   /* Default values */
+  priv -> id = NULL;
   priv -> filepath = NULL;
   priv -> title = NULL;
   priv -> description = NULL;
@@ -263,6 +282,30 @@ frogr_picture_new (const gchar *filepath,
 
 
 /* Data Managing functions */
+
+const gchar *
+frogr_picture_get_id (FrogrPicture *fpicture)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(fpicture), NULL);
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (fpicture);
+
+  return (const gchar *)priv -> id;
+}
+
+void
+frogr_picture_set_id (FrogrPicture *fpicture,
+                      const gchar *id)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(fpicture));
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (fpicture);
+
+  g_free (priv -> id);
+  priv -> id = g_strdup (id);
+}
 
 const gchar *
 frogr_picture_get_filepath (FrogrPicture *fpicture)
