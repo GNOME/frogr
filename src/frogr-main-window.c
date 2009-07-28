@@ -263,11 +263,7 @@ _on_upload_button_clicked (GtkButton *widget,
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
 
   /* Upload pictures */
-  if (priv -> fpictures_list != NULL)
-    {
-      frogr_controller_upload_pictures (priv -> controller,
-                                        priv -> fpictures_list);
-    }
+  frogr_controller_upload_pictures (priv -> controller);
 }
 
 void
@@ -465,6 +461,15 @@ _pulse_activity_progress_bar (gpointer data)
   /* Pulse and wait for another pulse */
   gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv -> progress_bar));
   return TRUE;
+}
+
+GSList *
+frogr_main_window_get_pictures_list (FrogrMainWindow *fmainwin)
+{
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW (fmainwin));
+
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  return priv -> fpictures_list;
 }
 
 void
