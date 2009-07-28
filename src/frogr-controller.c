@@ -51,6 +51,85 @@ static FrogrController *_instance = NULL;
 
 /* Private API */
 
+void
+_notify_pictures_uploaded (FrogrController *fcontroller)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
+
+  FrogrControllerPrivate *priv =
+    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+
+  GSList *fpictures;
+  GSList *item;
+  guint index;
+  guint num_photos;
+  gchar **str_array;
+  gchar *ids_str;
+  gchar *edition_url;
+  const gchar *id;
+
+  /* Change state and notify ui */
+  priv -> state = FROGR_CONTROLLER_IDLE;
+  frogr_main_window_notify_state_changed (priv -> mainwin);
+
+  /* Build the photo edition url */
+  fpictures = frogr_main_window_get_pictures_list (priv -> mainwin);
+  num_photos = g_slist_length (fpictures);
+  str_array = g_new (gchar*, num_photos + 1);
+
+  index = 0;
+  for (item = fpictures; item; item = g_slist_next (item))
+    {
+      id = frogr_picture_get_id (FROGR_PICTURE (item -> data));
+      if (id != NULL)
+        str_array[index++] = g_strdup (id);
+    }
+  str_array[ndex] = NULL;
+
+  ids_str = g_strjoinv (",", str_array);
+  edition_url =
+    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
+                     ids_str);
+  g_debug ("Opening edition url: %s\n", edition_url);
+
+  /* Redirect to URL for setting more properties about the pictures */
+  gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
+
+  /* Free memory */
+  g_free (edition_url);
+  g_free (ids_str);
+  g_strfreev (str_array);
+}
+
+static gboolean
+_upload_picture_cb (FrogrController *fcontroller, FrogrPicture *fpicture)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
+  g_return_if_fail(FROGR_IS_PICTURE (fpicture));
+
+  FrogrControllerPrivate *priv =
+    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+
+  GSList *fpictures = frogr_main_window_get_pictures_list (priv -> mainwin);
+  GSList *pos = g_slist_find (fpictures, fpicture);
+
+  /* Find position in list and go for the next one */
+  g_object_unref (fpicture);
+  if (pos && pos -> next)
+    {
+      /* Delegate on facade and notify UI */
+      frogr_facade_upload_picture (priv -> facade,
+                                   FROGR_PICTURE (pos -> next -> data),
+                                   (GFunc)_upload_picture_cb,
+                                   fcontroller);
+    }
+  else
+    {
+      /* No more pictures to upload */
+      _notify_pictures_uploaded (fcontroller);
+    }
+}
+
 static GObject *
 _frogr_controller_constructor (GType type,
                                guint n_construct_properties,
@@ -244,69 +323,39 @@ frogr_controller_is_authorized (FrogrController *fcontroller)
 }
 
 void
-frogr_controller_upload_pictures (FrogrController *fcontroller,
-                                  GSList *gfpictures)
+frogr_controller_upload_pictures (FrogrController *fcontroller)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
 
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
-  /* Delegate on facade and notify UI */
-  frogr_facade_upload_pictures (priv -> facade, gfpictures);
+  GSList *fpictures =
+    frogr_main_window_get_pictures_list (priv -> mainwin);
 
-  /* Change state and notify  ui */
-  priv -> state = FROGR_CONTROLLER_UPLOADING;
-  frogr_main_window_notify_state_changed (priv -> mainwin);
-}
-
-void
-frogr_controller_notify_pictures_uploaded (FrogrController *fcontroller,
-                                           GSList *photos_ids)
-{
-  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
-
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
-
-  GSList *item;
-  guint index;
-  guint num_photos;
-  gchar **str_array;
-  gchar *photos_ids_str;
-  gchar *edition_url;
-
-  /* Change state and notify ui */
-  priv -> state = FROGR_CONTROLLER_IDLE;
-  frogr_main_window_notify_state_changed (priv -> mainwin);
-
-  /* Build the photo edition url */
-  num_photos = g_slist_length (photos_ids);
-  str_array = g_new (gchar*, num_photos + 1);
-
-  index = 0;
-  for (item = photos_ids; item; item = g_slist_next (item))
+  /* Check if the list of pictures is not empty */
+  if (fpictures != NULL)
     {
-      str_array[index] = g_strdup ((gchar *)(item -> data));
-      index++;
+      /* Check authorization */
+      if (!frogr_facade_is_authorized (priv -> facade))
+        {
+          g_debug ("Not authorized yet");
+          return;
+        }
+
+      /* Add references */
+      g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
+
+      /* Change state and notify  ui */
+      priv -> state = FROGR_CONTROLLER_UPLOADING;
+      frogr_main_window_notify_state_changed (priv -> mainwin);
+
+      /* Delegate on facade with the first item */
+      frogr_facade_upload_picture (priv -> facade,
+                                   FROGR_PICTURE (fpictures -> data),
+                                   (GFunc)_upload_picture_cb,
+                                   fcontroller);
     }
-  str_array[index] = NULL;
-
-  photos_ids_str = g_strjoinv (",", str_array);
-  edition_url =
-    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
-                     photos_ids_str);
-  g_debug ("Opening edition url: %s\n", edition_url);
-
-  /* Redirect to URL for setting more properties about the pictures */
-  gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
-
-  /* Free memory */
-  g_free (edition_url);
-  g_free (photos_ids_str);
-  g_strfreev (str_array);
-  g_slist_foreach (photos_ids, (GFunc)g_free, NULL);
-  g_slist_free (photos_ids);
 }
 
 FrogrControllerState

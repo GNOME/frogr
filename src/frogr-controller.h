@@ -70,11 +70,7 @@ void frogr_controller_open_authorization_url (FrogrController *fcontroller);
 gboolean frogr_controller_complete_authorization (FrogrController *fcontroller);
 gboolean frogr_controller_is_authorized (FrogrController *fcontroller);
 
-void frogr_controller_upload_pictures (FrogrController *fcontroller,
-                                       GSList *gfpictures);
-
-void frogr_controller_notify_pictures_uploaded (FrogrController *fcontroller,
-                                                GSList *photos_ids);
+void frogr_controller_upload_pictures (FrogrController *fcontroller);
 
 FrogrControllerState frogr_controller_get_state (FrogrController *fcontroller);
 
