@@ -240,11 +240,11 @@ _upload_picture_thread (upload_picture_st *up_st)
     frogr_picture_set_id (fpicture, ustatus -> photoid);
 
     /* Print and free upload status */
-    g_debug ("\tPhoto upload status:\n");
-    g_debug ("\t\tPhotoID: %s\n", ustatus -> photoid);
-    g_debug ("\t\tSecret: %s\n", ustatus -> secret);
-    g_debug ("\t\tOriginalSecret: %s\n", ustatus -> originalsecret);
-    g_debug ("\t\tTicketID: %s\n", ustatus -> ticketid);
+    g_debug ("\tPhoto upload status:");
+    g_debug ("\t\tPhotoID: %s", ustatus -> photoid);
+    g_debug ("\t\tSecret: %s", ustatus -> secret);
+    g_debug ("\t\tOriginalSecret: %s", ustatus -> originalsecret);
+    g_debug ("\t\tTicketID: %s", ustatus -> ticketid);
 
     /* Free */
     flickcurl_free_upload_status (ustatus);
