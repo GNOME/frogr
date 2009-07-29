@@ -76,42 +76,6 @@ frogr_main_window_model_new (void)
   return FROGR_MAIN_WINDOW_MODEL (new);
 }
 
-guint
-frogr_main_window_model_number_of_pictures (FrogrMainWindowModel *fmainwin_model)
-{
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
-
-  FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
-
-  return priv -> number_of_pictures;
-}
-
-GSList *
-frogr_main_window_model_get_pictures (FrogrMainWindowModel *fmainwin_model)
-{
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
-
-  FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
-
-  return priv -> pictures_list;
-}
-
-void
-frogr_main_window_model_set_pictures (FrogrMainWindowModel *fmainwin_model,
-                                      GSList *fpictures_list)
-{
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
-
-  FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
-
-  g_slist_free (priv -> pictures_list);
-  priv -> pictures_list = g_slist_copy (fpictures_list);
-  priv -> number_of_pictures = g_slist_length (fpictures_list);
-}
-
 void
 frogr_main_window_model_add_picture (FrogrMainWindowModel *fmainwin_model,
                                      FrogrPicture *fpicture)
@@ -140,4 +104,41 @@ frogr_main_window_model_remove_picture (FrogrMainWindowModel *fmainwin_model,
   priv -> number_of_pictures--;
 
   g_object_unref (fpicture);
+}
+
+void
+frogr_main_window_model_remove_all (FrogrMainWindowModel *fmainwin_model)
+{
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
+
+  FrogrMainWindowModelPrivate *priv =
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+
+  g_slist_foreach (priv -> pictures_list, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv -> pictures_list);
+
+  priv -> pictures_list = NULL;
+  priv -> number_of_pictures = 0;
+}
+
+guint
+frogr_main_window_model_number_of_pictures (FrogrMainWindowModel *fmainwin_model)
+{
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
+
+  FrogrMainWindowModelPrivate *priv =
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+
+  return priv -> number_of_pictures;
+}
+
+GSList *
+frogr_main_window_model_get_pictures (FrogrMainWindowModel *fmainwin_model)
+{
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
+
+  FrogrMainWindowModelPrivate *priv =
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+
+  return priv -> pictures_list;
 }
