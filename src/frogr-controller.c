@@ -41,7 +41,6 @@ G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
 typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
 struct _FrogrControllerPrivate
 {
-  FrogrControllerState state;
   FrogrMainWindow *mainwin;
   FrogrFacade *facade;
   gboolean app_running;
@@ -94,9 +93,8 @@ _notify_pictures_uploaded (FrogrController *fcontroller)
   /* Redirect to URL for setting more properties about the pictures */
   gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
 
-  /* Change state and notify ui */
-  priv -> state = FROGR_CONTROLLER_IDLE;
-  frogr_main_window_notify_state_changed (priv -> mainwin);
+  /* Set proper state */
+  frogr_main_window_set_state (priv -> mainwin, FROGR_STATE_IDLE);
 
   /* Free memory */
   g_free (edition_url);
@@ -209,7 +207,6 @@ frogr_controller_init (FrogrController *fcontroller)
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
   /* Default variables */
-  priv -> state = FROGR_CONTROLLER_IDLE;
   priv -> facade = NULL;
   priv -> mainwin = NULL;
   priv -> app_running = FALSE;
@@ -383,9 +380,8 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
           return;
         }
 
-      /* Change state and notify  ui */
-      priv -> state = FROGR_CONTROLLER_UPLOADING;
-      frogr_main_window_notify_state_changed (priv -> mainwin);
+      /* Set proper state */
+      frogr_main_window_set_state (priv -> mainwin, FROGR_STATE_UPLOADING);
 
       /* Update progress */
       status_text = g_strdup_printf ("Uploading '%s'...",
@@ -409,15 +405,4 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
                                    (GFunc)_upload_picture_cb,
                                    fcontroller);
     }
-}
-
-FrogrControllerState
-frogr_controller_get_state (FrogrController *fcontroller)
-{
-  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
-
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
-
-  return priv -> state;
 }

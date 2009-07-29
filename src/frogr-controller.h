@@ -49,11 +49,6 @@ struct _FrogrController
   GObject parent;
 };
 
-typedef enum {
-  FROGR_CONTROLLER_IDLE,
-  FROGR_CONTROLLER_UPLOADING
-} FrogrControllerState;
-
 GType frogr_controller_get_type (void) G_GNUC_CONST;
 
 FrogrController *frogr_controller_get_instance (void);
@@ -71,8 +66,6 @@ gboolean frogr_controller_complete_authorization (FrogrController *fcontroller);
 gboolean frogr_controller_is_authorized (FrogrController *fcontroller);
 
 void frogr_controller_upload_pictures (FrogrController *fcontroller);
-
-FrogrControllerState frogr_controller_get_state (FrogrController *fcontroller);
 
 G_END_DECLS
 

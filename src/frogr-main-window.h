@@ -48,6 +48,11 @@ struct _FrogrMainWindow
   GtkWindow parent;
 };
 
+typedef enum {
+  FROGR_STATE_IDLE,
+  FROGR_STATE_UPLOADING
+} FrogrMainWindowState;
+
 GType frogr_main_window_get_type (void) G_GNUC_CONST;
 
 FrogrMainWindow *frogr_main_window_new (void);
@@ -59,7 +64,8 @@ void frogr_main_window_set_progress (FrogrMainWindow *fmainwin,
                                      const gchar *text);
 FrogrMainWindowModel *frogr_main_window_get_model (FrogrMainWindow *fmainwin);
 
-void frogr_main_window_notify_state_changed (FrogrMainWindow *fmainwin);
+void frogr_main_window_set_state (FrogrMainWindow *fmainwin,
+                                  FrogrMainWindowState state);
 
 G_END_DECLS
 

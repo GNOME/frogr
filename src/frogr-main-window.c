@@ -56,6 +56,7 @@ G_DEFINE_TYPE (FrogrMainWindow, frogr_main_window, GTK_TYPE_WINDOW);
 
 typedef struct _FrogrMainWindowPrivate {
   FrogrMainWindowModel *model;
+  FrogrMainWindowState state;
   FrogrController *controller;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
@@ -127,21 +128,20 @@ static void
 _update_ui (FrogrMainWindow *fmainwin)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
-  FrogrControllerState state;
+  FrogrMainWindowState state;
   GSList *fpictures_list = NULL;
   gboolean authorized;
   guint npics;
 
   /* Set sensitiveness */
-  state = frogr_controller_get_state (priv -> controller);
-  switch (state)
+  switch (priv -> state)
     {
-    case FROGR_CONTROLLER_UPLOADING:
+    case FROGR_STATE_UPLOADING:
       gtk_widget_set_sensitive (priv -> auth_button, FALSE);
       gtk_widget_set_sensitive (priv -> upload_button, FALSE);
       break;
 
-    case FROGR_CONTROLLER_IDLE:
+    case FROGR_STATE_IDLE:
       npics = frogr_main_window_model_number_of_pictures (priv -> model);
       authorized = frogr_controller_is_authorized (priv -> controller);
       gtk_widget_set_sensitive (priv -> auth_button, !authorized);
@@ -360,6 +360,9 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   gboolean authorized;
   GList *icons;
 
+  /* Set initial state */
+  priv -> state = FROGR_STATE_IDLE;
+
   /* Save a reference to the controller */
   priv -> controller = frogr_controller_get_instance ();
 
@@ -506,10 +509,13 @@ frogr_main_window_get_model (FrogrMainWindow *fmainwin)
 }
 
 void
-frogr_main_window_notify_state_changed (FrogrMainWindow *fmainwin)
+frogr_main_window_set_state (FrogrMainWindow *fmainwin,
+                             FrogrMainWindowState state)
 {
   g_return_if_fail(FROGR_IS_MAIN_WINDOW (fmainwin));
 
-  /* Update UI */
+  /* Update state and UI */
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  priv -> state = state;
   _update_ui (fmainwin);
 }
