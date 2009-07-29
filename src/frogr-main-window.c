@@ -465,12 +465,17 @@ frogr_main_window_set_status_text (FrogrMainWindow *fmainwin,
 
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
 
-  /* Pop old message (if present) and push the new one */
+  /* Pop old message if present */
   gtk_statusbar_pop (GTK_STATUSBAR (priv -> status_bar),
                      priv -> sb_context_id);
-  gtk_statusbar_push (GTK_STATUSBAR (priv -> status_bar),
-                      priv -> sb_context_id,
-                      text);
+
+  if (text != NULL)
+    {
+      /* Push new message */
+      gtk_statusbar_push (GTK_STATUSBAR (priv -> status_bar),
+                          priv -> sb_context_id,
+                          text);
+    }
 }
 
 void
