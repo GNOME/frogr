@@ -24,6 +24,7 @@
 #define FROGR_MAIN_WINDOW_H
 
 #include <gtk/gtk.h>
+#include "frogr-main-window-model.h"
 
 G_BEGIN_DECLS
 
@@ -56,7 +57,7 @@ void frogr_main_window_set_status_text (FrogrMainWindow *fmainwin,
 void frogr_main_window_set_progress (FrogrMainWindow *fmainwin,
                                      double fraction,
                                      const gchar *text);
-GSList *frogr_main_window_get_pictures_list (FrogrMainWindow *fmainwin);
+FrogrMainWindowModel *frogr_main_window_get_model (FrogrMainWindow *fmainwin);
 
 void frogr_main_window_notify_state_changed (FrogrMainWindow *fmainwin);
 

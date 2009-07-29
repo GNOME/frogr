@@ -55,14 +55,14 @@ enum {
 G_DEFINE_TYPE (FrogrMainWindow, frogr_main_window, GTK_TYPE_WINDOW);
 
 typedef struct _FrogrMainWindowPrivate {
+  FrogrMainWindowModel *model;
   FrogrController *controller;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
   GtkWidget *progress_bar;
   GtkWidget *upload_button;
   GtkWidget *auth_button;
-  GtkTreeModel *model;
-  GSList *fpictures_list;
+  GtkTreeModel *tree_model;
   guint sb_context_id;
 } FrogrMainWindowPrivate;
 
@@ -105,19 +105,20 @@ _add_picture_to_icon_view (FrogrMainWindow *fmainwin,
                                            new_height,
                                            GDK_INTERP_TILES);
 
-  /* Add to internal list */
+  /* Add to model */
   filename = g_path_get_basename (filepath);
   fpicture = frogr_picture_new (filepath, filename, FALSE);
-  priv -> fpictures_list = g_slist_append (priv -> fpictures_list, fpicture);
+  frogr_main_window_model_add_picture (priv -> model, fpicture);
 
   /* Add to GtkIconView */
-  gtk_list_store_append (GTK_LIST_STORE (priv -> model), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (priv -> model), &iter,
+  gtk_list_store_append (GTK_LIST_STORE (priv -> tree_model), &iter);
+  gtk_list_store_set (GTK_LIST_STORE (priv -> tree_model), &iter,
                       FILEPATH_COL, filepath,
                       PIXBUF_COL, scaled_pixbuf,
                       FPICTURE_COL, fpicture,
                       -1);
   /* Free memory */
+  g_object_unref (fpicture);
   g_object_unref (pixbuf);
   g_free (filename);
 }
@@ -127,7 +128,9 @@ _update_ui (FrogrMainWindow *fmainwin)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
   FrogrControllerState state;
+  GSList *fpictures_list = NULL;
   gboolean authorized;
+  guint npics;
 
   /* Set sensitiveness */
   state = frogr_controller_get_state (priv -> controller);
@@ -139,10 +142,11 @@ _update_ui (FrogrMainWindow *fmainwin)
       break;
 
     case FROGR_CONTROLLER_IDLE:
+      npics = frogr_main_window_model_number_of_pictures (priv -> model);
       authorized = frogr_controller_is_authorized (priv -> controller);
       gtk_widget_set_sensitive (priv -> auth_button, !authorized);
       gtk_widget_set_sensitive (priv -> upload_button,
-                                authorized && priv -> fpictures_list);
+                                authorized && (npics > 0));
 
       /* Hide progress bar, just in case */
       gtk_widget_hide (priv -> progress_bar);
@@ -227,17 +231,17 @@ _on_remove_button_clicked (GtkButton *widget,
 
       /* Get needed information */
       path = (GtkTreePath *)(item -> data);
-      gtk_tree_model_get_iter (priv -> model, &iter, path);
-      gtk_tree_model_get (priv -> model,
+      gtk_tree_model_get_iter (priv -> tree_model, &iter, path);
+      gtk_tree_model_get (priv -> tree_model,
                           &iter,
                           FPICTURE_COL, &fpicture,
                           -1);
 
       /* Remove from the internal list */
-      priv -> fpictures_list = g_slist_remove (priv -> fpictures_list, fpicture);
+      frogr_main_window_model_remove_picture (priv -> model, fpicture);
 
       /* Remove from the GtkIconView */
-      gtk_list_store_remove (GTK_LIST_STORE (priv -> model), &iter);
+      gtk_list_store_remove (GTK_LIST_STORE (priv -> tree_model), &iter);
     }
 
   /* Update UI */
@@ -281,8 +285,8 @@ _on_icon_view_item_activated (GtkIconView *iconview,
   GtkTreeIter iter;
   FrogrPicture *fpicture;
 
-  gtk_tree_model_get_iter (priv -> model, &iter, path);
-  gtk_tree_model_get (priv -> model,
+  gtk_tree_model_get_iter (priv -> tree_model, &iter, path);
+  gtk_tree_model_get (priv -> tree_model,
                       &iter,
                       FPICTURE_COL, &fpicture,
                       -1);
@@ -327,9 +331,8 @@ _frogr_main_window_finalize (GObject *object)
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (object);
 
   /* Free memory */
+  g_object_unref (priv -> model);
   g_object_unref (priv -> controller);
-  g_slist_foreach (priv -> fpictures_list, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv -> fpictures_list);
 
   G_OBJECT_CLASS(frogr_main_window_parent_class) -> finalize (object);
 }
@@ -384,18 +387,18 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   priv -> progress_bar = progress_bar;
 
   /* Initialize model */
-  priv -> model = GTK_TREE_MODEL (gtk_list_store_new (3,
-                                                      G_TYPE_STRING,
-                                                      GDK_TYPE_PIXBUF,
-                                                      G_TYPE_POINTER));
-  gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), priv -> model);
+  priv -> tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
+                                                           G_TYPE_STRING,
+                                                           GDK_TYPE_PIXBUF,
+                                                           G_TYPE_POINTER));
+  gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), priv -> tree_model);
   gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), PIXBUF_COL);
   gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view), GTK_SELECTION_MULTIPLE);
   gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
   gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), ITEM_WIDTH);
 
-  /* Init list of pictures */
-  priv -> fpictures_list = NULL;
+  /* Init model */
+  priv -> model = frogr_main_window_model_new ();
 
   /* Provide a default icon list in several sizes */
   icons = g_list_prepend (NULL,
@@ -489,13 +492,12 @@ frogr_main_window_set_progress (FrogrMainWindow *fmainwin,
     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv -> progress_bar), text);
 }
 
-GSList *
-frogr_main_window_get_pictures_list (FrogrMainWindow *fmainwin)
+FrogrMainWindowModel *
+frogr_main_window_get_model (FrogrMainWindow *fmainwin)
 {
   g_return_if_fail(FROGR_IS_MAIN_WINDOW (fmainwin));
-
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
-  return priv -> fpictures_list;
+  return priv -> model;
 }
 
 void
