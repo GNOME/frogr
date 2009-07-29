@@ -111,21 +111,40 @@ _upload_picture_cb (FrogrController *fcontroller, FrogrPicture *fpicture)
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
   GSList *fpictures = frogr_main_window_get_pictures_list (priv -> mainwin);
-  GSList *pos = g_slist_find (fpictures, fpicture);
+  GSList *item = g_slist_find (fpictures, fpicture);
 
   /* Find position in list and go for the next one */
   g_object_unref (fpicture);
-  if (pos && pos -> next)
+  if (item && item -> next)
     {
+      FrogrPicture *next_fpicture = FROGR_PICTURE (item -> next -> data);
+      gint index = g_slist_index (fpictures, next_fpicture);
+      guint num_pics = g_slist_length (fpictures);
+      gchar *status_text = NULL;
+      gchar *progress_bar_text = NULL;
+
+      /* Update progress */
+      status_text = g_strdup_printf ("Uploading '%s'...",
+                                     frogr_picture_get_title (next_fpicture));
+      progress_bar_text = g_strdup_printf ("%d / %d", (index + 1), num_pics);
+
+      frogr_main_window_set_status_text (priv -> mainwin, status_text);
+      frogr_main_window_set_progress (priv -> mainwin,
+                                      (double) (index + 0.99) / num_pics,
+                                      progress_bar_text);
+
       /* Delegate on facade and notify UI */
       frogr_facade_upload_picture (priv -> facade,
-                                   FROGR_PICTURE (pos -> next -> data),
+                                   next_fpicture,
                                    (GFunc)_upload_picture_cb,
                                    fcontroller);
     }
   else
     {
       /* No more pictures to upload */
+      frogr_main_window_set_status_text (priv -> mainwin,
+                                         "All pictures uploaded!");
+      frogr_main_window_set_progress (priv -> mainwin, 1.0, NULL);
       _notify_pictures_uploaded (fcontroller);
     }
 }
@@ -336,6 +355,11 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
   /* Check if the list of pictures is not empty */
   if (fpictures != NULL)
     {
+      FrogrPicture *fpicture = FROGR_PICTURE (fpictures -> data);
+      guint num_pics = g_slist_length (fpictures);
+      gchar *status_text = NULL;
+      gchar *progress_bar_text = NULL;
+
       /* Check authorization */
       if (!frogr_facade_is_authorized (priv -> facade))
         {
@@ -343,16 +367,26 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
           return;
         }
 
-      /* Add references */
-      g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
-
       /* Change state and notify  ui */
       priv -> state = FROGR_CONTROLLER_UPLOADING;
       frogr_main_window_notify_state_changed (priv -> mainwin);
 
+      /* Update progress */
+      status_text = g_strdup_printf ("Uploading '%s'...",
+                                     frogr_picture_get_title (fpicture));
+      progress_bar_text = g_strdup_printf ("%d / %d", 1, num_pics);
+
+      frogr_main_window_set_status_text (priv -> mainwin, status_text);
+      frogr_main_window_set_progress (priv -> mainwin,
+                                      (double)0.99 / num_pics,
+                                      progress_bar_text);
+
+      /* Add references */
+      g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
+
       /* Delegate on facade with the first item */
       frogr_facade_upload_picture (priv -> facade,
-                                   FROGR_PICTURE (fpictures -> data),
+                                   fpicture,
                                    (GFunc)_upload_picture_cb,
                                    fcontroller);
     }
