@@ -40,6 +40,8 @@ frogr_SOURCES = \
 	frogr-facade.h \
 	frogr-main-window.c \
 	frogr-main-window.h \
+	frogr-main-window-model.c \
+	frogr-main-window-model.h \
 	frogr-picture.c \
 	frogr-picture.h \
 	frogr-account.c \
