@@ -23,15 +23,13 @@
 #include <config.h>
 #include "frogr-main-window.h"
 #include "frogr-controller.h"
+#include "frogr-picture-loader.h"
 #include "frogr-picture.h"
 
 #define MINIMUM_WINDOW_WIDTH 540
 #define MINIMUM_WINDOW_HEIGHT 420
 
 #define ITEM_WIDTH 120
-
-#define THUMBNAIL_MAX_WIDTH 100
-#define THUMBNAIL_MAX_HEIGHT 100
 
 #define PULSE_INTERVAL 125
 
@@ -71,60 +69,6 @@ typedef struct _FrogrMainWindowPrivate {
 /* Private API */
 
 static void
-_add_picture_to_icon_view (FrogrMainWindow *fmainwin,
-                           const gchar *filepath)
-{
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
-  FrogrPicture *fpicture;
-  GdkPixbuf *pixbuf;
-  GdkPixbuf *scaled_pixbuf;
-  GtkTreeIter iter;
-  gint width;
-  gint height;
-  gint new_width;
-  gint new_height;
-  gchar *filename;
-
-  pixbuf = gdk_pixbuf_new_from_file (filepath, NULL);
-  width = gdk_pixbuf_get_width (pixbuf);
-  height = gdk_pixbuf_get_height (pixbuf);
-
-  /* Look for the right side to reduce */
-  if (width > height)
-    {
-      new_width = THUMBNAIL_MAX_WIDTH;
-      new_height = (float)new_width * height / width;
-    }
-  else
-    {
-      new_height = THUMBNAIL_MAX_HEIGHT;
-      new_width = (float)new_height * width / height;
-    }
-
-  scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
-                                           new_width,
-                                           new_height,
-                                           GDK_INTERP_TILES);
-
-  /* Add to model */
-  filename = g_path_get_basename (filepath);
-  fpicture = frogr_picture_new (filepath, filename, FALSE);
-  frogr_main_window_model_add_picture (priv -> model, fpicture);
-
-  /* Add to GtkIconView */
-  gtk_list_store_append (GTK_LIST_STORE (priv -> tree_model), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (priv -> tree_model), &iter,
-                      FILEPATH_COL, filepath,
-                      PIXBUF_COL, scaled_pixbuf,
-                      FPICTURE_COL, fpicture,
-                      -1);
-  /* Free memory */
-  g_object_unref (fpicture);
-  g_object_unref (pixbuf);
-  g_free (filename);
-}
-
-static void
 _update_ui (FrogrMainWindow *fmainwin)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
@@ -159,6 +103,39 @@ _update_ui (FrogrMainWindow *fmainwin)
 
 /* Event handlers */
 
+static void
+_on_picture_loaded (FrogrMainWindow *fmainwin, FrogrPicture *fpicture)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  GdkPixbuf *pixbuf;
+  GtkTreeIter iter;
+  const gchar *filepath;
+
+  /* Add to model */
+  g_object_ref (fpicture);
+  frogr_main_window_model_add_picture (priv -> model, fpicture);
+
+  /* Add to GtkIconView */
+  filepath = frogr_picture_get_filepath (fpicture);
+  pixbuf = frogr_picture_get_pixbuf (fpicture);
+
+  gtk_list_store_append (GTK_LIST_STORE (priv -> tree_model), &iter);
+  gtk_list_store_set (GTK_LIST_STORE (priv -> tree_model), &iter,
+                      FILEPATH_COL, filepath,
+                      PIXBUF_COL, pixbuf,
+                      FPICTURE_COL, fpicture,
+                      -1);
+  /* Free memory */
+  g_object_unref (fpicture);
+}
+
+static void
+_on_pictures_loaded (FrogrMainWindow *fmainwin, GSList *fpictures)
+{
+  /* Update UI */
+  _update_ui (fmainwin);
+}
+
 void
 _on_add_button_clicked (GtkButton *widget,
                         gpointer data)
@@ -192,16 +169,17 @@ _on_add_button_clicked (GtkButton *widget,
 
       /* Add selected pictures to icon view area */
       filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
-      for (item = filepaths; item; item = g_slist_next (item))
+      if (filepaths != NULL)
         {
-          gchar *filepath = (gchar *)(item -> data);
+          FrogrPictureLoader *fpicture_loader;
 
-          g_debug ("Filename %s selected!\n", filepath);
-          _add_picture_to_icon_view (fmainwin, filepath);
+          fpicture_loader = frogr_picture_loader_new ();
+          frogr_picture_loader_load (fpicture_loader,
+                                     filepaths,
+                                     (GFunc)_on_picture_loaded,
+                                     (GFunc)_on_pictures_loaded,
+                                     fmainwin);
         }
-
-      /* Update UI */
-      _update_ui (fmainwin);
 
       /* Free memory */
       g_slist_foreach (filepaths, (GFunc)g_free, NULL);
