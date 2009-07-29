@@ -43,7 +43,8 @@ static void
 _frogr_main_window_model_finalize (GObject* object)
 {
   FrogrMainWindowModelPrivate *priv = FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (object);
-  g_free (priv -> pictures_list);
+  g_slist_foreach (priv -> pictures_list, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv -> pictures_list);
   G_OBJECT_CLASS (frogr_main_window_model_parent_class) -> finalize(object);
 }
 
@@ -58,7 +59,8 @@ frogr_main_window_model_class_init(FrogrMainWindowModelClass *klass)
 static void
 frogr_main_window_model_init (FrogrMainWindowModel *fmainwin_model)
 {
-  FrogrMainWindowModelPrivate *priv = FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+  FrogrMainWindowModelPrivate *priv =
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
 
   /* Init private data */
   priv -> pictures_list = NULL;
