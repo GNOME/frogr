@@ -72,17 +72,13 @@ _update_ui (FrogrDetailsDialog *fdetailsdialog)
 }
 
 static GdkPixbuf *
-_get_scaled_pixbuf (const gchar *filepath)
+_get_scaled_pixbuf (GdkPixbuf *pixbuf)
 {
-  GdkPixbuf *pixbuf = NULL;
   GdkPixbuf *scaled_pixbuf = NULL;
   gint width;
   gint height;
   gint new_width;
   gint new_height;
-
-  /* Build the image */
-  pixbuf = gdk_pixbuf_new_from_file (filepath, NULL);
 
   /* Look for the right side to reduce */
   width = gdk_pixbuf_get_width (pixbuf);
@@ -102,8 +98,6 @@ _get_scaled_pixbuf (const gchar *filepath)
   scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
                                            new_width, new_height,
                                            GDK_INTERP_TILES);
-  /* Free */
-  g_object_unref (pixbuf);
 
   return scaled_pixbuf;
 }
@@ -115,6 +109,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
     FROGR_DETAILS_DIALOG_GET_PRIVATE (fdetailsdialog);
 
   GdkPixbuf *pixbuf;
+  GdkPixbuf *s_pixbuf;
   gchar *filepath = NULL;
   gchar *title = NULL;
   gchar *description = NULL;
@@ -149,10 +144,11 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv -> family_cb),
                                 is_family);
 
-  /* Set resized pixbuf */
-  pixbuf = _get_scaled_pixbuf (filepath);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (priv -> picture_img), pixbuf);
-  g_object_unref (pixbuf);
+  /* Set pixbuf scaled to the right size */
+  pixbuf = frogr_picture_get_pixbuf (priv -> fpicture);
+  s_pixbuf = _get_scaled_pixbuf (pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (priv -> picture_img), s_pixbuf);
+  g_object_unref (s_pixbuf);
 
   /* Update UI */
   _update_ui (fdetailsdialog);
