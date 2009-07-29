@@ -127,24 +127,29 @@ _update_ui (FrogrMainWindow *fmainwin)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
   FrogrControllerState state;
+  gboolean authorized;
 
   /* Set sensitiveness */
   state = frogr_controller_get_state (priv -> controller);
-  if (state ==  FROGR_CONTROLLER_UPLOADING)
+  switch (state)
     {
-      gtk_widget_show (priv -> progress_bar);
+    case FROGR_CONTROLLER_UPLOADING:
       gtk_widget_set_sensitive (priv -> auth_button, FALSE);
       gtk_widget_set_sensitive (priv -> upload_button, FALSE);
-    }
-  else
-    {
-      gboolean authorized;
+      break;
 
+    case FROGR_CONTROLLER_IDLE:
       authorized = frogr_controller_is_authorized (priv -> controller);
       gtk_widget_set_sensitive (priv -> auth_button, !authorized);
       gtk_widget_set_sensitive (priv -> upload_button,
                                 authorized && priv -> fpictures_list);
+
+      /* Hide progress bar, just in case */
       gtk_widget_hide (priv -> progress_bar);
+      break;
+
+    default:
+      g_warning ("Invalid state reached!!");
     }
 }
 
@@ -416,7 +421,7 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   /* Init status bar */
   priv -> sb_context_id =
     gtk_statusbar_get_context_id (GTK_STATUSBAR (priv -> status_bar),
-                                  "Uploading pictures");
+                                  "Status bar messages");
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (fmainwin), "destroy",
@@ -428,12 +433,13 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
                     fmainwin);
 
   gtk_builder_connect_signals (builder, fmainwin);
-
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET(fmainwin));
-  _update_ui (fmainwin);
-
   g_object_unref (G_OBJECT (builder));
+
+  /* Show the UI, but hiding some widgets */
+  gtk_widget_show_all (GTK_WIDGET(fmainwin));
+
+  /* Update UI */
+  _update_ui (fmainwin);
 }
 
 
