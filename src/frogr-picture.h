@@ -25,6 +25,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 G_BEGIN_DECLS
 
@@ -90,6 +91,10 @@ void frogr_picture_set_friend (FrogrPicture *fpicture,
 gboolean frogr_picture_is_family (FrogrPicture *fpicture);
 void frogr_picture_set_family (FrogrPicture *fpicture,
                                gboolean family);
+
+GdkPixbuf *frogr_picture_get_pixbuf (FrogrPicture *fpicture);
+void frogr_picture_set_pixbuf (FrogrPicture *fpicture,
+                               GdkPixbuf *pixbuf);
 
 G_END_DECLS
 

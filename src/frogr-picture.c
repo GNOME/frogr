@@ -43,6 +43,8 @@ struct _FrogrPicturePrivate
   gboolean is_public;
   gboolean is_friend;
   gboolean is_family;
+
+  GdkPixbuf *pixbuf;
 };
 
 /* Properties */
@@ -55,7 +57,8 @@ enum  {
   PROP_TAGS_STRING,
   PROP_IS_PUBLIC,
   PROP_IS_FAMILY,
-  PROP_IS_FRIEND
+  PROP_IS_FRIEND,
+  PROP_PIXBUF
 };
 
 /* Private API */
@@ -99,6 +102,9 @@ _frogr_picture_set_property (GObject *object,
     case PROP_IS_FRIEND:
       priv -> is_friend = g_value_get_boolean (value);
       break;
+    case PROP_PIXBUF:
+      priv -> pixbuf = GDK_PIXBUF (g_value_get_object (value));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -139,6 +145,9 @@ _frogr_picture_get_property (GObject *object,
     case PROP_IS_FRIEND:
       g_value_set_boolean (value, priv -> is_friend);
       break;
+    case PROP_PIXBUF:
+      g_value_set_object (value, priv -> pixbuf);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -161,6 +170,10 @@ _frogr_picture_finalize (GObject* object)
   g_slist_foreach (priv -> tags_list, (GFunc) g_free, NULL);
   g_slist_free (priv -> tags_list);
 
+  /* Free pixbuf, if present */
+  if (priv -> pixbuf)
+    g_object_unref (priv -> pixbuf);
+
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class) -> finalize(object);
 }
@@ -179,40 +192,40 @@ frogr_picture_class_init(FrogrPictureClass *klass)
   g_object_class_install_property (obj_class,
                                    PROP_ID,
                                    g_param_spec_string ("id",
-							"id",
-							"Photo ID from flickr",
-							NULL,
-							G_PARAM_READWRITE));
+                                                        "id",
+                                                        "Photo ID from flickr",
+                                                        NULL,
+                                                        G_PARAM_READWRITE));
 
   g_object_class_install_property (obj_class,
                                    PROP_FILEPATH,
                                    g_param_spec_string ("filepath",
-							"filepath",
-							"Full filepath for the picture",
-							NULL,
-							G_PARAM_READWRITE));
+                                                        "filepath",
+                                                        "Full filepath for the picture",
+                                                        NULL,
+                                                        G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_TITLE,
                                    g_param_spec_string ("title",
-							"title",
-							"Picture's title",
-							NULL,
-							G_PARAM_READWRITE));
+                                                        "title",
+                                                        "Picture's title",
+                                                        NULL,
+                                                        G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_DESCRIPTION,
                                    g_param_spec_string ("description",
-							"description",
-							"Picture's description",
-							NULL,
-							G_PARAM_READWRITE));
+                                                        "description",
+                                                        "Picture's description",
+                                                        NULL,
+                                                        G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_TAGS_STRING,
                                    g_param_spec_string ("tags-string",
-							"tags-string",
-							"List of tags separated "
+                                                        "tags-string",
+                                                        "List of tags separated "
                                                         "with blanks between them",
-							NULL,
-							G_PARAM_READWRITE));
+                                                        NULL,
+                                                        G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_IS_PUBLIC,
                                    g_param_spec_boolean ("is-public",
@@ -239,6 +252,14 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                          "friends or not",
                                                          FALSE,
                                                          G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_PIXBUF,
+                                   g_param_spec_object ("pixbuf",
+                                                        "pixbuf",
+                                                        "Pre-loaded GdkPixbuf "
+                                                        "for this picture",
+                                                        GDK_TYPE_PIXBUF,
+                                                        G_PARAM_READWRITE));
 
  g_type_class_add_private (obj_class, sizeof (FrogrPicturePrivate));
 }
@@ -259,6 +280,8 @@ frogr_picture_init (FrogrPicture *fpicture)
   priv -> is_public = FALSE;
   priv -> is_friend = FALSE;
   priv -> is_family = FALSE;
+
+  priv -> pixbuf = NULL;
 }
 
 
@@ -519,3 +542,37 @@ frogr_picture_set_family (FrogrPicture *fpicture,
   priv -> is_family = family;
 }
 
+GdkPixbuf *
+frogr_picture_get_pixbuf (FrogrPicture *fpicture)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(fpicture), NULL);
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (fpicture);
+
+  return priv -> pixbuf;
+}
+
+void
+frogr_picture_set_pixbuf (FrogrPicture *fpicture,
+                          GdkPixbuf *pixbuf)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(fpicture));
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (fpicture);
+
+  /* Unref previous pixbuf, if present */
+  if (priv -> pixbuf)
+    {
+      g_object_unref (priv -> pixbuf);
+      priv -> pixbuf = NULL;
+    }
+
+  /* Add new pixbuf, if not NULL */
+  if (pixbuf)
+    {
+      priv -> pixbuf = pixbuf;
+      g_object_ref (priv -> pixbuf);
+    }
+}
