@@ -454,19 +454,39 @@ frogr_main_window_new (void)
   return FROGR_MAIN_WINDOW (new);
 }
 
-static gboolean
-_pulse_activity_progress_bar (gpointer data)
+void
+frogr_main_window_set_status_text (FrogrMainWindow *fmainwin,
+                                   const gchar *text)
 {
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-  FrogrControllerState state;
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW (fmainwin));
 
-  state = frogr_controller_get_state (priv -> controller);
-  if (state != FROGR_CONTROLLER_UPLOADING)
-    return FALSE;
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
 
-  /* Pulse and wait for another pulse */
-  gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv -> progress_bar));
-  return TRUE;
+  /* Pop old message (if present) and push the new one */
+  gtk_statusbar_pop (GTK_STATUSBAR (priv -> status_bar),
+                     priv -> sb_context_id);
+  gtk_statusbar_push (GTK_STATUSBAR (priv -> status_bar),
+                      priv -> sb_context_id,
+                      text);
+}
+
+void
+frogr_main_window_set_progress (FrogrMainWindow *fmainwin,
+                                double fraction,
+                                const gchar *text)
+{
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW (fmainwin));
+
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+
+  /* Show the widget and set fraction */
+  gtk_widget_show (GTK_WIDGET (priv -> progress_bar));
+  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv -> progress_bar),
+                                 fraction);
+
+  /* Set superimposed text, if specified */
+  if (text != NULL)
+    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv -> progress_bar), text);
 }
 
 GSList *
@@ -482,30 +502,6 @@ void
 frogr_main_window_notify_state_changed (FrogrMainWindow *fmainwin)
 {
   g_return_if_fail(FROGR_IS_MAIN_WINDOW (fmainwin));
-
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
-  FrogrControllerState state;
-
-  state = frogr_controller_get_state (priv -> controller);
-  if (state ==  FROGR_CONTROLLER_UPLOADING)
-    {
-      /* Update status bar message */
-      gtk_statusbar_push (GTK_STATUSBAR (priv -> status_bar),
-                          priv -> sb_context_id,
-                          "Uploading pictures...");
-
-      /* Start pulsing activity in the progress bar */
-      g_timeout_add (PULSE_INTERVAL,
-                     (GSourceFunc)_pulse_activity_progress_bar,
-                     fmainwin);
-    }
-  else
-    {
-      /* Return progress bar to normal mode if not uploading anymore */
-      g_object_set (priv -> progress_bar, "activity-mode", FALSE, NULL);
-      gtk_statusbar_pop (GTK_STATUSBAR (priv -> status_bar),
-                         priv -> sb_context_id);
-    }
 
   /* Update UI */
   _update_ui (fmainwin);

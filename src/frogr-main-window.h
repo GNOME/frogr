@@ -51,6 +51,11 @@ GType frogr_main_window_get_type (void) G_GNUC_CONST;
 
 FrogrMainWindow *frogr_main_window_new (void);
 
+void frogr_main_window_set_status_text (FrogrMainWindow *fmainwin,
+                                         const gchar *text);
+void frogr_main_window_set_progress (FrogrMainWindow *fmainwin,
+                                     double fraction,
+                                     const gchar *text);
 GSList *frogr_main_window_get_pictures_list (FrogrMainWindow *fmainwin);
 
 void frogr_main_window_notify_state_changed (FrogrMainWindow *fmainwin);
