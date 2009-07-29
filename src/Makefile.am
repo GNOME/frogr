@@ -38,6 +38,8 @@ frogr_SOURCES = \
 	frogr-details-dialog.h \
 	frogr-facade.c \
 	frogr-facade.h \
+	frogr-picture-loader.c \
+	frogr-picture-loader.h \
 	frogr-main-window.c \
 	frogr-main-window.h \
 	frogr-main-window-model.c \
