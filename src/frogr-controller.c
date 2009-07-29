@@ -132,6 +132,9 @@ _upload_picture_cb (FrogrController *fcontroller, FrogrPicture *fpicture)
       frogr_main_window_set_progress (priv -> mainwin,
                                       (double) (index + 0.99) / num_pics,
                                       progress_bar_text);
+      /* Free strings */
+      g_free (status_text);
+      g_free (progress_bar_text);
 
       /* Delegate on facade and notify UI */
       frogr_facade_upload_picture (priv -> facade,
@@ -380,6 +383,9 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
       frogr_main_window_set_progress (priv -> mainwin,
                                       (double)0.99 / num_pics,
                                       progress_bar_text);
+      /* Free strings */
+      g_free (status_text);
+      g_free (progress_bar_text);
 
       /* Add references */
       g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
