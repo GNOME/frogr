@@ -130,7 +130,7 @@ _upload_picture_cb (FrogrController *fcontroller, FrogrPicture *fpicture)
 
       frogr_main_window_set_status_text (priv -> mainwin, status_text);
       frogr_main_window_set_progress (priv -> mainwin,
-                                      (double) (index + 0.99) / num_pics,
+                                      (double) (index + 1) / num_pics,
                                       progress_bar_text);
       /* Free strings */
       g_free (status_text);
@@ -381,7 +381,7 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
 
       frogr_main_window_set_status_text (priv -> mainwin, status_text);
       frogr_main_window_set_progress (priv -> mainwin,
-                                      (double)0.99 / num_pics,
+                                      (double)1.0 / num_pics,
                                       progress_bar_text);
       /* Free strings */
       g_free (status_text);
