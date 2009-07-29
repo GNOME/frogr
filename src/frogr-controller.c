@@ -68,10 +68,6 @@ _notify_pictures_uploaded (FrogrController *fcontroller)
   gchar *edition_url;
   const gchar *id;
 
-  /* Change state and notify ui */
-  priv -> state = FROGR_CONTROLLER_IDLE;
-  frogr_main_window_notify_state_changed (priv -> mainwin);
-
   /* Build the photo edition url */
   fpictures = frogr_main_window_get_pictures_list (priv -> mainwin);
   num_photos = g_slist_length (fpictures);
@@ -84,7 +80,7 @@ _notify_pictures_uploaded (FrogrController *fcontroller)
       if (id != NULL)
         str_array[index++] = g_strdup (id);
     }
-  str_array[ndex] = NULL;
+  str_array[index] = NULL;
 
   ids_str = g_strjoinv (",", str_array);
   edition_url =
@@ -94,6 +90,10 @@ _notify_pictures_uploaded (FrogrController *fcontroller)
 
   /* Redirect to URL for setting more properties about the pictures */
   gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
+
+  /* Change state and notify ui */
+  priv -> state = FROGR_CONTROLLER_IDLE;
+  frogr_main_window_notify_state_changed (priv -> mainwin);
 
   /* Free memory */
   g_free (edition_url);
