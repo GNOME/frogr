@@ -25,6 +25,7 @@
 #include "frogr-controller.h"
 #include "frogr-facade.h"
 #include "frogr-main-window.h"
+#include "frogr-main-window-model.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-about-dialog.h"
 #include "frogr-details-dialog.h"
@@ -59,6 +60,7 @@ _notify_pictures_uploaded (FrogrController *fcontroller)
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
+  FrogrMainWindowModel *mainwin_model;
   GSList *fpictures;
   GSList *item;
   guint index;
@@ -69,7 +71,8 @@ _notify_pictures_uploaded (FrogrController *fcontroller)
   const gchar *id;
 
   /* Build the photo edition url */
-  fpictures = frogr_main_window_get_pictures_list (priv -> mainwin);
+  mainwin_model = frogr_main_window_get_model (priv -> mainwin);
+  fpictures = frogr_main_window_model_get_pictures (mainwin_model);
   num_photos = g_slist_length (fpictures);
   str_array = g_new (gchar*, num_photos + 1);
 
@@ -110,27 +113,33 @@ _upload_picture_cb (FrogrController *fcontroller, FrogrPicture *fpicture)
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
-  GSList *fpictures = frogr_main_window_get_pictures_list (priv -> mainwin);
-  GSList *item = g_slist_find (fpictures, fpicture);
+  FrogrMainWindowModel *mainwin_model;
+  GSList *fpictures;
+  GSList *item;
+
+  /* Get model and list of pictures */
+  mainwin_model = frogr_main_window_get_model (priv -> mainwin);
+  fpictures = frogr_main_window_model_get_pictures (mainwin_model);
+  item = g_slist_find (fpictures, fpicture);
 
   /* Find position in list and go for the next one */
   g_object_unref (fpicture);
   if (item && item -> next)
     {
       FrogrPicture *next_fpicture = FROGR_PICTURE (item -> next -> data);
+      guint npics = frogr_main_window_model_number_of_pictures (mainwin_model);
       gint index = g_slist_index (fpictures, next_fpicture);
-      guint num_pics = g_slist_length (fpictures);
       gchar *status_text = NULL;
       gchar *progress_bar_text = NULL;
 
       /* Update progress */
       status_text = g_strdup_printf ("Uploading '%s'...",
                                      frogr_picture_get_title (next_fpicture));
-      progress_bar_text = g_strdup_printf ("%d / %d", (index + 1), num_pics);
+      progress_bar_text = g_strdup_printf ("%d / %d", (index + 1), npics);
 
       frogr_main_window_set_status_text (priv -> mainwin, status_text);
       frogr_main_window_set_progress (priv -> mainwin,
-                                      (double) (index + 1) / num_pics,
+                                      (double) (index + 1) / npics,
                                       progress_bar_text);
       /* Free strings */
       g_free (status_text);
@@ -352,14 +361,18 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
-  GSList *fpictures =
-    frogr_main_window_get_pictures_list (priv -> mainwin);
+  FrogrMainWindowModel *mainwin_model;
+  GSList *fpictures;
+
+  /* Get model and list of pictures */
+  mainwin_model = frogr_main_window_get_model (priv -> mainwin);
+  fpictures = frogr_main_window_model_get_pictures (mainwin_model);
 
   /* Check if the list of pictures is not empty */
   if (fpictures != NULL)
     {
       FrogrPicture *fpicture = FROGR_PICTURE (fpictures -> data);
-      guint num_pics = g_slist_length (fpictures);
+      guint npics = frogr_main_window_model_number_of_pictures (mainwin_model);
       gchar *status_text = NULL;
       gchar *progress_bar_text = NULL;
 
@@ -377,11 +390,11 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
       /* Update progress */
       status_text = g_strdup_printf ("Uploading '%s'...",
                                      frogr_picture_get_title (fpicture));
-      progress_bar_text = g_strdup_printf ("%d / %d", 1, num_pics);
+      progress_bar_text = g_strdup_printf ("%d / %d", 1, npics);
 
       frogr_main_window_set_status_text (priv -> mainwin, status_text);
       frogr_main_window_set_progress (priv -> mainwin,
-                                      (double)1.0 / num_pics,
+                                      (double)1.0 / npics,
                                       progress_bar_text);
       /* Free strings */
       g_free (status_text);
