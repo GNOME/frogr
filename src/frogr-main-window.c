@@ -25,8 +25,8 @@
 #include "frogr-controller.h"
 #include "frogr-picture.h"
 
-#define MINIMUM_WINDOW_WIDTH 400
-#define MINIMUM_WINDOW_HEIGHT 300
+#define MINIMUM_WINDOW_WIDTH 540
+#define MINIMUM_WINDOW_HEIGHT 420
 
 #define ITEM_WIDTH 120
 
