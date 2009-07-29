@@ -85,10 +85,9 @@ frogr_main_window_model_add_picture (FrogrMainWindowModel *fmainwin_model,
   FrogrMainWindowModelPrivate *priv =
     FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
 
+  g_object_ref (fpicture);
   priv -> pictures_list = g_slist_append (priv -> pictures_list, fpicture);
   priv -> number_of_pictures++;
-
-  g_object_ref (fpicture);
 }
 
 void
@@ -102,7 +101,6 @@ frogr_main_window_model_remove_picture (FrogrMainWindowModel *fmainwin_model,
 
   priv -> pictures_list = g_slist_remove (priv -> pictures_list, fpicture);
   priv -> number_of_pictures--;
-
   g_object_unref (fpicture);
 }
 
