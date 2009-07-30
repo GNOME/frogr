@@ -234,8 +234,7 @@ _load_next_picture (FrogrPictureLoader *fpicture_loader)
 
       /* Execute final callback */
       if (priv -> pictures_loaded_cb)
-        priv -> pictures_loaded_cb (priv -> object,
-                                    GUINT_TO_POINTER (priv -> n_pictures));
+        priv -> pictures_loaded_cb (priv -> object, fpicture_loader);
     }
 }
 

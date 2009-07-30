@@ -133,14 +133,13 @@ _on_picture_loaded (FrogrMainWindow *fmainwin, FrogrPicture *fpicture)
 }
 
 static void
-_on_pictures_loaded (FrogrMainWindow *fmainwin, gpointer result)
+_on_pictures_loaded (FrogrMainWindow *fmainwin,
+                     FrogrPictureLoader *fpicture_loader)
 {
-  guint n_pictures = GPOINTER_TO_UINT (result);
-
   /* Update UI */
   _update_ui (fmainwin);
 
-  g_debug ("Added %d pictures", n_pictures);
+  g_object_unref (fpicture_loader);
 }
 
 void
