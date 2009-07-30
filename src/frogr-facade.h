@@ -62,6 +62,7 @@ gboolean frogr_facade_is_authorized (FrogrFacade *ffacade);
 void frogr_facade_upload_picture (FrogrFacade *ffacade,
                                   FrogrPicture *fpicture,
                                   GFunc callback,
+                                  gpointer object,
                                   gpointer data);
 
 G_END_DECLS

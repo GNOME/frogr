@@ -181,6 +181,7 @@ typedef struct {
   FrogrFacade *ffacade;
   FrogrPicture *fpicture;
   GFunc callback;
+  gpointer object;
   gpointer data;
 } upload_picture_st;
 
@@ -191,6 +192,7 @@ _picture_uploaded (upload_picture_st *up_st)
   FrogrFacade *ffacade = up_st -> ffacade;
   FrogrPicture *fpicture = up_st -> fpicture;
   GFunc callback = up_st -> callback;
+  gpointer object = up_st -> object;
   gpointer data = up_st -> data;
 
   /* Free memory */
@@ -198,7 +200,7 @@ _picture_uploaded (upload_picture_st *up_st)
 
   /* Execute callback */
   if (callback)
-    callback (data, fpicture);
+    callback (object, data);
 
   return FALSE;
 }
@@ -264,6 +266,7 @@ void
 frogr_facade_upload_picture (FrogrFacade *ffacade,
                              FrogrPicture *fpicture,
                              GFunc callback,
+                             gpointer object,
                              gpointer data)
 {
   g_return_if_fail(FROGR_IS_FACADE (ffacade));
@@ -276,6 +279,7 @@ frogr_facade_upload_picture (FrogrFacade *ffacade,
   up_st -> ffacade = ffacade;
   up_st -> fpicture = fpicture;
   up_st -> callback = callback;
+  up_st -> object = object;
   up_st -> data = data;
 
   /* Initiate the process in another thread */
