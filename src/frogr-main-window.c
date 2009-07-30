@@ -24,6 +24,7 @@
 #include "frogr-main-window.h"
 #include "frogr-controller.h"
 #include "frogr-picture-loader.h"
+#include "frogr-picture-uploader.h"
 #include "frogr-picture.h"
 
 #define MINIMUM_WINDOW_WIDTH 540
@@ -87,7 +88,7 @@ _update_ui (FrogrMainWindow *fmainwin)
       break;
 
     case FROGR_STATE_IDLE:
-      npics = frogr_main_window_model_number_of_pictures (priv -> model);
+      npics = frogr_main_window_model_n_pictures (priv -> model);
       authorized = frogr_controller_is_authorized (priv -> controller);
       gtk_widget_set_sensitive (priv -> auth_button, !authorized);
       gtk_widget_set_sensitive (priv -> upload_button,
@@ -246,6 +247,52 @@ _on_auth_button_clicked (GtkButton *widget,
   _update_ui (fmainwin);
 }
 
+static void
+_on_pictures_uploaded (FrogrMainWindow *fmainwin,
+                      FrogrPictureUploader *fpicture_uploader)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+
+  GSList *fpictures;
+  GSList *item;
+  guint index;
+  guint n_pictures;
+  gchar **str_array;
+  gchar *ids_str;
+  gchar *edition_url;
+  const gchar *id;
+
+  fpictures = frogr_main_window_model_get_pictures (priv -> model);
+  n_pictures = frogr_main_window_model_n_pictures (priv -> model);;
+
+  /* Build the photo edition url */
+  str_array = g_new (gchar*, n_pictures + 1);
+
+  index = 0;
+  for (item = fpictures; item; item = g_slist_next (item))
+    {
+      id = frogr_picture_get_id (FROGR_PICTURE (item -> data));
+      if (id != NULL)
+        str_array[index++] = g_strdup (id);
+    }
+  str_array[index] = NULL;
+
+  ids_str = g_strjoinv (",", str_array);
+  edition_url =
+    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
+                     ids_str);
+  g_debug ("Opening edition url: %s\n", edition_url);
+
+  /* Redirect to URL for setting more properties about the pictures */
+  gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
+
+  /* Free memory */
+  g_object_unref (fpicture_uploader);
+  g_free (edition_url);
+  g_free (ids_str);
+  g_strfreev (str_array);
+}
+
 void
 _on_upload_button_clicked (GtkButton *widget,
                            gpointer data)
@@ -254,7 +301,17 @@ _on_upload_button_clicked (GtkButton *widget,
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
 
   /* Upload pictures */
-  frogr_controller_upload_pictures (priv -> controller);
+  if (frogr_main_window_model_n_pictures (priv -> model) > 0)
+    {
+      GSList *fpictures = frogr_main_window_model_get_pictures (priv -> model);
+      FrogrPictureUploader *fpicture_uploader =
+        frogr_picture_uploader_new (fpictures,
+                                    NULL,
+                                    (GFunc)_on_pictures_uploaded,
+                                    fmainwin);
+      /* Load the pictures! */
+      frogr_picture_uploader_upload (fpicture_uploader);
+    }
 }
 
 void

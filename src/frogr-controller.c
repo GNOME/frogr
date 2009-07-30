@@ -50,111 +50,30 @@ static FrogrController *_instance = NULL;
 
 /* Private API */
 
-void
-_notify_pictures_uploaded (FrogrController *fcontroller)
-{
-  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
-
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
-
-  FrogrMainWindowModel *mainwin_model;
-  GSList *fpictures;
-  GSList *item;
-  guint index;
-  guint num_photos;
-  gchar **str_array;
-  gchar *ids_str;
-  gchar *edition_url;
-  const gchar *id;
-
-  /* Build the photo edition url */
-  mainwin_model = frogr_main_window_get_model (priv -> mainwin);
-  fpictures = frogr_main_window_model_get_pictures (mainwin_model);
-  num_photos = g_slist_length (fpictures);
-  str_array = g_new (gchar*, num_photos + 1);
-
-  index = 0;
-  for (item = fpictures; item; item = g_slist_next (item))
-    {
-      id = frogr_picture_get_id (FROGR_PICTURE (item -> data));
-      if (id != NULL)
-        str_array[index++] = g_strdup (id);
-    }
-  str_array[index] = NULL;
-
-  ids_str = g_strjoinv (",", str_array);
-  edition_url =
-    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
-                     ids_str);
-  g_debug ("Opening edition url: %s\n", edition_url);
-
-  /* Redirect to URL for setting more properties about the pictures */
-  gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
-
-  /* Set proper state */
-  frogr_main_window_set_state (priv -> mainwin, FROGR_STATE_IDLE);
-
-  /* Free memory */
-  g_free (edition_url);
-  g_free (ids_str);
-  g_strfreev (str_array);
-}
+typedef struct {
+  FrogrPicture *fpicture;
+  GFunc callback;
+  gpointer object;
+} upload_picture_st;
 
 static gboolean
-_upload_picture_cb (FrogrController *fcontroller, FrogrPicture *fpicture)
+_upload_picture_cb (FrogrController *fcontroller, upload_picture_st *up_st)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
-  g_return_if_fail(FROGR_IS_PICTURE (fpicture));
-
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
-  FrogrMainWindowModel *mainwin_model;
-  GSList *fpictures;
-  GSList *item;
+  FrogrPicture *fpicture = up_st -> fpicture;
+  GFunc callback = up_st -> callback;
+  gpointer object = up_st -> object;
 
-  /* Get model and list of pictures */
-  mainwin_model = frogr_main_window_get_model (priv -> mainwin);
-  fpictures = frogr_main_window_model_get_pictures (mainwin_model);
-  item = g_slist_find (fpictures, fpicture);
+  /* Free memory */
+  g_slice_free (upload_picture_st, up_st);
 
-  /* Find position in list and go for the next one */
+  /* Execute callback */
+  if (callback)
+    callback (object, fpicture);
+
   g_object_unref (fpicture);
-  if (item && item -> next)
-    {
-      FrogrPicture *next_fpicture = FROGR_PICTURE (item -> next -> data);
-      guint npics = frogr_main_window_model_number_of_pictures (mainwin_model);
-      gint index = g_slist_index (fpictures, next_fpicture);
-      gchar *status_text = NULL;
-      gchar *progress_bar_text = NULL;
-
-      /* Update progress */
-      status_text = g_strdup_printf ("Uploading '%s'...",
-                                     frogr_picture_get_title (next_fpicture));
-      progress_bar_text = g_strdup_printf ("%d / %d", index, npics);
-
-      frogr_main_window_set_status_text (priv -> mainwin, status_text);
-      frogr_main_window_set_progress (priv -> mainwin,
-                                      (double) index / npics,
-                                      progress_bar_text);
-      /* Free strings */
-      g_free (status_text);
-      g_free (progress_bar_text);
-
-      /* Delegate on facade and notify UI */
-      frogr_facade_upload_picture (priv -> facade,
-                                   next_fpicture,
-                                   (GFunc)_upload_picture_cb,
-                                   fcontroller);
-    }
-  else
-    {
-      /* No more pictures to upload */
-      frogr_main_window_set_status_text (priv -> mainwin, NULL);
-      frogr_main_window_set_progress (priv -> mainwin, 1.0, NULL);
-      _notify_pictures_uploaded (fcontroller);
-    }
 }
 
 static GObject *
@@ -360,57 +279,29 @@ frogr_controller_is_authorized (FrogrController *fcontroller)
 }
 
 void
-frogr_controller_upload_pictures (FrogrController *fcontroller)
+frogr_controller_upload_picture (FrogrController *fcontroller,
+                                 FrogrPicture *fpicture,
+                                 GFunc fpicture_uploaded_cb,
+                                 gpointer object)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
 
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
-  FrogrMainWindowModel *mainwin_model;
-  GSList *fpictures;
+  upload_picture_st *up_st;
 
-  /* Get model and list of pictures */
-  mainwin_model = frogr_main_window_get_model (priv -> mainwin);
-  fpictures = frogr_main_window_model_get_pictures (mainwin_model);
+  /* Create structure to pass to the thread */
+  up_st = g_slice_new (upload_picture_st);
+  up_st -> fpicture = fpicture;
+  up_st -> callback = fpicture_uploaded_cb;
+  up_st -> object = object;
 
-  /* Check if the list of pictures is not empty */
-  if (fpictures != NULL)
-    {
-      FrogrPicture *fpicture = FROGR_PICTURE (fpictures -> data);
-      guint npics = frogr_main_window_model_number_of_pictures (mainwin_model);
-      gchar *status_text = NULL;
-      gchar *progress_bar_text = NULL;
-
-      /* Check authorization */
-      if (!frogr_facade_is_authorized (priv -> facade))
-        {
-          g_debug ("Not authorized yet");
-          return;
-        }
-
-      /* Set proper state */
-      frogr_main_window_set_state (priv -> mainwin, FROGR_STATE_UPLOADING);
-
-      /* Update progress */
-      status_text = g_strdup_printf ("Uploading '%s'...",
-                                     frogr_picture_get_title (fpicture));
-      progress_bar_text = g_strdup_printf ("%d / %d", 0, npics);
-
-      frogr_main_window_set_status_text (priv -> mainwin, status_text);
-      frogr_main_window_set_progress (priv -> mainwin, 0.0, progress_bar_text);
-
-      /* Free strings */
-      g_free (status_text);
-      g_free (progress_bar_text);
-
-      /* Add references */
-      g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
-
-      /* Delegate on facade with the first item */
-      frogr_facade_upload_picture (priv -> facade,
-                                   fpicture,
-                                   (GFunc)_upload_picture_cb,
-                                   fcontroller);
-    }
+  /* Delegate on facade with the first item */
+  g_object_ref (fpicture);
+  frogr_facade_upload_picture (priv -> facade,
+                               fpicture,
+                               (GFunc)_upload_picture_cb,
+                               fcontroller,
+                               up_st);
 }
