@@ -24,7 +24,6 @@
 #include <gtk/gtk.h>
 #include "frogr-controller.h"
 #include "frogr-facade.h"
-#include "frogr-main-window.h"
 #include "frogr-main-window-model.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-about-dialog.h"
@@ -218,6 +217,17 @@ FrogrController *
 frogr_controller_get_instance (void)
 {
   return FROGR_CONTROLLER (g_object_new (FROGR_TYPE_CONTROLLER, NULL));
+}
+
+FrogrMainWindow *
+frogr_controller_get_main_window (FrogrController *fcontroller)
+{
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (fcontroller), FALSE);
+
+  FrogrControllerPrivate *priv =
+    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+
+  return g_object_ref (priv -> mainwin);
 }
 
 gboolean

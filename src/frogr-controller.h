@@ -25,6 +25,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include "frogr-main-window.h"
 #include "frogr-picture.h"
 
 G_BEGIN_DECLS
@@ -52,6 +53,7 @@ struct _FrogrController
 GType frogr_controller_get_type (void) G_GNUC_CONST;
 
 FrogrController *frogr_controller_get_instance (void);
+FrogrMainWindow *frogr_controller_get_main_window (FrogrController *fcontroller);
 
 gboolean frogr_controller_run_app (FrogrController *fcontroller);
 gboolean frogr_controller_quit_app (FrogrController *fcontroller);
