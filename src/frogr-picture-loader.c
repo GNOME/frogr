@@ -199,8 +199,9 @@ _load_next_picture_cb (GObject *object,
     priv -> picture_loaded_cb (priv -> object, fpicture);
 
   /* Free memory */
-  g_object_unref (fpicture);
   g_free (contents);
+  if (fpicture != NULL)
+    g_object_unref (fpicture);
 
   /* Go for the next picture */
   _load_next_picture (fpicture_loader);
