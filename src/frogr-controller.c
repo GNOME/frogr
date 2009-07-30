@@ -133,11 +133,11 @@ _upload_picture_cb (FrogrController *fcontroller, FrogrPicture *fpicture)
       /* Update progress */
       status_text = g_strdup_printf ("Uploading '%s'...",
                                      frogr_picture_get_title (next_fpicture));
-      progress_bar_text = g_strdup_printf ("%d / %d", (index + 1), npics);
+      progress_bar_text = g_strdup_printf ("%d / %d", index, npics);
 
       frogr_main_window_set_status_text (priv -> mainwin, status_text);
       frogr_main_window_set_progress (priv -> mainwin,
-                                      (double) (index + 1) / npics,
+                                      (double) index / npics,
                                       progress_bar_text);
       /* Free strings */
       g_free (status_text);
@@ -152,8 +152,7 @@ _upload_picture_cb (FrogrController *fcontroller, FrogrPicture *fpicture)
   else
     {
       /* No more pictures to upload */
-      frogr_main_window_set_status_text (priv -> mainwin,
-                                         "All pictures uploaded!");
+      frogr_main_window_set_status_text (priv -> mainwin, NULL);
       frogr_main_window_set_progress (priv -> mainwin, 1.0, NULL);
       _notify_pictures_uploaded (fcontroller);
     }
@@ -386,12 +385,11 @@ frogr_controller_upload_pictures (FrogrController *fcontroller)
       /* Update progress */
       status_text = g_strdup_printf ("Uploading '%s'...",
                                      frogr_picture_get_title (fpicture));
-      progress_bar_text = g_strdup_printf ("%d / %d", 1, npics);
+      progress_bar_text = g_strdup_printf ("%d / %d", 0, npics);
 
       frogr_main_window_set_status_text (priv -> mainwin, status_text);
-      frogr_main_window_set_progress (priv -> mainwin,
-                                      (double)1.0 / npics,
-                                      progress_bar_text);
+      frogr_main_window_set_progress (priv -> mainwin, 0.0, progress_bar_text);
+
       /* Free strings */
       g_free (status_text);
       g_free (progress_bar_text);
