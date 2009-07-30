@@ -11,16 +11,10 @@ groups depending on the scope of the application, which can be:
 TODO list for the uploader:
 ===========================
 
- * Store configuration issues locally, such as the Flickr username and
-   the required artifacts to use the REST API (auth token and frob).
-
  * Add a "Settings" new dialog to allow the user preselect some useful
    and common options (e.g. always upload public pictures by default).
 
  * Allow setting common properties for several pictures at once.
-
- * Show extra information when uploading, for instance a "x/y"-like
-   text over the progress bar telling how many pictures were uploaded.
 
  * Add a "Cancel" button, to allow interrupting an uploading process
    without having to quit the application, as it is right now :-)
@@ -31,11 +25,7 @@ TODO list for the uploader:
 
  * Allow pre-selecting the target album for a picture before uploading.
 
- * Improve the authorization dialog.
-
  * Add contextual menu for right click on a picture (GtkIconView).
-
- * Reimplement authorization dialog as a GtkMessageDialog
 
  * etc...
 
