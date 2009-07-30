@@ -49,8 +49,9 @@ struct _FrogrMainWindow
 };
 
 typedef enum {
-  FROGR_STATE_IDLE,
-  FROGR_STATE_UPLOADING
+  FROGR_STATE_IDLE,     /* self-explained */
+  FROGR_STATE_LOADING,  /* loading pictures from disk */
+  FROGR_STATE_UPLOADING /* uploading pictures to flickr */
 } FrogrMainWindowState;
 
 GType frogr_main_window_get_type (void) G_GNUC_CONST;

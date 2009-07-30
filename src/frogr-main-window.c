@@ -80,6 +80,7 @@ _update_ui (FrogrMainWindow *fmainwin)
   /* Set sensitiveness */
   switch (priv -> state)
     {
+    case FROGR_STATE_LOADING:
     case FROGR_STATE_UPLOADING:
       gtk_widget_set_sensitive (priv -> auth_button, FALSE);
       gtk_widget_set_sensitive (priv -> upload_button, FALSE);
