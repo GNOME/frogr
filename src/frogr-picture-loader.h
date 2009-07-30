@@ -51,12 +51,11 @@ struct _FrogrPictureLoaderClass
 
 GType frogr_picture_loader_get_type(void) G_GNUC_CONST;
 
-FrogrPictureLoader *frogr_picture_loader_new (void);
-void frogr_picture_loader_load (FrogrPictureLoader *fpicture_loader,
-                                GSList *filepaths,
-                                GFunc picture_loaded_cb,
-                                GFunc pictures_loaded_cb,
-                                gpointer object);
+FrogrPictureLoader *frogr_picture_loader_new (GSList *filepaths,
+                                              GFunc picture_loaded_cb,
+                                              GFunc pictures_loaded_cb,
+                                              gpointer object);
+gboolean frogr_picture_loader_load (FrogrPictureLoader *fpicture_loader);
 
 G_END_DECLS
 

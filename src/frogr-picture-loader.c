@@ -21,6 +21,8 @@
  */
 
 #include "frogr-picture-loader.h"
+#include "frogr-controller.h"
+#include "frogr-main-window.h"
 #include "frogr-picture.h"
 
 #define PICTURE_WIDTH 100
@@ -37,54 +39,63 @@ G_DEFINE_TYPE (FrogrPictureLoader, frogr_picture_loader, G_TYPE_OBJECT);
 typedef struct _FrogrPictureLoaderPrivate FrogrPictureLoaderPrivate;
 struct _FrogrPictureLoaderPrivate
 {
+  FrogrMainWindow *mainwin;
   GSList *filepaths;
-  guint n_filepaths;
-  guint current;
+  GSList *current;
+  guint index;
+  guint n_pictures;
+
+  GFunc picture_loaded_cb;
+  GFunc pictures_loaded_cb;
+  gpointer object;
 };
 
 /* Private API */
 
-static void
-_frogr_picture_loader_finalize (GObject* object)
-{
-  G_OBJECT_CLASS (frogr_picture_loader_parent_class) -> finalize(object);
-}
+static void _load_next_picture (FrogrPictureLoader *fpicture_loader);
+static void _load_next_picture_cb (GObject *object,
+                                   GAsyncResult *res,
+                                   gpointer data);
 
 static void
-frogr_picture_loader_class_init(FrogrPictureLoaderClass *klass)
+_update_status_and_progress (FrogrPictureLoader *fpicture_loader)
 {
-  GObjectClass *obj_class = G_OBJECT_CLASS(klass);
-  obj_class -> finalize = _frogr_picture_loader_finalize;
-  g_type_class_add_private (obj_class, sizeof (FrogrPictureLoaderPrivate));
-}
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (fpicture_loader);
 
-static void
-frogr_picture_loader_init (FrogrPictureLoader *fpicture)
-{
+  gchar *status_text = NULL;
+  gchar *progress_bar_text = NULL;
 
-}
+  if (priv -> current)
+    {
+      const gchar *filepath = (const gchar *)priv -> current -> data;
+      gchar *filename = g_path_get_basename (filepath);
 
-/* Public API */
+      /* Update progress */
+      status_text = g_strdup_printf ("Loading '%s'...", filename);
+      progress_bar_text = g_strdup_printf ("%d / %d",
+                                           priv -> index,
+                                           priv -> n_pictures);
+      g_free (filename);
+    }
 
-FrogrPictureLoader *
-frogr_picture_loader_new (void)
-{
-  GObject *new = g_object_new(FROGR_TYPE_PICTURE_LOADER, NULL);
-  return FROGR_PICTURE_LOADER (new);
+  frogr_main_window_set_status_text (priv -> mainwin, status_text);
+  frogr_main_window_set_progress (priv -> mainwin,
+                                  (double) priv -> index / priv -> n_pictures,
+                                  progress_bar_text);
+  /* Free */
+  g_free (status_text);
+  g_free (progress_bar_text);
 }
 
 static GdkPixbuf *
-_get_scaled_pixbuf (const gchar *filepath)
+_get_scaled_pixbuf (GdkPixbuf *pixbuf)
 {
-  GdkPixbuf *pixbuf = NULL;
   GdkPixbuf *scaled_pixbuf = NULL;
   gint width;
   gint height;
   gint new_width;
   gint new_height;
-
-  /* Build the picture */
-  pixbuf = gdk_pixbuf_new_from_file (filepath, NULL);
 
   /* Look for the right side to reduce */
   width = gdk_pixbuf_get_width (pixbuf);
@@ -104,51 +115,223 @@ _get_scaled_pixbuf (const gchar *filepath)
   scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
                                            new_width, new_height,
                                            GDK_INTERP_TILES);
-  /* Free */
-  g_object_unref (pixbuf);
-
   return scaled_pixbuf;
 }
 
-void
-frogr_picture_loader_load (FrogrPictureLoader *fpicture_loader,
-                           GSList *filepaths,
-                           GFunc picture_loaded_cb,
-                           GFunc pictures_loaded_cb,
-                           gpointer object)
+static void
+_load_next_picture_cb (GObject *object,
+                       GAsyncResult *res,
+                       gpointer data)
+{
+  FrogrPictureLoader *fpicture_loader = FROGR_PICTURE_LOADER (data);;
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (fpicture_loader);
+
+  FrogrPicture *fpicture = NULL;
+  GFile *file = G_FILE (object);
+  GError *error = NULL;
+  gchar *contents;
+  gsize length;
+
+  if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
+    {
+      GdkPixbufLoader *pixbuf_loader = gdk_pixbuf_loader_new ();
+
+      if (gdk_pixbuf_loader_write (pixbuf_loader,
+                                   (const guchar *)contents,
+                                   length,
+                                   &error))
+        {
+          GdkPixbuf *pixbuf;
+          GdkPixbuf *s_pixbuf;
+          gchar *filepath;
+          gchar *filename;
+
+          /* Gather needed information */
+          filepath = g_file_get_path (file);
+          filename = g_file_get_basename (file);
+          gdk_pixbuf_loader_close (pixbuf_loader, NULL);
+          pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
+
+          /* Get (scaled) pixbuf */
+          s_pixbuf = _get_scaled_pixbuf (pixbuf);
+
+          /* Build the FrogrPicture and set pixbuf */
+          fpicture = frogr_picture_new (filepath, filename, FALSE);
+          frogr_picture_set_pixbuf (fpicture, s_pixbuf);
+
+          /* Free */
+          g_object_unref (s_pixbuf);
+          g_free (filepath);
+          g_free (filename);
+        }
+      else
+        {
+          /* Not able to write pixbuf */
+          gchar *filename = g_file_get_basename (file);
+          g_warning ("Not able to write pixbuf: %s",
+                     error -> message);
+          g_error_free (error);
+        }
+
+      g_object_unref (pixbuf_loader);
+    }
+  else
+    {
+      /* Not able to load contents */
+      gchar *filename = g_file_get_basename (file);
+      g_warning ("Not able to read contents from %s: %s",
+                 filename,
+                 error -> message);
+      g_error_free (error);
+      g_free (filename);
+    }
+
+  /* Update internal status */
+  priv -> current = g_slist_next (priv -> current);
+  priv -> index++;
+
+  /* Update status and progress bars */
+  _update_status_and_progress (fpicture_loader);
+
+  /* Execute 'picture-loaded' callback */
+  if (priv -> picture_loaded_cb)
+    priv -> picture_loaded_cb (priv -> object, fpicture);
+
+  /* Free memory */
+  g_object_unref (fpicture);
+  g_free (contents);
+
+  /* Go for the next picture */
+  _load_next_picture (fpicture_loader);
+}
+
+static void
+_load_next_picture (FrogrPictureLoader *fpicture_loader)
+{
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (fpicture_loader);
+
+  if (priv -> current)
+    {
+      GFile *gfile = NULL;
+      gchar *filepath = (gchar *)priv -> current -> data;
+
+      /* Asynchronously load the picture */
+      gfile = g_file_new_for_path (filepath);
+      g_file_load_contents_async (gfile,
+                                  NULL,
+                                  _load_next_picture_cb,
+                                  fpicture_loader);
+    }
+  else
+    {
+      /* Update status and progress bars */
+      _update_status_and_progress (fpicture_loader);
+
+      /* Set proper state */
+      frogr_main_window_set_state (priv -> mainwin, FROGR_STATE_IDLE);
+
+      /* Execute final callback */
+      if (priv -> pictures_loaded_cb)
+        priv -> pictures_loaded_cb (priv -> object,
+                                    GUINT_TO_POINTER (priv -> n_pictures));
+    }
+}
+
+static void
+_frogr_picture_loader_finalize (GObject* object)
+{
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (object);
+
+  /* Free */
+  g_object_unref (priv -> mainwin);
+  g_slist_foreach (priv -> filepaths, (GFunc)g_free, NULL);
+  g_slist_free (priv -> filepaths);
+
+  G_OBJECT_CLASS (frogr_picture_loader_parent_class) -> finalize(object);
+}
+
+static void
+frogr_picture_loader_class_init(FrogrPictureLoaderClass *klass)
+{
+  GObjectClass *obj_class = G_OBJECT_CLASS(klass);
+  obj_class -> finalize = _frogr_picture_loader_finalize;
+  g_type_class_add_private (obj_class, sizeof (FrogrPictureLoaderPrivate));
+}
+
+static void
+frogr_picture_loader_init (FrogrPictureLoader *fpicture_loader)
+{
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (fpicture_loader);
+
+  FrogrController *controller = NULL;
+
+  /* Init private data */
+
+  /* We need the controller to get the main window */
+  controller = frogr_controller_get_instance ();
+  priv -> mainwin = frogr_controller_get_main_window (controller);
+  g_object_unref (controller);
+
+  /* Init the rest of private data */
+  priv -> filepaths = NULL;
+  priv -> current = NULL;
+  priv -> index = -1;
+  priv -> n_pictures = 0;
+}
+
+/* Public API */
+
+FrogrPictureLoader *
+frogr_picture_loader_new (GSList *filepaths,
+                          GFunc picture_loaded_cb,
+                          GFunc pictures_loaded_cb,
+                          gpointer object)
+{
+  FrogrPictureLoader *fpicture_loader =
+    FROGR_PICTURE_LOADER (g_object_new(FROGR_TYPE_PICTURE_LOADER, NULL));
+
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (fpicture_loader);
+
+  /* Internal data */
+  priv -> filepaths = g_slist_copy (filepaths);
+  priv -> current = priv -> filepaths;
+  priv -> index = 0;
+  priv -> n_pictures = g_slist_length (priv -> filepaths);
+
+  /* Callback data */
+  priv -> picture_loaded_cb = picture_loaded_cb;
+  priv -> pictures_loaded_cb = pictures_loaded_cb;
+  priv -> object = object;
+
+  return fpicture_loader;
+}
+
+gboolean
+frogr_picture_loader_load (FrogrPictureLoader *fpicture_loader)
 {
   g_return_if_fail (FROGR_IS_PICTURE_LOADER (fpicture_loader));
 
-  FrogrPicture *fpicture;
-  GdkPixbuf *pixbuf;
-  GSList *item;
-  gchar *filename;
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (fpicture_loader);
 
-  /* Add to model */
-  /* FIXME: Actually asynchronously load pictures here */
-  for (item = filepaths; item; item = g_slist_next (item))
-    {
-      gchar *filepath = (gchar *)(item -> data);
-      filename = g_path_get_basename (filepath);
-      fpicture = frogr_picture_new (filepath, filename, FALSE);
+  /* Check first whether there's something to load */
+  if (priv -> filepaths == NULL)
+    return FALSE;
 
-      g_debug ("Filename %s selected!\n", filepath);
+  /* Set proper state */
+  frogr_main_window_set_state (priv -> mainwin, FROGR_STATE_LOADING);
 
-      /* Get (scaled) pixbuf */
-      pixbuf = _get_scaled_pixbuf (filepath);
-      frogr_picture_set_pixbuf (fpicture, pixbuf);
-      g_object_unref (pixbuf);
+  /* Update status and progress bars */
+  _update_status_and_progress (fpicture_loader);
 
-      /* Execute 'picture-loaded' callback */
-      if (picture_loaded_cb)
-        picture_loaded_cb (object, fpicture);
+  /* Trigger the asynchronous process */
+  _load_next_picture (fpicture_loader);
 
-      /* Free memory */
-      g_free (filename);
-      g_object_unref (fpicture);
-    }
-
-  /* Execute 'pictures-loaded' callback */
-  if (pictures_loaded_cb)
-    pictures_loaded_cb (object, NULL);
+  /* The process has been properly  started */
+  return TRUE;
 }

@@ -179,17 +179,15 @@ _on_add_button_clicked (GtkButton *widget,
       if (filepaths != NULL)
         {
           FrogrPictureLoader *fpicture_loader;
-
-          fpicture_loader = frogr_picture_loader_new ();
-          frogr_picture_loader_load (fpicture_loader,
-                                     filepaths,
-                                     (GFunc)_on_picture_loaded,
-                                     (GFunc)_on_pictures_loaded,
-                                     fmainwin);
+          fpicture_loader = frogr_picture_loader_new (filepaths,
+                                                      (GFunc)_on_picture_loaded,
+                                                      (GFunc)_on_pictures_loaded,
+                                                      fmainwin);
+          /* Load the pictures! */
+          frogr_picture_loader_load (fpicture_loader);
         }
 
       /* Free memory */
-      g_slist_foreach (filepaths, (GFunc)g_free, NULL);
       g_slist_free (filepaths);
     }
 
