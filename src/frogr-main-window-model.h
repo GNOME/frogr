@@ -60,8 +60,8 @@ void frogr_main_window_model_remove_picture (FrogrMainWindowModel *fmainwin_mode
                                              FrogrPicture *fpicture);
 void frogr_main_window_model_remove_all (FrogrMainWindowModel *fmainwin_model);
 
-guint frogr_main_window_model_number_of_pictures (FrogrMainWindowModel *fmainwin_model);
-GSList * frogr_main_window_model_get_pictures (FrogrMainWindowModel *fmainwin_model);
+guint frogr_main_window_model_n_pictures (FrogrMainWindowModel *fmainwin_model);
+GSList *frogr_main_window_model_get_pictures (FrogrMainWindowModel *fmainwin_model);
 
 G_END_DECLS
 

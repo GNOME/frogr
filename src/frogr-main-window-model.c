@@ -34,7 +34,7 @@ typedef struct _FrogrMainWindowModelPrivate FrogrMainWindowModelPrivate;
 struct _FrogrMainWindowModelPrivate
 {
   GSList *pictures_list;
-  guint number_of_pictures;
+  guint n_pictures;
 };
 
 /* Private API */
@@ -64,7 +64,7 @@ frogr_main_window_model_init (FrogrMainWindowModel *fmainwin_model)
 
   /* Init private data */
   priv -> pictures_list = NULL;
-  priv -> number_of_pictures = 0;
+  priv -> n_pictures = 0;
 }
 
 /* Public API */
@@ -87,7 +87,7 @@ frogr_main_window_model_add_picture (FrogrMainWindowModel *fmainwin_model,
 
   g_object_ref (fpicture);
   priv -> pictures_list = g_slist_append (priv -> pictures_list, fpicture);
-  priv -> number_of_pictures++;
+  priv -> n_pictures++;
 }
 
 void
@@ -100,7 +100,7 @@ frogr_main_window_model_remove_picture (FrogrMainWindowModel *fmainwin_model,
     FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
 
   priv -> pictures_list = g_slist_remove (priv -> pictures_list, fpicture);
-  priv -> number_of_pictures--;
+  priv -> n_pictures--;
   g_object_unref (fpicture);
 }
 
@@ -116,18 +116,18 @@ frogr_main_window_model_remove_all (FrogrMainWindowModel *fmainwin_model)
   g_slist_free (priv -> pictures_list);
 
   priv -> pictures_list = NULL;
-  priv -> number_of_pictures = 0;
+  priv -> n_pictures = 0;
 }
 
 guint
-frogr_main_window_model_number_of_pictures (FrogrMainWindowModel *fmainwin_model)
+frogr_main_window_model_n_pictures (FrogrMainWindowModel *fmainwin_model)
 {
   g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
 
   FrogrMainWindowModelPrivate *priv =
     FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
 
-  return priv -> number_of_pictures;
+  return priv -> n_pictures;
 }
 
 GSList *
