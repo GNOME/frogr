@@ -60,6 +60,8 @@ typedef struct _FrogrMainWindowPrivate {
   GtkWidget *icon_view;
   GtkWidget *status_bar;
   GtkWidget *progress_bar;
+  GtkWidget *add_button;
+  GtkWidget *remove_button;
   GtkWidget *upload_button;
   GtkWidget *auth_button;
   GtkTreeModel *tree_model;
@@ -83,6 +85,8 @@ _update_ui (FrogrMainWindow *fmainwin)
     {
     case FROGR_STATE_LOADING:
     case FROGR_STATE_UPLOADING:
+      gtk_widget_set_sensitive (priv -> add_button, FALSE);
+      gtk_widget_set_sensitive (priv -> remove_button, FALSE);
       gtk_widget_set_sensitive (priv -> auth_button, FALSE);
       gtk_widget_set_sensitive (priv -> upload_button, FALSE);
       break;
@@ -90,6 +94,9 @@ _update_ui (FrogrMainWindow *fmainwin)
     case FROGR_STATE_IDLE:
       npics = frogr_main_window_model_n_pictures (priv -> model);
       authorized = frogr_controller_is_authorized (priv -> controller);
+
+      gtk_widget_set_sensitive (priv -> add_button, TRUE);
+      gtk_widget_set_sensitive (priv -> remove_button, TRUE);
       gtk_widget_set_sensitive (priv -> auth_button, !authorized);
       gtk_widget_set_sensitive (priv -> upload_button,
                                 authorized && (npics > 0));
@@ -391,6 +398,8 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
   GtkBuilder *builder;
   GtkWidget *vbox;
+  GtkWidget *add_button;
+  GtkWidget *remove_button;
   GtkWidget *auth_button;
   GtkWidget *upload_button;
   GtkWidget *icon_view;
@@ -417,6 +426,12 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
 
   status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
   priv -> status_bar = status_bar;
+
+  add_button = GTK_WIDGET (gtk_builder_get_object (builder, "add_button"));
+  priv -> add_button = add_button;
+
+  remove_button = GTK_WIDGET (gtk_builder_get_object (builder, "remove_button"));
+  priv -> remove_button = remove_button;
 
   upload_button = GTK_WIDGET (gtk_builder_get_object (builder, "upload_button"));
   priv -> upload_button = upload_button;
