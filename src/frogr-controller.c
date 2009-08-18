@@ -229,14 +229,14 @@ frogr_controller_show_auth_dialog (FrogrController *fcontroller)
 
 void
 frogr_controller_show_details_dialog (FrogrController *fcontroller,
-                                      FrogrPicture *fpicture)
+                                      GSList *fpictures)
 {
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
   FrogrDetailsDialog *dialog;
 
   /* Run the details dialog */
-  dialog = frogr_details_dialog_new (GTK_WINDOW (priv -> mainwin), fpicture);
+  dialog = frogr_details_dialog_new (GTK_WINDOW (priv -> mainwin), fpictures);
   frogr_details_dialog_show (dialog);
 }
 
