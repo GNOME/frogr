@@ -62,12 +62,53 @@ typedef struct _FrogrMainWindowPrivate {
   GtkWidget *remove_button;
   GtkWidget *upload_button;
   GtkWidget *auth_button;
+  GtkWidget *ctxt_menu;
   GtkTreeModel *tree_model;
   guint sb_context_id;
 } FrogrMainWindowPrivate;
 
 
+/* Prototypes */
+
+static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget, gpointer data);
+static void _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data);
+
+
 /* Private API */
+
+static GtkWidget *
+_ctxt_menu_create (FrogrMainWindow *fmainwin)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  GtkWidget *ctxt_menu = NULL;
+  GtkWidget *edit_details_item;
+  GtkWidget *remove_item;
+
+  /* Create ctxt_menu and its items */
+  ctxt_menu = gtk_menu_new ();
+  edit_details_item = gtk_menu_item_new_with_label ("Edit details...");
+  remove_item = gtk_menu_item_new_with_label ("Remove");
+
+  /* Add items to ctxt_menu */
+  gtk_menu_append (ctxt_menu, edit_details_item);
+  gtk_menu_append (ctxt_menu, remove_item);
+
+  /* Connect signals */
+  g_signal_connect(edit_details_item,
+                   "activate",
+                   G_CALLBACK (_ctxt_menu_edit_details_item_activated),
+                   fmainwin);
+
+  g_signal_connect(remove_item,
+                   "activate",
+                   G_CALLBACK (_ctxt_menu_remove_item_activated),
+                   fmainwin);
+
+  /* Make menu and its widgets visible */
+  gtk_widget_show_all (ctxt_menu);
+
+  return ctxt_menu;
+}
 
 static void
 _update_ui (FrogrMainWindow *fmainwin)
@@ -107,6 +148,79 @@ _update_ui (FrogrMainWindow *fmainwin)
       g_warning ("Invalid state reached!!");
     }
 }
+
+void
+_edit_selected_items (FrogrMainWindow *fmainwin)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  GSList *fpictures = NULL;
+  GList *selected_items;
+  GList *item;
+
+  /* Remove selected items */
+  selected_items = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv -> icon_view));
+  for (item = selected_items; item; item = g_list_next (item))
+    {
+      FrogrPicture *fpicture;
+      GtkTreePath *path;
+      GtkTreeIter iter;
+
+      /* Get needed information */
+      path = (GtkTreePath *)(item -> data);
+      gtk_tree_model_get_iter (priv -> tree_model, &iter, path);
+      gtk_tree_model_get (priv -> tree_model,
+                          &iter,
+                          FPICTURE_COL, &fpicture,
+                          -1);
+
+      /* Add the picture to the list */
+      fpictures = g_slist_prepend (fpictures, fpicture);
+    }
+
+  /* Ref the pictures and call the controller */
+  g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
+  frogr_controller_show_details_dialog (priv -> controller, fpictures);
+}
+
+
+static void
+_remove_selected_items (FrogrMainWindow *fmainwin)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  GList *selected_items;
+  GList *item;
+
+  /* Remove selected items */
+  selected_items = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv -> icon_view));
+  for (item = selected_items; item; item = g_list_next (item))
+    {
+      FrogrPicture *fpicture;
+      GtkTreePath *path;
+      GtkTreeIter iter;
+
+      /* Get needed information */
+      path = (GtkTreePath *)(item -> data);
+      gtk_tree_model_get_iter (priv -> tree_model, &iter, path);
+      gtk_tree_model_get (priv -> tree_model,
+                          &iter,
+                          FPICTURE_COL, &fpicture,
+                          -1);
+
+      /* Remove from the internal list */
+      frogr_main_window_model_remove_picture (priv -> model, fpicture);
+
+      /* Remove from the GtkIconView */
+      gtk_list_store_remove (GTK_LIST_STORE (priv -> tree_model), &iter);
+    }
+
+  /* Update UI */
+  _update_ui (fmainwin);
+
+  /* Free */
+  g_list_foreach (selected_items, (GFunc)gtk_tree_path_free, NULL);
+  g_list_free (selected_items);
+}
+
 
 /* Event handlers */
 
@@ -205,39 +319,7 @@ _on_remove_button_clicked (GtkButton *widget,
                            gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-  GList *selected_items;
-  GList *item;
-
-  /* Remove selected items */
-  selected_items = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv -> icon_view));
-  for (item = selected_items; item; item = g_list_next (item))
-    {
-      FrogrPicture *fpicture;
-      GtkTreePath *path;
-      GtkTreeIter iter;
-
-      /* Get needed information */
-      path = (GtkTreePath *)(item -> data);
-      gtk_tree_model_get_iter (priv -> tree_model, &iter, path);
-      gtk_tree_model_get (priv -> tree_model,
-                          &iter,
-                          FPICTURE_COL, &fpicture,
-                          -1);
-
-      /* Remove from the internal list */
-      frogr_main_window_model_remove_picture (priv -> model, fpicture);
-
-      /* Remove from the GtkIconView */
-      gtk_list_store_remove (GTK_LIST_STORE (priv -> tree_model), &iter);
-    }
-
-  /* Update UI */
-  _update_ui (fmainwin);
-
-  /* Free */
-  g_list_foreach (selected_items, (GFunc)gtk_tree_path_free, NULL);
-  g_list_free (selected_items);
+  _remove_selected_items (fmainwin);
 }
 
 void
@@ -319,25 +401,71 @@ _on_upload_button_clicked (GtkButton *widget,
     }
 }
 
-void
-_on_icon_view_item_activated (GtkIconView *iconview,
-                              GtkTreePath *path,
-                              gpointer data)
+static void
+_ctxt_menu_edit_details_item_activated (GtkWidget *widget, gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+
+  /* Just edit the selected items */
+  _edit_selected_items (fmainwin);
+}
+
+static void
+_ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  _remove_selected_items (fmainwin);
+}
+
+gboolean
+_on_icon_view_button_press_event (GtkWidget *widget,
+                                  GdkEventButton *event,
+                                  gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-  GtkTreeIter iter;
-  FrogrPicture *fpicture;
+  GtkTreePath *path;
 
-  gtk_tree_model_get_iter (priv -> tree_model, &iter, path);
-  gtk_tree_model_get (priv -> tree_model,
-                      &iter,
-                      FPICTURE_COL, &fpicture,
-                      -1);
+  /* Check if we clicked on top of an item */
+  if (gtk_icon_view_get_item_at_pos (GTK_ICON_VIEW (priv -> icon_view),
+                                     event -> x,
+                                     event -> y,
+                                     &path,
+                                     NULL))
+    {
+      /* Check whether it's needed to keep this item as the only selection */
+      if ((event -> button != 3)
+          || (!gtk_icon_view_path_is_selected (GTK_ICON_VIEW (priv->icon_view),
+                                               path)))
+        {
+          gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv -> icon_view));
+          gtk_icon_view_select_path (GTK_ICON_VIEW (priv -> icon_view),
+                                         path);
+          gtk_tree_path_free (path);
+        }
 
-  /* Delegate on controller and update UI */
-  g_object_ref (fpicture);
-  frogr_controller_show_details_dialog (priv -> controller, fpicture);
+      /* Perform the right action: edit picture or show ctxt menu */
+      if ((event -> button == 1)                   /* left button */
+          && (event -> type == GDK_2BUTTON_PRESS)) /* doubleclick */
+        {
+          /* edit selected item */
+          _edit_selected_items (fmainwin);
+        }
+      else if ((event -> button == 3)             /* right button */
+          && (event -> type == GDK_BUTTON_PRESS)) /* single click */
+        {
+          /* Show contextual menu if in IDLE state*/
+          if (priv -> state == FROGR_STATE_IDLE)
+            {
+              gtk_menu_popup (GTK_MENU (priv -> ctxt_menu),
+                              NULL, NULL, NULL, NULL,
+                              event -> button,
+                              gtk_get_current_event_time ());
+            }
+        }
+    }
+
+  return FALSE;
 }
 
 gboolean
@@ -377,6 +505,7 @@ _frogr_main_window_finalize (GObject *object)
   /* Free memory */
   g_object_unref (priv -> model);
   g_object_unref (priv -> controller);
+  gtk_widget_destroy (priv -> ctxt_menu);
 
   G_OBJECT_CLASS(frogr_main_window_parent_class) -> finalize (object);
 }
@@ -436,6 +565,8 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
 
   auth_button = GTK_WIDGET (gtk_builder_get_object (builder, "auth_button"));
   priv -> auth_button = auth_button;
+
+  priv -> ctxt_menu = _ctxt_menu_create (fmainwin);
 
   progress_bar = gtk_progress_bar_new ();
   gtk_box_pack_start (GTK_BOX (status_bar), progress_bar, FALSE, FALSE, 6);

@@ -129,7 +129,7 @@
               <object class="GtkIconView" id="icon_view">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="item_activated" handler="_on_icon_view_item_activated"/>
+                <signal name="button_press_event" handler="_on_icon_view_button_press_event"/>
               </object>
             </child>
           </object>
