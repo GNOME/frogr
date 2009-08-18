@@ -24,7 +24,6 @@
 #define FROGR_DETAILS_DIALOG_H
 
 #include <gtk/gtk.h>
-#include "frogr-picture.h"
 
 G_BEGIN_DECLS
 
@@ -51,7 +50,7 @@ struct _FrogrDetailsDialog
 GType frogr_details_dialog_get_type (void) G_GNUC_CONST;
 
 FrogrDetailsDialog *frogr_details_dialog_new (GtkWindow *parent,
-                                              FrogrPicture *fpicture);
+                                              GSList *fpictures);
 
 void frogr_details_dialog_show (FrogrDetailsDialog *fdetailsdialog);
 

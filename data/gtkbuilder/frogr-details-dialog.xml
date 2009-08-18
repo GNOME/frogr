@@ -67,7 +67,7 @@
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
                                 <property name="group">private_rbutton</property>
-                                <signal name="toggled" handler="_on_public_rbutton_toggled"/>
+                                <signal name="toggled" handler="_on_public_private_rbutton_toggled"/>
                               </object>
                               <packing>
                                 <property name="position">0</property>
@@ -85,6 +85,7 @@
                                     <property name="receives_default">False</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="_on_public_private_rbutton_toggled"/>
                                   </object>
                                   <packing>
                                     <property name="position">0</property>
@@ -105,6 +106,7 @@
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
                                             <property name="draw_indicator">True</property>
+                                            <signal name="toggled" handler="_on_family_friend_cbutton_toggled"/>
                                           </object>
                                           <packing>
                                             <property name="position">0</property>
@@ -117,6 +119,7 @@
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
                                             <property name="draw_indicator">True</property>
+                                            <signal name="toggled" handler="_on_family_friend_cbutton_toggled"/>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
