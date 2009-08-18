@@ -204,7 +204,7 @@
                     <child>
                       <object class="GtkLabel" id="label3">
                         <property name="visible">True</property>
-                        <property name="xalign">1</property>
+                        <property name="xalign">0</property>
                         <property name="xpad">6</property>
                         <property name="label" translatable="yes">Tags:</property>
                       </object>
@@ -218,7 +218,7 @@
                     <child>
                       <object class="GtkLabel" id="label2">
                         <property name="visible">True</property>
-                        <property name="xalign">1</property>
+                        <property name="xalign">0</property>
                         <property name="yalign">0</property>
                         <property name="xpad">6</property>
                         <property name="label" translatable="yes">Description:</property>
@@ -233,7 +233,7 @@
                     <child>
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
-                        <property name="xalign">1</property>
+                        <property name="xalign">0</property>
                         <property name="xpad">6</property>
                         <property name="label" translatable="yes">Title:</property>
                         <property name="ellipsize">end</property>
