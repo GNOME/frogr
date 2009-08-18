@@ -32,8 +32,6 @@
 
 #define ITEM_WIDTH 120
 
-#define PULSE_INTERVAL 125
-
 #define GTKBUILDER_FILE                                 \
   APP_DATA_DIR "/gtkbuilder/frogr-main-window.xml"
 
