@@ -14,8 +14,6 @@ TODO list for the uploader:
  * Add a "Settings" new dialog to allow the user preselect some useful
    and common options (e.g. always upload public pictures by default).
 
- * Allow setting common properties for several pictures at once.
-
  * Add a "Cancel" button, to allow interrupting an uploading process
    without having to quit the application, as it is right now :-)
 
@@ -24,8 +22,6 @@ TODO list for the uploader:
  * Add drag & drop support.
 
  * Allow pre-selecting the target album for a picture before uploading.
-
- * Add contextual menu for right click on a picture (GtkIconView).
 
  * etc...
 
