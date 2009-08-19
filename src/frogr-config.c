@@ -25,8 +25,10 @@
 #include <string.h>
 #include <errno.h>
 
-#define FROGR_CONFIG_GET_PRIVATE(object) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_TYPE_CONFIG, FrogrConfigPrivate))
+#define FROGR_CONFIG_GET_PRIVATE(object)             \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),            \
+                                FROGR_TYPE_CONFIG,   \
+                                FrogrConfigPrivate))
 
 
 G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT);
@@ -35,7 +37,6 @@ G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT);
 typedef struct _FrogrConfigPrivate FrogrConfigPrivate;
 struct _FrogrConfigPrivate
 {
-  /* List of accounts. */
   GList *accounts;
 };
 
@@ -174,7 +175,7 @@ _frogr_config_load_accounts (FrogrConfig *fconfig, const gchar *config_dir)
             }
           else
             {
-              priv -> accounts = g_list_prepend (priv -> accounts, account);
+              priv->accounts = g_list_prepend (priv->accounts, account);
             }
         }
     }
@@ -265,7 +266,7 @@ _frogr_config_save_accounts (FrogrConfig *fconfig)
   root = xmlNewNode (NULL, (const xmlChar*) "accounts");
   xmlDocSetRootElement (xml, root);
 
-  for (item = g_list_first (priv -> accounts);
+  for (item = g_list_first (priv->accounts);
        item != NULL;
        item = g_list_next (item))
     {
@@ -315,11 +316,11 @@ _frogr_config_finalize (GObject *object)
 {
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
 
-  g_list_foreach (priv -> accounts, (GFunc) g_object_unref, NULL);
-  g_list_free (priv -> accounts);
+  g_list_foreach (priv->accounts, (GFunc) g_object_unref, NULL);
+  g_list_free (priv->accounts);
 
   /* Call superclass */
-  G_OBJECT_CLASS (frogr_config_parent_class) -> finalize (object);
+  G_OBJECT_CLASS (frogr_config_parent_class)->finalize (object);
 }
 
 static GObject*
@@ -332,9 +333,9 @@ _frogr_config_constructor (GType type,
   if (!_instance)
     {
       object =
-        G_OBJECT_CLASS (frogr_config_parent_class) -> constructor (type,
-                                                                   n_construct_properties,
-                                                                   construct_properties);
+        G_OBJECT_CLASS (frogr_config_parent_class)->constructor (type,
+                                                                 n_construct_properties,
+                                                                 construct_properties);
       _instance = FROGR_CONFIG (object);
     }
   else
@@ -350,8 +351,8 @@ frogr_config_class_init (FrogrConfigClass *klass)
 
   g_type_class_add_private (klass, sizeof (FrogrConfigPrivate));
 
-  obj_class -> constructor = _frogr_config_constructor;
-  obj_class -> finalize    = _frogr_config_finalize;
+  obj_class->constructor = _frogr_config_constructor;
+  obj_class->finalize    = _frogr_config_finalize;
 }
 
 static void
@@ -361,7 +362,7 @@ frogr_config_init (FrogrConfig *fconfig)
   gchar *config_dir = g_build_filename (g_get_user_config_dir (),
                                         g_get_prgname (), NULL);
 
-  priv -> accounts = NULL;
+  priv->accounts = NULL;
 
   /* Ensure that we have the config directory in place. */
   if (g_mkdir_with_parents (config_dir, 0777) != 0)
@@ -399,8 +400,8 @@ frogr_config_add_account (FrogrConfig  *fconfig,
 
   priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
 
-  priv -> accounts = g_list_prepend (priv -> accounts,
-                                     g_object_ref (faccount));
+  priv->accounts = g_list_prepend (priv->accounts,
+                                   g_object_ref (faccount));
 }
 
 FrogrAccount*
@@ -414,7 +415,7 @@ frogr_config_get_account (FrogrConfig *fconfig,
 
   priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
 
-  if (priv -> accounts == NULL)
+  if (priv->accounts == NULL)
     {
       FrogrAccount *faccount = frogr_account_new ();
       frogr_config_add_account (fconfig, faccount);
@@ -422,13 +423,13 @@ frogr_config_get_account (FrogrConfig *fconfig,
     }
 
   if (username == NULL)
-    return FROGR_ACCOUNT (g_list_first (priv -> accounts)->data);
+    return FROGR_ACCOUNT (g_list_first (priv->accounts)->data);
 
-  for (item = g_list_first (priv -> accounts);
+  for (item = g_list_first (priv->accounts);
        item != NULL;
        item = g_list_next (item))
     {
-      FrogrAccount *faccount = FROGR_ACCOUNT (item -> data);
+      FrogrAccount *faccount = FROGR_ACCOUNT (item->data);
       const gchar *tmp = frogr_account_get_username (faccount);
       if (g_str_equal (tmp, username))
         {

@@ -24,8 +24,10 @@
 
 #define TAGS_DELIMITER " "
 
-#define FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE(object) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_TYPE_MAIN_WINDOW_MODEL, FrogrMainWindowModelPrivate))
+#define FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE(object)           \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                     \
+                                FROGR_TYPE_MAIN_WINDOW_MODEL, \
+                                FrogrMainWindowModelPrivate))
 
 G_DEFINE_TYPE (FrogrMainWindowModel, frogr_main_window_model, G_TYPE_OBJECT);
 
@@ -42,29 +44,31 @@ struct _FrogrMainWindowModelPrivate
 static void
 _frogr_main_window_model_finalize (GObject* object)
 {
-  FrogrMainWindowModelPrivate *priv = FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (object);
-  g_slist_foreach (priv -> pictures_list, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv -> pictures_list);
-  G_OBJECT_CLASS (frogr_main_window_model_parent_class) -> finalize(object);
+  FrogrMainWindowModelPrivate *priv =
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (object);
+
+  g_slist_foreach (priv->pictures_list, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv->pictures_list);
+  G_OBJECT_CLASS (frogr_main_window_model_parent_class)->finalize(object);
 }
 
 static void
 frogr_main_window_model_class_init(FrogrMainWindowModelClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
-  obj_class -> finalize = _frogr_main_window_model_finalize;
+  obj_class->finalize = _frogr_main_window_model_finalize;
   g_type_class_add_private (obj_class, sizeof (FrogrMainWindowModelPrivate));
 }
 
 static void
-frogr_main_window_model_init (FrogrMainWindowModel *fmainwin_model)
+frogr_main_window_model_init (FrogrMainWindowModel *fmwmodel)
 {
   FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmwmodel);
 
   /* Init private data */
-  priv -> pictures_list = NULL;
-  priv -> n_pictures = 0;
+  priv->pictures_list = NULL;
+  priv->n_pictures = 0;
 }
 
 /* Public API */
@@ -77,66 +81,66 @@ frogr_main_window_model_new (void)
 }
 
 void
-frogr_main_window_model_add_picture (FrogrMainWindowModel *fmainwin_model,
+frogr_main_window_model_add_picture (FrogrMainWindowModel *fmwmodel,
                                      FrogrPicture *fpicture)
 {
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel));
 
   FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmwmodel);
 
   g_object_ref (fpicture);
-  priv -> pictures_list = g_slist_append (priv -> pictures_list, fpicture);
-  priv -> n_pictures++;
+  priv->pictures_list = g_slist_append (priv->pictures_list, fpicture);
+  priv->n_pictures++;
 }
 
 void
-frogr_main_window_model_remove_picture (FrogrMainWindowModel *fmainwin_model,
+frogr_main_window_model_remove_picture (FrogrMainWindowModel *fmwmodel,
                                         FrogrPicture *fpicture)
 {
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel));
 
   FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmwmodel);
 
-  priv -> pictures_list = g_slist_remove (priv -> pictures_list, fpicture);
-  priv -> n_pictures--;
+  priv->pictures_list = g_slist_remove (priv->pictures_list, fpicture);
+  priv->n_pictures--;
   g_object_unref (fpicture);
 }
 
 void
-frogr_main_window_model_remove_all (FrogrMainWindowModel *fmainwin_model)
+frogr_main_window_model_remove_all (FrogrMainWindowModel *fmwmodel)
 {
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel));
 
   FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmwmodel);
 
-  g_slist_foreach (priv -> pictures_list, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv -> pictures_list);
+  g_slist_foreach (priv->pictures_list, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv->pictures_list);
 
-  priv -> pictures_list = NULL;
-  priv -> n_pictures = 0;
+  priv->pictures_list = NULL;
+  priv->n_pictures = 0;
 }
 
 guint
-frogr_main_window_model_n_pictures (FrogrMainWindowModel *fmainwin_model)
+frogr_main_window_model_n_pictures (FrogrMainWindowModel *fmwmodel)
 {
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel));
 
   FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmwmodel);
 
-  return priv -> n_pictures;
+  return priv->n_pictures;
 }
 
 GSList *
-frogr_main_window_model_get_pictures (FrogrMainWindowModel *fmainwin_model)
+frogr_main_window_model_get_pictures (FrogrMainWindowModel *fmwmodel)
 {
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmainwin_model));
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel));
 
   FrogrMainWindowModelPrivate *priv =
-    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmainwin_model);
+    FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmwmodel);
 
-  return priv -> pictures_list;
+  return priv->pictures_list;
 }

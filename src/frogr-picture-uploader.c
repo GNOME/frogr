@@ -28,9 +28,9 @@
 #define PICTURE_WIDTH 100
 #define PICTURE_HEIGHT 100
 
-#define FROGR_PICTURE_UPLOADER_GET_PRIVATE(object)                \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_PICTURE_UPLOADER,      \
+#define FROGR_PICTURE_UPLOADER_GET_PRIVATE(object)            \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                     \
+                                FROGR_TYPE_PICTURE_UPLOADER,  \
                                 FrogrPictureUploaderPrivate))
 
 G_DEFINE_TYPE (FrogrPictureUploader, frogr_picture_uploader, G_TYPE_OBJECT);
@@ -66,22 +66,22 @@ _update_status_and_progress (FrogrPictureUploader *fpicture_uploader)
   gchar *status_text = NULL;
   gchar *progress_bar_text = NULL;
 
-  if (priv -> current)
+  if (priv->current)
     {
-      FrogrPicture *fpicture = FROGR_PICTURE (priv -> current -> data);
+      FrogrPicture *fpicture = FROGR_PICTURE (priv->current->data);
       gchar *title = g_strdup (frogr_picture_get_title (fpicture));
 
       /* Update progress */
       status_text = g_strdup_printf ("Uploading '%s'...", title);
       progress_bar_text = g_strdup_printf ("%d / %d",
-                                           priv -> index,
-                                           priv -> n_pictures);
+                                           priv->index,
+                                           priv->n_pictures);
       g_free (title);
     }
 
-  frogr_main_window_set_status_text (priv -> mainwin, status_text);
-  frogr_main_window_set_progress (priv -> mainwin,
-                                  (double) priv -> index / priv -> n_pictures,
+  frogr_main_window_set_status_text (priv->mainwin, status_text);
+  frogr_main_window_set_progress (priv->mainwin,
+                                  (double) priv->index / priv->n_pictures,
                                   progress_bar_text);
   /* Free */
   g_free (status_text);
@@ -96,15 +96,15 @@ _upload_next_picture_cb (FrogrPictureUploader *fpicture_uploader,
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (fpicture_uploader);
 
   /* Update internal status */
-  priv -> current = g_slist_next (priv -> current);
-  priv -> index++;
+  priv->current = g_slist_next (priv->current);
+  priv->index++;
 
   /* Update status and progress bars */
   _update_status_and_progress (fpicture_uploader);
 
   /* Execute 'picture-uploaded' callback */
-  if (priv -> picture_uploaded_cb)
-    priv -> picture_uploaded_cb (priv -> object, fpicture);
+  if (priv->picture_uploaded_cb)
+    priv->picture_uploaded_cb (priv->object, fpicture);
 
   /* Go for the next picture */
   _upload_next_picture (fpicture_uploader);
@@ -116,12 +116,12 @@ _upload_next_picture (FrogrPictureUploader *fpicture_uploader)
   FrogrPictureUploaderPrivate *priv =
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (fpicture_uploader);
 
-  if (priv -> current)
+  if (priv->current)
     {
-      FrogrPicture *fpicture = FROGR_PICTURE (priv -> current -> data);
+      FrogrPicture *fpicture = FROGR_PICTURE (priv->current->data);
 
       /* Delegate on controller and notify UI */
-      frogr_controller_upload_picture (priv -> controller,
+      frogr_controller_upload_picture (priv->controller,
                                        fpicture,
                                        (GFunc)_upload_next_picture_cb,
                                        fpicture_uploader);
@@ -132,11 +132,11 @@ _upload_next_picture (FrogrPictureUploader *fpicture_uploader)
       _update_status_and_progress (fpicture_uploader);
 
       /* Set proper state */
-      frogr_main_window_set_state (priv -> mainwin, FROGR_STATE_IDLE);
+      frogr_main_window_set_state (priv->mainwin, FROGR_STATE_IDLE);
 
       /* Execute final callback */
-      if (priv -> pictures_uploaded_cb)
-        priv -> pictures_uploaded_cb (priv -> object, fpicture_uploader);
+      if (priv->pictures_uploaded_cb)
+        priv->pictures_uploaded_cb (priv->object, fpicture_uploader);
     }
 }
 
@@ -147,19 +147,19 @@ _frogr_picture_uploader_finalize (GObject* object)
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (object);
 
   /* Free */
-  g_object_unref (priv -> mainwin);
-  g_object_unref (priv -> controller);
-  g_slist_foreach (priv -> fpictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv -> fpictures);
+  g_object_unref (priv->mainwin);
+  g_object_unref (priv->controller);
+  g_slist_foreach (priv->fpictures, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv->fpictures);
 
-  G_OBJECT_CLASS (frogr_picture_uploader_parent_class) -> finalize(object);
+  G_OBJECT_CLASS (frogr_picture_uploader_parent_class)->finalize(object);
 }
 
 static void
 frogr_picture_uploader_class_init(FrogrPictureUploaderClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
-  obj_class -> finalize = _frogr_picture_uploader_finalize;
+  obj_class->finalize = _frogr_picture_uploader_finalize;
   g_type_class_add_private (obj_class, sizeof (FrogrPictureUploaderPrivate));
 }
 
@@ -170,14 +170,14 @@ frogr_picture_uploader_init (FrogrPictureUploader *fpicture_uploader)
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (fpicture_uploader);
 
   /* Init private data */
-  priv -> controller = frogr_controller_get_instance ();
-  priv -> mainwin = frogr_controller_get_main_window (priv -> controller);
+  priv->controller = frogr_controller_get_instance ();
+  priv->mainwin = frogr_controller_get_main_window (priv->controller);
 
   /* Init the rest of private data */
-  priv -> fpictures = NULL;
-  priv -> current = NULL;
-  priv -> index = -1;
-  priv -> n_pictures = 0;
+  priv->fpictures = NULL;
+  priv->current = NULL;
+  priv->index = -1;
+  priv->n_pictures = 0;
 }
 
 /* Public API */
@@ -198,15 +198,15 @@ frogr_picture_uploader_new (GSList *fpictures,
   g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
 
   /* Internal data */
-  priv -> fpictures = g_slist_copy (fpictures);
-  priv -> current = priv -> fpictures;
-  priv -> index = 0;
-  priv -> n_pictures = g_slist_length (priv -> fpictures);
+  priv->fpictures = g_slist_copy (fpictures);
+  priv->current = priv->fpictures;
+  priv->index = 0;
+  priv->n_pictures = g_slist_length (priv->fpictures);
 
   /* Callback data */
-  priv -> picture_uploaded_cb = picture_uploaded_cb;
-  priv -> pictures_uploaded_cb = pictures_uploaded_cb;
-  priv -> object = object;
+  priv->picture_uploaded_cb = picture_uploaded_cb;
+  priv->pictures_uploaded_cb = pictures_uploaded_cb;
+  priv->object = object;
 
   return fpicture_uploader;
 }
@@ -220,18 +220,18 @@ frogr_picture_uploader_upload (FrogrPictureUploader *fpicture_uploader)
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (fpicture_uploader);
 
   /* Check first whether there's something to upload */
-  if (priv -> fpictures == NULL)
+  if (priv->fpictures == NULL)
     return FALSE;
 
   /* Check authorization */
-  if (!frogr_controller_is_authorized (priv -> controller))
+  if (!frogr_controller_is_authorized (priv->controller))
     {
       g_debug ("Not authorized yet");
       return FALSE;
     }
 
   /* Set proper state */
-  frogr_main_window_set_state (priv -> mainwin, FROGR_STATE_UPLOADING);
+  frogr_main_window_set_state (priv->mainwin, FROGR_STATE_UPLOADING);
 
   /* Update status and progress bars */
   _update_status_and_progress (fpicture_uploader);

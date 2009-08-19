@@ -29,8 +29,10 @@
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
 
-#define FROGR_FACADE_GET_PRIVATE(object) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object), FROGR_FACADE_TYPE, FrogrFacadePrivate))
+#define FROGR_FACADE_GET_PRIVATE(object)             \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),            \
+                                FROGR_FACADE_TYPE,   \
+                                FrogrFacadePrivate))
 
 G_DEFINE_TYPE (FrogrFacade, frogr_facade, G_TYPE_OBJECT);
 
@@ -51,11 +53,11 @@ frogr_facade_finalize (GObject* object)
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (object);
 
   /* Free memory */
-  g_object_unref (priv -> config);
-  flickcurl_free (priv -> fcurl);
+  g_object_unref (priv->config);
+  flickcurl_free (priv->fcurl);
 
   /* Call superclass */
-  G_OBJECT_CLASS (frogr_facade_parent_class) -> finalize(object);
+  G_OBJECT_CLASS (frogr_facade_parent_class)->finalize(object);
 }
 
 static void
@@ -63,7 +65,7 @@ frogr_facade_class_init(FrogrFacadeClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
 
-  obj_class -> finalize = frogr_facade_finalize;
+  obj_class->finalize = frogr_facade_finalize;
   g_type_class_add_private (obj_class, sizeof (FrogrFacadePrivate));
 }
 
@@ -75,18 +77,18 @@ frogr_facade_init (FrogrFacade *ffacade)
   const gchar *token;
 
   /* Get config */
-  priv -> config = frogr_config_get_instance ();
+  priv->config = frogr_config_get_instance ();
 
   /* Init flickcurl */
   flickcurl_init();
-  priv -> fcurl = flickcurl_new();
+  priv->fcurl = flickcurl_new();
 
   /* Set API key and shared secret */
-  flickcurl_set_api_key(priv -> fcurl, API_KEY);
-  flickcurl_set_shared_secret(priv -> fcurl, SHARED_SECRET);
+  flickcurl_set_api_key(priv->fcurl, API_KEY);
+  flickcurl_set_shared_secret(priv->fcurl, SHARED_SECRET);
 
   /* If available, set token */
-  faccount = frogr_config_get_default_account (priv -> config);
+  faccount = frogr_config_get_default_account (priv->config);
   token = frogr_account_get_token (faccount);
   if (token != NULL)
     {
@@ -109,19 +111,19 @@ frogr_facade_get_authorization_url (FrogrFacade *ffacade)
   g_return_if_fail(FROGR_IS_FACADE (ffacade));
 
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-  gchar *frob = flickcurl_auth_getFrob (priv -> fcurl);
+  gchar *frob = flickcurl_auth_getFrob (priv->fcurl);
   gchar *auth_url = NULL;
 
 
   /* Get auth url */
   if (frob)
     {
+      FrogrConfig *fconfig = frogr_config_get_instance ();
       gchar *sign_str;
       gchar *api_sig;
 
       /* Save frob value */
-      frogr_account_set_frob (frogr_config_get_default_account (frogr_config_get_instance ()),
-                              frob);
+      frogr_account_set_frob (frogr_config_get_default_account (fconfig), frob);
 
       /* Build the authorization url */
       sign_str = g_strdup_printf ("%sapi_key%sfrob%spermswrite",
@@ -143,8 +145,9 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
 {
   g_return_if_fail(FROGR_IS_FACADE (ffacade));
 
-  FrogrAccount *faccount = frogr_config_get_default_account (frogr_config_get_instance ());
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
+  FrogrConfig *fconfig = frogr_config_get_instance ();
+  FrogrAccount *faccount = frogr_config_get_default_account (fconfig);
   gchar *auth_token = NULL;
   gchar *frob = NULL;
 
@@ -157,11 +160,11 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
     }
 
   /* Get auth token */
-  auth_token = flickcurl_auth_getToken (priv -> fcurl, frob);
+  auth_token = flickcurl_auth_getToken (priv->fcurl, frob);
   if (auth_token)
     {
       /* Set and save the auth token */
-      flickcurl_set_auth_token(priv -> fcurl, auth_token);
+      flickcurl_set_auth_token(priv->fcurl, auth_token);
       frogr_account_set_token (faccount, auth_token);
     }
 
@@ -174,7 +177,7 @@ frogr_facade_is_authorized (FrogrFacade *ffacade)
   g_return_if_fail(FROGR_IS_FACADE (ffacade));
 
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-  return (flickcurl_get_auth_token (priv -> fcurl) != NULL);
+  return (flickcurl_get_auth_token (priv->fcurl) != NULL);
 }
 
 typedef struct {
@@ -189,11 +192,11 @@ static gboolean
 _picture_uploaded (upload_picture_st *up_st)
 {
   g_return_if_fail (up_st != NULL);
-  FrogrFacade *ffacade = up_st -> ffacade;
-  FrogrPicture *fpicture = up_st -> fpicture;
-  GFunc callback = up_st -> callback;
-  gpointer object = up_st -> object;
-  gpointer data = up_st -> data;
+  FrogrFacade *ffacade = up_st->ffacade;
+  FrogrPicture *fpicture = up_st->fpicture;
+  GFunc callback = up_st->callback;
+  gpointer object = up_st->object;
+  gpointer data = up_st->data;
 
   /* Free memory */
   g_slice_free (upload_picture_st, up_st);
@@ -209,8 +212,8 @@ static void
 _upload_picture_thread (upload_picture_st *up_st)
 {
   g_return_if_fail (up_st != NULL);
-  FrogrFacade *ffacade = up_st -> ffacade;
-  FrogrPicture *fpicture = up_st -> fpicture;
+  FrogrFacade *ffacade = up_st->ffacade;
+  FrogrPicture *fpicture = up_st->fpicture;
 
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
   flickcurl_upload_params *uparams;
@@ -220,33 +223,33 @@ _upload_picture_thread (upload_picture_st *up_st)
 
   /* Prepare upload params */
   uparams = g_slice_new (flickcurl_upload_params);
-  uparams -> title = frogr_picture_get_title (fpicture);
-  uparams -> photo_file = frogr_picture_get_filepath (fpicture);
-  uparams -> description = frogr_picture_get_description (fpicture);
-  uparams -> tags = frogr_picture_get_tags (fpicture);
-  uparams -> is_public = frogr_picture_is_public (fpicture);
-  uparams -> is_friend = frogr_picture_is_friend (fpicture);
-  uparams -> is_family = frogr_picture_is_family (fpicture);
-  uparams -> safety_level = 1; /* Harcoded: 'safe' */
-  uparams -> content_type = 1; /* Harcoded: 'photo' */
+  uparams->title = frogr_picture_get_title (fpicture);
+  uparams->photo_file = frogr_picture_get_filepath (fpicture);
+  uparams->description = frogr_picture_get_description (fpicture);
+  uparams->tags = frogr_picture_get_tags (fpicture);
+  uparams->is_public = frogr_picture_is_public (fpicture);
+  uparams->is_friend = frogr_picture_is_friend (fpicture);
+  uparams->is_family = frogr_picture_is_family (fpicture);
+  uparams->safety_level = 1; /* Harcoded: 'safe' */
+  uparams->content_type = 1; /* Harcoded: 'photo' */
 
   /* Upload the test photo (private) */
   g_debug ("\n\nNow uploading picture %s...\n",
            frogr_picture_get_title (fpicture));
 
-  ustatus = flickcurl_photos_upload_params (priv -> fcurl, uparams);
+  ustatus = flickcurl_photos_upload_params (priv->fcurl, uparams);
   if (ustatus) {
     g_debug ("[OK] Success uploading a new picture\n");
 
     /* Save photo ID along with the picture */
-    frogr_picture_set_id (fpicture, ustatus -> photoid);
+    frogr_picture_set_id (fpicture, ustatus->photoid);
 
     /* Print and free upload status */
     g_debug ("\tPhoto upload status:");
-    g_debug ("\t\tPhotoID: %s", ustatus -> photoid);
-    g_debug ("\t\tSecret: %s", ustatus -> secret);
-    g_debug ("\t\tOriginalSecret: %s", ustatus -> originalsecret);
-    g_debug ("\t\tTicketID: %s", ustatus -> ticketid);
+    g_debug ("\t\tPhotoID: %s", ustatus->photoid);
+    g_debug ("\t\tSecret: %s", ustatus->secret);
+    g_debug ("\t\tOriginalSecret: %s", ustatus->originalsecret);
+    g_debug ("\t\tTicketID: %s", ustatus->ticketid);
 
     /* Free */
     flickcurl_free_upload_status (ustatus);
@@ -276,11 +279,11 @@ frogr_facade_upload_picture (FrogrFacade *ffacade,
 
   /* Create structure to pass to the thread */
   up_st = g_slice_new (upload_picture_st);
-  up_st -> ffacade = ffacade;
-  up_st -> fpicture = fpicture;
-  up_st -> callback = callback;
-  up_st -> object = object;
-  up_st -> data = data;
+  up_st->ffacade = ffacade;
+  up_st->fpicture = fpicture;
+  up_st->callback = callback;
+  up_st->object = object;
+  up_st->data = data;
 
   /* Initiate the process in another thread */
   g_thread_create ((GThreadFunc)_upload_picture_thread,

@@ -31,9 +31,9 @@
 #define PICTURE_WIDTH 150
 #define PICTURE_HEIGHT 150
 
-#define FROGR_DETAILS_DIALOG_GET_PRIVATE(object)                   \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                          \
-                                FROGR_TYPE_DETAILS_DIALOG,         \
+#define FROGR_DETAILS_DIALOG_GET_PRIVATE(object)            \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                   \
+                                FROGR_TYPE_DETAILS_DIALOG,  \
                                 FrogrDetailsDialogPrivate))
 
 G_DEFINE_TYPE (FrogrDetailsDialog, frogr_details_dialog, GTK_TYPE_DIALOG);
@@ -67,9 +67,9 @@ _update_ui (FrogrDetailsDialog *fdetailsdialog)
   gboolean active;
 
   /* Adjust sensitiveness for check buttons */
-  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> public_rb));
-  gtk_widget_set_sensitive (priv -> friend_cb, !active);
-  gtk_widget_set_sensitive (priv -> family_cb, !active);
+  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->public_rb));
+  gtk_widget_set_sensitive (priv->friend_cb, !active);
+  gtk_widget_set_sensitive (priv->family_cb, !active);
 }
 
 static GdkPixbuf *
@@ -121,8 +121,8 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
   GSList *item;
 
   /* Take first element values */
-  item = priv -> fpictures;
-  fpicture = FROGR_PICTURE (item -> data);
+  item = priv->fpictures;
+  fpicture = FROGR_PICTURE (item->data);
 
   title_val = (gchar *)frogr_picture_get_title (fpicture);
   desc_val = (gchar *)frogr_picture_get_description (fpicture);
@@ -142,7 +142,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
       gboolean is_family = FALSE;
 
       /* Retrieve needed data */
-      fpicture = FROGR_PICTURE (item -> data);
+      fpicture = FROGR_PICTURE (item->data);
 
       /* Only retrieve title and desc when needed */
       if (title_val != NULL)
@@ -174,21 +174,21 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
         tags_val = NULL;
 
       /* Check radio and check buttons consistence */
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv -> public_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv -> public_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb),
                                               is_public_val != is_public);
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv -> public_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb),
                                               is_public_val != is_public);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv -> family_cb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv -> family_cb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb),
                                               is_family_val != is_family);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv -> friend_cb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->friend_cb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv -> friend_cb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->friend_cb),
                                               is_friend_val != is_friend);
         }
 
@@ -200,27 +200,27 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
 
   /* Fill in with data */
   if (title_val != NULL)
-    gtk_entry_set_text (GTK_ENTRY (priv -> title_entry), title_val);
+    gtk_entry_set_text (GTK_ENTRY (priv->title_entry), title_val);
 
   if (desc_val != NULL)
-    gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv -> text_buffer),
+    gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv->text_buffer),
                               desc_val, -1);
   if (tags_val != NULL)
-    gtk_entry_set_text (GTK_ENTRY (priv -> tags_entry), tags_val);
+    gtk_entry_set_text (GTK_ENTRY (priv->tags_entry), tags_val);
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv -> public_rb),
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->public_rb),
                                 is_public_val);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv -> private_rb),
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->private_rb),
                                 !is_public_val);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv -> friend_cb),
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb),
                                 is_friend_val);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv -> family_cb),
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb),
                                 is_family_val);
 
   /* Set pixbuf scaled to the right size */
   pixbuf = frogr_picture_get_pixbuf (fpicture);
   s_pixbuf = _get_scaled_pixbuf (pixbuf);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (priv -> picture_img), s_pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), s_pixbuf);
   g_object_unref (s_pixbuf);
 
   /* Update UI */
@@ -236,10 +236,10 @@ _validate_dialog_data (FrogrDetailsDialog *fdetailsdialog)
   gboolean result = TRUE;
 
   /* Mandatory fields (only if editing a single picture) */
-  if (g_slist_length (priv -> fpictures) <= 1)
+  if (g_slist_length (priv->fpictures) <= 1)
     {
       gchar *title =
-        g_strdup (gtk_entry_get_text (GTK_ENTRY (priv -> title_entry)));
+        g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
 
       if ((title == NULL) || g_str_equal (g_strstrip (title), ""))
         result = FALSE;
@@ -269,27 +269,27 @@ _save_data (FrogrDetailsDialog *fdetailsdialog)
   gboolean result = FALSE;
 
   /* Save data */
-  title = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv -> title_entry)));
+  title = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
   title = g_strstrip (title);
 
-  gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (priv -> text_buffer),
+  gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (priv->text_buffer),
                               &start, &end);
-  description = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (priv -> text_buffer),
+  description = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (priv->text_buffer),
                                           &start, &end, FALSE);
   description = g_strstrip (description);
 
-  tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv -> tags_entry)));
+  tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->tags_entry)));
   tags = g_strstrip (tags);
 
   is_public =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> public_rb));
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->public_rb));
 
   if (!is_public)
     {
       is_friend =
-        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> friend_cb));
+        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->friend_cb));
       is_family =
-        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv -> family_cb));
+        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->family_cb));
     }
   else
     {
@@ -306,10 +306,10 @@ _save_data (FrogrDetailsDialog *fdetailsdialog)
       guint n_pictures;
 
       /* Iterate over the rest of elements */
-      n_pictures = g_slist_length (priv -> fpictures);
-      for (item = priv -> fpictures; item; item = g_slist_next (item))
+      n_pictures = g_slist_length (priv->fpictures);
+      for (item = priv->fpictures; item; item = g_slist_next (item))
         {
-          fpicture = FROGR_PICTURE (item -> data);
+          fpicture = FROGR_PICTURE (item->data);
 
           if (!g_str_equal (title, "") || (n_pictures <= 1))
             frogr_picture_set_title (fpicture, title);
@@ -362,16 +362,16 @@ _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
   FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (data);
 
   /* Reset consistence and update UI */
-  gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv -> public_rb),
+  gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb),
                                       FALSE);
-  gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv -> private_rb),
+  gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->private_rb),
                                       FALSE);
   _update_ui (fdetailsdialog);
 }
 
 void
 _on_family_friend_cbutton_toggled (GtkToggleButton *tbutton,
-                            gpointer data)
+                                   gpointer data)
 {
   FrogrDetailsDialog *fdetailsdialog = FROGR_DETAILS_DIALOG (data);
 
@@ -391,7 +391,7 @@ _frogr_details_dialog_set_property (GObject *object,
   switch (prop_id)
     {
     case PROP_PICTURES:
-      priv -> fpictures = (GSList *) g_value_get_pointer (value);
+      priv->fpictures = (GSList *) g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -410,7 +410,7 @@ _frogr_details_dialog_get_property (GObject *object,
   switch (prop_id)
     {
     case PROP_PICTURES:
-      g_value_set_pointer (value, priv -> fpictures);
+      g_value_set_pointer (value, priv->fpictures);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -422,30 +422,30 @@ static void
 _frogr_details_dialog_finalize (GObject *object)
 {
   FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (object);
-  g_slist_foreach (priv -> fpictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv -> fpictures);
-  G_OBJECT_CLASS(frogr_details_dialog_parent_class) -> finalize (object);
+  g_slist_foreach (priv->fpictures, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv->fpictures);
+  G_OBJECT_CLASS(frogr_details_dialog_parent_class)->finalize (object);
 }
 
 static void
 frogr_details_dialog_class_init (FrogrDetailsDialogClass *klass)
 {
   GObjectClass *obj_class = (GObjectClass *)klass;
+  GParamSpec *pspec;
 
   /* GtkObject signals */
   obj_class->set_property = _frogr_details_dialog_set_property;
   obj_class->get_property = _frogr_details_dialog_get_property;
-  obj_class -> finalize = _frogr_details_dialog_finalize;
+  obj_class->finalize = _frogr_details_dialog_finalize;
 
   /* Install properties */
-  g_object_class_install_property (obj_class,
-                                   PROP_PICTURES,
-                                   g_param_spec_pointer ("pictures",
-                                                         "pictures",
-                                                         "List of pictures for "
-                                                         "the details dialog",
-                                                         G_PARAM_READWRITE
-                                                         | G_PARAM_CONSTRUCT_ONLY));
+  pspec = g_param_spec_pointer ("pictures",
+                                "pictures",
+                                "List of pictures for "
+                                "the details dialog",
+                                G_PARAM_READWRITE
+                                | G_PARAM_CONSTRUCT_ONLY);
+  g_object_class_install_property (obj_class, PROP_PICTURES, pspec);
 
   g_type_class_add_private (obj_class, sizeof (FrogrDetailsDialogPrivate));
 }
@@ -465,7 +465,7 @@ frogr_details_dialog_init (FrogrDetailsDialog *fdetailsdialog)
 
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main-vbox"));
   gtk_widget_reparent (main_vbox,
-                       GTK_WIDGET (GTK_DIALOG (fdetailsdialog) -> vbox));
+                       GTK_WIDGET (GTK_DIALOG (fdetailsdialog)->vbox));
 
   gtk_dialog_add_buttons (GTK_DIALOG (fdetailsdialog),
                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -473,23 +473,23 @@ frogr_details_dialog_init (FrogrDetailsDialog *fdetailsdialog)
                           NULL);
 
   /* Get widgets */
-  priv -> title_entry =
+  priv->title_entry =
     GTK_WIDGET (gtk_builder_get_object (builder, "title_entry"));
-  priv -> desc_tview =
+  priv->desc_tview =
     GTK_WIDGET (gtk_builder_get_object (builder, "description_tview"));
-  priv -> tags_entry =
+  priv->tags_entry =
     GTK_WIDGET (gtk_builder_get_object (builder, "tags_entry"));
-  priv -> text_buffer =
-    gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv -> desc_tview));
-  priv -> public_rb =
+  priv->text_buffer =
+    gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
+  priv->public_rb =
     GTK_WIDGET (gtk_builder_get_object (builder, "public_rbutton"));
-  priv -> private_rb =
+  priv->private_rb =
     GTK_WIDGET (gtk_builder_get_object (builder, "private_rbutton"));
-  priv -> friend_cb =
+  priv->friend_cb =
     GTK_WIDGET (gtk_builder_get_object (builder, "friend_cbutton"));
-  priv -> family_cb =
+  priv->family_cb =
     GTK_WIDGET (gtk_builder_get_object (builder, "family_cbutton"));
-  priv -> picture_img =
+  priv->picture_img =
     GTK_WIDGET (gtk_builder_get_object (builder, "picture_img"));
 
   /* Connect signals */
