@@ -462,25 +462,35 @@ _on_icon_view_button_press_event (GtkWidget *widget,
                                      &path,
                                      NULL))
     {
+      gboolean path_selected =
+        gtk_icon_view_path_is_selected (GTK_ICON_VIEW (priv->icon_view), path);
+
       /* Check whether it's needed to keep this item as the only selection */
-      if ((event->button != 3)
-          || (!gtk_icon_view_path_is_selected (GTK_ICON_VIEW (priv->icon_view),
-                                               path)))
+      if (((event->button == 1) && path_selected)
+          || ((event->button == 3) && !path_selected))
         {
-          gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
-          gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view),
-                                     path);
-          gtk_tree_path_free (path);
+          if (!(event->state & GDK_SHIFT_MASK)
+              && !(event->state & GDK_CONTROL_MASK))
+            {
+              /* Deselect all items if not pressing Ctrl or shift */
+              gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
+            }
+
+          /* Now select the item */
+          gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
+
         }
 
       /* Perform the right action: edit picture or show ctxt menu */
       if ((event->button == 1)                   /* left button */
-          && (event->type == GDK_2BUTTON_PRESS)) /* doubleclick */
+          && (event->type == GDK_2BUTTON_PRESS ) /* doubleclick */
+          && !(event->state & GDK_SHIFT_MASK)    /*  not shift  */
+          && !(event->state & GDK_CONTROL_MASK)) /*  not Ctrl   */
         {
           /* edit selected item */
           _edit_selected_items (fmainwin);
         }
-      else if ((event->button == 3)             /* right button */
+      else if ((event->button == 3)                  /* right button */
                && (event->type == GDK_BUTTON_PRESS)) /* single click */
         {
           /* Show contextual menu if in IDLE state*/
@@ -492,6 +502,8 @@ _on_icon_view_button_press_event (GtkWidget *widget,
                               gtk_get_current_event_time ());
             }
         }
+      /* Free */
+      gtk_tree_path_free (path);
     }
 
   return FALSE;
