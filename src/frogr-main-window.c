@@ -117,6 +117,7 @@ _update_ui (FrogrMainWindow *fmainwin)
   FrogrMainWindowState state;
   GSList *fpictures_list = NULL;
   gboolean authorized;
+  gboolean pictures_loaded;
   guint npics;
 
   /* Set sensitiveness */
@@ -133,9 +134,10 @@ _update_ui (FrogrMainWindow *fmainwin)
     case FROGR_STATE_IDLE:
       npics = frogr_main_window_model_n_pictures (priv -> model);
       authorized = frogr_controller_is_authorized (priv -> controller);
+      pictures_loaded = frogr_main_window_model_n_pictures (priv -> model);
 
       gtk_widget_set_sensitive (priv -> add_button, TRUE);
-      gtk_widget_set_sensitive (priv -> remove_button, TRUE);
+      gtk_widget_set_sensitive (priv -> remove_button, pictures_loaded);
       gtk_widget_set_sensitive (priv -> auth_button, !authorized);
       gtk_widget_set_sensitive (priv -> upload_button,
                                 authorized && (npics > 0));
