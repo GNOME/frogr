@@ -42,32 +42,26 @@ struct _FrogrConfigPrivate
 
 static FrogrConfig *_instance = NULL;
 
-static gboolean
-_xml_node_to_boolean (const xmlNodePtr node)
-{
-  xmlChar *xstr;
-  gchar *str;
-  gboolean result;
+/* Prototypes */
 
-  g_return_val_if_fail (node != NULL, FALSE);
+static FrogrAccount *_frogr_config_account_from_xml (xmlDocPtr xml,
+                                                     xmlNodePtr rootnode);
+static void _frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir);
+static void _frogr_config_load_accounts (FrogrConfig *fconfig,
+                                         const gchar *config_dir);
+static gboolean _frogr_config_save_accounts (FrogrConfig *fconfig);
+static xmlNodePtr _xml_add_boolean_child (xmlNodePtr   parent,
+                                          const gchar *xml_name,
+                                          GObject     *object,
+                                          const gchar *prop_name);
+static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
+                                         const gchar *xml_name,
+                                         GObject     *object,
+                                         const gchar *prop_name);
+static gboolean _xml_node_to_boolean (const xmlNodePtr node);
 
-  xstr = xmlNodeGetContent (node);
-  str = (gchar*) xstr;
 
-  while (g_ascii_isspace (*str++)); /* Skip blanks */
-
-  if (g_ascii_isdigit (*str))
-    {
-      long value = strtol (str, NULL, 0);
-      result = (value != 0);
-    }
-  else
-    {
-      result = (g_ascii_strncasecmp ("false", str, 5) != 0);
-    }
-  xmlFree (xstr);
-  return result;
-}
+/* Private functions */
 
 static FrogrAccount*
 _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
@@ -197,56 +191,6 @@ _frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir)
   _frogr_config_load_accounts (fconfig, config_dir);
 }
 
-static xmlNodePtr
-_xml_add_string_child (xmlNodePtr   parent,
-                       const gchar *xml_name,
-                       GObject     *object,
-                       const gchar *prop_name)
-{
-  xmlNodePtr node;
-  xmlChar *enc;
-  gchar *value;
-
-  g_return_val_if_fail (parent    != NULL, NULL);
-  g_return_val_if_fail (xml_name  != NULL, NULL);
-  g_return_val_if_fail (object    != NULL, NULL);
-  g_return_val_if_fail (prop_name != NULL, NULL);
-
-  g_object_get (object, prop_name, &value, NULL);
-
-  node = xmlNewNode (NULL, (const xmlChar*) xml_name);
-  enc = xmlEncodeEntitiesReentrant (NULL, (const xmlChar*) value);
-  xmlNodeSetContent (node, enc);
-  g_free (value);
-  xmlFree (enc);
-  xmlAddChild (parent, node);
-
-  return node;
-}
-
-static xmlNodePtr
-_xml_add_boolean_child (xmlNodePtr   parent,
-                        const gchar *xml_name,
-                        GObject     *object,
-                        const gchar *prop_name)
-{
-  xmlNodePtr node;
-  gboolean value;
-
-  g_return_val_if_fail (parent    != NULL, NULL);
-  g_return_val_if_fail (xml_name  != NULL, NULL);
-  g_return_val_if_fail (object    != NULL, NULL);
-  g_return_val_if_fail (prop_name != NULL, NULL);
-
-  g_object_get (object, prop_name, &value, NULL);
-
-  node = xmlNewNode (NULL, (const xmlChar*) xml_name);
-  xmlNodeSetContent (node, (const xmlChar*) ((value) ? "true" : "false"));
-  xmlAddChild (parent, node);
-
-  return node;
-}
-
 static gboolean
 _frogr_config_save_accounts (FrogrConfig *fconfig)
 {
@@ -297,6 +241,86 @@ _frogr_config_save_accounts (FrogrConfig *fconfig)
 
   return retval;
 }
+
+static xmlNodePtr
+_xml_add_boolean_child (xmlNodePtr   parent,
+                        const gchar *xml_name,
+                        GObject     *object,
+                        const gchar *prop_name)
+{
+  xmlNodePtr node;
+  gboolean value;
+
+  g_return_val_if_fail (parent    != NULL, NULL);
+  g_return_val_if_fail (xml_name  != NULL, NULL);
+  g_return_val_if_fail (object    != NULL, NULL);
+  g_return_val_if_fail (prop_name != NULL, NULL);
+
+  g_object_get (object, prop_name, &value, NULL);
+
+  node = xmlNewNode (NULL, (const xmlChar*) xml_name);
+  xmlNodeSetContent (node, (const xmlChar*) ((value) ? "true" : "false"));
+  xmlAddChild (parent, node);
+
+  return node;
+}
+
+static xmlNodePtr
+_xml_add_string_child (xmlNodePtr   parent,
+                       const gchar *xml_name,
+                       GObject     *object,
+                       const gchar *prop_name)
+{
+  xmlNodePtr node;
+  xmlChar *enc;
+  gchar *value;
+
+  g_return_val_if_fail (parent    != NULL, NULL);
+  g_return_val_if_fail (xml_name  != NULL, NULL);
+  g_return_val_if_fail (object    != NULL, NULL);
+  g_return_val_if_fail (prop_name != NULL, NULL);
+
+  g_object_get (object, prop_name, &value, NULL);
+
+  node = xmlNewNode (NULL, (const xmlChar*) xml_name);
+  enc = xmlEncodeEntitiesReentrant (NULL, (const xmlChar*) value);
+  xmlNodeSetContent (node, enc);
+  g_free (value);
+  xmlFree (enc);
+  xmlAddChild (parent, node);
+
+  return node;
+}
+
+static gboolean
+_xml_node_to_boolean (const xmlNodePtr node)
+{
+  xmlChar *xstr;
+  gchar *str;
+  gboolean result;
+
+  g_return_val_if_fail (node != NULL, FALSE);
+
+  xstr = xmlNodeGetContent (node);
+  str = (gchar*) xstr;
+
+  while (g_ascii_isspace (*str++)); /* Skip blanks */
+
+  if (g_ascii_isdigit (*str))
+    {
+      long value = strtol (str, NULL, 0);
+      result = (value != 0);
+    }
+  else
+    {
+      result = (g_ascii_strncasecmp ("false", str, 5) != 0);
+    }
+  xmlFree (xstr);
+  return result;
+}
+
+
+/* Public functions */
 
 gboolean
 frogr_config_save (FrogrConfig *fconfig)

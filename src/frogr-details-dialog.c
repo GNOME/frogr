@@ -57,6 +57,20 @@ enum  {
   PROP_PICTURES
 };
 
+
+/* Prototypes */
+
+static void _update_ui (FrogrDetailsDialog *fdetailsdialog);
+static GdkPixbuf *_get_scaled_pixbuf (GdkPixbuf *pixbuf);
+static void _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog);
+static gboolean _validate_dialog_data (FrogrDetailsDialog *fdetailsdialog);
+static gboolean _save_data (FrogrDetailsDialog *fdetailsdialog);
+
+void _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
+                                         gpointer data);
+void _on_family_friend_cbutton_toggled (GtkToggleButton *tbutton,
+                                        gpointer data);
+
 /* Private API */
 
 static void
@@ -253,7 +267,6 @@ _validate_dialog_data (FrogrDetailsDialog *fdetailsdialog)
 
 static gboolean
 _save_data (FrogrDetailsDialog *fdetailsdialog)
-
 {
   FrogrDetailsDialogPrivate *priv =
     FROGR_DETAILS_DIALOG_GET_PRIVATE (fdetailsdialog);

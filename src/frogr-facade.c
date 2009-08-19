@@ -44,8 +44,97 @@ struct _FrogrFacadePrivate
   flickcurl *fcurl;
 };
 
+/* Prototypes */
+
+typedef struct {
+  FrogrFacade *ffacade;
+  FrogrPicture *fpicture;
+  GFunc callback;
+  gpointer object;
+  gpointer data;
+} upload_picture_st;
+
+static gboolean _picture_uploaded (upload_picture_st *up_st);
+static void _upload_picture_thread (upload_picture_st *up_st);
 
 /* Private API */
+
+static gboolean
+_picture_uploaded (upload_picture_st *up_st)
+{
+  g_return_if_fail (up_st != NULL);
+  FrogrFacade *ffacade = up_st->ffacade;
+  FrogrPicture *fpicture = up_st->fpicture;
+  GFunc callback = up_st->callback;
+  gpointer object = up_st->object;
+  gpointer data = up_st->data;
+
+  /* Free memory */
+  g_slice_free (upload_picture_st, up_st);
+
+  /* Execute callback */
+  if (callback)
+    callback (object, data);
+
+  return FALSE;
+}
+
+static void
+_upload_picture_thread (upload_picture_st *up_st)
+{
+  g_return_if_fail (up_st != NULL);
+  FrogrFacade *ffacade = up_st->ffacade;
+  FrogrPicture *fpicture = up_st->fpicture;
+
+  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
+  flickcurl_upload_params *uparams;
+  flickcurl_upload_status *ustatus;
+
+  /* Upload picture and gather photo ID */
+
+  /* Prepare upload params */
+  uparams = g_slice_new (flickcurl_upload_params);
+  uparams->title = frogr_picture_get_title (fpicture);
+  uparams->photo_file = frogr_picture_get_filepath (fpicture);
+  uparams->description = frogr_picture_get_description (fpicture);
+  uparams->tags = frogr_picture_get_tags (fpicture);
+  uparams->is_public = frogr_picture_is_public (fpicture);
+  uparams->is_friend = frogr_picture_is_friend (fpicture);
+  uparams->is_family = frogr_picture_is_family (fpicture);
+  uparams->safety_level = 1; /* Harcoded: 'safe' */
+  uparams->content_type = 1; /* Harcoded: 'photo' */
+
+  /* Upload the test photo (private) */
+  g_debug ("\n\nNow uploading picture %s...\n",
+           frogr_picture_get_title (fpicture));
+
+  ustatus = flickcurl_photos_upload_params (priv->fcurl, uparams);
+  if (ustatus) {
+    g_debug ("[OK] Success uploading a new picture\n");
+
+    /* Save photo ID along with the picture */
+    frogr_picture_set_id (fpicture, ustatus->photoid);
+
+    /* Print and free upload status */
+    g_debug ("\tPhoto upload status:");
+    g_debug ("\t\tPhotoID: %s", ustatus->photoid);
+    g_debug ("\t\tSecret: %s", ustatus->secret);
+    g_debug ("\t\tOriginalSecret: %s", ustatus->originalsecret);
+    g_debug ("\t\tTicketID: %s", ustatus->ticketid);
+
+    /* Free */
+    flickcurl_free_upload_status (ustatus);
+
+  } else {
+    g_debug ("[ERRROR] Failure uploading a new picture\n");
+  }
+
+  /* Free memory */
+  g_slice_free (flickcurl_upload_params, uparams);
+
+  /* At last, just call the return callback */
+  g_idle_add ((GSourceFunc)_picture_uploaded, up_st);
+}
 
 static void
 frogr_facade_finalize (GObject* object)
@@ -178,91 +267,6 @@ frogr_facade_is_authorized (FrogrFacade *ffacade)
 
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
   return (flickcurl_get_auth_token (priv->fcurl) != NULL);
-}
-
-typedef struct {
-  FrogrFacade *ffacade;
-  FrogrPicture *fpicture;
-  GFunc callback;
-  gpointer object;
-  gpointer data;
-} upload_picture_st;
-
-static gboolean
-_picture_uploaded (upload_picture_st *up_st)
-{
-  g_return_if_fail (up_st != NULL);
-  FrogrFacade *ffacade = up_st->ffacade;
-  FrogrPicture *fpicture = up_st->fpicture;
-  GFunc callback = up_st->callback;
-  gpointer object = up_st->object;
-  gpointer data = up_st->data;
-
-  /* Free memory */
-  g_slice_free (upload_picture_st, up_st);
-
-  /* Execute callback */
-  if (callback)
-    callback (object, data);
-
-  return FALSE;
-}
-
-static void
-_upload_picture_thread (upload_picture_st *up_st)
-{
-  g_return_if_fail (up_st != NULL);
-  FrogrFacade *ffacade = up_st->ffacade;
-  FrogrPicture *fpicture = up_st->fpicture;
-
-  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
-  flickcurl_upload_params *uparams;
-  flickcurl_upload_status *ustatus;
-
-  /* Upload picture and gather photo ID */
-
-  /* Prepare upload params */
-  uparams = g_slice_new (flickcurl_upload_params);
-  uparams->title = frogr_picture_get_title (fpicture);
-  uparams->photo_file = frogr_picture_get_filepath (fpicture);
-  uparams->description = frogr_picture_get_description (fpicture);
-  uparams->tags = frogr_picture_get_tags (fpicture);
-  uparams->is_public = frogr_picture_is_public (fpicture);
-  uparams->is_friend = frogr_picture_is_friend (fpicture);
-  uparams->is_family = frogr_picture_is_family (fpicture);
-  uparams->safety_level = 1; /* Harcoded: 'safe' */
-  uparams->content_type = 1; /* Harcoded: 'photo' */
-
-  /* Upload the test photo (private) */
-  g_debug ("\n\nNow uploading picture %s...\n",
-           frogr_picture_get_title (fpicture));
-
-  ustatus = flickcurl_photos_upload_params (priv->fcurl, uparams);
-  if (ustatus) {
-    g_debug ("[OK] Success uploading a new picture\n");
-
-    /* Save photo ID along with the picture */
-    frogr_picture_set_id (fpicture, ustatus->photoid);
-
-    /* Print and free upload status */
-    g_debug ("\tPhoto upload status:");
-    g_debug ("\t\tPhotoID: %s", ustatus->photoid);
-    g_debug ("\t\tSecret: %s", ustatus->secret);
-    g_debug ("\t\tOriginalSecret: %s", ustatus->originalsecret);
-    g_debug ("\t\tTicketID: %s", ustatus->ticketid);
-
-    /* Free */
-    flickcurl_free_upload_status (ustatus);
-
-  } else {
-    g_debug ("[ERRROR] Failure uploading a new picture\n");
-  }
-
-  /* Free memory */
-  g_slice_free (flickcurl_upload_params, uparams);
-
-  /* At last, just call the return callback */
-  g_idle_add ((GSourceFunc)_picture_uploaded, up_st);
 }
 
 void

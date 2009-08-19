@@ -55,7 +55,7 @@ FrogrPictureUploader *frogr_picture_uploader_new (GSList *fpictures,
                                                   GFunc picture_uploaded_cb,
                                                   GFunc pictures_uploaded_cb,
                                                   gpointer object);
-gboolean frogr_picture_uploader_upload (FrogrPictureUploader *fpicture_uploader);
+gboolean frogr_picture_uploader_upload (FrogrPictureUploader *fpuploader);
 
 G_END_DECLS
 

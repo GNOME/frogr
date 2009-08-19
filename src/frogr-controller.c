@@ -56,8 +56,16 @@ typedef struct {
   gpointer object;
 } upload_picture_st;
 
+/* Prototypes */
+
+static gboolean _upload_picture_cb (FrogrController *fcontroller,
+                                    upload_picture_st *up_st);
+
+/* Private functions */
+
 static gboolean
-_upload_picture_cb (FrogrController *fcontroller, upload_picture_st *up_st)
+_upload_picture_cb (FrogrController *fcontroller,
+                    upload_picture_st *up_st)
 {
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);

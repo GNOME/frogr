@@ -70,10 +70,32 @@ typedef struct _FrogrMainWindowPrivate {
 
 /* Prototypes */
 
+static GtkWidget *_ctxt_menu_create (FrogrMainWindow *fmainwin);
+static void _update_ui (FrogrMainWindow *fmainwin);
+static void _edit_selected_items (FrogrMainWindow *fmainwin);
+static void _remove_selected_items (FrogrMainWindow *fmainwin);
+static void _on_picture_loaded (FrogrMainWindow *fmainwin,
+                                FrogrPicture *fpicture);
+static void _on_pictures_loaded (FrogrMainWindow *fmainwin,
+                                 FrogrPictureLoader *fploader);
+static void _on_pictures_uploaded (FrogrMainWindow *fmainwin,
+                                   FrogrPictureUploader *fpuploader);
 static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget,
                                                     gpointer data);
-static void _ctxt_menu_remove_item_activated (GtkWidget *widget,
-                                              gpointer data);
+static void _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data);
+
+void _on_add_button_clicked (GtkButton *widget, gpointer data);
+void _on_remove_button_clicked (GtkButton *widget, gpointer data);
+void _on_auth_button_clicked (GtkButton *widget, gpointer data);
+void _on_upload_button_clicked (GtkButton *widget, gpointer data);
+gboolean _on_icon_view_button_press_event (GtkWidget *widget,
+                                           GdkEventButton *event,
+                                           gpointer data);
+gboolean _on_main_window_delete_event (GtkWidget *widget,
+                                       GdkEvent *event,
+                                       gpointer fmainwin);
+void _on_quit_menu_item_activate (GtkWidget *widget, gpointer fmainwin);
+void _on_about_menu_item_activate (GtkWidget *widget, gpointer fmainwin);
 
 
 /* Private API */
@@ -153,7 +175,7 @@ _update_ui (FrogrMainWindow *fmainwin)
     }
 }
 
-void
+static void
 _edit_selected_items (FrogrMainWindow *fmainwin)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
@@ -260,90 +282,17 @@ _on_picture_loaded (FrogrMainWindow *fmainwin, FrogrPicture *fpicture)
 
 static void
 _on_pictures_loaded (FrogrMainWindow *fmainwin,
-                     FrogrPictureLoader *fpicture_loader)
+                     FrogrPictureLoader *fploader)
 {
   /* Update UI */
   _update_ui (fmainwin);
 
-  g_object_unref (fpicture_loader);
-}
-
-void
-_on_add_button_clicked (GtkButton *widget,
-                        gpointer data)
-{
-  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-  GtkWidget *dialog;
-  GtkFileFilter *filter;
-
-  dialog = gtk_file_chooser_dialog_new ("Select a picture",
-                                        GTK_WINDOW (fmainwin),
-                                        GTK_FILE_CHOOSER_ACTION_OPEN,
-                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-                                        NULL);
-
-  /* Set images filter */
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_add_mime_type (filter, "image/jpeg");
-  gtk_file_filter_add_mime_type (filter, "image/png");
-  gtk_file_filter_add_mime_type (filter, "image/bmp");
-  gtk_file_filter_add_mime_type (filter, "image/gif");
-  gtk_file_filter_set_name (filter, "images");
-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
-  gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
-
-  if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
-    {
-      GSList *filepaths;
-      GSList *item;
-
-      /* Add selected pictures to icon view area */
-      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
-      if (filepaths != NULL)
-        {
-          FrogrPictureLoader *fpicture_loader;
-          fpicture_loader =
-            frogr_picture_loader_new (filepaths,
-                                      (GFunc)_on_picture_loaded,
-                                      (GFunc)_on_pictures_loaded,
-                                      fmainwin);
-          /* Load the pictures! */
-          frogr_picture_loader_load (fpicture_loader);
-        }
-
-      /* Free memory */
-      g_slist_free (filepaths);
-    }
-
-  /* Close dialog */
-  gtk_widget_destroy (dialog);
-}
-
-void
-_on_remove_button_clicked (GtkButton *widget,
-                           gpointer data)
-{
-  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  _remove_selected_items (fmainwin);
-}
-
-void
-_on_auth_button_clicked (GtkButton *widget,
-                         gpointer data)
-{
-  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-
-  /* Delegate on controller and update UI */
-  frogr_controller_show_auth_dialog (priv->controller);
-  _update_ui (fmainwin);
+  g_object_unref (fploader);
 }
 
 static void
 _on_pictures_uploaded (FrogrMainWindow *fmainwin,
-                       FrogrPictureUploader *fpicture_uploader)
+                       FrogrPictureUploader *fpuploader)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
 
@@ -381,31 +330,10 @@ _on_pictures_uploaded (FrogrMainWindow *fmainwin,
   gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
 
   /* Free memory */
-  g_object_unref (fpicture_uploader);
+  g_object_unref (fpuploader);
   g_free (edition_url);
   g_free (ids_str);
   g_strfreev (str_array);
-}
-
-void
-_on_upload_button_clicked (GtkButton *widget,
-                           gpointer data)
-{
-  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-
-  /* Upload pictures */
-  if (frogr_main_window_model_n_pictures (priv->model) > 0)
-    {
-      GSList *fpictures = frogr_main_window_model_get_pictures (priv->model);
-      FrogrPictureUploader *fpicture_uploader =
-        frogr_picture_uploader_new (fpictures,
-                                    NULL,
-                                    (GFunc)_on_pictures_uploaded,
-                                    fmainwin);
-      /* Load the pictures! */
-      frogr_picture_uploader_upload (fpicture_uploader);
-    }
 }
 
 static void
@@ -422,6 +350,100 @@ _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
   _remove_selected_items (fmainwin);
+}
+
+void
+_on_add_button_clicked (GtkButton *widget,
+                        gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
+  GtkWidget *dialog;
+  GtkFileFilter *filter;
+
+  dialog = gtk_file_chooser_dialog_new ("Select a picture",
+                                        GTK_WINDOW (fmainwin),
+                                        GTK_FILE_CHOOSER_ACTION_OPEN,
+                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                        NULL);
+
+  /* Set images filter */
+  filter = gtk_file_filter_new ();
+  gtk_file_filter_add_mime_type (filter, "image/jpeg");
+  gtk_file_filter_add_mime_type (filter, "image/png");
+  gtk_file_filter_add_mime_type (filter, "image/bmp");
+  gtk_file_filter_add_mime_type (filter, "image/gif");
+  gtk_file_filter_set_name (filter, "images");
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+  gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
+
+  if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+    {
+      GSList *filepaths;
+      GSList *item;
+
+      /* Add selected pictures to icon view area */
+      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
+      if (filepaths != NULL)
+        {
+          FrogrPictureLoader *fploader;
+          fploader =
+            frogr_picture_loader_new (filepaths,
+                                      (GFunc)_on_picture_loaded,
+                                      (GFunc)_on_pictures_loaded,
+                                      fmainwin);
+          /* Load the pictures! */
+          frogr_picture_loader_load (fploader);
+        }
+
+      /* Free memory */
+      g_slist_free (filepaths);
+    }
+
+  /* Close dialog */
+  gtk_widget_destroy (dialog);
+}
+
+void
+_on_remove_button_clicked (GtkButton *widget,
+                           gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  _remove_selected_items (fmainwin);
+}
+
+void
+_on_auth_button_clicked (GtkButton *widget,
+                         gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
+
+  /* Delegate on controller and update UI */
+  frogr_controller_show_auth_dialog (priv->controller);
+  _update_ui (fmainwin);
+}
+
+void
+_on_upload_button_clicked (GtkButton *widget,
+                           gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
+
+  /* Upload pictures */
+  if (frogr_main_window_model_n_pictures (priv->model) > 0)
+    {
+      GSList *fpictures = frogr_main_window_model_get_pictures (priv->model);
+      FrogrPictureUploader *fpuploader =
+        frogr_picture_uploader_new (fpictures,
+                                    NULL,
+                                    (GFunc)_on_pictures_uploaded,
+                                    fmainwin);
+      /* Load the pictures! */
+      frogr_picture_uploader_upload (fpuploader);
+    }
 }
 
 gboolean
