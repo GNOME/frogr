@@ -1,7 +1,7 @@
 Currently, these are the only instructions available to compile and
 try the application:
 
- $ ./autogen.sh --datadir=$(pwd)/data --prefix=/tmp
+ $ ./autogen.sh --prefix=/tmp
  $ make
  $ make install
  $ ./src/frogr
