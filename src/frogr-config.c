@@ -290,6 +290,10 @@ _frogr_config_save_accounts (FrogrConfig *fconfig)
     retval = FALSE;
   }
 
+  /* Free */
+  xmlFreeDoc (xml);
+  g_free (xml_path);
+
   return retval;
 }
 
