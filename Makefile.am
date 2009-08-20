@@ -50,6 +50,9 @@ icon128_DATA = $(srcdir)/data/icons/hicolor/128x128/apps/*
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
 iconscalable_DATA = $(srcdir)/data/icons/hicolor/scalable/apps/*
 
+imagesdir = $(appdatadir)/images
+images_DATA = $(srcdir)/data/images/*
+
 gtkbuilderdir = $(appdatadir)/gtkbuilder
 gtkbuilder_DATA = $(srcdir)/data/gtkbuilder/frogr-main-window.xml \
 	$(srcdir)/data/gtkbuilder/frogr-details-dialog.xml
