@@ -54,8 +54,7 @@ GType frogr_account_get_type(void) G_GNUC_CONST;
 
 FrogrAccount* frogr_account_new (void);
 FrogrAccount* frogr_account_new_with_params (const gchar *frob,
-                                             const gchar *token,
-                                             const gchar *username);
+                                             const gchar *token);
 
 const gchar* frogr_account_get_frob (FrogrAccount *faccount);
 void frogr_account_set_frob (FrogrAccount *faccount,
@@ -64,10 +63,6 @@ void frogr_account_set_frob (FrogrAccount *faccount,
 const gchar* frogr_account_get_token (FrogrAccount *faccount);
 void frogr_account_set_token (FrogrAccount *faccount,
                               const gchar *token);
-
-const gchar* frogr_account_get_username (FrogrAccount *faccount);
-void frogr_account_set_username (FrogrAccount *faccount,
-                                 const gchar *username);
 
 G_END_DECLS
 

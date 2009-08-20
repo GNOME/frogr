@@ -67,7 +67,6 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
   xmlNodePtr node;
   xmlChar *frob = NULL;
   xmlChar *token = NULL;
-  xmlChar *username = NULL;
   gboolean retval = FALSE;
 
   g_return_val_if_fail (faccount != NULL, FALSE);
@@ -84,25 +83,18 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
         frob = xmlNodeGetContent (node);
       else if (xmlStrcmp (node->name, (const xmlChar*) "token") == 0)
         token = xmlNodeGetContent (node);
-      else if (xmlStrcmp (node->name, (const xmlChar*) "username") == 0)
-        username = xmlNodeGetContent (node);
     }
 
-  /*
-   * The account object is created only of some minimum requirements are
-   * met: user name, token and frob. Also, token must *not* be empty.
-   */
-  if (frob != NULL && frob[0] != '\0' && token != NULL && token[0] != '\0' && username != NULL)
+  /* The account object is created if some minimum requirements are met */
+  if (frob != NULL && frob[0] != '\0' && token != NULL && token[0] != '\0')
     {
       frogr_account_set_frob (faccount, frob);
       frogr_account_set_token (faccount, token);
-      frogr_account_set_username (faccount, username);
       retval = TRUE;
     }
 
   if (frob != NULL) xmlFree (frob);
   if (token != NULL) xmlFree (token);
-  if (username != NULL) xmlFree (username);
 
   return retval;
 }
@@ -212,7 +204,6 @@ _frogr_config_save_account (FrogrConfig *fconfig)
     node = xmlNewNode (NULL, (const xmlChar*) "account");
     _xml_add_string_child (node, "frob", account, "frob");
     _xml_add_string_child (node, "token", account, "token");
-    _xml_add_string_child (node, "username", account, "username");
     xmlAddChild (root, node);
   }
 

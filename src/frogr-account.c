@@ -38,11 +38,6 @@ struct _FrogrAccountPrivate
 {
   gchar *frob;
   gchar *token;
-  gchar *username;
-
-  gboolean public;
-  gboolean family;
-  gboolean friends;
 };
 
 
@@ -51,10 +46,6 @@ enum {
   PROP_0,
   PROP_FROB,
   PROP_TOKEN,
-  PROP_USERNAME,
-  PROP_PUBLIC,
-  PROP_FAMILY,
-  PROP_FRIENDS,
 };
 
 
@@ -74,22 +65,10 @@ _frogr_account_set_property (GObject      *object,
       g_free (priv->frob);
       priv->frob = g_value_dup_string (value);
       break;
+
     case PROP_TOKEN:
       g_free (priv->token);
       priv->token = g_value_dup_string (value);
-      break;
-    case PROP_USERNAME:
-      g_free (priv->username);
-      priv->username = g_value_dup_string (value);
-      break;
-    case PROP_PUBLIC:
-      priv->public = g_value_get_boolean (value);
-      break;
-    case PROP_FAMILY:
-      priv->family = g_value_get_boolean (value);
-      break;
-    case PROP_FRIENDS:
-      priv->friends = g_value_get_boolean (value);
       break;
 
     default:
@@ -110,20 +89,9 @@ _frogr_account_get_property (GObject    *object,
     case PROP_FROB:
       g_value_set_string (value, priv->frob);
       break;
+
     case PROP_TOKEN:
       g_value_set_string (value, priv->token);
-      break;
-    case PROP_USERNAME:
-      g_value_set_string (value, priv->username);
-      break;
-    case PROP_PUBLIC:
-      g_value_set_boolean (value, priv->public);
-      break;
-    case PROP_FAMILY:
-      g_value_set_boolean (value, priv->family);
-      break;
-    case PROP_FRIENDS:
-      g_value_set_boolean (value, priv->friends);
       break;
 
     default:
@@ -138,7 +106,6 @@ _frogr_account_finalize (GObject *object)
 
   g_free (priv->frob);
   g_free (priv->token);
-  g_free (priv->username);
 
   /* Call superclass */
   G_OBJECT_CLASS (frogr_account_parent_class)->finalize (object);
@@ -169,36 +136,6 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                "",
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_TOKEN, pspec);
-
-  pspec = g_param_spec_string ("username",
-                               "Flickr account user name",
-                               "Get/set Flickr user name",
-                               "",
-                               G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_USERNAME, pspec);
-
-  pspec = g_param_spec_boolean ("public",
-                                "Whether photos are public by default",
-                                "Get/set private by default",
-                                FALSE,
-                                G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_PUBLIC, pspec);
-
-  pspec = g_param_spec_boolean ("family",
-                                "If sharing is private, whether to "
-                                "share with family",
-                                "Get/set family sharing",
-                                FALSE,
-                                G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_FAMILY, pspec);
-
-  pspec = g_param_spec_boolean ("friends",
-                                "If sharing is private, whether to "
-                                "share with friends",
-                                "Get/set family sharing",
-                                FALSE,
-                                G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_FRIENDS, pspec);
 }
 
 static void
@@ -208,10 +145,6 @@ frogr_account_init (FrogrAccount *faccount)
 
   priv->frob = NULL;
   priv->token = NULL;
-  priv->username = NULL;
-  priv->public = FALSE;
-  priv->family = FALSE;
-  priv->friends = FALSE;
 }
 
 FrogrAccount *
@@ -223,17 +156,14 @@ frogr_account_new (void)
 
 FrogrAccount *
 frogr_account_new_with_params (const gchar *frob,
-                               const gchar *token,
-                               const gchar *username)
+                               const gchar *token)
 {
   g_return_val_if_fail (frob, NULL);
   g_return_val_if_fail (token, NULL);
-  g_return_val_if_fail (username, NULL);
 
   GObject *new = g_object_new (FROGR_TYPE_ACCOUNT,
                                "frob",     frob,
                                "token",    token,
-                               "username", username,
                                NULL);
 
   return FROGR_ACCOUNT (new);
@@ -280,25 +210,3 @@ frogr_account_set_token (FrogrAccount *faccount,
   g_free (priv->token);
   priv->token = g_strdup (token);
 }
-
-const gchar *
-frogr_account_get_username (FrogrAccount *faccount)
-{
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  return (const gchar *)priv->username;
-}
-
-void
-frogr_account_set_username (FrogrAccount *faccount,
-                            const gchar *username)
-{
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-
-  g_free (priv->username);
-  priv->username = g_strdup (username);
-}
-
