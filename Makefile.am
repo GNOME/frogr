@@ -59,8 +59,11 @@ gtkbuilder_DATA = $(srcdir)/data/gtkbuilder/frogr-main-window.xml \
 	$(srcdir)/data/gtkbuilder/frogr-details-dialog.xml
 
 desktopentrydir = $(datadir)/applications
-desktopentry_DATA = data/frogr.desktop
+desktopentry_DATA = $(srcdir)/data/frogr.desktop
 
-data/frogr.desktop: data/frogr.desktop.in
-	sed -e "s!@BINDIR@!${bindir}!g" \ -e "s!@ICONDIR@!${pixmapdir}!g" \ $< > $@
+edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
+
+$(srcdir)/data/frogr.desktop: data/frogr.desktop.in
+	$(edit) $(srcdir)/data/frogr.desktop.in > $(srcdir)/data/frogr.desktop
+	sed -e "s!@BINDIR@!${bindir}!g" -e "s!@ICONDIR@!${pixmapdir}!g" $< > $@
 
