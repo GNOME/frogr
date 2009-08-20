@@ -26,6 +26,7 @@
 #include "frogr-picture.h"
 
 #define GTKBUILDER_FILE APP_DATA_DIR "/gtkbuilder/frogr-details-dialog.xml"
+#define MPICTURES_IMAGE APP_DATA_DIR "/images/mpictures.png"
 
 #define PICTURE_WIDTH 150
 #define PICTURE_HEIGHT 150
@@ -47,6 +48,7 @@ typedef struct _FrogrDetailsDialogPrivate {
   GtkWidget *family_cb;
   GtkTextBuffer *text_buffer;
   GtkWidget *picture_img;
+  GtkWidget *mpictures_label;
   GSList *fpictures;
 } FrogrDetailsDialogPrivate;
 
@@ -123,15 +125,14 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
     FROGR_DETAILS_DIALOG_GET_PRIVATE (fdetailsdialog);
 
   FrogrPicture *fpicture;
-  GdkPixbuf *pixbuf = NULL;
-  GdkPixbuf *s_pixbuf = NULL;
+  GSList *item;
+  guint n_pictures;
   gchar *title_val = NULL;
   gchar *desc_val = NULL;
   gchar *tags_val = NULL;
   gboolean is_public_val = FALSE;
   gboolean is_friend_val = FALSE;
   gboolean is_family_val = FALSE;
-  GSList *item;
 
   /* Take first element values */
   item = priv->fpictures;
@@ -230,11 +231,34 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb),
                                 is_family_val);
 
-  /* Set pixbuf scaled to the right size */
-  pixbuf = frogr_picture_get_pixbuf (fpicture);
-  s_pixbuf = _get_scaled_pixbuf (pixbuf);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), s_pixbuf);
-  g_object_unref (s_pixbuf);
+  n_pictures = g_slist_length (priv->fpictures);
+  if (n_pictures > 1)
+    {
+      GdkPixbuf *pixbuf;
+      gchar *text;
+
+      /* Set the image for editing multiple pictures */
+      pixbuf = gdk_pixbuf_new_from_file (MPICTURES_IMAGE, NULL);
+      gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), pixbuf);
+      g_object_unref (pixbuf);
+
+      /* Show the hidden label */
+      gtk_widget_show (priv->mpictures_label);
+      text = g_strdup_printf ("(Editing %d pictures)", n_pictures);
+      gtk_label_set_text (GTK_LABEL (priv->mpictures_label), text);
+      g_free (text);
+    }
+  else
+    {
+      /* Set pixbuf scaled to the right size */
+      GdkPixbuf *pixbuf = frogr_picture_get_pixbuf (fpicture);
+      GdkPixbuf *s_pixbuf = _get_scaled_pixbuf (pixbuf);
+      gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), s_pixbuf);
+      g_object_unref (s_pixbuf);
+
+      /* Hide multiple pictures label (unused) */
+      gtk_widget_hide (priv->mpictures_label);
+    }
 
   /* Update UI */
   _update_ui (fdetailsdialog);
@@ -503,12 +527,14 @@ frogr_details_dialog_init (FrogrDetailsDialog *fdetailsdialog)
     GTK_WIDGET (gtk_builder_get_object (builder, "family_cbutton"));
   priv->picture_img =
     GTK_WIDGET (gtk_builder_get_object (builder, "picture_img"));
+  priv->mpictures_label =
+    GTK_WIDGET (gtk_builder_get_object (builder, "mpictures_label"));
 
   /* Connect signals */
   gtk_builder_connect_signals (builder, fdetailsdialog);
 
   /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET(fdetailsdialog));
+  gtk_widget_show_all (GTK_WIDGET (fdetailsdialog));
 
   /* Free */
   g_object_unref (G_OBJECT (builder));
