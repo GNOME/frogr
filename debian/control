@@ -9,6 +9,6 @@ Homepage: http://code.google.com/p/frogr/
 Package: frogr
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Flickr manager for GNOME
+Description: Flickr Remote Organizer for GNOME
  Frogr intends to be a complete GNOME application to remotely manage a
  flickr account from the desktop.
