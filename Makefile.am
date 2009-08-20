@@ -29,7 +29,8 @@ MAINTAINERCLEANFILES = \
 	ltmain.sh \
 	missing \
 	mkinstalldirs \
-	data/gtkbuilder/frogr-main-window.xml
+	data/gtkbuilder/frogr-main-window.xml \
+	data/frogr.desktop
 
 SUBDIRS = src
 
@@ -56,3 +57,10 @@ images_DATA = $(srcdir)/data/images/*
 gtkbuilderdir = $(appdatadir)/gtkbuilder
 gtkbuilder_DATA = $(srcdir)/data/gtkbuilder/frogr-main-window.xml \
 	$(srcdir)/data/gtkbuilder/frogr-details-dialog.xml
+
+desktopentrydir = $(datadir)/applications
+desktopentry_DATA = data/frogr.desktop
+
+data/frogr.desktop: data/frogr.desktop.in
+	sed -e "s!@BINDIR@!${bindir}!g" \ -e "s!@ICONDIR@!${pixmapdir}!g" \ $< > $@
+
