@@ -25,8 +25,7 @@
 #include "frogr-controller.h"
 #include "frogr-picture.h"
 
-#define GTKBUILDER_FILE                                 \
-  APP_DATA_DIR "/gtkbuilder/frogr-details-dialog.xml"
+#define GTKBUILDER_FILE APP_DATA_DIR "/gtkbuilder/frogr-details-dialog.xml"
 
 #define PICTURE_WIDTH 150
 #define PICTURE_HEIGHT 150
