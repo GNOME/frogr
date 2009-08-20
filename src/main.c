@@ -41,7 +41,6 @@ main (int argc, char **argv)
   /* Run app */
   fcontroller = frogr_controller_get_instance ();
   frogr_controller_run_app (fcontroller);
-  frogr_config_save (frogr_config_get_instance ());
 
   gdk_threads_leave ();
 
