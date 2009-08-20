@@ -55,10 +55,7 @@ GType frogr_account_get_type(void) G_GNUC_CONST;
 FrogrAccount* frogr_account_new (void);
 FrogrAccount* frogr_account_new_with_params (const gchar *frob,
                                              const gchar *token,
-                                             const gchar *username,
-                                             gboolean public,
-                                             gboolean family,
-                                             gboolean friends);
+                                             const gchar *username);
 
 const gchar* frogr_account_get_frob (FrogrAccount *faccount);
 void frogr_account_set_frob (FrogrAccount *faccount,
@@ -71,18 +68,6 @@ void frogr_account_set_token (FrogrAccount *faccount,
 const gchar* frogr_account_get_username (FrogrAccount *faccount);
 void frogr_account_set_username (FrogrAccount *faccount,
                                  const gchar *username);
-
-gboolean frogr_account_get_public (FrogrAccount *faccount);
-void frogr_account_set_public (FrogrAccount *faccount,
-                               gboolean public);
-
-gboolean frogr_account_get_private_family (FrogrAccount *faccount);
-void frogr_account_set_private_family (FrogrAccount *faccount,
-                                       gboolean family);
-
-gboolean frogr_account_get_private_friends (FrogrAccount *faccount);
-void frogr_account_set_private_friends (FrogrAccount *faccount,
-                                        gboolean friends);
 
 G_END_DECLS
 

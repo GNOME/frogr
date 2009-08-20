@@ -224,10 +224,7 @@ frogr_account_new (void)
 FrogrAccount *
 frogr_account_new_with_params (const gchar *frob,
                                const gchar *token,
-                               const gchar *username,
-                               gboolean public,
-                               gboolean family,
-                               gboolean friends)
+                               const gchar *username)
 {
   g_return_val_if_fail (frob, NULL);
   g_return_val_if_fail (token, NULL);
@@ -237,9 +234,6 @@ frogr_account_new_with_params (const gchar *frob,
                                "frob",     frob,
                                "token",    token,
                                "username", username,
-                               "public",   public,
-                               "family",   family,
-                               "friends",  friends,
                                NULL);
 
   return FROGR_ACCOUNT (new);
@@ -308,59 +302,3 @@ frogr_account_set_username (FrogrAccount *faccount,
   priv->username = g_strdup (username);
 }
 
-gboolean
-frogr_account_get_public (FrogrAccount *faccount)
-{
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  return priv->public;
-}
-
-void
-frogr_account_set_public (FrogrAccount *faccount,
-                          gboolean public)
-{
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  priv->public = public;
-}
-
-gboolean
-frogr_account_get_private_family (FrogrAccount *faccount)
-{
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  return priv->family;
-}
-
-void
-frogr_account_set_private_family (FrogrAccount *faccount,
-                                  gboolean family)
-{
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  priv->family = family;
-}
-
-gboolean
-frogr_account_get_private_friends (FrogrAccount *faccount)
-{
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  return priv->friends;
-}
-
-void
-frogr_account_set_private_friends (FrogrAccount *faccount,
-                                   gboolean friends)
-{
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
-  priv->friends = friends;
-}

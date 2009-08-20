@@ -177,7 +177,7 @@ frogr_facade_init (FrogrFacade *ffacade)
   flickcurl_set_shared_secret(priv->fcurl, SHARED_SECRET);
 
   /* If available, set token */
-  faccount = frogr_config_get_default_account (priv->config);
+  faccount = frogr_config_get_account (priv->config);
   token = frogr_account_get_token (faccount);
   if (token != NULL)
     {
@@ -212,7 +212,7 @@ frogr_facade_get_authorization_url (FrogrFacade *ffacade)
       gchar *api_sig;
 
       /* Save frob value */
-      frogr_account_set_frob (frogr_config_get_default_account (fconfig), frob);
+      frogr_account_set_frob (frogr_config_get_account (fconfig), frob);
 
       /* Build the authorization url */
       sign_str = g_strdup_printf ("%sapi_key%sfrob%spermswrite",
@@ -236,7 +236,7 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
 
   FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
   FrogrConfig *fconfig = frogr_config_get_instance ();
-  FrogrAccount *faccount = frogr_config_get_default_account (fconfig);
+  FrogrAccount *faccount = frogr_config_get_account (fconfig);
   gchar *auth_token = NULL;
   gchar *frob = NULL;
 
@@ -252,9 +252,10 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
   auth_token = flickcurl_auth_getToken (priv->fcurl, frob);
   if (auth_token)
     {
-      /* Set and save the auth token */
+      /* Set and save the auth token and the settings to disk */
       flickcurl_set_auth_token(priv->fcurl, auth_token);
       frogr_account_set_token (faccount, auth_token);
+      frogr_config_save (fconfig);
     }
 
   return (auth_token != NULL);

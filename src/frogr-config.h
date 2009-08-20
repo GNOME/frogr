@@ -57,13 +57,10 @@ FrogrConfig* frogr_config_get_instance (void);
 
 gboolean frogr_config_save (FrogrConfig *fconfig);
 
-FrogrAccount* frogr_config_get_default_account (FrogrConfig *fconfig);
+FrogrAccount* frogr_config_get_account (FrogrConfig *fconfig);
 
-void frogr_config_add_account (FrogrConfig  *fconfig,
+void frogr_config_set_account (FrogrConfig  *fconfig,
                                FrogrAccount *faccount);
-
-FrogrAccount* frogr_config_get_account (FrogrConfig *fconfig,
-                                        const gchar *username);
 
 G_END_DECLS
 

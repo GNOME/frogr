@@ -37,7 +37,7 @@ G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT);
 typedef struct _FrogrConfigPrivate FrogrConfigPrivate;
 struct _FrogrConfigPrivate
 {
-  GList *accounts;
+  FrogrAccount *account;
 };
 
 static FrogrConfig *_instance = NULL;
@@ -47,18 +47,13 @@ static FrogrConfig *_instance = NULL;
 static FrogrAccount *_frogr_config_account_from_xml (xmlDocPtr xml,
                                                      xmlNodePtr rootnode);
 static void _frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir);
-static void _frogr_config_load_accounts (FrogrConfig *fconfig,
-                                         const gchar *config_dir);
-static gboolean _frogr_config_save_accounts (FrogrConfig *fconfig);
-static xmlNodePtr _xml_add_boolean_child (xmlNodePtr   parent,
-                                          const gchar *xml_name,
-                                          GObject     *object,
-                                          const gchar *prop_name);
+static void _frogr_config_load_account (FrogrConfig *fconfig,
+                                        const gchar *config_dir);
+static gboolean _frogr_config_save_account (FrogrConfig *fconfig);
 static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
                                          const gchar *xml_name,
                                          GObject     *object,
                                          const gchar *prop_name);
-static gboolean _xml_node_to_boolean (const xmlNodePtr node);
 
 
 /* Private functions */
@@ -71,9 +66,6 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
   xmlChar *frob = NULL;
   xmlChar *token = NULL;
   xmlChar *username = NULL;
-  gboolean public = FALSE;
-  gboolean family = FALSE;
-  gboolean friends = FALSE;
 
   g_return_val_if_fail (xml != NULL, NULL);
   g_return_val_if_fail (rootnode != NULL, NULL);
@@ -90,40 +82,34 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
         token = xmlNodeGetContent (node);
       else if (xmlStrcmp (node->name, (const xmlChar*) "username") == 0)
         username = xmlNodeGetContent (node);
-      else if (xmlStrcmp (node->name, (const xmlChar*) "public") == 0)
-        public = _xml_node_to_boolean (node);
-      else if (xmlStrcmp (node->name, (const xmlChar*) "family") == 0)
-        family = _xml_node_to_boolean (node);
-      else if (xmlStrcmp (node->name, (const xmlChar*) "friends") == 0)
-        friends = _xml_node_to_boolean (node);
     }
 
   /*
    * The account object is created only of some minimum requirements are
-   * met: user name, token and frob.
+   * met: user name, token and frob. Also, token must *not* be empty.
    */
-  if (frob != NULL && token != NULL && username != NULL)
+  if (frob != NULL && frob[0] != '\0' && token != NULL && token[0] != '\0' && username != NULL)
     {
       faccount = frogr_account_new_with_params ((const gchar *)frob,
                                                 (const gchar *)token,
-                                                (const gchar *)username,
-                                                public, family, friends);
+                                                (const gchar *)username);
     }
 
   if (frob != NULL) xmlFree (frob);
   if (token != NULL) xmlFree (token);
   if (username != NULL) xmlFree (username);
 
-  return FROGR_ACCOUNT (faccount);
+  return faccount;
 }
 
 static void
-_frogr_config_load_accounts (FrogrConfig *fconfig, const gchar *config_dir)
+_frogr_config_load_account (FrogrConfig *fconfig, const gchar *config_dir)
 {
   FrogrConfigPrivate *priv;
   gchar *xml_path;
+  gboolean load_ok = FALSE;
   xmlNodePtr node;
-  xmlDocPtr xml;
+  xmlDocPtr xml = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (fconfig));
   g_return_if_fail (config_dir != NULL);
@@ -131,20 +117,19 @@ _frogr_config_load_accounts (FrogrConfig *fconfig, const gchar *config_dir)
   priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
 
   xml_path = g_build_filename (config_dir, "accounts.xml", NULL);
-  xml = xmlParseFile (xml_path);
-  g_free (xml_path);
+  if (g_file_test (xml_path, G_FILE_TEST_IS_REGULAR))
+    xml = xmlParseFile (xml_path);
 
   if (xml == NULL)
     {
       g_debug ("Could not load '%s/accounts.xml'", config_dir);
-      return;
+      goto cleanup_path;
     }
 
   if ((node = xmlDocGetRootElement (xml)) == NULL)
     {
       g_warning ("File '%s/accounts.xml' is empty", config_dir);
-      xmlFreeDoc (xml);
-      return;
+      goto cleanup_parser;
     }
 
   if (node->name == NULL ||
@@ -152,30 +137,38 @@ _frogr_config_load_accounts (FrogrConfig *fconfig, const gchar *config_dir)
     {
       g_warning ("File '%s/accounts.xml' does not start with "
                  "an <accounts> tag", config_dir);
-      xmlFreeDoc (xml);
-      return;
+      goto cleanup_parser;
     }
 
   /* Iterate over children nodes and extract accounts. */
   for (node = node->children; node != NULL; node = node->next)
     {
+      /* Node "account" found, stop searching */
       if (xmlStrcmp (node->name, (const xmlChar*) "account") == 0)
-        {
-          FrogrAccount *account;
-          if ((account = _frogr_config_account_from_xml (xml, node)) == NULL)
-            {
-              g_warning ("Malformed account in '%s/accounts.xml', "
-                         "skipping it", config_dir);
-            }
-          else
-            {
-              priv->accounts = g_list_prepend (priv->accounts, account);
-            }
-        }
+        break;
     }
 
+  if (node != NULL &&
+      (priv->account = _frogr_config_account_from_xml (xml, node)) == NULL)
+    {
+      g_warning ("Malformed account in '%s/accounts.xml', "
+                 "skipping it", config_dir);
+    }
+  else
+    {
+      /* Everything was loaded okay */
+      load_ok = TRUE;
+    }
+
+cleanup_parser:
   xmlFreeDoc (xml);
   xmlCleanupParser ();
+
+cleanup_path:
+  if (!load_ok)
+    g_remove (xml_path);
+
+  g_free (xml_path);
 }
 
 static void
@@ -188,11 +181,11 @@ _frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir)
    * settings. For now, load just the accounts.
    */
 
-  _frogr_config_load_accounts (fconfig, config_dir);
+  _frogr_config_load_account (fconfig, config_dir);
 }
 
 static gboolean
-_frogr_config_save_accounts (FrogrConfig *fconfig)
+_frogr_config_save_account (FrogrConfig *fconfig)
 {
   FrogrConfigPrivate *priv;
   gboolean retval = TRUE;
@@ -210,22 +203,13 @@ _frogr_config_save_accounts (FrogrConfig *fconfig)
   root = xmlNewNode (NULL, (const xmlChar*) "accounts");
   xmlDocSetRootElement (xml, root);
 
-  for (item = g_list_first (priv->accounts);
-       item != NULL;
-       item = g_list_next (item))
-    {
-      account = G_OBJECT (item->data);
-      node = xmlNewNode (NULL, (const xmlChar*) "account");
-      _xml_add_string_child (node, "frob", account, "frob");
-      _xml_add_string_child (node, "token", account, "token");
-      _xml_add_string_child (node, "username", account, "username");
-
-      _xml_add_boolean_child (node, "public", account, "public");
-      _xml_add_boolean_child (node, "family", account, "family");
-      _xml_add_boolean_child (node, "friends", account, "friends");
-
-      xmlAddChild (root, node);
-    }
+  /* Handle account */
+  account = G_OBJECT (priv->account);
+  node = xmlNewNode (NULL, (const xmlChar*) "account");
+  _xml_add_string_child (node, "frob", account, "frob");
+  _xml_add_string_child (node, "token", account, "token");
+  _xml_add_string_child (node, "username", account, "username");
+  xmlAddChild (root, node);
 
   xml_path = g_build_filename (g_get_user_config_dir (),
                                "frogr", "accounts.xml", NULL);
@@ -242,28 +226,6 @@ _frogr_config_save_accounts (FrogrConfig *fconfig)
   return retval;
 }
 
-static xmlNodePtr
-_xml_add_boolean_child (xmlNodePtr   parent,
-                        const gchar *xml_name,
-                        GObject     *object,
-                        const gchar *prop_name)
-{
-  xmlNodePtr node;
-  gboolean value;
-
-  g_return_val_if_fail (parent    != NULL, NULL);
-  g_return_val_if_fail (xml_name  != NULL, NULL);
-  g_return_val_if_fail (object    != NULL, NULL);
-  g_return_val_if_fail (prop_name != NULL, NULL);
-
-  g_object_get (object, prop_name, &value, NULL);
-
-  node = xmlNewNode (NULL, (const xmlChar*) xml_name);
-  xmlNodeSetContent (node, (const xmlChar*) ((value) ? "true" : "false"));
-  xmlAddChild (parent, node);
-
-  return node;
-}
 
 static xmlNodePtr
 _xml_add_string_child (xmlNodePtr   parent,
@@ -292,33 +254,6 @@ _xml_add_string_child (xmlNodePtr   parent,
   return node;
 }
 
-static gboolean
-_xml_node_to_boolean (const xmlNodePtr node)
-{
-  xmlChar *xstr;
-  gchar *str;
-  gboolean result;
-
-  g_return_val_if_fail (node != NULL, FALSE);
-
-  xstr = xmlNodeGetContent (node);
-  str = (gchar*) xstr;
-
-  while (g_ascii_isspace (*str++)); /* Skip blanks */
-
-  if (g_ascii_isdigit (*str))
-    {
-      long value = strtol (str, NULL, 0);
-      result = (value != 0);
-    }
-  else
-    {
-      result = (g_ascii_strncasecmp ("false", str, 5) != 0);
-    }
-  xmlFree (xstr);
-  return result;
-}
-
 
 /* Public functions */
 
@@ -329,10 +264,10 @@ frogr_config_save (FrogrConfig *fconfig)
 
   /*
    * XXX This method is just a placeholder for when we have program
-   * settings. For now, save just the accounts.
+   * settings. For now, save just the account.
    */
 
-  return _frogr_config_save_accounts (fconfig);
+  return _frogr_config_save_account (fconfig);
 }
 
 static void
@@ -340,8 +275,7 @@ _frogr_config_finalize (GObject *object)
 {
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
 
-  g_list_foreach (priv->accounts, (GFunc) g_object_unref, NULL);
-  g_list_free (priv->accounts);
+  g_object_unref (priv->account);
 
   /* Call superclass */
   G_OBJECT_CLASS (frogr_config_parent_class)->finalize (object);
@@ -386,7 +320,7 @@ frogr_config_init (FrogrConfig *fconfig)
   gchar *config_dir = g_build_filename (g_get_user_config_dir (),
                                         g_get_prgname (), NULL);
 
-  priv->accounts = NULL;
+  priv->account = NULL;
 
   /* Ensure that we have the config directory in place. */
   if (g_mkdir_with_parents (config_dir, 0777) != 0)
@@ -406,15 +340,9 @@ frogr_config_get_instance (void)
   return FROGR_CONFIG (g_object_new (FROGR_TYPE_CONFIG, NULL));
 }
 
-FrogrAccount*
-frogr_config_get_default_account (FrogrConfig *fconfig)
-{
-  g_return_val_if_fail (FROGR_IS_CONFIG (fconfig), NULL);
-  return frogr_config_get_account (fconfig, NULL);
-}
 
 void
-frogr_config_add_account (FrogrConfig  *fconfig,
+frogr_config_set_account (FrogrConfig  *fconfig,
                           FrogrAccount *faccount)
 {
   FrogrConfigPrivate *priv;
@@ -424,42 +352,16 @@ frogr_config_add_account (FrogrConfig  *fconfig,
 
   priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
 
-  priv->accounts = g_list_prepend (priv->accounts,
-                                   g_object_ref (faccount));
+  g_object_unref (priv->account);
+  priv->account = g_object_ref (faccount);
 }
 
 FrogrAccount*
-frogr_config_get_account (FrogrConfig *fconfig,
-                          const gchar *username)
+frogr_config_get_account (FrogrConfig *fconfig)
 {
   FrogrConfigPrivate *priv;
-  GList *item;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (fconfig), NULL);
 
-  priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
-
-  if (priv->accounts == NULL)
-    {
-      FrogrAccount *faccount = frogr_account_new ();
-      frogr_config_add_account (fconfig, faccount);
-      g_object_unref (faccount);
-    }
-
-  if (username == NULL)
-    return FROGR_ACCOUNT (g_list_first (priv->accounts)->data);
-
-  for (item = g_list_first (priv->accounts);
-       item != NULL;
-       item = g_list_next (item))
-    {
-      FrogrAccount *faccount = FROGR_ACCOUNT (item->data);
-      const gchar *tmp = frogr_account_get_username (faccount);
-      if (g_str_equal (tmp, username))
-        {
-          return faccount;
-        }
-    }
-
-  return NULL;
+  return FROGR_CONFIG_GET_PRIVATE (fconfig)->account;
 }
