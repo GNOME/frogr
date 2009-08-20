@@ -260,7 +260,12 @@ frogr_controller_open_authorization_url (FrogrController *fcontroller)
   if (auth_url)
     {
       /* Open url in the default application */
+#ifdef HAVE_GTK_2_14
       gtk_show_uri (NULL, auth_url, GDK_CURRENT_TIME, NULL);
+#else
+      gnome_url_show (auth_url);
+#endif
+
       g_free (auth_url);
     }
 }

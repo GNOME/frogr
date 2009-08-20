@@ -330,7 +330,11 @@ _on_pictures_uploaded (FrogrMainWindow *fmainwin,
   g_debug ("Opening edition url: %s\n", edition_url);
 
   /* Redirect to URL for setting more properties about the pictures */
+#ifdef HAVE_GTK_2_14
   gtk_show_uri (NULL, edition_url, GDK_CURRENT_TIME, NULL);
+#else
+  gnome_url_show (edition_url);
+#endif
 
   /* Free memory */
   g_object_unref (fpuploader);

@@ -12,7 +12,7 @@ LIBS=""
 
 AC_CHECK_LIB(gthread-2.0, g_thread_init)
 
-PKG_CHECK_MODULES(Gtk2, gtk+-2.0 >= 2.14)
+PKG_CHECK_MODULES(Gtk2, gtk+-2.0 >= 2.12)
 FROGR_CFLAGS="$FROGR_CFLAGS $Gtk2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $Gtk2_LIBS"
 
@@ -31,6 +31,25 @@ FROGR_LIBS="$FROGR_LIBS $Libxml2_LIBS"
 PKG_CHECK_MODULES(Libcurl, libcurl >= 7.10)
 FROGR_CFLAGS="$FROGR_CFLAGS $Libcurl_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $Libcurl_LIBS"
+
+# gtk_show_uri requires gtk 2.14
+echo -n "checking for Gtk+ >= 2.14... "
+if $PKG_CONFIG --atleast-version=2.20 gtk+-2.0; then
+   have_gtk_2_14="yes"
+   AC_DEFINE([HAVE_GTK_2_14],[1],
+             [Defined if Gtk+ 2.14 exists])
+else
+   have_gtk_2_14="no"
+fi
+echo $have_gtk_2_14
+
+# if Gtk+ is not >= 2.14, then check for libgnome to
+# use gnome_url_show() instead of gtk_show_uri()
+if test "$have_gtk_2_14" = "no"; then
+   PKG_CHECK_MODULES(Libgnome, libgnome-2.0 >= 2.22)
+   FROGR_CFLAGS="$FROGR_CFLAGS $Libgnome_CFLAGS"
+   FROGR_LIBS="$FROGR_LIBS $Libgnome_LIBS"
+fi
 
 AC_SUBST(appdatadir, "\${datadir}/frogr")
 AC_SUBST(iconsdir, "\${datadir}/icons")
