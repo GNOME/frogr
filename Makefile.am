@@ -33,7 +33,7 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src
 
-pixmapdir = $(datadir)/data/icons/frogr.xpm
+pixmapdir = $(datadir)/icons
 pixmap_DATA = $(srcdir)/data/icons/frogr.xpm
 icon16dir = $(datadir)/icons/hicolor/16x16/apps
 icon16_DATA = $(srcdir)/data/icons/hicolor/16x16/apps/*
