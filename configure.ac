@@ -28,10 +28,6 @@ PKG_CHECK_MODULES(Libxml2, libxml-2.0 >= 2.6.8)
 FROGR_CFLAGS="$FROGR_CFLAGS $Libxml2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $Libxml2_LIBS"
 
-PKG_CHECK_MODULES(Libcurl, libcurl >= 7.10)
-FROGR_CFLAGS="$FROGR_CFLAGS $Libcurl_CFLAGS"
-FROGR_LIBS="$FROGR_LIBS $Libcurl_LIBS"
-
 # gtk_show_uri requires gtk 2.14
 echo -n "checking for Gtk+ >= 2.14... "
 if $PKG_CONFIG --atleast-version=2.20 gtk+-2.0; then
