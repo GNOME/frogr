@@ -44,8 +44,9 @@ static FrogrConfig *_instance = NULL;
 
 /* Prototypes */
 
-static FrogrAccount *_frogr_config_account_from_xml (xmlDocPtr xml,
-                                                     xmlNodePtr rootnode);
+static gboolean _frogr_config_load_account_xml (FrogrAccount *faccount,
+                                                xmlDocPtr     xml,
+                                                xmlNodePtr    rootnode);
 static void _frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir);
 static void _frogr_config_load_account (FrogrConfig *fconfig,
                                         const gchar *config_dir);
@@ -58,17 +59,20 @@ static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
 
 /* Private functions */
 
-static FrogrAccount*
-_frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
+static gboolean
+_frogr_config_load_account_xml (FrogrAccount *faccount,
+                                xmlDocPtr     xml,
+                                xmlNodePtr    rootnode)
 {
-  FrogrAccount *faccount = NULL;
   xmlNodePtr node;
   xmlChar *frob = NULL;
   xmlChar *token = NULL;
   xmlChar *username = NULL;
+  gboolean retval = FALSE;
 
-  g_return_val_if_fail (xml != NULL, NULL);
-  g_return_val_if_fail (rootnode != NULL, NULL);
+  g_return_val_if_fail (faccount != NULL, FALSE);
+  g_return_val_if_fail (xml      != NULL, FALSE);
+  g_return_val_if_fail (rootnode != NULL, FALSE);
 
   /* Traverse child nodes and extract relevant information. */
   for (node = rootnode->children; node != NULL; node = node->next)
@@ -90,16 +94,17 @@ _frogr_config_account_from_xml (xmlDocPtr xml, xmlNodePtr rootnode)
    */
   if (frob != NULL && frob[0] != '\0' && token != NULL && token[0] != '\0' && username != NULL)
     {
-      faccount = frogr_account_new_with_params ((const gchar *)frob,
-                                                (const gchar *)token,
-                                                (const gchar *)username);
+      frogr_account_set_frob (faccount, frob);
+      frogr_account_set_token (faccount, token);
+      frogr_account_set_username (faccount, username);
+      retval = TRUE;
     }
 
   if (frob != NULL) xmlFree (frob);
   if (token != NULL) xmlFree (token);
   if (username != NULL) xmlFree (username);
 
-  return faccount;
+  return retval;
 }
 
 static void
@@ -148,8 +153,7 @@ _frogr_config_load_account (FrogrConfig *fconfig, const gchar *config_dir)
         break;
     }
 
-  if (node != NULL &&
-      (priv->account = _frogr_config_account_from_xml (xml, node)) == NULL)
+  if (node != NULL && !_frogr_config_load_account_xml (priv->account, xml, node))
     {
       g_warning ("Malformed account in '%s/accounts.xml', "
                  "skipping it", config_dir);
@@ -321,8 +325,6 @@ frogr_config_init (FrogrConfig *fconfig)
   gchar *config_dir = g_build_filename (g_get_user_config_dir (),
                                         g_get_prgname (), NULL);
 
-  priv->account = NULL;
-
   /* Ensure that we have the config directory in place. */
   if (g_mkdir_with_parents (config_dir, 0777) != 0)
     {
@@ -330,6 +332,7 @@ frogr_config_init (FrogrConfig *fconfig)
                  config_dir, strerror (errno));
     }
 
+  priv->account = frogr_account_new ();
   _frogr_config_load (fconfig, config_dir);
 
   g_free (config_dir);
