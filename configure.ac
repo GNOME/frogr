@@ -30,7 +30,7 @@ FROGR_LIBS="$FROGR_LIBS $Libxml2_LIBS"
 
 # gtk_show_uri requires gtk 2.14
 echo -n "checking for Gtk+ >= 2.14... "
-if $PKG_CONFIG --atleast-version=2.20 gtk+-2.0; then
+if $PKG_CONFIG --atleast-version=2.14 gtk+-2.0; then
    have_gtk_2_14="yes"
    AC_DEFINE([HAVE_GTK_2_14],[1],
              [Defined if Gtk+ 2.14 exists])
