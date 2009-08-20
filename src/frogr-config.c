@@ -204,12 +204,13 @@ _frogr_config_save_account (FrogrConfig *fconfig)
   xmlDocSetRootElement (xml, root);
 
   /* Handle account */
-  account = G_OBJECT (priv->account);
-  node = xmlNewNode (NULL, (const xmlChar*) "account");
-  _xml_add_string_child (node, "frob", account, "frob");
-  _xml_add_string_child (node, "token", account, "token");
-  _xml_add_string_child (node, "username", account, "username");
-  xmlAddChild (root, node);
+  if ((account = G_OBJECT (priv->account)) != NULL) {
+    node = xmlNewNode (NULL, (const xmlChar*) "account");
+    _xml_add_string_child (node, "frob", account, "frob");
+    _xml_add_string_child (node, "token", account, "token");
+    _xml_add_string_child (node, "username", account, "username");
+    xmlAddChild (root, node);
+  }
 
   xml_path = g_build_filename (g_get_user_config_dir (),
                                "frogr", "accounts.xml", NULL);

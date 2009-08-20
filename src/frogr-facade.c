@@ -178,10 +178,11 @@ frogr_facade_init (FrogrFacade *ffacade)
 
   /* If available, set token */
   faccount = frogr_config_get_account (priv->config);
-  token = frogr_account_get_token (faccount);
-  if (token != NULL)
+  if (faccount != NULL)
     {
-      flickcurl_set_auth_token (priv->fcurl, token);
+      token = frogr_account_get_token (faccount);
+      if (token != NULL)
+        flickcurl_set_auth_token (priv->fcurl, token);
     }
 }
 
