@@ -55,6 +55,7 @@ typedef struct _FrogrMainWindowPrivate {
   FrogrMainWindowModel *model;
   FrogrMainWindowState state;
   FrogrController *controller;
+  GtkWidget *menu_bar;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
   GtkWidget *progress_bar;
@@ -79,6 +80,7 @@ static void _on_pictures_loaded (FrogrMainWindow *fmainwin,
                                  FrogrPictureLoader *fploader);
 static void _on_pictures_uploaded (FrogrMainWindow *fmainwin,
                                    FrogrPictureUploader *fpuploader);
+static void _populate_menu_bar (FrogrMainWindow *fmainwin);
 static GtkWidget *_ctxt_menu_create (FrogrMainWindow *fmainwin);
 static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget,
                                                     gpointer data);
@@ -307,6 +309,47 @@ _on_pictures_uploaded (FrogrMainWindow *fmainwin,
   g_free (edition_url);
   g_free (ids_str);
   g_strfreev (str_array);
+}
+
+static void
+_populate_menu_bar (FrogrMainWindow *fmainwin)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  GtkWidget *file_menu_item;
+  GtkWidget *file_menu;
+  GtkWidget *quit_menu_item;
+  GtkWidget *help_menu_item;
+  GtkWidget *help_menu;
+  GtkWidget *about_menu_item;
+
+  /* File menu */
+  file_menu_item = gtk_menu_item_new_with_mnemonic ("_File");
+  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), file_menu_item);
+
+  file_menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item), file_menu);
+
+  quit_menu_item = gtk_menu_item_new_with_mnemonic ("_Quit");
+  gtk_menu_shell_append (GTK_MENU_SHELL (file_menu), quit_menu_item);
+
+  /* Help menu */
+  help_menu_item = gtk_menu_item_new_with_mnemonic ("_Help");
+  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), help_menu_item);
+
+  help_menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (help_menu_item), help_menu);
+
+  about_menu_item = gtk_menu_item_new_with_mnemonic ("_About");
+  gtk_menu_shell_append (GTK_MENU_SHELL (help_menu), about_menu_item);
+
+    /* Connect signals */
+  g_signal_connect (G_OBJECT (quit_menu_item), "activate",
+                    G_CALLBACK (_on_quit_menu_item_activate),
+                    fmainwin);
+
+  g_signal_connect (G_OBJECT (about_menu_item), "activate",
+                    G_CALLBACK (_on_about_menu_item_activate),
+                    fmainwin);
 }
 
 static GtkWidget *
@@ -588,6 +631,7 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
   GtkBuilder *builder;
   GtkWidget *vbox;
+  GtkWidget *menu_bar;
   GtkWidget *add_button;
   GtkWidget *remove_button;
   GtkWidget *auth_button;
@@ -604,12 +648,15 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   /* Save a reference to the controller */
   priv->controller = frogr_controller_get_instance ();
 
-  /* Create widgets */
+  /* Get widgets from GtkBuilder */
   builder = gtk_builder_new ();
   gtk_builder_add_from_file (builder, GTKBUILDER_FILE, NULL);
 
   vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
   gtk_widget_reparent (vbox, GTK_WIDGET (fmainwin));
+
+  menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
+  priv->menu_bar = menu_bar;
 
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
   priv->icon_view = icon_view;
@@ -629,8 +676,15 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   auth_button = GTK_WIDGET (gtk_builder_get_object (builder, "auth_button"));
   priv->auth_button = auth_button;
 
+  /* initialize extra widgets */
+
+  /* populate menubar with items and submenus */
+  _populate_menu_bar (fmainwin);
+
+  /* create contextual menus for right-clicks */
   priv->ctxt_menu = _ctxt_menu_create (fmainwin);
 
+  /* Create and add progress bar to the statusbar */
   progress_bar = gtk_progress_bar_new ();
   gtk_box_pack_start (GTK_BOX (status_bar), progress_bar, FALSE, FALSE, 6);
   priv->progress_bar = progress_bar;

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="main_window">
     <property name="title" translatable="yes">frogr</property>
@@ -8,50 +8,8 @@
       <object class="GtkVBox" id="main_window_vbox">
         <property name="visible">True</property>
         <child>
-          <object class="GtkMenuBar" id="menubar1">
+          <object class="GtkMenuBar" id="menu_bar">
             <property name="visible">True</property>
-            <child>
-              <object class="GtkMenuItem" id="menuitem1">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_File</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu1">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="quit_menu_item">
-                        <property name="label">_Quit</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <signal name="activate" handler="_on_quit_menu_item_activate"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="menuitem4">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_Help</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu3">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="about_menu_item">
-                        <property name="label">_About</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <signal name="activate" handler="_on_about_menu_item_activate"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
           </object>
           <packing>
             <property name="expand">False</property>
