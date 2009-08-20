@@ -21,6 +21,7 @@
  */
 
 #include <config.h>
+#include <gdk/gdkkeysyms.h>
 #include "frogr-main-window.h"
 #include "frogr-controller.h"
 #include "frogr-picture-loader.h"
@@ -88,6 +89,9 @@ void _on_add_button_clicked (GtkButton *widget, gpointer data);
 void _on_remove_button_clicked (GtkButton *widget, gpointer data);
 void _on_auth_button_clicked (GtkButton *widget, gpointer data);
 void _on_upload_button_clicked (GtkButton *widget, gpointer data);
+gboolean _on_icon_view_key_press_event (GtkWidget *widget,
+                                        GdkEventKey *event,
+                                        gpointer data);
 gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            GdkEventButton *event,
                                            gpointer data);
@@ -444,6 +448,21 @@ _on_upload_button_clicked (GtkButton *widget,
       /* Load the pictures! */
       frogr_picture_uploader_upload (fpuploader);
     }
+}
+
+gboolean
+_on_icon_view_key_press_event (GtkWidget *widget,
+                               GdkEventKey *event,
+                               gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
+
+  /* Remove selected pictures if pressed Supr */
+  if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
+    _remove_selected_items (fmainwin);
+
+  return FALSE;
 }
 
 gboolean
