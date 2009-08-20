@@ -32,6 +32,7 @@ PKG_CHECK_MODULES(Libcurl, libcurl >= 7.10)
 FROGR_CFLAGS="$FROGR_CFLAGS $Libcurl_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $Libcurl_LIBS"
 
+AC_SUBST(appdatadir, "\${datadir}/frogr")
 AC_SUBST(iconsdir, "\${datadir}/icons")
 AC_SUBST(FROGR_CFLAGS)
 AC_SUBST(FROGR_LIBS)
