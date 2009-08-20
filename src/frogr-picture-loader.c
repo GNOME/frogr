@@ -24,6 +24,7 @@
 #include "frogr-controller.h"
 #include "frogr-main-window.h"
 #include "frogr-picture.h"
+#include <gio/gio.h>
 
 #define PICTURE_WIDTH 100
 #define PICTURE_HEIGHT 100
