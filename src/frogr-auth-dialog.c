@@ -25,12 +25,12 @@
 #include "frogr-controller.h"
 
 static gchar *unauth_txt =
-  "Please press in the 'Continue' button to authorize " PACKAGE_NAME " "
-  "in your flickr account and then come back to this screen to "
-  "complete the process.";
+  "You have not properly authorized " PACKAGE_NAME " in flickr.\n"
+  "Please press the 'Continue' button to authorize " PACKAGE_NAME " "
+  " and then come back to this screen to complete the process.";
 
 static gchar *auth_txt =
-  "Press on 'Complete' to start using " PACKAGE_NAME " once you've "
+  "Press 'Complete' to start using " PACKAGE_NAME " once you've "
   "authorized it in your flickr account.";
 
 #define FROGR_AUTH_DIALOG_GET_PRIVATE(object)            \
