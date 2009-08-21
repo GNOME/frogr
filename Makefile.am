@@ -24,35 +24,42 @@ MAINTAINERCLEANFILES = \
 	config.h.in~ \
 	config.sub \
 	configure \
+	data/frogr.desktop \
+	data/frogr.desktop.in \
+	debian/files \
+	debian/stamp-autotools-files \
+	debian/stamp-makefile-build \
+	debian/frogr.debhelper.log \
+	debian/frogr.postinst.debhelper \
+	debian/frogr.postrm.debhelper \
+	debian/frogr.substvars \
 	depcomp \
 	install-sh \
 	ltmain.sh \
 	missing \
-	mkinstalldirs \
-	data/gtkbuilder/frogr-main-window.xml \
-	data/frogr.desktop
+	mkinstalldirs
 
 SUBDIRS = src
 
 pixmapdir = $(datadir)/icons
 pixmap_DATA = $(srcdir)/data/icons/frogr.xpm
 icon16dir = $(datadir)/icons/hicolor/16x16/apps
-icon16_DATA = $(srcdir)/data/icons/hicolor/16x16/apps/*
+icon16_DATA = $(srcdir)/data/icons/hicolor/16x16/apps/frogr.png
 icon24dir = $(datadir)/icons/hicolor/24x24/apps
-icon24_DATA = $(srcdir)/data/icons/hicolor/24x24/apps/*
+icon24_DATA = $(srcdir)/data/icons/hicolor/24x24/apps/frogr.png
 icon32dir = $(datadir)/icons/hicolor/32x32/apps
-icon32_DATA = $(srcdir)/data/icons/hicolor/32x32/apps/*
+icon32_DATA = $(srcdir)/data/icons/hicolor/32x32/apps/frogr.png
 icon48dir = $(datadir)/icons/hicolor/48x48/apps
-icon48_DATA = $(srcdir)/data/icons/hicolor/48x48/apps/*
+icon48_DATA = $(srcdir)/data/icons/hicolor/48x48/apps/frogr.png
 icon64dir = $(datadir)/icons/hicolor/64x64/apps
-icon64_DATA = $(srcdir)/data/icons/hicolor/64x64/apps/*
+icon64_DATA = $(srcdir)/data/icons/hicolor/64x64/apps/frogr.png
 icon128dir = $(datadir)/icons/hicolor/128x128/apps
-icon128_DATA = $(srcdir)/data/icons/hicolor/128x128/apps/*
+icon128_DATA = $(srcdir)/data/icons/hicolor/128x128/apps/frogr.png
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
-iconscalable_DATA = $(srcdir)/data/icons/hicolor/scalable/apps/*
+iconscalable_DATA = $(srcdir)/data/icons/hicolor/scalable/apps/frogr.svg
 
 imagesdir = $(appdatadir)/images
-images_DATA = $(srcdir)/data/images/*
+images_DATA = $(srcdir)/data/images/mpictures.png
 
 gtkbuilderdir = $(appdatadir)/gtkbuilder
 gtkbuilder_DATA = $(srcdir)/data/gtkbuilder/frogr-main-window.xml \
@@ -63,7 +70,9 @@ desktopentry_DATA = $(srcdir)/data/frogr.desktop
 
 edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
 
-$(srcdir)/data/frogr.desktop: data/frogr.desktop.in
+$(srcdir)/data/frogr.desktop: $(srcdir)/data/frogr.desktop.in
 	$(edit) $(srcdir)/data/frogr.desktop.in > $(srcdir)/data/frogr.desktop
-	sed -e "s!@BINDIR@!${bindir}!g" -e "s!@ICONDIR@!${pixmapdir}!g" $< > $@
 
+EXTRA_DIST = \
+	$(srcdir)/data/frogr.desktop.in \
+	$(srcdir)/data/frogr.desktop
