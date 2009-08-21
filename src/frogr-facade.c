@@ -54,15 +54,15 @@ typedef struct {
   gpointer data;
 } upload_picture_st;
 
-static void _picture_uploaded (upload_picture_st *up_st);
+static gboolean _picture_uploaded (upload_picture_st *up_st);
 static void _upload_picture_thread (upload_picture_st *up_st);
 
 /* Private API */
 
-static void
+static gboolean
 _picture_uploaded (upload_picture_st *up_st)
 {
-  g_return_if_fail (up_st != NULL);
+  g_return_val_if_fail (up_st != NULL, FALSE);
   GFunc callback = up_st->callback;
   gpointer object = up_st->object;
   gpointer data = up_st->data;
@@ -73,6 +73,9 @@ _picture_uploaded (upload_picture_st *up_st)
   /* Execute callback */
   if (callback)
     callback (object, data);
+
+  /* Remove the GSource */
+  return FALSE;
 }
 
 static void
