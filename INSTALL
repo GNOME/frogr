@@ -1,10 +1,21 @@
-Currently, these are the only instructions available to compile and
-try the application:
+Building and installing a debian package
+========================================
+
+You can easily build a new debian package by doing:
+
+ $ dpkg-buildpackage -rfakeroot
+
+After that, just install the debian package created in '../'.
+
+
+Compiling from source code
+==========================
+
+To compile and try the application you can just do this:
 
  $ ./autogen.sh --prefix=/tmp
  $ make
  $ make install
  $ ./src/frogr
 
-This is just because of the extremely early stage f the project, of
-course in the future it will be improved :-).
+(Feel free to use another prefix of course, this is just a suggestion)

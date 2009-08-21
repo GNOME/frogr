@@ -1,2 +1,16 @@
+0.1 (21 Aug 2009)
+
+  * A better UI. Faster and better user experience
+  * Basic configuration management to store account details (auth token)
+  * Support for editing details of multiple pictures at the same time
+  * Added status and improved the progress bar usage to show the status
+    of async operations, giving a much better feedback to the end user.
+  * A better (and more easily hackable) code and design.
+  * No more .glade files, no more gtk-builder-convert
+  * Avoid libgnome dependency if gtk+ >= 2.14 is present
+  * Still implemented some parts of the UI (menubar) without GtkBuilder
+    to keep compatibility with Gtk+ 2.12 (least version supported).
+  * Bugfixes and several (minor and major) improvements
+
 0.0.20090603 (03 Jun 2009)
   * Initial pre-release, right after getting the basic stuff together.
