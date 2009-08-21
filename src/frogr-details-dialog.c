@@ -28,6 +28,9 @@
 #define GTKBUILDER_FILE APP_DATA_DIR "/gtkbuilder/frogr-details-dialog.xml"
 #define MPICTURES_IMAGE APP_DATA_DIR "/images/mpictures.png"
 
+#define DIALOG_MIN_WIDTH 540
+#define DIALOG_MIN_HEIGHT 420
+
 #define PICTURE_WIDTH 150
 #define PICTURE_HEIGHT 150
 
@@ -550,7 +553,9 @@ frogr_details_dialog_new (GtkWindow *parent, GSList *fpictures)
                                "modal", TRUE,
                                "pictures", fpictures,
                                "transient-for", parent,
-                               "resizable", FALSE,
+                               "width-request", DIALOG_MIN_WIDTH,
+                               "height-request", DIALOG_MIN_HEIGHT,
+                               "resizable", TRUE,
                                "title", "Edit picture details",
                                NULL);
   return FROGR_DETAILS_DIALOG (new);
