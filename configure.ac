@@ -1,12 +1,7 @@
-AC_INIT([frogr], [0.0.1], [msanchez@igalia.com])
+AC_INIT([frogr], [0.1~unreleased], [msanchez@igalia.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AC_CONFIG_HEADERS([config.h])
-
-# Default flags and libs
-
-CFLAGS="-g3 -O0"
-LIBS=""
 
 # Dependencies for frogr
 
