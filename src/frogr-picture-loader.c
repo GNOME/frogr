@@ -206,7 +206,6 @@ _load_next_picture_cb (GObject *object,
       else
         {
           /* Not able to write pixbuf */
-          gchar *filename = g_file_get_basename (file);
           g_warning ("Not able to write pixbuf: %s",
                      error->message);
           g_error_free (error);
@@ -317,7 +316,7 @@ frogr_picture_loader_new (GSList *filepaths,
   return fploader;
 }
 
-gboolean
+void
 frogr_picture_loader_load (FrogrPictureLoader *fploader)
 {
   g_return_if_fail (FROGR_IS_PICTURE_LOADER (fploader));
@@ -327,7 +326,7 @@ frogr_picture_loader_load (FrogrPictureLoader *fploader)
 
   /* Check first whether there's something to load */
   if (priv->filepaths == NULL)
-    return FALSE;
+    return;
 
   /* Set proper state */
   frogr_main_window_set_state (priv->mainwin, FROGR_STATE_LOADING);
@@ -337,7 +336,4 @@ frogr_picture_loader_load (FrogrPictureLoader *fploader)
 
   /* Trigger the asynchronous process */
   _load_next_picture (fploader);
-
-  /* The process has been properly  started */
-  return TRUE;
 }

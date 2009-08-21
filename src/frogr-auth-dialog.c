@@ -145,8 +145,7 @@ frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
                                                        GTK_MESSAGE_ERROR,
                                                        GTK_BUTTONS_OK,
                                                        "Authorization failed.\n"
-                                                       "Please try again",
-                                                       NULL);
+                                                       "Please try again");
                   /* Show and destroy a an error message */
                   gtk_dialog_run (GTK_DIALOG (msg_dialog));
                   gtk_widget_destroy (msg_dialog);

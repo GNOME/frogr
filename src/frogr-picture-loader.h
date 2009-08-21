@@ -55,7 +55,7 @@ FrogrPictureLoader *frogr_picture_loader_new (GSList *filepaths,
                                               GFunc picture_loaded_cb,
                                               GFunc pictures_loaded_cb,
                                               gpointer object);
-gboolean frogr_picture_loader_load (FrogrPictureLoader *fploader);
+void frogr_picture_loader_load (FrogrPictureLoader *fploader);
 
 G_END_DECLS
 

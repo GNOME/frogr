@@ -126,7 +126,7 @@ frogr_main_window_model_remove_all (FrogrMainWindowModel *fmwmodel)
 guint
 frogr_main_window_model_n_pictures (FrogrMainWindowModel *fmwmodel)
 {
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel));
+  g_return_val_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel), 0);
 
   FrogrMainWindowModelPrivate *priv =
     FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmwmodel);
@@ -137,7 +137,7 @@ frogr_main_window_model_n_pictures (FrogrMainWindowModel *fmwmodel)
 GSList *
 frogr_main_window_model_get_pictures (FrogrMainWindowModel *fmwmodel)
 {
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel));
+  g_return_val_if_fail(FROGR_IS_MAIN_WINDOW_MODEL (fmwmodel), NULL);
 
   FrogrMainWindowModelPrivate *priv =
     FROGR_MAIN_WINDOW_MODEL_GET_PRIVATE (fmwmodel);

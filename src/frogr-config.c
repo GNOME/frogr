@@ -21,6 +21,7 @@
 
 #include "frogr-config.h"
 #include "frogr-account.h"
+#include <glib/gstdio.h>
 #include <libxml/parser.h>
 #include <string.h>
 #include <errno.h>
@@ -88,8 +89,8 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
   /* The account object is created if some minimum requirements are met */
   if (frob != NULL && frob[0] != '\0' && token != NULL && token[0] != '\0')
     {
-      frogr_account_set_frob (faccount, frob);
-      frogr_account_set_token (faccount, token);
+      frogr_account_set_frob (faccount, (gchar *)frob);
+      frogr_account_set_token (faccount, (gchar *)token);
       retval = TRUE;
     }
 
@@ -187,7 +188,6 @@ _frogr_config_save_account (FrogrConfig *fconfig)
   gboolean retval = TRUE;
   xmlDocPtr xml;
   xmlNodePtr node, root;
-  GList *item;
   GObject *account;
   gchar *xml_path;
 
@@ -340,12 +340,10 @@ void
 frogr_config_set_account (FrogrConfig  *fconfig,
                           FrogrAccount *faccount)
 {
-  FrogrConfigPrivate *priv;
-
   g_return_if_fail (FROGR_IS_CONFIG (fconfig));
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
 
-  priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
 
   g_object_unref (priv->account);
   priv->account = g_object_ref (faccount);
@@ -354,8 +352,6 @@ frogr_config_set_account (FrogrConfig  *fconfig,
 FrogrAccount*
 frogr_config_get_account (FrogrConfig *fconfig)
 {
-  FrogrConfigPrivate *priv;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (fconfig), NULL);
 
   return FROGR_CONFIG_GET_PRIVATE (fconfig)->account;

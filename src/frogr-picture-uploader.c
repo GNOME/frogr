@@ -214,7 +214,7 @@ frogr_picture_uploader_new (GSList *fpictures,
   return fpuploader;
 }
 
-gboolean
+void
 frogr_picture_uploader_upload (FrogrPictureUploader *fpuploader)
 {
   g_return_if_fail (FROGR_IS_PICTURE_UPLOADER (fpuploader));
@@ -224,13 +224,13 @@ frogr_picture_uploader_upload (FrogrPictureUploader *fpuploader)
 
   /* Check first whether there's something to upload */
   if (priv->fpictures == NULL)
-    return FALSE;
+    return;
 
   /* Check authorization */
   if (!frogr_controller_is_authorized (priv->controller))
     {
       g_debug ("Not authorized yet");
-      return FALSE;
+      return;
     }
 
   /* Set proper state */
@@ -241,7 +241,4 @@ frogr_picture_uploader_upload (FrogrPictureUploader *fpuploader)
 
   /* Trigger the asynchronous process */
   _upload_next_picture (fpuploader);
-
-  /* The process has been properly  started */
-  return TRUE;
 }

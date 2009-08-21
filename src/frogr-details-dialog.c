@@ -564,8 +564,6 @@ frogr_details_dialog_new (GtkWindow *parent, GSList *fpictures)
 void
 frogr_details_dialog_show (FrogrDetailsDialog *fdetailsdialog)
 {
-  FrogrDetailsDialogPrivate *priv =
-    FROGR_DETAILS_DIALOG_GET_PRIVATE (fdetailsdialog);
   gint response;
   gboolean saved;
 

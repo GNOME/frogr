@@ -107,8 +107,6 @@ static void
 _update_ui (FrogrMainWindow *fmainwin)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
-  FrogrMainWindowState state;
-  GSList *fpictures_list = NULL;
   gboolean pictures_loaded;
   guint npics;
 
@@ -372,7 +370,6 @@ _populate_menu_bar (FrogrMainWindow *fmainwin)
 static GtkWidget *
 _ctxt_menu_create (FrogrMainWindow *fmainwin)
 {
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
   GtkWidget *ctxt_menu = NULL;
   GtkWidget *edit_details_item;
   GtkWidget *remove_item;
@@ -424,7 +421,6 @@ _on_add_button_clicked (GtkButton *widget,
                         gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
   GtkWidget *dialog;
   GtkFileFilter *filter;
 
@@ -448,7 +444,6 @@ _on_add_button_clicked (GtkButton *widget,
   if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
     {
       GSList *filepaths;
-      GSList *item;
 
       /* Add selected pictures to icon view area */
       filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
@@ -494,7 +489,6 @@ _on_icon_view_key_press_event (GtkWidget *widget,
                                gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
 
   /* Remove selected pictures if pressed Supr */
   if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
@@ -630,7 +624,6 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   GtkWidget *icon_view;
   GtkWidget *status_bar;
   GtkWidget *progress_bar;
-  gboolean authorized;
   GList *icons;
 
   /* Set initial state */
@@ -802,7 +795,7 @@ frogr_main_window_set_progress (FrogrMainWindow *fmainwin,
 FrogrMainWindowModel *
 frogr_main_window_get_model (FrogrMainWindow *fmainwin)
 {
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW (fmainwin));
+  g_return_val_if_fail(FROGR_IS_MAIN_WINDOW (fmainwin), NULL);
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
   return priv->model;
 }

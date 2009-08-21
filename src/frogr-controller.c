@@ -58,18 +58,15 @@ typedef struct {
 
 /* Prototypes */
 
-static gboolean _upload_picture_cb (FrogrController *fcontroller,
+static void _upload_picture_cb (FrogrController *fcontroller,
                                     upload_picture_st *up_st);
 
 /* Private functions */
 
-static gboolean
+static void
 _upload_picture_cb (FrogrController *fcontroller,
                     upload_picture_st *up_st)
 {
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
-
   FrogrPicture *fpicture = up_st->fpicture;
   GFunc callback = up_st->callback;
   gpointer object = up_st->object;
@@ -257,7 +254,7 @@ frogr_controller_open_authorization_url (FrogrController *fcontroller)
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
 
   gchar *auth_url = frogr_facade_get_authorization_url (priv->facade);
-  if (auth_url)
+  if (auth_url != NULL)
     {
       /* Open url in the default application */
 #ifdef HAVE_GTK_2_14
@@ -273,7 +270,7 @@ frogr_controller_open_authorization_url (FrogrController *fcontroller)
 gboolean
 frogr_controller_complete_authorization (FrogrController *fcontroller)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (fcontroller), FALSE);
 
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
@@ -285,7 +282,7 @@ frogr_controller_complete_authorization (FrogrController *fcontroller)
 gboolean
 frogr_controller_is_authorized (FrogrController *fcontroller)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (fcontroller), FALSE);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
   return frogr_facade_is_authorized (priv->facade);
