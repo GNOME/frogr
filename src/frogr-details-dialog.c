@@ -551,6 +551,7 @@ frogr_details_dialog_new (GtkWindow *parent, GSList *fpictures)
                                "pictures", fpictures,
                                "transient-for", parent,
                                "resizable", FALSE,
+                               "title", "Edit picture details",
                                NULL);
   return FROGR_DETAILS_DIALOG (new);
 }
