@@ -62,7 +62,6 @@ typedef struct _FrogrMainWindowPrivate {
   GtkWidget *add_button;
   GtkWidget *remove_button;
   GtkWidget *upload_button;
-  GtkWidget *auth_button;
   GtkWidget *ctxt_menu;
   GtkTreeModel *tree_model;
   guint sb_context_id;
@@ -88,7 +87,6 @@ static void _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data);
 
 void _on_add_button_clicked (GtkButton *widget, gpointer data);
 void _on_remove_button_clicked (GtkButton *widget, gpointer data);
-void _on_auth_button_clicked (GtkButton *widget, gpointer data);
 void _on_upload_button_clicked (GtkButton *widget, gpointer data);
 gboolean _on_icon_view_key_press_event (GtkWidget *widget,
                                         GdkEventKey *event,
@@ -111,7 +109,6 @@ _update_ui (FrogrMainWindow *fmainwin)
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
   FrogrMainWindowState state;
   GSList *fpictures_list = NULL;
-  gboolean authorized;
   gboolean pictures_loaded;
   guint npics;
 
@@ -122,20 +119,16 @@ _update_ui (FrogrMainWindow *fmainwin)
     case FROGR_STATE_UPLOADING:
       gtk_widget_set_sensitive (priv->add_button, FALSE);
       gtk_widget_set_sensitive (priv->remove_button, FALSE);
-      gtk_widget_set_sensitive (priv->auth_button, FALSE);
       gtk_widget_set_sensitive (priv->upload_button, FALSE);
       break;
 
     case FROGR_STATE_IDLE:
       npics = frogr_main_window_model_n_pictures (priv->model);
-      authorized = frogr_controller_is_authorized (priv->controller);
       pictures_loaded = frogr_main_window_model_n_pictures (priv->model);
 
       gtk_widget_set_sensitive (priv->add_button, TRUE);
       gtk_widget_set_sensitive (priv->remove_button, pictures_loaded);
-      gtk_widget_set_sensitive (priv->auth_button, !authorized);
-      gtk_widget_set_sensitive (priv->upload_button,
-                                authorized && (npics > 0));
+      gtk_widget_set_sensitive (priv->upload_button, npics > 0);
 
       /* Hide progress bar, just in case */
       gtk_widget_hide (priv->progress_bar);
@@ -220,6 +213,30 @@ _remove_selected_items (FrogrMainWindow *fmainwin)
   g_list_free (selected_items);
 }
 
+static void
+_upload_pictures (FrogrMainWindow *fmainwin)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+
+  /* Upload pictures */
+  if (!frogr_controller_is_authorized (priv->controller))
+    {
+      /* FIXME: Improve the way the user gets asked for re-athorize
+         frogr in Flick, so it does not look a bit confusing */
+      frogr_controller_show_auth_dialog (priv->controller);
+    }
+  else if (frogr_main_window_model_n_pictures (priv->model) > 0)
+    {
+      GSList *fpictures = frogr_main_window_model_get_pictures (priv->model);
+      FrogrPictureUploader *fpuploader =
+        frogr_picture_uploader_new (fpictures,
+                                    NULL,
+                                    (GFunc)_on_pictures_uploaded,
+                                    fmainwin);
+      /* Load the pictures! */
+      frogr_picture_uploader_upload (fpuploader);
+    }
+}
 
 /* Event handlers */
 
@@ -464,36 +481,11 @@ _on_remove_button_clicked (GtkButton *widget,
 }
 
 void
-_on_auth_button_clicked (GtkButton *widget,
-                         gpointer data)
-{
-  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-
-  /* Delegate on controller and update UI */
-  frogr_controller_show_auth_dialog (priv->controller);
-  _update_ui (fmainwin);
-}
-
-void
 _on_upload_button_clicked (GtkButton *widget,
                            gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-
-  /* Upload pictures */
-  if (frogr_main_window_model_n_pictures (priv->model) > 0)
-    {
-      GSList *fpictures = frogr_main_window_model_get_pictures (priv->model);
-      FrogrPictureUploader *fpuploader =
-        frogr_picture_uploader_new (fpictures,
-                                    NULL,
-                                    (GFunc)_on_pictures_uploaded,
-                                    fmainwin);
-      /* Load the pictures! */
-      frogr_picture_uploader_upload (fpuploader);
-    }
+  _upload_pictures (fmainwin);
 }
 
 gboolean
@@ -634,7 +626,6 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
   GtkWidget *menu_bar;
   GtkWidget *add_button;
   GtkWidget *remove_button;
-  GtkWidget *auth_button;
   GtkWidget *upload_button;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
@@ -672,9 +663,6 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
 
   upload_button = GTK_WIDGET (gtk_builder_get_object (builder, "upload_button"));
   priv->upload_button = upload_button;
-
-  auth_button = GTK_WIDGET (gtk_builder_get_object (builder, "auth_button"));
-  priv->auth_button = auth_button;
 
   /* initialize extra widgets */
 
@@ -753,6 +741,10 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
 
   /* Update UI */
   _update_ui (fmainwin);
+
+  /* Show authorization dialog if needed */
+  if (!frogr_controller_is_authorized (priv->controller))
+    frogr_controller_show_auth_dialog (priv->controller);
 }
 
 

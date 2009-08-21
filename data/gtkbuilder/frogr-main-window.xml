@@ -45,19 +45,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="auth_button">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Authorize</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-dialog-authentication</property>
-                <signal name="clicked" handler="_on_auth_button_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkToolButton" id="upload_button">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Upload</property>
