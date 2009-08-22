@@ -75,4 +75,14 @@ $(srcdir)/data/frogr.desktop: $(srcdir)/data/frogr.desktop.in
 
 EXTRA_DIST = \
 	$(srcdir)/data/frogr.desktop.in \
-	$(srcdir)/data/frogr.desktop
+	$(srcdir)/data/frogr.desktop \
+	$(pixmap_DATA) \
+	$(icon16_DATA) \
+	$(icon24_DATA) \
+	$(icon32_DATA) \
+	$(icon48_DATA) \
+	$(icon64_DATA) \
+	$(icon128_DATA) \
+	$(iconscalable_DATA) \
+	$(gtkbuilder_DATA) \
+	$(images_DATA)
