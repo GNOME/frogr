@@ -508,7 +508,11 @@ frogr_details_dialog_init (FrogrDetailsDialog *fdetailsdialog)
 
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main-vbox"));
   gtk_widget_reparent (main_vbox,
+#if GTK_CHECK_VERSION (2,14,0)
+                       GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (fdetailsdialog))));
+#else
                        GTK_WIDGET (GTK_DIALOG (fdetailsdialog)->vbox));
+#endif
 
   gtk_dialog_add_buttons (GTK_DIALOG (fdetailsdialog),
                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,

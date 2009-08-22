@@ -82,7 +82,11 @@ frogr_auth_dialog_init (FrogrAuthDialog *fauthdialog)
   priv->info_label = gtk_label_new (unauth_txt);
   gtk_label_set_line_wrap (GTK_LABEL (priv->info_label), TRUE);
 
+#if GTK_CHECK_VERSION (2,14,0)
+  vbox = gtk_dialog_get_content_area (GTK_DIALOG (fauthdialog));
+#else
   vbox = GTK_DIALOG (fauthdialog)->vbox;
+#endif
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_box_pack_start (GTK_BOX (vbox), priv->info_label, FALSE, FALSE, 0);
 
