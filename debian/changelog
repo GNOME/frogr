@@ -2,7 +2,13 @@ frogr (0.2~unreleased) unstable; urgency=low
 
   * 
 
- -- Mario Sanchez Prada <msanchez@igalia.com>  Fri, 21 Aug 2009 19:19:19 +0200
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Sat, 22 Aug 2009 12:01:57 +0200
+
+frogr (0.1.1) unstable; urgency=low
+
+  * Bugfixing release
+
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Sat, 22 Aug 2009 11:49:43 +0200
 
 frogr (0.1) unstable; urgency=low
 
