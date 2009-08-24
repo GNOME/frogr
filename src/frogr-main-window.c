@@ -84,6 +84,13 @@ static GtkWidget *_ctxt_menu_create (FrogrMainWindow *fmainwin);
 static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget,
                                                     gpointer data);
 static void _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data);
+static void _initialize_drag_n_drop (FrogrMainWindow *fmainwin);
+static void _on_icon_view_drag_data_received (GtkWidget *widget,
+                                              GdkDragContext *context,
+                                              gint x, gint y,
+                                              GtkSelectionData *selection_data,
+                                              guint info, guint time,
+                                              gpointer data);
 
 void _on_add_button_clicked (GtkButton *widget, gpointer data);
 void _on_remove_button_clicked (GtkButton *widget, gpointer data);
@@ -416,6 +423,70 @@ _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data)
   _remove_selected_items (fmainwin);
 }
 
+static void
+_initialize_drag_n_drop (FrogrMainWindow *fmainwin)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+
+  gtk_drag_dest_set ( priv->icon_view, GTK_DEST_DEFAULT_ALL,
+                      NULL, 0, GDK_ACTION_COPY );
+  gtk_drag_dest_add_uri_targets (priv->icon_view);
+
+  g_signal_connect(G_OBJECT(priv->icon_view), "drag-data-received",
+                   G_CALLBACK(_on_icon_view_drag_data_received),
+                   fmainwin);
+}
+
+static void
+_on_icon_view_drag_data_received (GtkWidget *widget,
+                                  GdkDragContext *context,
+                                  gint x, gint y,
+                                  GtkSelectionData *selection_data,
+                                  guint info, guint time,
+                                  gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  GSList *filepaths_list = NULL;
+  gchar *files_string;
+  gchar **fileuris_array = NULL;
+  gint i;
+
+  if (!gtk_targets_include_uri (&selection_data->target, 1))
+    return;
+
+  /* Get GSList with the list of files */
+  files_string = ((gchar *) selection_data->data);
+
+  fileuris_array = g_strsplit (files_string, "\r\n", -1);
+  for (i = 0;  fileuris_array[i]; i++)
+    {
+      gchar *filepath = g_filename_from_uri (fileuris_array[i], NULL, NULL);
+      if (filepath && !g_str_equal (g_strstrip (filepath), ""))
+        filepaths_list = g_slist_append (filepaths_list, filepath);
+    }
+
+  /* Load pictures */
+  if (filepaths_list != NULL)
+    {
+      FrogrPictureLoader *fploader;
+      fploader =
+        frogr_picture_loader_new (filepaths_list,
+                                  (GFunc)_on_picture_loaded,
+                                  (GFunc)_on_pictures_loaded,
+                                  fmainwin);
+
+      /* Load the pictures! */
+      frogr_picture_loader_load (fploader);
+    }
+
+  /* Finish drag and drop */
+  gtk_drag_finish (context, TRUE, FALSE, time);
+
+  /* Free */
+  g_strfreev (fileuris_array);
+  g_slist_free (filepaths_list);
+}
+
 void
 _on_add_button_clicked (GtkButton *widget,
                         gpointer data)
@@ -664,6 +735,9 @@ frogr_main_window_init (FrogrMainWindow *fmainwin)
 
   /* create contextual menus for right-clicks */
   priv->ctxt_menu = _ctxt_menu_create (fmainwin);
+
+  /* Initialize drag'n'drop support */
+  _initialize_drag_n_drop (fmainwin);
 
   /* Create and add progress bar to the statusbar */
   progress_bar = gtk_progress_bar_new ();
