@@ -271,7 +271,7 @@ _load_next_picture_cb (GObject *object,
   _update_status_and_progress (fploader);
 
   /* Execute 'picture-loaded' callback */
-  if (priv->picture_loaded_cb)
+  if (priv->picture_loaded_cb && fpicture)
     priv->picture_loaded_cb (priv->object, fpicture);
 
   /* Free memory */
