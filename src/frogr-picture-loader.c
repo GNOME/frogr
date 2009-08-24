@@ -163,6 +163,8 @@ _load_next_picture (FrogrPictureLoader *fploader)
               break;
             }
         }
+
+      g_debug ("Adding file %s (%s)\n", filepath, mime_type);
       g_object_unref (file_info);
 
       /* Asynchronously load the picture if mime is valid */

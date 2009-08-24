@@ -253,8 +253,6 @@ _on_picture_loaded (FrogrMainWindow *fmainwin, FrogrPicture *fpicture)
   GtkTreeIter iter;
   const gchar *filepath;
 
-  g_debug ("Added picture: %s", frogr_picture_get_title (fpicture));
-
   /* Add to model */
   g_object_ref (fpicture);
   frogr_main_window_model_add_picture (priv->model, fpicture);
