@@ -2,7 +2,7 @@
 
   * Fixed problems with 'make dist' (missing files in EXTRA_DIST)
 
-0.1-1 (21 Aug 2009)
+0.1 (21 Aug 2009)
 
   * A better UI. Faster and better user experience
   * Basic configuration management to store account details (auth token)
