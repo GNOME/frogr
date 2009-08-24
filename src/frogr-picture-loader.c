@@ -51,6 +51,13 @@ struct _FrogrPictureLoaderPrivate
   gpointer object;
 };
 
+static const gchar *valid_mimetypes[] = {
+  "image/jpg",
+  "image/jpeg",
+  "image/png",
+  "image/bmp",
+  "image/gif",
+  NULL};
 
 /* Prototypes */
 
@@ -133,14 +140,46 @@ _load_next_picture (FrogrPictureLoader *fploader)
   if (priv->current)
     {
       GFile *gfile = NULL;
+      GFileInfo *file_info;
       gchar *filepath = (gchar *)priv->current->data;
+      const gchar *mime_type;
+      gboolean valid_mime = FALSE;
+      gint i;
 
-      /* Asynchronously load the picture */
+      /* Get file info */
       gfile = g_file_new_for_path (filepath);
-      g_file_load_contents_async (gfile,
-                                  NULL,
-                                  _load_next_picture_cb,
-                                  fploader);
+      file_info = g_file_query_info (gfile,
+                                     G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                     G_FILE_QUERY_INFO_NONE,
+                                     NULL,
+                                     NULL);
+      /* Check mimetype */
+      mime_type = g_file_info_get_content_type (file_info);
+      for (i = 0; valid_mimetypes[i]; i++)
+        {
+          if (g_str_equal (valid_mimetypes[i], mime_type))
+            {
+              valid_mime = TRUE;
+              break;
+            }
+        }
+      g_object_unref (file_info);
+
+      /* Asynchronously load the picture if mime is valid */
+      if (valid_mime)
+        {
+          g_file_load_contents_async (gfile,
+                                      NULL,
+                                      _load_next_picture_cb,
+                                      fploader);
+        }
+      else
+        {
+          /* update internal status and check the next picture */
+          priv->current = g_slist_next (priv->current);
+          priv->index++;
+          _load_next_picture (fploader);
+        }
     }
   else
     {
