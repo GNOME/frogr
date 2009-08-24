@@ -504,6 +504,7 @@ _on_add_button_clicked (GtkButton *widget,
 
   /* Set images filter */
   filter = gtk_file_filter_new ();
+  gtk_file_filter_add_mime_type (filter, "image/jpg");
   gtk_file_filter_add_mime_type (filter, "image/jpeg");
   gtk_file_filter_add_mime_type (filter, "image/png");
   gtk_file_filter_add_mime_type (filter, "image/bmp");
