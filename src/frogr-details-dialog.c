@@ -88,6 +88,10 @@ _update_ui (FrogrDetailsDialog *fdetailsdialog)
   active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->public_rb));
   gtk_widget_set_sensitive (priv->friend_cb, !active);
   gtk_widget_set_sensitive (priv->family_cb, !active);
+
+  /* Initial widget to grab focus */
+  gtk_widget_grab_focus (priv->title_entry);
+  gtk_editable_set_position (GTK_EDITABLE (priv->title_entry), -1);
 }
 
 static GdkPixbuf *
@@ -538,6 +542,8 @@ frogr_details_dialog_init (FrogrDetailsDialog *fdetailsdialog)
 
   /* Show the UI */
   gtk_widget_show_all (GTK_WIDGET (fdetailsdialog));
+  gtk_dialog_set_default_response (GTK_DIALOG (fdetailsdialog),
+                                   GTK_RESPONSE_OK);
 
   /* Free */
   g_object_unref (G_OBJECT (builder));
