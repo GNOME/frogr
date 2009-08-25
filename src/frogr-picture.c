@@ -543,10 +543,13 @@ frogr_picture_set_tags (FrogrPicture *fpicture, const gchar *tags_string)
   _add_tags_to_tags_list (fpicture, tags_string);
 }
 
+void
+frogr_picture_add_tags (FrogrPicture *fpicture, const gchar *tags_string)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
-      /* Set the tags_string value */
-      priv->tags_string = stripped_tags;
-    }
+  /* Add to internal tags_list */
+  _add_tags_to_tags_list (fpicture, tags_string);
 }
 
 gboolean
