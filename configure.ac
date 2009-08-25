@@ -41,7 +41,7 @@ echo $have_gtk_2_14
 # if Gtk+ is not >= 2.14, then check for libgnome to
 # use gnome_url_show() instead of gtk_show_uri()
 if test "$have_gtk_2_14" = "no"; then
-   PKG_CHECK_MODULES(Libgnome, libgnome-2.0 >= 2.22)
+   PKG_CHECK_MODULES(Libgnome, libgnome-2.0 >= 2.20)
    FROGR_CFLAGS="$FROGR_CFLAGS $Libgnome_CFLAGS"
    FROGR_LIBS="$FROGR_LIBS $Libgnome_LIBS"
 fi
