@@ -63,7 +63,105 @@ enum  {
   PROP_PIXBUF
 };
 
+/* Prototypes */
+
+static gboolean _tag_is_set (FrogrPicture *fpicture, const gchar *tag);
+static void _add_tags_to_tags_list (FrogrPicture *fpicture,
+                                    const gchar *tags_string);
+static void _update_tags_string (FrogrPicture *fpicture);
+
 /* Private API */
+
+static gboolean
+_tag_is_set (FrogrPicture *fpicture, const gchar *tag)
+{
+  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (fpicture);
+  GSList *item;
+  gboolean tag_found = FALSE;
+
+  for (item = priv->tags_list; item; item = g_slist_next (item))
+    {
+      if (g_str_equal ((gchar *)item->data, tag))
+        {
+          tag_found = TRUE;
+          break;
+        }
+    }
+
+  return tag_found;
+}
+
+static void
+_add_tags_to_tags_list (FrogrPicture *fpicture,
+                        const gchar *tags_string)
+{
+  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (fpicture);
+
+  /* Check if valid data is passed to the function */
+  if (tags_string != NULL)
+    {
+      gchar *stripped_tags = g_strstrip (g_strdup (tags_string));
+      if (!g_str_equal (stripped_tags, ""))
+        {
+          gchar **tags_array = NULL;
+          gchar *tag;
+          gint i;
+
+          /* Now iterate over every token, adding it to the list */
+          tags_array = g_strsplit (stripped_tags, TAGS_DELIMITER, -1);
+          for (i = 0; tags_array[i]; i++)
+            {
+              /* add stripped tag if not already set*/
+              tag = g_strstrip(g_strdup (tags_array[i]));
+              if (!g_str_equal (tag, "") && !_tag_is_set (fpicture, tag))
+                priv->tags_list = g_slist_append (priv->tags_list, tag);
+            }
+
+          /* Free */
+          g_strfreev (tags_array);
+        }
+      g_free (stripped_tags);
+
+      /* Update internal tags string */
+      _update_tags_string (fpicture);
+    }
+}
+
+static void
+_update_tags_string (FrogrPicture *fpicture)
+{
+  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (fpicture);
+
+  /* Reset previous tags string */
+  g_free (priv->tags_string);
+  priv->tags_string = NULL;
+
+  /* Set the tags_string value, if needed */
+  if (priv->tags_list != NULL)
+    {
+      GSList *item = NULL;
+      gchar *new_str = NULL;
+      gchar *tmp_str = NULL;
+
+      /* Init new_string to first item */
+      new_str = g_strdup ((gchar *)priv->tags_list->data);
+
+      /* Continue with the remaining tags */
+      for (item = g_slist_next (priv->tags_list);
+           item != NULL;
+           item = g_slist_next (item))
+        {
+          tmp_str = g_strconcat (new_str, " ", (gchar *)item->data, NULL);
+          g_free (new_str);
+
+          /* Update pointer */
+          new_str = tmp_str;
+        }
+
+      /* Store final result */
+      priv->tags_string = new_str;
+    }
+}
 
 static void
 _frogr_picture_set_property (GObject *object,
@@ -429,8 +527,7 @@ frogr_picture_get_tags (FrogrPicture *fpicture)
 }
 
 void
-frogr_picture_set_tags (FrogrPicture *fpicture,
-                        const gchar *tags_string)
+frogr_picture_set_tags (FrogrPicture *fpicture, const gchar *tags_string)
 {
   g_return_if_fail(FROGR_IS_PICTURE(fpicture));
 
@@ -442,34 +539,10 @@ frogr_picture_set_tags (FrogrPicture *fpicture,
   g_slist_free (priv->tags_list);
   priv->tags_list = NULL;
 
-  /* Reset previous tags string */
-  g_free (priv->tags_string);
-  priv->tags_string = NULL;
+  /* Add to internal tags_list */
+  _add_tags_to_tags_list (fpicture, tags_string);
+}
 
-  /* Build the new tags list */
-  if (tags_string)
-    {
-      gchar *stripped_tags = NULL;
-
-      /* Now create a new list of tags from the tags string */
-      stripped_tags = g_strstrip (g_strdup (tags_string));
-
-      if (!g_str_equal (stripped_tags, ""))
-        {
-          gchar **tags_array = NULL;
-          GSList *new_list = NULL;
-          gint i;
-
-          tags_array = g_strsplit (stripped_tags, TAGS_DELIMITER, -1);
-          for (i = 0; tags_array[i]; i++)
-            {
-              /* Add tag to the tags list */
-              new_list = g_slist_prepend (new_list, g_strdup (tags_array[i]));
-            }
-          priv->tags_list = g_slist_reverse (new_list);
-
-          g_strfreev (tags_array);
-        }
 
       /* Set the tags_string value */
       priv->tags_string = stripped_tags;
