@@ -37,11 +37,11 @@ msgstr "_Ayuda"
 
 #: ../src/frogr-main-window.c:393
 msgid "_About"
-msgstr "_Sobre"
+msgstr "_Acerca de"
 
 #: ../src/frogr-main-window.c:416
 msgid "Add tags..."
-msgstr "_Añadir tags"
+msgstr "Añadir tags"
 
 #: ../src/frogr-main-window.c:417
 msgid "Edit details..."
