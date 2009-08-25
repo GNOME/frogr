@@ -72,6 +72,7 @@ typedef struct _FrogrMainWindowPrivate {
 
 static void _update_ui (FrogrMainWindow *fmainwin);
 static GSList *_get_selected_pictures (FrogrMainWindow *fmainwin);
+static void _add_tags_to_pictures (FrogrMainWindow *fmainwin);
 static void _edit_selected_pictures (FrogrMainWindow *fmainwin);
 static void _remove_selected_pictures (FrogrMainWindow *fmainwin);
 static void _on_picture_loaded (FrogrMainWindow *fmainwin,
@@ -82,6 +83,8 @@ static void _on_pictures_uploaded (FrogrMainWindow *fmainwin,
                                    FrogrPictureUploader *fpuploader);
 static void _populate_menu_bar (FrogrMainWindow *fmainwin);
 static GtkWidget *_ctxt_menu_create (FrogrMainWindow *fmainwin);
+static void _ctxt_menu_add_tags_item_activated (GtkWidget *widget,
+                                                gpointer data);
 static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget,
                                                     gpointer data);
 static void _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data);
@@ -175,6 +178,20 @@ _get_selected_pictures (FrogrMainWindow *fmainwin)
     }
 
   return fpictures;
+}
+
+static void
+_add_tags_to_pictures (FrogrMainWindow *fmainwin)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  GSList *fpictures;
+
+  /* Get selected pictures */
+  fpictures = _get_selected_pictures (fmainwin);
+
+  /* Ref the pictures and call the controller to add tags to them */
+  g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
+  frogr_controller_show_add_tags_dialog (priv->controller, fpictures);
 }
 
 static void
@@ -389,19 +406,27 @@ static GtkWidget *
 _ctxt_menu_create (FrogrMainWindow *fmainwin)
 {
   GtkWidget *ctxt_menu = NULL;
+  GtkWidget *add_tags_item;
   GtkWidget *edit_details_item;
   GtkWidget *remove_item;
 
   /* Create ctxt_menu and its items */
   ctxt_menu = gtk_menu_new ();
+  add_tags_item = gtk_menu_item_new_with_label ("Add tags...");
   edit_details_item = gtk_menu_item_new_with_label ("Edit details...");
   remove_item = gtk_menu_item_new_with_label ("Remove");
 
   /* Add items to ctxt_menu */
+  gtk_menu_append (ctxt_menu, add_tags_item);
   gtk_menu_append (ctxt_menu, edit_details_item);
   gtk_menu_append (ctxt_menu, remove_item);
 
   /* Connect signals */
+  g_signal_connect(add_tags_item,
+                   "activate",
+                   G_CALLBACK (_ctxt_menu_add_tags_item_activated),
+                   fmainwin);
+
   g_signal_connect(edit_details_item,
                    "activate",
                    G_CALLBACK (_ctxt_menu_edit_details_item_activated),
@@ -416,6 +441,15 @@ _ctxt_menu_create (FrogrMainWindow *fmainwin)
   gtk_widget_show_all (ctxt_menu);
 
   return ctxt_menu;
+}
+
+static void
+_ctxt_menu_add_tags_item_activated (GtkWidget *widget, gpointer data)
+{
+  FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+
+  /* Just add tags to them */
+  _add_tags_to_pictures (fmainwin);
 }
 
 static void

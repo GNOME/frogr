@@ -62,6 +62,8 @@ void frogr_controller_show_about_dialog (FrogrController *fcontroller);
 void frogr_controller_show_auth_dialog (FrogrController *fcontroller);
 void frogr_controller_show_details_dialog (FrogrController *fcontroller,
                                            GSList *fpictures);
+void frogr_controller_show_add_tags_dialog (FrogrController *fcontroller,
+                                            GSList *fpictures);
 
 void frogr_controller_open_authorization_url (FrogrController *fcontroller);
 gboolean frogr_controller_complete_authorization (FrogrController *fcontroller);
