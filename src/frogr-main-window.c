@@ -417,9 +417,9 @@ _ctxt_menu_create (FrogrMainWindow *fmainwin)
   remove_item = gtk_menu_item_new_with_label ("Remove");
 
   /* Add items to ctxt_menu */
-  gtk_menu_append (ctxt_menu, add_tags_item);
-  gtk_menu_append (ctxt_menu, edit_details_item);
-  gtk_menu_append (ctxt_menu, remove_item);
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), add_tags_item);
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), edit_details_item);
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), remove_item);
 
   /* Connect signals */
   g_signal_connect(add_tags_item,
