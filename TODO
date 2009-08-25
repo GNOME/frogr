@@ -21,6 +21,8 @@ TODO list for the uploader:
 
  * Allow pre-selecting the target album for a picture before uploading.
 
+ * Add i18n support and a default messages file (English)
+
  * etc...
 
 
