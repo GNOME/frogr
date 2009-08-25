@@ -38,6 +38,11 @@ main (int argc, char **argv)
   gtk_init (&argc, &argv);
   g_set_application_name(PACKAGE);
 
+  /* Translation domain */
+  bindtextdomain (GETTEXT_PACKAGE, FROGR_LOCALE_DIR);
+  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+  textdomain (GETTEXT_PACKAGE);
+
   /* Run app */
   fcontroller = frogr_controller_get_instance ();
   frogr_controller_run_app (fcontroller);

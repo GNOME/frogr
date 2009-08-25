@@ -39,7 +39,7 @@ MAINTAINERCLEANFILES = \
 	missing \
 	mkinstalldirs
 
-SUBDIRS = src
+SUBDIRS = src po
 
 pixmapdir = $(datadir)/icons
 pixmap_DATA = $(srcdir)/data/icons/frogr.xpm

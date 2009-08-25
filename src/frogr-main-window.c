@@ -21,6 +21,7 @@
  */
 
 #include <config.h>
+#include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
 #include "frogr-main-window.h"
 #include "frogr-controller.h"
@@ -373,23 +374,23 @@ _populate_menu_bar (FrogrMainWindow *fmainwin)
   GtkWidget *about_menu_item;
 
   /* File menu */
-  file_menu_item = gtk_menu_item_new_with_mnemonic ("_File");
+  file_menu_item = gtk_menu_item_new_with_mnemonic (_("_File"));
   gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), file_menu_item);
 
   file_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item), file_menu);
 
-  quit_menu_item = gtk_menu_item_new_with_mnemonic ("_Quit");
+  quit_menu_item = gtk_menu_item_new_with_mnemonic (_("_Quit"));
   gtk_menu_shell_append (GTK_MENU_SHELL (file_menu), quit_menu_item);
 
   /* Help menu */
-  help_menu_item = gtk_menu_item_new_with_mnemonic ("_Help");
+  help_menu_item = gtk_menu_item_new_with_mnemonic (_("_Help"));
   gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), help_menu_item);
 
   help_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (help_menu_item), help_menu);
 
-  about_menu_item = gtk_menu_item_new_with_mnemonic ("_About");
+  about_menu_item = gtk_menu_item_new_with_mnemonic (_("_About"));
   gtk_menu_shell_append (GTK_MENU_SHELL (help_menu), about_menu_item);
 
     /* Connect signals */
@@ -412,9 +413,9 @@ _ctxt_menu_create (FrogrMainWindow *fmainwin)
 
   /* Create ctxt_menu and its items */
   ctxt_menu = gtk_menu_new ();
-  add_tags_item = gtk_menu_item_new_with_label ("Add tags...");
-  edit_details_item = gtk_menu_item_new_with_label ("Edit details...");
-  remove_item = gtk_menu_item_new_with_label ("Remove");
+  add_tags_item = gtk_menu_item_new_with_label (_("Add tags..."));
+  edit_details_item = gtk_menu_item_new_with_label (_("Edit details..."));
+  remove_item = gtk_menu_item_new_with_label (_("Remove"));
 
   /* Add items to ctxt_menu */
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), add_tags_item);
@@ -540,7 +541,7 @@ _on_add_button_clicked (GtkButton *widget,
   GtkWidget *dialog;
   GtkFileFilter *filter;
 
-  dialog = gtk_file_chooser_dialog_new ("Select a picture",
+  dialog = gtk_file_chooser_dialog_new (_("Select a picture"),
                                         GTK_WINDOW (fmainwin),
                                         GTK_FILE_CHOOSER_ACTION_OPEN,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,

@@ -1,0 +1,5 @@
+# List of source files containing translatable strings.
+
+src/frogr-controller.c
+src/frogr-main-window.c
+[type: gettext/glade]data/gtkbuilder/frogr-main-window.xml

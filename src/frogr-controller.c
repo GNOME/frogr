@@ -21,6 +21,7 @@
  */
 
 #include <config.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include "frogr-controller.h"
 #include "frogr-facade.h"
@@ -258,7 +259,7 @@ frogr_controller_show_add_tags_dialog (FrogrController *fcontroller,
   gint response;
 
   /* Build the dialog */
-  dialog = gtk_dialog_new_with_buttons ("Add tags",
+  dialog = gtk_dialog_new_with_buttons (_("Add tags"),
                                         GTK_WINDOW (priv->mainwin),
                                         GTK_DIALOG_MODAL,
                                         GTK_STOCK_OK,

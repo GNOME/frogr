@@ -2,6 +2,7 @@ AC_INIT([frogr], [0.2~unreleased], [msanchez@igalia.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AC_CONFIG_HEADERS([config.h])
+IT_PROG_INTLTOOL([0.35.0])
 
 # Dependencies for frogr
 
@@ -51,11 +52,22 @@ AC_SUBST(iconsdir, "\${datadir}/icons")
 AC_SUBST(FROGR_CFLAGS)
 AC_SUBST(FROGR_LIBS)
 
+
+# Translations
+FROGR_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
+AM_GLIB_DEFINE_LOCALEDIR([FROGR_LOCALE_DIR])
+AM_GLIB_GNU_GETTEXT
+
+GETTEXT_PACKAGE=frogr
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+
 # Produce output files
 
 AC_CONFIG_FILES([
         Makefile
         src/Makefile
+        po/Makefile.in
 ])
 AC_OUTPUT
 
