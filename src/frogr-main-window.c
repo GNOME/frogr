@@ -71,8 +71,9 @@ typedef struct _FrogrMainWindowPrivate {
 /* Prototypes */
 
 static void _update_ui (FrogrMainWindow *fmainwin);
-static void _edit_selected_items (FrogrMainWindow *fmainwin);
-static void _remove_selected_items (FrogrMainWindow *fmainwin);
+static GSList *_get_selected_pictures (FrogrMainWindow *fmainwin);
+static void _edit_selected_pictures (FrogrMainWindow *fmainwin);
+static void _remove_selected_pictures (FrogrMainWindow *fmainwin);
 static void _on_picture_loaded (FrogrMainWindow *fmainwin,
                                 FrogrPicture *fpicture);
 static void _on_pictures_loaded (FrogrMainWindow *fmainwin,
@@ -144,18 +145,18 @@ _update_ui (FrogrMainWindow *fmainwin)
     }
 }
 
-static void
-_edit_selected_items (FrogrMainWindow *fmainwin)
+static GSList *
+_get_selected_pictures (FrogrMainWindow *fmainwin)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
   GSList *fpictures = NULL;
-  GList *selected_items;
+  GList *selected_pictures;
   GList *item;
 
   /* Iterate over selected items */
-  selected_items =
+  selected_pictures =
     gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
-  for (item = selected_items; item; item = g_list_next (item))
+  for (item = selected_pictures; item; item = g_list_next (item))
     {
       FrogrPicture *fpicture;
       GtkTreePath *path;
@@ -173,6 +174,18 @@ _edit_selected_items (FrogrMainWindow *fmainwin)
       fpictures = g_slist_prepend (fpictures, fpicture);
     }
 
+  return fpictures;
+}
+
+static void
+_edit_selected_pictures (FrogrMainWindow *fmainwin)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
+  GSList *fpictures = NULL;
+
+  /* Get the selected pictures */
+  fpictures = _get_selected_pictures (fmainwin);
+
   /* Ref the pictures and call the controller to edit them */
   g_slist_foreach (fpictures, (GFunc)g_object_ref, NULL);
   frogr_controller_show_details_dialog (priv->controller, fpictures);
@@ -180,16 +193,16 @@ _edit_selected_items (FrogrMainWindow *fmainwin)
 
 
 static void
-_remove_selected_items (FrogrMainWindow *fmainwin)
+_remove_selected_pictures (FrogrMainWindow *fmainwin)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (fmainwin);
-  GList *selected_items;
+  GList *selected_pictures;
   GList *item;
 
   /* Remove selected items */
-  selected_items =
+  selected_pictures =
     gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
-  for (item = selected_items; item; item = g_list_next (item))
+  for (item = selected_pictures; item; item = g_list_next (item))
     {
       FrogrPicture *fpicture;
       GtkTreePath *path;
@@ -214,8 +227,8 @@ _remove_selected_items (FrogrMainWindow *fmainwin)
   _update_ui (fmainwin);
 
   /* Free */
-  g_list_foreach (selected_items, (GFunc)gtk_tree_path_free, NULL);
-  g_list_free (selected_items);
+  g_list_foreach (selected_pictures, (GFunc)gtk_tree_path_free, NULL);
+  g_list_free (selected_pictures);
 }
 
 static void
@@ -411,14 +424,14 @@ _ctxt_menu_edit_details_item_activated (GtkWidget *widget, gpointer data)
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
 
   /* Just edit the selected items */
-  _edit_selected_items (fmainwin);
+  _edit_selected_pictures (fmainwin);
 }
 
 static void
 _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  _remove_selected_items (fmainwin);
+  _remove_selected_pictures (fmainwin);
 }
 
 static void
@@ -542,7 +555,7 @@ _on_remove_button_clicked (GtkButton *widget,
                            gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
-  _remove_selected_items (fmainwin);
+  _remove_selected_pictures (fmainwin);
 }
 
 void
@@ -562,7 +575,7 @@ _on_icon_view_key_press_event (GtkWidget *widget,
 
   /* Remove selected pictures if pressed Supr */
   if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
-    _remove_selected_items (fmainwin);
+    _remove_selected_pictures (fmainwin);
 
   return FALSE;
 }
@@ -609,7 +622,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
           && !(event->state & GDK_CONTROL_MASK)) /*  not Ctrl   */
         {
           /* edit selected item */
-          _edit_selected_items (fmainwin);
+          _edit_selected_pictures (fmainwin);
         }
       else if ((event->button == 3)                  /* right button */
                && (event->type == GDK_BUTTON_PRESS)) /* single click */
