@@ -3,4 +3,7 @@
 src/frogr-controller.c
 src/frogr-main-window.c
 src/frogr-auth-dialog.c
+src/frogr-about-dialog.c
+src/frogr-details-dialog.c
 [type: gettext/glade]data/gtkbuilder/frogr-main-window.xml
+[type: gettext/glade]data/gtkbuilder/frogr-details-dialog.xml

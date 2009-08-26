@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.2~unreleased\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-26 12:07+0200\n"
-"PO-Revision-Date: 2009-08-26 12:09+0200\n"
+"POT-Creation-Date: 2009-08-26 14:27+0200\n"
+"PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Alejandro Pinheiro <apinheiro@igalia.com>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -63,14 +63,17 @@ msgid ""
 "this screen to complete the process."
 msgstr ""
 "No se ha registrado adecuadamente %s en flickr.\n"
-"Por favor, presione el botón \"Continuar\" para registrar %s y luego vuelva a esta pantalla para completar el proceso"
+"Por favor, presione el botón \"Continuar\" para registrar %s y luego vuelva "
+"a esta pantalla para completar el proceso"
 
 #: ../src/frogr-auth-dialog.c:34
 #, c-format
 msgid ""
 "Press 'Complete' to start using %s once you've authorized it in your flickr "
 "account."
-msgstr "Presiones \"Completar\" para empezar a usar %s una vez lo haya registrado en su cuenta de flickr"
+msgstr ""
+"Presiones \"Completar\" para empezar a usar %s una vez lo haya registrado en "
+"su cuenta de flickr"
 
 #: ../src/frogr-auth-dialog.c:81 ../src/frogr-auth-dialog.c:170
 msgid "Continue"
@@ -92,6 +95,24 @@ msgstr ""
 "Fallo en el registro.\n"
 "Pruebe de nuevo por favor"
 
+#: ../src/frogr-about-dialog.c:41
+msgid "A Flickr remote organizer for GNOME\n"
+msgstr "Un organizador remoto de Flickr para GNOME\n"
+
+#: ../src/frogr-details-dialog.c:255
+#, c-format
+msgid "(Editing %d pictures)"
+msgstr "(Editando %d imágenes)"
+
+#: ../src/frogr-details-dialog.c:384
+msgid "Missing data required"
+msgstr "Falta información necesaria"
+
+#: ../src/frogr-details-dialog.c:570
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:2
+msgid "Edit picture details"
+msgstr "Editar detalles de la imagen"
+
 #: ../data/gtkbuilder/frogr-main-window.xml.h:1
 msgid "Upload"
 msgstr "Subir"
@@ -99,3 +120,31 @@ msgstr "Subir"
 #: ../data/gtkbuilder/frogr-main-window.xml.h:2
 msgid "frogr"
 msgstr "frogr"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:1
+msgid "Description:"
+msgstr "Descripción:"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:3
+msgid "Family"
+msgstr "Familia"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:4
+msgid "Friend"
+msgstr "Amigo"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:5
+msgid "Private"
+msgstr "Privado"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:6
+msgid "Public"
+msgstr "Público"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:7
+msgid "Tags:"
+msgstr "Tags"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
+msgid "Title:"
+msgstr "Título"

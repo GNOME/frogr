@@ -19,7 +19,7 @@
  * Boston, MA 02111-1307, USA.
  *
  */
-
+#include <glib/gi18n.h>
 #include "frogr-picture-uploader.h"
 #include "frogr-controller.h"
 #include "frogr-main-window.h"
@@ -75,7 +75,7 @@ _update_status_and_progress (FrogrPictureUploader *fpuploader)
       gchar *title = g_strdup (frogr_picture_get_title (fpicture));
 
       /* Update progress */
-      status_text = g_strdup_printf ("Uploading '%s'...", title);
+      status_text = g_strdup_printf (_("Uploading '%s'..."), title);
       progress_bar_text = g_strdup_printf ("%d / %d",
                                            priv->index,
                                            priv->n_pictures);

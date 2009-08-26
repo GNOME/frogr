@@ -21,6 +21,7 @@
  */
 
 #include <config.h>
+#include <glib/gi18n.h>
 #include "frogr-about-dialog.h"
 
 #define ABOUT_DIALOG_ICON ICONS_DIR "/hicolor/48x48/apps/frogr.png"
@@ -37,7 +38,7 @@ static const gchar *artists[] = {
   NULL
 };
 
-static const gchar *appdescr = "A Flickr remote organizer for GNOME\n";
+static const gchar *appdescr = N_("A Flickr remote organizer for GNOME\n");
 static const gchar *copyright = "(c) 2009 Mario Sanchez Prada";
 static const gchar *website = "http://code.google.com/p/frogr";
 static const gchar *license =
@@ -89,7 +90,7 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "name", PACKAGE,
                          "authors", authors,
                          "artists", artists,
-                         "comments", appdescr,
+                         "comments", _(appdescr),
                          "copyright", copyright,
                          "license", license,
                          "version", VERSION,

@@ -21,6 +21,7 @@
  */
 
 #include <config.h>
+#include <glib/gi18n.h>
 #include "frogr-details-dialog.h"
 #include "frogr-controller.h"
 #include "frogr-picture.h"
@@ -251,7 +252,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *fdetailsdialog)
 
       /* Show the hidden label */
       gtk_widget_show (priv->mpictures_label);
-      text = g_strdup_printf ("(Editing %d pictures)", n_pictures);
+      text = g_strdup_printf (_("(Editing %d pictures)"), n_pictures);
       gtk_label_set_text (GTK_LABEL (priv->mpictures_label), text);
       g_free (text);
     }
@@ -380,7 +381,7 @@ _save_data (FrogrDetailsDialog *fdetailsdialog)
                                 GTK_DIALOG_MODAL,
                                 GTK_MESSAGE_WARNING,
                                 GTK_BUTTONS_CLOSE,
-                                "Missing data required");
+                                _("Missing data required"));
       /* Run alert dialog */
       gtk_dialog_run (GTK_DIALOG (dialog));
       gtk_widget_destroy (dialog);
@@ -566,7 +567,7 @@ frogr_details_dialog_new (GtkWindow *parent, GSList *fpictures)
                                "width-request", DIALOG_MIN_WIDTH,
                                "height-request", DIALOG_MIN_HEIGHT,
                                "resizable", TRUE,
-                               "title", "Edit picture details",
+                               "title", _("Edit picture details"),
                                NULL);
   return FROGR_DETAILS_DIALOG (new);
 }
