@@ -2,4 +2,5 @@
 
 src/frogr-controller.c
 src/frogr-main-window.c
+src/frogr-auth-dialog.c
 [type: gettext/glade]data/gtkbuilder/frogr-main-window.xml

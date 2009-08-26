@@ -21,17 +21,18 @@
  */
 
 #include <config.h>
+#include <glib/gi18n.h>
 #include "frogr-auth-dialog.h"
 #include "frogr-controller.h"
 
 static gchar *unauth_txt =
-  "You have not properly authorized " PACKAGE_NAME " in flickr.\n"
-  "Please press the 'Continue' button to authorize " PACKAGE_NAME " "
-  " and then come back to this screen to complete the process.";
+  N_("You have not properly authorized %s in flickr.\n"
+     "Please press the 'Continue' button to authorize %s "
+     "and then come back to this screen to complete the process.");
 
 static gchar *auth_txt =
-  "Press 'Complete' to start using " PACKAGE_NAME " once you've "
-  "authorized it in your flickr account.";
+  N_("Press 'Complete' to start using %s once you've "
+     "authorized it in your flickr account.");
 
 #define FROGR_AUTH_DIALOG_GET_PRIVATE(object)            \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                \
@@ -70,16 +71,19 @@ frogr_auth_dialog_init (FrogrAuthDialog *fauthdialog)
 {
   FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (fauthdialog);
   GtkWidget *vbox;
+  gchar *aux_string = NULL;
 
   /* Get controller */
   priv->controller = frogr_controller_get_instance ();
 
   /* Create widgets */
   priv->button = gtk_dialog_add_button (GTK_DIALOG (fauthdialog),
-                                        "Continue",
+                                        _("Continue"),
                                         GTK_RESPONSE_ACCEPT);
   /* Add labels */
-  priv->info_label = gtk_label_new (unauth_txt);
+  aux_string = g_strdup_printf (_(unauth_txt), PACKAGE_NAME, PACKAGE_NAME);
+  priv->info_label = gtk_label_new (aux_string);
+  g_free (aux_string);
   gtk_label_set_line_wrap (GTK_LABEL (priv->info_label), TRUE);
 
 #if GTK_CHECK_VERSION (2,14,0)
@@ -100,7 +104,7 @@ FrogrAuthDialog *
 frogr_auth_dialog_new (GtkWindow *parent)
 {
   GObject *new = g_object_new (FROGR_TYPE_AUTH_DIALOG,
-                               "title", "Authorize Frogr",
+                               "title", _("Authorize Frogr"),
                                "modal", TRUE,
                                "transient-for", parent,
                                "resizable", FALSE,
@@ -123,14 +127,18 @@ frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
       /* Run the dialog */
       do
         {
+          gchar *aux_string = NULL;
+
           response = gtk_dialog_run (GTK_DIALOG (fauthdialog));
           if (response == GTK_RESPONSE_ACCEPT && !authorizing)
             {
               frogr_controller_open_authorization_url (priv->controller);
               authorizing = TRUE;
 
-              gtk_button_set_label (GTK_BUTTON (priv->button), "Complete");
-              gtk_label_set_text (GTK_LABEL (priv->info_label), auth_txt);
+              gtk_button_set_label (GTK_BUTTON (priv->button), _("Complete"));
+              aux_string = g_strdup_printf (_(auth_txt), PACKAGE_NAME);
+              gtk_label_set_text (GTK_LABEL (priv->info_label), aux_string);
+              g_free (aux_string);
             }
           else if (response == GTK_RESPONSE_ACCEPT)
             {
@@ -144,12 +152,14 @@ frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
                 {
                   /* An error happened */
                   GtkWidget *msg_dialog;
+                  gchar *aux_string = NULL;
+
                   msg_dialog = gtk_message_dialog_new (GTK_WINDOW (fauthdialog),
                                                        GTK_DIALOG_MODAL,
                                                        GTK_MESSAGE_ERROR,
                                                        GTK_BUTTONS_OK,
-                                                       "Authorization failed.\n"
-                                                       "Please try again");
+                                                       _("Authorization failed.\n"
+                                                         "Please try again"));
                   /* Show and destroy a an error message */
                   gtk_dialog_run (GTK_DIALOG (msg_dialog));
                   gtk_widget_destroy (msg_dialog);
@@ -157,8 +167,10 @@ frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
                   /* Restore values if reached */
                   authorizing = FALSE;
                   authorized = FALSE;
-                  gtk_button_set_label (GTK_BUTTON (priv->button), "Continue");
-                  gtk_label_set_text (GTK_LABEL (priv->info_label), unauth_txt);
+                  gtk_button_set_label (GTK_BUTTON (priv->button), _("Continue"));
+                  aux_string = g_strdup_printf (_(unauth_txt), PACKAGE_NAME, PACKAGE_NAME);
+                  gtk_label_set_text (GTK_LABEL (priv->info_label), aux_string);
+                  g_free (aux_string);
                   g_debug ("Authorization not completed");
                 }
             }

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.2~unreleased\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-25 17:20+0200\n"
-"PO-Revision-Date: 2009-08-25 17:17+0200\n"
+"POT-Creation-Date: 2009-08-26 12:07+0200\n"
+"PO-Revision-Date: 2009-08-26 12:09+0200\n"
 "Last-Translator: Alejandro Pinheiro <apinheiro@igalia.com>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -54,6 +54,43 @@ msgstr "Eliminar"
 #: ../src/frogr-main-window.c:544
 msgid "Select a picture"
 msgstr "Seleccionar una imagen"
+
+#: ../src/frogr-auth-dialog.c:29
+#, c-format
+msgid ""
+"You have not properly authorized %s in flickr.\n"
+"Please press the 'Continue' button to authorize %s and then come back to "
+"this screen to complete the process."
+msgstr ""
+"No se ha registrado adecuadamente %s en flickr.\n"
+"Por favor, presione el botón \"Continuar\" para registrar %s y luego vuelva a esta pantalla para completar el proceso"
+
+#: ../src/frogr-auth-dialog.c:34
+#, c-format
+msgid ""
+"Press 'Complete' to start using %s once you've authorized it in your flickr "
+"account."
+msgstr "Presiones \"Completar\" para empezar a usar %s una vez lo haya registrado en su cuenta de flickr"
+
+#: ../src/frogr-auth-dialog.c:81 ../src/frogr-auth-dialog.c:170
+msgid "Continue"
+msgstr "Continuar"
+
+#: ../src/frogr-auth-dialog.c:107
+msgid "Authorize Frogr"
+msgstr "Registrar Frogr"
+
+#: ../src/frogr-auth-dialog.c:138
+msgid "Complete"
+msgstr "Completar"
+
+#: ../src/frogr-auth-dialog.c:161
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"Fallo en el registro.\n"
+"Pruebe de nuevo por favor"
 
 #: ../data/gtkbuilder/frogr-main-window.xml.h:1
 msgid "Upload"
