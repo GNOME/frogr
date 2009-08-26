@@ -143,8 +143,8 @@ msgstr "Público"
 
 #: ../data/gtkbuilder/frogr-details-dialog.xml.h:7
 msgid "Tags:"
-msgstr "Tags"
+msgstr "Tags:"
 
 #: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
 msgid "Title:"
-msgstr "Título"
+msgstr "Título:"
