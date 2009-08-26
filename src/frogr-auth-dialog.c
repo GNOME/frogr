@@ -127,11 +127,11 @@ frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
       /* Run the dialog */
       do
         {
-          gchar *aux_string = NULL;
-
           response = gtk_dialog_run (GTK_DIALOG (fauthdialog));
           if (response == GTK_RESPONSE_ACCEPT && !authorizing)
             {
+              gchar *aux_string = NULL;
+
               frogr_controller_open_authorization_url (priv->controller);
               authorizing = TRUE;
 
