@@ -87,11 +87,11 @@ _frogr_account_get_property (GObject    *object,
   switch (property_id)
     {
     case PROP_FROB:
-      g_value_set_string (value, priv->frob);
+      g_value_set_string (value, g_strdup (priv->frob));
       break;
 
     case PROP_TOKEN:
-      g_value_set_string (value, priv->token);
+      g_value_set_string (value, g_strdup (priv->token));
       break;
 
     default:

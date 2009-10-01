@@ -222,19 +222,19 @@ _frogr_picture_get_property (GObject *object,
   switch (prop_id)
     {
     case PROP_ID:
-      g_value_set_string (value, priv->id);
+      g_value_set_string (value, g_strdup (priv->id));
       break;
     case PROP_FILEPATH:
-      g_value_set_string (value, priv->filepath);
+      g_value_set_string (value, g_strdup (priv->filepath));
       break;
     case PROP_TITLE:
-      g_value_set_string (value, priv->title);
+      g_value_set_string (value, g_strdup (priv->title));
       break;
     case PROP_DESCRIPTION:
-      g_value_set_string (value, priv->description);
+      g_value_set_string (value, g_strdup (priv->description));
       break;
     case PROP_TAGS_STRING:
-      g_value_set_string (value, priv->tags_string);
+      g_value_set_string (value, g_strdup (priv->tags_string));
       break;
     case PROP_IS_PUBLIC:
       g_value_set_boolean (value, priv->is_public);
@@ -246,7 +246,7 @@ _frogr_picture_get_property (GObject *object,
       g_value_set_boolean (value, priv->is_friend);
       break;
     case PROP_PIXBUF:
-      g_value_set_object (value, priv->pixbuf);
+      g_value_set_object (value, g_object_ref (priv->pixbuf));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
