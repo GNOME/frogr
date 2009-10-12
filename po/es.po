@@ -113,6 +113,12 @@ msgstr "Falta información necesaria"
 msgid "Edit picture details"
 msgstr "Editar detalles de la imagen"
 
+#. Update progress
+#: ../src/frogr-picture-uploader.c:78
+#, c-format
+msgid "Uploading '%s'..."
+msgstr "Subiendo '%s'..."
+
 #: ../data/gtkbuilder/frogr-main-window.xml.h:1
 msgid "Upload"
 msgstr "Subir"
