@@ -2,7 +2,15 @@ Mario Sanchez Prada <msanchez@igalia.com>
 * Lead developer
 
 Adrian Perez de Castro <aperez@igalia.com>
-* Artwork artist and code developer
+* Artwork
+* Configuration management system
+* Fedora packaging
 
 Alberto Garcia <agarcia@igalia.com>
 * Debian packaging
+
+Alejandro Piñeiro Iglesias <apinheiro@igalia.com>
+* Gettext support for i18n
+
+Javier Jardon <javierjc1982@gmail.com>
+* Cleanup and improvements for GNOME 3.0
