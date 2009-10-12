@@ -267,7 +267,12 @@ frogr_controller_show_add_tags_dialog (FrogrController *fcontroller,
                                         GTK_STOCK_CANCEL,
                                         GTK_RESPONSE_CANCEL,
                                         NULL);
+#if GTK_CHECK_VERSION (2,14,0)
   main_vbox = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+#else
+  main_vbox = GTK_DIALOG (dialog)->vbox;
+#endif
+
   entry = gtk_entry_new ();
   gtk_box_pack_start (GTK_BOX (main_vbox), entry, TRUE, FALSE, 6);
   gtk_widget_set_size_request (dialog, 200, -1);
