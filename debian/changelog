@@ -1,8 +1,8 @@
-frogr (0.2~unreleased) unstable; urgency=low
+frogr (0.2) unstable; urgency=low
 
-  * 
+  * New upstream release
 
- -- Mario Sanchez Prada <msanchez@igalia.com>  Sat, 22 Aug 2009 12:01:57 +0200
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Mon, 12 Oct 2009 16:57:36 +0200
 
 frogr (0.1.1) unstable; urgency=low
 

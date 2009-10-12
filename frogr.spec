@@ -1,5 +1,5 @@
 Name:		frogr
-Version:	0.2~unreleased
+Version:	0.2
 Summary:	Flickr Remote Organizer for GNOME
 Release:	1%{?dist}
 
@@ -50,8 +50,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Aug 24 2009 Mario Sanchez Prada <msanchez at, igalia.com> 0.2~unreleased-1
-- Updated for 0.2~unreleased.
+* Mon Oct 12 2009 Mario Sanchez Prada <msanchez at, igalia.com> 0.2-1
+- Updated for 0.2
 
 * Sat Aug 22 2009 Adrian Perez <aperez at, igalia.com> 0.1.1-1
-- First packaged release.
+- First packaged release
