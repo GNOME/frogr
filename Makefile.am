@@ -74,7 +74,9 @@ $(srcdir)/data/frogr.desktop: $(srcdir)/data/frogr.desktop.in
 	$(edit) $(srcdir)/data/frogr.desktop.in > $(srcdir)/data/frogr.desktop
 
 EXTRA_DIST = \
+	$(srcdir)/MAINTAINERS \
 	$(srcdir)/TRANSLATORS \
+	$(srcdir)/TODO \
 	$(srcdir)/data/frogr.desktop.in \
 	$(srcdir)/data/frogr.desktop \
 	$(pixmap_DATA) \

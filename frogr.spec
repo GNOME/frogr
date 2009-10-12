@@ -45,7 +45,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
 %{_datadir}/applications/%{name}.desktop
-%doc README COPYING AUTHORS THANKS
+%{_datadir}/locale/es/LC_MESSAGES/frogr.mo
+%doc README NEWS COPYING AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
 
 
 %changelog
