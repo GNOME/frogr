@@ -3,7 +3,7 @@
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
 
-DEB_INSTALL_DOCS_ALL := README NEWS AUTHORS THANKS TODO MAINTAINERS
+DEB_INSTALL_DOCS_ALL := README NEWS AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
 
 makebuilddir/frogr:: configure
 
