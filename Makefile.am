@@ -25,7 +25,6 @@ MAINTAINERCLEANFILES = \
 	config.sub \
 	configure \
 	data/frogr.desktop \
-	data/frogr.desktop.in \
 	debian/files \
 	debian/stamp-autotools-files \
 	debian/stamp-makefile-build \
@@ -78,7 +77,6 @@ EXTRA_DIST = \
 	$(srcdir)/TRANSLATORS \
 	$(srcdir)/TODO \
 	$(srcdir)/data/frogr.desktop.in \
-	$(srcdir)/data/frogr.desktop \
 	$(pixmap_DATA) \
 	$(icon16_DATA) \
 	$(icon24_DATA) \

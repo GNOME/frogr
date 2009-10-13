@@ -10,5 +10,4 @@ TryExec=@BINDIR@/frogr
 Terminal=false
 Categories=Network;RasterGraphics;Photography;GTK;
 StartupNotify=false
-X-Icon-Path=@ICONDIR@
 X-Window-Icon=frogr
