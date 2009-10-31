@@ -716,6 +716,7 @@ _frogr_main_window_finalize (GObject *object)
   /* Free memory */
   g_object_unref (priv->model);
   g_object_unref (priv->controller);
+  g_object_unref (priv->tree_model);
   gtk_widget_destroy (priv->ctxt_menu);
 
   G_OBJECT_CLASS(frogr_main_window_parent_class)->finalize (object);
