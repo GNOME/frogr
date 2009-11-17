@@ -492,18 +492,29 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
                                   gpointer data)
 {
   FrogrMainWindow *fmainwin = FROGR_MAIN_WINDOW (data);
+  GdkAtom target;
   GSList *filepaths_list = NULL;
-  gchar *files_string;
+  const guchar *files_string;
   gchar **fileuris_array = NULL;
   gint i;
 
-  if (!gtk_targets_include_uri (&selection_data->target, 1))
+#if GTK_CHECK_VERSION (2,14,0)
+  target = gtk_selection_data_get_target (selection_data);
+#else
+  target = selection_data->target;
+#endif
+
+  if (!gtk_targets_include_uri (&target, 1))
     return;
 
   /* Get GSList with the list of files */
-  files_string = ((gchar *) selection_data->data);
+#if GTK_CHECK_VERSION (2,14,0)
+  files_string = gtk_selection_data_get_data (selection_data);
+#else
+  files_string = selection_data->data;
+#endif
 
-  fileuris_array = g_strsplit (files_string, "\r\n", -1);
+  fileuris_array = g_strsplit ((const gchar*)files_string, "\r\n", -1);
   for (i = 0;  fileuris_array[i]; i++)
     {
       gchar *filepath = g_filename_from_uri (fileuris_array[i], NULL, NULL);
