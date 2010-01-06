@@ -21,15 +21,15 @@
  */
 
 #include <config.h>
-#include <glib.h>
-#include "frogr-controller.h"
-#include "frogr-config.h"
+#include <gtk/gtk.h>
 
-static FrogrController *fcontroller = NULL;
+#include "frogr-controller.h"
 
 int
 main (int argc, char **argv)
 {
+  FrogrController *fcontroller = NULL;
+
   /* Init threads system */
   g_thread_init (NULL);
   gdk_threads_init ();

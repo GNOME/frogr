@@ -22,8 +22,8 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
-#include "frogr-auth-dialog.h"
 #include "frogr-controller.h"
+#include "frogr-auth-dialog.h"
 
 static gchar *unauth_txt =
   N_("You have not properly authorized %s in flickr.\n"
@@ -34,9 +34,9 @@ static gchar *auth_txt =
   N_("Press 'Complete' to start using %s once you've "
      "authorized it in your flickr account.");
 
-#define FROGR_AUTH_DIALOG_GET_PRIVATE(object)            \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                \
-                                FROGR_TYPE_AUTH_DIALOG,  \
+#define FROGR_AUTH_DIALOG_GET_PRIVATE(object)                   \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
+                                FROGR_TYPE_AUTH_DIALOG,         \
                                 FrogrAuthDialogPrivate))
 
 G_DEFINE_TYPE (FrogrAuthDialog, frogr_auth_dialog, GTK_TYPE_DIALOG);
@@ -67,9 +67,9 @@ frogr_auth_dialog_class_init (FrogrAuthDialogClass *klass)
 }
 
 static void
-frogr_auth_dialog_init (FrogrAuthDialog *fauthdialog)
+frogr_auth_dialog_init (FrogrAuthDialog *self)
 {
-  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (fauthdialog);
+  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (self);
   GtkWidget *vbox;
   gchar *aux_string = NULL;
 
@@ -77,7 +77,7 @@ frogr_auth_dialog_init (FrogrAuthDialog *fauthdialog)
   priv->controller = frogr_controller_get_instance ();
 
   /* Create widgets */
-  priv->button = gtk_dialog_add_button (GTK_DIALOG (fauthdialog),
+  priv->button = gtk_dialog_add_button (GTK_DIALOG (self),
                                         _("Continue"),
                                         GTK_RESPONSE_ACCEPT);
   /* Add labels */
@@ -87,15 +87,15 @@ frogr_auth_dialog_init (FrogrAuthDialog *fauthdialog)
   gtk_label_set_line_wrap (GTK_LABEL (priv->info_label), TRUE);
 
 #if GTK_CHECK_VERSION (2,14,0)
-  vbox = gtk_dialog_get_content_area (GTK_DIALOG (fauthdialog));
+  vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
 #else
-  vbox = GTK_DIALOG (fauthdialog)->vbox;
+  vbox = GTK_DIALOG (self)->vbox;
 #endif
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_box_pack_start (GTK_BOX (vbox), priv->info_label, FALSE, FALSE, 0);
 
   /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET(fauthdialog));
+  gtk_widget_show_all (GTK_WIDGET(self));
 }
 
 /* Public API */
@@ -114,9 +114,9 @@ frogr_auth_dialog_new (GtkWindow *parent)
 }
 
 void
-frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
+frogr_auth_dialog_show (FrogrAuthDialog *self)
 {
-  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (fauthdialog);
+  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (self);
 
   if (!frogr_controller_is_authorized (priv->controller))
     {
@@ -127,7 +127,7 @@ frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
       /* Run the dialog */
       do
         {
-          response = gtk_dialog_run (GTK_DIALOG (fauthdialog));
+          response = gtk_dialog_run (GTK_DIALOG (self));
           if (response == GTK_RESPONSE_ACCEPT && !authorizing)
             {
               gchar *aux_string = NULL;
@@ -154,7 +154,7 @@ frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
                   GtkWidget *msg_dialog;
                   gchar *aux_string = NULL;
 
-                  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (fauthdialog),
+                  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (self),
                                                        GTK_DIALOG_MODAL,
                                                        GTK_MESSAGE_ERROR,
                                                        GTK_BUTTONS_OK,
@@ -179,5 +179,5 @@ frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog)
     }
 
   /* Destroy the dialog */
-  gtk_widget_destroy (GTK_WIDGET (fauthdialog));
+  gtk_widget_destroy (GTK_WIDGET (self));
 }

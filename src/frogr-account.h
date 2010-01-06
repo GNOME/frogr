@@ -1,5 +1,5 @@
 /*
- * frogr-config.h -- Account class for Frogr.
+ * frogr-account.h -- User account for Frogr.
  *
  * Copyright (C) 2009 Adrian Perez
  * Authors: Adrian Perez <aperez@igalia.com>
@@ -56,12 +56,12 @@ FrogrAccount* frogr_account_new (void);
 FrogrAccount* frogr_account_new_with_params (const gchar *frob,
                                              const gchar *token);
 
-const gchar* frogr_account_get_frob (FrogrAccount *faccount);
-void frogr_account_set_frob (FrogrAccount *faccount,
+const gchar* frogr_account_get_frob (FrogrAccount *self);
+void frogr_account_set_frob (FrogrAccount *self,
                              const gchar *frob);
 
-const gchar* frogr_account_get_token (FrogrAccount *faccount);
-void frogr_account_set_token (FrogrAccount *faccount,
+const gchar* frogr_account_get_token (FrogrAccount *self);
+void frogr_account_set_token (FrogrAccount *self,
                               const gchar *token);
 
 G_END_DECLS

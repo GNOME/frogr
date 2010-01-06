@@ -23,18 +23,18 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include "frogr-controller.h"
 #include "frogr-facade.h"
 #include "frogr-main-window-model.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-about-dialog.h"
 #include "frogr-details-dialog.h"
+#include "frogr-controller.h"
 
 G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
 
-#define FROGR_CONTROLLER_GET_PRIVATE(object)             \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                \
-                                FROGR_TYPE_CONTROLLER,   \
+#define FROGR_CONTROLLER_GET_PRIVATE(object)                    \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
+                                FROGR_TYPE_CONTROLLER,          \
                                 FrogrControllerPrivate))
 
 /* Private struct */
@@ -52,23 +52,23 @@ static FrogrController *_instance = NULL;
 /* Private API */
 
 typedef struct {
-  FrogrPicture *fpicture;
+  FrogrPicture *picture;
   GFunc callback;
   gpointer object;
 } upload_picture_st;
 
 /* Prototypes */
 
-static void _upload_picture_cb (FrogrController *fcontroller,
-                                    upload_picture_st *up_st);
+static void _upload_picture_cb (FrogrController *self,
+                                upload_picture_st *up_st);
 
 /* Private functions */
 
 static void
-_upload_picture_cb (FrogrController *fcontroller,
+_upload_picture_cb (FrogrController *self,
                     upload_picture_st *up_st)
 {
-  FrogrPicture *fpicture = up_st->fpicture;
+  FrogrPicture *picture = up_st->picture;
   GFunc callback = up_st->callback;
   gpointer object = up_st->object;
 
@@ -77,9 +77,9 @@ _upload_picture_cb (FrogrController *fcontroller,
 
   /* Execute callback */
   if (callback)
-    callback (object, fpicture);
+    callback (object, picture);
 
-  g_object_unref (fpicture);
+  g_object_unref (picture);
 }
 
 static GObject *
@@ -125,9 +125,9 @@ frogr_controller_class_init (FrogrControllerClass *klass)
 }
 
 static void
-frogr_controller_init (FrogrController *fcontroller)
+frogr_controller_init (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Default variables */
   priv->facade = NULL;
@@ -145,23 +145,23 @@ frogr_controller_get_instance (void)
 }
 
 FrogrMainWindow *
-frogr_controller_get_main_window (FrogrController *fcontroller)
+frogr_controller_get_main_window (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (fcontroller), FALSE);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
 
   return g_object_ref (priv->mainwin);
 }
 
 gboolean
-frogr_controller_run_app (FrogrController *fcontroller)
+frogr_controller_run_app (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (fcontroller), FALSE);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
 
   if (priv->app_running)
     {
@@ -190,12 +190,12 @@ frogr_controller_run_app (FrogrController *fcontroller)
 }
 
 gboolean
-frogr_controller_quit_app(FrogrController *fcontroller)
+frogr_controller_quit_app(FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (fcontroller), FALSE);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
 
   if (priv->app_running)
     {
@@ -212,20 +212,20 @@ frogr_controller_quit_app(FrogrController *fcontroller)
 }
 
 void
-frogr_controller_show_about_dialog (FrogrController *fcontroller)
+frogr_controller_show_about_dialog (FrogrController *self)
 {
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Run the about dialog */
   frogr_about_dialog_show (GTK_WINDOW (priv->mainwin));
 }
 
 void
-frogr_controller_show_auth_dialog (FrogrController *fcontroller)
+frogr_controller_show_auth_dialog (FrogrController *self)
 {
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
   FrogrAuthDialog *dialog;
 
   /* Run the about dialog */
@@ -234,24 +234,24 @@ frogr_controller_show_auth_dialog (FrogrController *fcontroller)
 }
 
 void
-frogr_controller_show_details_dialog (FrogrController *fcontroller,
-                                      GSList *fpictures)
+frogr_controller_show_details_dialog (FrogrController *self,
+                                      GSList *pictures)
 {
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
   FrogrDetailsDialog *dialog;
 
   /* Run the details dialog */
-  dialog = frogr_details_dialog_new (GTK_WINDOW (priv->mainwin), fpictures);
+  dialog = frogr_details_dialog_new (GTK_WINDOW (priv->mainwin), pictures);
   frogr_details_dialog_show (dialog);
 }
 
 void
-frogr_controller_show_add_tags_dialog (FrogrController *fcontroller,
-                                       GSList *fpictures)
+frogr_controller_show_add_tags_dialog (FrogrController *self,
+                                       GSList *pictures)
 {
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
 
   GtkWidget *dialog;
   GtkWidget *main_vbox;
@@ -290,18 +290,18 @@ frogr_controller_show_add_tags_dialog (FrogrController *fcontroller,
       /* Check if there's something to add */
       if (tags && !g_str_equal (tags, ""))
         {
-          FrogrPicture *fpicture;
+          FrogrPicture *picture;
           GSList *item;
           guint n_pictures;
 
           g_debug ("Adding tags to picture(s): %s\n", tags);
 
           /* Iterate over the rest of elements */
-          n_pictures = g_slist_length (fpictures);
-          for (item = fpictures; item; item = g_slist_next (item))
+          n_pictures = g_slist_length (pictures);
+          for (item = pictures; item; item = g_slist_next (item))
             {
-              fpicture = FROGR_PICTURE (item->data);
-              frogr_picture_add_tags (fpicture, tags);
+              picture = FROGR_PICTURE (item->data);
+              frogr_picture_add_tags (picture, tags);
             }
         }
 
@@ -310,19 +310,19 @@ frogr_controller_show_add_tags_dialog (FrogrController *fcontroller,
     }
 
   /* Free */
-  g_slist_foreach (fpictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (fpictures);
+  g_slist_foreach (pictures, (GFunc)g_object_unref, NULL);
+  g_slist_free (pictures);
 
   gtk_widget_destroy (dialog);
 }
 
 void
-frogr_controller_open_authorization_url (FrogrController *fcontroller)
+frogr_controller_open_authorization_url (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
 
   gchar *auth_url = frogr_facade_get_authorization_url (priv->facade);
   if (auth_url != NULL)
@@ -339,50 +339,50 @@ frogr_controller_open_authorization_url (FrogrController *fcontroller)
 }
 
 gboolean
-frogr_controller_complete_authorization (FrogrController *fcontroller)
+frogr_controller_complete_authorization (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (fcontroller), FALSE);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Delegate on facade */
   return frogr_facade_complete_authorization (priv->facade);
 }
 
 gboolean
-frogr_controller_is_authorized (FrogrController *fcontroller)
+frogr_controller_is_authorized (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (fcontroller), FALSE);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return frogr_facade_is_authorized (priv->facade);
 }
 
 void
-frogr_controller_upload_picture (FrogrController *fcontroller,
-                                 FrogrPicture *fpicture,
-                                 GFunc fpicture_uploaded_cb,
+frogr_controller_upload_picture (FrogrController *self,
+                                 FrogrPicture *picture,
+                                 GFunc picture_uploaded_cb,
                                  gpointer object)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (fcontroller));
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (fcontroller);
+    FROGR_CONTROLLER_GET_PRIVATE (self);
 
   upload_picture_st *up_st;
 
   /* Create structure to pass to the thread */
   up_st = g_slice_new (upload_picture_st);
-  up_st->fpicture = fpicture;
-  up_st->callback = fpicture_uploaded_cb;
+  up_st->picture = picture;
+  up_st->callback = picture_uploaded_cb;
   up_st->object = object;
 
   /* Delegate on facade with the first item */
-  g_object_ref (fpicture);
+  g_object_ref (picture);
   frogr_facade_upload_picture (priv->facade,
-                               fpicture,
+                               picture,
                                (GFunc)_upload_picture_cb,
-                               fcontroller,
+                               self,
                                up_st);
 }

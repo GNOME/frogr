@@ -54,14 +54,14 @@ GType frogr_main_window_model_get_type(void) G_GNUC_CONST;
 
 FrogrMainWindowModel *frogr_main_window_model_new (void);
 
-void frogr_main_window_model_add_picture (FrogrMainWindowModel *fmwmodel,
+void frogr_main_window_model_add_picture (FrogrMainWindowModel *self,
                                           FrogrPicture *fpicture);
-void frogr_main_window_model_remove_picture (FrogrMainWindowModel *fmwmodel,
+void frogr_main_window_model_remove_picture (FrogrMainWindowModel *self,
                                              FrogrPicture *fpicture);
-void frogr_main_window_model_remove_all (FrogrMainWindowModel *fmwmodel);
+void frogr_main_window_model_remove_all (FrogrMainWindowModel *self);
 
-guint frogr_main_window_model_n_pictures (FrogrMainWindowModel *fmwmodel);
-GSList *frogr_main_window_model_get_pictures (FrogrMainWindowModel *fmwmodel);
+guint frogr_main_window_model_n_pictures (FrogrMainWindowModel *self);
+GSList *frogr_main_window_model_get_pictures (FrogrMainWindowModel *self);
 
 G_END_DECLS
 

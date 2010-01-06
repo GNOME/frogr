@@ -22,16 +22,16 @@
 
 #include <string.h>
 #include <flickcurl.h>
-#include "frogr-facade.h"
 #include "frogr-config.h"
 #include "frogr-account.h"
+#include "frogr-facade.h"
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
 
-#define FROGR_FACADE_GET_PRIVATE(object)             \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),            \
-                                FROGR_FACADE_TYPE,   \
+#define FROGR_FACADE_GET_PRIVATE(object)                \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
+                                FROGR_FACADE_TYPE,      \
                                 FrogrFacadePrivate))
 
 G_DEFINE_TYPE (FrogrFacade, frogr_facade, G_TYPE_OBJECT);
@@ -47,8 +47,8 @@ struct _FrogrFacadePrivate
 /* Prototypes */
 
 typedef struct {
-  FrogrFacade *ffacade;
-  FrogrPicture *fpicture;
+  FrogrFacade *facade;
+  FrogrPicture *picture;
   GFunc callback;
   gpointer object;
   gpointer data;
@@ -82,10 +82,10 @@ static void
 _upload_picture_thread (upload_picture_st *up_st)
 {
   g_return_if_fail (up_st != NULL);
-  FrogrFacade *ffacade = up_st->ffacade;
-  FrogrPicture *fpicture = up_st->fpicture;
+  FrogrFacade *facade = up_st->facade;
+  FrogrPicture *picture = up_st->picture;
 
-  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
+  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (facade);
   flickcurl_upload_params *uparams;
   flickcurl_upload_status *ustatus;
 
@@ -93,26 +93,26 @@ _upload_picture_thread (upload_picture_st *up_st)
 
   /* Prepare upload params */
   uparams = g_slice_new (flickcurl_upload_params);
-  uparams->title = frogr_picture_get_title (fpicture);
-  uparams->photo_file = frogr_picture_get_filepath (fpicture);
-  uparams->description = frogr_picture_get_description (fpicture);
-  uparams->tags = frogr_picture_get_tags (fpicture);
-  uparams->is_public = frogr_picture_is_public (fpicture);
-  uparams->is_friend = frogr_picture_is_friend (fpicture);
-  uparams->is_family = frogr_picture_is_family (fpicture);
+  uparams->title = frogr_picture_get_title (picture);
+  uparams->photo_file = frogr_picture_get_filepath (picture);
+  uparams->description = frogr_picture_get_description (picture);
+  uparams->tags = frogr_picture_get_tags (picture);
+  uparams->is_public = frogr_picture_is_public (picture);
+  uparams->is_friend = frogr_picture_is_friend (picture);
+  uparams->is_family = frogr_picture_is_family (picture);
   uparams->safety_level = 1; /* Harcoded: 'safe' */
   uparams->content_type = 1; /* Harcoded: 'photo' */
 
   /* Upload the test photo (private) */
   g_debug ("\n\nNow uploading picture %s...\n",
-           frogr_picture_get_title (fpicture));
+           frogr_picture_get_title (picture));
 
   ustatus = flickcurl_photos_upload_params (priv->fcurl, uparams);
   if (ustatus) {
     g_debug ("[OK] Success uploading a new picture\n");
 
     /* Save photo ID along with the picture */
-    frogr_picture_set_id (fpicture, ustatus->photoid);
+    frogr_picture_set_id (picture, ustatus->photoid);
 
     /* Print and free upload status */
     g_debug ("\tPhoto upload status:");
@@ -158,9 +158,9 @@ frogr_facade_class_init(FrogrFacadeClass *klass)
 }
 
 static void
-frogr_facade_init (FrogrFacade *ffacade)
+frogr_facade_init (FrogrFacade *self)
 {
-  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
+  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (self);
   FrogrAccount *faccount;
   const gchar *token;
 
@@ -192,11 +192,11 @@ frogr_facade_new (void)
 }
 
 gchar *
-frogr_facade_get_authorization_url (FrogrFacade *ffacade)
+frogr_facade_get_authorization_url (FrogrFacade *self)
 {
-  g_return_val_if_fail(FROGR_IS_FACADE (ffacade), NULL);
+  g_return_val_if_fail(FROGR_IS_FACADE (self), NULL);
 
-  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
+  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (self);
   gchar *frob = flickcurl_auth_getFrob (priv->fcurl);
   gchar *auth_url = NULL;
 
@@ -227,11 +227,11 @@ frogr_facade_get_authorization_url (FrogrFacade *ffacade)
 }
 
 gboolean
-frogr_facade_complete_authorization (FrogrFacade *ffacade)
+frogr_facade_complete_authorization (FrogrFacade *self)
 {
-  g_return_val_if_fail(FROGR_IS_FACADE (ffacade), FALSE);
+  g_return_val_if_fail(FROGR_IS_FACADE (self), FALSE);
 
-  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
+  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (self);
   FrogrConfig *fconfig = frogr_config_get_instance ();
   FrogrAccount *faccount = frogr_config_get_account (fconfig);
   gchar *auth_token = NULL;
@@ -259,29 +259,29 @@ frogr_facade_complete_authorization (FrogrFacade *ffacade)
 }
 
 gboolean
-frogr_facade_is_authorized (FrogrFacade *ffacade)
+frogr_facade_is_authorized (FrogrFacade *self)
 {
-  g_return_val_if_fail(FROGR_IS_FACADE (ffacade), FALSE);
+  g_return_val_if_fail(FROGR_IS_FACADE (self), FALSE);
 
-  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (ffacade);
+  FrogrFacadePrivate *priv = FROGR_FACADE_GET_PRIVATE (self);
   return (flickcurl_get_auth_token (priv->fcurl) != NULL);
 }
 
 void
-frogr_facade_upload_picture (FrogrFacade *ffacade,
-                             FrogrPicture *fpicture,
+frogr_facade_upload_picture (FrogrFacade *self,
+                             FrogrPicture *picture,
                              GFunc callback,
                              gpointer object,
                              gpointer data)
 {
-  g_return_if_fail(FROGR_IS_FACADE (ffacade));
+  g_return_if_fail(FROGR_IS_FACADE (self));
 
   upload_picture_st *up_st;
 
   /* Create structure to pass to the thread */
   up_st = g_slice_new (upload_picture_st);
-  up_st->ffacade = ffacade;
-  up_st->fpicture = fpicture;
+  up_st->facade = self;
+  up_st->picture = picture;
   up_st->callback = callback;
   up_st->object = object;
   up_st->data = data;

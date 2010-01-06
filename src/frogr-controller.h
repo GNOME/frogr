@@ -53,23 +53,23 @@ struct _FrogrController
 GType frogr_controller_get_type (void) G_GNUC_CONST;
 
 FrogrController *frogr_controller_get_instance (void);
-FrogrMainWindow *frogr_controller_get_main_window (FrogrController *fcontroller);
+FrogrMainWindow *frogr_controller_get_main_window (FrogrController *self);
 
-gboolean frogr_controller_run_app (FrogrController *fcontroller);
-gboolean frogr_controller_quit_app (FrogrController *fcontroller);
+gboolean frogr_controller_run_app (FrogrController *self);
+gboolean frogr_controller_quit_app (FrogrController *self);
 
-void frogr_controller_show_about_dialog (FrogrController *fcontroller);
-void frogr_controller_show_auth_dialog (FrogrController *fcontroller);
-void frogr_controller_show_details_dialog (FrogrController *fcontroller,
+void frogr_controller_show_about_dialog (FrogrController *self);
+void frogr_controller_show_auth_dialog (FrogrController *self);
+void frogr_controller_show_details_dialog (FrogrController *self,
                                            GSList *fpictures);
-void frogr_controller_show_add_tags_dialog (FrogrController *fcontroller,
+void frogr_controller_show_add_tags_dialog (FrogrController *self,
                                             GSList *fpictures);
 
-void frogr_controller_open_authorization_url (FrogrController *fcontroller);
-gboolean frogr_controller_complete_authorization (FrogrController *fcontroller);
-gboolean frogr_controller_is_authorized (FrogrController *fcontroller);
+void frogr_controller_open_authorization_url (FrogrController *self);
+gboolean frogr_controller_complete_authorization (FrogrController *self);
+gboolean frogr_controller_is_authorized (FrogrController *self);
 
-void frogr_controller_upload_picture (FrogrController *fcontroller,
+void frogr_controller_upload_picture (FrogrController *self,
                                       FrogrPicture *fpicture,
                                       GFunc fpicture_uploaded_cb,
                                       gpointer object);

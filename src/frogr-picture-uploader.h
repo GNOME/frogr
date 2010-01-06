@@ -51,11 +51,11 @@ struct _FrogrPictureUploaderClass
 
 GType frogr_picture_uploader_get_type(void) G_GNUC_CONST;
 
-FrogrPictureUploader *frogr_picture_uploader_new (GSList *fpictures,
+FrogrPictureUploader *frogr_picture_uploader_new (GSList *pictures,
                                                   GFunc picture_uploaded_cb,
                                                   GFunc pictures_uploaded_cb,
                                                   gpointer object);
-void frogr_picture_uploader_upload (FrogrPictureUploader *fpuploader);
+void frogr_picture_uploader_upload (FrogrPictureUploader *self);
 
 G_END_DECLS
 

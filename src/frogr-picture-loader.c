@@ -20,11 +20,11 @@
  *
  */
 
-#include "frogr-picture-loader.h"
+#include <gio/gio.h>
 #include "frogr-controller.h"
 #include "frogr-main-window.h"
 #include "frogr-picture.h"
-#include <gio/gio.h>
+#include "frogr-picture-loader.h"
 
 #define PICTURE_WIDTH 100
 #define PICTURE_HEIGHT 100
@@ -61,9 +61,9 @@ static const gchar *valid_mimetypes[] = {
 
 /* Prototypes */
 
-static void _update_status_and_progress (FrogrPictureLoader *fploader);
+static void _update_status_and_progress (FrogrPictureLoader *self);
 static GdkPixbuf *_get_scaled_pixbuf (GdkPixbuf *pixbuf);
-static void _load_next_picture (FrogrPictureLoader *fploader);
+static void _load_next_picture (FrogrPictureLoader *self);
 static void _load_next_picture_cb (GObject *object,
                                    GAsyncResult *res,
                                    gpointer data);
@@ -71,10 +71,10 @@ static void _load_next_picture_cb (GObject *object,
 /* Private API */
 
 static void
-_update_status_and_progress (FrogrPictureLoader *fploader)
+_update_status_and_progress (FrogrPictureLoader *self)
 {
   FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (fploader);
+    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   gchar *status_text = NULL;
   gchar *progress_bar_text = NULL;
@@ -132,10 +132,10 @@ _get_scaled_pixbuf (GdkPixbuf *pixbuf)
 }
 
 static void
-_load_next_picture (FrogrPictureLoader *fploader)
+_load_next_picture (FrogrPictureLoader *self)
 {
   FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (fploader);
+    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   if (priv->current)
     {
@@ -173,27 +173,27 @@ _load_next_picture (FrogrPictureLoader *fploader)
           g_file_load_contents_async (gfile,
                                       NULL,
                                       _load_next_picture_cb,
-                                      fploader);
+                                      self);
         }
       else
         {
           /* update internal status and check the next picture */
           priv->current = g_slist_next (priv->current);
           priv->index++;
-          _load_next_picture (fploader);
+          _load_next_picture (self);
         }
     }
   else
     {
       /* Update status and progress bars */
-      _update_status_and_progress (fploader);
+      _update_status_and_progress (self);
 
       /* Set proper state */
       frogr_main_window_set_state (priv->mainwin, FROGR_STATE_IDLE);
 
       /* Execute final callback */
       if (priv->pictures_loaded_cb)
-        priv->pictures_loaded_cb (priv->object, fploader);
+        priv->pictures_loaded_cb (priv->object, self);
     }
 }
 
@@ -202,9 +202,9 @@ _load_next_picture_cb (GObject *object,
                        GAsyncResult *res,
                        gpointer data)
 {
-  FrogrPictureLoader *fploader = FROGR_PICTURE_LOADER (data);;
+  FrogrPictureLoader *self = FROGR_PICTURE_LOADER (data);;
   FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (fploader);
+    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   FrogrPicture *fpicture = NULL;
   GFile *file = G_FILE (object);
@@ -270,7 +270,7 @@ _load_next_picture_cb (GObject *object,
   priv->index++;
 
   /* Update status and progress bars */
-  _update_status_and_progress (fploader);
+  _update_status_and_progress (self);
 
   /* Execute 'picture-loaded' callback */
   if (priv->picture_loaded_cb && fpicture)
@@ -282,7 +282,7 @@ _load_next_picture_cb (GObject *object,
     g_object_unref (fpicture);
 
   /* Go for the next picture */
-  _load_next_picture (fploader);
+  _load_next_picture (self);
 }
 
 static void
@@ -308,10 +308,10 @@ frogr_picture_loader_class_init(FrogrPictureLoaderClass *klass)
 }
 
 static void
-frogr_picture_loader_init (FrogrPictureLoader *fploader)
+frogr_picture_loader_init (FrogrPictureLoader *self)
 {
   FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (fploader);
+    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   FrogrController *controller = NULL;
 
@@ -337,11 +337,11 @@ frogr_picture_loader_new (GSList *filepaths,
                           GFunc pictures_loaded_cb,
                           gpointer object)
 {
-  FrogrPictureLoader *fploader =
+  FrogrPictureLoader *self =
     FROGR_PICTURE_LOADER (g_object_new(FROGR_TYPE_PICTURE_LOADER, NULL));
 
   FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (fploader);
+    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   /* Internal data */
   priv->filepaths = g_slist_copy (filepaths);
@@ -354,16 +354,16 @@ frogr_picture_loader_new (GSList *filepaths,
   priv->pictures_loaded_cb = pictures_loaded_cb;
   priv->object = object;
 
-  return fploader;
+  return self;
 }
 
 void
-frogr_picture_loader_load (FrogrPictureLoader *fploader)
+frogr_picture_loader_load (FrogrPictureLoader *self)
 {
-  g_return_if_fail (FROGR_IS_PICTURE_LOADER (fploader));
+  g_return_if_fail (FROGR_IS_PICTURE_LOADER (self));
 
   FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (fploader);
+    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   /* Check first whether there's something to load */
   if (priv->filepaths == NULL)
@@ -373,8 +373,8 @@ frogr_picture_loader_load (FrogrPictureLoader *fploader)
   frogr_main_window_set_state (priv->mainwin, FROGR_STATE_LOADING);
 
   /* Update status and progress bars */
-  _update_status_and_progress (fploader);
+  _update_status_and_progress (self);
 
   /* Trigger the asynchronous process */
-  _load_next_picture (fploader);
+  _load_next_picture (self);
 }

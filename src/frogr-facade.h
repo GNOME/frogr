@@ -56,10 +56,10 @@ GType frogr_facade_get_type(void) G_GNUC_CONST;
 FrogrFacade *frogr_facade_new (void);
 
 /* Use cases */
-gchar *frogr_facade_get_authorization_url (FrogrFacade *ffacade);
-gboolean frogr_facade_complete_authorization (FrogrFacade *ffacade);
-gboolean frogr_facade_is_authorized (FrogrFacade *ffacade);
-void frogr_facade_upload_picture (FrogrFacade *ffacade,
+gchar *frogr_facade_get_authorization_url (FrogrFacade *self);
+gboolean frogr_facade_complete_authorization (FrogrFacade *self);
+gboolean frogr_facade_is_authorized (FrogrFacade *self);
+void frogr_facade_upload_picture (FrogrFacade *self,
                                   FrogrPicture *fpicture,
                                   GFunc callback,
                                   gpointer object,

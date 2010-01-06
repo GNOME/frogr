@@ -58,14 +58,14 @@ GType frogr_main_window_get_type (void) G_GNUC_CONST;
 
 FrogrMainWindow *frogr_main_window_new (void);
 
-void frogr_main_window_set_status_text (FrogrMainWindow *fmainwin,
-                                         const gchar *text);
-void frogr_main_window_set_progress (FrogrMainWindow *fmainwin,
+void frogr_main_window_set_status_text (FrogrMainWindow *self,
+                                        const gchar *text);
+void frogr_main_window_set_progress (FrogrMainWindow *self,
                                      double fraction,
                                      const gchar *text);
-FrogrMainWindowModel *frogr_main_window_get_model (FrogrMainWindow *fmainwin);
+FrogrMainWindowModel *frogr_main_window_get_model (FrogrMainWindow *self);
 
-void frogr_main_window_set_state (FrogrMainWindow *fmainwin,
+void frogr_main_window_set_state (FrogrMainWindow *self,
                                   FrogrMainWindowState state);
 
 G_END_DECLS

@@ -22,9 +22,9 @@
 #ifndef _FROGR_CONFIG_H
 #define _FROGR_CONFIG_H
 
-#include "frogr-account.h"
 #include <glib.h>
 #include <glib-object.h>
+#include "frogr-account.h"
 
 G_BEGIN_DECLS
 
@@ -55,11 +55,11 @@ GType frogr_config_get_type (void) G_GNUC_CONST;
 
 FrogrConfig* frogr_config_get_instance (void);
 
-gboolean frogr_config_save (FrogrConfig *fconfig);
+gboolean frogr_config_save (FrogrConfig *self);
 
-FrogrAccount* frogr_config_get_account (FrogrConfig *fconfig);
+FrogrAccount* frogr_config_get_account (FrogrConfig *self);
 
-void frogr_config_set_account (FrogrConfig  *fconfig,
+void frogr_config_set_account (FrogrConfig  *self,
                                FrogrAccount *faccount);
 
 G_END_DECLS

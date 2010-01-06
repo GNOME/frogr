@@ -50,7 +50,7 @@ struct _FrogrAuthDialog
 GType frogr_auth_dialog_get_type (void) G_GNUC_CONST;
 
 FrogrAuthDialog *frogr_auth_dialog_new (GtkWindow *parent);
-void frogr_auth_dialog_show (FrogrAuthDialog *fauthdialog);
+void frogr_auth_dialog_show (FrogrAuthDialog *self);
 
 G_END_DECLS
 

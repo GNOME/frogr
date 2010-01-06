@@ -1,5 +1,5 @@
 /*
- * frogr-config.c -- Configuration system for Frogr.
+ * frogr-account.c -- User account for Frogr.
  *
  * Copyright (C) 2009 Adrian Perez
  * Authors: Adrian Perez <aperez@igalia.com>
@@ -19,14 +19,13 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "frogr-account.h"
 #include <libxml/parser.h>
 #include <errno.h>
+#include "frogr-account.h"
 
-
-#define FROGR_ACCOUNT_GET_PRIVATE(object)            \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),            \
-                                FROGR_TYPE_ACCOUNT,  \
+#define FROGR_ACCOUNT_GET_PRIVATE(object)               \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
+                                FROGR_TYPE_ACCOUNT,     \
                                 FrogrAccountPrivate))
 
 G_DEFINE_TYPE (FrogrAccount, frogr_account, G_TYPE_OBJECT);
@@ -139,9 +138,9 @@ frogr_account_class_init (FrogrAccountClass *klass)
 }
 
 static void
-frogr_account_init (FrogrAccount *faccount)
+frogr_account_init (FrogrAccount *self)
 {
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
 
   priv->frob = NULL;
   priv->token = NULL;
@@ -170,42 +169,42 @@ frogr_account_new_with_params (const gchar *frob,
 }
 
 const gchar *
-frogr_account_get_frob (FrogrAccount *faccount)
+frogr_account_get_frob (FrogrAccount *self)
 {
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return (const gchar *)priv->frob;
 }
 
 void
-frogr_account_set_frob (FrogrAccount *faccount,
+frogr_account_set_frob (FrogrAccount *self,
                         const gchar *frob)
 {
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
 
   g_free (priv->frob);
   priv->frob = g_strdup (frob);
 }
 
 const gchar *
-frogr_account_get_token (FrogrAccount *faccount)
+frogr_account_get_token (FrogrAccount *self)
 {
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), NULL);
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return (const gchar *)priv->token;
 }
 
 void
-frogr_account_set_token (FrogrAccount *faccount,
+frogr_account_set_token (FrogrAccount *self,
                          const gchar *token)
 {
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (faccount);
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
 
   g_free (priv->token);
   priv->token = g_strdup (token);

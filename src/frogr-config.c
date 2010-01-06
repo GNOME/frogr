@@ -19,16 +19,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "frogr-config.h"
-#include "frogr-account.h"
 #include <glib/gstdio.h>
 #include <libxml/parser.h>
 #include <string.h>
 #include <errno.h>
+#include "frogr-account.h"
+#include "frogr-config.h"
 
-#define FROGR_CONFIG_GET_PRIVATE(object)             \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),            \
-                                FROGR_TYPE_CONFIG,   \
+#define FROGR_CONFIG_GET_PRIVATE(object)                \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
+                                FROGR_TYPE_CONFIG,      \
                                 FrogrConfigPrivate))
 
 
@@ -48,10 +48,10 @@ static FrogrConfig *_instance = NULL;
 static gboolean _frogr_config_load_account_xml (FrogrAccount *faccount,
                                                 xmlDocPtr     xml,
                                                 xmlNodePtr    rootnode);
-static void _frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir);
-static void _frogr_config_load_account (FrogrConfig *fconfig,
+static void _frogr_config_load (FrogrConfig *self, const gchar *config_dir);
+static void _frogr_config_load_account (FrogrConfig *self,
                                         const gchar *config_dir);
-static gboolean _frogr_config_save_account (FrogrConfig *fconfig);
+static gboolean _frogr_config_save_account (FrogrConfig *self);
 static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
                                          const gchar *xml_name,
                                          GObject     *object,
@@ -101,7 +101,7 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
 }
 
 static void
-_frogr_config_load_account (FrogrConfig *fconfig, const gchar *config_dir)
+_frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
 {
   FrogrConfigPrivate *priv;
   gchar *xml_path;
@@ -109,10 +109,10 @@ _frogr_config_load_account (FrogrConfig *fconfig, const gchar *config_dir)
   xmlNodePtr node;
   xmlDocPtr xml = NULL;
 
-  g_return_if_fail (FROGR_IS_CONFIG (fconfig));
+  g_return_if_fail (FROGR_IS_CONFIG (self));
   g_return_if_fail (config_dir != NULL);
 
-  priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   xml_path = g_build_filename (config_dir, "accounts.xml", NULL);
   if (g_file_test (xml_path, G_FILE_TEST_IS_REGULAR))
@@ -157,11 +157,11 @@ _frogr_config_load_account (FrogrConfig *fconfig, const gchar *config_dir)
       load_ok = TRUE;
     }
 
-cleanup_parser:
+ cleanup_parser:
   xmlFreeDoc (xml);
   xmlCleanupParser ();
 
-cleanup_path:
+ cleanup_path:
   if (!load_ok)
     g_remove (xml_path);
 
@@ -169,20 +169,20 @@ cleanup_path:
 }
 
 static void
-_frogr_config_load (FrogrConfig *fconfig, const gchar *config_dir)
+_frogr_config_load (FrogrConfig *self, const gchar *config_dir)
 {
-  g_return_if_fail (FROGR_IS_CONFIG (fconfig));
+  g_return_if_fail (FROGR_IS_CONFIG (self));
   g_return_if_fail (config_dir != NULL);
   /*
    * XXX This method is just a placeholder for when we have program
    * settings. For now, load just the accounts.
    */
 
-  _frogr_config_load_account (fconfig, config_dir);
+  _frogr_config_load_account (self, config_dir);
 }
 
 static gboolean
-_frogr_config_save_account (FrogrConfig *fconfig)
+_frogr_config_save_account (FrogrConfig *self)
 {
   FrogrConfigPrivate *priv;
   gboolean retval = TRUE;
@@ -191,9 +191,9 @@ _frogr_config_save_account (FrogrConfig *fconfig)
   GObject *account;
   gchar *xml_path;
 
-  g_return_val_if_fail (FROGR_IS_CONFIG (fconfig), FALSE);
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   xml = xmlNewDoc ((const xmlChar*) "1.0");
   root = xmlNewNode (NULL, (const xmlChar*) "accounts");
@@ -254,16 +254,16 @@ _xml_add_string_child (xmlNodePtr   parent,
 /* Public functions */
 
 gboolean
-frogr_config_save (FrogrConfig *fconfig)
+frogr_config_save (FrogrConfig *self)
 {
-  g_return_val_if_fail (FROGR_IS_CONFIG (fconfig), FALSE);
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   /*
    * XXX This method is just a placeholder for when we have program
    * settings. For now, save just the account.
    */
 
-  return _frogr_config_save_account (fconfig);
+  return _frogr_config_save_account (self);
 }
 
 static void
@@ -310,9 +310,9 @@ frogr_config_class_init (FrogrConfigClass *klass)
 }
 
 static void
-frogr_config_init (FrogrConfig *fconfig)
+frogr_config_init (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
   gchar *config_dir = g_build_filename (g_get_user_config_dir (),
                                         g_get_prgname (), NULL);
 
@@ -324,7 +324,7 @@ frogr_config_init (FrogrConfig *fconfig)
     }
 
   priv->account = frogr_account_new ();
-  _frogr_config_load (fconfig, config_dir);
+  _frogr_config_load (self, config_dir);
 
   g_free (config_dir);
 }
@@ -337,22 +337,22 @@ frogr_config_get_instance (void)
 
 
 void
-frogr_config_set_account (FrogrConfig  *fconfig,
+frogr_config_set_account (FrogrConfig  *self,
                           FrogrAccount *faccount)
 {
-  g_return_if_fail (FROGR_IS_CONFIG (fconfig));
+  g_return_if_fail (FROGR_IS_CONFIG (self));
   g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (fconfig);
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   g_object_unref (priv->account);
   priv->account = g_object_ref (faccount);
 }
 
 FrogrAccount*
-frogr_config_get_account (FrogrConfig *fconfig)
+frogr_config_get_account (FrogrConfig *self)
 {
-  g_return_val_if_fail (FROGR_IS_CONFIG (fconfig), NULL);
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
 
-  return FROGR_CONFIG_GET_PRIVATE (fconfig)->account;
+  return FROGR_CONFIG_GET_PRIVATE (self)->account;
 }

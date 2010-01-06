@@ -59,41 +59,41 @@ FrogrPicture *frogr_picture_new (const gchar *filepath,
 
 /* Data managing methods */
 
-const gchar *frogr_picture_get_id (FrogrPicture *fpicture);
-void frogr_picture_set_id (FrogrPicture *fpicture,
+const gchar *frogr_picture_get_id (FrogrPicture *self);
+void frogr_picture_set_id (FrogrPicture *self,
                            const gchar *id);
 
-const gchar *frogr_picture_get_title (FrogrPicture *fpicture);
-void frogr_picture_set_title (FrogrPicture *fpicture,
+const gchar *frogr_picture_get_title (FrogrPicture *self);
+void frogr_picture_set_title (FrogrPicture *self,
                               const gchar *title);
 
-const gchar *frogr_picture_get_description (FrogrPicture *fpicture);
-void frogr_picture_set_description (FrogrPicture *fpicture,
+const gchar *frogr_picture_get_description (FrogrPicture *self);
+void frogr_picture_set_description (FrogrPicture *self,
                                     const gchar *description);
 
-const gchar *frogr_picture_get_filepath (FrogrPicture *fpicture);
-void frogr_picture_set_filepath (FrogrPicture *fpicture,
+const gchar *frogr_picture_get_filepath (FrogrPicture *self);
+void frogr_picture_set_filepath (FrogrPicture *self,
                                  const gchar *filepath);
 
-const GSList *frogr_picture_get_tags_list (FrogrPicture *fpicture);
-const gchar *frogr_picture_get_tags (FrogrPicture *fpicture);
-void frogr_picture_set_tags (FrogrPicture *fpicture, const gchar *tags_string);
-void frogr_picture_add_tags (FrogrPicture *fpicture, const gchar *tags_string);
+const GSList *frogr_picture_get_tags_list (FrogrPicture *self);
+const gchar *frogr_picture_get_tags (FrogrPicture *self);
+void frogr_picture_set_tags (FrogrPicture *self, const gchar *tags_string);
+void frogr_picture_add_tags (FrogrPicture *self, const gchar *tags_string);
 
-gboolean frogr_picture_is_public (FrogrPicture *fpicture);
-void frogr_picture_set_public (FrogrPicture *fpicture,
+gboolean frogr_picture_is_public (FrogrPicture *self);
+void frogr_picture_set_public (FrogrPicture *self,
                                gboolean public);
 
-gboolean frogr_picture_is_friend (FrogrPicture *fpicture);
-void frogr_picture_set_friend (FrogrPicture *fpicture,
+gboolean frogr_picture_is_friend (FrogrPicture *self);
+void frogr_picture_set_friend (FrogrPicture *self,
                                gboolean friend);
 
-gboolean frogr_picture_is_family (FrogrPicture *fpicture);
-void frogr_picture_set_family (FrogrPicture *fpicture,
+gboolean frogr_picture_is_family (FrogrPicture *self);
+void frogr_picture_set_family (FrogrPicture *self,
                                gboolean family);
 
-GdkPixbuf *frogr_picture_get_pixbuf (FrogrPicture *fpicture);
-void frogr_picture_set_pixbuf (FrogrPicture *fpicture,
+GdkPixbuf *frogr_picture_get_pixbuf (FrogrPicture *self);
+void frogr_picture_set_pixbuf (FrogrPicture *self,
                                GdkPixbuf *pixbuf);
 
 G_END_DECLS
