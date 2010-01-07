@@ -41,6 +41,16 @@ typedef struct _FrogrMainWindowClass   FrogrMainWindowClass;
 struct _FrogrMainWindowClass
 {
   GtkWindowClass parent_class;
+
+  /* Private virtual */
+  void (*update_ui) (FrogrMainWindow *self);
+  GSList* (*get_selected_pictures) (FrogrMainWindow *self);
+  void (*add_picture_to_ui) (FrogrMainWindow *self, FrogrPicture *picture);
+  void (*remove_pictures_from_ui) (FrogrMainWindow *self, GSList *pictures);
+
+  /* Public virtual */
+  void (*set_status_text) (FrogrMainWindow *self, const gchar *text);
+  void (*set_progress) (FrogrMainWindow *self, double fraction, const gchar *text);
 };
 
 struct _FrogrMainWindow
@@ -56,17 +66,18 @@ typedef enum {
 
 GType frogr_main_window_get_type (void) G_GNUC_CONST;
 
-FrogrMainWindow *frogr_main_window_new (void);
-
-void frogr_main_window_set_status_text (FrogrMainWindow *self,
-                                        const gchar *text);
-void frogr_main_window_set_progress (FrogrMainWindow *self,
-                                     double fraction,
-                                     const gchar *text);
 FrogrMainWindowModel *frogr_main_window_get_model (FrogrMainWindow *self);
 
 void frogr_main_window_set_state (FrogrMainWindow *self,
                                   FrogrMainWindowState state);
+
+void frogr_main_window_set_status_text (FrogrMainWindow *self,
+                                        const gchar *text);
+
+void frogr_main_window_set_progress (FrogrMainWindow *self,
+                                     double fraction,
+                                     const gchar *text);
+
 
 G_END_DECLS
 

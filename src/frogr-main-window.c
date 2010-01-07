@@ -27,251 +27,60 @@
 #include "frogr-picture-loader.h"
 #include "frogr-picture-uploader.h"
 #include "frogr-picture.h"
+#include "frogr-main-window-private.h"
 #include "frogr-main-window.h"
-
-#define MINIMUM_WINDOW_WIDTH 540
-#define MINIMUM_WINDOW_HEIGHT 420
-
-#define ITEM_WIDTH 120
-
-#define GTKBUILDER_FILE APP_DATA_DIR "/gtkbuilder/frogr-main-window.xml"
 
 #define MAIN_WINDOW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
 
-
-enum {
-  FILEPATH_COL,
-  PIXBUF_COL,
-  FPICTURE_COL
-};
-
-#define FROGR_MAIN_WINDOW_GET_PRIVATE(object)                   \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_MAIN_WINDOW,         \
-                                FrogrMainWindowPrivate))
-
-G_DEFINE_TYPE (FrogrMainWindow, frogr_main_window, GTK_TYPE_WINDOW);
-
-typedef struct _FrogrMainWindowPrivate {
-  FrogrMainWindowModel *model;
-  FrogrMainWindowState state;
-  FrogrController *controller;
-  GtkWidget *menu_bar;
-  GtkWidget *icon_view;
-  GtkWidget *status_bar;
-  GtkWidget *progress_bar;
-  GtkWidget *add_button;
-  GtkWidget *remove_button;
-  GtkWidget *upload_button;
-  GtkWidget *ctxt_menu;
-  GtkTreeModel *tree_model;
-  guint sb_context_id;
-} FrogrMainWindowPrivate;
-
+G_DEFINE_ABSTRACT_TYPE (FrogrMainWindow, frogr_main_window, GTK_TYPE_WINDOW);
 
 /* Prototypes */
 
+/* Private API */
 static void _update_ui (FrogrMainWindow *self);
 static GSList *_get_selected_pictures (FrogrMainWindow *self);
-static void _add_tags_to_pictures (FrogrMainWindow *self);
-static void _edit_selected_pictures (FrogrMainWindow *self);
-static void _remove_selected_pictures (FrogrMainWindow *self);
+static void _add_picture_to_ui (FrogrMainWindow *self, FrogrPicture *picture);
+static void _remove_pictures_from_ui (FrogrMainWindow *self, GSList *pictures);
+
+/* Event handlers */
 static void _on_picture_loaded (FrogrMainWindow *self,
                                 FrogrPicture *picture);
 static void _on_pictures_loaded (FrogrMainWindow *self,
                                  FrogrPictureLoader *fploader);
 static void _on_pictures_uploaded (FrogrMainWindow *self,
                                    FrogrPictureUploader *fpuploader);
-static void _populate_menu_bar (FrogrMainWindow *self);
-static GtkWidget *_ctxt_menu_create (FrogrMainWindow *self);
-static void _ctxt_menu_add_tags_item_activated (GtkWidget *widget,
-                                                gpointer data);
-static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget,
-                                                    gpointer data);
-static void _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data);
-static void _initialize_drag_n_drop (FrogrMainWindow *self);
-static void _on_icon_view_drag_data_received (GtkWidget *widget,
-                                              GdkDragContext *context,
-                                              gint x, gint y,
-                                              GtkSelectionData *selection_data,
-                                              guint info, guint time,
-                                              gpointer data);
-
-void _on_add_button_clicked (GtkButton *widget, gpointer data);
-void _on_remove_button_clicked (GtkButton *widget, gpointer data);
-void _on_upload_button_clicked (GtkButton *widget, gpointer data);
-gboolean _on_icon_view_key_press_event (GtkWidget *widget,
-                                        GdkEventKey *event,
-                                        gpointer data);
-gboolean _on_icon_view_button_press_event (GtkWidget *widget,
-                                           GdkEventButton *event,
-                                           gpointer data);
 gboolean _on_main_window_delete_event (GtkWidget *widget,
                                        GdkEvent *event,
                                        gpointer self);
-void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
-
 
 /* Private API */
 
 static void
 _update_ui (FrogrMainWindow *self)
 {
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  gboolean pictures_loaded;
-  guint npics;
-
-  /* Set sensitiveness */
-  switch (priv->state)
-    {
-    case FROGR_STATE_LOADING:
-    case FROGR_STATE_UPLOADING:
-      gtk_widget_set_sensitive (priv->add_button, FALSE);
-      gtk_widget_set_sensitive (priv->remove_button, FALSE);
-      gtk_widget_set_sensitive (priv->upload_button, FALSE);
-      break;
-
-    case FROGR_STATE_IDLE:
-      npics = frogr_main_window_model_n_pictures (priv->model);
-      pictures_loaded = frogr_main_window_model_n_pictures (priv->model);
-
-      gtk_widget_set_sensitive (priv->add_button, TRUE);
-      gtk_widget_set_sensitive (priv->remove_button, pictures_loaded);
-      gtk_widget_set_sensitive (priv->upload_button, npics > 0);
-
-      /* Hide progress bar, just in case */
-      gtk_widget_hide (priv->progress_bar);
-      break;
-
-    default:
-      g_warning ("Invalid state reached!!");
-    }
+  FrogrMainWindowClass *klass = FROGR_MAIN_WINDOW_GET_CLASS (self);
+  return klass->update_ui (self);
 }
 
 static GSList *
 _get_selected_pictures (FrogrMainWindow *self)
 {
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  GSList *pictures = NULL;
-  GList *selected_pictures;
-  GList *item;
-
-  /* Iterate over selected items */
-  selected_pictures =
-    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
-  for (item = selected_pictures; item; item = g_list_next (item))
-    {
-      FrogrPicture *picture;
-      GtkTreePath *path;
-      GtkTreeIter iter;
-
-      /* Get needed information */
-      path = (GtkTreePath *)(item->data);
-      gtk_tree_model_get_iter (priv->tree_model, &iter, path);
-      gtk_tree_model_get (priv->tree_model,
-                          &iter,
-                          FPICTURE_COL, &picture,
-                          -1);
-
-      /* Add the picture to the list */
-      pictures = g_slist_prepend (pictures, picture);
-    }
-
-  return pictures;
+  FrogrMainWindowClass *klass = FROGR_MAIN_WINDOW_GET_CLASS (self);
+  return klass->get_selected_pictures (self);
 }
 
 static void
-_add_tags_to_pictures (FrogrMainWindow *self)
+_add_picture_to_ui (FrogrMainWindow *self, FrogrPicture *picture)
 {
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  GSList *pictures;
-
-  /* Get selected pictures */
-  pictures = _get_selected_pictures (self);
-
-  /* Ref the pictures and call the controller to add tags to them */
-  g_slist_foreach (pictures, (GFunc)g_object_ref, NULL);
-  frogr_controller_show_add_tags_dialog (priv->controller, pictures);
+  FrogrMainWindowClass *klass = FROGR_MAIN_WINDOW_GET_CLASS (self);
+  return klass->add_picture_to_ui (self, picture);
 }
 
 static void
-_edit_selected_pictures (FrogrMainWindow *self)
+_remove_pictures_from_ui (FrogrMainWindow *self, GSList *pictures)
 {
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  GSList *pictures = NULL;
-
-  /* Get the selected pictures */
-  pictures = _get_selected_pictures (self);
-
-  /* Ref the pictures and call the controller to edit them */
-  g_slist_foreach (pictures, (GFunc)g_object_ref, NULL);
-  frogr_controller_show_details_dialog (priv->controller, pictures);
-}
-
-
-static void
-_remove_selected_pictures (FrogrMainWindow *self)
-{
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  GList *selected_pictures;
-  GList *item;
-
-  /* Remove selected items */
-  selected_pictures =
-    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
-  for (item = selected_pictures; item; item = g_list_next (item))
-    {
-      FrogrPicture *picture;
-      GtkTreePath *path;
-      GtkTreeIter iter;
-
-      /* Get needed information */
-      path = (GtkTreePath *)(item->data);
-      gtk_tree_model_get_iter (priv->tree_model, &iter, path);
-      gtk_tree_model_get (priv->tree_model,
-                          &iter,
-                          FPICTURE_COL, &picture,
-                          -1);
-
-      /* Remove from the internal list */
-      frogr_main_window_model_remove_picture (priv->model, picture);
-
-      /* Remove from the GtkIconView */
-      gtk_list_store_remove (GTK_LIST_STORE (priv->tree_model), &iter);
-    }
-
-  /* Update UI */
-  _update_ui (self);
-
-  /* Free */
-  g_list_foreach (selected_pictures, (GFunc)gtk_tree_path_free, NULL);
-  g_list_free (selected_pictures);
-}
-
-static void
-_upload_pictures (FrogrMainWindow *self)
-{
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-
-  /* Upload pictures */
-  if (!frogr_controller_is_authorized (priv->controller))
-    {
-      /* FIXME: Improve the way the user gets asked for re-athorize
-         frogr in Flick, so it does not look a bit confusing */
-      frogr_controller_show_auth_dialog (priv->controller);
-    }
-  else if (frogr_main_window_model_n_pictures (priv->model) > 0)
-    {
-      GSList *pictures = frogr_main_window_model_get_pictures (priv->model);
-      FrogrPictureUploader *fpuploader =
-        frogr_picture_uploader_new (pictures,
-                                    NULL,
-                                    (GFunc)_on_pictures_uploaded,
-                                    self);
-      /* Load the pictures! */
-      frogr_picture_uploader_upload (fpuploader);
-    }
+  FrogrMainWindowClass *klass = FROGR_MAIN_WINDOW_GET_CLASS (self);
+  return klass->remove_pictures_from_ui (self, pictures);
 }
 
 /* Event handlers */
@@ -280,25 +89,13 @@ static void
 _on_picture_loaded (FrogrMainWindow *self, FrogrPicture *picture)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  GdkPixbuf *pixbuf;
-  GtkTreeIter iter;
-  const gchar *filepath;
 
-  /* Add to model */
   g_object_ref (picture);
+
+  /* Add to model and UI*/
   frogr_main_window_model_add_picture (priv->model, picture);
+  _add_picture_to_ui (self, picture);
 
-  /* Add to GtkIconView */
-  filepath = frogr_picture_get_filepath (picture);
-  pixbuf = frogr_picture_get_pixbuf (picture);
-
-  gtk_list_store_append (GTK_LIST_STORE (priv->tree_model), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (priv->tree_model), &iter,
-                      FILEPATH_COL, filepath,
-                      PIXBUF_COL, pixbuf,
-                      FPICTURE_COL, picture,
-                      -1);
-  /* Free memory */
   g_object_unref (picture);
 }
 
@@ -362,334 +159,6 @@ _on_pictures_uploaded (FrogrMainWindow *self,
   g_strfreev (str_array);
 }
 
-static void
-_populate_menu_bar (FrogrMainWindow *self)
-{
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  GtkWidget *file_menu_item;
-  GtkWidget *file_menu;
-  GtkWidget *quit_menu_item;
-  GtkWidget *help_menu_item;
-  GtkWidget *help_menu;
-  GtkWidget *about_menu_item;
-
-  /* File menu */
-  file_menu_item = gtk_menu_item_new_with_mnemonic (_("_File"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), file_menu_item);
-
-  file_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item), file_menu);
-
-  quit_menu_item = gtk_menu_item_new_with_mnemonic (_("_Quit"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (file_menu), quit_menu_item);
-
-  /* Help menu */
-  help_menu_item = gtk_menu_item_new_with_mnemonic (_("_Help"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), help_menu_item);
-
-  help_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (help_menu_item), help_menu);
-
-  about_menu_item = gtk_menu_item_new_with_mnemonic (_("_About"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (help_menu), about_menu_item);
-
-  /* Connect signals */
-  g_signal_connect (G_OBJECT (quit_menu_item), "activate",
-                    G_CALLBACK (_on_quit_menu_item_activate),
-                    self);
-
-  g_signal_connect (G_OBJECT (about_menu_item), "activate",
-                    G_CALLBACK (_on_about_menu_item_activate),
-                    self);
-}
-
-static GtkWidget *
-_ctxt_menu_create (FrogrMainWindow *self)
-{
-  GtkWidget *ctxt_menu = NULL;
-  GtkWidget *add_tags_item;
-  GtkWidget *edit_details_item;
-  GtkWidget *remove_item;
-
-  /* Create ctxt_menu and its items */
-  ctxt_menu = gtk_menu_new ();
-  add_tags_item = gtk_menu_item_new_with_label (_("Add tags..."));
-  edit_details_item = gtk_menu_item_new_with_label (_("Edit details..."));
-  remove_item = gtk_menu_item_new_with_label (_("Remove"));
-
-  /* Add items to ctxt_menu */
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), add_tags_item);
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), edit_details_item);
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), remove_item);
-
-  /* Connect signals */
-  g_signal_connect(add_tags_item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_add_tags_item_activated),
-                   self);
-
-  g_signal_connect(edit_details_item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_edit_details_item_activated),
-                   self);
-
-  g_signal_connect(remove_item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_remove_item_activated),
-                   self);
-
-  /* Make menu and its widgets visible */
-  gtk_widget_show_all (ctxt_menu);
-
-  return ctxt_menu;
-}
-
-static void
-_ctxt_menu_add_tags_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-
-  /* Just add tags to them */
-  _add_tags_to_pictures (self);
-}
-
-static void
-_ctxt_menu_edit_details_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-
-  /* Just edit the selected items */
-  _edit_selected_pictures (self);
-}
-
-static void
-_ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-  _remove_selected_pictures (self);
-}
-
-static void
-_initialize_drag_n_drop (FrogrMainWindow *self)
-{
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-
-  gtk_drag_dest_set ( priv->icon_view, GTK_DEST_DEFAULT_ALL,
-                      NULL, 0, GDK_ACTION_COPY );
-  gtk_drag_dest_add_uri_targets (priv->icon_view);
-
-  g_signal_connect(G_OBJECT(priv->icon_view), "drag-data-received",
-                   G_CALLBACK(_on_icon_view_drag_data_received),
-                   self);
-}
-
-static void
-_on_icon_view_drag_data_received (GtkWidget *widget,
-                                  GdkDragContext *context,
-                                  gint x, gint y,
-                                  GtkSelectionData *selection_data,
-                                  guint info, guint time,
-                                  gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-  GdkAtom target;
-  GSList *filepaths_list = NULL;
-  const guchar *files_string;
-  gchar **fileuris_array = NULL;
-  gint i;
-
-#if GTK_CHECK_VERSION (2,14,0)
-  target = gtk_selection_data_get_target (selection_data);
-#else
-  target = selection_data->target;
-#endif
-
-  if (!gtk_targets_include_uri (&target, 1))
-    return;
-
-  /* Get GSList with the list of files */
-#if GTK_CHECK_VERSION (2,14,0)
-  files_string = gtk_selection_data_get_data (selection_data);
-#else
-  files_string = selection_data->data;
-#endif
-
-  fileuris_array = g_strsplit ((const gchar*)files_string, "\r\n", -1);
-  for (i = 0;  fileuris_array[i]; i++)
-    {
-      gchar *filepath = g_filename_from_uri (fileuris_array[i], NULL, NULL);
-      if (filepath && !g_str_equal (g_strstrip (filepath), ""))
-        filepaths_list = g_slist_append (filepaths_list, filepath);
-    }
-
-  /* Load pictures */
-  if (filepaths_list != NULL)
-    {
-      FrogrPictureLoader *fploader;
-      fploader =
-        frogr_picture_loader_new (filepaths_list,
-                                  (GFunc)_on_picture_loaded,
-                                  (GFunc)_on_pictures_loaded,
-                                  self);
-
-      /* Load the pictures! */
-      frogr_picture_loader_load (fploader);
-    }
-
-  /* Finish drag and drop */
-  gtk_drag_finish (context, TRUE, FALSE, time);
-
-  /* Free */
-  g_strfreev (fileuris_array);
-  g_slist_free (filepaths_list);
-}
-
-void
-_on_add_button_clicked (GtkButton *widget,
-                        gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-  GtkWidget *dialog;
-  GtkFileFilter *filter;
-
-  dialog = gtk_file_chooser_dialog_new (_("Select a picture"),
-                                        GTK_WINDOW (self),
-                                        GTK_FILE_CHOOSER_ACTION_OPEN,
-                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-                                        NULL);
-
-  /* Set images filter */
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_add_mime_type (filter, "image/jpg");
-  gtk_file_filter_add_mime_type (filter, "image/jpeg");
-  gtk_file_filter_add_mime_type (filter, "image/png");
-  gtk_file_filter_add_mime_type (filter, "image/bmp");
-  gtk_file_filter_add_mime_type (filter, "image/gif");
-  gtk_file_filter_set_name (filter, "images");
-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
-  gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
-
-  if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
-    {
-      GSList *filepaths;
-
-      /* Add selected pictures to icon view area */
-      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
-      if (filepaths != NULL)
-        {
-          FrogrPictureLoader *fploader;
-          fploader =
-            frogr_picture_loader_new (filepaths,
-                                      (GFunc)_on_picture_loaded,
-                                      (GFunc)_on_pictures_loaded,
-                                      self);
-          /* Load the pictures! */
-          frogr_picture_loader_load (fploader);
-        }
-
-      /* Free memory */
-      g_slist_free (filepaths);
-    }
-
-  /* Close dialog */
-  gtk_widget_destroy (dialog);
-}
-
-void
-_on_remove_button_clicked (GtkButton *widget,
-                           gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-  _remove_selected_pictures (self);
-}
-
-void
-_on_upload_button_clicked (GtkButton *widget,
-                           gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-  _upload_pictures (self);
-}
-
-gboolean
-_on_icon_view_key_press_event (GtkWidget *widget,
-                               GdkEventKey *event,
-                               gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-
-  /* Remove selected pictures if pressed Supr */
-  if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
-    _remove_selected_pictures (self);
-
-  return FALSE;
-}
-
-gboolean
-_on_icon_view_button_press_event (GtkWidget *widget,
-                                  GdkEventButton *event,
-                                  gpointer data)
-{
-  FrogrMainWindow *self = FROGR_MAIN_WINDOW (data);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (data);
-  GtkTreePath *path;
-
-  /* Check if we clicked on top of an item */
-  if (gtk_icon_view_get_item_at_pos (GTK_ICON_VIEW (priv->icon_view),
-                                     event->x,
-                                     event->y,
-                                     &path,
-                                     NULL))
-    {
-      gboolean path_selected =
-        gtk_icon_view_path_is_selected (GTK_ICON_VIEW (priv->icon_view), path);
-
-      /* Check whether it's needed to keep this item as the only selection */
-      if (((event->button == 1) && path_selected)
-          || ((event->button == 3) && !path_selected))
-        {
-          if (!(event->state & GDK_SHIFT_MASK)
-              && !(event->state & GDK_CONTROL_MASK))
-            {
-              /* Deselect all items if not pressing Ctrl or shift */
-              gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
-            }
-
-          /* Now select the item */
-          gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
-
-        }
-
-      /* Following actions are only allowed in IDLE state */
-      if (priv->state == FROGR_STATE_IDLE)
-        {
-          /* Perform the right action: edit picture or show ctxt menu */
-          if ((event->button == 1)                   /* left button */
-              && (event->type == GDK_2BUTTON_PRESS ) /* doubleclick */
-              && !(event->state & GDK_SHIFT_MASK)    /*  not shift  */
-              && !(event->state & GDK_CONTROL_MASK)) /*  not Ctrl   */
-            {
-              /* edit selected item */
-              _edit_selected_pictures (self);
-            }
-          else if ((event->button == 3)                  /* right button */
-                   && (event->type == GDK_BUTTON_PRESS)) /* single click */
-            {
-              /* Show contextual menu */
-              gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
-                              NULL, NULL, NULL, NULL,
-                              event->button,
-                              gtk_get_current_event_time ());
-            }
-        }
-      /* Free */
-      gtk_tree_path_free (path);
-    }
-
-  return FALSE;
-}
-
 gboolean
 _on_main_window_delete_event (GtkWidget *widget,
                               GdkEvent *event,
@@ -700,25 +169,6 @@ _on_main_window_delete_event (GtkWidget *widget,
   return TRUE;
 }
 
-void
-_on_quit_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainWindowPrivate *priv = \
-    FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-
-  frogr_controller_quit_app (priv->controller);
-}
-
-void
-_on_about_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainWindowPrivate *priv = \
-    FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-
-  /* Run the about dialog */
-  frogr_controller_show_about_dialog (priv->controller);
-}
-
 static void
 _frogr_main_window_finalize (GObject *object)
 {
@@ -727,8 +177,6 @@ _frogr_main_window_finalize (GObject *object)
   /* Free memory */
   g_object_unref (priv->model);
   g_object_unref (priv->controller);
-  g_object_unref (priv->tree_model);
-  gtk_widget_destroy (priv->ctxt_menu);
 
   G_OBJECT_CLASS(frogr_main_window_parent_class)->finalize (object);
 }
@@ -739,6 +187,14 @@ frogr_main_window_class_init (FrogrMainWindowClass *klass)
   GObjectClass *obj_class = (GObjectClass *)klass;
 
   obj_class->finalize = _frogr_main_window_finalize;
+
+  klass->update_ui = NULL;
+  klass->get_selected_pictures = NULL;
+  klass->add_picture_to_ui = NULL;
+  klass->remove_pictures_from_ui = NULL;
+  klass->set_status_text = NULL;
+  klass->set_progress = NULL;
+
   g_type_class_add_private (obj_class, sizeof (FrogrMainWindowPrivate));
 }
 
@@ -746,15 +202,6 @@ static void
 frogr_main_window_init (FrogrMainWindow *self)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  GtkBuilder *builder;
-  GtkWidget *vbox;
-  GtkWidget *menu_bar;
-  GtkWidget *add_button;
-  GtkWidget *remove_button;
-  GtkWidget *upload_button;
-  GtkWidget *icon_view;
-  GtkWidget *status_bar;
-  GtkWidget *progress_bar;
   GList *icons;
 
   /* Set initial state */
@@ -762,59 +209,6 @@ frogr_main_window_init (FrogrMainWindow *self)
 
   /* Save a reference to the controller */
   priv->controller = frogr_controller_get_instance ();
-
-  /* Get widgets from GtkBuilder */
-  builder = gtk_builder_new ();
-  gtk_builder_add_from_file (builder, GTKBUILDER_FILE, NULL);
-
-  vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
-  gtk_widget_reparent (vbox, GTK_WIDGET (self));
-
-  menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
-  priv->menu_bar = menu_bar;
-
-  icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
-  priv->icon_view = icon_view;
-
-  status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
-  priv->status_bar = status_bar;
-
-  add_button = GTK_WIDGET (gtk_builder_get_object (builder, "add_button"));
-  priv->add_button = add_button;
-
-  remove_button = GTK_WIDGET (gtk_builder_get_object (builder, "remove_button"));
-  priv->remove_button = remove_button;
-
-  upload_button = GTK_WIDGET (gtk_builder_get_object (builder, "upload_button"));
-  priv->upload_button = upload_button;
-
-  /* initialize extra widgets */
-
-  /* populate menubar with items and submenus */
-  _populate_menu_bar (self);
-
-  /* create contextual menus for right-clicks */
-  priv->ctxt_menu = _ctxt_menu_create (self);
-
-  /* Initialize drag'n'drop support */
-  _initialize_drag_n_drop (self);
-
-  /* Create and add progress bar to the statusbar */
-  progress_bar = gtk_progress_bar_new ();
-  gtk_box_pack_start (GTK_BOX (status_bar), progress_bar, FALSE, FALSE, 6);
-  priv->progress_bar = progress_bar;
-
-  /* Initialize model */
-  priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
-                                                         G_TYPE_STRING,
-                                                         GDK_TYPE_PIXBUF,
-                                                         G_TYPE_POINTER));
-  gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), priv->tree_model);
-  gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), PIXBUF_COL);
-  gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view),
-                                    GTK_SELECTION_MULTIPLE);
-  gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
-  gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), ITEM_WIDTH);
 
   /* Init model */
   priv->model = frogr_main_window_model_new ();
@@ -842,15 +236,6 @@ frogr_main_window_init (FrogrMainWindow *self)
   g_list_foreach (icons, (GFunc) g_object_unref, NULL);
   g_list_free (icons);
 
-  gtk_window_set_default_size (GTK_WINDOW (self),
-                               MINIMUM_WINDOW_WIDTH,
-                               MINIMUM_WINDOW_HEIGHT);
-
-  /* Init status bar */
-  priv->sb_context_id =
-    gtk_statusbar_get_context_id (GTK_STATUSBAR (priv->status_bar),
-                                  "Status bar messages");
-
   /* Connect signals */
   g_signal_connect (G_OBJECT (self), "destroy",
                     G_CALLBACK (gtk_main_quit),
@@ -860,18 +245,103 @@ frogr_main_window_init (FrogrMainWindow *self)
                     G_CALLBACK (_on_main_window_delete_event),
                     self);
 
-  gtk_builder_connect_signals (builder, self);
-  g_object_unref (G_OBJECT (builder));
+  /* Show authorization dialog if needed */
+  if (!frogr_controller_is_authorized (priv->controller))
+    frogr_controller_show_auth_dialog (priv->controller);
+}
 
-  /* Show the UI, but hiding some widgets */
-  gtk_widget_show_all (GTK_WIDGET(self));
+
+/* Protected API (from frog-main-window-private.h) */
+
+void
+_frogr_main_window_add_tags_to_pictures (FrogrMainWindow *self)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+  GSList *pictures;
+
+  /* Get selected pictures */
+  pictures = _get_selected_pictures (self);
+
+  /* Call the controller to add tags to them */
+  frogr_controller_show_add_tags_dialog (priv->controller, pictures);
+}
+
+void
+_frogr_main_window_edit_selected_pictures (FrogrMainWindow *self)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+  GSList *pictures = NULL;
+
+  /* Get the selected pictures */
+  pictures = _get_selected_pictures (self);
+
+  /* Call the controller to edit them */
+  frogr_controller_show_details_dialog (priv->controller, pictures);
+}
+
+
+void
+_frogr_main_window_remove_selected_pictures (FrogrMainWindow *self)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+  GSList *selected_pictures;
+  GSList *item;
+
+  /* Remove from model */
+  selected_pictures = _get_selected_pictures (self);
+  for (item = selected_pictures; item; item = g_slist_next (item))
+    {
+      FrogrPicture *picture = FROGR_PICTURE (item->data);
+      frogr_main_window_model_remove_picture (priv->model, picture);
+    }
+
+  /* Remove from UI */
+  _remove_pictures_from_ui (self, selected_pictures);
 
   /* Update UI */
   _update_ui (self);
 
-  /* Show authorization dialog if needed */
+  /* Free */
+  g_slist_foreach (selected_pictures, (GFunc)g_object_unref, NULL);
+  g_slist_free (selected_pictures);
+}
+
+void
+_frogr_main_window_load_pictures (FrogrMainWindow *self, GSList *filepaths)
+{
+  FrogrPictureLoader *fploader;
+  fploader =
+    frogr_picture_loader_new (filepaths,
+                              (GFunc)_on_picture_loaded,
+                              (GFunc)_on_pictures_loaded,
+                              self);
+  /* Load the pictures! */
+  frogr_picture_loader_load (fploader);
+}
+
+void
+_frogr_main_window_upload_pictures (FrogrMainWindow *self)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+
+  /* Upload pictures */
   if (!frogr_controller_is_authorized (priv->controller))
-    frogr_controller_show_auth_dialog (priv->controller);
+    {
+      /* FIXME: Improve the way the user gets asked for re-athorize
+         frogr in Flick, so it does not look a bit confusing */
+      frogr_controller_show_auth_dialog (priv->controller);
+    }
+  else if (frogr_main_window_model_n_pictures (priv->model) > 0)
+    {
+      GSList *pictures = frogr_main_window_model_get_pictures (priv->model);
+      FrogrPictureUploader *fpuploader =
+        frogr_picture_uploader_new (pictures,
+                                    NULL,
+                                    (GFunc)_on_pictures_uploaded,
+                                    self);
+      /* Load the pictures! */
+      frogr_picture_uploader_upload (fpuploader);
+    }
 }
 
 
@@ -887,24 +357,25 @@ frogr_main_window_new (void)
 }
 
 void
+frogr_main_window_set_state (FrogrMainWindow *self,
+                             FrogrMainWindowState state)
+{
+  g_return_if_fail(FROGR_IS_MAIN_WINDOW (self));
+
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+  priv->state = state;
+  _update_ui (self);
+}
+
+void
 frogr_main_window_set_status_text (FrogrMainWindow *self,
                                    const gchar *text)
 {
   g_return_if_fail(FROGR_IS_MAIN_WINDOW (self));
 
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+  FrogrMainWindowClass *klass = FROGR_MAIN_WINDOW_GET_CLASS (self);
+  klass->set_status_text (self, text);
 
-  /* Pop old message if present */
-  gtk_statusbar_pop (GTK_STATUSBAR (priv->status_bar),
-                     priv->sb_context_id);
-
-  if (text != NULL)
-    {
-      /* Push new message */
-      gtk_statusbar_push (GTK_STATUSBAR (priv->status_bar),
-                          priv->sb_context_id,
-                          text);
-    }
 }
 
 void
@@ -914,34 +385,6 @@ frogr_main_window_set_progress (FrogrMainWindow *self,
 {
   g_return_if_fail(FROGR_IS_MAIN_WINDOW (self));
 
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-
-  /* Show the widget and set fraction */
-  gtk_widget_show (GTK_WIDGET (priv->progress_bar));
-  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar),
-                                 fraction);
-
-  /* Set superimposed text, if specified */
-  if (text != NULL)
-    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
-}
-
-FrogrMainWindowModel *
-frogr_main_window_get_model (FrogrMainWindow *self)
-{
-  g_return_val_if_fail(FROGR_IS_MAIN_WINDOW (self), NULL);
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  return priv->model;
-}
-
-void
-frogr_main_window_set_state (FrogrMainWindow *self,
-                             FrogrMainWindowState state)
-{
-  g_return_if_fail(FROGR_IS_MAIN_WINDOW (self));
-
-  /* Update state and UI */
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  priv->state = state;
-  _update_ui (self);
+  FrogrMainWindowClass *klass = FROGR_MAIN_WINDOW_GET_CLASS (self);
+  klass->set_progress (self, fraction, text);
 }

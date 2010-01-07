@@ -50,6 +50,7 @@ frogr_SOURCES = \
 	frogr-picture-uploader.h \
 	frogr-main-window.c \
 	frogr-main-window.h \
+	frogr-main-window-private.h \
 	frogr-main-window-model.c \
 	frogr-main-window-model.h \
 	frogr-picture.c \
