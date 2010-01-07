@@ -38,6 +38,8 @@ frogr_SOURCES = \
 	frogr-controller.c \
 	frogr-controller.h \
 	frogr-controller-private.h \
+	frogr-controller-gtk.c \
+	frogr-controller-gtk.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
 	frogr-facade.c \

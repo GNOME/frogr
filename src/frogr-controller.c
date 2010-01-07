@@ -24,18 +24,11 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include "frogr-facade.h"
-#include "frogr-main-window-model.h"
-#include "frogr-about-dialog.h"
-#include "frogr-add-tags-dialog.h"
-#include "frogr-auth-dialog.h"
-#include "frogr-details-dialog.h"
 #include "frogr-controller-private.h"
+#include "frogr-controller-gtk.h"
 #include "frogr-controller.h"
 
-G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
-
-static FrogrController *_instance = NULL;
-
+G_DEFINE_ABSTRACT_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
 
 /* Private API */
 
@@ -47,10 +40,19 @@ typedef struct {
 
 /* Prototypes */
 
+static FrogrMainWindow *_create_main_window (FrogrController *self);
+
 static void _upload_picture_cb (FrogrController *self,
                                 upload_picture_st *up_st);
 
 /* Private functions */
+
+static FrogrMainWindow *
+_create_main_window (FrogrController *self)
+{
+  FrogrControllerClass *klass = FROGR_CONTROLLER_GET_CLASS (self);
+  return klass->create_main_window (self);
+}
 
 static void
 _upload_picture_cb (FrogrController *self,
@@ -70,27 +72,6 @@ _upload_picture_cb (FrogrController *self,
   g_object_unref (picture);
 }
 
-static GObject *
-_frogr_controller_constructor (GType type,
-                               guint n_construct_properties,
-                               GObjectConstructParam *construct_properties)
-{
-  GObject *object;
-
-  if (!_instance)
-    {
-      object =
-        G_OBJECT_CLASS (frogr_controller_parent_class)->constructor (type,
-                                                                     n_construct_properties,
-                                                                     construct_properties);
-      _instance = FROGR_CONTROLLER (object);
-    }
-  else
-    object = G_OBJECT (g_object_ref (G_OBJECT (_instance)));
-
-  return object;
-}
-
 static void
 _frogr_controller_finalize (GObject* object)
 {
@@ -106,8 +87,12 @@ frogr_controller_class_init (FrogrControllerClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 
-  obj_class->constructor = _frogr_controller_constructor;
   obj_class->finalize = _frogr_controller_finalize;
+
+  klass->create_main_window = NULL;
+  klass->show_auth_dialog = NULL;
+  klass->show_details_dialog = NULL;
+  klass->show_add_tags_dialog = NULL;
 
   g_type_class_add_private (obj_class, sizeof (FrogrControllerPrivate));
 }
@@ -129,7 +114,8 @@ frogr_controller_init (FrogrController *self)
 FrogrController *
 frogr_controller_get_instance (void)
 {
-  return FROGR_CONTROLLER (g_object_new (FROGR_TYPE_CONTROLLER, NULL));
+  /* TODO: Actually choose the right controller to return */
+  return FROGR_CONTROLLER (frogr_controller_gtk_get_instance());
 }
 
 FrogrMainWindow *
@@ -161,7 +147,7 @@ frogr_controller_run_app (FrogrController *self)
   priv->facade = frogr_facade_new ();
 
   /* Create UI window */
-  priv->mainwin = frogr_main_window_new ();
+  priv->mainwin = _create_main_window (self);
   g_object_add_weak_pointer (G_OBJECT (priv->mainwin),
                              (gpointer) & priv-> mainwin);
 
@@ -202,8 +188,7 @@ frogr_controller_quit_app(FrogrController *self)
 void
 frogr_controller_show_about_dialog (FrogrController *self)
 {
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Run the about dialog */
   frogr_about_dialog_show (GTK_WINDOW (priv->mainwin));
@@ -212,39 +197,24 @@ frogr_controller_show_about_dialog (FrogrController *self)
 void
 frogr_controller_show_auth_dialog (FrogrController *self)
 {
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
-  FrogrAuthDialog *dialog;
-
-  /* Run the about dialog */
-  dialog = frogr_auth_dialog_new (GTK_WINDOW (priv->mainwin));
-  frogr_auth_dialog_show (dialog);
+  FrogrControllerClass *klass = FROGR_CONTROLLER_GET_CLASS (self);
+  klass->show_auth_dialog (self);
 }
 
 void
 frogr_controller_show_details_dialog (FrogrController *self,
                                       GSList *pictures)
 {
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
-  FrogrDetailsDialog *dialog;
-
-  /* Run the details dialog */
-  dialog = frogr_details_dialog_new (GTK_WINDOW (priv->mainwin), pictures);
-  frogr_details_dialog_show (dialog);
+  FrogrControllerClass *klass = FROGR_CONTROLLER_GET_CLASS (self);
+  klass->show_details_dialog (self, pictures);
 }
 
 void
 frogr_controller_show_add_tags_dialog (FrogrController *self,
                                        GSList *pictures)
 {
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
-  FrogrAddTagsDialog *dialog;
-
-  /* Run the details dialog */
-  dialog = frogr_add_tags_dialog_new (GTK_WINDOW (priv->mainwin), pictures);
-  frogr_add_tags_dialog_show (dialog);
+  FrogrControllerClass *klass = FROGR_CONTROLLER_GET_CLASS (self);
+  klass->show_add_tags_dialog (self, pictures);
 }
 
 void

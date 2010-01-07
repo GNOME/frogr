@@ -43,6 +43,11 @@ typedef struct _FrogrControllerClass FrogrControllerClass;
 struct _FrogrControllerClass
 {
   GObjectClass parent_class;
+
+  FrogrMainWindow* (*create_main_window) (FrogrController *self);
+  void (*show_auth_dialog) (FrogrController *self);
+  void (*show_details_dialog) (FrogrController *self, GSList *fpictures);
+  void (*show_add_tags_dialog) (FrogrController *self, GSList *fpictures);
 };
 
 struct _FrogrController
