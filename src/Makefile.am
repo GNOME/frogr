@@ -51,6 +51,8 @@ frogr_SOURCES = \
 	frogr-main-window.c \
 	frogr-main-window.h \
 	frogr-main-window-private.h \
+	frogr-main-window-gtk.c \
+	frogr-main-window-gtk.h \
 	frogr-main-window-model.c \
 	frogr-main-window-model.h \
 	frogr-picture.c \
