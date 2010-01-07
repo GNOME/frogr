@@ -188,6 +188,8 @@ frogr_controller_quit_app(FrogrController *self)
 void
 frogr_controller_show_about_dialog (FrogrController *self)
 {
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Run the about dialog */
@@ -197,6 +199,8 @@ frogr_controller_show_about_dialog (FrogrController *self)
 void
 frogr_controller_show_auth_dialog (FrogrController *self)
 {
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
   FrogrControllerClass *klass = FROGR_CONTROLLER_GET_CLASS (self);
   klass->show_auth_dialog (self);
 }
@@ -205,6 +209,8 @@ void
 frogr_controller_show_details_dialog (FrogrController *self,
                                       GSList *pictures)
 {
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
   FrogrControllerClass *klass = FROGR_CONTROLLER_GET_CLASS (self);
   klass->show_details_dialog (self, pictures);
 }
@@ -213,6 +219,8 @@ void
 frogr_controller_show_add_tags_dialog (FrogrController *self,
                                        GSList *pictures)
 {
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
   FrogrControllerClass *klass = FROGR_CONTROLLER_GET_CLASS (self);
   klass->show_add_tags_dialog (self, pictures);
 }
