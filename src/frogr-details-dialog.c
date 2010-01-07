@@ -477,7 +477,7 @@ frogr_details_dialog_class_init (FrogrDetailsDialogClass *klass)
   GObjectClass *obj_class = (GObjectClass *)klass;
   GParamSpec *pspec;
 
-  /* GtkObject signals */
+  /* GObject signals */
   obj_class->set_property = _frogr_details_dialog_set_property;
   obj_class->get_property = _frogr_details_dialog_get_property;
   obj_class->finalize = _frogr_details_dialog_finalize;

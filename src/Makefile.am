@@ -31,6 +31,8 @@ frogr_LDFLAGS = -export-dynamic
 frogr_SOURCES = \
 	frogr-about-dialog.c \
 	frogr-about-dialog.h \
+	frogr-add-tags-dialog.c \
+	frogr-add-tags-dialog.h \
 	frogr-auth-dialog.c \
 	frogr-auth-dialog.h \
 	frogr-controller.c \

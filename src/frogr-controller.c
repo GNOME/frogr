@@ -25,8 +25,9 @@
 #include <gtk/gtk.h>
 #include "frogr-facade.h"
 #include "frogr-main-window-model.h"
-#include "frogr-auth-dialog.h"
 #include "frogr-about-dialog.h"
+#include "frogr-add-tags-dialog.h"
+#include "frogr-auth-dialog.h"
 #include "frogr-details-dialog.h"
 #include "frogr-controller.h"
 
@@ -252,68 +253,11 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
 {
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrAddTagsDialog *dialog;
 
-  GtkWidget *dialog;
-  GtkWidget *main_vbox;
-  GtkWidget *entry;
-  gint response;
-
-  /* Build the dialog */
-  dialog = gtk_dialog_new_with_buttons (_("Add tags"),
-                                        GTK_WINDOW (priv->mainwin),
-                                        GTK_DIALOG_MODAL,
-                                        GTK_STOCK_OK,
-                                        GTK_RESPONSE_OK,
-                                        GTK_STOCK_CANCEL,
-                                        GTK_RESPONSE_CANCEL,
-                                        NULL);
-#if GTK_CHECK_VERSION (2,14,0)
-  main_vbox = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-  main_vbox = GTK_DIALOG (dialog)->vbox;
-#endif
-
-  entry = gtk_entry_new ();
-  gtk_box_pack_start (GTK_BOX (main_vbox), entry, TRUE, FALSE, 6);
-  gtk_widget_set_size_request (dialog, 200, -1);
-
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET (dialog));
-  response = gtk_dialog_run (GTK_DIALOG (dialog));
-
-  if (response == GTK_RESPONSE_OK)
-    {
-      /* Update pictures data */
-      gchar *tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
-      tags = g_strstrip (tags);
-
-      /* Check if there's something to add */
-      if (tags && !g_str_equal (tags, ""))
-        {
-          FrogrPicture *picture;
-          GSList *item;
-          guint n_pictures;
-
-          g_debug ("Adding tags to picture(s): %s\n", tags);
-
-          /* Iterate over the rest of elements */
-          n_pictures = g_slist_length (pictures);
-          for (item = pictures; item; item = g_slist_next (item))
-            {
-              picture = FROGR_PICTURE (item->data);
-              frogr_picture_add_tags (picture, tags);
-            }
-        }
-
-      /* Free */
-      g_free (tags);
-    }
-
-  /* Free */
-  g_slist_foreach (pictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (pictures);
-
-  gtk_widget_destroy (dialog);
+  /* Run the details dialog */
+  dialog = frogr_add_tags_dialog_new (GTK_WINDOW (priv->mainwin), pictures);
+  frogr_add_tags_dialog_show (dialog);
 }
 
 void
