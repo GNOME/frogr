@@ -37,6 +37,7 @@ frogr_SOURCES = \
 	frogr-auth-dialog.h \
 	frogr-controller.c \
 	frogr-controller.h \
+	frogr-controller-private.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
 	frogr-facade.c \

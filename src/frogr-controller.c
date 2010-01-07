@@ -29,23 +29,10 @@
 #include "frogr-add-tags-dialog.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-details-dialog.h"
+#include "frogr-controller-private.h"
 #include "frogr-controller.h"
 
 G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
-
-#define FROGR_CONTROLLER_GET_PRIVATE(object)                    \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_CONTROLLER,          \
-                                FrogrControllerPrivate))
-
-/* Private struct */
-typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
-struct _FrogrControllerPrivate
-{
-  FrogrMainWindow *mainwin;
-  FrogrFacade *facade;
-  gboolean app_running;
-};
 
 static FrogrController *_instance = NULL;
 
