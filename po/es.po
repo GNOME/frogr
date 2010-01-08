@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.2~unreleased\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-26 14:27+0200\n"
+"POT-Creation-Date: 2010-01-08 09:39+0100\n"
 "PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Alejandro Pinheiro <apinheiro@igalia.com>\n"
 "Language-Team: English\n"
@@ -16,42 +16,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. Build the dialog
-#: ../src/frogr-controller.c:262
-msgid "Add tags"
-msgstr "Añadir tags"
-
 #. File menu
-#: ../src/frogr-main-view.c:377
+#: ../src/frogr-main-view-gtk.c:292
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../src/frogr-main-view.c:383
+#: ../src/frogr-main-view-gtk.c:298
 msgid "_Quit"
 msgstr "_Salir"
 
 #. Help menu
-#: ../src/frogr-main-view.c:387
+#: ../src/frogr-main-view-gtk.c:302
 msgid "_Help"
 msgstr "_Ayuda"
 
-#: ../src/frogr-main-view.c:393
+#: ../src/frogr-main-view-gtk.c:308
 msgid "_About"
 msgstr "_Acerca de"
 
-#: ../src/frogr-main-view.c:416
+#: ../src/frogr-main-view-gtk.c:331
 msgid "Add tags..."
 msgstr "Añadir tags"
 
-#: ../src/frogr-main-view.c:417
+#: ../src/frogr-main-view-gtk.c:332
 msgid "Edit details..."
 msgstr "Editar detalles"
 
-#: ../src/frogr-main-view.c:418
+#: ../src/frogr-main-view-gtk.c:333
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ../src/frogr-main-view.c:544
+#: ../src/frogr-main-view-gtk.c:459
 msgid "Select a picture"
 msgstr "Seleccionar una imagen"
 
@@ -79,7 +74,7 @@ msgstr ""
 msgid "Continue"
 msgstr "Continuar"
 
-#: ../src/frogr-auth-dialog.c:107
+#: ../src/frogr-auth-dialog.c:107 ../src/frogr-add-tags-dialog.c:154
 msgid "Authorize Frogr"
 msgstr "Registrar Frogr"
 
