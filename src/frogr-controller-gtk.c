@@ -41,7 +41,7 @@ static FrogrControllerGtk *_instance = NULL;
 static FrogrMainView*
 _create_main_view (FrogrController *self)
 {
- return FROGR_MAIN_VIEW (frogr_main_view_gtk_new ());
+  return FROGR_MAIN_VIEW (frogr_main_view_gtk_new ());
 }
 
 static void

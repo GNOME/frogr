@@ -84,8 +84,8 @@ _update_status_and_progress (FrogrPictureUploader *self)
 
   frogr_main_view_set_status_text (priv->mainview, status_text);
   frogr_main_view_set_progress (priv->mainview,
-                                  (double) priv->index / priv->n_pictures,
-                                  progress_bar_text);
+                                (double) priv->index / priv->n_pictures,
+                                progress_bar_text);
   /* Free */
   g_free (status_text);
   g_free (progress_bar_text);
