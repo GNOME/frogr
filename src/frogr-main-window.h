@@ -40,7 +40,7 @@ typedef struct _FrogrMainWindowClass   FrogrMainWindowClass;
 
 struct _FrogrMainWindowClass
 {
-  GtkWindowClass parent_class;
+  GObjectClass parent_class;
 
   /* Private virtual */
   void (*update_ui) (FrogrMainWindow *self);
@@ -55,7 +55,7 @@ struct _FrogrMainWindowClass
 
 struct _FrogrMainWindow
 {
-  GtkWindow parent;
+  GObject parent;
 };
 
 typedef enum {
@@ -66,7 +66,7 @@ typedef enum {
 
 GType frogr_main_window_get_type (void) G_GNUC_CONST;
 
-FrogrMainWindowModel *frogr_main_window_get_model (FrogrMainWindow *self);
+GtkWindow *frogr_main_window_get_window (FrogrMainWindow *self);
 
 void frogr_main_window_set_state (FrogrMainWindow *self,
                                   FrogrMainWindowState state);

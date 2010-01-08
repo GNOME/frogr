@@ -76,6 +76,7 @@ static void
 _frogr_controller_finalize (GObject* object)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (object);
+
   g_object_unref (priv->mainwin);
   g_object_unref (priv->facade);
 
@@ -175,7 +176,7 @@ frogr_controller_quit_app(FrogrController *self)
     {
       while (gtk_events_pending ())
         gtk_main_iteration ();
-      gtk_widget_destroy (GTK_WIDGET (priv->mainwin));
+      g_object_unref (priv->mainwin);
 
       priv->app_running = FALSE;
       return TRUE;
@@ -191,9 +192,10 @@ frogr_controller_show_about_dialog (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  GtkWindow *window = frogr_main_window_get_window (priv->mainwin);
 
   /* Run the about dialog */
-  frogr_about_dialog_show (GTK_WINDOW (priv->mainwin));
+  frogr_about_dialog_show (window);
 }
 
 void

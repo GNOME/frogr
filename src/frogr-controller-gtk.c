@@ -27,6 +27,7 @@
 #include "frogr-add-tags-dialog.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-details-dialog.h"
+#include "frogr-main-window-gtk.h"
 #include "frogr-controller.h"
 #include "frogr-controller-private.h"
 #include "frogr-controller-gtk.h"
@@ -40,7 +41,7 @@ static FrogrControllerGtk *_instance = NULL;
 static FrogrMainWindow*
 _create_main_window (FrogrController *self)
 {
-  return frogr_main_window_new ();
+  return FROGR_MAIN_WINDOW (frogr_main_window_gtk_new ());
 }
 
 static void
@@ -48,10 +49,11 @@ _show_auth_dialog (FrogrController *self)
 {
   FrogrController *controller = FROGR_CONTROLLER (self);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  GtkWindow *window = frogr_main_window_get_window (priv->mainwin);
   FrogrAuthDialog *dialog;
 
   /* Run the auth dialog */
-  dialog = frogr_auth_dialog_new (GTK_WINDOW (priv->mainwin));
+  dialog = frogr_auth_dialog_new (window);
   frogr_auth_dialog_show (dialog);
 }
 
@@ -61,10 +63,11 @@ _show_details_dialog (FrogrController *self,
 {
   FrogrController *controller = FROGR_CONTROLLER (self);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  GtkWindow *window = frogr_main_window_get_window (priv->mainwin);
   FrogrDetailsDialog *dialog;
 
   /* Run the details dialog */
-  dialog = frogr_details_dialog_new (GTK_WINDOW (priv->mainwin), pictures);
+  dialog = frogr_details_dialog_new (window, pictures);
   frogr_details_dialog_show (dialog);
 }
 
@@ -74,10 +77,11 @@ _show_add_tags_dialog (FrogrController *self,
 {
   FrogrController *controller = FROGR_CONTROLLER (self);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  GtkWindow *window = frogr_main_window_get_window (priv->mainwin);
   FrogrAddTagsDialog *dialog;
 
   /* Run the details dialog */
-  dialog = frogr_add_tags_dialog_new (GTK_WINDOW (priv->mainwin), pictures);
+  dialog = frogr_add_tags_dialog_new (window, pictures);
   frogr_add_tags_dialog_show (dialog);
 }
 

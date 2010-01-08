@@ -39,6 +39,7 @@ typedef struct _FrogrMainWindowPrivate {
   FrogrMainWindowModel *model;
   FrogrMainWindowState state;
   FrogrController *controller;
+  GtkWindow *window;
 } FrogrMainWindowPrivate;
 
 void _frogr_main_window_add_tags_to_pictures (FrogrMainWindow *self);

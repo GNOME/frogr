@@ -99,7 +99,9 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            gpointer data);
 void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
-
+gboolean _on_main_window_delete_event (GtkWidget *widget,
+                                       GdkEvent *event,
+                                       gpointer self);
 
 /* Private API */
 
@@ -450,11 +452,14 @@ _on_add_button_clicked (GtkButton *widget,
                         gpointer data)
 {
   FrogrMainWindowGtk *self = FROGR_MAIN_WINDOW_GTK (data);
+  FrogrMainWindowGtkPrivate *priv = FROGR_MAIN_WINDOW_GTK_GET_PRIVATE (self);
+  FrogrMainWindowPrivate *mw_priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+
   GtkWidget *dialog;
   GtkFileFilter *filter;
 
   dialog = gtk_file_chooser_dialog_new (_("Select a picture"),
-                                        GTK_WINDOW (self),
+                                        GTK_WINDOW (mw_priv->window),
                                         GTK_FILE_CHOOSER_ACTION_OPEN,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -597,6 +602,16 @@ _on_about_menu_item_activate (GtkWidget *widget, gpointer self)
   frogr_controller_show_about_dialog (mw_priv->controller);
 }
 
+gboolean
+_on_main_window_delete_event (GtkWidget *widget,
+                              GdkEvent *event,
+                              gpointer self)
+{
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+  frogr_controller_quit_app (priv->controller);
+  return TRUE;
+}
+
 static void
 _frogr_main_window_gtk_finalize (GObject *object)
 {
@@ -632,8 +647,9 @@ static void
 frogr_main_window_gtk_init (FrogrMainWindowGtk *self)
 {
   FrogrMainWindowGtkPrivate *priv = FROGR_MAIN_WINDOW_GTK_GET_PRIVATE (self);
+  FrogrMainWindowPrivate *mw_priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
   GtkBuilder *builder;
-  GtkWidget *vbox;
+  GtkWindow *window;
   GtkWidget *menu_bar;
   GtkWidget *add_button;
   GtkWidget *remove_button;
@@ -646,8 +662,8 @@ frogr_main_window_gtk_init (FrogrMainWindowGtk *self)
   builder = gtk_builder_new ();
   gtk_builder_add_from_file (builder, GTKBUILDER_FILE, NULL);
 
-  vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
-  gtk_widget_reparent (vbox, GTK_WIDGET (self));
+  window = GTK_WINDOW(gtk_builder_get_object (builder, "main_window"));
+  mw_priv->window = window;
 
   menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
   priv->menu_bar = menu_bar;
@@ -695,7 +711,7 @@ frogr_main_window_gtk_init (FrogrMainWindowGtk *self)
   gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
   gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), ITEM_WIDTH);
 
-  gtk_window_set_default_size (GTK_WINDOW (self),
+  gtk_window_set_default_size (GTK_WINDOW (mw_priv->window),
                                MINIMUM_WINDOW_WIDTH,
                                MINIMUM_WINDOW_HEIGHT);
 
@@ -705,11 +721,19 @@ frogr_main_window_gtk_init (FrogrMainWindowGtk *self)
                                   "Status bar messages");
 
   /* Connect signals */
+  g_signal_connect (G_OBJECT (mw_priv->window), "destroy",
+                    G_CALLBACK (gtk_main_quit),
+                    NULL);
+
+  g_signal_connect (G_OBJECT (mw_priv->window), "delete-event",
+                    G_CALLBACK (_on_main_window_delete_event),
+                    self);
+
   gtk_builder_connect_signals (builder, self);
   g_object_unref (G_OBJECT (builder));
 
   /* Show the UI, but hiding some widgets */
-  gtk_widget_show_all (GTK_WIDGET(self));
+  gtk_widget_show_all (GTK_WIDGET(mw_priv->window));
 
   /* Update UI */
   _update_ui (FROGR_MAIN_WINDOW (self));
@@ -722,7 +746,6 @@ FrogrMainWindowGtk *
 frogr_main_window_gtk_new (void)
 {
   GObject *new = g_object_new (FROGR_TYPE_MAIN_WINDOW_GTK,
-                               "type", GTK_WINDOW_TOPLEVEL,
                                NULL);
   return FROGR_MAIN_WINDOW_GTK (new);
 }

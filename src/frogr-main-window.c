@@ -22,7 +22,6 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
-#include <gdk/gdkkeysyms.h>
 #include "frogr-controller.h"
 #include "frogr-picture-loader.h"
 #include "frogr-picture-uploader.h"
@@ -32,7 +31,7 @@
 
 #define MAIN_WINDOW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
 
-G_DEFINE_ABSTRACT_TYPE (FrogrMainWindow, frogr_main_window, GTK_TYPE_WINDOW);
+G_DEFINE_ABSTRACT_TYPE (FrogrMainWindow, frogr_main_window, G_TYPE_OBJECT);
 
 /* Prototypes */
 
@@ -49,9 +48,6 @@ static void _on_pictures_loaded (FrogrMainWindow *self,
                                  FrogrPictureLoader *fploader);
 static void _on_pictures_uploaded (FrogrMainWindow *self,
                                    FrogrPictureUploader *fpuploader);
-gboolean _on_main_window_delete_event (GtkWidget *widget,
-                                       GdkEvent *event,
-                                       gpointer self);
 
 /* Private API */
 
@@ -159,16 +155,6 @@ _on_pictures_uploaded (FrogrMainWindow *self,
   g_strfreev (str_array);
 }
 
-gboolean
-_on_main_window_delete_event (GtkWidget *widget,
-                              GdkEvent *event,
-                              gpointer self)
-{
-  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
-  frogr_controller_quit_app (priv->controller);
-  return TRUE;
-}
-
 static void
 _frogr_main_window_finalize (GObject *object)
 {
@@ -177,6 +163,7 @@ _frogr_main_window_finalize (GObject *object)
   /* Free memory */
   g_object_unref (priv->model);
   g_object_unref (priv->controller);
+  gtk_widget_destroy (GTK_WIDGET (priv->window));
 
   G_OBJECT_CLASS(frogr_main_window_parent_class)->finalize (object);
 }
@@ -203,6 +190,9 @@ frogr_main_window_init (FrogrMainWindow *self)
 {
   FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
   GList *icons;
+
+  /* To be defined by the subclasses */
+  priv->window = NULL;
 
   /* Set initial state */
   priv->state = FROGR_STATE_IDLE;
@@ -235,15 +225,6 @@ frogr_main_window_init (FrogrMainWindow *self)
   gtk_window_set_default_icon_list (icons);
   g_list_foreach (icons, (GFunc) g_object_unref, NULL);
   g_list_free (icons);
-
-  /* Connect signals */
-  g_signal_connect (G_OBJECT (self), "destroy",
-                    G_CALLBACK (gtk_main_quit),
-                    NULL);
-
-  g_signal_connect (G_OBJECT (self), "delete-event",
-                    G_CALLBACK (_on_main_window_delete_event),
-                    self);
 
   /* Show authorization dialog if needed */
   if (!frogr_controller_is_authorized (priv->controller))
@@ -347,13 +328,13 @@ _frogr_main_window_upload_pictures (FrogrMainWindow *self)
 
 /* Public API */
 
-FrogrMainWindow *
-frogr_main_window_new (void)
+GtkWindow *
+frogr_main_window_get_window (FrogrMainWindow *self)
 {
-  GObject *new = g_object_new (FROGR_TYPE_MAIN_WINDOW,
-                               "type", GTK_WINDOW_TOPLEVEL,
-                               NULL);
-  return FROGR_MAIN_WINDOW (new);
+  g_return_val_if_fail(FROGR_IS_MAIN_WINDOW (self), NULL);
+
+  FrogrMainWindowPrivate *priv = FROGR_MAIN_WINDOW_GET_PRIVATE (self);
+  return priv->window;
 }
 
 void
