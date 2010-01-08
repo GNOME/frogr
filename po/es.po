@@ -22,36 +22,36 @@ msgid "Add tags"
 msgstr "Añadir tags"
 
 #. File menu
-#: ../src/frogr-main-window.c:377
+#: ../src/frogr-main-view.c:377
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../src/frogr-main-window.c:383
+#: ../src/frogr-main-view.c:383
 msgid "_Quit"
 msgstr "_Salir"
 
 #. Help menu
-#: ../src/frogr-main-window.c:387
+#: ../src/frogr-main-view.c:387
 msgid "_Help"
 msgstr "_Ayuda"
 
-#: ../src/frogr-main-window.c:393
+#: ../src/frogr-main-view.c:393
 msgid "_About"
 msgstr "_Acerca de"
 
-#: ../src/frogr-main-window.c:416
+#: ../src/frogr-main-view.c:416
 msgid "Add tags..."
 msgstr "Añadir tags"
 
-#: ../src/frogr-main-window.c:417
+#: ../src/frogr-main-view.c:417
 msgid "Edit details..."
 msgstr "Editar detalles"
 
-#: ../src/frogr-main-window.c:418
+#: ../src/frogr-main-view.c:418
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ../src/frogr-main-window.c:544
+#: ../src/frogr-main-view.c:544
 msgid "Select a picture"
 msgstr "Seleccionar una imagen"
 
@@ -119,11 +119,11 @@ msgstr "Editar detalles de la imagen"
 msgid "Uploading '%s'..."
 msgstr "Subiendo '%s'..."
 
-#: ../data/gtkbuilder/frogr-main-window.xml.h:1
+#: ../data/gtkbuilder/frogr-main-view.xml.h:1
 msgid "Upload"
 msgstr "Subir"
 
-#: ../data/gtkbuilder/frogr-main-window.xml.h:2
+#: ../data/gtkbuilder/frogr-main-view.xml.h:2
 msgid "frogr"
 msgstr "frogr"
 

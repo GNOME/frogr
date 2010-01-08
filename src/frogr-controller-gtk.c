@@ -27,7 +27,7 @@
 #include "frogr-add-tags-dialog.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-details-dialog.h"
-#include "frogr-main-window-gtk.h"
+#include "frogr-main-view-gtk.h"
 #include "frogr-controller.h"
 #include "frogr-controller-private.h"
 #include "frogr-controller-gtk.h"
@@ -38,10 +38,10 @@ G_DEFINE_TYPE (FrogrControllerGtk, frogr_controller_gtk, FROGR_TYPE_CONTROLLER);
 
 static FrogrControllerGtk *_instance = NULL;
 
-static FrogrMainWindow*
-_create_main_window (FrogrController *self)
+static FrogrMainView*
+_create_main_view (FrogrController *self)
 {
-  return FROGR_MAIN_WINDOW (frogr_main_window_gtk_new ());
+ return FROGR_MAIN_VIEW (frogr_main_view_gtk_new ());
 }
 
 static void
@@ -49,7 +49,7 @@ _show_auth_dialog (FrogrController *self)
 {
   FrogrController *controller = FROGR_CONTROLLER (self);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  GtkWindow *window = frogr_main_window_get_window (priv->mainwin);
+  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
   FrogrAuthDialog *dialog;
 
   /* Run the auth dialog */
@@ -63,7 +63,7 @@ _show_details_dialog (FrogrController *self,
 {
   FrogrController *controller = FROGR_CONTROLLER (self);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  GtkWindow *window = frogr_main_window_get_window (priv->mainwin);
+  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
   FrogrDetailsDialog *dialog;
 
   /* Run the details dialog */
@@ -77,7 +77,7 @@ _show_add_tags_dialog (FrogrController *self,
 {
   FrogrController *controller = FROGR_CONTROLLER (self);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  GtkWindow *window = frogr_main_window_get_window (priv->mainwin);
+  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
   FrogrAddTagsDialog *dialog;
 
   /* Run the details dialog */
@@ -121,7 +121,7 @@ frogr_controller_gtk_class_init (FrogrControllerGtkClass *klass)
   obj_class->constructor = _frogr_controller_gtk_constructor;
   obj_class->finalize = _frogr_controller_gtk_finalize;
 
-  controller_class->create_main_window = _create_main_window;
+  controller_class->create_main_view = _create_main_view;
   controller_class->show_auth_dialog = _show_auth_dialog;
   controller_class->show_details_dialog = _show_details_dialog;
   controller_class->show_add_tags_dialog = _show_add_tags_dialog;

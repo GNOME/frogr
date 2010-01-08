@@ -25,7 +25,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include "frogr-main-window.h"
+#include "frogr-main-view.h"
 #include "frogr-picture.h"
 
 G_BEGIN_DECLS
@@ -44,7 +44,7 @@ struct _FrogrControllerClass
 {
   GObjectClass parent_class;
 
-  FrogrMainWindow* (*create_main_window) (FrogrController *self);
+ FrogrMainView* (*create_main_view) (FrogrController *self);
   void (*show_auth_dialog) (FrogrController *self);
   void (*show_details_dialog) (FrogrController *self, GSList *fpictures);
   void (*show_add_tags_dialog) (FrogrController *self, GSList *fpictures);
@@ -58,7 +58,7 @@ struct _FrogrController
 GType frogr_controller_get_type (void) G_GNUC_CONST;
 
 FrogrController *frogr_controller_get_instance (void);
-FrogrMainWindow *frogr_controller_get_main_window (FrogrController *self);
+FrogrMainView *frogr_controller_get_main_view (FrogrController *self);
 
 gboolean frogr_controller_run_app (FrogrController *self);
 gboolean frogr_controller_quit_app (FrogrController *self);

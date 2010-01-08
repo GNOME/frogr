@@ -21,7 +21,7 @@
  */
 #include <glib/gi18n.h>
 #include "frogr-controller.h"
-#include "frogr-main-window.h"
+#include "frogr-main-view.h"
 #include "frogr-picture.h"
 #include "frogr-picture-uploader.h"
 
@@ -40,7 +40,7 @@ typedef struct _FrogrPictureUploaderPrivate FrogrPictureUploaderPrivate;
 struct _FrogrPictureUploaderPrivate
 {
   FrogrController *controller;
-  FrogrMainWindow *mainwin;
+  FrogrMainView *mainview;
   GSList *pictures;
   GSList *current;
   guint index;
@@ -82,8 +82,8 @@ _update_status_and_progress (FrogrPictureUploader *self)
       g_free (title);
     }
 
-  frogr_main_window_set_status_text (priv->mainwin, status_text);
-  frogr_main_window_set_progress (priv->mainwin,
+  frogr_main_view_set_status_text (priv->mainview, status_text);
+  frogr_main_view_set_progress (priv->mainview,
                                   (double) priv->index / priv->n_pictures,
                                   progress_bar_text);
   /* Free */
@@ -113,7 +113,7 @@ _upload_next_picture (FrogrPictureUploader *self)
       _update_status_and_progress (self);
 
       /* Set proper state */
-      frogr_main_window_set_state (priv->mainwin, FROGR_STATE_IDLE);
+      frogr_main_view_set_state (priv->mainview, FROGR_STATE_IDLE);
 
       /* Execute final callback */
       if (priv->pictures_uploaded_cb)
@@ -150,7 +150,7 @@ _frogr_picture_uploader_finalize (GObject* object)
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (object);
 
   /* Free */
-  g_object_unref (priv->mainwin);
+  g_object_unref (priv->mainview);
   g_object_unref (priv->controller);
   g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
   g_slist_free (priv->pictures);
@@ -174,7 +174,7 @@ frogr_picture_uploader_init (FrogrPictureUploader *self)
 
   /* Init private data */
   priv->controller = frogr_controller_get_instance ();
-  priv->mainwin = frogr_controller_get_main_window (priv->controller);
+  priv->mainview = frogr_controller_get_main_view (priv->controller);
 
   /* Init the rest of private data */
   priv->pictures = NULL;
@@ -234,7 +234,7 @@ frogr_picture_uploader_upload (FrogrPictureUploader *self)
     }
 
   /* Set proper state */
-  frogr_main_window_set_state (priv->mainwin, FROGR_STATE_UPLOADING);
+  frogr_main_view_set_state (priv->mainview, FROGR_STATE_UPLOADING);
 
   /* Update status and progress bars */
   _update_status_and_progress (self);

@@ -40,18 +40,18 @@ typedef struct {
 
 /* Prototypes */
 
-static FrogrMainWindow *_create_main_window (FrogrController *self);
+static FrogrMainView *_create_main_view (FrogrController *self);
 
 static void _upload_picture_cb (FrogrController *self,
                                 upload_picture_st *up_st);
 
 /* Private functions */
 
-static FrogrMainWindow *
-_create_main_window (FrogrController *self)
+static FrogrMainView *
+_create_main_view (FrogrController *self)
 {
   FrogrControllerClass *klass = FROGR_CONTROLLER_GET_CLASS (self);
-  return klass->create_main_window (self);
+  return klass->create_main_view (self);
 }
 
 static void
@@ -77,7 +77,7 @@ _frogr_controller_finalize (GObject* object)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (object);
 
-  g_object_unref (priv->mainwin);
+  g_object_unref (priv->mainview);
   g_object_unref (priv->facade);
 
   G_OBJECT_CLASS (frogr_controller_parent_class)->finalize (object);
@@ -90,7 +90,7 @@ frogr_controller_class_init (FrogrControllerClass *klass)
 
   obj_class->finalize = _frogr_controller_finalize;
 
-  klass->create_main_window = NULL;
+  klass->create_main_view = NULL;
   klass->show_auth_dialog = NULL;
   klass->show_details_dialog = NULL;
   klass->show_add_tags_dialog = NULL;
@@ -105,7 +105,7 @@ frogr_controller_init (FrogrController *self)
 
   /* Default variables */
   priv->facade = NULL;
-  priv->mainwin = NULL;
+  priv->mainview = NULL;
   priv->app_running = FALSE;
 }
 
@@ -119,15 +119,15 @@ frogr_controller_get_instance (void)
   return FROGR_CONTROLLER (frogr_controller_gtk_get_instance());
 }
 
-FrogrMainWindow *
-frogr_controller_get_main_window (FrogrController *self)
+FrogrMainView *
+frogr_controller_get_main_view (FrogrController *self)
 {
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv =
     FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  return g_object_ref (priv->mainwin);
+  return g_object_ref (priv->mainview);
 }
 
 gboolean
@@ -148,9 +148,9 @@ frogr_controller_run_app (FrogrController *self)
   priv->facade = frogr_facade_new ();
 
   /* Create UI window */
-  priv->mainwin = _create_main_window (self);
-  g_object_add_weak_pointer (G_OBJECT (priv->mainwin),
-                             (gpointer) & priv-> mainwin);
+  priv->mainview = _create_main_view (self);
+  g_object_add_weak_pointer (G_OBJECT (priv->mainview),
+                             (gpointer) & priv-> mainview);
 
   /* Update flag */
   priv->app_running = TRUE;
@@ -176,7 +176,7 @@ frogr_controller_quit_app(FrogrController *self)
     {
       while (gtk_events_pending ())
         gtk_main_iteration ();
-      g_object_unref (priv->mainwin);
+      g_object_unref (priv->mainview);
 
       priv->app_running = FALSE;
       return TRUE;
@@ -192,7 +192,7 @@ frogr_controller_show_about_dialog (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  GtkWindow *window = frogr_main_window_get_window (priv->mainwin);
+  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
 
   /* Run the about dialog */
   frogr_about_dialog_show (window);

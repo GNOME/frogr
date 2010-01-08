@@ -26,7 +26,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "frogr-controller.h"
-#include "frogr-main-window.h"
+#include "frogr-main-view.h"
 #include "frogr-picture.h"
 
 G_BEGIN_DECLS

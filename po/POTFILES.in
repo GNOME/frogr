@@ -1,10 +1,10 @@
 # List of source files containing translatable strings.
 
 src/frogr-controller.c
-src/frogr-main-window.c
+src/frogr-main-view.c
 src/frogr-auth-dialog.c
 src/frogr-about-dialog.c
 src/frogr-details-dialog.c
 src/frogr-picture-uploader.c
-[type: gettext/glade]data/gtkbuilder/frogr-main-window.xml
+[type: gettext/glade]data/gtkbuilder/frogr-main-view.xml
 [type: gettext/glade]data/gtkbuilder/frogr-details-dialog.xml

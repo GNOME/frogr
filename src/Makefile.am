@@ -48,13 +48,13 @@ frogr_SOURCES = \
 	frogr-picture-loader.h \
 	frogr-picture-uploader.c \
 	frogr-picture-uploader.h \
-	frogr-main-window.c \
-	frogr-main-window.h \
-	frogr-main-window-private.h \
-	frogr-main-window-gtk.c \
-	frogr-main-window-gtk.h \
-	frogr-main-window-model.c \
-	frogr-main-window-model.h \
+	frogr-main-view.c \
+	frogr-main-view.h \
+	frogr-main-view-private.h \
+	frogr-main-view-gtk.c \
+	frogr-main-view-gtk.h \
+	frogr-main-view-model.c \
+	frogr-main-view-model.h \
 	frogr-picture.c \
 	frogr-picture.h \
 	frogr-account.c \

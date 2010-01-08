@@ -25,7 +25,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include "frogr-main-window.h"
+#include "frogr-main-view.h"
 #include "frogr-facade.h"
 #include "frogr-controller.h"
 
@@ -40,7 +40,7 @@ typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
 
 struct _FrogrControllerPrivate
 {
-  FrogrMainWindow *mainwin;
+  FrogrMainView *mainview;
   FrogrFacade *facade;
   gboolean app_running;
 };
