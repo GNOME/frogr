@@ -151,7 +151,7 @@ FrogrAddTagsDialog *
 frogr_add_tags_dialog_new (GtkWindow *parent, GSList *pictures)
 {
   GObject *new = g_object_new (FROGR_TYPE_ADD_TAGS_DIALOG,
-                               "title", _("Authorize Frogr"),
+                               "title", _("Add tags"),
                                "modal", TRUE,
                                "pictures", pictures,
                                "transient-for", parent,
