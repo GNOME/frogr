@@ -28,8 +28,13 @@
 #include "frogr-picture.h"
 #include "frogr-picture-loader.h"
 
-#define PICTURE_WIDTH 100
-#define PICTURE_HEIGHT 100
+#ifdef MAEMO
+#   define PICTURE_WIDTH 180
+#   define PICTURE_HEIGHT 180
+#else
+#   define PICTURE_WIDTH 100
+#   define PICTURE_HEIGHT 100
+#endif
 
 #define FROGR_PICTURE_LOADER_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
