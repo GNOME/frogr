@@ -244,7 +244,8 @@ _frogr_main_view_add_tags_to_pictures (FrogrMainView *self)
   pictures = _get_selected_pictures (self);
 
   /* Call the controller to add tags to them */
-  frogr_controller_show_add_tags_dialog (priv->controller, pictures);
+  if (pictures != NULL)
+    frogr_controller_show_add_tags_dialog (priv->controller, pictures);
 }
 
 void
@@ -257,7 +258,8 @@ _frogr_main_view_edit_selected_pictures (FrogrMainView *self)
   pictures = _get_selected_pictures (self);
 
   /* Call the controller to edit them */
-  frogr_controller_show_details_dialog (priv->controller, pictures);
+  if (pictures != NULL)
+    frogr_controller_show_details_dialog (priv->controller, pictures);
 }
 
 
@@ -277,7 +279,8 @@ _frogr_main_view_remove_selected_pictures (FrogrMainView *self)
     }
 
   /* Remove from UI */
-  _remove_pictures_from_ui (self, selected_pictures);
+  if (selected_pictures != NULL)
+    _remove_pictures_from_ui (self, selected_pictures);
 
   /* Update UI */
   _update_ui (self);
