@@ -239,7 +239,6 @@ _set_status_text (FrogrMainView *self,
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_GTK (self));
 
-  FrogrMainViewPrivate *mv_priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   FrogrMainViewGtkPrivate *priv = FROGR_MAIN_VIEW_GTK_GET_PRIVATE (self);
 
   /* Pop old message if present */
@@ -262,7 +261,6 @@ _set_progress (FrogrMainView *self,
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_GTK (self));
 
-  FrogrMainViewPrivate *mv_priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   FrogrMainViewGtkPrivate *priv = FROGR_MAIN_VIEW_GTK_GET_PRIVATE (self);
 
   /* Show the widget and set fraction */
