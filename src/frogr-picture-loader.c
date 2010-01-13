@@ -20,6 +20,8 @@
  *
  */
 
+#include <config.h>
+#include <glib/gi18n.h>
 #include <gio/gio.h>
 #include "frogr-controller.h"
 #include "frogr-main-view.h"
@@ -85,7 +87,7 @@ _update_status_and_progress (FrogrPictureLoader *self)
       gchar *filename = g_path_get_basename (filepath);
 
       /* Update progress */
-      status_text = g_strdup_printf ("Loading '%s'...", filename);
+      status_text = g_strdup_printf (_("Loading '%s'..."), filename);
       progress_bar_text = g_strdup_printf ("%d / %d",
                                            priv->index,
                                            priv->n_pictures);
