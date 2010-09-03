@@ -41,16 +41,6 @@ typedef struct _FrogrMainViewClass   FrogrMainViewClass;
 struct _FrogrMainViewClass
 {
   GObjectClass parent_class;
-
-  /* Private virtual */
-  void (*update_ui) (FrogrMainView *self);
-  GSList* (*get_selected_pictures) (FrogrMainView *self);
-  void (*add_picture_to_ui) (FrogrMainView *self, FrogrPicture *picture);
-  void (*remove_pictures_from_ui) (FrogrMainView *self, GSList *pictures);
-
-  /* Public virtual */
-  void (*set_status_text) (FrogrMainView *self, const gchar *text);
-  void (*set_progress) (FrogrMainView *self, double fraction, const gchar *text);
 };
 
 struct _FrogrMainView
@@ -65,6 +55,8 @@ typedef enum {
 } FrogrMainViewState;
 
 GType frogr_main_view_get_type (void) G_GNUC_CONST;
+
+FrogrMainView *frogr_main_view_new (void);
 
 GtkWindow *frogr_main_view_get_window (FrogrMainView *self);
 

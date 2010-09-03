@@ -37,9 +37,6 @@ frogr_SOURCES = \
 	frogr-auth-dialog.h \
 	frogr-controller.c \
 	frogr-controller.h \
-	frogr-controller-private.h \
-	frogr-controller-gtk.c \
-	frogr-controller-gtk.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
 	frogr-facade.c \
@@ -50,9 +47,6 @@ frogr_SOURCES = \
 	frogr-picture-uploader.h \
 	frogr-main-view.c \
 	frogr-main-view.h \
-	frogr-main-view-private.h \
-	frogr-main-view-gtk.c \
-	frogr-main-view-gtk.h \
 	frogr-main-view-model.c \
 	frogr-main-view-model.h \
 	frogr-picture.c \
