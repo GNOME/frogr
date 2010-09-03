@@ -909,10 +909,6 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* Update UI */
   _update_ui (FROGR_MAIN_VIEW (self));
-
-  /* Show authorization dialog if needed */
-  if (!frogr_controller_is_authorized (priv->controller))
-    frogr_controller_show_auth_dialog (priv->controller);
 }
 
 

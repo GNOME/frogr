@@ -182,6 +182,10 @@ frogr_controller_run_app (FrogrController *self)
   /* Update flag */
   priv->app_running = TRUE;
 
+  /* Show authorization dialog if needed */
+  if (!frogr_controller_is_authorized (self))
+    frogr_controller_show_auth_dialog (self);
+
   /* Run UI */
   gtk_main ();
 
