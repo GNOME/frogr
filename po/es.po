@@ -17,36 +17,36 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. File menu
-#: ../src/frogr-main-view-gtk.c:292
+#: ../src/frogr-main-view.c:145
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../src/frogr-main-view-gtk.c:298
+#: ../src/frogr-main-view.c:151
 msgid "_Quit"
 msgstr "_Salir"
 
 #. Help menu
-#: ../src/frogr-main-view-gtk.c:302
+#: ../src/frogr-main-view.c:155
 msgid "_Help"
 msgstr "_Ayuda"
 
-#: ../src/frogr-main-view-gtk.c:308
+#: ../src/frogr-main-view.c:161
 msgid "_About"
 msgstr "_Acerca de"
 
-#: ../src/frogr-main-view-gtk.c:331
+#: ../src/frogr-main-view.c:184
 msgid "Add tags..."
 msgstr "Añadir tags"
 
-#: ../src/frogr-main-view-gtk.c:332
+#: ../src/frogr-main-view.c:185
 msgid "Edit details..."
 msgstr "Editar detalles"
 
-#: ../src/frogr-main-view-gtk.c:333
+#: ../src/frogr-main-view.c:186
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ../src/frogr-main-view-gtk.c:459
+#: ../src/frogr-main-view.c:311
 msgid "Select a picture"
 msgstr "Seleccionar una imagen"
 
