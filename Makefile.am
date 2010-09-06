@@ -38,7 +38,9 @@ MAINTAINERCLEANFILES = \
 	missing \
 	mkinstalldirs
 
-SUBDIRS = src po
+SUBDIRS = flicksoup src po
+
+ACLOCAL_AMFLAGS=-I m4
 
 pixmapdir = $(datadir)/icons
 pixmap_DATA = $(srcdir)/data/icons/frogr.xpm

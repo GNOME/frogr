@@ -1,6 +1,7 @@
 AC_INIT([frogr], [0.3~unreleased], [msanchez@igalia.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
+AC_PROG_LIBTOOL
 AC_CONFIG_HEADERS([config.h])
 IT_PROG_INTLTOOL([0.35.0])
 
@@ -25,10 +26,6 @@ PKG_CHECK_MODULES(Gtk2, gtk+-2.0 >= 2.12)
 FROGR_CFLAGS="$FROGR_CFLAGS $Gtk2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $Gtk2_LIBS"
 
-PKG_CHECK_MODULES(Gio, gio-2.0 >= 2.16)
-FROGR_CFLAGS="$FROGR_CFLAGS $Gio_CFLAGS"
-FROGR_LIBS="$FROGR_LIBS $Gio_LIBS"
-
 PKG_CHECK_MODULES(Glib, glib-2.0 >= 2.16)
 FROGR_CFLAGS="$FROGR_CFLAGS $Glib_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $Glib_LIBS"
@@ -37,9 +34,10 @@ PKG_CHECK_MODULES(Flickcurl, flickcurl >= 1.0)
 FROGR_CFLAGS="$FROGR_CFLAGS $Flickcurl_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $Flickcurl_LIBS"
 
+# Extra checks for flicksoup internal library
+
+PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4 >= 2.24)
 PKG_CHECK_MODULES(Libxml2, libxml-2.0 >= 2.6.8)
-FROGR_CFLAGS="$FROGR_CFLAGS $Libxml2_CFLAGS"
-FROGR_LIBS="$FROGR_LIBS $Libxml2_LIBS"
 
 # gtk_show_uri requires gtk 2.14
 echo -n "checking for Gtk+ >= 2.14... "
@@ -65,7 +63,6 @@ AC_SUBST(iconsdir, "\${datadir}/icons")
 AC_SUBST(FROGR_CFLAGS)
 AC_SUBST(FROGR_LIBS)
 
-
 # Translations
 FROGR_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
 AM_GLIB_DEFINE_LOCALEDIR([FROGR_LOCALE_DIR])
@@ -75,10 +72,17 @@ GETTEXT_PACKAGE=frogr
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 
+
+# Check for headers
+
+AC_HEADER_STDC
+
 # Produce output files
 
 AC_CONFIG_FILES([
         Makefile
+        flicksoup/Makefile
+        flicksoup/examples/Makefile
         src/Makefile
         po/Makefile.in
 ])

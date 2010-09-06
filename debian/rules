@@ -9,5 +9,5 @@ DEB_INSTALL_DOCS_ALL := README NEWS AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
 
 makebuilddir/frogr:: configure
 
-configure: configure.ac Makefile.am src/Makefile.am
+configure: configure.ac Makefile.am flicksoup/Makefile.am flicksoup/examples/Makefile.am src/Makefile.am
 	./autogen.sh

@@ -20,7 +20,8 @@ MAINTAINERCLEANFILES = \
 
 bin_PROGRAMS = frogr
 
-frogr_LDADD = $(FROGR_LIBS)
+frogr_LDADD = $(FROGR_LIBS) \
+	$(top_builddir)/flicksoup/libflicksoup.la
 
 frogr_CFLAGS = $(FROGR_CFLAGS) \
 	-DAPP_DATA_DIR=\"$(appdatadir)\" \
