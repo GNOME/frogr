@@ -38,7 +38,7 @@ MAINTAINERCLEANFILES = \
 	missing \
 	mkinstalldirs
 
-SUBDIRS = flicksoup src po
+SUBDIRS = src po examples
 
 ACLOCAL_AMFLAGS=-I m4
 

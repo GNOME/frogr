@@ -12,33 +12,15 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-SUBDIRS = . examples
+AM_CPPFLAGS = 			\
+	-I$(top_srcdir)/src	\
+	$(GLIB_CFLAGS)
 
-AM_CFLAGS =			  \
-	-I$(top_srcdir) 	  \
-	$(LIBSOUP_CFLAGS)	  \
-	$(LIBXML_CFLAGS)
+noinst_PROGRAMS = \
+	example
 
-lib_LTLIBRARIES = libflicksoup.la
-
-libflicksoup_la_SOURCES =	\
-	flicksoup.h		\
-	fsp-data.c		\
-	fsp-data.h		\
-	fsp-error.c		\
-	fsp-error.h		\
-	fsp-flickr-parser.c	\
-	fsp-flickr-parser.h	\
-	fsp-flickr-proxy.c	\
-	fsp-flickr-proxy.h	\
-	fsp-photos-mgr.c	\
-	fsp-photos-mgr.h	\
-	fsp-session.c		\
-	fsp-session.h		\
-	fsp-session-priv.h	\
-	fsp-util.c		\
-	fsp-util.h
-
-libflicksoup_la_LDFLAGS =	\
-	$(LIBSOUP_LIBS)		\
-	$(LIBXML_LIBS)
+example_SOURCES = example.c
+example_LDADD = 					\
+	$(top_srcdir)/src/flicksoup/libflicksoup.a	\
+	$(LIBSOUP_LIBS)		  			\
+	$(LIBXML2_LIBS)

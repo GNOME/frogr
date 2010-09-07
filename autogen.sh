@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -e
-libtoolize --automake --copy --force
 aclocal
 autoconf --force
 autoheader --force

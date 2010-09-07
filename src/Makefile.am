@@ -18,10 +18,13 @@
 MAINTAINERCLEANFILES = \
 	Makefile.in
 
+SUBDIRS = flicksoup
+
 bin_PROGRAMS = frogr
 
-frogr_LDADD = $(FROGR_LIBS) \
-	$(top_builddir)/flicksoup/libflicksoup.la
+frogr_LDADD = 				\
+	flicksoup/libflicksoup.a 	\
+	$(FROGR_LIBS)
 
 frogr_CFLAGS = $(FROGR_CFLAGS) \
 	-DAPP_DATA_DIR=\"$(appdatadir)\" \
