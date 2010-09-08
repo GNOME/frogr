@@ -22,6 +22,7 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
+#include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "frogr-main-view.h"
@@ -32,7 +33,7 @@
 #include "frogr-picture-uploader.h"
 #include "frogr-picture.h"
 
-#define MAIN_WINDOW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
+#define MAIN_VIEW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
 
 #define MINIMUM_WINDOW_WIDTH 540
 #define MINIMUM_WINDOW_HEIGHT 420
@@ -105,7 +106,7 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            gpointer data);
 void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
-gboolean _on_main_window_delete_event (GtkWidget *widget,
+gboolean _on_main_view_delete_event (GtkWidget *widget,
                                        GdkEvent *event,
                                        gpointer self);
 
@@ -452,7 +453,7 @@ _on_about_menu_item_activate (GtkWidget *widget, gpointer self)
 }
 
 gboolean
-_on_main_window_delete_event (GtkWidget *widget,
+_on_main_view_delete_event (GtkWidget *widget,
                               GdkEvent *event,
                               gpointer self)
 {
@@ -809,22 +810,22 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* Provide a default icon list in several sizes */
   icons = g_list_prepend (NULL,
-                          gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("128x128"),
+                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("128x128"),
                                                     NULL));
   icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("64x64"),
+                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("64x64"),
                                                     NULL));
   icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("48x48"),
+                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("48x48"),
                                                     NULL));
   icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("32x32"),
+                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("32x32"),
                                                     NULL));
   icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("24x24"),
+                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("24x24"),
                                                     NULL));
   icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_WINDOW_ICON("16x16"),
+                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("16x16"),
                                                     NULL));
   gtk_window_set_default_icon_list (icons);
   g_list_foreach (icons, (GFunc) g_object_unref, NULL);
@@ -898,7 +899,7 @@ frogr_main_view_init (FrogrMainView *self)
                     NULL);
 
   g_signal_connect (G_OBJECT (priv->window), "delete-event",
-                    G_CALLBACK (_on_main_window_delete_event),
+                    G_CALLBACK (_on_main_view_delete_event),
                     self);
 
   gtk_builder_connect_signals (builder, self);
