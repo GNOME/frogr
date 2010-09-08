@@ -20,18 +20,25 @@
  *
  */
 
-#include <config.h>
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
 
 #include "frogr-controller.h"
 
 #include "frogr-about-dialog.h"
+#include "frogr-account.h"
 #include "frogr-add-tags-dialog.h"
 #include "frogr-auth-dialog.h"
+#include "frogr-config.h"
 #include "frogr-details-dialog.h"
-#include "frogr-facade.h"
 #include "frogr-main-view.h"
+
+#include <config.h>
+#include <flicksoup/flicksoup.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <string.h>
+
+#define API_KEY "18861766601de84f0921ce6be729f925"
+#define SHARED_SECRET "6233fbefd85f733a"
 
 #define FROGR_CONTROLLER_GET_PRIVATE(object)                    \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
@@ -46,7 +53,9 @@ typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
 struct _FrogrControllerPrivate
 {
   FrogrMainView *mainview;
-  FrogrFacade *facade;
+  FrogrConfig *config;
+  FrogrAccount *account;
+  FspSession *session;
   gboolean app_running;
 };
 
@@ -56,14 +65,47 @@ typedef struct {
   FrogrPicture *picture;
   GFunc callback;
   gpointer object;
+  gpointer data;
 } upload_picture_st;
 
 /* Prototypes */
 
+static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data);
 static void _upload_picture_cb (FrogrController *self,
                                 upload_picture_st *up_st);
 
 /* Private functions */
+
+static void
+_get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data)
+{
+  FrogrController *self = FROGR_CONTROLLER(user_data);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  GError *error = NULL;
+  gchar *auth_url = NULL;
+
+  auth_url = fsp_session_get_auth_url_finish (priv->session, res, &error);
+  if (error != NULL)
+    {
+      g_debug ("Error getting auth URL: %s\n", error->message);
+      g_error_free (error);
+      return;
+    }
+
+  g_print ("[get_auth_url_cb]::Result: %s\n\n",
+           auth_url ? auth_url : "No URL got");
+
+  if (auth_url != NULL)
+    {
+      /* Open url in the default application */
+#ifdef HAVE_GTK_2_14
+      gtk_show_uri (NULL, auth_url, GDK_CURRENT_TIME, NULL);
+#else
+      gnome_url_show (auth_url);
+#endif
+      g_free (auth_url);
+    }
+}
 
 static void
 _upload_picture_cb (FrogrController *self,
@@ -110,7 +152,8 @@ _frogr_controller_finalize (GObject* object)
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (object);
 
   g_object_unref (priv->mainview);
-  g_object_unref (priv->facade);
+  g_object_unref (priv->config);
+  g_object_unref (priv->session);
 
   G_OBJECT_CLASS (frogr_controller_parent_class)->finalize (object);
 }
@@ -130,11 +173,19 @@ static void
 frogr_controller_init (FrogrController *self)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  const gchar *token;
 
   /* Default variables */
-  priv->facade = NULL;
   priv->mainview = NULL;
+  priv->config = frogr_config_get_instance ();
+  priv->account = frogr_config_get_account (priv->config);
+  priv->session = fsp_session_new(API_KEY, SHARED_SECRET, NULL);
   priv->app_running = FALSE;
+
+  /* If available, set token */
+  token = frogr_account_get_token (priv->account);
+  if (token != NULL)
+    fsp_session_set_token (priv->session, token);
 }
 
 
@@ -151,8 +202,7 @@ frogr_controller_get_main_view (FrogrController *self)
 {
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   return g_object_ref (priv->mainview);
 }
@@ -162,17 +212,13 @@ frogr_controller_run_app (FrogrController *self)
 {
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   if (priv->app_running)
     {
       g_debug ("Application already running");
       return FALSE;
     }
-
-  /* Create model facade */
-  priv->facade = frogr_facade_new ();
 
   /* Create UI window */
   priv->mainview = frogr_main_view_new ();
@@ -200,8 +246,7 @@ frogr_controller_quit_app(FrogrController *self)
 {
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   if (priv->app_running)
     {
@@ -277,37 +322,51 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
 }
 
 void
-frogr_controller_open_authorization_url (FrogrController *self)
+frogr_controller_open_auth_url (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  fsp_session_get_auth_url_async (priv->session, NULL, _get_auth_url_cb, self);
+}
 
-  gchar *auth_url = frogr_facade_get_authorization_url (priv->facade);
-  if (auth_url != NULL)
-    {
-      /* Open url in the default application */
-#ifdef HAVE_GTK_2_14
-      gtk_show_uri (NULL, auth_url, GDK_CURRENT_TIME, NULL);
-#else
-      gnome_url_show (auth_url);
-#endif
+void
+frogr_controller_complete_auth_async (FrogrController *self,
+                                      GCancellable *c,
+                                      GAsyncReadyCallback cb,
+                                      gpointer object)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-      g_free (auth_url);
-    }
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  fsp_session_complete_auth_async (priv->session, c, cb, object);
 }
 
 gboolean
-frogr_controller_complete_authorization (FrogrController *self)
+frogr_controller_complete_auth_finish (FrogrController *self,
+                                       GAsyncResult *res,
+                                       GError **error)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
+  g_return_val_if_fail (FROGR_IS_CONTROLLER (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  gboolean auth_done = FALSE;
 
-  /* Delegate on facade */
-  return frogr_facade_complete_authorization (priv->facade);
+  auth_done = fsp_session_complete_auth_finish (priv->session, res, error);
+  if (auth_done)
+    {
+      gchar *token = fsp_session_get_token (priv->session);
+      if (token)
+        {
+          /* Set and save the auth token and the settings to disk */
+          frogr_account_set_token (priv->account, token);
+          frogr_config_save (priv->config);
+          return TRUE;
+        }
+    }
+
+  return FALSE;
 }
 
 gboolean
@@ -316,7 +375,7 @@ frogr_controller_is_authorized (FrogrController *self)
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  return frogr_facade_is_authorized (priv->facade);
+  return (fsp_session_get_token (priv->session) != NULL);
 }
 
 void
@@ -327,22 +386,22 @@ frogr_controller_upload_picture (FrogrController *self,
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv =
-    FROGR_CONTROLLER_GET_PRIVATE (self);
+  /* FrogrControllerPrivate *priv = */
+  /*   FROGR_CONTROLLER_GET_PRIVATE (self); */
 
-  upload_picture_st *up_st;
+  /* upload_picture_st *up_st; */
 
-  /* Create structure to pass to the thread */
-  up_st = g_slice_new (upload_picture_st);
-  up_st->picture = picture;
-  up_st->callback = picture_uploaded_cb;
-  up_st->object = object;
+  /* /\* Create structure to pass to the thread *\/ */
+  /* up_st = g_slice_new (upload_picture_st); */
+  /* up_st->picture = picture; */
+  /* up_st->callback = picture_uploaded_cb; */
+  /* up_st->object = object; */
 
-  /* Delegate on facade with the first item */
-  g_object_ref (picture);
-  frogr_facade_upload_picture (priv->facade,
-                               picture,
-                               (GFunc)_upload_picture_cb,
-                               self,
-                               up_st);
+  /* /\* Delegate on facade with the first item *\/ */
+  /* g_object_ref (picture); */
+  /* frogr_facade_upload_picture (priv->facade, */
+  /*                              picture, */
+  /*                              (GFunc)_upload_picture_cb, */
+  /*                              self, */
+  /*                              up_st); */
 }

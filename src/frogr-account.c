@@ -35,7 +35,6 @@ G_DEFINE_TYPE (FrogrAccount, frogr_account, G_TYPE_OBJECT);
 typedef struct _FrogrAccountPrivate FrogrAccountPrivate;
 struct _FrogrAccountPrivate
 {
-  gchar *frob;
   gchar *token;
 };
 
@@ -43,7 +42,6 @@ struct _FrogrAccountPrivate
 /* Properties */
 enum {
   PROP_0,
-  PROP_FROB,
   PROP_TOKEN,
 };
 
@@ -60,11 +58,6 @@ _frogr_account_set_property (GObject      *object,
 
   switch (property_id)
     {
-    case PROP_FROB:
-      g_free (priv->frob);
-      priv->frob = g_value_dup_string (value);
-      break;
-
     case PROP_TOKEN:
       g_free (priv->token);
       priv->token = g_value_dup_string (value);
@@ -85,10 +78,6 @@ _frogr_account_get_property (GObject    *object,
 
   switch (property_id)
     {
-    case PROP_FROB:
-      g_value_set_string (value, g_strdup (priv->frob));
-      break;
-
     case PROP_TOKEN:
       g_value_set_string (value, g_strdup (priv->token));
       break;
@@ -103,7 +92,6 @@ _frogr_account_finalize (GObject *object)
 {
   FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (object);
 
-  g_free (priv->frob);
   g_free (priv->token);
 
   /* Call superclass */
@@ -122,13 +110,6 @@ frogr_account_class_init (FrogrAccountClass *klass)
   obj_class->set_property = _frogr_account_set_property;
   obj_class->finalize     = _frogr_account_finalize;
 
-  pspec = g_param_spec_string ("frob",
-                               "Flickr API authentication frob",
-                               "Get/set Flickr frob",
-                               "",
-                               G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_FROB, pspec);
-
   pspec = g_param_spec_string ("token",
                                "Flickr API authentication token",
                                "Get/set Flickr token",
@@ -141,8 +122,6 @@ static void
 frogr_account_init (FrogrAccount *self)
 {
   FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-
-  priv->frob = NULL;
   priv->token = NULL;
 }
 
@@ -154,39 +133,14 @@ frogr_account_new (void)
 }
 
 FrogrAccount *
-frogr_account_new_with_params (const gchar *frob,
-                               const gchar *token)
+frogr_account_new_with_token (const gchar *token)
 {
-  g_return_val_if_fail (frob, NULL);
   g_return_val_if_fail (token, NULL);
 
   GObject *new = g_object_new (FROGR_TYPE_ACCOUNT,
-                               "frob",     frob,
                                "token",    token,
                                NULL);
-
   return FROGR_ACCOUNT (new);
-}
-
-const gchar *
-frogr_account_get_frob (FrogrAccount *self)
-{
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  return (const gchar *)priv->frob;
-}
-
-void
-frogr_account_set_frob (FrogrAccount *self,
-                        const gchar *frob)
-{
-  g_return_if_fail (FROGR_IS_ACCOUNT (self));
-
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-
-  g_free (priv->frob);
-  priv->frob = g_strdup (frob);
 }
 
 const gchar *

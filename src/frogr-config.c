@@ -66,7 +66,6 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
                                 xmlNodePtr    rootnode)
 {
   xmlNodePtr node;
-  xmlChar *frob = NULL;
   xmlChar *token = NULL;
   gboolean retval = FALSE;
 
@@ -80,21 +79,17 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
       if (node->type != XML_ELEMENT_NODE)
         continue;
 
-      if (xmlStrcmp (node->name, (const xmlChar*) "frob") == 0)
-        frob = xmlNodeGetContent (node);
-      else if (xmlStrcmp (node->name, (const xmlChar*) "token") == 0)
+      if (xmlStrcmp (node->name, (const xmlChar*) "token") == 0)
         token = xmlNodeGetContent (node);
     }
 
   /* The account object is created if some minimum requirements are met */
-  if (frob != NULL && frob[0] != '\0' && token != NULL && token[0] != '\0')
+  if (token != NULL && token[0] != '\0')
     {
-      frogr_account_set_frob (faccount, (gchar *)frob);
       frogr_account_set_token (faccount, (gchar *)token);
       retval = TRUE;
     }
 
-  if (frob != NULL) xmlFree (frob);
   if (token != NULL) xmlFree (token);
 
   return retval;
@@ -202,7 +197,6 @@ _frogr_config_save_account (FrogrConfig *self)
   /* Handle account */
   if ((account = G_OBJECT (priv->account)) != NULL) {
     node = xmlNewNode (NULL, (const xmlChar*) "account");
-    _xml_add_string_child (node, "frob", account, "frob");
     _xml_add_string_child (node, "token", account, "token");
     xmlAddChild (root, node);
   }

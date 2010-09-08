@@ -53,12 +53,7 @@ struct _FrogrAccountClass
 GType frogr_account_get_type(void) G_GNUC_CONST;
 
 FrogrAccount* frogr_account_new (void);
-FrogrAccount* frogr_account_new_with_params (const gchar *frob,
-                                             const gchar *token);
-
-const gchar* frogr_account_get_frob (FrogrAccount *self);
-void frogr_account_set_frob (FrogrAccount *self,
-                             const gchar *frob);
+FrogrAccount* frogr_account_new_with_token (const gchar *token);
 
 const gchar* frogr_account_get_token (FrogrAccount *self);
 void frogr_account_set_token (FrogrAccount *self,

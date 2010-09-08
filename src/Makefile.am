@@ -43,8 +43,6 @@ frogr_SOURCES = \
 	frogr-controller.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
-	frogr-facade.c \
-	frogr-facade.h \
 	frogr-picture-loader.c \
 	frogr-picture-loader.h \
 	frogr-picture-uploader.c \
