@@ -258,18 +258,18 @@ build_async_result_and_complete         (GAsyncData *clos,
   GObject *object = NULL;
   GAsyncReadyCallback  callback = NULL;
   gpointer source_tag;
-  gpointer user_data;
+  gpointer data;
 
   /* Get data from closure, and free it */
   object = clos->object;
   callback = clos->callback;
   source_tag = clos->source_tag;
-  user_data = clos->user_data;
+  data = clos->data;
   g_slice_free (GAsyncData, clos);
 
   /* Build response and call async callback */
   res = g_simple_async_result_new (object, callback,
-                                   user_data, source_tag);
+                                   data, source_tag);
 
   /* Return the given value or an error otherwise */
   if (error != NULL)

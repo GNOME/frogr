@@ -68,12 +68,12 @@ _get_flickr_proxy                       (FspSession *self);
 static void
 _get_auth_url_result_cb                 (GObject      *object,
                                          GAsyncResult *result,
-                                         gpointer      user_data);
+                                         gpointer      data);
 
 static void
 _complete_auth_cb                       (GObject      *object,
                                          GAsyncResult *result,
-                                         gpointer      user_data);
+                                         gpointer      data);
 
 /* Private API */
 
@@ -218,8 +218,12 @@ _get_flickr_proxy                       (FspSession *self)
 static void
 _get_auth_url_result_cb                 (GObject      *object,
                                          GAsyncResult *result,
-                                         gpointer      user_data)
+                                         gpointer      data)
 {
+  g_return_if_fail (FSP_IS_PROXY (object));
+  g_return_if_fail (G_IS_ASYNC_RESULT (result));
+  g_return_if_fail (data != NULL);
+
   FspFlickrProxy *proxy = FSP_FLICKR_PROXY(object);
   FspSession *session = NULL;
   GAsyncData *clos = NULL;
@@ -227,7 +231,7 @@ _get_auth_url_result_cb                 (GObject      *object,
   gchar *frob = NULL;
   GError *error = NULL;
 
-  clos = (GAsyncData *) user_data;
+  clos = (GAsyncData *) data;
   session = FSP_SESSION (clos->object);
 
   /* Get and save the frob */
@@ -256,8 +260,12 @@ _get_auth_url_result_cb                 (GObject      *object,
 
 static void _complete_auth_cb           (GObject      *object,
                                          GAsyncResult *result,
-                                         gpointer      user_data)
+                                         gpointer      data)
 {
+  g_return_if_fail (FSP_IS_PROXY (object));
+  g_return_if_fail (G_IS_ASYNC_RESULT (result));
+  g_return_if_fail (data != NULL);
+
   FspFlickrProxy *proxy = FSP_FLICKR_PROXY (object);
   FspSession *session = NULL;
   GAsyncData *clos = NULL;
@@ -265,7 +273,7 @@ static void _complete_auth_cb           (GObject      *object,
   gboolean retval = FALSE;
   GError *error = NULL;
 
-  clos = (GAsyncData *) user_data;
+  clos = (GAsyncData *) data;
   session = FSP_SESSION (clos->object);
 
   auth_token = fsp_flickr_proxy_get_auth_token_finish (proxy, result, &error);
@@ -355,7 +363,7 @@ void
 fsp_session_get_auth_url_async          (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_SESSION (self));
 
@@ -366,7 +374,7 @@ fsp_session_get_auth_url_async          (FspSession          *self,
   clos->cancellable = c;
   clos->callback = cb;
   clos->source_tag = fsp_session_get_auth_url_async;
-  clos->user_data = user_data;
+  clos->data = data;
 
   fsp_flickr_proxy_get_frob_async (proxy, c, _get_auth_url_result_cb, clos);
 }
@@ -407,7 +415,7 @@ void
 fsp_session_complete_auth_async         (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (cb != NULL);
@@ -419,7 +427,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
   clos->cancellable = c;
   clos->callback = cb;
   clos->source_tag = fsp_session_complete_auth_async;
-  clos->user_data = user_data;
+  clos->data = data;
 
   if (priv->frob != NULL)
     {
@@ -434,7 +442,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
       /* Build and report error */
       err = g_error_new (FSP_ERROR, FSP_ERROR_NOFROB, "No frob defined");
       g_simple_async_report_gerror_in_idle (G_OBJECT (self),
-                                            cb, user_data, err);
+                                            cb, data, err);
     }
 }
 

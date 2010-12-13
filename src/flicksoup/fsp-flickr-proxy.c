@@ -113,7 +113,7 @@ _perform_async_request                  (FspFlickrProxy      *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             source_tag,
-                                         gpointer             user_data);
+                                         gpointer             data);
 
 /* Private API */
 
@@ -506,7 +506,7 @@ _perform_async_request                  (FspFlickrProxy      *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             source_tag,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_FLICKR_PROXY (self));
   g_return_if_fail (url != NULL);
@@ -522,7 +522,7 @@ _perform_async_request                  (FspFlickrProxy      *self,
   clos->cancellable = cancellable;
   clos->callback = callback;
   clos->source_tag = source_tag;
-  clos->user_data = user_data;
+  clos->data = data;
 
   /* Build and queue the message */
   msg = soup_message_new (SOUP_METHOD_GET, url);
@@ -587,7 +587,7 @@ void
 fsp_flickr_proxy_get_frob_async         (FspFlickrProxy      *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_FLICKR_PROXY (self));
   g_return_if_fail (cb != NULL);
@@ -605,7 +605,7 @@ fsp_flickr_proxy_get_frob_async         (FspFlickrProxy      *self,
 
   /* Perform the async request */
   _perform_async_request (self, url, _get_frob_soup_session_cb, c, cb,
-                          fsp_flickr_proxy_get_frob_async, user_data);
+                          fsp_flickr_proxy_get_frob_async, data);
 
   /* Free */
   g_free (url);
@@ -646,7 +646,7 @@ fsp_flickr_proxy_get_auth_token_async   (FspFlickrProxy      *self,
                                          const gchar         *frob,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_FLICKR_PROXY (self));
   g_return_if_fail (frob != NULL);
@@ -666,7 +666,7 @@ fsp_flickr_proxy_get_auth_token_async   (FspFlickrProxy      *self,
 
   /* Perform the async request */
   _perform_async_request (self, url, _get_auth_token_soup_session_cb, c, cb,
-                          fsp_flickr_proxy_get_auth_token_async, user_data);
+                          fsp_flickr_proxy_get_auth_token_async, data);
 
   g_free (url);
 }
@@ -708,7 +708,7 @@ fsp_flickr_proxy_photo_upload_async     (FspFlickrProxy      *self,
                                          GHashTable          *extra_params,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_FLICKR_PROXY (self));
   g_return_if_fail (filepath != NULL);
@@ -725,7 +725,7 @@ fsp_flickr_proxy_photo_upload_async     (FspFlickrProxy      *self,
   ga_clos->cancellable = c;
   ga_clos->callback = cb;
   ga_clos->source_tag = fsp_flickr_proxy_photo_upload_async;
-  ga_clos->user_data = user_data;
+  ga_clos->data = data;
 
   /* Get ownership of the table */
   g_hash_table_ref (extra_params);
@@ -785,7 +785,7 @@ fsp_flickr_proxy_photo_get_info_async   (FspFlickrProxy      *self,
                                          const gchar         *photo_id,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_FLICKR_PROXY (self));
   g_return_if_fail (photo_id != NULL);
@@ -806,7 +806,7 @@ fsp_flickr_proxy_photo_get_info_async   (FspFlickrProxy      *self,
 
   /* Perform the async request */
   _perform_async_request (self, url, _photo_get_info_soup_session_cb, c, cb,
-                          fsp_flickr_proxy_photo_get_info_async, user_data);
+                          fsp_flickr_proxy_photo_get_info_async, data);
 
   g_free (url);
 }

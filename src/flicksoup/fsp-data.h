@@ -41,7 +41,7 @@ typedef union  _FspData	    FspData;
 
 typedef enum
 {
-  FSP_NOTHING	   = -1,
+  FSP_UNKNOWN	   = -1,
   FSP_USER_PROFILE = 0,
   FSP_AUTH_TOKEN   = 1,
   FSP_PHOTO_INFO   = 2,

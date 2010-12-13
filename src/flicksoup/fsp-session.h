@@ -83,7 +83,7 @@ void
 fsp_session_get_auth_url_async          (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
-                                         gpointer             user_data);
+                                         gpointer             data);
 gchar *
 fsp_session_get_auth_url_finish         (FspSession    *self,
                                          GAsyncResult  *res,
@@ -93,7 +93,7 @@ void
 fsp_session_complete_auth_async         (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
-                                         gpointer             user_data);
+                                         gpointer             data);
 gboolean
 fsp_session_complete_auth_finish        (FspSession    *self,
                                          GAsyncResult  *res,

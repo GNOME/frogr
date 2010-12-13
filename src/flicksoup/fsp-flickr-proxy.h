@@ -87,7 +87,7 @@ void
 fsp_flickr_proxy_get_frob_async         (FspFlickrProxy      *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data);
+                                         gpointer             data);
 gchar *
 fsp_flickr_proxy_get_frob_finish        (FspFlickrProxy  *self,
                                          GAsyncResult    *res,
@@ -98,7 +98,7 @@ fsp_flickr_proxy_get_auth_token_async   (FspFlickrProxy      *self,
                                          const gchar         *frob,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data);
+                                         gpointer             data);
 FspDataAuthToken *
 fsp_flickr_proxy_get_auth_token_finish  (FspFlickrProxy  *self,
                                          GAsyncResult    *res,
@@ -112,7 +112,7 @@ fsp_flickr_proxy_photo_upload_async     (FspFlickrProxy      *self,
                                          GHashTable          *extra_params,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data);
+                                         gpointer             data);
 
 gchar *
 fsp_flickr_proxy_photo_upload_finish    (FspFlickrProxy *self,
@@ -124,7 +124,7 @@ fsp_flickr_proxy_photo_get_info_async   (FspFlickrProxy      *self,
                                          const gchar         *photo_id,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
-                                         gpointer             user_data);
+                                         gpointer             data);
 
 FspDataPhotoInfo *
 fsp_flickr_proxy_photo_get_info_finish  (FspFlickrProxy *self,

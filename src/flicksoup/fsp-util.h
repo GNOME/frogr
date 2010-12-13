@@ -35,7 +35,7 @@ typedef struct
   GCancellable        *cancellable;
   GAsyncReadyCallback  callback;
   gpointer             source_tag;
-  gpointer             user_data;
+  gpointer             data;
 } GAsyncData;
 
 gchar *

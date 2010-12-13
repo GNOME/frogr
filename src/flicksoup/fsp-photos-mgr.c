@@ -70,7 +70,12 @@ _get_upload_extra_params                (const gchar    *title,
 static void
 _upload_cb                              (GObject      *object,
                                          GAsyncResult *result,
-                                         gpointer      user_data);
+                                         gpointer      data);
+
+static void
+_get_info_cb                            (GObject      *object,
+                                         GAsyncResult *result,
+                                         gpointer      data);
 
 /* Private API */
 
@@ -234,27 +239,35 @@ _get_upload_extra_params                (const gchar    *title,
 static void
 _upload_cb                              (GObject      *object,
                                          GAsyncResult *result,
-                                         gpointer      user_data)
+                                         gpointer      data)
 {
+  g_return_if_fail (FSP_IS_PROXY (object));
+  g_return_if_fail (G_IS_ASYNC_RESULT (result));
+  g_return_if_fail (data != NULL);
+
   FspFlickrProxy *proxy = FSP_FLICKR_PROXY(object);
   gchar *photo_id = NULL;
   GError *error = NULL;
 
   photo_id = fsp_flickr_proxy_photo_upload_finish (proxy, result, &error);
-  build_async_result_and_complete ((GAsyncData *) user_data, (gpointer) photo_id, error);
+  build_async_result_and_complete ((GAsyncData *) data, (gpointer) photo_id, error);
 }
 
 static void
 _get_info_cb                            (GObject      *object,
                                          GAsyncResult *result,
-                                         gpointer      user_data)
+                                         gpointer      data)
 {
+  g_return_if_fail (FSP_IS_PROXY (object));
+  g_return_if_fail (G_IS_ASYNC_RESULT (result));
+  g_return_if_fail (data != NULL);
+
   FspFlickrProxy *proxy = FSP_FLICKR_PROXY(object);
   FspDataPhotoInfo *photo_info = NULL;
   GError *error = NULL;
 
   photo_info = fsp_flickr_proxy_photo_get_info_finish (proxy, result, &error);
-  build_async_result_and_complete ((GAsyncData *) user_data, (gpointer) photo_info, error);
+  build_async_result_and_complete ((GAsyncData *) data, (gpointer) photo_info, error);
 }
 
 /* Public API */
@@ -292,7 +305,7 @@ fsp_photos_mgr_upload_async             (FspPhotosMgr        *self,
                                          FspSearchScope       hidden,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
   g_return_if_fail (filepath != NULL);
@@ -304,7 +317,7 @@ fsp_photos_mgr_upload_async             (FspPhotosMgr        *self,
   clos->cancellable = cancellable;
   clos->callback = callback;
   clos->source_tag = fsp_photos_mgr_upload_async;
-  clos->user_data = user_data;
+  clos->data = data;
 
   /* Get flickr proxy and extra params (those actually used) */
   proxy = _get_flickr_proxy (self);
@@ -353,7 +366,7 @@ fsp_photos_mgr_get_info_async           (FspPhotosMgr        *self,
                                          const gchar         *photo_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
   g_return_if_fail (photo_id != NULL);
@@ -364,7 +377,7 @@ fsp_photos_mgr_get_info_async           (FspPhotosMgr        *self,
   clos->cancellable = cancellable;
   clos->callback = callback;
   clos->source_tag = fsp_photos_mgr_get_info_async;
-  clos->user_data = user_data;
+  clos->data = data;
 
   /* Get flickr proxy and call it */
   proxy = _get_flickr_proxy (self);
