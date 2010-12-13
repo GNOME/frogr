@@ -24,8 +24,19 @@
 #define _FSP_UTIL_H
 
 #include <glib.h>
+#include <glib-object.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
+
+typedef struct
+{
+  GObject             *object;
+  GCancellable        *cancellable;
+  GAsyncReadyCallback  callback;
+  gpointer             source_tag;
+  gpointer             user_data;
+} GAsyncData;
 
 gchar *
 get_api_signature                       (const gchar *shared_secret,
@@ -42,6 +53,18 @@ get_signed_query                        (const gchar *shared_secret,
 gchar *
 get_signed_query_from_hash_table        (const gchar *shared_secret,
                                          GHashTable  *params_table);
+
+void
+build_async_result_and_complete         (GAsyncData *clos,
+                                         gpointer    result,
+                                         GError     *error);
+
+gboolean
+check_async_errors_on_finish            (GObject         *object,
+                                         GAsyncResult    *res,
+                                         gpointer         source_tag,
+                                         GError         **error);
+
 G_END_DECLS
 
 #endif

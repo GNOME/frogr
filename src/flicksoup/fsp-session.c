@@ -23,10 +23,11 @@
 #include <string.h>
 
 #include "fsp-session.h"
-#include "fsp-session-priv.h"
+
 #include "fsp-data.h"
 #include "fsp-error.h"
 #include "fsp-flickr-proxy.h"
+#include "fsp-session-priv.h"
 #include "fsp-util.h"
 
 #define FSP_SESSION_GET_PRIVATE(object)                 \
@@ -64,6 +65,15 @@ enum  {
 static FspFlickrProxy *
 _get_flickr_proxy                       (FspSession *self);
 
+static void
+_get_auth_url_result_cb                 (GObject      *object,
+                                         GAsyncResult *result,
+                                         gpointer      user_data);
+
+static void
+_complete_auth_cb                       (GObject      *object,
+                                         GAsyncResult *result,
+                                         gpointer      user_data);
 
 /* Private API */
 
@@ -205,6 +215,70 @@ _get_flickr_proxy                       (FspSession *self)
   return priv->flickr_proxy;
 }
 
+static void
+_get_auth_url_result_cb                 (GObject      *object,
+                                         GAsyncResult *result,
+                                         gpointer      user_data)
+{
+  FspFlickrProxy *proxy = FSP_FLICKR_PROXY(object);
+  FspSession *session = NULL;
+  GAsyncData *clos = NULL;
+  gchar *auth_url = NULL;
+  gchar *frob = NULL;
+  GError *error = NULL;
+
+  clos = (GAsyncData *) user_data;
+  session = FSP_SESSION (clos->object);
+
+  /* Get and save the frob */
+  frob = fsp_flickr_proxy_get_frob_finish (proxy, result, &error);
+  if (frob != NULL)
+    {
+      FspSessionPrivate *priv = session->priv;
+      gchar *signed_query = NULL;
+
+      /* Save the frob */
+      priv->frob = frob;
+
+      /* Build the authorization url */
+      signed_query = get_signed_query (priv->secret,
+                                       "api_key", priv->api_key,
+                                       "perms", "write",
+                                       "frob", priv->frob,
+                                       NULL);
+      auth_url = g_strdup_printf ("http://flickr.com/services/auth/?%s",
+                                  signed_query);
+      g_free (signed_query);
+    }
+
+  build_async_result_and_complete (clos, (gpointer) auth_url, error);
+}
+
+static void _complete_auth_cb           (GObject      *object,
+                                         GAsyncResult *result,
+                                         gpointer      user_data)
+{
+  FspFlickrProxy *proxy = FSP_FLICKR_PROXY (object);
+  FspSession *session = NULL;
+  GAsyncData *clos = NULL;
+  FspDataAuthToken *auth_token = NULL;
+  gboolean retval = FALSE;
+  GError *error = NULL;
+
+  clos = (GAsyncData *) user_data;
+  session = FSP_SESSION (clos->object);
+
+  auth_token = fsp_flickr_proxy_get_auth_token_finish (proxy, result, &error);
+  if (auth_token != NULL)
+    {
+      fsp_session_set_token (session, auth_token->token);
+      fsp_data_free (FSP_DATA (auth_token));
+      retval = TRUE;
+    }
+
+  build_async_result_and_complete (clos, GINT_TO_POINTER ((gint) retval), error);
+}
+
 /* from fsp-session-priv.h */
 FspFlickrProxy *
 fsp_session_get_flickr_proxy            (FspSession *self)
@@ -287,7 +361,14 @@ fsp_session_get_auth_url_async          (FspSession          *self,
 
   /* We need the frob for this */
   FspFlickrProxy *proxy = _get_flickr_proxy (self);
-  fsp_flickr_proxy_get_frob_async (proxy, c, cb, user_data);
+  GAsyncData *clos = g_slice_new (GAsyncData);
+  clos->object = G_OBJECT (self);
+  clos->cancellable = c;
+  clos->callback = cb;
+  clos->source_tag = fsp_session_get_auth_url_async;
+  clos->user_data = user_data;
+
+  fsp_flickr_proxy_get_frob_async (proxy, c, _get_auth_url_result_cb, clos);
 }
 
 gchar *
@@ -298,28 +379,23 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
-  FspSessionPrivate *priv = self->priv;
-  FspFlickrProxy *proxy = _get_flickr_proxy (self);
   gchar *auth_url = NULL;
-  gchar *frob = NULL;
 
-  frob = fsp_flickr_proxy_get_frob_finish (proxy, res, error);
-  if (frob != NULL)
+  /* Check for errors */
+  if (!check_async_errors_on_finish (G_OBJECT (self), res,
+                                     fsp_session_get_auth_url_async, error))
     {
-      gchar *signed_query = NULL;
+      GSimpleAsyncResult *simple = NULL;
+      gpointer result = NULL;
 
-      /* Save the frob */
-      priv->frob = frob;
-
-      /* Build the authorization url */
-      signed_query = get_signed_query (priv->secret,
-                                       "api_key", priv->api_key,
-                                       "perms", "write",
-                                       "frob", priv->frob,
-                                       NULL);
-      auth_url = g_strdup_printf ("http://flickr.com/services/auth/?%s",
-                                  signed_query);
-      g_free (signed_query);
+      /* Get result */
+      simple = G_SIMPLE_ASYNC_RESULT (res);
+      result = g_simple_async_result_get_op_res_gpointer (simple);
+      if (result != NULL)
+        auth_url = (gchar *) result;
+      else
+        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
+                             "Internal error");
     }
 
   return auth_url;
@@ -338,12 +414,18 @@ fsp_session_complete_auth_async         (FspSession          *self,
 
   FspSessionPrivate *priv = self->priv;
   FspFlickrProxy *proxy = _get_flickr_proxy (self);
+  GAsyncData *clos = g_slice_new (GAsyncData);
+  clos->object = G_OBJECT (self);
+  clos->cancellable = c;
+  clos->callback = cb;
+  clos->source_tag = fsp_session_complete_auth_async;
+  clos->user_data = user_data;
 
   if (priv->frob != NULL)
     {
       /* We need the auth token for this */
       fsp_flickr_proxy_get_auth_token_async (proxy, priv->frob,
-                                             c, cb, user_data);
+                                             c, _complete_auth_cb, clos);
     }
   else
     {
@@ -364,17 +446,24 @@ fsp_session_complete_auth_finish        (FspSession    *self,
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
-  FspFlickrProxy *proxy = _get_flickr_proxy (self);
-  FspDataAuthToken *auth_token = NULL;
-  gboolean retval = FALSE;
+  gboolean auth_done = FALSE;
 
-  auth_token = fsp_flickr_proxy_get_auth_token_finish (proxy, res, error);
-  if (auth_token != NULL)
+  /* Check for errors */
+  if (!check_async_errors_on_finish (G_OBJECT (self), res,
+                                     fsp_session_complete_auth_async, error))
     {
-      fsp_session_set_token (self, auth_token->token);
-      fsp_data_free (FSP_DATA (auth_token));
-      retval = TRUE;
+      GSimpleAsyncResult *simple = NULL;
+      gpointer result = NULL;
+
+      /* Get result */
+      simple = G_SIMPLE_ASYNC_RESULT (res);
+      result = g_simple_async_result_get_op_res_gpointer (simple);
+      if (result != NULL)
+        auth_done = (gboolean) GPOINTER_TO_INT (result);
+      else
+        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
+                             "Internal error");
     }
 
-  return retval;
+  return auth_done;
 }

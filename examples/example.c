@@ -30,11 +30,11 @@
 #define TEST_PHOTO "./examples/testphoto.png"
 
 void
-photo_get_info_cb                       (GObject      *obj,
+photo_get_info_cb                       (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (user_data);
+  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
   GError *error = NULL;
   FspDataPhotoInfo *photo_info =
     fsp_photos_mgr_get_info_finish (photos_mgr, res, &error);
@@ -72,11 +72,11 @@ photo_get_info_cb                       (GObject      *obj,
 }
 
 void
-upload_cb                               (GObject      *obj,
+upload_cb                               (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (user_data);
+  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
   GError *error = NULL;
   gchar *photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
 
@@ -96,16 +96,16 @@ upload_cb                               (GObject      *obj,
       /* Continue finishing the authorization */
       g_print ("Getting info for photo %s...\n", photo_id);
       fsp_photos_mgr_get_info_async (photos_mgr, photo_id, NULL,
-                                     photo_get_info_cb, photos_mgr);
+                                     photo_get_info_cb, NULL);
     }
 }
 
 void
-complete_auth_cb                        (GObject      *obj,
+complete_auth_cb                        (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspSession *session = FSP_SESSION (user_data);
+  FspSession* session = FSP_SESSION (object);
   GError *error = NULL;
   gboolean auth_done = fsp_session_complete_auth_finish (session, res, &error);
 
@@ -146,17 +146,17 @@ complete_auth_cb                        (GObject      *obj,
                                        FSP_SAFETY_LEVEL_NONE,
                                        FSP_CONTENT_TYPE_PHOTO,
                                        FSP_SEARCH_SCOPE_NONE,
-                                       NULL, upload_cb, photos_mgr);
+                                       NULL, upload_cb, NULL);
         }
     }
 }
 
 void
-get_auth_url_cb                         (GObject      *obj,
+get_auth_url_cb                         (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspSession *session = FSP_SESSION (user_data);
+  FspSession* session = FSP_SESSION (object);
   GError *error = NULL;
   gchar *auth_url = fsp_session_get_auth_url_finish (session, res, &error);
 
@@ -176,7 +176,7 @@ get_auth_url_cb                         (GObject      *obj,
 
       /* Continue finishing the authorization */
       g_print ("Finishing authorization...\n");
-      fsp_session_complete_auth_async (session, NULL, complete_auth_cb, session);
+      fsp_session_complete_auth_async (session, NULL, complete_auth_cb, NULL);
     }
 }
 
@@ -195,7 +195,7 @@ do_work (gpointer unused)
   g_free (secret);
 
   g_print ("Getting authorization URL...\n");
-  fsp_session_get_auth_url_async (session, NULL, get_auth_url_cb, session);
+  fsp_session_get_auth_url_async (session, NULL, get_auth_url_cb, NULL);
 
   return FALSE;
 }

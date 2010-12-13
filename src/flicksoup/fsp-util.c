@@ -20,10 +20,12 @@
  *
  */
 
+#include "fsp-util.h"
+
+#include "fsp-error.h"
+
 #include <stdarg.h>
 #include <libsoup/soup.h>
-
-#include "fsp-util.h"
 
 static GHashTable *
 _get_params_table_from_valist           (const gchar *first_param,
@@ -243,4 +245,64 @@ get_signed_query_from_hash_table        (const gchar *shared_secret,
   g_free (api_sig);
 
   return retval;
+}
+
+void
+build_async_result_and_complete         (GAsyncData *clos,
+                                         gpointer    result,
+                                         GError     *error)
+{
+  g_assert (clos != NULL);
+
+  GSimpleAsyncResult *res = NULL;
+  GObject *object = NULL;
+  GAsyncReadyCallback  callback = NULL;
+  gpointer source_tag;
+  gpointer user_data;
+
+  /* Get data from closure, and free it */
+  object = clos->object;
+  callback = clos->callback;
+  source_tag = clos->source_tag;
+  user_data = clos->user_data;
+  g_slice_free (GAsyncData, clos);
+
+  /* Build response and call async callback */
+  res = g_simple_async_result_new (object, callback,
+                                   user_data, source_tag);
+
+  /* Return the given value or an error otherwise */
+  if (error != NULL)
+    g_simple_async_result_set_from_error (res, error);
+  else
+    g_simple_async_result_set_op_res_gpointer (res, result, NULL);
+
+  /* Execute the callback */
+  g_simple_async_result_complete_in_idle (res);
+}
+
+gboolean
+check_async_errors_on_finish            (GObject       *object,
+                                         GAsyncResult  *res,
+                                         gpointer       source_tag,
+                                         GError       **error)
+{
+  g_return_val_if_fail (G_IS_OBJECT (object), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  gboolean errors_found = TRUE;
+
+  if (g_simple_async_result_is_valid (res, object, source_tag))
+    {
+      GSimpleAsyncResult *simple = NULL;
+
+      /* Check error */
+      simple = G_SIMPLE_ASYNC_RESULT (res);
+      if (!g_simple_async_result_propagate_error (simple, error))
+	errors_found = FALSE;
+    }
+  else
+    g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER, "Internal error");
+
+  return errors_found;
 }

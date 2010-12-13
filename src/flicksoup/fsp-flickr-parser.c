@@ -20,11 +20,12 @@
  *
  */
 
+#include "fsp-flickr-parser.h"
+
+#include "fsp-error.h"
+
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
-
-#include "fsp-flickr-parser.h"
-#include "fsp-error.h"
 
 G_DEFINE_TYPE (FspFlickrParser, fsp_flickr_parser, G_TYPE_OBJECT);
 

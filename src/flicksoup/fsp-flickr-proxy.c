@@ -20,15 +20,16 @@
  *
  */
 
+#include "fsp-flickr-proxy.h"
+
+#include "fsp-error.h"
+#include "fsp-flickr-parser.h"
+#include "fsp-util.h"
+
+#include <libsoup/soup.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libsoup/soup.h>
-
-#include "fsp-flickr-proxy.h"
-#include "fsp-flickr-parser.h"
-#include "fsp-error.h"
-#include "fsp-util.h"
 
 #define FLICKR_API_BASE_URL   "http://api.flickr.com/services/rest"
 #define FLICKR_API_UPLOAD_URL "http://api.flickr.com/services/upload"
@@ -51,16 +52,6 @@ struct _FspFlickrProxyPrivate
   FspFlickrParser *parser;
   SoupSession *soup_session;
 };
-
-/* Other struts */
-typedef struct
-{
-  FspFlickrProxy      *self;
-  GCancellable        *cancellable;
-  GAsyncReadyCallback  callback;
-  gpointer             source_tag;
-  gpointer             user_data;
-} GAsyncData;
 
 typedef struct
 {
@@ -85,10 +76,6 @@ static gboolean
 _check_errors_on_soup_response          (SoupMessage  *msg,
                                          GError      **error);
 
-static void
-_build_async_result_and_complete        (GAsyncData *clos,
-                                         gpointer    result,
-                                         GError     *error);
 static SoupMessage *
 _get_soup_message_for_upload            (GFile       *file,
                                          const gchar *contents,
@@ -127,13 +114,6 @@ _perform_async_request                  (FspFlickrProxy      *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             source_tag,
                                          gpointer             user_data);
-
-static gboolean
-_check_errors_on_finish                 (FspFlickrProxy  *self,
-                                         GAsyncResult    *res,
-                                         gpointer         source_tag,
-                                         GError         **error);
-
 
 /* Private API */
 
@@ -291,42 +271,6 @@ _check_errors_on_soup_response           (SoupMessage  *msg,
   return (err != NULL);
 }
 
-static void
-_build_async_result_and_complete        (GAsyncData *clos,
-                                         gpointer    result,
-                                         GError     *error)
-{
-  g_assert (clos != NULL);
-
-  GSimpleAsyncResult *res = NULL;
-  FspFlickrProxy *self = NULL;
-  GCancellable *cancellable = NULL;
-  GAsyncReadyCallback callback;
-  gpointer source_tag;
-  gpointer user_data;
-
-  /* Get data from closure, and free it */
-  self = clos->self;
-  cancellable = clos->cancellable;
-  callback = clos->callback;
-  source_tag = clos->source_tag;
-  user_data = clos->user_data;
-  g_slice_free (GAsyncData, clos);
-
-  /* Build response and call async callback */
-  res = g_simple_async_result_new (G_OBJECT (self), callback,
-                                   user_data, source_tag);
-
-  /* Return the given value or an error otherwise */
-  if (error != NULL)
-    g_simple_async_result_set_from_error (res, error);
-  else
-    g_simple_async_result_set_op_res_gpointer (res, result, NULL);
-
-  /* Execute the callback */
-  g_simple_async_result_complete_in_idle (res);
-}
-
 static SoupMessage *
 _get_soup_message_for_upload            (GFile       *file,
                                          const gchar *contents,
@@ -404,15 +348,15 @@ _load_file_contents_cb                  (GObject      *object,
   file = G_FILE (object);
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
-      FspFlickrProxy * self = NULL;
+      FspFlickrProxy * proxy = NULL;
       SoupMessage *msg = NULL;
 
       /* Get the associated message */
       msg = _get_soup_message_for_upload (file, contents, length, extra_params);
 
       /* Perform the async request */
-      self = ga_clos->self;
-      soup_session_queue_message (self->priv->soup_session,
+      proxy = FSP_FLICKR_PROXY (ga_clos->object);
+      soup_session_queue_message (proxy->priv->soup_session,
                                   msg, _photo_upload_soup_session_cb, ga_clos);
 
       /* Free */
@@ -424,7 +368,7 @@ _load_file_contents_cb                  (GObject      *object,
       /* If an error happened here, report through the async callback */
       g_warning ("Unable to get contents for file\n");
       error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file");
-      _build_async_result_and_complete (ga_clos, NULL, error);
+      build_async_result_and_complete (ga_clos, NULL, error);
     }
 }
 
@@ -438,25 +382,25 @@ _get_frob_soup_session_cb               (SoupSession *session,
   g_assert (data != NULL);
 
   GAsyncData *clos = NULL;
-  FspFlickrProxy *self = NULL;
+  FspFlickrProxy *proxy = NULL;
   gchar *frob = NULL;
   GError *err = NULL;
 
   /* Get needed data from closure */
   clos = (GAsyncData *) data;
-  self = clos->self;
+  proxy = FSP_FLICKR_PROXY (clos->object);
 
   /* Get value from response */
   if (!_check_errors_on_soup_response (msg, &err))
     {
-      frob = fsp_flickr_parser_get_frob (self->priv->parser,
+      frob = fsp_flickr_parser_get_frob (proxy->priv->parser,
                                          msg->response_body->data,
                                          (int) msg->response_body->length,
                                          &err);
     }
 
   /* Build response and call async callback */
-  _build_async_result_and_complete (clos, (gpointer) frob, err);
+  build_async_result_and_complete (clos, (gpointer) frob, err);
 }
 
 static void
@@ -469,26 +413,26 @@ _get_auth_token_soup_session_cb         (SoupSession *session,
   g_assert (data != NULL);
 
   GAsyncData *clos = NULL;
-  FspFlickrProxy *self = NULL;
+  FspFlickrProxy *proxy = NULL;
   FspDataAuthToken *auth_token = NULL;
   GError *err = NULL;
 
   /* Get needed data from closure */
   clos = (GAsyncData *) data;
-  self = clos->self;
+  proxy = FSP_FLICKR_PROXY (clos->object);
 
   /* Get value from response */
   if (!_check_errors_on_soup_response (msg, &err))
     {
       auth_token =
-        fsp_flickr_parser_get_auth_token (self->priv->parser,
+        fsp_flickr_parser_get_auth_token (proxy->priv->parser,
                                           msg->response_body->data,
                                           (int) msg->response_body->length,
                                           &err);
     }
 
   /* Build response and call async callback */
-  _build_async_result_and_complete (clos, (gpointer) auth_token, err);
+  build_async_result_and_complete (clos, (gpointer) auth_token, err);
 }
 
 static void
@@ -501,26 +445,26 @@ _photo_upload_soup_session_cb           (SoupSession *session,
   g_assert (data != NULL);
 
   GAsyncData *clos = NULL;
-  FspFlickrProxy *self = NULL;
+  FspFlickrProxy *proxy = NULL;
   gchar *photo_id = NULL;
   GError *err = NULL;
 
   /* Get needed data from closure */
   clos = (GAsyncData *) data;
-  self = clos->self;
+  proxy = FSP_FLICKR_PROXY (clos->object);
 
   /* Get value from response */
   if (!_check_errors_on_soup_response (msg, &err))
     {
       photo_id =
-        fsp_flickr_parser_get_upload_result (self->priv->parser,
+        fsp_flickr_parser_get_upload_result (proxy->priv->parser,
                                              msg->response_body->data,
                                              (int) msg->response_body->length,
                                              &err);
     }
 
   /* Build response and call async callback */
-  _build_async_result_and_complete (clos, photo_id, err);
+  build_async_result_and_complete (clos, photo_id, err);
 }
 
 static void
@@ -533,26 +477,26 @@ _photo_get_info_soup_session_cb         (SoupSession *session,
   g_assert (data != NULL);
 
   GAsyncData *clos = NULL;
-  FspFlickrProxy *self = NULL;
+  FspFlickrProxy *proxy = NULL;
   FspDataPhotoInfo *photo_info = NULL;
   GError *err = NULL;
 
   /* Get needed data from closure */
   clos = (GAsyncData *) data;
-  self = clos->self;
+  proxy = FSP_FLICKR_PROXY (clos->object);
 
   /* Get value from response */
   if (!_check_errors_on_soup_response (msg, &err))
     {
       photo_info =
-        fsp_flickr_parser_get_photo_info (self->priv->parser,
+        fsp_flickr_parser_get_photo_info (proxy->priv->parser,
                                           msg->response_body->data,
                                           (int) msg->response_body->length,
                                           &err);
     }
 
   /* Build response and call async callback */
-  _build_async_result_and_complete (clos, photo_info, err);
+  build_async_result_and_complete (clos, photo_info, err);
 }
 
 static void
@@ -574,7 +518,7 @@ _perform_async_request                  (FspFlickrProxy      *self,
 
   /* Save important data for the callback */
   clos = g_slice_new (GAsyncData);
-  clos->self = self;
+  clos->object = G_OBJECT (self);
   clos->cancellable = cancellable;
   clos->callback = callback;
   clos->source_tag = source_tag;
@@ -584,32 +528,6 @@ _perform_async_request                  (FspFlickrProxy      *self,
   msg = soup_message_new (SOUP_METHOD_GET, url);
   soup_session_queue_message (self->priv->soup_session,
                               msg, request_cb, clos);
-}
-
-static gboolean
-_check_errors_on_finish                 (FspFlickrProxy *self,
-                                         GAsyncResult *res,
-                                         gpointer source_tag,
-                                         GError **error)
-{
-  g_return_val_if_fail (FSP_IS_FLICKR_PROXY (self), FALSE);
-  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-
-  gboolean errors_found = TRUE;
-
-  if (g_simple_async_result_is_valid (res, G_OBJECT (self), source_tag))
-    {
-      GSimpleAsyncResult *simple = NULL;
-
-      /* Check error */
-      simple = G_SIMPLE_ASYNC_RESULT (res);
-      if (!g_simple_async_result_propagate_error (simple, error))
-	errors_found = FALSE;
-    }
-  else
-    g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER, "Internal error");
-
-  return errors_found;
 }
 
 
@@ -704,8 +622,8 @@ fsp_flickr_proxy_get_frob_finish        (FspFlickrProxy  *self,
   gchar *frob = NULL;
 
   /* Check for errors */
-  if (!_check_errors_on_finish (self, res,
-                                fsp_flickr_proxy_get_frob_async, error))
+  if (!check_async_errors_on_finish (G_OBJECT (self), res,
+                                     fsp_flickr_proxy_get_frob_async, error))
     {
       GSimpleAsyncResult *simple = NULL;
       gpointer result = NULL;
@@ -764,8 +682,8 @@ fsp_flickr_proxy_get_auth_token_finish  (FspFlickrProxy  *self,
   FspDataAuthToken *auth_token = NULL;
 
   /* Check for errors */
-  if (!_check_errors_on_finish (self, res,
-                                fsp_flickr_proxy_get_auth_token_async, error))
+  if (!check_async_errors_on_finish (G_OBJECT (self), res,
+                                     fsp_flickr_proxy_get_auth_token_async, error))
     {
       GSimpleAsyncResult *simple = NULL;
       gpointer result = NULL;
@@ -803,7 +721,7 @@ fsp_flickr_proxy_photo_upload_async     (FspFlickrProxy      *self,
 
   /* Save important data for the callback */
   ga_clos = g_slice_new (GAsyncData);
-  ga_clos->self = self;
+  ga_clos->object = G_OBJECT (self);
   ga_clos->cancellable = c;
   ga_clos->callback = cb;
   ga_clos->source_tag = fsp_flickr_proxy_photo_upload_async;
@@ -843,8 +761,8 @@ fsp_flickr_proxy_photo_upload_finish    (FspFlickrProxy *self,
   gchar *retval = NULL;
 
   /* Check for errors */
-  if (!_check_errors_on_finish (self, res,
-                                fsp_flickr_proxy_photo_upload_async, error))
+  if (!check_async_errors_on_finish (G_OBJECT (self), res,
+                                     fsp_flickr_proxy_photo_upload_async, error))
     {
       GSimpleAsyncResult *simple = NULL;
       gpointer result = NULL;
@@ -904,8 +822,8 @@ fsp_flickr_proxy_photo_get_info_finish  (FspFlickrProxy *self,
   FspDataPhotoInfo *retval = NULL;
 
   /* Check for errors */
-  if (!_check_errors_on_finish (self, res,
-                                fsp_flickr_proxy_photo_get_info_async, error))
+  if (!check_async_errors_on_finish (G_OBJECT (self), res,
+                                     fsp_flickr_proxy_photo_get_info_async, error))
     {
       GSimpleAsyncResult *simple = NULL;
       gpointer result = NULL;
