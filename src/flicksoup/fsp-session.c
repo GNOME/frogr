@@ -220,7 +220,7 @@ _get_auth_url_result_cb                 (GObject      *object,
                                          GAsyncResult *result,
                                          gpointer      data)
 {
-  g_return_if_fail (FSP_IS_PROXY (object));
+  g_return_if_fail (FSP_IS_FLICKR_PROXY (object));
   g_return_if_fail (G_IS_ASYNC_RESULT (result));
   g_return_if_fail (data != NULL);
 
@@ -262,7 +262,7 @@ static void _complete_auth_cb           (GObject      *object,
                                          GAsyncResult *result,
                                          gpointer      data)
 {
-  g_return_if_fail (FSP_IS_PROXY (object));
+  g_return_if_fail (FSP_IS_FLICKR_PROXY (object));
   g_return_if_fail (G_IS_ASYNC_RESULT (result));
   g_return_if_fail (data != NULL);
 
