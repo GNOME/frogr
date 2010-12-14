@@ -50,8 +50,6 @@ typedef struct _FrogrAuthDialogPrivate {
 /* Prototypes */
 
 static void _ask_for_authorization (FrogrAuthDialog *self);
-static void _complete_auth_cb (GObject *obj, GAsyncResult *res, gpointer data);
-static void _auth_failed_dialog_cb (GtkDialog *dialog, gint response, gpointer data);
 static void _ask_for_auth_confirmation (FrogrAuthDialog *self);
 
 /* Private API */
@@ -69,69 +67,15 @@ _ask_for_authorization (FrogrAuthDialog *self)
   g_free (aux_string);
 
   response = gtk_dialog_run (GTK_DIALOG (self));
-  if (response != GTK_RESPONSE_ACCEPT)
+  if (response == GTK_RESPONSE_ACCEPT)
     {
-      /* Destroy the dialog if no longer useful */
-      gtk_widget_destroy (GTK_WIDGET (self));
-      return;
-    }
-
-  frogr_controller_open_auth_url (priv->controller);
-  _ask_for_auth_confirmation (self);
-}
-
-static void
-_complete_auth_cb (GObject *obj, GAsyncResult *res, gpointer data)
-{
-  FrogrAuthDialog *self = FROGR_AUTH_DIALOG (data);
-  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (self);
-  GError *error = NULL;
-  gboolean auth_done;
-
-  if (frogr_controller_complete_auth_finish (priv->controller, res, &error))
-    {
-      /* Everything went fine */
-      g_debug ("Authorization successfully completed!");
-      gtk_widget_destroy (GTK_WIDGET (self));
+      frogr_controller_open_auth_url (priv->controller);
+      _ask_for_auth_confirmation (self);
     }
   else
     {
-      /* An error happened */
-      GtkWidget *auth_failed_dialog;
-      gchar *aux_string = NULL;
-
-      auth_failed_dialog = gtk_message_dialog_new (GTK_WINDOW (self),
-                                                   GTK_DIALOG_MODAL,
-                                                   GTK_MESSAGE_ERROR,
-                                                   GTK_BUTTONS_OK,
-                                                   _("Authorization failed.\n"
-                                                     "Please try again"));
-      /* Show and destroy a an error message */
-      gtk_widget_show (auth_failed_dialog);
-      g_signal_connect (G_OBJECT (auth_failed_dialog), "response",
-                        G_CALLBACK (_auth_failed_dialog_cb),
-                        self);
-
-      /* gtk_widget_destroy (msg_dialog); */
-      if (error != NULL)
-        {
-          g_debug ("Authorization failed: %s\n", error->message);
-          g_error_free (error);
-        }
+      gtk_widget_destroy (GTK_WIDGET (self));
     }
-}
-
-static void
-_auth_failed_dialog_cb (GtkDialog *dialog, gint response, gpointer data)
-{
-  FrogrAuthDialog *self = FROGR_AUTH_DIALOG (data);
-  FrogrAuthDialogPrivate *priv = FROGR_AUTH_DIALOG_GET_PRIVATE (self);
-  gtk_widget_destroy (GTK_WIDGET (dialog));
-
-  /* Re-enable button and ask again for authorization */
-  gtk_widget_set_sensitive (priv->button, TRUE);
-  gtk_widget_grab_focus (priv->button);
-  _ask_for_authorization (self);
 }
 
 static void
@@ -147,17 +91,10 @@ _ask_for_auth_confirmation (FrogrAuthDialog *self)
   g_free (aux_string);
 
   response = gtk_dialog_run (GTK_DIALOG (self));
-  if (response != GTK_RESPONSE_ACCEPT)
-    {
-      /* Destroy the dialog if no longer useful */
-      gtk_widget_destroy (GTK_WIDGET (self));
-      return;
-    }
+  gtk_widget_destroy (GTK_WIDGET (self));
 
-  /* Complete authorization */
-  gtk_widget_set_sensitive (priv->button, FALSE);
-  frogr_controller_complete_auth_async (priv->controller, NULL,
-                                        _complete_auth_cb, self);
+  if (response == GTK_RESPONSE_ACCEPT)
+    frogr_controller_complete_auth (priv->controller);
 }
 
 static void
@@ -213,9 +150,10 @@ frogr_auth_dialog_new (GtkWindow *parent)
                                "title", _("Authorize Frogr"),
                                "modal", TRUE,
                                "transient-for", parent,
-                               "type", GTK_WIN_POS_CENTER_ON_PARENT,
+                               "type", GTK_WINDOW_POPUP,
                                "resizable", FALSE,
                                "has-separator", FALSE,
+                               "window-position", GTK_WIN_POS_CENTER_ON_PARENT,
                                NULL);
   return FROGR_AUTH_DIALOG (new);
 }
@@ -230,5 +168,6 @@ frogr_auth_dialog_show (FrogrAuthDialog *self)
       g_debug ("Not needed to show dialog: already authenticated");
       return;
     }
+
   _ask_for_authorization (self);
 }

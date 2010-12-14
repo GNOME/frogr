@@ -71,6 +71,9 @@ typedef struct {
 /* Prototypes */
 
 static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data);
+
+static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data);
+
 static void _upload_picture_cb (FrogrController *self,
                                 upload_picture_st *up_st);
 
@@ -104,6 +107,53 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data)
       gnome_url_show (auth_url);
 #endif
       g_free (auth_url);
+    }
+}
+
+static void
+_complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data)
+{
+  FspSession *session = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  controller = FROGR_CONTROLLER (user_data);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  if (fsp_session_complete_auth_finish (session, result, &error))
+    {
+      gchar *token = fsp_session_get_token (session);
+      if (token)
+        {
+          /* Set and save the auth token and the settings to disk */
+          frogr_account_set_token (priv->account, token);
+          frogr_config_save (priv->config);
+
+          g_debug ("Authorization successfully completed!");
+        }
+    }
+
+  if (error != NULL)
+    {
+      GtkWidget *dialog = NULL;
+      GtkWindow *window = NULL;
+
+      /* Show error dialog */
+      window = frogr_main_view_get_window (priv->mainview);
+      dialog = gtk_message_dialog_new (window,
+                                       GTK_DIALOG_MODAL,
+                                       GTK_MESSAGE_ERROR,
+                                       GTK_BUTTONS_OK,
+                                       _("Authorization failed.\n"
+                                         "Please try again"));
+      gtk_widget_show (dialog);
+      g_signal_connect (G_OBJECT (dialog), "response",
+                        G_CALLBACK (gtk_widget_destroy), NULL);
+
+      g_debug ("Authorization failed: %s\n", error->message);
+      g_error_free (error);
     }
 }
 
@@ -224,13 +274,8 @@ frogr_controller_run_app (FrogrController *self)
   priv->mainview = frogr_main_view_new ();
   g_object_add_weak_pointer (G_OBJECT (priv->mainview),
                              (gpointer) & priv-> mainview);
-
   /* Update flag */
   priv->app_running = TRUE;
-
-  /* Show authorization dialog if needed */
-  if (!frogr_controller_is_authorized (self))
-    frogr_controller_show_auth_dialog (self);
 
   /* Run UI */
   gtk_main ();
@@ -331,42 +376,12 @@ frogr_controller_open_auth_url (FrogrController *self)
 }
 
 void
-frogr_controller_complete_auth_async (FrogrController *self,
-                                      GCancellable *c,
-                                      GAsyncReadyCallback cb,
-                                      gpointer object)
+frogr_controller_complete_auth (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  fsp_session_complete_auth_async (priv->session, c, cb, object);
-}
-
-gboolean
-frogr_controller_complete_auth_finish (FrogrController *self,
-                                       GAsyncResult *res,
-                                       GError **error)
-{
-  g_return_val_if_fail (FROGR_IS_CONTROLLER (self), FALSE);
-  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  gboolean auth_done = FALSE;
-
-  auth_done = fsp_session_complete_auth_finish (priv->session, res, error);
-  if (auth_done)
-    {
-      gchar *token = fsp_session_get_token (priv->session);
-      if (token)
-        {
-          /* Set and save the auth token and the settings to disk */
-          frogr_account_set_token (priv->account, token);
-          frogr_config_save (priv->config);
-          return TRUE;
-        }
-    }
-
-  return FALSE;
+  fsp_session_complete_auth_async (priv->session, NULL, _complete_auth_cb, self);
 }
 
 gboolean

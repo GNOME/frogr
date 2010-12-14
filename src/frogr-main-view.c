@@ -106,9 +106,14 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            gpointer data);
 void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
-gboolean _on_main_view_delete_event (GtkWidget *widget,
-                                       GdkEvent *event,
-                                       gpointer self);
+
+static void _on_main_view_map_event (GtkWidget *widget,
+                                     GdkEvent *event,
+                                     gpointer user_data);
+
+static gboolean _on_main_view_delete_event (GtkWidget *widget,
+                                            GdkEvent *event,
+                                            gpointer self);
 
 static void _update_ui (FrogrMainView *self);
 static GSList *_get_selected_pictures (FrogrMainView *self);
@@ -452,7 +457,19 @@ _on_about_menu_item_activate (GtkWidget *widget, gpointer self)
   frogr_controller_show_about_dialog (priv->controller);
 }
 
-gboolean
+
+static void
+_on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
+  FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Show authorization dialog if needed */
+  if (!frogr_controller_is_authorized (priv->controller))
+    frogr_controller_show_auth_dialog (priv->controller);
+}
+
+static gboolean
 _on_main_view_delete_event (GtkWidget *widget,
                               GdkEvent *event,
                               gpointer self)
@@ -894,6 +911,9 @@ frogr_main_view_init (FrogrMainView *self)
                                   "Status bar messages");
 
   /* Connect signals */
+  g_signal_connect (G_OBJECT (priv->window), "map-event",
+                    _on_main_view_map_event, self);
+
   g_signal_connect (G_OBJECT (priv->window), "destroy",
                     G_CALLBACK (gtk_main_quit),
                     NULL);

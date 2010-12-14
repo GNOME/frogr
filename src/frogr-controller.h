@@ -67,14 +67,7 @@ void frogr_controller_show_add_tags_dialog (FrogrController *self,
 
 void frogr_controller_open_auth_url (FrogrController *self);
 
-void frogr_controller_complete_auth (FrogrController *self,
-                                     GCancellable *c,
-                                     GAsyncReadyCallback cb,
-                                     gpointer object);
-gboolean
-frogr_controller_complete_auth_finish (FrogrController *self,
-                                       GAsyncResult *res,
-                                       GError **error);
+void frogr_controller_complete_auth (FrogrController *self);
 
 gboolean frogr_controller_is_authorized (FrogrController *self);
 
