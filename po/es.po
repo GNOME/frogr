@@ -5,84 +5,52 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: frogr 0.2~unreleased\n"
+"Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-08 09:39+0100\n"
+"POT-Creation-Date: 2010-12-15 20:56+0100\n"
 "PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Alejandro Pinheiro <apinheiro@igalia.com>\n"
 "Language-Team: English\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. File menu
-#: ../src/frogr-main-view.c:145
-msgid "_File"
-msgstr "_Archivo"
+#: ../src/frogr-about-dialog.c:44
+msgid "A Flickr remote organizer for GNOME\n"
+msgstr "Un organizador remoto de Flickr para GNOME\n"
 
-#: ../src/frogr-main-view.c:151
-msgid "_Quit"
-msgstr "_Salir"
-
-#. Help menu
-#: ../src/frogr-main-view.c:155
-msgid "_Help"
-msgstr "_Ayuda"
-
-#: ../src/frogr-main-view.c:161
-msgid "_About"
-msgstr "_Acerca de"
-
-#: ../src/frogr-main-view.c:184
-msgid "Add tags..."
+#: ../src/frogr-add-tags-dialog.c:201
+#, fuzzy
+msgid "Add tags"
 msgstr "Añadir tags"
 
-#: ../src/frogr-main-view.c:185
-msgid "Edit details..."
-msgstr "Editar detalles"
-
-#: ../src/frogr-main-view.c:186
-msgid "Remove"
-msgstr "Eliminar"
-
-#: ../src/frogr-main-view.c:311
-msgid "Select a picture"
-msgstr "Seleccionar una imagen"
-
-#: ../src/frogr-auth-dialog.c:29
+#: ../src/frogr-auth-dialog.c:31
 #, c-format
 msgid ""
 "You have not properly authorized %s in flickr.\n"
-"Please press the 'Continue' button to authorize %s and then come back to "
-"this screen to complete the process."
+"Please press the button to authorize %s and then come back to this screen to "
+"complete the process."
 msgstr ""
 "No se ha registrado adecuadamente %s en flickr.\n"
-"Por favor, presione el botón \"Continuar\" para registrar %s y luego vuelva "
-"a esta pantalla para completar el proceso"
+"Por favor, presione el botón para registrar %s y luego vuelva a esta "
+"pantalla para completar el proceso"
 
-#: ../src/frogr-auth-dialog.c:34
+#: ../src/frogr-auth-dialog.c:36
 #, c-format
 msgid ""
-"Press 'Complete' to start using %s once you've authorized it in your flickr "
+"Press the button to start using %s once you've authorized it in your flickr "
 "account."
 msgstr ""
-"Presiones \"Completar\" para empezar a usar %s una vez lo haya registrado en "
-"su cuenta de flickr"
+"Presione el botón para empezar a usar %s una vez lo haya registrado en su "
+"cuenta de flickr"
 
-#: ../src/frogr-auth-dialog.c:81 ../src/frogr-auth-dialog.c:170
-msgid "Continue"
-msgstr "Continuar"
+#: ../src/frogr-controller.c:160
+msgid "Authorization successfully completed!"
+msgstr "Registro completado con éxito!"
 
-#: ../src/frogr-auth-dialog.c:107 ../src/frogr-add-tags-dialog.c:154
-msgid "Authorize Frogr"
-msgstr "Registrar Frogr"
-
-#: ../src/frogr-auth-dialog.c:138
-msgid "Complete"
-msgstr "Completar"
-
-#: ../src/frogr-auth-dialog.c:161
+#: ../src/frogr-controller.c:161
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -90,23 +58,60 @@ msgstr ""
 "Fallo en el registro.\n"
 "Pruebe de nuevo por favor"
 
-#: ../src/frogr-about-dialog.c:41
-msgid "A Flickr remote organizer for GNOME\n"
-msgstr "Un organizador remoto de Flickr para GNOME\n"
-
-#: ../src/frogr-details-dialog.c:255
+#: ../src/frogr-details-dialog.c:260
 #, c-format
 msgid "(Editing %d pictures)"
 msgstr "(Editando %d imágenes)"
 
-#: ../src/frogr-details-dialog.c:384
+#. This shows a dialog notifying the problem to the user
+#: ../src/frogr-details-dialog.c:381
 msgid "Missing data required"
 msgstr "Falta información necesaria"
 
-#: ../src/frogr-details-dialog.c:570
+#: ../src/frogr-details-dialog.c:595
 #: ../data/gtkbuilder/frogr-details-dialog.xml.h:2
 msgid "Edit picture details"
 msgstr "Editar detalles de la imagen"
+
+#. File menu
+#: ../src/frogr-main-view.c:157
+msgid "_File"
+msgstr "_Archivo"
+
+#: ../src/frogr-main-view.c:163
+msgid "_Quit"
+msgstr "_Salir"
+
+#. Help menu
+#: ../src/frogr-main-view.c:167
+msgid "_Help"
+msgstr "_Ayuda"
+
+#: ../src/frogr-main-view.c:173
+msgid "_About"
+msgstr "_Acerca de"
+
+#: ../src/frogr-main-view.c:196
+msgid "Add tags..."
+msgstr "Añadir tags"
+
+#: ../src/frogr-main-view.c:197
+msgid "Edit details..."
+msgstr "Editar detalles"
+
+#: ../src/frogr-main-view.c:198
+msgid "Remove"
+msgstr "Eliminar"
+
+#: ../src/frogr-main-view.c:344
+msgid "Select a picture"
+msgstr "Seleccionar una imagen"
+
+#. Update progress
+#: ../src/frogr-picture-loader.c:95
+#, fuzzy, c-format
+msgid "Loading '%s'..."
+msgstr "Subiendo '%s'..."
 
 #. Update progress
 #: ../src/frogr-picture-uploader.c:78
@@ -115,10 +120,25 @@ msgid "Uploading '%s'..."
 msgstr "Subiendo '%s'..."
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:1
+#, fuzzy
+msgid "Add pictures"
+msgstr "(Editando %d imágenes)"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:2
+#, fuzzy
+msgid "Authorize frogr"
+msgstr "Registrar Frogr"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:3
+#, fuzzy
+msgid "Remove pictures"
+msgstr "Seleccionar una imagen"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "Upload"
 msgstr "Subir"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:2
+#: ../data/gtkbuilder/frogr-main-view.xml.h:5
 msgid "frogr"
 msgstr "frogr"
 

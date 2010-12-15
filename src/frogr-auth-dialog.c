@@ -29,11 +29,11 @@
 
 static gchar *unauth_txt =
   N_("You have not properly authorized %s in flickr.\n"
-     "Please press the 'Continue' button to authorize %s "
+     "Please press the button to authorize %s "
      "and then come back to this screen to complete the process.");
 
 static gchar *auth_txt =
-  N_("Press 'Complete' to start using %s once you've "
+  N_("Press the button to start using %s once you've "
      "authorized it in your flickr account.");
 
 /* Prototypes */
