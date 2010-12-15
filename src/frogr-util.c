@@ -29,7 +29,14 @@ void
 frogr_util_open_url_in_browser (const gchar *url)
 {
 #ifdef HAVE_GTK_2_14
-  gtk_show_uri (NULL, url, gtk_get_current_event_time (), NULL);
+  GError *error = NULL;
+
+  gtk_show_uri (NULL, url, gtk_get_current_event_time (), &error);
+  if (error != NULL)
+    {
+      g_debug ("Error opening URL %s: %s\n", url, error->message);
+      g_error_free (error);
+    }
 #else
   gnome_url_show (url);
 #endif
