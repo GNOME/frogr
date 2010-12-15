@@ -53,6 +53,8 @@ frogr_SOURCES = \
 	frogr-main-view-model.h \
 	frogr-picture.c \
 	frogr-picture.h \
+	frogr-util.c \
+	frogr-util.h \
 	frogr-account.c \
 	frogr-account.h \
 	frogr-config.c \

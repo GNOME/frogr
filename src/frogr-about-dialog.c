@@ -20,9 +20,12 @@
  *
  */
 
+#include "frogr-about-dialog.h"
+
+#include "frogr-util.h"
+
 #include <config.h>
 #include <glib/gi18n.h>
-#include "frogr-about-dialog.h"
 
 #define ABOUT_DIALOG_ICON ICONS_DIR "/hicolor/48x48/apps/frogr.png"
 
@@ -65,13 +68,7 @@ _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
                               gpointer data)
 {
   gchar *uri = g_strconcat (data, link, NULL);
-
-#ifdef HAVE_GTK_2_14
-  gtk_show_uri (NULL, uri, GDK_CURRENT_TIME, NULL);
-#else
-  gnome_url_show (uri);
-#endif
-
+  frogr_util_open_url_in_browser (uri);
   g_free (uri);
 }
 

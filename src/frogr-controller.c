@@ -98,14 +98,10 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data)
   g_print ("[get_auth_url_cb]::Result: %s\n\n",
            auth_url ? auth_url : "No URL got");
 
+  /* Open url in the default application */
   if (auth_url != NULL)
     {
-      /* Open url in the default application */
-#ifdef HAVE_GTK_2_14
-      gtk_show_uri (NULL, auth_url, GDK_CURRENT_TIME, NULL);
-#else
-      gnome_url_show (auth_url);
-#endif
+      frogr_util_open_url_in_browser (auth_url);
       g_free (auth_url);
     }
 }
