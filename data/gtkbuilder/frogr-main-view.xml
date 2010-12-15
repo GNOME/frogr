@@ -23,6 +23,8 @@
             <child>
               <object class="GtkToolButton" id="add_button">
                 <property name="visible">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes">Add pictures</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-add</property>
                 <signal name="clicked" handler="_on_add_button_clicked" swapped="no"/>
@@ -35,6 +37,8 @@
             <child>
               <object class="GtkToolButton" id="remove_button">
                 <property name="visible">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes">Remove pictures</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-remove</property>
                 <signal name="clicked" handler="_on_remove_button_clicked" swapped="no"/>
@@ -47,6 +51,7 @@
             <child>
               <object class="GtkToolButton" id="upload_button">
                 <property name="visible">True</property>
+                <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes">Upload</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-go-up</property>
@@ -61,6 +66,7 @@
               <object class="GtkToolButton" id="auth_button">
                 <property name="visible">True</property>
                 <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes">Authorize frogr</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-dialog-authentication</property>
                 <signal name="clicked" handler="_on_auth_button_clicked" swapped="no"/>
