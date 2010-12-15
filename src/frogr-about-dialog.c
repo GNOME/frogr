@@ -1,7 +1,7 @@
 /*
  * frogr-about-dialog.c -- About dialog
  *
- * Copyright (C) 2009 Mario Sanchez Prada
+ * Copyright (C) 2009, 2010 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ static const gchar *artists[] = {
 };
 
 static const gchar *appdescr = N_("A Flickr remote organizer for GNOME\n");
-static const gchar *copyright = "(c) 2009 Mario Sanchez Prada";
+static const gchar *copyright = "(c) 2009, 2010 Mario Sanchez Prada";
 static const gchar *website = "http://code.google.com/p/frogr";
 static const gchar *license =
   "frogr is free software: you can redistribute\n"

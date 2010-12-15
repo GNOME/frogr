@@ -1,8 +1,10 @@
 /*
  * frogr-config.h -- Configuration system for Frogr.
  *
- * Copyright (C) 2009 Adrian Perez
- * Authors: Adrian Perez <aperez@igalia.com>
+ * Copyright (C) 2009, 2010 Adrian Perez
+ * Authors:
+ *   Adrian Perez <aperez@igalia.com>
+ *   Mario Sanchez Prada <msanchez@igalia.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 3 of the GNU General Public

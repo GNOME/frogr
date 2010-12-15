@@ -1,7 +1,7 @@
 /*
  * main.c -- Main file and initialization
  *
- * Copyright (C) 2009 Mario Sanchez Prada
+ * Copyright (C) 2009, 2010 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
  * This program is free software; you can redistribute it and/or

@@ -1,5 +1,5 @@
 # English translations for frogr package.
-# Copyright (C) 2009 THE frogr'S COPYRIGHT HOLDER
+# Copyright (C) 2009, 2010 THE frogr'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
 # Alejandro Pinheiro <apinheiro@igalia.com>, 2009.
 #
