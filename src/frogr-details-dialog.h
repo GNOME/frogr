@@ -49,10 +49,7 @@ struct _FrogrDetailsDialog
 
 GType frogr_details_dialog_get_type (void) G_GNUC_CONST;
 
-FrogrDetailsDialog *frogr_details_dialog_new (GtkWindow *parent,
-                                              GSList *fpictures);
-
-void frogr_details_dialog_show (FrogrDetailsDialog *self);
+void frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures);
 
 G_END_DECLS  /* FROGR_DETAILS_DIALOG_H */
 

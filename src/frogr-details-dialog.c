@@ -71,10 +71,15 @@ static void _fill_dialog_with_data (FrogrDetailsDialog *self);
 static gboolean _validate_dialog_data (FrogrDetailsDialog *self);
 static gboolean _save_data (FrogrDetailsDialog *self);
 
+static void _show_error_saving_data_dialog (FrogrDetailsDialog *self, const gchar *message);
+
 void _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
                                          gpointer data);
 void _on_family_friend_cbutton_toggled (GtkToggleButton *tbutton,
                                         gpointer data);
+
+static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
+
 
 /* Private API */
 
@@ -372,19 +377,8 @@ _save_data (FrogrDetailsDialog *self)
     }
   else
     {
-      /* Show alert */
-      GtkWindow *parent_win =
-        gtk_window_get_transient_for (GTK_WINDOW (self));
-
-      GtkWidget *dialog =
-        gtk_message_dialog_new (parent_win,
-                                GTK_DIALOG_MODAL,
-                                GTK_MESSAGE_WARNING,
-                                GTK_BUTTONS_CLOSE,
-                                _("Missing data required"));
-      /* Run alert dialog */
-      gtk_dialog_run (GTK_DIALOG (dialog));
-      gtk_widget_destroy (dialog);
+      /* This shows a dialog notifying the problem to the user */
+      _show_error_saving_data_dialog (self, _("Missing data required"));
     }
 
   /* free */
@@ -394,6 +388,23 @@ _save_data (FrogrDetailsDialog *self)
 
   /* Return result */
   return result;
+}
+
+static void
+_show_error_saving_data_dialog (FrogrDetailsDialog *self, const gchar *message)
+{
+  /* Show alert */
+  GtkWidget *dialog =
+    gtk_message_dialog_new (GTK_WINDOW (self),
+                            GTK_DIALOG_MODAL,
+                            GTK_MESSAGE_WARNING,
+                            GTK_BUTTONS_CLOSE,
+                            message);
+
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (gtk_widget_destroy), dialog);
+
+  gtk_widget_show_all (dialog);
 }
 
 /* Event handlers */
@@ -422,6 +433,17 @@ _on_family_friend_cbutton_toggled (GtkToggleButton *tbutton,
   /* Reset consistence and update UI */
   gtk_toggle_button_set_inconsistent (tbutton, FALSE);
   _update_ui (self);
+}
+
+static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
+{
+  FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (dialog);
+
+  /* Try to save data if response is OK */
+  if (response == GTK_RESPONSE_OK && _save_data (self) == FALSE)
+      return;
+
+  gtk_widget_destroy (GTK_WIDGET (self));
 }
 
 static void
@@ -557,41 +579,27 @@ g_object_unref (G_OBJECT (builder));
 
 /* Public API */
 
-FrogrDetailsDialog *
-frogr_details_dialog_new (GtkWindow *parent, GSList *pictures)
-{
-  GObject *new = g_object_new (FROGR_TYPE_DETAILS_DIALOG,
-                               "modal", TRUE,
-                               "pictures", pictures,
-                               "transient-for", parent,
-                               "width-request", DIALOG_MIN_WIDTH,
-                               "height-request", DIALOG_MIN_HEIGHT,
-                               "resizable", TRUE,
-                               "title", _("Edit picture details"),
-                               NULL);
-  return FROGR_DETAILS_DIALOG (new);
-}
-
 void
-frogr_details_dialog_show (FrogrDetailsDialog *self)
+frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures)
 {
-  gint response;
+  GtkWidget *dialog = NULL;
   gboolean saved;
 
+  dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_DETAILS_DIALOG,
+                                     "modal", TRUE,
+                                     "pictures", fpictures,
+                                     "transient-for", parent,
+                                     "width-request", DIALOG_MIN_WIDTH,
+                                     "height-request", DIALOG_MIN_HEIGHT,
+                                     "resizable", TRUE,
+                                     "title", _("Edit picture details"),
+                                     NULL));
+
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (_dialog_response_cb), NULL);
+
   /* Fill dialog's widgets with data */
-  _fill_dialog_with_data (self);
+  _fill_dialog_with_data (FROGR_DETAILS_DIALOG (dialog));
 
-  /* Run the dialog */
-  do
-    {
-      response = gtk_dialog_run (GTK_DIALOG (self));
-
-      /* Try to save data if response is OK */
-      if (response == GTK_RESPONSE_OK)
-        saved =_save_data (self);
-
-    } while ((response == GTK_RESPONSE_OK) && !saved);
-
-  /* Destroy the dialog */
-  gtk_widget_destroy (GTK_WIDGET (self));
+  gtk_widget_show_all (dialog);
 }
