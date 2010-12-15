@@ -30,6 +30,7 @@
 #include "frogr-config.h"
 #include "frogr-details-dialog.h"
 #include "frogr-main-view.h"
+#include "frogr-util.h"
 
 #include <config.h>
 #include <flicksoup/flicksoup.h>
@@ -101,8 +102,14 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data)
   /* Open url in the default application */
   if (auth_url != NULL)
     {
+      GtkWindow *window = NULL;
+
       frogr_util_open_url_in_browser (auth_url);
       g_free (auth_url);
+
+      /* Run the auth confirmation dialog */
+      window = frogr_main_view_get_window (priv->mainview);
+      frogr_auth_dialog_show (window, CONFIRM_AUTHORIZATION);
     }
 }
 
@@ -112,7 +119,10 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data)
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  GtkWidget *dialog = NULL;
+  GtkWindow *window = NULL;
   GError *error = NULL;
+  gboolean success = FALSE;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (user_data);
@@ -126,6 +136,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data)
           /* Set and save the auth token and the settings to disk */
           frogr_account_set_token (priv->account, token);
           frogr_config_save (priv->config);
+          success = TRUE;
 
           g_debug ("Authorization successfully completed!");
         }
@@ -133,24 +144,22 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data)
 
   if (error != NULL)
     {
-      GtkWidget *dialog = NULL;
-      GtkWindow *window = NULL;
-
-      /* Show error dialog */
-      window = frogr_main_view_get_window (priv->mainview);
-      dialog = gtk_message_dialog_new (window,
-                                       GTK_DIALOG_MODAL,
-                                       GTK_MESSAGE_ERROR,
-                                       GTK_BUTTONS_OK,
-                                       _("Authorization failed.\n"
-                                         "Please try again"));
-      gtk_widget_show (dialog);
-      g_signal_connect (G_OBJECT (dialog), "response",
-                        G_CALLBACK (gtk_widget_destroy), NULL);
-
       g_debug ("Authorization failed: %s\n", error->message);
       g_error_free (error);
     }
+
+  /* Report result to the user */
+  window = frogr_main_view_get_window (priv->mainview);
+  dialog = gtk_message_dialog_new (window,
+                                   GTK_DIALOG_MODAL,
+                                   success ? GTK_MESSAGE_INFO : GTK_MESSAGE_ERROR,
+                                   GTK_BUTTONS_OK,
+                                   success
+                                   ? _("Authorization successfully completed!")
+                                   : _("Authorization failed.\n" "Please try again"));
+  gtk_widget_show (dialog);
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (gtk_widget_destroy), NULL);
 }
 
 static void
@@ -240,6 +249,9 @@ frogr_controller_init (FrogrController *self)
 FrogrController *
 frogr_controller_get_instance (void)
 {
+  if (_instance)
+    return g_object_ref (_instance);
+
   return FROGR_CONTROLLER (g_object_new (FROGR_TYPE_CONTROLLER, NULL));
 }
 
@@ -323,11 +335,9 @@ frogr_controller_show_auth_dialog (FrogrController *self)
   FrogrController *controller = FROGR_CONTROLLER (self);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   GtkWindow *window = frogr_main_view_get_window (priv->mainview);
-  FrogrAuthDialog *dialog;
 
   /* Run the auth dialog */
-  dialog = frogr_auth_dialog_new (window);
-  frogr_auth_dialog_show (dialog);
+  frogr_auth_dialog_show (window, REQUEST_AUTHORIZATION);
 }
 
 void
