@@ -388,9 +388,7 @@ _on_auth_button_clicked (GtkButton *widget, gpointer data)
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
 
-  /* Show authorization dialog if needed */
-  if (!frogr_controller_is_authorized (priv->controller))
-    frogr_controller_show_auth_dialog (priv->controller);
+  frogr_controller_show_auth_dialog (priv->controller);
 }
 
 gboolean
