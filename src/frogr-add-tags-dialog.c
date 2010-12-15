@@ -44,7 +44,52 @@ enum  {
   PROP_PICTURES
 };
 
+/* Prototypes */
+
+static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
+
 /* Private API */
+
+static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
+{
+  if (response == GTK_RESPONSE_OK)
+    {
+      FrogrAddTagsDialog *self = NULL;
+      FrogrAddTagsDialogPrivate *priv = NULL;
+      gchar *tags = NULL;
+
+      self = FROGR_ADD_TAGS_DIALOG (dialog);
+      priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
+
+      /* Update pictures data */
+      tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->entry)));
+      tags = g_strstrip (tags);
+
+      /* Check if there's something to add */
+      if (tags && !g_str_equal (tags, ""))
+        {
+          FrogrPicture *picture;
+          GSList *item;
+          guint n_pictures;
+
+          g_debug ("Adding tags to picture(s): %s\n", tags);
+
+          /* Iterate over the rest of elements */
+          n_pictures = g_slist_length (priv->pictures);
+          for (item = priv->pictures; item; item = g_slist_next (item))
+            {
+              picture = FROGR_PICTURE (item->data);
+              frogr_picture_add_tags (picture, tags);
+            }
+        }
+
+      /* Free */
+      g_free (tags);
+    }
+
+  /* Destroy the dialog */
+  gtk_widget_destroy (GTK_WIDGET (dialog));
+}
 
 static void
 _frogr_add_tags_dialog_set_property (GObject *object,
@@ -147,56 +192,22 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 
 /* Public API */
 
-FrogrAddTagsDialog *
-frogr_add_tags_dialog_new (GtkWindow *parent, GSList *pictures)
-{
-  GObject *new = g_object_new (FROGR_TYPE_ADD_TAGS_DIALOG,
-                               "title", _("Add tags"),
-                               "modal", TRUE,
-                               "pictures", pictures,
-                               "transient-for", parent,
-                               "resizable", FALSE,
-                               "has-separator", FALSE,
-                               NULL);
-  return FROGR_ADD_TAGS_DIALOG (new);
-}
-
 void
-frogr_add_tags_dialog_show (FrogrAddTagsDialog *self)
+frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures)
 {
-  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
+  GtkWidget *dialog = NULL;
 
-  gint response = 0;
-  response = gtk_dialog_run (GTK_DIALOG (self));
+  dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_ADD_TAGS_DIALOG,
+                                     "title", _("Add tags"),
+                                     "modal", TRUE,
+                                     "pictures", pictures,
+                                     "transient-for", parent,
+                                     "resizable", FALSE,
+                                     "has-separator", FALSE,
+                                     NULL));
 
-  if (response == GTK_RESPONSE_OK)
-    {
-      /* Update pictures data */
-      gchar *tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->entry)));
-      tags = g_strstrip (tags);
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (_dialog_response_cb), NULL);
 
-      /* Check if there's something to add */
-      if (tags && !g_str_equal (tags, ""))
-        {
-          FrogrPicture *picture;
-          GSList *item;
-          guint n_pictures;
-
-          g_debug ("Adding tags to picture(s): %s\n", tags);
-
-          /* Iterate over the rest of elements */
-          n_pictures = g_slist_length (priv->pictures);
-          for (item = priv->pictures; item; item = g_slist_next (item))
-            {
-              picture = FROGR_PICTURE (item->data);
-              frogr_picture_add_tags (picture, tags);
-            }
-        }
-
-      /* Free */
-      g_free (tags);
-    }
-
-  /* Destroy the dialog */
-  gtk_widget_destroy (GTK_WIDGET (self));
+  gtk_widget_show_all (dialog);
 }

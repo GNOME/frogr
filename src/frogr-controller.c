@@ -367,11 +367,9 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
   FrogrController *controller = FROGR_CONTROLLER (self);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   GtkWindow *window = frogr_main_view_get_window (priv->mainview);
-  FrogrAddTagsDialog *dialog;
 
   /* Run the details dialog */
-  dialog = frogr_add_tags_dialog_new (window, pictures);
-  frogr_add_tags_dialog_show (dialog);
+  frogr_add_tags_dialog_show (window, pictures);
 }
 
 void
