@@ -56,34 +56,36 @@ struct _FrogrControllerPrivate
   FrogrMainView *mainview;
   FrogrConfig *config;
   FrogrAccount *account;
+
   FspSession *session;
+  FspPhotosMgr *photos_mgr;
+
   gboolean app_running;
 };
 
 static FrogrController *_instance = NULL;
 
 typedef struct {
+  FrogrController *controller;
   FrogrPicture *picture;
   GFunc callback;
   gpointer object;
-  gpointer data;
 } upload_picture_st;
 
 /* Prototypes */
 
-static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data);
+static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
 
-static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data);
+static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data);
 
-static void _upload_picture_cb (FrogrController *self,
-                                upload_picture_st *up_st);
+static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 /* Private functions */
 
 static void
-_get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data)
+_get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
 {
-  FrogrController *self = FROGR_CONTROLLER(user_data);
+  FrogrController *self = FROGR_CONTROLLER(data);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   GError *error = NULL;
   gchar *auth_url = NULL;
@@ -114,7 +116,7 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer user_data)
 }
 
 static void
-_complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data)
+_complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
@@ -125,7 +127,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data)
   gboolean success = FALSE;
 
   session = FSP_SESSION (object);
-  controller = FROGR_CONTROLLER (user_data);
+  controller = FROGR_CONTROLLER (data);
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   if (fsp_session_complete_auth_finish (session, result, &error))
@@ -165,19 +167,42 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data)
 }
 
 static void
-_upload_picture_cb (FrogrController *self,
-                    upload_picture_st *up_st)
+_upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
-  FrogrPicture *picture = up_st->picture;
-  GFunc callback = up_st->callback;
-  gpointer object = up_st->object;
+  FspPhotosMgr *photos_mgr = NULL;
+  upload_picture_st *up_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrPicture *picture = NULL;
+  GFunc callback = NULL;
+  gpointer source_object = NULL;
+  GError *error = NULL;
+  gchar *photo_id = NULL;
 
-  /* Free memory */
+  photos_mgr = FSP_PHOTOS_MGR (object);
+  up_st = (upload_picture_st*) data;
+
+  controller = up_st->controller;
+  picture = up_st->picture;
+  callback = up_st->callback;
+  source_object = up_st->object;
   g_slice_free (upload_picture_st, up_st);
+
+  photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
+  if (error != NULL)
+    {
+      g_debug ("Error uploading picture: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_debug ("Success uploading picture: ID %s\n\n", photo_id);
+      frogr_picture_set_id (picture, photo_id);
+      g_free (photo_id);
+    }
 
   /* Execute callback */
   if (callback)
-    callback (object, picture);
+    callback (source_object, picture);
 
   g_object_unref (picture);
 }
@@ -237,6 +262,7 @@ frogr_controller_init (FrogrController *self)
   priv->config = frogr_config_get_instance ();
   priv->account = frogr_config_get_account (priv->config);
   priv->session = fsp_session_new(API_KEY, SHARED_SECRET, NULL);
+  priv->photos_mgr = fsp_photos_mgr_new (priv->session);
   priv->app_running = FALSE;
 
   /* If available, set token */
@@ -405,22 +431,29 @@ frogr_controller_upload_picture (FrogrController *self,
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  /* FrogrControllerPrivate *priv = */
-  /*   FROGR_CONTROLLER_GET_PRIVATE (self); */
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  /* upload_picture_st *up_st; */
+  upload_picture_st *up_st;
 
-  /* /\* Create structure to pass to the thread *\/ */
-  /* up_st = g_slice_new (upload_picture_st); */
-  /* up_st->picture = picture; */
-  /* up_st->callback = picture_uploaded_cb; */
-  /* up_st->object = object; */
+  /* Create structure to pass to the thread */
+  up_st = g_slice_new (upload_picture_st);
+  up_st->controller = self;
+  up_st->picture = picture;
+  up_st->callback = picture_uploaded_cb;
+  up_st->object = object;
 
-  /* /\* Delegate on facade with the first item *\/ */
-  /* g_object_ref (picture); */
-  /* frogr_facade_upload_picture (priv->facade, */
-  /*                              picture, */
-  /*                              (GFunc)_upload_picture_cb, */
-  /*                              self, */
-  /*                              up_st); */
+  g_object_ref (picture);
+
+  fsp_photos_mgr_upload_async (priv->photos_mgr,
+                               frogr_picture_get_filepath (picture),
+                               frogr_picture_get_title (picture),
+                               frogr_picture_get_description (picture),
+                               frogr_picture_get_tags (picture),
+                               frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                               frogr_picture_is_family (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                               frogr_picture_is_friend (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                               FSP_SAFETY_LEVEL_NONE,  /* Hard coded at the moment */
+                               FSP_CONTENT_TYPE_PHOTO, /* Hard coded at the moment */
+                               FSP_SEARCH_SCOPE_NONE,  /* Hard coded at the moment */
+                               NULL, _upload_picture_cb, up_st);
 }
