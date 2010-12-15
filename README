@@ -12,13 +12,12 @@ To work properly, frogr needs some libraries to be installed first::
 
  - glib (version 2.16 or higher)
  - gtk+ (version 2.12 or higher)
- - flickcurl (version 1.0 or higher)
  - libxml (version 2.6.8 or higher)
- - libcurl (version 7.10 or higher)
+ - libsoup (version 2.24 or higher)
 
 -------------------------------------------
 
-frogr is (c) 2009 Mario Sanchez Prada
+frogr is (c) 2009, 2010 Mario Sanchez Prada
 http://code.google.com/p/frogr
 
 See AUTHORS file for details on authors
@@ -32,11 +31,6 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the COPYING file for more details.
-
-frogr uses the Flickcurl library to interact with the flickr REST
-API. Flickcurl is (C) 2007-2008, David Beckett http://www.dajobe.org/
-triple licensed as LGPL 2.1 / GPL 2 / Apache 2.0.
-http://librdf.org/flickcurl
 
 -------------------------------------------
 
