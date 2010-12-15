@@ -95,6 +95,10 @@ static void _on_icon_view_drag_data_received (GtkWidget *widget,
                                               guint info, guint time,
                                               gpointer data);
 
+void _add_pictures_dialog_response_cb (GtkDialog *dialog,
+                                       gint response,
+                                       gpointer data);
+
 void _on_add_button_clicked (GtkButton *widget, gpointer data);
 void _on_remove_button_clicked (GtkButton *widget, gpointer data);
 void _on_upload_button_clicked (GtkButton *widget, gpointer data);
@@ -307,6 +311,27 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
 }
 
 void
+_add_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
+{
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+
+  if (response == GTK_RESPONSE_ACCEPT)
+    {
+      GSList *filepaths;
+
+      /* Add selected pictures to icon view area */
+      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
+      if (filepaths != NULL)
+        {
+          _load_pictures (FROGR_MAIN_VIEW (self), filepaths);
+          g_slist_free (filepaths);
+        }
+    }
+
+  gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+void
 _on_add_button_clicked (GtkButton *widget,
                         gpointer data)
 {
@@ -334,21 +359,11 @@ _on_add_button_clicked (GtkButton *widget,
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
 
-  if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
-    {
-      GSList *filepaths;
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (_add_pictures_dialog_response_cb), self);
 
-      /* Add selected pictures to icon view area */
-      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
-      if (filepaths != NULL)
-        {
-          _load_pictures (FROGR_MAIN_VIEW (self), filepaths);
-          g_slist_free (filepaths);
-        }
-    }
-
-  /* Close dialog */
-  gtk_widget_destroy (dialog);
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_widget_show_all (dialog);
 }
 
 void
