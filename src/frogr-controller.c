@@ -157,9 +157,11 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer user_data)
                                    success
                                    ? _("Authorization successfully completed!")
                                    : _("Authorization failed.\n" "Please try again"));
-  gtk_widget_show (dialog);
+
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (gtk_widget_destroy), NULL);
+
+  gtk_widget_show_all (dialog);
 }
 
 static void
