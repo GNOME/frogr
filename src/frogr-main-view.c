@@ -925,7 +925,7 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (priv->window), "map-event",
-                    _on_main_view_map_event, self);
+                    G_CALLBACK (_on_main_view_map_event), self);
 
   g_signal_connect (G_OBJECT (priv->window), "destroy",
                     G_CALLBACK (gtk_main_quit),
