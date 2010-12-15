@@ -95,9 +95,9 @@ static void _on_icon_view_drag_data_received (GtkWidget *widget,
                                               guint info, guint time,
                                               gpointer data);
 
-void _add_pictures_dialog_response_cb (GtkDialog *dialog,
-                                       gint response,
-                                       gpointer data);
+static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
+                                              gint response,
+                                              gpointer data);
 
 void _on_add_button_clicked (GtkButton *widget, gpointer data);
 void _on_remove_button_clicked (GtkButton *widget, gpointer data);
@@ -310,7 +310,7 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   g_slist_free (filepaths_list);
 }
 
-void
+static void
 _add_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
