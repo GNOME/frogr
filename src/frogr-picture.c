@@ -169,41 +169,36 @@ _frogr_picture_set_property (GObject *object,
                              const GValue *value,
                              GParamSpec *pspec)
 {
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
+  FrogrPicture *self = FROGR_PICTURE (object);
 
   switch (prop_id)
     {
     case PROP_ID:
-      g_free (priv->id);
-      priv->id = g_value_dup_string (value);
+      frogr_picture_set_id (self, g_value_get_string (value));
       break;
     case PROP_FILEPATH:
-      g_free (priv->filepath);
-      priv->filepath = g_value_dup_string (value);
+      frogr_picture_set_filepath (self, g_value_get_string (value));
       break;
     case PROP_TITLE:
-      g_free (priv->title);
-      priv->title = g_value_dup_string (value);
+      frogr_picture_set_title (self, g_value_get_string (value));
       break;
     case PROP_DESCRIPTION:
-      g_free (priv->description);
-      priv->description = g_value_dup_string (value);
+      frogr_picture_set_description (self, g_value_get_string (value));
       break;
     case PROP_TAGS_STRING:
-      g_free (priv->tags_string);
-      priv->tags_string = g_value_dup_string (value);
+      frogr_picture_set_tags (self, g_value_get_string (value));
       break;
     case PROP_IS_PUBLIC:
-      priv->is_public = g_value_get_boolean (value);
+      frogr_picture_set_public (self, g_value_get_boolean (value));
       break;
     case PROP_IS_FAMILY:
-      priv->is_family = g_value_get_boolean (value);
+      frogr_picture_set_family (self, g_value_get_boolean (value));
       break;
     case PROP_IS_FRIEND:
-      priv->is_friend = g_value_get_boolean (value);
+      frogr_picture_set_friend (self, g_value_get_boolean (value));
       break;
     case PROP_PIXBUF:
-      priv->pixbuf = GDK_PIXBUF (g_value_get_object (value));
+      frogr_picture_set_pixbuf (self, GDK_PIXBUF (g_value_get_object (value)));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -222,19 +217,19 @@ _frogr_picture_get_property (GObject *object,
   switch (prop_id)
     {
     case PROP_ID:
-      g_value_set_string (value, g_strdup (priv->id));
+      g_value_set_string (value, priv->id);
       break;
     case PROP_FILEPATH:
-      g_value_set_string (value, g_strdup (priv->filepath));
+      g_value_set_string (value, priv->filepath);
       break;
     case PROP_TITLE:
-      g_value_set_string (value, g_strdup (priv->title));
+      g_value_set_string (value, priv->title);
       break;
     case PROP_DESCRIPTION:
-      g_value_set_string (value, g_strdup (priv->description));
+      g_value_set_string (value, priv->description);
       break;
     case PROP_TAGS_STRING:
-      g_value_set_string (value, g_strdup (priv->tags_string));
+      g_value_set_string (value, priv->tags_string);
       break;
     case PROP_IS_PUBLIC:
       g_value_set_boolean (value, priv->is_public);
@@ -246,12 +241,28 @@ _frogr_picture_get_property (GObject *object,
       g_value_set_boolean (value, priv->is_friend);
       break;
     case PROP_PIXBUF:
-      g_value_set_object (value, g_object_ref (priv->pixbuf));
+      g_value_set_object (value, priv->pixbuf);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
+}
+
+static void
+_frogr_picture_dispose (GObject* object)
+{
+  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
+
+  /* Free pixbuf, if present */
+  if (priv->pixbuf)
+    {
+      g_object_unref (priv->pixbuf);
+      priv->pixbuf = NULL;
+    }
+
+  /* call super class */
+  G_OBJECT_CLASS (frogr_picture_parent_class)->dispose(object);
 }
 
 static void
@@ -270,10 +281,6 @@ _frogr_picture_finalize (GObject* object)
   g_slist_foreach (priv->tags_list, (GFunc) g_free, NULL);
   g_slist_free (priv->tags_list);
 
-  /* Free pixbuf, if present */
-  if (priv->pixbuf)
-    g_object_unref (priv->pixbuf);
-
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class)->finalize(object);
 }
@@ -286,6 +293,7 @@ frogr_picture_class_init(FrogrPictureClass *klass)
   /* GtkObject signals */
   obj_class->set_property = _frogr_picture_set_property;
   obj_class->get_property = _frogr_picture_get_property;
+  obj_class->finalize = _frogr_picture_dispose;
   obj_class->finalize = _frogr_picture_finalize;
 
   /* Install properties */
