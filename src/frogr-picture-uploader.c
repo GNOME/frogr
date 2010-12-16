@@ -238,13 +238,6 @@ frogr_picture_uploader_upload (FrogrPictureUploader *self)
   if (priv->pictures == NULL)
     return;
 
-  /* Check authorization */
-  if (!frogr_controller_is_authorized (priv->controller))
-    {
-      g_debug ("Not authorized yet");
-      return;
-    }
-
   /* Set proper state */
   frogr_main_view_set_state (priv->mainview, FROGR_STATE_UPLOADING);
 
