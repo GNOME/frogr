@@ -161,7 +161,7 @@ fsp_data_get_type                       (void) G_GNUC_CONST;
 FspData *
 fsp_data_new                            (FspDataType type);
 
-FspData*
+FspData *
 fsp_data_copy                           (const FspData *data);
 
 void
