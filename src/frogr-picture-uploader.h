@@ -38,6 +38,15 @@ G_BEGIN_DECLS
 typedef struct _FrogrPictureUploader FrogrPictureUploader;
 typedef struct _FrogrPictureUploaderClass FrogrPictureUploaderClass;
 
+/* Callback to be executed after every single upload */
+typedef void (*FPUploaderPictureUploaded) (GObject *source,
+                                           FrogrPicture *picture);
+
+/* Callback to be executed after every all the pictures upload */
+typedef void (*FPUploaderPicturesUploaded) (GObject *source,
+                                            FrogrPictureUploader *self,
+                                            GError *error);
+
 struct _FrogrPictureUploader
 {
   GObject parent_instance;
@@ -52,9 +61,10 @@ struct _FrogrPictureUploaderClass
 GType frogr_picture_uploader_get_type(void) G_GNUC_CONST;
 
 FrogrPictureUploader *frogr_picture_uploader_new (GSList *pictures,
-                                                  GFunc picture_uploaded_cb,
-                                                  GFunc pictures_uploaded_cb,
+                                                  FPUploaderPictureUploaded picture_uploaded_cb,
+                                                  FPUploaderPicturesUploaded pictures_uploaded_cb,
                                                   gpointer object);
+
 void frogr_picture_uploader_upload (FrogrPictureUploader *self);
 
 G_END_DECLS

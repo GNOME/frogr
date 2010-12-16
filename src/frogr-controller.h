@@ -23,10 +23,12 @@
 #ifndef FROGR_CONTROLLER_H
 #define FROGR_CONTROLLER_H
 
-#include <glib.h>
-#include <glib-object.h>
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
+#include "frogr-picture-uploader.h"
+
+#include <glib.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -49,6 +51,11 @@ struct _FrogrController
 {
   GObject parent;
 };
+
+/* Callback to be executed after every single upload */
+typedef void (*FCPictureUploadedCallback) (FrogrPictureUploader *self,
+                                           FrogrPicture *picture,
+                                           GError *error);
 
 GType frogr_controller_get_type (void) G_GNUC_CONST;
 
@@ -73,7 +80,7 @@ gboolean frogr_controller_is_authorized (FrogrController *self);
 
 void frogr_controller_upload_picture (FrogrController *self,
                                       FrogrPicture *fpicture,
-                                      GFunc fpicture_uploaded_cb,
+                                      FCPictureUploadedCallback picture_uploaded_cb,
                                       gpointer object);
 
 G_END_DECLS

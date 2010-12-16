@@ -68,7 +68,7 @@ static FrogrController *_instance = NULL;
 typedef struct {
   FrogrController *controller;
   FrogrPicture *picture;
-  GFunc callback;
+  FCPictureUploadedCallback callback;
   gpointer object;
 } upload_picture_st;
 
@@ -173,7 +173,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
   FrogrPicture *picture = NULL;
-  GFunc callback = NULL;
+  FCPictureUploadedCallback callback = NULL;
   gpointer source_object = NULL;
   GError *error = NULL;
   gchar *photo_id = NULL;
@@ -188,21 +188,15 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   g_slice_free (upload_picture_st, up_st);
 
   photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
-  if (error != NULL)
+  if (photo_id)
     {
-      g_debug ("Error uploading picture: %s\n", error->message);
-      g_error_free (error);
-    }
-  else
-    {
-      g_debug ("Success uploading picture: ID %s\n\n", photo_id);
       frogr_picture_set_id (picture, photo_id);
       g_free (photo_id);
     }
 
   /* Execute callback */
   if (callback)
-    callback (source_object, picture);
+    callback (source_object, picture, error);
 
   g_object_unref (picture);
 }
@@ -426,7 +420,7 @@ frogr_controller_is_authorized (FrogrController *self)
 void
 frogr_controller_upload_picture (FrogrController *self,
                                  FrogrPicture *picture,
-                                 GFunc picture_uploaded_cb,
+                                 FCPictureUploadedCallback picture_uploaded_cb,
                                  gpointer object)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));

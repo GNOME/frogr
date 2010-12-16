@@ -32,6 +32,7 @@
 #include "frogr-picture-loader.h"
 #include "frogr-picture-uploader.h"
 #include "frogr-picture.h"
+#include "frogr-util.h"
 
 #define MAIN_VIEW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
 
@@ -138,7 +139,8 @@ static void _on_picture_loaded (FrogrMainView *self,
 static void _on_pictures_loaded (FrogrMainView *self,
                                  FrogrPictureLoader *fploader);
 static void _on_pictures_uploaded (FrogrMainView *self,
-                                   FrogrPictureUploader *fpuploader);
+                                   FrogrPictureUploader *fpuploader,
+                                   GError *error);
 
 /* Private API */
 
@@ -722,7 +724,7 @@ _upload_pictures (FrogrMainView *self)
       FrogrPictureUploader *fpuploader =
         frogr_picture_uploader_new (pictures,
                                     NULL,
-                                    (GFunc)_on_pictures_uploaded,
+                                    (FPUploaderPicturesUploaded)_on_pictures_uploaded,
                                     self);
       /* Load the pictures! */
       frogr_picture_uploader_upload (fpuploader);
@@ -758,48 +760,65 @@ _on_pictures_loaded (FrogrMainView *self,
 
 static void
 _on_pictures_uploaded (FrogrMainView *self,
-                       FrogrPictureUploader *fpuploader)
+                       FrogrPictureUploader *fpuploader,
+                       GError *error)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  GSList *pictures;
-  GSList *item;
-  guint index;
-  guint n_pictures;
-  gchar **str_array;
-  gchar *ids_str;
-  gchar *edition_url;
-  const gchar *id;
-
-  pictures = frogr_main_view_model_get_pictures (priv->model);
-  n_pictures = frogr_main_view_model_n_pictures (priv->model);;
-
-  /* Build the photo edition url */
-  str_array = g_new (gchar*, n_pictures + 1);
-
-  index = 0;
-  for (item = pictures; item; item = g_slist_next (item))
+  if (error != NULL)
     {
-      id = frogr_picture_get_id (FROGR_PICTURE (item->data));
-      if (id != NULL)
-        str_array[index++] = g_strdup (id);
+      gchar *msg = NULL;
+
+      msg = g_strdup_printf (_("And error happened while uploading a picture: %s"),
+                             error->message);
+      frogr_util_show_error_dialog (priv->window, msg);
+      g_free (msg);
+
+      g_debug ("Error uploading picture: %s\n", error->message);
+      g_error_free (error);
     }
-  str_array[index] = NULL;
+  else
+    {
+      GSList *pictures;
+      GSList *item;
+      guint index;
+      guint n_pictures;
+      gchar **str_array;
+      gchar *ids_str;
+      gchar *edition_url;
+      const gchar *id;
 
-  ids_str = g_strjoinv (",", str_array);
-  edition_url =
-    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
-                     ids_str);
-  g_debug ("Opening edition url: %s\n", edition_url);
+      pictures = frogr_main_view_model_get_pictures (priv->model);
+      n_pictures = frogr_main_view_model_n_pictures (priv->model);;
 
-  /* Redirect to URL for setting more properties about the pictures */
-  frogr_util_open_url_in_browser (edition_url);
+      /* Build the photo edition url */
+      str_array = g_new (gchar*, n_pictures + 1);
+
+      index = 0;
+      for (item = pictures; item; item = g_slist_next (item))
+        {
+          id = frogr_picture_get_id (FROGR_PICTURE (item->data));
+          if (id != NULL)
+            str_array[index++] = g_strdup (id);
+        }
+      str_array[index] = NULL;
+
+      ids_str = g_strjoinv (",", str_array);
+      edition_url =
+        g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
+                         ids_str);
+      g_debug ("Opening edition url: %s\n", edition_url);
+
+      /* Redirect to URL for setting more properties about the pictures */
+      frogr_util_open_url_in_browser (edition_url);
+
+      g_free (edition_url);
+      g_free (ids_str);
+      g_strfreev (str_array);
+    }
 
   /* Free memory */
   g_object_unref (fpuploader);
-  g_free (edition_url);
-  g_free (ids_str);
-  g_strfreev (str_array);
 }
 
 static void
