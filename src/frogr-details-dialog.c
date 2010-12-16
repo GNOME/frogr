@@ -20,11 +20,14 @@
  *
  */
 
-#include <config.h>
-#include <glib/gi18n.h>
+#include "frogr-details-dialog.h"
+
 #include "frogr-controller.h"
 #include "frogr-picture.h"
-#include "frogr-details-dialog.h"
+#include "frogr-util.h"
+
+#include <config.h>
+#include <glib/gi18n.h>
 
 #define GTKBUILDER_FILE APP_DATA_DIR "/gtkbuilder/frogr-details-dialog.xml"
 #define MPICTURES_IMAGE APP_DATA_DIR "/images/mpictures.png"
@@ -378,7 +381,7 @@ _save_data (FrogrDetailsDialog *self)
   else
     {
       /* This shows a dialog notifying the problem to the user */
-      _show_error_saving_data_dialog (self, _("Missing data required"));
+      frogr_util_show_error_dialog (GTK_WINDOW (self), _("Missing data required"));
     }
 
   /* free */
@@ -388,23 +391,6 @@ _save_data (FrogrDetailsDialog *self)
 
   /* Return result */
   return result;
-}
-
-static void
-_show_error_saving_data_dialog (FrogrDetailsDialog *self, const gchar *message)
-{
-  /* Show alert */
-  GtkWidget *dialog =
-    gtk_message_dialog_new (GTK_WINDOW (self),
-                            GTK_DIALOG_MODAL,
-                            GTK_MESSAGE_WARNING,
-                            GTK_BUTTONS_CLOSE,
-                            message);
-
-  g_signal_connect (G_OBJECT (dialog), "response",
-                    G_CALLBACK (gtk_widget_destroy), dialog);
-
-  gtk_widget_show_all (dialog);
 }
 
 /* Event handlers */
