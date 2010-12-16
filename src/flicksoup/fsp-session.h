@@ -66,13 +66,13 @@ fsp_session_new                         (const gchar *api_key,
                                          const gchar *secret,
                                          const gchar *token);
 
-gchar *
+const gchar *
 fsp_session_get_api_key                 (FspSession *self);
 
-gchar *
+const gchar *
 fsp_session_get_secret                  (FspSession *self);
 
-gchar *
+const gchar *
 fsp_session_get_token                   (FspSession *self);
 
 void

@@ -130,12 +130,27 @@ _frogr_add_tags_dialog_get_property (GObject *object,
 }
 
 static void
+_frogr_add_tags_dialog_dispose (GObject *object)
+{
+  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (object);
+
+  if (priv->pictures)
+    {
+      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->pictures);
+      priv->pictures = NULL;
+    }
+
+  G_OBJECT_CLASS(frogr_add_tags_dialog_parent_class)->dispose (object);
+}
+
+static void
 _frogr_add_tags_dialog_finalize (GObject *object)
 {
   FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (object);
-  g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv->pictures);
+
   g_free (priv->tags);
+
   G_OBJECT_CLASS(frogr_add_tags_dialog_parent_class)->finalize (object);
 }
 
@@ -148,6 +163,7 @@ frogr_add_tags_dialog_class_init (FrogrAddTagsDialogClass *klass)
   /* GObject signals */
   obj_class->set_property = _frogr_add_tags_dialog_set_property;
   obj_class->get_property = _frogr_add_tags_dialog_get_property;
+  obj_class->dispose = _frogr_add_tags_dialog_dispose;
   obj_class->finalize = _frogr_add_tags_dialog_finalize;
 
   /* Install properties */

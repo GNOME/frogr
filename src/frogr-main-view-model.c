@@ -42,21 +42,26 @@ struct _FrogrMainViewModelPrivate
 /* Private API */
 
 static void
-_frogr_main_view_model_finalize (GObject* object)
+_frogr_main_view_model_dispose (GObject* object)
 {
   FrogrMainViewModelPrivate *priv =
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (object);
 
-  g_slist_foreach (priv->pictures_list, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv->pictures_list);
-  G_OBJECT_CLASS (frogr_main_view_model_parent_class)->finalize(object);
+  if (priv->pictures_list)
+    {
+      g_slist_foreach (priv->pictures_list, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->pictures_list);
+      priv->pictures_list = NULL;
+    }
+
+  G_OBJECT_CLASS (frogr_main_view_model_parent_class)->dispose (object);
 }
 
 static void
 frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
-  obj_class->finalize = _frogr_main_view_model_finalize;
+  obj_class->dispose = _frogr_main_view_model_dispose;
   g_type_class_add_private (obj_class, sizeof (FrogrMainViewModelPrivate));
 }
 

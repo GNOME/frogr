@@ -156,13 +156,13 @@ fsp_flickr_proxy_get_property           (GObject    *object,
   switch (prop_id)
     {
     case PROP_API_KEY:
-      g_value_set_string (value, fsp_flickr_proxy_get_api_key (self));
+      g_value_set_string (value, self->priv->api_key);
       break;
     case PROP_SECRET:
-      g_value_set_string (value, fsp_flickr_proxy_get_secret (self));
+      g_value_set_string (value, self->priv->secret);
       break;
     case PROP_TOKEN:
-      g_value_set_string (value, fsp_flickr_proxy_get_token (self));
+      g_value_set_string (value, self->priv->token);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -177,10 +177,16 @@ fsp_flickr_proxy_dispose                (GObject* object)
 
   /* Unref objects */
   if (self->priv->parser)
-    g_object_unref (self->priv->parser);
+    {
+      g_object_unref (self->priv->parser);
+      self->priv->parser = NULL;
+    }
 
   if (self->priv->soup_session)
-    g_object_unref (self->priv->soup_session);
+    {
+      g_object_unref (self->priv->soup_session);
+      self->priv->soup_session = NULL;
+    }
 
   /* Call superclass */
   G_OBJECT_CLASS (fsp_flickr_proxy_parent_class)->dispose(object);
@@ -549,28 +555,28 @@ fsp_flickr_proxy_new                    (const gchar *api_key,
   return FSP_FLICKR_PROXY (object);
 }
 
-gchar *
+const gchar *
 fsp_flickr_proxy_get_api_key            (FspFlickrProxy *self)
 {
   g_return_val_if_fail (FSP_IS_FLICKR_PROXY (self), NULL);
 
-  return g_strdup (self->priv->api_key);
+  return self->priv->api_key;
 }
 
-gchar *
+const gchar *
 fsp_flickr_proxy_get_secret             (FspFlickrProxy *self)
 {
   g_return_val_if_fail (FSP_IS_FLICKR_PROXY (self), NULL);
 
-  return g_strdup (self->priv->secret);
+  return self->priv->secret;
 }
 
-gchar *
+const gchar *
 fsp_flickr_proxy_get_token              (FspFlickrProxy *self)
 {
   g_return_val_if_fail (FSP_IS_FLICKR_PROXY (self), NULL);
 
-  return g_strdup (self->priv->token);
+  return self->priv->token;
 }
 
 void

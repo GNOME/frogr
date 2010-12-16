@@ -132,7 +132,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 
   if (fsp_session_complete_auth_finish (session, result, &error))
     {
-      gchar *token = fsp_session_get_token (session);
+      const gchar *token = fsp_session_get_token (session);
       if (token)
         {
           /* Set and save the auth token and the settings to disk */
@@ -217,21 +217,35 @@ _frogr_controller_constructor (GType type,
       _instance = FROGR_CONTROLLER (object);
     }
   else
-    object = G_OBJECT (g_object_ref (G_OBJECT (_instance)));
+    object = G_OBJECT (_instance);
 
   return object;
 }
 
 static void
-_frogr_controller_finalize (GObject* object)
+_frogr_controller_dispose (GObject* object)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (object);
 
-  g_object_unref (priv->mainview);
-  g_object_unref (priv->config);
-  g_object_unref (priv->session);
+  if (priv->mainview)
+    {
+      g_object_unref (priv->mainview);
+      priv->mainview = NULL;
+    }
 
-  G_OBJECT_CLASS (frogr_controller_parent_class)->finalize (object);
+  if (priv->config)
+    {
+      g_object_unref (priv->config);
+      priv->config = NULL;
+    }
+
+  if (priv->session)
+    {
+      g_object_unref (priv->session);
+      priv->session = NULL;
+    }
+
+  G_OBJECT_CLASS (frogr_controller_parent_class)->dispose (object);
 }
 
 static void
@@ -240,7 +254,7 @@ frogr_controller_class_init (FrogrControllerClass *klass)
   GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 
   obj_class->constructor = _frogr_controller_constructor;
-  obj_class->finalize = _frogr_controller_finalize;
+  obj_class->dispose = _frogr_controller_dispose;
 
   g_type_class_add_private (obj_class, sizeof (FrogrControllerPrivate));
 }
@@ -255,7 +269,7 @@ frogr_controller_init (FrogrController *self)
   priv->mainview = NULL;
   priv->config = frogr_config_get_instance ();
   priv->account = frogr_config_get_account (priv->config);
-  priv->session = fsp_session_new(API_KEY, SHARED_SECRET, NULL);
+  priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
   priv->photos_mgr = fsp_photos_mgr_new (priv->session);
   priv->app_running = FALSE;
 
@@ -272,7 +286,7 @@ FrogrController *
 frogr_controller_get_instance (void)
 {
   if (_instance)
-    return g_object_ref (_instance);
+    return _instance;
 
   return FROGR_CONTROLLER (g_object_new (FROGR_TYPE_CONTROLLER, NULL));
 }
@@ -284,7 +298,7 @@ frogr_controller_get_main_view (FrogrController *self)
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  return g_object_ref (priv->mainview);
+  return priv->mainview;
 }
 
 gboolean
@@ -303,7 +317,7 @@ frogr_controller_run_app (FrogrController *self)
   /* Create UI window */
   priv->mainview = frogr_main_view_new ();
   g_object_add_weak_pointer (G_OBJECT (priv->mainview),
-                             (gpointer) & priv-> mainview);
+                             (gpointer) & priv->mainview);
   /* Update flag */
   priv->app_running = TRUE;
 
@@ -317,7 +331,7 @@ frogr_controller_run_app (FrogrController *self)
 }
 
 gboolean
-frogr_controller_quit_app(FrogrController *self)
+frogr_controller_quit_app (FrogrController *self)
 {
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
@@ -327,6 +341,7 @@ frogr_controller_quit_app(FrogrController *self)
     {
       while (gtk_events_pending ())
         gtk_main_iteration ();
+
       g_object_unref (priv->mainview);
 
       priv->app_running = FALSE;

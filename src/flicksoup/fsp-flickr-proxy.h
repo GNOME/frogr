@@ -70,13 +70,13 @@ fsp_flickr_proxy_new                    (const gchar *api_key,
 
 /* Authentication */
 
-gchar *
+const gchar *
 fsp_flickr_proxy_get_api_key            (FspFlickrProxy *self);
 
-gchar *
+const gchar *
 fsp_flickr_proxy_get_secret             (FspFlickrProxy *self);
 
-gchar *
+const gchar *
 fsp_flickr_proxy_get_token              (FspFlickrProxy *self);
 
 void

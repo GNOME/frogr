@@ -28,6 +28,9 @@
 void
 frogr_util_open_url_in_browser (const gchar *url)
 {
+  if (url == NULL)
+    return;
+
 #ifdef HAVE_GTK_2_14
   gchar *command = NULL;
   GError *error = NULL;

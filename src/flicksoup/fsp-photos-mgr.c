@@ -110,7 +110,7 @@ fsp_photos_mgr_get_property             (GObject    *object,
   switch (prop_id)
     {
     case PROP_SESSION:
-      g_value_set_object (value, fsp_photos_mgr_get_session (self));
+      g_value_set_object (value, self->priv->session);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -125,10 +125,16 @@ fsp_photos_mgr_dispose                  (GObject* object)
 
   /* Unref objects */
   if (self->priv->session)
-    g_object_unref (self->priv->session);
+    {
+      g_object_unref (self->priv->session);
+      self->priv->session = NULL;
+    }
 
   if (self->priv->flickr_proxy)
-    g_object_unref (self->priv->flickr_proxy);
+    {
+      g_object_unref (self->priv->flickr_proxy);
+      self->priv->flickr_proxy = NULL;
+    }
 
   /* Call superclass */
   G_OBJECT_CLASS (fsp_photos_mgr_parent_class)->dispose(object);
@@ -172,7 +178,7 @@ _get_flickr_proxy                       (FspPhotosMgr *self)
   FspPhotosMgrPrivate *priv = self->priv;
 
   if (priv->flickr_proxy == NULL)
-    priv->flickr_proxy = fsp_session_get_flickr_proxy (priv->session);
+    priv->flickr_proxy = g_object_ref (fsp_session_get_flickr_proxy (priv->session));
 
   return priv->flickr_proxy;
 }
@@ -288,7 +294,7 @@ fsp_photos_mgr_get_session              (FspPhotosMgr *self)
 {
   g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), NULL);
 
-  return g_object_ref (self->priv->session);
+  return self->priv->session;
 }
 
 void

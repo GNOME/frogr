@@ -822,14 +822,37 @@ _on_pictures_uploaded (FrogrMainView *self,
 }
 
 static void
-_frogr_main_view_finalize (GObject *object)
+_frogr_main_view_dispose (GObject *object)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
 
   /* Free memory */
-  g_object_unref (priv->model);
-  g_object_unref (priv->controller);
-  g_object_unref (priv->tree_model);
+  if (priv->model)
+    {
+      g_object_unref (priv->model);
+      priv->model = NULL;
+    }
+
+  if (priv->controller = NULL)
+    {
+      g_object_unref (priv->controller);
+      priv->controller = NULL;
+    }
+
+  if (priv->tree_model)
+    {
+      g_object_unref (priv->tree_model);
+      priv->tree_model = NULL;
+    }
+
+  G_OBJECT_CLASS(frogr_main_view_parent_class)->dispose (object);
+}
+
+static void
+_frogr_main_view_finalize (GObject *object)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
+
   gtk_widget_destroy (priv->ctxt_menu);
   gtk_widget_destroy (GTK_WIDGET (priv->window));
 
@@ -841,6 +864,7 @@ frogr_main_view_class_init (FrogrMainViewClass *klass)
 {
   GObjectClass *obj_class = (GObjectClass *)klass;
 
+  obj_class->dispose = _frogr_main_view_dispose;
   obj_class->finalize = _frogr_main_view_finalize;
 
   g_type_class_add_private (obj_class, sizeof (FrogrMainViewPrivate));
@@ -864,7 +888,7 @@ frogr_main_view_init (FrogrMainView *self)
   /* Init model, state and controller */
   priv->model = frogr_main_view_model_new ();
   priv->state = FROGR_STATE_IDLE;
-  priv->controller = frogr_controller_get_instance ();
+  priv->controller = g_object_ref (frogr_controller_get_instance ());
 
   /* Provide a default icon list in several sizes */
   icons = g_list_prepend (NULL,

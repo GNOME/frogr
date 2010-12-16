@@ -95,7 +95,7 @@ fsp_flickr_parser_constructor           (GType                  type,
       _instance = FSP_FLICKR_PARSER (object);
     }
   else
-    object = G_OBJECT (g_object_ref (G_OBJECT (_instance)));
+    object = G_OBJECT (_instance);
 
   return object;
 }
@@ -663,6 +663,9 @@ _get_photo_info_from_node               (xmlNode *node)
 FspFlickrParser *
 fsp_flickr_parser_get_instance          (void)
 {
+  if (_instance)
+    return _instance;
+
   return FSP_FLICKR_PARSER (g_object_new (FSP_TYPE_FLICKR_PARSER, NULL));
 }
 

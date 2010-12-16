@@ -471,12 +471,18 @@ _frogr_details_dialog_get_property (GObject *object,
 }
 
 static void
-_frogr_details_dialog_finalize (GObject *object)
+_frogr_details_dialog_dispose (GObject *object)
 {
   FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (object);
-  g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv->pictures);
-  G_OBJECT_CLASS(frogr_details_dialog_parent_class)->finalize (object);
+
+  if (priv->pictures)
+    {
+      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->pictures);
+      priv->pictures = NULL;
+    }
+
+  G_OBJECT_CLASS(frogr_details_dialog_parent_class)->dispose (object);
 }
 
 static void
@@ -488,7 +494,7 @@ frogr_details_dialog_class_init (FrogrDetailsDialogClass *klass)
   /* GObject signals */
   obj_class->set_property = _frogr_details_dialog_set_property;
   obj_class->get_property = _frogr_details_dialog_get_property;
-  obj_class->finalize = _frogr_details_dialog_finalize;
+  obj_class->dispose = _frogr_details_dialog_dispose;
 
   /* Install properties */
   pspec = g_param_spec_pointer ("pictures",
@@ -516,50 +522,50 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
   gtk_builder_add_from_file (builder, GTKBUILDER_FILE, NULL);
 
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main-vbox"));
-  gtk_widget_reparent (main_vbox,
 #if GTK_CHECK_VERSION (2,14,0)
+  gtk_widget_reparent (main_vbox,
                        GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (self))));
 #else
-  GTK_WIDGET (GTK_DIALOG (self)->vbox));
+  gtk_widget_reparent (main_vbox,
+                       GTK_WIDGET (GTK_DIALOG (self)->vbox));
 #endif
 
-gtk_dialog_add_buttons (GTK_DIALOG (self),
-                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                        GTK_STOCK_OK, GTK_RESPONSE_OK,
-                        NULL);
+  gtk_dialog_add_buttons (GTK_DIALOG (self),
+                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                          GTK_STOCK_OK, GTK_RESPONSE_OK,
+                          NULL);
 
-/* Get widgets */
-priv->title_entry =
-  GTK_WIDGET (gtk_builder_get_object (builder, "title_entry"));
-priv->desc_tview =
-  GTK_WIDGET (gtk_builder_get_object (builder, "description_tview"));
-priv->tags_entry =
-  GTK_WIDGET (gtk_builder_get_object (builder, "tags_entry"));
-priv->text_buffer =
-  gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
-priv->public_rb =
-  GTK_WIDGET (gtk_builder_get_object (builder, "public_rbutton"));
-priv->private_rb =
-  GTK_WIDGET (gtk_builder_get_object (builder, "private_rbutton"));
-priv->friend_cb =
-  GTK_WIDGET (gtk_builder_get_object (builder, "friend_cbutton"));
-priv->family_cb =
-  GTK_WIDGET (gtk_builder_get_object (builder, "family_cbutton"));
-priv->picture_img =
-  GTK_WIDGET (gtk_builder_get_object (builder, "picture_img"));
-priv->mpictures_label =
-  GTK_WIDGET (gtk_builder_get_object (builder, "mpictures_label"));
+  /* Get widgets */
+  priv->title_entry =
+    GTK_WIDGET (gtk_builder_get_object (builder, "title_entry"));
+  priv->desc_tview =
+    GTK_WIDGET (gtk_builder_get_object (builder, "description_tview"));
+  priv->tags_entry =
+    GTK_WIDGET (gtk_builder_get_object (builder, "tags_entry"));
+  priv->text_buffer =
+    gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
+  priv->public_rb =
+    GTK_WIDGET (gtk_builder_get_object (builder, "public_rbutton"));
+  priv->private_rb =
+    GTK_WIDGET (gtk_builder_get_object (builder, "private_rbutton"));
+  priv->friend_cb =
+    GTK_WIDGET (gtk_builder_get_object (builder, "friend_cbutton"));
+  priv->family_cb =
+    GTK_WIDGET (gtk_builder_get_object (builder, "family_cbutton"));
+  priv->picture_img =
+    GTK_WIDGET (gtk_builder_get_object (builder, "picture_img"));
+  priv->mpictures_label =
+    GTK_WIDGET (gtk_builder_get_object (builder, "mpictures_label"));
 
-/* Connect signals */
-gtk_builder_connect_signals (builder, self);
+  /* Connect signals */
+  gtk_builder_connect_signals (builder, self);
 
-/* Show the UI */
-gtk_widget_show_all (GTK_WIDGET (self));
-gtk_dialog_set_default_response (GTK_DIALOG (self),
-                                 GTK_RESPONSE_OK);
-
-/* Free */
-g_object_unref (G_OBJECT (builder));
+  /* Show the UI */
+  gtk_widget_show_all (GTK_WIDGET (self));
+  gtk_dialog_set_default_response (GTK_DIALOG (self),
+                                   GTK_RESPONSE_OK);
+  /* Free */
+  g_object_unref (G_OBJECT (builder));
 }
 
 

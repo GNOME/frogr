@@ -263,14 +263,18 @@ frogr_config_save (FrogrConfig *self)
 }
 
 static void
-_frogr_config_finalize (GObject *object)
+_frogr_config_dispose (GObject *object)
 {
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
 
-  g_object_unref (priv->account);
+  if (priv->account)
+    {
+      g_object_unref (priv->account);
+      priv->account = NULL;
+    }
 
   /* Call superclass */
-  G_OBJECT_CLASS (frogr_config_parent_class)->finalize (object);
+  G_OBJECT_CLASS (frogr_config_parent_class)->dispose (object);
 }
 
 static GObject*
@@ -289,7 +293,7 @@ _frogr_config_constructor (GType type,
       _instance = FROGR_CONFIG (object);
     }
   else
-    object = G_OBJECT (g_object_ref (G_OBJECT (_instance)));
+    object = G_OBJECT (_instance);
 
   return object;
 }
@@ -302,7 +306,7 @@ frogr_config_class_init (FrogrConfigClass *klass)
   g_type_class_add_private (klass, sizeof (FrogrConfigPrivate));
 
   obj_class->constructor = _frogr_config_constructor;
-  obj_class->finalize    = _frogr_config_finalize;
+  obj_class->dispose    = _frogr_config_dispose;
 }
 
 static void
@@ -328,6 +332,9 @@ frogr_config_init (FrogrConfig *self)
 FrogrConfig*
 frogr_config_get_instance (void)
 {
+  if (_instance)
+    return _instance;
+
   return FROGR_CONFIG (g_object_new (FROGR_TYPE_CONFIG, NULL));
 }
 

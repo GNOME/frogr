@@ -73,7 +73,6 @@ _ask_for_authorization_response_cb (GtkDialog *dialog, gint response, gpointer d
     {
       FrogrController *controller = frogr_controller_get_instance();
       frogr_controller_open_auth_url (controller);
-      g_object_unref (controller);
     }
 
   gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -103,7 +102,6 @@ _ask_for_auth_confirmation_response_cb (GtkDialog *dialog, gint response, gpoint
     {
       FrogrController *controller = frogr_controller_get_instance();
       frogr_controller_complete_auth (controller);
-      g_object_unref (controller);
     }
 
   gtk_widget_destroy (GTK_WIDGET (dialog));

@@ -155,25 +155,38 @@ _upload_next_picture_cb (FrogrPictureUploader *self,
 }
 
 static void
-_frogr_picture_uploader_finalize (GObject* object)
+_frogr_picture_uploader_dispose (GObject* object)
 {
   FrogrPictureUploaderPrivate *priv =
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (object);
 
-  /* Free */
-  g_object_unref (priv->mainview);
-  g_object_unref (priv->controller);
-  g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv->pictures);
+  if (priv->mainview)
+    {
+      g_object_unref (priv->mainview);
+      priv->mainview = NULL;
+    }
 
-  G_OBJECT_CLASS (frogr_picture_uploader_parent_class)->finalize(object);
+  if (priv->controller)
+    {
+      g_object_unref (priv->controller);
+      priv->controller = NULL;
+    }
+
+  if (priv->pictures)
+    {
+      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->pictures);
+      priv->pictures = NULL;
+    }
+
+  G_OBJECT_CLASS (frogr_picture_uploader_parent_class)->dispose (object);
 }
 
 static void
 frogr_picture_uploader_class_init(FrogrPictureUploaderClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
-  obj_class->finalize = _frogr_picture_uploader_finalize;
+  obj_class->dispose = _frogr_picture_uploader_dispose;
   g_type_class_add_private (obj_class, sizeof (FrogrPictureUploaderPrivate));
 }
 
@@ -184,8 +197,8 @@ frogr_picture_uploader_init (FrogrPictureUploader *self)
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (self);
 
   /* Init private data */
-  priv->controller = frogr_controller_get_instance ();
-  priv->mainview = frogr_controller_get_main_view (priv->controller);
+  priv->controller = g_object_ref (frogr_controller_get_instance ());
+  priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
   priv->error = NULL;
 
   /* Init the rest of private data */

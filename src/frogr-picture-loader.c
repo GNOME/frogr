@@ -293,13 +293,27 @@ _load_next_picture_cb (GObject *object,
 }
 
 static void
+_frogr_picture_loader_dispose (GObject* object)
+{
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (object);
+
+  if (priv->mainview)
+    {
+      g_object_unref (priv->mainview);
+      priv->mainview = NULL;
+    }
+
+  G_OBJECT_CLASS (frogr_picture_loader_parent_class)->dispose(object);
+}
+
+static void
 _frogr_picture_loader_finalize (GObject* object)
 {
   FrogrPictureLoaderPrivate *priv =
     FROGR_PICTURE_LOADER_GET_PRIVATE (object);
 
   /* Free */
-  g_object_unref (priv->mainview);
   g_slist_foreach (priv->filepaths, (GFunc)g_free, NULL);
   g_slist_free (priv->filepaths);
 
@@ -310,7 +324,10 @@ static void
 frogr_picture_loader_class_init(FrogrPictureLoaderClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
+
+  obj_class->dispose = _frogr_picture_loader_dispose;
   obj_class->finalize = _frogr_picture_loader_finalize;
+
   g_type_class_add_private (obj_class, sizeof (FrogrPictureLoaderPrivate));
 }
 
@@ -326,8 +343,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
 
   /* We need the controller to get the main window */
   controller = frogr_controller_get_instance ();
-  priv->mainview = frogr_controller_get_main_view (controller);
-  g_object_unref (controller);
+  priv->mainview = g_object_ref (frogr_controller_get_main_view (controller));
 
   /* Init the rest of private data */
   priv->filepaths = NULL;

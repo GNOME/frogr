@@ -116,13 +116,13 @@ fsp_session_get_property                (GObject    *object,
   switch (prop_id)
     {
     case PROP_API_KEY:
-      g_value_set_string (value, fsp_session_get_api_key (self));
+      g_value_set_string (value, self->priv->api_key);
       break;
     case PROP_SECRET:
-      g_value_set_string (value, fsp_session_get_secret (self));
+      g_value_set_string (value, self->priv->secret);
       break;
     case PROP_TOKEN:
-      g_value_set_string (value, fsp_session_get_token (self));
+      g_value_set_string (value, self->priv->token);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -137,7 +137,10 @@ fsp_session_dispose                     (GObject* object)
 
   /* Unref object */
   if (self->priv->flickr_proxy)
-    g_object_unref (self->priv->flickr_proxy);
+    {
+      g_object_unref (self->priv->flickr_proxy);
+      self->priv->flickr_proxy = NULL;
+    }
 
   /* Call superclass */
   G_OBJECT_CLASS (fsp_session_parent_class)->dispose(object);
@@ -293,11 +296,7 @@ fsp_session_get_flickr_proxy            (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
 
-  FspFlickrProxy *flickr_proxy = _get_flickr_proxy (self);
-  if (flickr_proxy != NULL)
-    g_object_ref (flickr_proxy);
-
-  return flickr_proxy;
+  return _get_flickr_proxy (self);
 }
 
 /* Public API */
@@ -318,28 +317,28 @@ fsp_session_new                         (const gchar *api_key,
   return FSP_SESSION (object);
 }
 
-gchar *
+const gchar *
 fsp_session_get_api_key                 (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
 
-  return g_strdup (self->priv->api_key);
+  return self->priv->api_key;
 }
 
-gchar *
+const gchar *
 fsp_session_get_secret                  (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
 
-  return g_strdup (self->priv->secret);
+  return self->priv->secret;
 }
 
-gchar *
+const gchar *
 fsp_session_get_token                   (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
 
-  return g_strdup (self->priv->token);
+  return self->priv->token;
 }
 
 void

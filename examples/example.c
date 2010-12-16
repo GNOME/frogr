@@ -122,11 +122,10 @@ complete_auth_cb                        (GObject      *object,
         {
 
           FspPhotosMgr *photos_mgr = NULL;
-          gchar *token = NULL;
+          const gchar *token = NULL;
 
           token = fsp_session_get_token (session);
           g_print ("[complete_auth_cb]::Auth token = %s\n", token);
-          g_free (token);
 
           /* Continue uploading a picture */
           g_print ("Uploading a picture...\n");
@@ -186,13 +185,10 @@ do_work (gpointer unused)
   FspSession *session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
   g_print ("Created FspSession:\n");
 
-  gchar *api_key = fsp_session_get_api_key (session);
-  gchar *secret = fsp_session_get_secret (session);
+  const gchar *api_key = fsp_session_get_api_key (session);
+  const gchar *secret = fsp_session_get_secret (session);
 
   g_print ("\tAPI key: %s\n\tSecret: %s\n\n", api_key, secret);
-
-  g_free (api_key);
-  g_free (secret);
 
   g_print ("Getting authorization URL...\n");
   fsp_session_get_auth_url_async (session, NULL, get_auth_url_cb, NULL);
