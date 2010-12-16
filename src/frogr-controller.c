@@ -98,8 +98,7 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
       return;
     }
 
-  g_print ("[get_auth_url_cb]::Result: %s\n\n",
-           auth_url ? auth_url : "No URL got");
+  g_debug ("Auth URL: %s\n", auth_url ? auth_url : "No URL got");
 
   /* Open url in the default application */
   if (auth_url != NULL)
