@@ -399,6 +399,11 @@ _on_icon_view_key_press_event (GtkWidget *widget,
                                gpointer data)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+
+  /* Actions are only allowed in IDLE state */
+  if (priv->state != FROGR_STATE_IDLE)
+    return TRUE;
 
   /* Remove selected pictures if pressed Supr */
   if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
@@ -415,6 +420,10 @@ _on_icon_view_button_press_event (GtkWidget *widget,
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
   GtkTreePath *path;
+
+  /* Actions are only allowed in IDLE state */
+  if (priv->state != FROGR_STATE_IDLE)
+    return TRUE;
 
   /* Check if we clicked on top of an item */
   if (gtk_icon_view_get_item_at_pos (GTK_ICON_VIEW (priv->icon_view),
@@ -442,28 +451,25 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 
         }
 
-      /* Following actions are only allowed in IDLE state */
-      if (priv->state == FROGR_STATE_IDLE)
+      /* Perform the right action: edit picture or show ctxt menu */
+      if ((event->button == 1)                   /* left button */
+          && (event->type == GDK_2BUTTON_PRESS ) /* doubleclick */
+          && !(event->state & GDK_SHIFT_MASK)    /*  not shift  */
+          && !(event->state & GDK_CONTROL_MASK)) /*  not Ctrl   */
         {
-          /* Perform the right action: edit picture or show ctxt menu */
-          if ((event->button == 1)                   /* left button */
-              && (event->type == GDK_2BUTTON_PRESS ) /* doubleclick */
-              && !(event->state & GDK_SHIFT_MASK)    /*  not shift  */
-              && !(event->state & GDK_CONTROL_MASK)) /*  not Ctrl   */
-            {
-              /* edit selected item */
-              _edit_selected_pictures (mainview);
-            }
-          else if ((event->button == 3)                  /* right button */
-                   && (event->type == GDK_BUTTON_PRESS)) /* single click */
-            {
-              /* Show contextual menu */
-              gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
-                              NULL, NULL, NULL, NULL,
-                              event->button,
-                              gtk_get_current_event_time ());
-            }
+          /* edit selected item */
+          _edit_selected_pictures (mainview);
         }
+      else if ((event->button == 3)                  /* right button */
+               && (event->type == GDK_BUTTON_PRESS)) /* single click */
+        {
+          /* Show contextual menu */
+          gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
+                          NULL, NULL, NULL, NULL,
+                          event->button,
+                          gtk_get_current_event_time ());
+        }
+
       /* Free */
       gtk_tree_path_free (path);
     }
