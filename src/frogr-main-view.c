@@ -780,9 +780,13 @@ _upload_pictures (FrogrMainView *self)
   /* Upload pictures */
   if (!frogr_controller_is_authorized (priv->controller))
     {
-      /* FIXME: Improve the way the user gets asked for re-athorize
-         frogr in Flick, so it does not look a bit confusing */
-      frogr_controller_show_auth_dialog (priv->controller);
+      gchar *msg = NULL;
+      msg = g_strdup_printf (_("You need to properly authorize %s before"
+                               " uploading any picture to flickr.\n"
+                               "Please re-authorize it."), PACKAGE_NAME);
+
+      frogr_util_show_error_dialog (priv->window, msg);
+      g_free (msg);
     }
   else if (frogr_main_view_model_n_pictures (priv->model) > 0)
     {
