@@ -439,7 +439,6 @@ frogr_controller_revoke_authorization (FrogrController *self)
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   fsp_session_set_token (priv->session, NULL);
-
   frogr_account_set_token (priv->account, NULL);
   frogr_config_save (priv->config);
 }

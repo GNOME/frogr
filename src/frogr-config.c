@@ -254,11 +254,6 @@ frogr_config_save (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  /*
-   * XXX This method is just a placeholder for when we have program
-   * settings. For now, save just the account.
-   */
-
   return _frogr_config_save_account (self);
 }
 
