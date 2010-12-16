@@ -56,13 +56,13 @@ _frogr_account_set_property (GObject      *object,
                              const GValue *value,
                              GParamSpec   *pspec)
 {
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (object);
+  FrogrAccount *self = FROGR_ACCOUNT (object);
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
 
   switch (property_id)
     {
     case PROP_TOKEN:
-      g_free (priv->token);
-      priv->token = g_value_dup_string (value);
+      frogr_account_set_token (self, g_value_get_string (value));
       break;
 
     default:
@@ -81,7 +81,7 @@ _frogr_account_get_property (GObject    *object,
   switch (property_id)
     {
     case PROP_TOKEN:
-      g_value_set_string (value, g_strdup (priv->token));
+      g_value_set_string (value, priv->token);
       break;
 
     default:
@@ -151,7 +151,7 @@ frogr_account_get_token (FrogrAccount *self)
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
   FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  return (const gchar *)priv->token;
+  return priv->token;
 }
 
 void
