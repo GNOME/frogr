@@ -25,7 +25,6 @@
 #include "fsp-error.h"
 #include "fsp-session-priv.h"
 #include "fsp-session.h"
-#include "fsp-session.h"
 #include "fsp-util.h"
 
 #define FSP_PHOTOS_MGR_GET_PRIVATE(object)            \
