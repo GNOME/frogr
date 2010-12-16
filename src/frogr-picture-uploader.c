@@ -98,7 +98,7 @@ _upload_next_picture (FrogrPictureUploader *self)
   FrogrPictureUploaderPrivate *priv =
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (self);
 
-  if (priv->current && !priv->error)
+  if (priv->current)
     {
       FrogrPicture *picture = FROGR_PICTURE (priv->current->data);
 
@@ -130,15 +130,6 @@ _upload_next_picture_cb (FrogrPictureUploader *self,
   FrogrPictureUploaderPrivate *priv =
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (self);
 
-  if (error)
-    {
-      priv->error = error;
-      g_debug ("Error uploading picture: %s\n", error->message);
-    }
-  else
-    g_debug ("Success uploading picture\n\n");
-
-
   /* Update internal status */
   priv->current = g_slist_next (priv->current);
   priv->index++;
@@ -149,6 +140,13 @@ _upload_next_picture_cb (FrogrPictureUploader *self,
   /* Execute 'picture-uploaded' callback */
   if (priv->picture_uploaded_cb)
     priv->picture_uploaded_cb (priv->object, picture);
+
+  /* Update values on error */
+  if (error)
+    {
+      priv->error = error;
+      priv->current = NULL;
+    }
 
   /* Go for the next picture */
   _upload_next_picture (self);
