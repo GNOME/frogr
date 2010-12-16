@@ -29,9 +29,15 @@ void
 frogr_util_open_url_in_browser (const gchar *url)
 {
 #ifdef HAVE_GTK_2_14
+  gchar *command = NULL;
   GError *error = NULL;
 
-  gtk_show_uri (NULL, url, gtk_get_current_event_time (), &error);
+  /* FIXME: Replace this lines with gtk_show_uri() when we found the
+     reason behind frogr hanging after calling twice that function */
+  command = g_strdup_printf ("gnome-open %s", url);
+  g_spawn_command_line_async (command, &error);
+  g_free (command);
+
   if (error != NULL)
     {
       g_debug ("Error opening URL %s: %s\n", url, error->message);
