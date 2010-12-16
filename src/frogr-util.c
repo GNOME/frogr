@@ -47,3 +47,38 @@ frogr_util_open_url_in_browser (const gchar *url)
   gnome_url_show (url);
 #endif
 }
+
+static void
+frogr_util_show_message_dialog (GtkWindow *parent, const gchar *message, GtkMessageType type)
+{
+  /* Show alert */
+  GtkWidget *dialog =
+    gtk_message_dialog_new (parent,
+                            GTK_DIALOG_MODAL,
+                            type,
+                            GTK_BUTTONS_CLOSE,
+                            message);
+
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (gtk_widget_destroy), dialog);
+
+  gtk_widget_show_all (dialog);
+}
+
+void
+frogr_util_show_info_dialog (GtkWindow *parent, const gchar *message)
+{
+  frogr_util_show_message_dialog (parent, message, GTK_MESSAGE_INFO);
+}
+
+void
+frogr_util_show_warning_dialog (GtkWindow *parent, const gchar *message)
+{
+  frogr_util_show_message_dialog (parent, message, GTK_MESSAGE_WARNING);
+}
+
+void
+frogr_util_show_error_dialog (GtkWindow *parent, const gchar *message)
+{
+  frogr_util_show_message_dialog (parent, message, GTK_MESSAGE_ERROR);
+}

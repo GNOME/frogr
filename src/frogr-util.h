@@ -27,6 +27,12 @@ G_BEGIN_DECLS
 
 void frogr_util_open_url_in_browser (const gchar *url);
 
+void frogr_util_show_info_dialog (GtkWindow *parent, const gchar *message);
+
+void frogr_util_show_warning_dialog (GtkWindow *parent, const gchar *message);
+
+void frogr_util_show_error_dialog (GtkWindow *parent, const gchar *message);
+
 G_END_DECLS
 
 #endif /* FROGR_UTIL_H */
