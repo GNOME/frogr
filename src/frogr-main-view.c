@@ -906,7 +906,7 @@ _error_uploading_pictures (FrogrMainView *self, GError *error)
     {
     case FSP_ERROR_NOT_AUTHENTICATED:
       frogr_controller_revoke_authorization (priv->controller);
-      msg = g_strdup_printf (_("%s is not properly authorized to upload picture "
+      msg = g_strdup_printf (_("%s is not properly authorized to upload pictures "
                                "to flickr.\nPlease re-authorize it."), PACKAGE_NAME);
       break;
 

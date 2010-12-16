@@ -134,7 +134,7 @@ msgstr ""
 #: ../src/frogr-main-view.c:909
 #, c-format
 msgid ""
-"%s is not properly authorized to upload picture to flickr.\n"
+"%s is not properly authorized to upload pictures to flickr.\n"
 "Please re-authorize it."
 msgstr ""
 "%s no está adecuadamente autorizado para subir fotos a flickr.Por favor "
