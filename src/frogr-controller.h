@@ -78,6 +78,8 @@ void frogr_controller_complete_auth (FrogrController *self);
 
 gboolean frogr_controller_is_authorized (FrogrController *self);
 
+void frogr_controller_revoke_authorization (FrogrController *self);
+
 void frogr_controller_upload_picture (FrogrController *self,
                                       FrogrPicture *fpicture,
                                       FCPictureUploadedCallback picture_uploaded_cb,

@@ -418,6 +418,18 @@ frogr_controller_is_authorized (FrogrController *self)
 }
 
 void
+frogr_controller_revoke_authorization (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  fsp_session_set_token (priv->session, NULL);
+
+  frogr_account_set_token (priv->account, NULL);
+  frogr_config_save (priv->config);
+}
+
+void
 frogr_controller_upload_picture (FrogrController *self,
                                  FrogrPicture *picture,
                                  FCPictureUploadedCallback picture_uploaded_cb,
