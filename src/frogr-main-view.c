@@ -20,11 +20,6 @@
  *
  */
 
-#include <config.h>
-#include <glib/gi18n.h>
-#include <gdk/gdk.h>
-#include <gdk/gdkkeysyms.h>
-
 #include "frogr-main-view.h"
 
 #include "frogr-controller.h"
@@ -33,6 +28,12 @@
 #include "frogr-picture-uploader.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
+
+#include <config.h>
+#include <flicksoup/flicksoup.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkkeysyms.h>
+#include <glib/gi18n.h>
 
 #define MAIN_VIEW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
 
@@ -96,10 +97,6 @@ static void _on_icon_view_drag_data_received (GtkWidget *widget,
                                               guint info, guint time,
                                               gpointer data);
 
-static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
-                                              gint response,
-                                              gpointer data);
-
 void _on_add_button_clicked (GtkButton *widget, gpointer data);
 void _on_remove_button_clicked (GtkButton *widget, gpointer data);
 void _on_upload_button_clicked (GtkButton *widget, gpointer data);
@@ -111,6 +108,10 @@ gboolean _on_icon_view_key_press_event (GtkWidget *widget,
 gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            GdkEventButton *event,
                                            gpointer data);
+void _on_authorize_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_add_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_remove_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_upload_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
 
@@ -127,6 +128,11 @@ static GSList *_get_selected_pictures (FrogrMainView *self);
 static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _remove_pictures_from_ui (FrogrMainView *self, GSList *pictures);
 
+static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
+                                              gint response,
+                                              gpointer data);
+
+static void _add_pictures_dialog (FrogrMainView *self);
 static void _add_tags_to_pictures (FrogrMainView *self);
 static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
@@ -142,45 +148,75 @@ static void _on_pictures_uploaded (FrogrMainView *self,
                                    FrogrPictureUploader *fpuploader,
                                    GError *error);
 
+static void _error_uploading_pictures (FrogrMainView *self,
+                                            GError *error);
+
+static void _open_browser_to_edit_details (FrogrMainView *self,
+                                           FrogrPictureUploader *fpuploader);
+
+
 /* Private API */
 
 static void
 _populate_menu_bar (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GtkWidget *file_menu_item;
-  GtkWidget *file_menu;
-  GtkWidget *quit_menu_item;
-  GtkWidget *help_menu_item;
-  GtkWidget *help_menu;
-  GtkWidget *about_menu_item;
+  GtkWidget *menubar_item;
+  GtkWidget *menu;
+  GtkWidget *menu_item;
 
   /* File menu */
-  file_menu_item = gtk_menu_item_new_with_mnemonic (_("_File"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), file_menu_item);
+  menubar_item = gtk_menu_item_new_with_mnemonic (_("_File"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
 
-  file_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item), file_menu);
+  menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
 
-  quit_menu_item = gtk_menu_item_new_with_mnemonic (_("_Quit"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (file_menu), quit_menu_item);
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Authorize frogr"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_authorize_menu_item_activate),
+                    self);
 
-  /* Help menu */
-  help_menu_item = gtk_menu_item_new_with_mnemonic (_("_Help"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), help_menu_item);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
-  help_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (help_menu_item), help_menu);
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Add pictures"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_add_menu_item_activate),
+                    self);
 
-  about_menu_item = gtk_menu_item_new_with_mnemonic (_("_About"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (help_menu), about_menu_item);
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove pictures"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_remove_menu_item_activate),
+                    self);
 
-  /* Connect signals */
-  g_signal_connect (G_OBJECT (quit_menu_item), "activate",
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Upload"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_upload_menu_item_activate),
+                    self);
+
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Quit"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_quit_menu_item_activate),
                     self);
 
-  g_signal_connect (G_OBJECT (about_menu_item), "activate",
+  /* Help menu */
+  menubar_item = gtk_menu_item_new_with_mnemonic (_("_Help"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
+
+  menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_About"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+
+  g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_about_menu_item_activate),
                     self);
 }
@@ -312,60 +348,12 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   g_slist_free (filepaths_list);
 }
 
-static void
-_add_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
-{
-  FrogrMainView *self = FROGR_MAIN_VIEW (data);
-
-  if (response == GTK_RESPONSE_ACCEPT)
-    {
-      GSList *filepaths;
-
-      /* Add selected pictures to icon view area */
-      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
-      if (filepaths != NULL)
-        {
-          _load_pictures (FROGR_MAIN_VIEW (self), filepaths);
-          g_slist_free (filepaths);
-        }
-    }
-
-  gtk_widget_destroy (GTK_WIDGET (dialog));
-}
-
 void
 _on_add_button_clicked (GtkButton *widget,
                         gpointer data)
 {
-  FrogrMainView *self = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  GtkWidget *dialog;
-  GtkFileFilter *filter;
-
-  dialog = gtk_file_chooser_dialog_new (_("Select a picture"),
-                                        GTK_WINDOW (priv->window),
-                                        GTK_FILE_CHOOSER_ACTION_OPEN,
-                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-                                        NULL);
-
-  /* Set images filter */
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_add_mime_type (filter, "image/jpg");
-  gtk_file_filter_add_mime_type (filter, "image/jpeg");
-  gtk_file_filter_add_mime_type (filter, "image/png");
-  gtk_file_filter_add_mime_type (filter, "image/bmp");
-  gtk_file_filter_add_mime_type (filter, "image/gif");
-  gtk_file_filter_set_name (filter, "images");
-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
-  gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
-
-  g_signal_connect (G_OBJECT (dialog), "response",
-                    G_CALLBACK (_add_pictures_dialog_response_cb), self);
-
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_widget_show_all (dialog);
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  _add_pictures_dialog (mainview);
 }
 
 void
@@ -475,6 +463,34 @@ _on_icon_view_button_press_event (GtkWidget *widget,
     }
 
   return FALSE;
+}
+
+void
+_on_authorize_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  frogr_controller_show_auth_dialog (priv->controller);
+}
+
+void
+_on_add_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  _add_pictures_dialog (mainview);
+}
+
+void
+_on_remove_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  _remove_selected_pictures (mainview);
+}
+
+void
+_on_upload_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  _upload_pictures (mainview);
 }
 
 void
@@ -644,6 +660,60 @@ _remove_pictures_from_ui (FrogrMainView *self, GSList *pictures)
 }
 
 static void
+_add_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
+{
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+
+  if (response == GTK_RESPONSE_ACCEPT)
+    {
+      GSList *filepaths;
+
+      /* Add selected pictures to icon view area */
+      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
+      if (filepaths != NULL)
+        {
+          _load_pictures (FROGR_MAIN_VIEW (self), filepaths);
+          g_slist_free (filepaths);
+        }
+    }
+
+  gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+_add_pictures_dialog (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  GtkWidget *dialog;
+  GtkFileFilter *filter;
+
+  dialog = gtk_file_chooser_dialog_new (_("Select a picture"),
+                                        GTK_WINDOW (priv->window),
+                                        GTK_FILE_CHOOSER_ACTION_OPEN,
+                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                        NULL);
+
+  /* Set images filter */
+  filter = gtk_file_filter_new ();
+  gtk_file_filter_add_mime_type (filter, "image/jpg");
+  gtk_file_filter_add_mime_type (filter, "image/jpeg");
+  gtk_file_filter_add_mime_type (filter, "image/png");
+  gtk_file_filter_add_mime_type (filter, "image/bmp");
+  gtk_file_filter_add_mime_type (filter, "image/gif");
+  gtk_file_filter_set_name (filter, "images");
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+  gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
+
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (_add_pictures_dialog_response_cb), self);
+
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_widget_show_all (dialog);
+}
+
+static void
 _add_tags_to_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
@@ -765,66 +835,95 @@ _on_pictures_loaded (FrogrMainView *self,
 }
 
 static void
+_open_browser_to_edit_details (FrogrMainView *self,
+                               FrogrPictureUploader *fpuploader)
+{
+  FrogrMainViewPrivate *priv;
+  GSList *pictures;
+  GSList *item;
+  guint index;
+  guint n_pictures;
+  gchar **str_array;
+  gchar *ids_str;
+  gchar *edition_url;
+  const gchar *id;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  pictures = frogr_main_view_model_get_pictures (priv->model);
+  n_pictures = frogr_main_view_model_n_pictures (priv->model);;
+
+  /* Build the photo edition url */
+  str_array = g_new (gchar*, n_pictures + 1);
+
+  index = 0;
+  for (item = pictures; item; item = g_slist_next (item))
+    {
+      id = frogr_picture_get_id (FROGR_PICTURE (item->data));
+      if (id != NULL)
+        str_array[index++] = g_strdup (id);
+    }
+  str_array[index] = NULL;
+
+  ids_str = g_strjoinv (",", str_array);
+  edition_url =
+    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
+                     ids_str);
+  g_debug ("Opening edition url: %s\n", edition_url);
+
+  /* Redirect to URL for setting more properties about the pictures */
+  frogr_util_open_url_in_browser (edition_url);
+
+  g_free (edition_url);
+  g_free (ids_str);
+  g_strfreev (str_array);
+}
+
+static void
 _on_pictures_uploaded (FrogrMainView *self,
                        FrogrPictureUploader *fpuploader,
                        GError *error)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  if (error != NULL)
+  if (!error)
     {
-      gchar *msg = NULL;
-
-      msg = g_strdup_printf (_("And error happened while uploading a picture: %s"),
-                             error->message);
-      frogr_util_show_error_dialog (priv->window, msg);
-      g_free (msg);
-
-      g_debug ("Error uploading picture: %s\n", error->message);
-      g_error_free (error);
+      _open_browser_to_edit_details (self, fpuploader);
+      g_debug ("Success uploading picture\n\n");
     }
   else
     {
-      GSList *pictures;
-      GSList *item;
-      guint index;
-      guint n_pictures;
-      gchar **str_array;
-      gchar *ids_str;
-      gchar *edition_url;
-      const gchar *id;
-
-      pictures = frogr_main_view_model_get_pictures (priv->model);
-      n_pictures = frogr_main_view_model_n_pictures (priv->model);;
-
-      /* Build the photo edition url */
-      str_array = g_new (gchar*, n_pictures + 1);
-
-      index = 0;
-      for (item = pictures; item; item = g_slist_next (item))
-        {
-          id = frogr_picture_get_id (FROGR_PICTURE (item->data));
-          if (id != NULL)
-            str_array[index++] = g_strdup (id);
-        }
-      str_array[index] = NULL;
-
-      ids_str = g_strjoinv (",", str_array);
-      edition_url =
-        g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
-                         ids_str);
-      g_debug ("Opening edition url: %s\n", edition_url);
-
-      /* Redirect to URL for setting more properties about the pictures */
-      frogr_util_open_url_in_browser (edition_url);
-
-      g_free (edition_url);
-      g_free (ids_str);
-      g_strfreev (str_array);
+      _error_uploading_pictures (self, error);
+      g_debug ("Error uploading picture: %s\n", error->message);
+      g_error_free (error);
     }
 
   /* Free memory */
   g_object_unref (fpuploader);
+}
+
+static void
+_error_uploading_pictures (FrogrMainView *self, GError *error)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  gchar *msg = NULL;
+
+  switch (error->code)
+    {
+    case FSP_ERROR_NOT_AUTHENTICATED:
+      frogr_controller_revoke_authorization (priv->controller);
+      msg = g_strdup_printf (_("%s is not properly authorized to upload picture "
+                               "to flickr.\nPlease re-authorize it."), PACKAGE_NAME);
+      break;
+
+    default:
+      // General error: just dump the raw error description 
+      msg = g_strdup_printf (_("And error happened while uploading a picture: %s"),
+                             error->message);
+    }
+
+  frogr_util_show_error_dialog (priv->window, msg);
+  g_free (msg);
 }
 
 static void
