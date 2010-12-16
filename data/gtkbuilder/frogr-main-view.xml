@@ -62,20 +62,6 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
-            <child>
-              <object class="GtkToolButton" id="auth_button">
-                <property name="visible">True</property>
-                <property name="use_action_appearance">False</property>
-                <property name="label" translatable="yes">Authorize frogr</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-dialog-authentication</property>
-                <signal name="clicked" handler="_on_auth_button_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
           </object>
           <packing>
             <property name="expand">False</property>
