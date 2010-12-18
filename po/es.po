@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-16 20:11+0100\n"
+"POT-Creation-Date: 2010-12-18 02:29+0100\n"
 "PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Alejandro Pinheiro <apinheiro@igalia.com>\n"
 "Language-Team: English\n"
@@ -45,11 +45,11 @@ msgstr ""
 "Presione el botón para empezar a usar %s una vez lo haya registrado en su "
 "cuenta de flickr"
 
-#: ../src/frogr-controller.c:159
+#: ../src/frogr-controller.c:161
 msgid "Authorization successfully completed!"
 msgstr "Registro completado con éxito!"
 
-#: ../src/frogr-controller.c:160
+#: ../src/frogr-controller.c:162
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -73,56 +73,56 @@ msgid "Edit picture details"
 msgstr "Editar detalles de la imagen"
 
 #. File menu
-#: ../src/frogr-main-view.c:168
+#: ../src/frogr-main-view.c:179
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../src/frogr-main-view.c:174
+#: ../src/frogr-main-view.c:185
 msgid "Authorize _frogr"
 msgstr "Autorizar _frogr"
 
-#: ../src/frogr-main-view.c:182
+#: ../src/frogr-main-view.c:193
 msgid "_Add pictures"
 msgstr "_Añadir imágenes"
 
-#: ../src/frogr-main-view.c:188
+#: ../src/frogr-main-view.c:199
 msgid "_Remove pictures"
 msgstr "_Eliminar imágenes"
 
-#: ../src/frogr-main-view.c:194
+#: ../src/frogr-main-view.c:205
 msgid "_Upload"
 msgstr "_Subir"
 
-#: ../src/frogr-main-view.c:202
+#: ../src/frogr-main-view.c:213
 msgid "_Quit"
 msgstr "_Salir"
 
 #. Help menu
-#: ../src/frogr-main-view.c:209
+#: ../src/frogr-main-view.c:220
 msgid "_Help"
 msgstr "Ay_uda"
 
-#: ../src/frogr-main-view.c:215
+#: ../src/frogr-main-view.c:226
 msgid "_About"
 msgstr "_Acerca de"
 
-#: ../src/frogr-main-view.c:233
+#: ../src/frogr-main-view.c:244
 msgid "Add tags..."
 msgstr "Añadir tags"
 
-#: ../src/frogr-main-view.c:234
+#: ../src/frogr-main-view.c:245
 msgid "Edit details..."
 msgstr "Editar detalles"
 
-#: ../src/frogr-main-view.c:235
+#: ../src/frogr-main-view.c:246
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ../src/frogr-main-view.c:681
+#: ../src/frogr-main-view.c:692
 msgid "Select a picture"
 msgstr "Seleccionar una imagen"
 
-#: ../src/frogr-main-view.c:784
+#: ../src/frogr-main-view.c:795
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any picture to flickr.\n"
@@ -131,7 +131,7 @@ msgstr ""
 "Es necesario autorizar %s para poder subir fotos a flickr.\n"
 "Por favor autorícelo de nuevo."
 
-#: ../src/frogr-main-view.c:909
+#: ../src/frogr-main-view.c:946
 #, c-format
 msgid ""
 "%s is not properly authorized to upload pictures to flickr.\n"
@@ -140,17 +140,25 @@ msgstr ""
 "%s no está adecuadamente autorizado para subir fotos a flickr.Por favor "
 "autorícelo de nuevo."
 
+#: ../src/frogr-main-view.c:951
+#, c-format
+msgid "Process cancelled by the user."
+msgstr "Proceso cancelado por el usuario"
+
 #. General error: just dump the raw error description
-#: ../src/frogr-main-view.c:915
+#: ../src/frogr-main-view.c:957
 #, c-format
 msgid "And error happened while uploading a picture: %s"
 msgstr "Ha ocurrido un error subiendo una imagen: %s"
 
-#. Update progress
-#: ../src/frogr-picture-loader.c:95
+#: ../src/frogr-main-view.c:1111
+msgid "Uploading pictures..."
+msgstr "Subiendo imágenes..."
+
+#: ../src/frogr-picture-loader.c:90
 #, c-format
-msgid "Loading '%s'..."
-msgstr "Subiendo '%s'..."
+msgid "Loading pictures %d / %d"
+msgstr "Cargando imágenes %d / %d"
 
 #. Update progress
 #: ../src/frogr-picture-uploader.c:79
@@ -201,3 +209,6 @@ msgstr "Tags:"
 #: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
 msgid "Title:"
 msgstr "Título:"
+
+#~ msgid "Loading '%s'..."
+#~ msgstr "Subiendo '%s'..."
