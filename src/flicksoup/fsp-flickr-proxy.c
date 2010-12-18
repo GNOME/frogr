@@ -386,7 +386,9 @@ _load_file_contents_cb                  (GObject      *object,
     {
       /* If an error happened here, report through the async callback */
       g_warning ("Unable to get contents for file\n");
-      error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file");
+      if (error)
+        g_error_free (error);
+      error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file for upload");
       build_async_result_and_complete (ga_clos, NULL, error);
     }
 }
