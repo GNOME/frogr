@@ -298,6 +298,7 @@ _get_soup_message_for_upload            (GFile       *file,
   gpointer key, value;
   gchar *mime_type;
   gchar *filepath;
+  gchar *fileuri;
 
   /* Gather needed information */
   filepath = g_file_get_path (file);
@@ -320,8 +321,10 @@ _get_soup_message_for_upload            (GFile       *file,
 
   /* Append the content of the file */
   buffer = soup_buffer_new (SOUP_MEMORY_TAKE, contents, length);
-  soup_multipart_append_form_file (mpart, "photo", filepath,
+  fileuri = g_filename_to_uri (filepath, NULL, NULL);
+  soup_multipart_append_form_file (mpart, "photo", fileuri,
                                    mime_type, buffer);
+  g_free (fileuri);
 
   /* Get the associated message */
   msg = soup_form_request_new_from_multipart (FLICKR_API_UPLOAD_URL, mpart);
