@@ -60,6 +60,8 @@ struct _FrogrControllerPrivate
   FspSession *session;
   FspPhotosMgr *photos_mgr;
 
+  GCancellable *cancellable;
+
   gboolean app_running;
 };
 
@@ -171,6 +173,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspPhotosMgr *photos_mgr = NULL;
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   FCPictureUploadedCallback callback = NULL;
   gpointer source_object = NULL;
@@ -185,6 +188,13 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   callback = up_st->callback;
   source_object = up_st->object;
   g_slice_free (upload_picture_st, up_st);
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  if (priv->cancellable)
+    {
+      g_object_unref (priv->cancellable);
+      priv->cancellable = NULL;
+    }
 
   photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
   if (photo_id)
@@ -244,6 +254,12 @@ _frogr_controller_dispose (GObject* object)
       priv->session = NULL;
     }
 
+  if (priv->cancellable)
+    {
+      g_object_unref (priv->cancellable);
+      priv->cancellable = NULL;
+    }
+
   G_OBJECT_CLASS (frogr_controller_parent_class)->dispose (object);
 }
 
@@ -270,6 +286,7 @@ frogr_controller_init (FrogrController *self)
   priv->account = frogr_config_get_account (priv->config);
   priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
   priv->photos_mgr = fsp_photos_mgr_new (priv->session);
+  priv->cancellable = NULL;
   priv->app_running = FALSE;
 
   /* If available, set token */
@@ -451,8 +468,10 @@ frogr_controller_upload_picture (FrogrController *self,
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   upload_picture_st *up_st;
+
+  /* Create cancellable */
+  priv->cancellable = g_cancellable_new ();
 
   /* Create structure to pass to the thread */
   up_st = g_slice_new (upload_picture_st);
@@ -474,5 +493,21 @@ frogr_controller_upload_picture (FrogrController *self,
                                FSP_SAFETY_LEVEL_NONE,  /* Hard coded at the moment */
                                FSP_CONTENT_TYPE_PHOTO, /* Hard coded at the moment */
                                FSP_SEARCH_SCOPE_NONE,  /* Hard coded at the moment */
-                               NULL, _upload_picture_cb, up_st);
+                               priv->cancellable, _upload_picture_cb, up_st);
+}
+
+void
+frogr_controller_cancel_upload (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = NULL;
+  GCancellable *cancellable = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  cancellable = priv->cancellable;
+
+  if (!g_cancellable_is_cancelled (cancellable))
+    g_cancellable_cancel (cancellable);
+
 }
