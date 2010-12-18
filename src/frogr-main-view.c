@@ -986,12 +986,6 @@ _frogr_main_view_dispose (GObject *object)
       priv->tree_model = NULL;
     }
 
-  if (priv->progress_dialog)
-    {
-      g_object_unref (priv->progress_dialog);
-      priv->progress_dialog = NULL;
-    }
-
   G_OBJECT_CLASS(frogr_main_view_parent_class)->dispose (object);
 }
 
