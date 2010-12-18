@@ -258,7 +258,10 @@ _check_errors_on_soup_response           (SoupMessage  *msg,
   /* Check non-succesful SoupMessage's only */
   if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
     {
-      if (SOUP_STATUS_IS_CLIENT_ERROR (msg->status_code))
+      if (msg->status_code == SOUP_STATUS_CANCELLED)
+        err = g_error_new (FSP_ERROR, FSP_ERROR_CANCELLED,
+                           "Cancelled by user");
+      else if (SOUP_STATUS_IS_CLIENT_ERROR (msg->status_code))
         err = g_error_new (FSP_ERROR, FSP_ERROR_CLIENT_ERROR,
                            "Bad request");
       else if (SOUP_STATUS_IS_SERVER_ERROR (msg->status_code))

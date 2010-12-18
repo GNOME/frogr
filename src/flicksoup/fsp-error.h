@@ -36,6 +36,7 @@ typedef enum {
   FSP_ERROR_UNKNOWN,
 
   /* Errors from communication layer */
+  FSP_ERROR_CANCELLED,
   FSP_ERROR_NETWORK_ERROR,
   FSP_ERROR_CLIENT_ERROR,
   FSP_ERROR_SERVER_ERROR,
