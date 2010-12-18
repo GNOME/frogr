@@ -84,28 +84,16 @@ _update_status_and_progress (FrogrPictureLoader *self)
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   gchar *status_text = NULL;
-  gchar *progress_bar_text = NULL;
 
+  /* Update progress */
   if (priv->current)
-    {
-      const gchar *filepath = (const gchar *)priv->current->data;
-      gchar *filename = g_path_get_basename (filepath);
-
-      /* Update progress */
-      status_text = g_strdup_printf (_("Loading '%s'..."), filename);
-      progress_bar_text = g_strdup_printf ("%d / %d",
-                                           priv->index,
-                                           priv->n_pictures);
-      g_free (filename);
-    }
+    status_text = g_strdup_printf (_("Loading pictures %d / %d"),
+                                   priv->index, priv->n_pictures);
 
   frogr_main_view_set_status_text (priv->mainview, status_text);
-  frogr_main_view_set_progress (priv->mainview,
-                                (double) priv->index / priv->n_pictures,
-                                progress_bar_text);
+
   /* Free */
   g_free (status_text);
-  g_free (progress_bar_text);
 }
 
 static GdkPixbuf *
@@ -192,7 +180,7 @@ _load_next_picture (FrogrPictureLoader *self)
     }
   else
     {
-      /* Update status and progress bars */
+      /* Update status and progress */
       _update_status_and_progress (self);
 
       /* Set proper state */
@@ -276,7 +264,7 @@ _load_next_picture_cb (GObject *object,
   priv->current = g_slist_next (priv->current);
   priv->index++;
 
-  /* Update status and progress bars */
+  /* Update status and progress */
   _update_status_and_progress (self);
 
   /* Execute 'picture-loaded' callback */
@@ -395,7 +383,7 @@ frogr_picture_loader_load (FrogrPictureLoader *self)
   /* Set proper state */
   frogr_main_view_set_state (priv->mainview, FROGR_STATE_LOADING);
 
-  /* Update status and progress bars */
+  /* Update status and progress */
   _update_status_and_progress (self);
 
   /* Trigger the asynchronous process */
