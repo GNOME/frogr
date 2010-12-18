@@ -133,10 +133,18 @@ _disconnect_cancellable_on_idle (GCancellableData *clos)
   return FALSE;
 }
 
+static void
+_soup_session_cancelled_cb              (GCancellable *cancellable,
+                                         gpointer      data)
+{
+  SoupSession *soup_session = SOUP_SESSION (data);
+  soup_session_abort (soup_session);
+}
+
 gchar *
 get_api_signature                      (const gchar *shared_secret,
-                                         const gchar *first_param,
-                                         ... )
+                                        const gchar *first_param,
+                                        ... )
 {
   g_return_val_if_fail (shared_secret != NULL, NULL);
 
@@ -310,7 +318,7 @@ check_errors_on_soup_response           (SoupMessage  *msg,
 }
 
 void
-perform_async_request                   (SoupSession         *session,
+perform_async_request                   (SoupSession         *soup_session,
                                          const gchar         *url,
                                          SoupSessionCallback  request_cb,
                                          GObject             *source_object,
@@ -319,7 +327,7 @@ perform_async_request                   (SoupSession         *session,
                                          gpointer             source_tag,
                                          gpointer             data)
 {
-  g_return_if_fail (SOUP_IS_SESSION (session));
+  g_return_if_fail (SOUP_IS_SESSION (soup_session));
   g_return_if_fail (url != NULL);
   g_return_if_fail (request_cb != NULL);
   g_return_if_fail (callback != NULL);
@@ -335,9 +343,19 @@ perform_async_request                   (SoupSession         *session,
   clos->source_tag = source_tag;
   clos->data = data;
 
+  /* Connect to the "cancelled" signal thread safely */
+  if (clos->cancellable)
+    {
+      clos->cancellable_id =
+        g_cancellable_connect (clos->cancellable,
+                               G_CALLBACK (_soup_session_cancelled_cb),
+                               soup_session,
+                               NULL);
+    }
+
   /* Build and queue the message */
   msg = soup_message_new (SOUP_METHOD_GET, url);
-  soup_session_queue_message (session, msg, request_cb, clos);
+  soup_session_queue_message (soup_session, msg, request_cb, clos);
 }
 
 void

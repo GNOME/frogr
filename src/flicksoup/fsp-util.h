@@ -62,7 +62,7 @@ check_errors_on_soup_response           (SoupMessage  *msg,
                                          GError      **error);
 
 void
-perform_async_request                   (SoupSession         *session,
+perform_async_request                   (SoupSession         *soup_session,
                                          const gchar         *url,
                                          SoupSessionCallback  request_cb,
                                          GObject             *source_object,

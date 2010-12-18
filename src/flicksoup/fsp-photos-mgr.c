@@ -90,6 +90,10 @@ _load_file_contents_cb                  (GObject      *object,
                                          gpointer      data);
 
 static void
+_upload_cancelled_cb                    (GCancellable *cancellable,
+                                         gpointer      data);
+
+static void
 _photo_upload_soup_session_cb           (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
@@ -98,11 +102,6 @@ static void
 _photo_get_info_soup_session_cb         (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
-
-static void
-_upload_cancelled_cb                    (GCancellable *cancellable,
-                                         gpointer      data);
-
 
 /* Private API */
 
@@ -371,7 +370,8 @@ _load_file_contents_cb                  (GObject      *object,
           ga_clos->cancellable_id =
             g_cancellable_connect (ga_clos->cancellable,
                                    G_CALLBACK (_upload_cancelled_cb),
-                                   self, NULL);
+                                   self->priv->soup_session,
+                                   NULL);
         }
 
       /* Perform the async request */
@@ -391,6 +391,14 @@ _load_file_contents_cb                  (GObject      *object,
       error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file for upload");
       build_async_result_and_complete (ga_clos, NULL, error);
     }
+}
+
+static void
+_upload_cancelled_cb                    (GCancellable *cancellable,
+                                         gpointer      data)
+{
+  SoupSession *soup_session = SOUP_SESSION (data);
+  soup_session_abort (soup_session);
 }
 
 static void
@@ -457,13 +465,6 @@ _photo_get_info_soup_session_cb         (SoupSession *session,
   build_async_result_and_complete (clos, photo_info, err);
 }
 
-static void
-_upload_cancelled_cb                    (GCancellable *cancellable,
-                                         gpointer      data)
-{
-  FspPhotosMgr *self = FSP_PHOTOS_MGR (data);
-  soup_session_abort (self->priv->soup_session);
-}
 
 /* Public API */
 
@@ -547,7 +548,7 @@ fsp_photos_mgr_upload_async             (FspPhotosMgr        *self,
 
   /* Asynchronously load the contents of the file */
   file = g_file_new_for_path (filepath);
-  g_file_load_contents_async (file, cancellable, _load_file_contents_cb, up_clos);
+  g_file_load_contents_async (file, NULL, _load_file_contents_cb, up_clos);
 }
 
 gchar *
