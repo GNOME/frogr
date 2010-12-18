@@ -32,10 +32,12 @@ G_BEGIN_DECLS
 #define FSP_DATA_USER_PROFILE(data) ((FspDataUserProfile*) data)
 #define FSP_DATA_AUTH_TOKEN(data)   ((FspDataAuthToken*) data)
 #define FSP_DATA_PHOTO_INFO(data)   ((FspDataPhotoInfo*) data)
+#define FSP_DATA_PHOTO_SET(data)    ((FspDataPhotoSet*) data)
 
 typedef struct _FspDataUserProfile FspDataUserProfile;
 typedef struct _FspDataAuthToken   FspDataAuthToken;
 typedef struct _FspDataPhotoInfo   FspDataPhotoInfo;
+typedef struct _FspDataPhotoSet    FspDataPhotoSet;
 
 typedef union  _FspData	    FspData;
 
@@ -147,12 +149,24 @@ struct _FspDataPhotoInfo
   FspPermission       can_add_meta;
 };
 
+struct _FspDataPhotoSet
+{
+  FspDataType  type;
+  gchar       *id;
+  gchar       *title;
+  gchar       *description;
+  gchar       *primary_photo_id;
+  gchar       *url;
+  gint         n_photos;
+};
+
 union _FspData
 {
   FspDataType        type;
   FspDataUserProfile user_profile;
   FspDataAuthToken   auth_token;
   FspDataPhotoInfo   photo_info;
+  FspDataPhotoSet    photo_set;
 };
 
 GType

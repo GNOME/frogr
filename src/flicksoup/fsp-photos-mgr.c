@@ -419,3 +419,65 @@ fsp_photos_mgr_get_info_finish          (FspPhotosMgr  *self,
 
   return photo_info;
 }
+
+void
+fsp_photos_mgr_get_photosets_async      (FspPhotosMgr        *self,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             user_data)
+{
+  g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
+}
+
+GSList *
+fsp_photos_mgr_get_photosets_finish     (FspPhotosMgr  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+  return NULL;
+}
+
+void
+fsp_photos_mgr_add_to_photosets_async   (FspPhotosMgr        *self,
+                                         const gchar         *photo_id,
+                                         const gchar         *photoset_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             user_data)
+{
+  g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
+}
+
+gboolean
+fsp_photos_mgr_add_to_photosets_finish  (FspPhotosMgr  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+  return FALSE;
+}
+
+void
+fsp_photos_mgr_create_photoset_async    (FspPhotosMgr        *self,
+                                         const gchar         *title,
+                                         const gchar         *description,
+                                         const gchar         *primary_photo_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             user_data)
+{
+  g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
+}
+
+FspDataPhotoSet *
+fsp_photos_mgr_create_photoset_finish   (FspPhotosMgr  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+  return NULL;
+}

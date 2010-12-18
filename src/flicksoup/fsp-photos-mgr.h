@@ -101,6 +101,43 @@ FspDataPhotoInfo *
 fsp_photos_mgr_get_info_finish          (FspPhotosMgr  *self,
                                          GAsyncResult  *res,
                                          GError       **error);
+void
+fsp_photos_mgr_get_photosets_async      (FspPhotosMgr        *self,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             user_data);
+
+GSList *
+fsp_photos_mgr_get_photosets_finish     (FspPhotosMgr  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
+void
+fsp_photos_mgr_add_to_photosets_async   (FspPhotosMgr        *self,
+                                         const gchar         *photo_id,
+                                         const gchar         *photoset_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             user_data);
+
+gboolean
+fsp_photos_mgr_add_to_photoset_finish   (FspPhotosMgr  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+void
+fsp_photos_mgr_create_photoset_async    (FspPhotosMgr        *self,
+                                         const gchar         *title,
+                                         const gchar         *description,
+                                         const gchar         *primary_photo_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             user_data);
+
+FspDataPhotoSet *
+fsp_photos_mgr_create_photoset_finish   (FspPhotosMgr  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
 
 G_END_DECLS
 
