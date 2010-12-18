@@ -147,8 +147,8 @@ static void _on_pictures_uploaded (FrogrMainView *self,
                                    FrogrPictureUploader *fpuploader,
                                    GError *error);
 
-static void _error_uploading_pictures (FrogrMainView *self,
-                                            GError *error);
+static void _notify_pictures_not_uploaded (FrogrMainView *self,
+                                           GError *error);
 
 static void _open_browser_to_edit_details (FrogrMainView *self,
                                            FrogrPictureUploader *fpuploader);
@@ -887,7 +887,7 @@ _on_pictures_uploaded (FrogrMainView *self,
     }
   else
     {
-      _error_uploading_pictures (self, error);
+      _notify_pictures_not_uploaded (self, error);
       g_debug ("Error uploading picture: %s\n", error->message);
       g_error_free (error);
     }
@@ -897,11 +897,13 @@ _on_pictures_uploaded (FrogrMainView *self,
 }
 
 static void
-_error_uploading_pictures (FrogrMainView *self, GError *error)
+_notify_pictures_not_uploaded (FrogrMainView *self, GError *error)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  void (* error_function) (GtkWindow *, const gchar *) = NULL;
   gchar *msg = NULL;
 
+  error_function = frogr_util_show_error_dialog;
   switch (error->code)
     {
     case FSP_ERROR_NOT_AUTHENTICATED:
@@ -910,13 +912,18 @@ _error_uploading_pictures (FrogrMainView *self, GError *error)
                                "to flickr.\nPlease re-authorize it."), PACKAGE_NAME);
       break;
 
+    case FSP_ERROR_CANCELLED:
+      msg = g_strdup_printf (_("Process cancelled by the user."), PACKAGE_NAME);
+      error_function = frogr_util_show_warning_dialog;
+      break;
+
     default:
       // General error: just dump the raw error description 
       msg = g_strdup_printf (_("And error happened while uploading a picture: %s"),
                              error->message);
     }
 
-  frogr_util_show_error_dialog (priv->window, msg);
+  error_function (priv->window, msg);
   g_free (msg);
 }
 
