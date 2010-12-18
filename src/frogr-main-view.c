@@ -63,11 +63,14 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *menu_bar;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
-  GtkWidget *progress_bar;
   GtkWidget *add_button;
   GtkWidget *remove_button;
   GtkWidget *upload_button;
   GtkWidget *ctxt_menu;
+
+  GtkWidget *progress_dialog;
+  GtkWidget *progress_bar;
+
   GtkTreeModel *tree_model;
   guint sb_context_id;
 } FrogrMainViewPrivate;
@@ -137,6 +140,14 @@ static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
 static void _load_pictures (FrogrMainView *self, GSList *filepaths);
 static void _upload_pictures (FrogrMainView *self);
+
+static void _progress_dialog_response (GtkDialog *dialog,
+                                       gint response_id,
+                                       gpointer user_data);
+static void _progress_dialog_delete_event (GtkWidget *widget,
+                                           GdkEvent *event,
+                                           gpointer user_data);
+static void _cancel_upload_process (FrogrMainView *self);
 
 /* Event handlers */
 static void _on_picture_loaded (FrogrMainView *self,
@@ -545,7 +556,7 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->upload_button, npics > 0);
 
       /* Hide progress bar, just in case */
-      gtk_widget_hide (priv->progress_bar);
+      gtk_widget_hide (priv->progress_dialog);
       break;
 
     default:
@@ -801,6 +812,30 @@ _upload_pictures (FrogrMainView *self)
     }
 }
 
+static void
+_progress_dialog_response (GtkDialog *dialog,
+                           gint response_id,
+                           gpointer user_data)
+{
+  FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
+  _cancel_upload_process (self);
+}
+
+static void
+_progress_dialog_delete_event (GtkWidget *widget,
+                               GdkEvent *event,
+                               gpointer user_data)
+{
+  FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
+  _cancel_upload_process (self);
+}
+
+static void
+_cancel_upload_process (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  frogr_controller_cancel_upload (priv->controller);
+}
 
 /* Event handlers */
 
@@ -951,6 +986,12 @@ _frogr_main_view_dispose (GObject *object)
       priv->tree_model = NULL;
     }
 
+  if (priv->progress_dialog)
+    {
+      g_object_unref (priv->progress_dialog);
+      priv->progress_dialog = NULL;
+    }
+
   G_OBJECT_CLASS(frogr_main_view_parent_class)->dispose (object);
 }
 
@@ -988,6 +1029,8 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *upload_button;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
+  GtkWidget *progress_dialog;
+  GtkWidget *progress_vbox;
   GtkWidget *progress_bar;
   GList *icons;
 
@@ -1055,9 +1098,21 @@ frogr_main_view_init (FrogrMainView *self)
   /* Initialize drag'n'drop support */
   _initialize_drag_n_drop (self);
 
-  /* Create and add progress bar to the statusbar */
+  /* Create and hide progress bar dialog for uploading pictures */
+  progress_dialog = gtk_dialog_new_with_buttons (NULL,
+                                                 priv->window,
+                                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                 GTK_STOCK_CANCEL,
+                                                 GTK_RESPONSE_CANCEL,
+                                                 NULL);
+  gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
+  progress_vbox = gtk_dialog_get_content_area (GTK_DIALOG (progress_dialog));
   progress_bar = gtk_progress_bar_new ();
-  gtk_box_pack_start (GTK_BOX (status_bar), progress_bar, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (progress_vbox), gtk_label_new (_("Uploading pictures...")), FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
+
+  gtk_widget_hide (progress_dialog);
+  priv->progress_dialog = progress_dialog;
   priv->progress_bar = progress_bar;
 
   /* Initialize model */
@@ -1091,6 +1146,15 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->window), "delete-event",
                     G_CALLBACK (_on_main_view_delete_event),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->progress_dialog), "response",
+                    G_CALLBACK(_progress_dialog_response),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->progress_dialog),
+                    "delete-event",
+                    G_CALLBACK(_progress_dialog_delete_event),
                     self);
 
   gtk_builder_connect_signals (builder, self);
@@ -1165,7 +1229,7 @@ frogr_main_view_set_progress (FrogrMainView *self,
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Show the widget and set fraction */
-  gtk_widget_show (GTK_WIDGET (priv->progress_bar));
+  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar),
                                  fraction);
 
