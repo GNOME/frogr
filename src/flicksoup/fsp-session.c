@@ -368,7 +368,7 @@ fsp_session_get_auth_url_async          (FspSession          *self,
 
   /* We need the frob for this */
   FspFlickrProxy *proxy = _get_flickr_proxy (self);
-  GAsyncData *clos = g_slice_new (GAsyncData);
+  GAsyncData *clos = g_slice_new0 (GAsyncData);
   clos->object = G_OBJECT (self);
   clos->cancellable = c;
   clos->callback = cb;
@@ -421,7 +421,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
 
   FspSessionPrivate *priv = self->priv;
   FspFlickrProxy *proxy = _get_flickr_proxy (self);
-  GAsyncData *clos = g_slice_new (GAsyncData);
+  GAsyncData *clos = g_slice_new0 (GAsyncData);
   clos->object = G_OBJECT (self);
   clos->cancellable = c;
   clos->callback = cb;

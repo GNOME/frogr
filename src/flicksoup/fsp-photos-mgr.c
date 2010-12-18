@@ -317,7 +317,7 @@ fsp_photos_mgr_upload_async             (FspPhotosMgr        *self,
 
   FspFlickrProxy *proxy = NULL;
   GHashTable *extra_params = NULL;
-  GAsyncData *clos = g_slice_new (GAsyncData);
+  GAsyncData *clos = g_slice_new0 (GAsyncData);
   clos->object = G_OBJECT (self);
   clos->cancellable = cancellable;
   clos->callback = callback;
@@ -377,7 +377,7 @@ fsp_photos_mgr_get_info_async           (FspPhotosMgr        *self,
   g_return_if_fail (photo_id != NULL);
 
   FspFlickrProxy *proxy = NULL;
-  GAsyncData *clos = g_slice_new (GAsyncData);
+  GAsyncData *clos = g_slice_new0 (GAsyncData);
   clos->object = G_OBJECT (self);
   clos->cancellable = cancellable;
   clos->callback = callback;
