@@ -92,8 +92,9 @@ _get_signed_query_with_params           (const gchar      *api_sig,
       for (k = keys; k; k = g_list_next (k))
         {
           gchar *key = (gchar*) k->data;
-          gchar *value = g_hash_table_lookup (params_table, key);
+          gchar *value = soup_uri_decode (g_hash_table_lookup (params_table, key));
           url_params_array[i++] = g_strdup_printf ("%s=%s", key, value);
+          g_free (value);
         }
 
       /* Add those to the params array (space previously reserved) */
@@ -188,7 +189,7 @@ get_api_signature_from_hash_table       (const gchar *shared_secret,
       for (k = keys; k; k = g_list_next (k))
         {
           gchar *key = (gchar*) k->data;
-          gchar *value = g_hash_table_lookup (params_table, key);
+          gchar *value = soup_uri_decode (g_hash_table_lookup (params_table, key));
 
           sign_str_array[i++] = key;
           sign_str_array[i++] = value;
