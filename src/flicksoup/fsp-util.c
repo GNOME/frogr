@@ -276,6 +276,70 @@ get_signed_query_from_hash_table        (const gchar *shared_secret,
   return retval;
 }
 
+gboolean
+check_errors_on_soup_response           (SoupMessage  *msg,
+                                         GError      **error)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+
+  GError *err = NULL;
+
+  /* Check non-succesful SoupMessage's only */
+  if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
+    {
+      if (msg->status_code == SOUP_STATUS_CANCELLED)
+        err = g_error_new (FSP_ERROR, FSP_ERROR_CANCELLED,
+                           "Cancelled by user");
+      else if (SOUP_STATUS_IS_CLIENT_ERROR (msg->status_code))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_CLIENT_ERROR,
+                           "Bad request");
+      else if (SOUP_STATUS_IS_SERVER_ERROR (msg->status_code))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_SERVER_ERROR,
+                           "Server error");
+      else
+        err = g_error_new (FSP_ERROR, FSP_ERROR_NETWORK_ERROR,
+                           "Network error");
+    }
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  /* Return result */
+  return (err != NULL);
+}
+
+void
+perform_async_request                   (SoupSession         *session,
+                                         const gchar         *url,
+                                         SoupSessionCallback  request_cb,
+                                         GObject             *source_object,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             source_tag,
+                                         gpointer             data)
+{
+  g_return_if_fail (SOUP_IS_SESSION (session));
+  g_return_if_fail (url != NULL);
+  g_return_if_fail (request_cb != NULL);
+  g_return_if_fail (callback != NULL);
+
+  GAsyncData *clos = NULL;
+  SoupMessage *msg = NULL;
+
+  /* Save important data for the callback */
+  clos = g_slice_new0 (GAsyncData);
+  clos->object = source_object;
+  clos->cancellable = cancellable;
+  clos->callback = callback;
+  clos->source_tag = source_tag;
+  clos->data = data;
+
+  /* Build and queue the message */
+  msg = soup_message_new (SOUP_METHOD_GET, url);
+  soup_session_queue_message (session, msg, request_cb, clos);
+}
+
 void
 build_async_result_and_complete         (GAsyncData *clos,
                                          gpointer    result,

@@ -27,6 +27,8 @@
 #include <glib-object.h>
 #include <gio/gio.h>
 
+#include <libsoup/soup.h>
+
 G_BEGIN_DECLS
 
 typedef struct
@@ -54,6 +56,20 @@ get_signed_query                        (const gchar *shared_secret,
 gchar *
 get_signed_query_from_hash_table        (const gchar *shared_secret,
                                          GHashTable  *params_table);
+
+gboolean
+check_errors_on_soup_response           (SoupMessage  *msg,
+                                         GError      **error);
+
+void
+perform_async_request                   (SoupSession         *session,
+                                         const gchar         *url,
+                                         SoupSessionCallback  request_cb,
+                                         GObject             *source_object,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             source_tag,
+                                         gpointer             data);
 
 void
 build_async_result_and_complete         (GAsyncData *clos,

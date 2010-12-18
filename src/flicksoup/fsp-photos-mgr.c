@@ -23,12 +23,16 @@
 #include "fsp-photos-mgr.h"
 
 #include "fsp-error.h"
+#include "fsp-global-defs.h"
+#include "fsp-flickr-parser.h"
 #include "fsp-session-priv.h"
 #include "fsp-session.h"
 #include "fsp-util.h"
 
+#include <libsoup/soup.h>
+
 #define FSP_PHOTOS_MGR_GET_PRIVATE(object)            \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),             \
                                 FSP_TYPE_PHOTOS_MGR,  \
                                 FspPhotosMgrPrivate))
 
@@ -39,8 +43,16 @@ G_DEFINE_TYPE (FspPhotosMgr, fsp_photos_mgr, G_TYPE_OBJECT);
 struct _FspPhotosMgrPrivate
 {
   FspSession *session;
-  FspFlickrProxy *flickr_proxy; /* Lazy initialization */
+
+  FspFlickrParser *parser;
+  SoupSession *soup_session;
 };
+
+typedef struct
+{
+  GAsyncData *gasync_data;
+  GHashTable *extra_params;
+} UploadPhotoData;
 
 /* Properties */
 
@@ -52,8 +64,8 @@ enum  {
 
 /* Prototypes */
 
-static FspFlickrProxy *
-_get_flickr_proxy                       (FspPhotosMgr *self);
+static SoupSession *
+_get_soup_session                       (FspPhotosMgr *self);
 
 static GHashTable *
 _get_upload_extra_params                (const gchar    *title,
@@ -66,15 +78,31 @@ _get_upload_extra_params                (const gchar    *title,
                                          FspContentType  content_type,
                                          FspSearchScope  hidden);
 
+static SoupMessage *
+_get_soup_message_for_upload            (GFile       *file,
+                                         const gchar *contents,
+                                         gsize        length,
+                                         GHashTable  *extra_params);
+
 static void
-_upload_cb                              (GObject      *object,
-                                         GAsyncResult *result,
+_load_file_contents_cb                  (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer      data);
 
 static void
-_get_info_cb                            (GObject      *object,
-                                         GAsyncResult *result,
+_photo_upload_soup_session_cb           (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_photo_get_info_soup_session_cb         (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_upload_cancelled_cb                    (GCancellable *cancellable,
                                          gpointer      data);
+
 
 /* Private API */
 
@@ -129,10 +157,18 @@ fsp_photos_mgr_dispose                  (GObject* object)
       self->priv->session = NULL;
     }
 
-  if (self->priv->flickr_proxy)
+  /* Unref objects */
+  if (self->priv->parser)
     {
-      g_object_unref (self->priv->flickr_proxy);
-      self->priv->flickr_proxy = NULL;
+      g_object_unref (self->priv->parser);
+      self->priv->parser = NULL;
+    }
+
+  /* Unref object */
+  if (self->priv->soup_session)
+    {
+      g_object_unref (self->priv->soup_session);
+      self->priv->soup_session = NULL;
     }
 
   /* Call superclass */
@@ -166,20 +202,21 @@ fsp_photos_mgr_init                     (FspPhotosMgr *self)
   self->priv = FSP_PHOTOS_MGR_GET_PRIVATE (self);
 
   self->priv->session = NULL;
-  self->priv->flickr_proxy = NULL;
+  self->priv->parser = fsp_flickr_parser_get_instance ();
+  self->priv->soup_session = NULL;
 }
 
-static FspFlickrProxy *
-_get_flickr_proxy                       (FspPhotosMgr *self)
+static SoupSession *
+_get_soup_session                       (FspPhotosMgr *self)
 {
   g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), NULL);
 
   FspPhotosMgrPrivate *priv = self->priv;
 
-  if (priv->flickr_proxy == NULL)
-    priv->flickr_proxy = g_object_ref (fsp_session_get_flickr_proxy (priv->session));
+  if (priv->soup_session == NULL)
+    priv->soup_session = g_object_ref (fsp_session_get_soup_session (priv->session));
 
-  return priv->flickr_proxy;
+  return priv->soup_session;
 }
 
 static GHashTable *
@@ -241,38 +278,191 @@ _get_upload_extra_params                (const gchar    *title,
   return table;
 }
 
-static void
-_upload_cb                              (GObject      *object,
-                                         GAsyncResult *result,
-                                         gpointer      data)
+static SoupMessage *
+_get_soup_message_for_upload            (GFile       *file,
+                                         const gchar *contents,
+                                         gsize        length,
+                                         GHashTable  *extra_params)
 {
-  g_return_if_fail (FSP_IS_FLICKR_PROXY (object));
-  g_return_if_fail (G_IS_ASYNC_RESULT (result));
-  g_return_if_fail (data != NULL);
+  GFileInfo *file_info = NULL;
+  SoupMessage *msg = NULL;
+  SoupMultipart *mpart = NULL;
+  SoupBuffer *buffer = NULL;
+  GHashTableIter iter;
+  gpointer key, value;
+  gchar *mime_type;
+  gchar *filepath;
+  gchar *fileuri;
 
-  FspFlickrProxy *proxy = FSP_FLICKR_PROXY(object);
-  gchar *photo_id = NULL;
-  GError *error = NULL;
+  /* Gather needed information */
+  filepath = g_file_get_path (file);
+  file_info = g_file_query_info (file,
+                                 G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                 G_FILE_QUERY_INFO_NONE,
+                                 NULL,
+                                 NULL);
+  /* Check mimetype */
+  mime_type = g_strdup (g_file_info_get_content_type (file_info));
 
-  photo_id = fsp_flickr_proxy_photo_upload_finish (proxy, result, &error);
-  build_async_result_and_complete ((GAsyncData *) data, (gpointer) photo_id, error);
+  /* Init multipart container */
+  mpart = soup_multipart_new (SOUP_FORM_MIME_TYPE_MULTIPART);
+
+  /* Traverse extra_params to append them to the message */
+  g_hash_table_iter_init (&iter, extra_params);
+
+  while (g_hash_table_iter_next (&iter, &key, &value))
+    soup_multipart_append_form_string (mpart, key, value);
+
+  /* Append the content of the file */
+  buffer = soup_buffer_new (SOUP_MEMORY_TAKE, contents, length);
+  fileuri = g_filename_to_uri (filepath, NULL, NULL);
+  soup_multipart_append_form_file (mpart, "photo", fileuri,
+                                   mime_type, buffer);
+  g_free (fileuri);
+
+  /* Get the associated message */
+  msg = soup_form_request_new_from_multipart (FLICKR_API_UPLOAD_URL, mpart);
+
+  /* Free */
+  soup_multipart_free (mpart);
+  g_free (filepath);
+  g_free (mime_type);
+
+  /* Return message */
+  return msg;
 }
 
 static void
-_get_info_cb                            (GObject      *object,
-                                         GAsyncResult *result,
+_load_file_contents_cb                  (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer      data)
 {
-  g_return_if_fail (FSP_IS_FLICKR_PROXY (object));
-  g_return_if_fail (G_IS_ASYNC_RESULT (result));
+  g_return_if_fail (G_IS_FILE (object));
+  g_return_if_fail (G_IS_ASYNC_RESULT (res));
   g_return_if_fail (data != NULL);
 
-  FspFlickrProxy *proxy = FSP_FLICKR_PROXY(object);
-  FspDataPhotoInfo *photo_info = NULL;
+  UploadPhotoData *up_clos = NULL;
+  GAsyncData *ga_clos = NULL;
+  GHashTable *extra_params = NULL;
+  GFile *file = NULL;
   GError *error = NULL;
+  gchar *contents;
+  gsize length;
 
-  photo_info = fsp_flickr_proxy_photo_get_info_finish (proxy, result, &error);
-  build_async_result_and_complete ((GAsyncData *) data, (gpointer) photo_info, error);
+  /* Get data from UploadPhotoData closure, and free it */
+  up_clos = (UploadPhotoData *) data;
+  ga_clos = up_clos->gasync_data;
+  extra_params = up_clos->extra_params;
+  g_slice_free (UploadPhotoData, up_clos);
+
+  file = G_FILE (object);
+  if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
+    {
+      FspPhotosMgr *self = NULL;
+      SoupMessage *msg = NULL;
+
+      /* Get the proxy and the associated message */
+      self = FSP_PHOTOS_MGR (ga_clos->object);
+      msg = _get_soup_message_for_upload (file, contents, length, extra_params);
+
+      /* Connect to the "cancelled" signal thread safely */
+      if (ga_clos->cancellable)
+        {
+          ga_clos->cancellable_id =
+            g_cancellable_connect (ga_clos->cancellable,
+                                   G_CALLBACK (_upload_cancelled_cb),
+                                   self, NULL);
+        }
+
+      /* Perform the async request */
+      soup_session_queue_message (self->priv->soup_session,
+                                  msg, _photo_upload_soup_session_cb, ga_clos);
+
+      /* Free */
+      g_hash_table_unref (extra_params);
+      g_object_unref (file);
+    }
+  else
+    {
+      /* If an error happened here, report through the async callback */
+      g_warning ("Unable to get contents for file\n");
+      if (error)
+        g_error_free (error);
+      error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file for upload");
+      build_async_result_and_complete (ga_clos, NULL, error);
+    }
+}
+
+static void
+_photo_upload_soup_session_cb           (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_SESSION (session));
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  GAsyncData *clos = NULL;
+  FspPhotosMgr *self = NULL;
+  gchar *photo_id = NULL;
+  GError *err = NULL;
+
+  /* Get needed data from closure */
+  clos = (GAsyncData *) data;
+  self = FSP_PHOTOS_MGR (clos->object);
+
+  /* Get value from response */
+  if (!check_errors_on_soup_response (msg, &err))
+    {
+      photo_id =
+        fsp_flickr_parser_get_upload_result (self->priv->parser,
+                                             msg->response_body->data,
+                                             (int) msg->response_body->length,
+                                             &err);
+    }
+
+  /* Build response and call async callback */
+  build_async_result_and_complete (clos, photo_id, err);
+}
+
+static void
+_photo_get_info_soup_session_cb         (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_SESSION (session));
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  GAsyncData *clos = NULL;
+  FspPhotosMgr *self = NULL;
+  FspDataPhotoInfo *photo_info = NULL;
+  GError *err = NULL;
+
+  /* Get needed data from closure */
+  clos = (GAsyncData *) data;
+  self = FSP_PHOTOS_MGR (clos->object);
+
+  /* Get value from response */
+  if (!check_errors_on_soup_response (msg, &err))
+    {
+      photo_info =
+        fsp_flickr_parser_get_photo_info (self->priv->parser,
+                                          msg->response_body->data,
+                                          (int) msg->response_body->length,
+                                          &err);
+    }
+
+  /* Build response and call async callback */
+  build_async_result_and_complete (clos, photo_info, err);
+}
+
+static void
+_upload_cancelled_cb                    (GCancellable *cancellable,
+                                         gpointer      data)
+{
+  FspPhotosMgr *self = FSP_PHOTOS_MGR (data);
+  soup_session_abort (self->priv->soup_session);
 }
 
 /* Public API */
@@ -315,25 +505,49 @@ fsp_photos_mgr_upload_async             (FspPhotosMgr        *self,
   g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
   g_return_if_fail (filepath != NULL);
 
-  FspFlickrProxy *proxy = NULL;
+  FspPhotosMgrPrivate *priv = NULL;
+  SoupSession *soup_session = NULL;
   GHashTable *extra_params = NULL;
-  GAsyncData *clos = g_slice_new0 (GAsyncData);
-  clos->object = G_OBJECT (self);
-  clos->cancellable = cancellable;
-  clos->callback = callback;
-  clos->source_tag = fsp_photos_mgr_upload_async;
-  clos->data = data;
+  GAsyncData *ga_clos = NULL;
+  UploadPhotoData *up_clos = NULL;
+  GFile *file = NULL;
+  const gchar *secret = NULL;
+  gchar *api_sig = NULL;
 
   /* Get flickr proxy and extra params (those actually used) */
-  proxy = _get_flickr_proxy (self);
+  priv = self->priv;
+  soup_session = _get_soup_session (self);
   extra_params = _get_upload_extra_params (title, description, tags,
                                            is_public, is_family, is_friend,
                                            safety_level, content_type, hidden);
 
-  fsp_flickr_proxy_photo_upload_async (proxy, filepath, extra_params,
-                                       cancellable, _upload_cb, clos);
-  /* Free hash table */
-  g_hash_table_unref (extra_params);
+  /* Add remaining parameters to the hash table */
+  g_hash_table_insert (extra_params, g_strdup ("api_key"),
+                       g_strdup (fsp_session_get_api_key (priv->session)));
+  g_hash_table_insert (extra_params, g_strdup ("auth_token"),
+                       g_strdup (fsp_session_get_token (priv->session)));
+
+  /* Build the api signature and add it to the hash table */
+  secret = fsp_session_get_secret (priv->session);
+  api_sig = get_api_signature_from_hash_table (secret, extra_params);
+  g_hash_table_insert (extra_params, g_strdup ("api_sig"), api_sig);
+
+  /* Save important data for the callback */
+  ga_clos = g_slice_new0 (GAsyncData);
+  ga_clos->object = G_OBJECT (self);
+  ga_clos->cancellable = cancellable;
+  ga_clos->callback = callback;
+  ga_clos->source_tag = fsp_photos_mgr_upload_async;
+  ga_clos->data = data;
+
+  /* Save important data for the upload process itself */
+  up_clos = g_slice_new0 (UploadPhotoData);
+  up_clos->gasync_data = ga_clos;
+  up_clos->extra_params = extra_params;
+
+  /* Asynchronously load the contents of the file */
+  file = g_file_new_for_path (filepath);
+  g_file_load_contents_async (file, cancellable, _load_file_contents_cb, up_clos);
 }
 
 gchar *
@@ -376,18 +590,29 @@ fsp_photos_mgr_get_info_async           (FspPhotosMgr        *self,
   g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
   g_return_if_fail (photo_id != NULL);
 
-  FspFlickrProxy *proxy = NULL;
-  GAsyncData *clos = g_slice_new0 (GAsyncData);
-  clos->object = G_OBJECT (self);
-  clos->cancellable = cancellable;
-  clos->callback = callback;
-  clos->source_tag = fsp_photos_mgr_get_info_async;
-  clos->data = data;
+  FspPhotosMgrPrivate *priv = self->priv;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
 
-  /* Get flickr proxy and call it */
-  proxy = _get_flickr_proxy (self);
-  fsp_flickr_proxy_photo_get_info_async (proxy, photo_id,
-                                         cancellable, _get_info_cb, clos);
+  /* Build the signed url */
+  secret = fsp_session_get_secret (priv->session);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.photos.getInfo",
+                                   "api_key", fsp_session_get_api_key (priv->session),
+                                   "auth_token", fsp_session_get_token (priv->session),
+                                   "photo_id", photo_id,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  perform_async_request (priv->soup_session, url,
+                         _photo_get_info_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_photos_mgr_get_info_async, data);
+
+  g_free (url);
 }
 
 FspDataPhotoInfo *

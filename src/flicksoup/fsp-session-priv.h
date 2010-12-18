@@ -26,10 +26,12 @@
 #include "fsp-session.h"
 #include "fsp-flickr-proxy.h"
 
+#include <libsoup/soup.h>
+
 G_BEGIN_DECLS
 
-FspFlickrProxy *
-fsp_session_get_flickr_proxy            (FspSession *self);
+SoupSession *
+fsp_session_get_soup_session            (FspSession *self);
 
 G_END_DECLS
 
