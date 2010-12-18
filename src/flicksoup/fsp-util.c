@@ -27,6 +27,13 @@
 #include <stdarg.h>
 #include <libsoup/soup.h>
 
+typedef struct
+{
+  GCancellable        *cancellable;
+  gulong               cancellable_id;
+} GCancellableData;
+
+
 static GHashTable *
 _get_params_table_from_valist           (const gchar *first_param,
                                          va_list      args)
@@ -102,6 +109,27 @@ _get_signed_query_with_params           (const gchar      *api_sig,
   g_hash_table_unref (params_table);
 
   return retval;
+}
+
+static gboolean
+_disconnect_cancellable_on_idle (GCancellableData *clos)
+{
+  GCancellable *cancellable = NULL;
+  gulong cancellable_id = 0;
+
+  /* Get data from closure, and free it */
+  cancellable = clos->cancellable;
+  cancellable_id = clos->cancellable_id;
+  g_slice_free (GCancellableData, clos);
+
+  /* Disconnect from the "cancelled" signal if needed */
+  if (cancellable)
+    {
+      g_cancellable_disconnect (cancellable, cancellable_id);
+      g_object_unref (cancellable);
+    }
+
+  return FALSE;
 }
 
 gchar *
@@ -256,16 +284,29 @@ build_async_result_and_complete         (GAsyncData *clos,
 
   GSimpleAsyncResult *res = NULL;
   GObject *object = NULL;
+  GCancellableData *cancellable_data = NULL;
+  GCancellable *cancellable = NULL;
+  gulong cancellable_id = 0;
   GAsyncReadyCallback  callback = NULL;
   gpointer source_tag;
   gpointer data;
 
   /* Get data from closure, and free it */
   object = clos->object;
+  cancellable = clos->cancellable;
+  cancellable_id = clos->cancellable_id;
   callback = clos->callback;
   source_tag = clos->source_tag;
   data = clos->data;
   g_slice_free (GAsyncData, clos);
+
+  /* Make sure the "cancelled" signal gets disconnected in another
+     iteration of the main loop to avoid a dead-lock with itself */
+  cancellable_data = g_slice_new0 (GCancellableData);
+  cancellable_data->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
+  cancellable_data->cancellable_id = cancellable_id;
+
+  g_idle_add ((GSourceFunc) _disconnect_cancellable_on_idle, cancellable_data);
 
   /* Build response and call async callback */
   res = g_simple_async_result_new (object, callback,

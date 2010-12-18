@@ -33,6 +33,7 @@ typedef struct
 {
   GObject             *object;
   GCancellable        *cancellable;
+  gulong               cancellable_id;
   GAsyncReadyCallback  callback;
   gpointer             source_tag;
   gpointer             data;

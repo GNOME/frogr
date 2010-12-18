@@ -115,6 +115,10 @@ _perform_async_request                  (FspFlickrProxy      *self,
                                          gpointer             source_tag,
                                          gpointer             data);
 
+static void
+_upload_cancelled_cb                    (GCancellable *cancellable,
+                                         gpointer      data);
+
 /* Private API */
 
 static void
@@ -360,11 +364,17 @@ _load_file_contents_cb                  (GObject      *object,
       FspFlickrProxy * proxy = NULL;
       SoupMessage *msg = NULL;
 
-      /* Get the associated message */
+      /* Get the proxy and the associated message */
+      proxy = FSP_FLICKR_PROXY (ga_clos->object);
       msg = _get_soup_message_for_upload (file, contents, length, extra_params);
 
+      /* Connect to the "cancelled" signal thread safely */
+      ga_clos->cancellable_id =
+        g_cancellable_connect (ga_clos->cancellable,
+                               G_CALLBACK (_upload_cancelled_cb),
+                               proxy, NULL);
+
       /* Perform the async request */
-      proxy = FSP_FLICKR_PROXY (ga_clos->object);
       soup_session_queue_message (proxy->priv->soup_session,
                                   msg, _photo_upload_soup_session_cb, ga_clos);
 
@@ -526,7 +536,7 @@ _perform_async_request                  (FspFlickrProxy      *self,
   SoupMessage *msg = NULL;
 
   /* Save important data for the callback */
-  clos = g_slice_new (GAsyncData);
+  clos = g_slice_new0 (GAsyncData);
   clos->object = G_OBJECT (self);
   clos->cancellable = cancellable;
   clos->callback = callback;
@@ -539,6 +549,13 @@ _perform_async_request                  (FspFlickrProxy      *self,
                               msg, request_cb, clos);
 }
 
+static void
+_upload_cancelled_cb                    (GCancellable *cancellable,
+                                         gpointer      data)
+{
+  FspFlickrProxy *proxy = FSP_FLICKR_PROXY (data);
+  soup_session_abort (proxy->priv->soup_session);
+}
 
 /* Public API */
 
@@ -729,7 +746,7 @@ fsp_flickr_proxy_photo_upload_async     (FspFlickrProxy      *self,
   gchar *api_sig = NULL;
 
   /* Save important data for the callback */
-  ga_clos = g_slice_new (GAsyncData);
+  ga_clos = g_slice_new0 (GAsyncData);
   ga_clos->object = G_OBJECT (self);
   ga_clos->cancellable = c;
   ga_clos->callback = cb;
@@ -750,13 +767,13 @@ fsp_flickr_proxy_photo_upload_async     (FspFlickrProxy      *self,
   g_hash_table_insert (extra_params, g_strdup ("api_sig"), api_sig);
 
   /* Save important data for the upload process itself */
-  up_clos = g_slice_new (UploadPhotoData);
+  up_clos = g_slice_new0 (UploadPhotoData);
   up_clos->gasync_data = ga_clos;
   up_clos->extra_params = extra_params;
 
   /* Asynchronously load the contents of the file */
   file = g_file_new_for_path (filepath);
-  g_file_load_contents_async (file, NULL, _load_file_contents_cb, up_clos);
+  g_file_load_contents_async (file, c, _load_file_contents_cb, up_clos);
 }
 
 gchar *
