@@ -14,9 +14,6 @@ TODO list for the uploader:
  * Add a "Settings" new dialog to allow the user preselect some useful
    and common options (e.g. always upload public pictures by default).
 
- * Add a "Cancel" button, to allow interrupting an uploading process
-   without having to quit the application, as it is right now :-)
-
  * Allow adding pictures by just selecting its folder.
 
  * Allow pre-selecting the target album for a picture before uploading.
