@@ -83,7 +83,7 @@ fsp_photos_mgr_upload_async             (FspPhotosMgr        *self,
                                          FspSearchScope       hidden,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data);
+                                         gpointer             data);
 
 gchar *
 fsp_photos_mgr_upload_finish            (FspPhotosMgr  *self,
@@ -95,7 +95,7 @@ fsp_photos_mgr_get_info_async           (FspPhotosMgr        *self,
                                          const gchar         *photo_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data);
+                                         gpointer             data);
 
 FspDataPhotoInfo *
 fsp_photos_mgr_get_info_finish          (FspPhotosMgr  *self,
@@ -105,7 +105,7 @@ void
 fsp_photos_mgr_get_photosets_async      (FspPhotosMgr        *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data);
+                                         gpointer             data);
 
 GSList *
 fsp_photos_mgr_get_photosets_finish     (FspPhotosMgr  *self,
@@ -113,12 +113,12 @@ fsp_photos_mgr_get_photosets_finish     (FspPhotosMgr  *self,
                                          GError       **error);
 
 void
-fsp_photos_mgr_add_to_photosets_async   (FspPhotosMgr        *self,
+fsp_photos_mgr_add_to_photoset_async    (FspPhotosMgr        *self,
                                          const gchar         *photo_id,
                                          const gchar         *photoset_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data);
+                                         gpointer             data);
 
 gboolean
 fsp_photos_mgr_add_to_photoset_finish   (FspPhotosMgr  *self,
@@ -131,9 +131,9 @@ fsp_photos_mgr_create_photoset_async    (FspPhotosMgr        *self,
                                          const gchar         *primary_photo_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data);
+                                         gpointer             data);
 
-FspDataPhotoSet *
+gchar *
 fsp_photos_mgr_create_photoset_finish   (FspPhotosMgr  *self,
                                          GAsyncResult  *res,
                                          GError       **error);

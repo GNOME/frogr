@@ -93,6 +93,24 @@ fsp_flickr_parser_get_photo_info        (FspFlickrParser  *self,
                                          gulong            buf_size,
                                          GError          **error);
 
+GSList *
+fsp_flickr_parser_get_photosets_list    (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
+gpointer
+fsp_flickr_parser_added_to_photoset     (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
+gchar *
+fsp_flickr_parser_photoset_created      (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
 G_END_DECLS
 
 #endif

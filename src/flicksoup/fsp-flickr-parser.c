@@ -746,3 +746,35 @@ fsp_flickr_parser_get_photo_info        (FspFlickrParser  *self,
   /* Return value */
   return photo_info;
 }
+
+
+GSList *
+fsp_flickr_parser_get_photosets_list    (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error)
+{
+  /* TODO Implement */
+  return NULL;
+}
+
+gpointer
+fsp_flickr_parser_added_to_photoset     (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error)
+{
+  /* TODO Implement */
+  return NULL;
+}
+
+gchar *
+fsp_flickr_parser_photoset_created      (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error)
+{
+  /* TODO Implement */
+  return NULL;
+}
+

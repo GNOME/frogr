@@ -101,6 +101,21 @@ _photo_get_info_soup_session_cb         (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
 
+static void
+_get_photosets_soup_session_cb          (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_add_to_photoset_soup_session_cb        (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_create_photoset_soup_session_cb        (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
 /* Private API */
 
 static void
@@ -423,6 +438,48 @@ _photo_get_info_soup_session_cb         (SoupSession *session,
                         data);
 }
 
+static void
+_get_photosets_soup_session_cb          (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_photosets_list,
+                        data);
+}
+
+static void
+_add_to_photoset_soup_session_cb        (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_added_to_photoset,
+                        data);
+}
+
+static void
+_create_photoset_soup_session_cb        (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_photoset_created,
+                        data);
+}
+
 
 /* Public API */
 
@@ -579,9 +636,32 @@ void
 fsp_photos_mgr_get_photosets_async      (FspPhotosMgr        *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
+
+  FspPhotosMgrPrivate *priv = self->priv;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (priv->session);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.photosets.getList",
+                                   "api_key", fsp_session_get_api_key (priv->session),
+                                   "auth_token", fsp_session_get_token (priv->session),
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  perform_async_request (priv->soup_session, url,
+                         _get_photosets_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_photos_mgr_get_photosets_async, data);
+
+  g_free (url);
 }
 
 GSList *
@@ -591,28 +671,66 @@ fsp_photos_mgr_get_photosets_finish     (FspPhotosMgr  *self,
 {
   g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
-  return NULL;
+
+  GSList *photosets_list = NULL;
+
+  photosets_list = (GSList*) finish_async_request (G_OBJECT (self), res,
+                                                   fsp_photos_mgr_get_photosets_async,
+                                                   error);
+  return photosets_list;
 }
 
 void
-fsp_photos_mgr_add_to_photosets_async   (FspPhotosMgr        *self,
+fsp_photos_mgr_add_to_photoset_async    (FspPhotosMgr        *self,
                                          const gchar         *photo_id,
                                          const gchar         *photoset_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
+  g_return_if_fail (photo_id != NULL);
+  g_return_if_fail (photoset_id != NULL);
+
+  FspPhotosMgrPrivate *priv = self->priv;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (priv->session);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.photosets.addPhoto",
+                                   "api_key", fsp_session_get_api_key (priv->session),
+                                   "auth_token", fsp_session_get_token (priv->session),
+                                   "photo_id", photo_id,
+                                   "photoset_id", photoset_id,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  perform_async_request (priv->soup_session, url,
+                         _add_to_photoset_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_photos_mgr_add_to_photoset_async, data);
+
+  g_free (url);
 }
 
 gboolean
-fsp_photos_mgr_add_to_photosets_finish  (FspPhotosMgr  *self,
+fsp_photos_mgr_add_to_photoset_finish   (FspPhotosMgr  *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
   g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-  return FALSE;
+
+  finish_async_request (G_OBJECT (self), res,
+                        fsp_photos_mgr_add_to_photoset_async, error);
+
+  /* No specific response got, just check error */
+  return (*error == NULL);
 }
 
 void
@@ -622,17 +740,53 @@ fsp_photos_mgr_create_photoset_async    (FspPhotosMgr        *self,
                                          const gchar         *primary_photo_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
-                                         gpointer             user_data)
+                                         gpointer             data)
 {
   g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
+  g_return_if_fail (title != NULL);
+  g_return_if_fail (description != NULL);
+  g_return_if_fail (primary_photo_id != NULL);
+
+  FspPhotosMgrPrivate *priv = self->priv;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (priv->session);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.photosets.addPhoto",
+                                   "api_key", fsp_session_get_api_key (priv->session),
+                                   "auth_token", fsp_session_get_token (priv->session),
+                                   "title", title,
+                                   "description", description,
+                                   "primary_photo_id", primary_photo_id,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  perform_async_request (priv->soup_session, url,
+                         _create_photoset_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_photos_mgr_create_photoset_async, data);
+
+  g_free (url);
 }
 
-FspDataPhotoSet *
+gchar *
 fsp_photos_mgr_create_photoset_finish   (FspPhotosMgr  *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
   g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
-  return NULL;
+
+  gchar *photoset_id = NULL;
+
+  photoset_id =
+    (gchar*) finish_async_request (G_OBJECT (self), res,
+                                   fsp_photos_mgr_create_photoset_async,
+                                   error);
+  return photoset_id;
 }
