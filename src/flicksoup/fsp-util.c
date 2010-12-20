@@ -176,6 +176,32 @@ _check_errors_on_soup_response           (SoupMessage  *msg,
   return (err != NULL);
 }
 
+static gboolean
+_check_async_errors_on_finish           (GObject       *object,
+                                         GAsyncResult  *res,
+                                         gpointer       source_tag,
+                                         GError       **error)
+{
+  g_return_val_if_fail (G_IS_OBJECT (object), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  gboolean errors_found = TRUE;
+
+  if (g_simple_async_result_is_valid (res, object, source_tag))
+    {
+      GSimpleAsyncResult *simple = NULL;
+
+      /* Check error */
+      simple = G_SIMPLE_ASYNC_RESULT (res);
+      if (!g_simple_async_result_propagate_error (simple, error))
+	errors_found = FALSE;
+    }
+  else
+    g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER, "Internal error");
+
+  return errors_found;
+}
+
 gchar *
 get_api_signature                      (const gchar *shared_secret,
                                         const gchar *first_param,
@@ -443,28 +469,32 @@ build_async_result_and_complete         (GAsyncData *clos,
   g_simple_async_result_complete_in_idle (res);
 }
 
-gboolean
-check_async_errors_on_finish            (GObject       *object,
+gpointer
+finish_async_request                    (GObject       *object,
                                          GAsyncResult  *res,
                                          gpointer       source_tag,
                                          GError       **error)
 {
-  g_return_val_if_fail (G_IS_OBJECT (object), FALSE);
-  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+  g_return_val_if_fail (G_IS_OBJECT (object), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
-  gboolean errors_found = TRUE;
+  gpointer retval = NULL;
 
-  if (g_simple_async_result_is_valid (res, object, source_tag))
+  /* Check for errors */
+  if (!_check_async_errors_on_finish (object, res, source_tag, error))
     {
       GSimpleAsyncResult *simple = NULL;
+      gpointer result = NULL;
 
-      /* Check error */
+      /* Get result */
       simple = G_SIMPLE_ASYNC_RESULT (res);
-      if (!g_simple_async_result_propagate_error (simple, error))
-	errors_found = FALSE;
+      result = g_simple_async_result_get_op_res_gpointer (simple);
+      if (result != NULL)
+        retval = result;
+      else
+        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
+                             "Internal error");
     }
-  else
-    g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER, "Internal error");
 
-  return errors_found;
+  return retval;
 }

@@ -340,22 +340,8 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
   gchar *frob = NULL;
   gchar *auth_url = NULL;
 
-  /* Check for errors */
-  if (!check_async_errors_on_finish (G_OBJECT (self), res,
-                                     fsp_session_get_auth_url_async, error))
-    {
-      GSimpleAsyncResult *simple = NULL;
-      gpointer result = NULL;
-
-      /* Get result */
-      simple = G_SIMPLE_ASYNC_RESULT (res);
-      result = g_simple_async_result_get_op_res_gpointer (simple);
-      if (result != NULL)
-        frob = (gchar *) result;
-      else
-        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
-                             "Internal error");
-    }
+  frob = (gchar*) finish_async_request (G_OBJECT (self), res,
+                                        fsp_session_get_auth_url_async, error);
 
   /* Build the auth URL from the frob */
   if (frob != NULL)
@@ -434,22 +420,10 @@ fsp_session_complete_auth_finish        (FspSession    *self,
 
   FspDataAuthToken *auth_token = NULL;
 
-  /* Check for errors */
-  if (!check_async_errors_on_finish (G_OBJECT (self), res,
-                                     fsp_session_complete_auth_async, error))
-    {
-      GSimpleAsyncResult *simple = NULL;
-      gpointer result = NULL;
-
-      /* Get result */
-      simple = G_SIMPLE_ASYNC_RESULT (res);
-      result = g_simple_async_result_get_op_res_gpointer (simple);
-      if (result != NULL)
-        auth_token = FSP_DATA_AUTH_TOKEN (result);
-      else
-        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
-                             "Internal error");
-    }
+  auth_token =
+    FSP_DATA_AUTH_TOKEN (finish_async_request (G_OBJECT (self), res,
+                                               fsp_session_complete_auth_async,
+                                               error));
 
   /* Complete the authorization saving the token if present */
   if (auth_token != NULL)

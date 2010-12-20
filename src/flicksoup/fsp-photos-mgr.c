@@ -517,25 +517,9 @@ fsp_photos_mgr_upload_finish            (FspPhotosMgr  *self,
   g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
-  gchar *photo_id = NULL;
-
-  /* Check for errors */
-  if (!check_async_errors_on_finish (G_OBJECT (self), res,
-                                     fsp_photos_mgr_upload_async, error))
-    {
-      GSimpleAsyncResult *simple = NULL;
-      gpointer result = NULL;
-
-      /* Get result */
-      simple = G_SIMPLE_ASYNC_RESULT (res);
-      result = g_simple_async_result_get_op_res_gpointer (simple);
-      if (result != NULL)
-        photo_id = (gchar *) result;
-      else
-        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
-                             "Internal error");
-    }
-
+  gchar *photo_id = (gchar*) finish_async_request (G_OBJECT (self), res,
+                                                   fsp_photos_mgr_upload_async,
+                                                   error);
   return photo_id;
 }
 
@@ -584,23 +568,10 @@ fsp_photos_mgr_get_info_finish          (FspPhotosMgr  *self,
 
   FspDataPhotoInfo *photo_info = NULL;
 
-  /* Check for errors */
-  if (!check_async_errors_on_finish (G_OBJECT (self), res,
-                                     fsp_photos_mgr_get_info_async, error))
-    {
-      GSimpleAsyncResult *simple = NULL;
-      gpointer result = NULL;
-
-      /* Get result */
-      simple = G_SIMPLE_ASYNC_RESULT (res);
-      result = g_simple_async_result_get_op_res_gpointer (simple);
-      if (result != NULL)
-        photo_info = (FspDataPhotoInfo *) result;
-      else
-        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
-                             "Internal error");
-    }
-
+  photo_info =
+    FSP_DATA_PHOTO_INFO (finish_async_request (G_OBJECT (self), res,
+                                               fsp_photos_mgr_get_info_async,
+                                               error));
   return photo_info;
 }
 

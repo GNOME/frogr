@@ -79,11 +79,11 @@ build_async_result_and_complete         (GAsyncData *clos,
                                          gpointer    result,
                                          GError     *error);
 
-gboolean
-check_async_errors_on_finish            (GObject         *object,
-                                         GAsyncResult    *res,
-                                         gpointer         source_tag,
-                                         GError         **error);
+gpointer
+finish_async_request                    (GObject       *object,
+                                         GAsyncResult  *res,
+                                         gpointer       source_tag,
+                                         GError       **error);
 
 G_END_DECLS
 
