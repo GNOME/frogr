@@ -35,30 +35,32 @@ frogr_LDFLAGS = -export-dynamic
 frogr_SOURCES = \
 	frogr-about-dialog.c \
 	frogr-about-dialog.h \
+	frogr-account.c \
+	frogr-account.h \
 	frogr-add-tags-dialog.c \
 	frogr-add-tags-dialog.h \
 	frogr-add-to-album-dialog.c \
 	frogr-add-to-album-dialog.h \
+	frogr-album.c \
+	frogr-album.h \
 	frogr-auth-dialog.c \
 	frogr-auth-dialog.h \
+	frogr-config.c \
+	frogr-config.h \
 	frogr-controller.c \
 	frogr-controller.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
+	frogr-main-view-model.c \
+	frogr-main-view-model.h \
+	frogr-main-view.c \
+	frogr-main-view.h \
 	frogr-picture-loader.c \
 	frogr-picture-loader.h \
 	frogr-picture-uploader.c \
 	frogr-picture-uploader.h \
-	frogr-main-view.c \
-	frogr-main-view.h \
-	frogr-main-view-model.c \
-	frogr-main-view-model.h \
 	frogr-picture.c \
 	frogr-picture.h \
 	frogr-util.c \
 	frogr-util.h \
-	frogr-account.c \
-	frogr-account.h \
-	frogr-config.c \
-	frogr-config.h \
 	main.c
