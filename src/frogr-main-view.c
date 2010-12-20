@@ -89,6 +89,8 @@ static void _populate_menu_bar (FrogrMainView *self);
 static GtkWidget *_ctxt_menu_create (FrogrMainView *self);
 static void _ctxt_menu_add_tags_item_activated (GtkWidget *widget,
                                                 gpointer data);
+static void _ctxt_menu_add_to_album_item_activated (GtkWidget *widget,
+                                                    gpointer data);
 static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget,
                                                     gpointer data);
 static void _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data);
@@ -136,6 +138,7 @@ static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
 
 static void _add_pictures_dialog (FrogrMainView *self);
 static void _add_tags_to_pictures (FrogrMainView *self);
+static void _add_pictures_to_album (FrogrMainView *self);
 static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
 static void _load_pictures (FrogrMainView *self, GSList *filepaths);
@@ -235,33 +238,40 @@ static GtkWidget *
 _ctxt_menu_create (FrogrMainView *self)
 {
   GtkWidget *ctxt_menu = NULL;
-  GtkWidget *add_tags_item;
-  GtkWidget *edit_details_item;
-  GtkWidget *remove_item;
+  GtkWidget *item = NULL;
 
-  /* Create ctxt_menu and its items */
   ctxt_menu = gtk_menu_new ();
-  add_tags_item = gtk_menu_item_new_with_label (_("Add tags..."));
-  edit_details_item = gtk_menu_item_new_with_label (_("Edit details..."));
-  remove_item = gtk_menu_item_new_with_label (_("Remove"));
 
-  /* Add items to ctxt_menu */
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), add_tags_item);
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), edit_details_item);
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), remove_item);
-
-  /* Connect signals */
-  g_signal_connect(add_tags_item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_add_tags_item_activated),
-                   self);
-
-  g_signal_connect(edit_details_item,
+  /* Edit details */
+  item = gtk_menu_item_new_with_label (_("Edit details..."));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
+  g_signal_connect(item,
                    "activate",
                    G_CALLBACK (_ctxt_menu_edit_details_item_activated),
                    self);
 
-  g_signal_connect(remove_item,
+  /* Add Tags */
+  item = gtk_menu_item_new_with_label (_("Add tags..."));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
+  g_signal_connect(item,
+                   "activate",
+                   G_CALLBACK (_ctxt_menu_add_tags_item_activated),
+                   self);
+
+  /* Add to album */
+  item = gtk_menu_item_new_with_label (_("Add to album..."));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
+  g_signal_connect(item,
+                   "activate",
+                   G_CALLBACK (_ctxt_menu_add_to_album_item_activated),
+                   self);
+
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), gtk_separator_menu_item_new ());
+
+  /* Remove */
+  item = gtk_menu_item_new_with_label (_("Remove"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
+  g_signal_connect(item,
                    "activate",
                    G_CALLBACK (_ctxt_menu_remove_item_activated),
                    self);
@@ -278,6 +288,14 @@ _ctxt_menu_add_tags_item_activated (GtkWidget *widget, gpointer data)
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   _add_tags_to_pictures (mainview);
 }
+
+static void
+_ctxt_menu_add_to_album_item_activated (GtkWidget *widget, gpointer data)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  _add_pictures_to_album (mainview);
+}
+
 
 static void
 _ctxt_menu_edit_details_item_activated (GtkWidget *widget, gpointer data)
@@ -726,6 +744,20 @@ _add_tags_to_pictures (FrogrMainView *self)
   /* Call the controller to add tags to them */
   if (pictures != NULL)
     frogr_controller_show_add_tags_dialog (priv->controller, pictures);
+}
+
+static void
+_add_pictures_to_album (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  GSList *pictures;
+
+  /* Get selected pictures */
+  pictures = _get_selected_pictures (self);
+
+  /* Call the controller to add tags to them */
+  if (pictures != NULL)
+    frogr_controller_show_add_to_album_dialog (priv->controller, pictures);
 }
 
 static void

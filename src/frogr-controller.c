@@ -417,8 +417,22 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   GtkWindow *window = frogr_main_view_get_window (priv->mainview);
 
-  /* Run the details dialog */
+  /* Run the 'add tags' dialog */
   frogr_add_tags_dialog_show (window, pictures);
+}
+
+void
+frogr_controller_show_add_to_album_dialog (FrogrController *self,
+                                           GSList *fpictures)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrController *controller = FROGR_CONTROLLER (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
+
+  /* Run the 'add to album' dialog */
+  frogr_add_to_album_dialog_show (window, fpictures);
 }
 
 void

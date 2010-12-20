@@ -72,6 +72,9 @@ void frogr_controller_show_details_dialog (FrogrController *self,
 void frogr_controller_show_add_tags_dialog (FrogrController *self,
                                             GSList *fpictures);
 
+void frogr_controller_show_add_to_album_dialog (FrogrController *self,
+                                                GSList *fpictures);
+
 void frogr_controller_open_auth_url (FrogrController *self);
 
 void frogr_controller_complete_auth (FrogrController *self);
