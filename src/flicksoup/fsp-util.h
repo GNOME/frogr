@@ -23,6 +23,8 @@
 #ifndef _FSP_UTIL_H
 #define _FSP_UTIL_H
 
+#include <fsp-flickr-parser.h>
+
 #include <glib.h>
 #include <glib-object.h>
 #include <gio/gio.h>
@@ -57,10 +59,6 @@ gchar *
 get_signed_query_from_hash_table        (const gchar *shared_secret,
                                          GHashTable  *params_table);
 
-gboolean
-check_errors_on_soup_response           (SoupMessage  *msg,
-                                         GError      **error);
-
 void
 perform_async_request                   (SoupSession         *soup_session,
                                          const gchar         *url,
@@ -69,6 +67,11 @@ perform_async_request                   (SoupSession         *soup_session,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             source_tag,
+                                         gpointer             data);
+
+void
+handle_soup_response                    (SoupMessage         *msg,
+                                         FspFlickrParserFunc  parserFunc,
                                          gpointer             data);
 
 void

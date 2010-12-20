@@ -43,8 +43,6 @@ G_DEFINE_TYPE (FspPhotosMgr, fsp_photos_mgr, G_TYPE_OBJECT);
 struct _FspPhotosMgrPrivate
 {
   FspSession *session;
-
-  FspFlickrParser *parser;
   SoupSession *soup_session;
 };
 
@@ -156,13 +154,6 @@ fsp_photos_mgr_dispose                  (GObject* object)
       self->priv->session = NULL;
     }
 
-  /* Unref objects */
-  if (self->priv->parser)
-    {
-      g_object_unref (self->priv->parser);
-      self->priv->parser = NULL;
-    }
-
   /* Unref object */
   if (self->priv->soup_session)
     {
@@ -201,7 +192,6 @@ fsp_photos_mgr_init                     (FspPhotosMgr *self)
   self->priv = FSP_PHOTOS_MGR_GET_PRIVATE (self);
 
   self->priv->session = NULL;
-  self->priv->parser = fsp_flickr_parser_get_instance ();
   self->priv->soup_session = NULL;
 }
 
@@ -399,6 +389,8 @@ _upload_cancelled_cb                    (GCancellable *cancellable,
 {
   SoupSession *soup_session = SOUP_SESSION (data);
   soup_session_abort (soup_session);
+
+  g_debug ("Upload cancelled!");
 }
 
 static void
@@ -406,31 +398,13 @@ _photo_upload_soup_session_cb           (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_SESSION (session));
   g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
-  GAsyncData *clos = NULL;
-  FspPhotosMgr *self = NULL;
-  gchar *photo_id = NULL;
-  GError *err = NULL;
-
-  /* Get needed data from closure */
-  clos = (GAsyncData *) data;
-  self = FSP_PHOTOS_MGR (clos->object);
-
-  /* Get value from response */
-  if (!check_errors_on_soup_response (msg, &err))
-    {
-      photo_id =
-        fsp_flickr_parser_get_upload_result (self->priv->parser,
-                                             msg->response_body->data,
-                                             (int) msg->response_body->length,
-                                             &err);
-    }
-
-  /* Build response and call async callback */
-  build_async_result_and_complete (clos, photo_id, err);
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_upload_result,
+                        data);
 }
 
 static void
@@ -438,31 +412,13 @@ _photo_get_info_soup_session_cb         (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_SESSION (session));
   g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
-  GAsyncData *clos = NULL;
-  FspPhotosMgr *self = NULL;
-  FspDataPhotoInfo *photo_info = NULL;
-  GError *err = NULL;
-
-  /* Get needed data from closure */
-  clos = (GAsyncData *) data;
-  self = FSP_PHOTOS_MGR (clos->object);
-
-  /* Get value from response */
-  if (!check_errors_on_soup_response (msg, &err))
-    {
-      photo_info =
-        fsp_flickr_parser_get_photo_info (self->priv->parser,
-                                          msg->response_body->data,
-                                          (int) msg->response_body->length,
-                                          &err);
-    }
-
-  /* Build response and call async callback */
-  build_async_result_and_complete (clos, photo_info, err);
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_photo_info,
+                        data);
 }
 
 

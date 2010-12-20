@@ -139,6 +139,41 @@ _soup_session_cancelled_cb              (GCancellable *cancellable,
 {
   SoupSession *soup_session = SOUP_SESSION (data);
   soup_session_abort (soup_session);
+
+  g_debug ("Remote request cancelled!");
+}
+
+static gboolean
+_check_errors_on_soup_response           (SoupMessage  *msg,
+                                         GError      **error)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+
+  GError *err = NULL;
+
+  /* Check non-succesful SoupMessage's only */
+  if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
+    {
+      if (msg->status_code == SOUP_STATUS_CANCELLED)
+        err = g_error_new (FSP_ERROR, FSP_ERROR_CANCELLED,
+                           "Cancelled by user");
+      else if (SOUP_STATUS_IS_CLIENT_ERROR (msg->status_code))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_CLIENT_ERROR,
+                           "Bad request");
+      else if (SOUP_STATUS_IS_SERVER_ERROR (msg->status_code))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_SERVER_ERROR,
+                           "Server error");
+      else
+        err = g_error_new (FSP_ERROR, FSP_ERROR_NETWORK_ERROR,
+                           "Network error");
+    }
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  /* Return result */
+  return (err != NULL);
 }
 
 gchar *
@@ -284,39 +319,6 @@ get_signed_query_from_hash_table        (const gchar *shared_secret,
   return retval;
 }
 
-gboolean
-check_errors_on_soup_response           (SoupMessage  *msg,
-                                         GError      **error)
-{
-  g_assert (SOUP_IS_MESSAGE (msg));
-
-  GError *err = NULL;
-
-  /* Check non-succesful SoupMessage's only */
-  if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
-    {
-      if (msg->status_code == SOUP_STATUS_CANCELLED)
-        err = g_error_new (FSP_ERROR, FSP_ERROR_CANCELLED,
-                           "Cancelled by user");
-      else if (SOUP_STATUS_IS_CLIENT_ERROR (msg->status_code))
-        err = g_error_new (FSP_ERROR, FSP_ERROR_CLIENT_ERROR,
-                           "Bad request");
-      else if (SOUP_STATUS_IS_SERVER_ERROR (msg->status_code))
-        err = g_error_new (FSP_ERROR, FSP_ERROR_SERVER_ERROR,
-                           "Server error");
-      else
-        err = g_error_new (FSP_ERROR, FSP_ERROR_NETWORK_ERROR,
-                           "Network error");
-    }
-
-  /* Propagate error */
-  if (err != NULL)
-    g_propagate_error (error, err);
-
-  /* Return result */
-  return (err != NULL);
-}
-
 void
 perform_async_request                   (SoupSession         *soup_session,
                                          const gchar         *url,
@@ -356,6 +358,42 @@ perform_async_request                   (SoupSession         *soup_session,
   /* Build and queue the message */
   msg = soup_message_new (SOUP_METHOD_GET, url);
   soup_session_queue_message (soup_session, msg, request_cb, clos);
+
+  g_debug ("\nRequested URL:\n%s\n", url);
+}
+
+void
+handle_soup_response                    (SoupMessage         *msg,
+                                         FspFlickrParserFunc  parserFunc,
+                                         gpointer             data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (parserFunc != NULL);
+  g_assert (data != NULL);
+
+  FspFlickrParser *parser = NULL;
+  GAsyncData *clos = NULL;
+  gpointer result = NULL;
+  GError *err = NULL;
+  gchar *response_str = NULL;
+  gulong response_len = 0;
+
+  parser = fsp_flickr_parser_get_instance ();
+  clos = (GAsyncData *) data;
+
+  response_str = g_strndup (msg->response_body->data, msg->response_body->length);
+  response_len = (ulong) msg->response_body->length;
+  if (response_str)
+    g_debug ("\nResponse got:\n%s\n", response_str);
+
+  /* Get value from response */
+  if (!_check_errors_on_soup_response (msg, &err))
+    result = parserFunc (parser, response_str, response_len, &err);
+
+  /* Build response and call async callback */
+  build_async_result_and_complete (clos, result, err);
+
+  g_free (response_str);
 }
 
 void

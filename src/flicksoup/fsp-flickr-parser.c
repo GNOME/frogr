@@ -52,7 +52,7 @@ _parse_error_from_node                  (xmlNode *error_node);
 static gpointer
 _process_xml_response                   (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          gpointer        (*body_parser)
                                                           (xmlDoc  *doc,
                                                            GError **error),
@@ -215,7 +215,7 @@ _parse_error_from_node                  (xmlNode *error_node)
 static gpointer
 _process_xml_response                   (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          gpointer        (*body_parser)
                                                           (xmlDoc  *doc,
                                                            GError **error),
@@ -672,7 +672,7 @@ fsp_flickr_parser_get_instance          (void)
 gchar *
 fsp_flickr_parser_get_frob              (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          GError          **error)
 {
   g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
@@ -691,7 +691,7 @@ fsp_flickr_parser_get_frob              (FspFlickrParser  *self,
 FspDataAuthToken *
 fsp_flickr_parser_get_auth_token        (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          GError          **error)
 {
   g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
@@ -711,7 +711,7 @@ fsp_flickr_parser_get_auth_token        (FspFlickrParser  *self,
 gchar *
 fsp_flickr_parser_get_upload_result     (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          GError          **error)
 {
   g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
@@ -730,7 +730,7 @@ fsp_flickr_parser_get_upload_result     (FspFlickrParser  *self,
 FspDataPhotoInfo *
 fsp_flickr_parser_get_photo_info        (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          GError          **error)
 {
   g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);

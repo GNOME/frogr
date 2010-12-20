@@ -56,6 +56,12 @@ struct _FspFlickrParserClass
   GObjectClass parent_class;
 };
 
+/* All the parsers should be defined like this type */
+typedef
+gpointer (* FspFlickrParserFunc)        (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
 
 GType
 fsp_flickr_parser_get_type              (void) G_GNUC_CONST;
@@ -66,25 +72,25 @@ fsp_flickr_parser_get_instance          (void);
 gchar *
 fsp_flickr_parser_get_frob              (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          GError          **error);
 
 FspDataAuthToken *
 fsp_flickr_parser_get_auth_token        (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          GError          **error);
 
 gchar *
 fsp_flickr_parser_get_upload_result     (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          GError          **error);
 
 FspDataPhotoInfo *
 fsp_flickr_parser_get_photo_info        (FspFlickrParser  *self,
                                          const gchar      *buffer,
-                                         gint              buf_size,
+                                         gulong            buf_size,
                                          GError          **error);
 
 G_END_DECLS

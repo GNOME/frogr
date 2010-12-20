@@ -48,7 +48,6 @@ struct _FspSessionPrivate
   gchar *token;
   gchar *frob;
 
-  FspFlickrParser *parser;
   SoupSession *soup_session;
 };
 
@@ -137,13 +136,6 @@ fsp_session_dispose                     (GObject* object)
 {
   FspSession *self = FSP_SESSION (object);
 
-  /* Unref objects */
-  if (self->priv->parser)
-    {
-      g_object_unref (self->priv->parser);
-      self->priv->parser = NULL;
-    }
-
   /* Unref object */
   if (self->priv->soup_session)
     {
@@ -208,7 +200,6 @@ fsp_session_init                        (FspSession *self)
   self->priv->token = NULL;
   self->priv->frob = NULL;
 
-  self->priv->parser = fsp_flickr_parser_get_instance ();
   self->priv->soup_session = soup_session_async_new ();
 }
 
@@ -224,30 +215,13 @@ _get_frob_soup_session_cb               (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer data)
 {
-  g_assert (SOUP_IS_SESSION (session));
   g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
-  GAsyncData *clos = NULL;
-  FspSession *self = NULL;
-  gchar *frob = NULL;
-  GError *err = NULL;
-
-  /* Get needed data from closure */
-  clos = (GAsyncData *) data;
-  self = FSP_SESSION (clos->object);
-
-  /* Get value from response */
-  if (!check_errors_on_soup_response (msg, &err))
-    {
-      frob = fsp_flickr_parser_get_frob (self->priv->parser,
-                                         msg->response_body->data,
-                                         (int) msg->response_body->length,
-                                         &err);
-    }
-
-  /* Build response and call async callback */
-  build_async_result_and_complete (clos, (gpointer) frob, err);
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_frob,
+                        data);
 }
 
 static void
@@ -255,31 +229,13 @@ _get_auth_token_soup_session_cb         (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer data)
 {
-  g_assert (SOUP_IS_SESSION (session));
   g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
-  GAsyncData *clos = NULL;
-  FspSession *self = NULL;
-  FspDataAuthToken *auth_token = NULL;
-  GError *err = NULL;
-
-  /* Get needed data from closure */
-  clos = (GAsyncData *) data;
-  self = FSP_SESSION (clos->object);
-
-  /* Get value from response */
-  if (!check_errors_on_soup_response (msg, &err))
-    {
-      auth_token =
-        fsp_flickr_parser_get_auth_token (self->priv->parser,
-                                          msg->response_body->data,
-                                          (int) msg->response_body->length,
-                                          &err);
-    }
-
-  /* Build response and call async callback */
-  build_async_result_and_complete (clos, (gpointer) auth_token, err);
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_auth_token,
+                        data);
 }
 
 /* from fsp-session-priv.h */
