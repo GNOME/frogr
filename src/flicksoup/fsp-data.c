@@ -59,7 +59,7 @@ fsp_data_new                            (FspDataType type)
       break;
 
     case FSP_PHOTO_INFO:
-      new_data->photo_info.id = NULL ;
+      new_data->photo_info.id = NULL;
       new_data->photo_info.secret = NULL;
       new_data->photo_info.server = NULL;
       new_data->photo_info.is_favorite = FALSE;
@@ -80,6 +80,15 @@ fsp_data_new                            (FspDataType type)
       new_data->photo_info.perm_add_meta = FSP_PERMISSION_UNKNOWN;
       new_data->photo_info.can_comment = FSP_PERMISSION_UNKNOWN;
       new_data->photo_info.can_add_meta = FSP_PERMISSION_UNKNOWN;
+      break;
+
+    case FSP_PHOTO_SET:
+      new_data->photo_set.id = NULL;
+      new_data->photo_set.title = NULL;
+      new_data->photo_set.description = NULL;
+      new_data->photo_set.primary_photo_id = NULL;
+      new_data->photo_set.url = NULL;
+      new_data->photo_set.n_photos = -1;
       break;
 
     default:
@@ -147,6 +156,15 @@ fsp_data_copy                           (const FspData *data)
       new_data->photo_info.can_add_meta = data->photo_info.can_add_meta;
       break;
 
+    case FSP_PHOTO_SET:
+      new_data->photo_set.id = g_strdup(data->photo_set.id);
+      new_data->photo_set.title = g_strdup(data->photo_set.title);
+      new_data->photo_set.description = g_strdup(data->photo_set.description);
+      new_data->photo_set.primary_photo_id = g_strdup(data->photo_set.primary_photo_id);
+      new_data->photo_set.url = g_strdup(data->photo_set.url);
+      new_data->photo_set.n_photos = data->photo_set.n_photos;
+      break;
+
     default:
       break;
     }
@@ -187,6 +205,14 @@ fsp_data_free                           (FspData *data)
       g_free (data->photo_info.description);
       if (data->auth_token.user_profile)
         fsp_data_free (FSP_DATA (data->photo_info.owner));
+      break;
+
+    case FSP_PHOTO_SET:
+      g_free (data->photo_set.id);
+      g_free (data->photo_set.title);
+      g_free (data->photo_set.description);
+      g_free (data->photo_set.primary_photo_id);
+      g_free (data->photo_set.url);
       break;
 
     default:

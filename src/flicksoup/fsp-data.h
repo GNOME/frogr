@@ -47,6 +47,7 @@ typedef enum
   FSP_USER_PROFILE = 0,
   FSP_AUTH_TOKEN   = 1,
   FSP_PHOTO_INFO   = 2,
+  FSP_PHOTO_SET    = 3,
   FSP_DATA_LAST
 } FspDataType;
 
