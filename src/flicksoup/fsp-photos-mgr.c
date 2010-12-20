@@ -755,7 +755,7 @@ fsp_photos_mgr_create_photoset_async    (FspPhotosMgr        *self,
   /* Build the signed url */
   secret = fsp_session_get_secret (priv->session);
   signed_query = get_signed_query (secret,
-                                   "method", "flickr.photosets.addPhoto",
+                                   "method", "flickr.photosets.create",
                                    "api_key", fsp_session_get_api_key (priv->session),
                                    "auth_token", fsp_session_get_token (priv->session),
                                    "title", title,

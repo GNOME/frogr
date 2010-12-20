@@ -72,6 +72,9 @@ _get_photo_info_parser                  (xmlDoc  *doc,
 static gpointer
 _get_photosets_list_parser              (xmlDoc  *doc,
                                          GError **error);
+static gpointer
+_photoset_created_parser                (xmlDoc  *doc,
+                                         GError **error);
 
 static FspDataUserProfile *
 _get_user_profile_from_node             (xmlNode *node);
@@ -417,7 +420,7 @@ _photo_get_upload_result_parser         (xmlDoc  *doc,
     }
   else
     err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
-                       "No photoid found in the response");
+                       "No photo id found in the response");
   /* Free */
   xmlXPathFreeObject (xpathObj);
   xmlXPathFreeContext (xpathCtx);
@@ -515,6 +518,46 @@ _get_photosets_list_parser              (xmlDoc  *doc,
   return photosetsList;
 }
 
+static gpointer
+_photoset_created_parser                (xmlDoc  *doc,
+                                         GError **error)
+{
+  g_return_val_if_fail (doc != NULL, NULL);
+
+  xmlXPathContext *xpathCtx = NULL;
+  xmlXPathObject * xpathObj = NULL;
+  gchar *photosetId = NULL;
+  GError *err = NULL;
+
+  xpathCtx = xmlXPathNewContext (doc);
+  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/photoset", xpathCtx);
+
+  if ((xpathObj != NULL) && (xpathObj->nodesetval->nodeNr > 0))
+    {
+      /* Matching nodes found */
+      xmlNode *node = NULL;
+      gchar *id = NULL;
+
+      /* Get the photoid */
+      node = xpathObj->nodesetval->nodeTab[0];
+      id = (gchar *) xmlGetProp (node, (const xmlChar *) "id");
+      photosetId = g_strdup (id);
+      g_free (id);
+    }
+  else
+    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                       "No photoset id found in the response");
+  /* Free */
+  xmlXPathFreeObject (xpathObj);
+  xmlXPathFreeContext (xpathCtx);
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  return photosetId;
+}
+
 static FspDataUserProfile *
 _get_user_profile_from_node             (xmlNode *node)
 {
@@ -523,29 +566,29 @@ _get_user_profile_from_node             (xmlNode *node)
   FspDataUserProfile *uprofile = NULL;
 
   gchar *name = (gchar *) node->name;
-  if (!g_strcmp0 (name, "user"))
-    {
-      gchar *id = (gchar *) xmlGetProp (node, (const xmlChar *) "nsid");
-      gchar *uname = (gchar *) xmlGetProp (node, (const xmlChar *) "username");
-      gchar *fname = (gchar *) xmlGetProp (node, (const xmlChar *) "fullname");
-      gchar *url = (gchar *) xmlGetProp (node, (const xmlChar *) "url");
-      gchar *loc = (gchar *) xmlGetProp (node, (const xmlChar *) "location");
+  if (g_strcmp0 (name, "user"))
+    return NULL;
 
-      /* Build the FspUserProfile struct */
-      uprofile = FSP_DATA_USER_PROFILE (fsp_data_new (FSP_USER_PROFILE));
-      uprofile->id = g_strdup (id);
-      uprofile->username = g_strdup (uname);
-      uprofile->fullname = g_strdup (fname);
-      uprofile->url = g_strdup (url);
-      uprofile->location = g_strdup (loc);
+  gchar *id = (gchar *) xmlGetProp (node, (const xmlChar *) "nsid");
+  gchar *uname = (gchar *) xmlGetProp (node, (const xmlChar *) "username");
+  gchar *fname = (gchar *) xmlGetProp (node, (const xmlChar *) "fullname");
+  gchar *url = (gchar *) xmlGetProp (node, (const xmlChar *) "url");
+  gchar *loc = (gchar *) xmlGetProp (node, (const xmlChar *) "location");
 
-      /* Free */
-      g_free (id);
-      g_free (uname);
-      g_free (fname);
-      g_free (url);
-      g_free (loc);
-    }
+  /* Build the FspUserProfile struct */
+  uprofile = FSP_DATA_USER_PROFILE (fsp_data_new (FSP_USER_PROFILE));
+  uprofile->id = g_strdup (id);
+  uprofile->username = g_strdup (uname);
+  uprofile->fullname = g_strdup (fname);
+  uprofile->url = g_strdup (url);
+  uprofile->location = g_strdup (loc);
+
+  /* Free */
+  g_free (id);
+  g_free (uname);
+  g_free (fname);
+  g_free (url);
+  g_free (loc);
 
   return uprofile;
 }
@@ -721,26 +764,27 @@ _get_photo_set_from_node                (xmlNode *node)
   FspDataPhotoSet *photoSet = NULL;
   xmlAttr *attr = NULL;
   xmlChar *content = NULL;
+  gchar *id = NULL;
+  gchar *primaryPhotoId = NULL;
+  gchar *numPhotos = NULL;
 
-  /* Create and fill the FspDataPhotoInfo */
+  if (g_strcmp0 ((gchar *) node->name, "photoset"))
+    return NULL;
+
+  id = (gchar *) xmlGetProp (node, (const xmlChar *) "id");
+  primaryPhotoId = (gchar *) xmlGetProp (node, (const xmlChar *) "primary");
+  numPhotos =  (gchar *) xmlGetProp (node, (const xmlChar *) "photos");
+
+  /* Create and fill basic data for the FspDataPhotoSet */
   photoSet = FSP_DATA_PHOTO_SET (fsp_data_new (FSP_PHOTO_SET));
-  for (attr = node->properties; attr != NULL; attr = attr->next)
-    {
-      /* Id */
-      if (!g_strcmp0 ((gchar *)attr->name, "id"))
-        photoSet->id = g_strdup ((gchar *) attr->children->content);
+  photoSet->id = g_strdup (id);
+  photoSet->primary_photo_id = g_strdup (primaryPhotoId);
+  if (numPhotos != NULL)
+    photoSet->n_photos = (gint) g_ascii_strtoll (numPhotos, NULL, 10);
 
-      /* Primary Photo ID */
-      if (!g_strcmp0 ((gchar *)attr->name, "primary"))
-        photoSet->primary_photo_id = g_strdup ((gchar *) attr->children->content);
-
-      /* Number of photos */
-      if (!g_strcmp0 ((gchar *)attr->name, "photos"))
-        {
-          gchar *val = (gchar *) attr->children->content;
-          photoSet->n_photos = (FspLicense) g_ascii_strtoll (val, NULL, 10);
-        }
-    }
+  g_free (id);
+  g_free (primaryPhotoId);
+  g_free (numPhotos);
 
   /* Get data from inner nodes */
   for (node = node->children; node != NULL; node = node->next)
@@ -893,7 +937,16 @@ fsp_flickr_parser_photoset_created      (FspFlickrParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  /* TODO Implement */
-  return NULL;
+  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  gchar *photoset_id = NULL;
+
+  /* Process the response */
+  photoset_id = (gchar *) (_process_xml_response (self, buffer, buf_size,
+                                                  _photoset_created_parser,
+                                                  error));
+  /* Return value */
+  return photoset_id;
 }
 

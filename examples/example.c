@@ -29,6 +29,31 @@
 
 #define TEST_PHOTO "./examples/testphoto.png"
 
+static gchar *uploaded_photo_id = NULL;
+static gchar *created_photoset_id = NULL;
+
+void
+photoset_created_cb                     (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  GError *error = NULL;
+  created_photoset_id =
+    fsp_photos_mgr_create_photoset_finish (photos_mgr, res, &error);
+
+  if (error != NULL)
+    {
+      g_print ("Error creating photoset: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[get_photosets_cb]::Success! Photo set Id: %s\n\n",
+               created_photoset_id);
+    }
+}
+
 void
 get_photosets_cb                        (GObject      *object,
                                          GAsyncResult *res,
@@ -65,6 +90,13 @@ get_photosets_cb                        (GObject      *object,
           fsp_data_free (FSP_DATA (photoset));
         }
 
+      /* Continue creating a new photoset */
+      g_print ("Creatine a new photoset...\n");
+      fsp_photos_mgr_create_photoset_async (photos_mgr,
+                                            "Photoset's title",
+                                            "Photoset's description",
+                                            uploaded_photo_id,
+                                            NULL, photoset_created_cb, NULL);
       g_slist_free (photosets_list);
     }
 }
@@ -129,7 +161,7 @@ upload_cb                               (GObject      *object,
 {
   FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
   GError *error = NULL;
-  gchar *photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
+  uploaded_photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
 
   if (error != NULL)
     {
@@ -138,17 +170,16 @@ upload_cb                               (GObject      *object,
     }
   else
     {
-      g_print ("[upload_cb]::Success! Photo ID: %s\n\n", photo_id);
+      g_print ("[upload_cb]::Success! Photo ID: %s\n\n", uploaded_photo_id);
 
       /* Make a pause before continuing */
       g_print ("Press ENTER to continue...\n\n");
       getchar ();
 
       /* Continue getting info about the picture */
-      g_print ("Getting info for photo %s...\n", photo_id);
-      fsp_photos_mgr_get_info_async (photos_mgr, photo_id, NULL,
+      g_print ("Getting info for photo %s...\n", uploaded_photo_id);
+      fsp_photos_mgr_get_info_async (photos_mgr, uploaded_photo_id, NULL,
                                      photo_get_info_cb, NULL);
-      g_free (photo_id);
     }
 }
 
