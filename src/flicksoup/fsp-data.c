@@ -70,7 +70,6 @@ fsp_data_new                            (FspDataType type)
 
       new_data->photo_info.title = NULL;
       new_data->photo_info.description = NULL;
-      new_data->photo_info.owner = NULL;
 
       new_data->photo_info.is_public = FSP_VISIBILITY_NONE;
       new_data->photo_info.is_family = FSP_VISIBILITY_NONE;
@@ -139,11 +138,6 @@ fsp_data_copy                           (const FspData *data)
 
       new_data->photo_info.title = g_strdup(data->photo_info.title);
       new_data->photo_info.description = g_strdup(data->photo_info.description);
-      if (data->auth_token.user_profile)
-        {
-          FspData *owner = FSP_DATA (data->photo_info.owner);
-          new_data->photo_info.owner = FSP_DATA_USER_PROFILE (fsp_data_copy (owner));
-        }
 
       new_data->photo_info.is_public = data->photo_info.is_public;
       new_data->photo_info.is_family = data->photo_info.is_family;
@@ -201,8 +195,6 @@ fsp_data_free                           (FspData *data)
 
       g_free(data->photo_info.title);
       g_free (data->photo_info.description);
-      if (data->photo_info.owner)
-        fsp_data_free (FSP_DATA (data->photo_info.owner));
       break;
 
     case FSP_PHOTO_SET:

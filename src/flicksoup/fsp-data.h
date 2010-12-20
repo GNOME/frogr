@@ -138,7 +138,6 @@ struct _FspDataPhotoInfo
 
   gchar              *title;
   gchar              *description;
-  FspDataUserProfile *owner;
 
   FspVisibility       is_public;
   FspVisibility       is_family;

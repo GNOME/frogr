@@ -599,7 +599,6 @@ _get_photo_info_from_node               (xmlNode *node)
   g_return_val_if_fail (node != NULL, NULL);
 
   FspDataPhotoInfo *pinfo = NULL;
-  FspDataUserProfile *owner = NULL;
   xmlAttr *attr = NULL;
   xmlChar *content = NULL;
 
@@ -670,10 +669,6 @@ _get_photo_info_from_node               (xmlNode *node)
           pinfo->description = g_strdup ((gchar *) content);
           xmlFree (content);
         }
-
-      /* User profile */
-      if (!g_strcmp0 ((gchar *) node->name, "owner"))
-        owner = _get_user_profile_from_node (node);
 
       /* Visibility */
       if (!g_strcmp0 ((gchar *) node->name, "visibility"))
