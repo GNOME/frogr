@@ -249,7 +249,7 @@ _process_xml_response                   (FspFlickrParser  *self,
 
       /* Get the body of the response and process it */
       if (type == REST_RESPONSE_OK)
-        retval = body_parser (doc, &err);
+        retval = body_parser ? body_parser (doc, &err) : NULL;
       else
         err = _get_error_from_response (doc);
 
@@ -927,8 +927,14 @@ fsp_flickr_parser_added_to_photoset     (FspFlickrParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  /* TODO Implement */
-  return NULL;
+  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  /* Process the response */
+  _process_xml_response (self, buffer, buf_size, NULL, error);
+
+  /* No return value for this method */
+  return GINT_TO_POINTER ((gint)(*error == NULL));
 }
 
 gchar *

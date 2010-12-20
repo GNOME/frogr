@@ -726,11 +726,12 @@ fsp_photos_mgr_add_to_photoset_finish   (FspPhotosMgr  *self,
   g_return_val_if_fail (FSP_IS_PHOTOS_MGR (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
-  finish_async_request (G_OBJECT (self), res,
-                        fsp_photos_mgr_add_to_photoset_async, error);
+  gpointer result = NULL;
 
-  /* No specific response got, just check error */
-  return (*error == NULL);
+  result = finish_async_request (G_OBJECT (self), res,
+                                 fsp_photos_mgr_add_to_photoset_async, error);
+
+  return result ? TRUE : FALSE;
 }
 
 void

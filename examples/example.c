@@ -32,6 +32,84 @@
 static gchar *uploaded_photo_id = NULL;
 static gchar *created_photoset_id = NULL;
 
+/* Prototypes */
+
+void upload_cb (GObject *object, GAsyncResult *res, gpointer source_func);
+void added_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void photo_get_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void complete_auth_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void get_auth_url_cb (GObject *object, GAsyncResult *res, gpointer unused);
+gboolean do_work (gpointer unused);
+
+/* Implementations */
+
+void
+upload_cb                               (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      source_func)
+{
+  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  GError *error = NULL;
+
+  g_free (uploaded_photo_id);
+  uploaded_photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
+
+  if (error != NULL)
+    {
+      g_print ("Error uploading picture: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[upload_cb]::Success! Photo ID: %s\n\n", uploaded_photo_id);
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      if (source_func == complete_auth_cb)
+        {
+          /* Continue getting info about the picture */
+          g_print ("Getting info for photo %s...\n", uploaded_photo_id);
+          fsp_photos_mgr_get_info_async (photos_mgr, uploaded_photo_id, NULL,
+                                         photo_get_info_cb, NULL);
+        }
+      else if (source_func == photoset_created_cb)
+        {
+          /* Continue adding the picture to the photoset */
+          g_print ("Creatine a new photoset...\n");
+          fsp_photos_mgr_add_to_photoset_async (photos_mgr,
+                                                uploaded_photo_id,
+                                                created_photoset_id,
+                                                NULL, added_to_photoset_cb, NULL);
+        }
+    }
+}
+
+void
+added_to_photoset_cb                    (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  GError *error = NULL;
+  gboolean result = FALSE;
+
+  result = fsp_photos_mgr_add_to_photoset_finish (photos_mgr, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error creating photoset: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[added_to_photosets_cb]::Success! (%s)\n\n",
+               result ? "OK" : "FAIL");
+    }
+}
+
 void
 photoset_created_cb                     (GObject      *object,
                                          GAsyncResult *res,
@@ -49,8 +127,25 @@ photoset_created_cb                     (GObject      *object,
     }
   else
     {
-      g_print ("[get_photosets_cb]::Success! Photo set Id: %s\n\n",
+      g_print ("[photosets_created_cb]::Success! Photo set Id: %s\n\n",
                created_photoset_id);
+
+      getchar ();
+
+      /* Continue adding a picture to the photoset, but first upload a new one */
+      g_print ("Uploading a new picture to be added to the photoset...");
+      fsp_photos_mgr_upload_async (photos_mgr,
+                                   TEST_PHOTO,
+                                   "Yet another title",
+                                   "Yet another description ",
+                                   "yet some other tags",
+                                   FSP_VISIBILITY_NO,
+                                   FSP_VISIBILITY_YES,
+                                   FSP_VISIBILITY_NONE,
+                                   FSP_SAFETY_LEVEL_NONE,
+                                   FSP_CONTENT_TYPE_PHOTO,
+                                   FSP_SEARCH_SCOPE_NONE,
+                                   NULL, upload_cb, photoset_created_cb);
     }
 }
 
@@ -89,6 +184,8 @@ get_photosets_cb                        (GObject      *object,
 
           fsp_data_free (FSP_DATA (photoset));
         }
+
+      getchar ();
 
       /* Continue creating a new photoset */
       g_print ("Creatine a new photoset...\n");
@@ -155,35 +252,6 @@ photo_get_info_cb                       (GObject      *object,
 }
 
 void
-upload_cb                               (GObject      *object,
-                                         GAsyncResult *res,
-                                         gpointer      user_data)
-{
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
-  GError *error = NULL;
-  uploaded_photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
-
-  if (error != NULL)
-    {
-      g_print ("Error uploading picture: %s\n", error->message);
-      g_error_free (error);
-    }
-  else
-    {
-      g_print ("[upload_cb]::Success! Photo ID: %s\n\n", uploaded_photo_id);
-
-      /* Make a pause before continuing */
-      g_print ("Press ENTER to continue...\n\n");
-      getchar ();
-
-      /* Continue getting info about the picture */
-      g_print ("Getting info for photo %s...\n", uploaded_photo_id);
-      fsp_photos_mgr_get_info_async (photos_mgr, uploaded_photo_id, NULL,
-                                     photo_get_info_cb, NULL);
-    }
-}
-
-void
 complete_auth_cb                        (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
@@ -228,7 +296,7 @@ complete_auth_cb                        (GObject      *object,
                                        FSP_SAFETY_LEVEL_NONE,
                                        FSP_CONTENT_TYPE_PHOTO,
                                        FSP_SEARCH_SCOPE_NONE,
-                                       NULL, upload_cb, NULL);
+                                       NULL, upload_cb, complete_auth_cb);
         }
     }
 }
