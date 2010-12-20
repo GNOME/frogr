@@ -74,6 +74,12 @@ typedef struct {
   GObject *object;
 } upload_picture_st;
 
+typedef struct {
+  FrogrController *controller;
+  FCAlbumsFetchedCallback callback;
+  GObject *object;
+} fetch_albums_st;
+
 /* Prototypes */
 
 static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
@@ -81,6 +87,8 @@ static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
 static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data);
 
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 /* Private functions */
 
@@ -208,6 +216,62 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
     callback (source_object, picture, error);
 
   g_object_unref (picture);
+}
+
+static void
+_fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspPhotosMgr *photos_mgr = NULL;
+  fetch_albums_st *fa_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FCAlbumsFetchedCallback callback = NULL;
+  GObject *source_object = NULL;
+  GError *error = NULL;
+  GSList *photosets_list = NULL;
+  GSList *albums_list = NULL;
+
+  photos_mgr = FSP_PHOTOS_MGR (object);
+  fa_st = (fetch_albums_st*) data;
+
+  controller = fa_st->controller;
+  callback = fa_st->callback;
+  source_object = fa_st->object;
+  g_slice_free (fetch_albums_st, fa_st);
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  if (priv->cancellable)
+    {
+      g_object_unref (priv->cancellable);
+      priv->cancellable = NULL;
+    }
+
+  photosets_list = fsp_photos_mgr_get_photosets_finish (photos_mgr, res, &error);
+  if (photosets_list)
+    {
+      GSList *item = NULL;
+      FspDataPhotoSet *current_photoset = NULL;
+      FrogrAlbum *current_album = NULL;
+      for (item = photosets_list; item; item = g_slist_next (item))
+        {
+          current_photoset = FSP_DATA_PHOTO_SET (item->data);
+          current_album = frogr_album_new (current_photoset->title,
+                                           current_photoset->description);
+          frogr_album_set_id (current_album, current_photoset->id);
+          frogr_album_set_primary_photo_id (current_album, current_photoset->primary_photo_id);
+          frogr_album_set_n_photos (current_album, current_photoset->n_photos);
+
+          albums_list = g_slist_append (albums_list, current_album);
+
+          fsp_data_free (FSP_DATA (current_photoset));
+        }
+
+      g_slist_free (photosets_list);
+    }
+
+  /* Execute callback */
+  if (callback)
+    callback (source_object, albums_list, error);
 }
 
 static GObject *
@@ -511,6 +575,31 @@ frogr_controller_upload_picture (FrogrController *self,
 }
 
 void
+frogr_controller_fetch_albums (FrogrController *self,
+                               FCAlbumsFetchedCallback albums_fetched_cb,
+                               GObject *object)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = NULL;
+  fetch_albums_st *fa_st;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  fa_st = g_slice_new (fetch_albums_st);
+  fa_st->controller = self;
+  fa_st->callback = albums_fetched_cb;
+  fa_st->object = object;
+
+  /* Create cancellable */
+  priv->cancellable = g_cancellable_new ();
+
+  fsp_photos_mgr_get_photosets_async (priv->photos_mgr,
+                                      priv->cancellable,
+                                      _fetch_albums_cb,
+                                      fa_st);
+}
+
+void
 frogr_controller_cancel_ongoing_request (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
@@ -521,7 +610,7 @@ frogr_controller_cancel_ongoing_request (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   cancellable = priv->cancellable;
 
-  if (!g_cancellable_is_cancelled (cancellable))
+  if (cancellable && !g_cancellable_is_cancelled (cancellable))
     g_cancellable_cancel (cancellable);
 
 }

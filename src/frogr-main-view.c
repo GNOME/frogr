@@ -49,8 +49,7 @@
                                 FROGR_TYPE_MAIN_VIEW,   \
                                 FrogrMainViewPrivate))
 
-G_DEFINE_TYPE (FrogrMainView, frogr_main_view, G_TYPE_OBJECT);
-
+G_DEFINE_TYPE (FrogrMainView, frogr_main_view, G_TYPE_OBJECT)
 
 /* Private Data */
 
@@ -150,7 +149,6 @@ static void _progress_dialog_response (GtkDialog *dialog,
 static void _progress_dialog_delete_event (GtkWidget *widget,
                                            GdkEvent *event,
                                            gpointer user_data);
-static void _cancel_upload_process (FrogrMainView *self);
 
 /* Event handlers */
 static void _on_picture_loaded (FrogrMainView *self,
@@ -526,6 +524,20 @@ _on_about_menu_item_activate (GtkWidget *widget, gpointer self)
   frogr_controller_show_about_dialog (priv->controller);
 }
 
+static void
+_albums_list_fetched_cb (FrogrMainView *self, GSList *albums, GError *error)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  frogr_main_view_model_remove_all_albums (priv->model);
+  frogr_main_view_model_set_albums (priv->model, albums);
+
+  if (error != NULL)
+    {
+      g_debug ("Error fetching list of albums: %s", error->message);
+      g_error_free (error);
+    }
+}
 
 static void
 _on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
@@ -533,15 +545,24 @@ _on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
   FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  /* Show authorization dialog if needed */
   if (!frogr_controller_is_authorized (priv->controller))
-    frogr_controller_show_auth_dialog (priv->controller);
+    {
+      /* Show authorization dialog if needed */
+      frogr_controller_show_auth_dialog (priv->controller);
+    }
+  else
+    {
+      /* If authorized, try to retrieve some data from the server */
+      frogr_controller_fetch_albums (priv->controller,
+                                     (FCAlbumsFetchedCallback) _albums_list_fetched_cb,
+                                     G_OBJECT (self));
+    }
 }
 
 static gboolean
 _on_main_view_delete_event (GtkWidget *widget,
-                              GdkEvent *event,
-                              gpointer self)
+                            GdkEvent *event,
+                            gpointer self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   frogr_controller_quit_app (priv->controller);
