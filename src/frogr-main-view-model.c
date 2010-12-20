@@ -37,6 +37,9 @@ struct _FrogrMainViewModelPrivate
 {
   GSList *pictures_list;
   guint n_pictures;
+
+  GSList *albums_list;
+  guint n_albums;
 };
 
 /* Private API */
@@ -52,6 +55,13 @@ _frogr_main_view_model_dispose (GObject* object)
       g_slist_foreach (priv->pictures_list, (GFunc)g_object_unref, NULL);
       g_slist_free (priv->pictures_list);
       priv->pictures_list = NULL;
+    }
+
+  if (priv->albums_list)
+    {
+      g_slist_foreach (priv->albums_list, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->albums_list);
+      priv->albums_list = NULL;
     }
 
   G_OBJECT_CLASS (frogr_main_view_model_parent_class)->dispose (object);
@@ -74,6 +84,9 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
   /* Init private data */
   priv->pictures_list = NULL;
   priv->n_pictures = 0;
+
+  priv->albums_list = NULL;
+  priv->n_albums = 0;
 }
 
 /* Public API */
@@ -87,34 +100,34 @@ frogr_main_view_model_new (void)
 
 void
 frogr_main_view_model_add_picture (FrogrMainViewModel *self,
-                                   FrogrPicture *fpicture)
+                                   FrogrPicture *picture)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   FrogrMainViewModelPrivate *priv =
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
-  g_object_ref (fpicture);
-  priv->pictures_list = g_slist_append (priv->pictures_list, fpicture);
+  g_object_ref (picture);
+  priv->pictures_list = g_slist_append (priv->pictures_list, picture);
   priv->n_pictures++;
 }
 
 void
 frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
-                                      FrogrPicture *fpicture)
+                                      FrogrPicture *picture)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   FrogrMainViewModelPrivate *priv =
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
-  priv->pictures_list = g_slist_remove (priv->pictures_list, fpicture);
+  priv->pictures_list = g_slist_remove (priv->pictures_list, picture);
   priv->n_pictures--;
-  g_object_unref (fpicture);
+  g_object_unref (picture);
 }
 
 void
-frogr_main_view_model_remove_all (FrogrMainViewModel *self)
+frogr_main_view_model_remove_all_pictures (FrogrMainViewModel *self)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
@@ -148,4 +161,82 @@ frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   return priv->pictures_list;
+}
+
+void
+frogr_main_view_model_add_album (FrogrMainViewModel *self,
+                                 FrogrAlbum *album)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  g_object_ref (album);
+  priv->albums_list = g_slist_append (priv->albums_list, album);
+  priv->n_albums++;
+}
+
+void
+frogr_main_view_model_remove_album (FrogrMainViewModel *self,
+                                    FrogrAlbum *album)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  priv->albums_list = g_slist_remove (priv->albums_list, album);
+  priv->n_albums--;
+  g_object_unref (album);
+}
+
+void
+frogr_main_view_model_remove_all_albums (FrogrMainViewModel *self)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  g_slist_foreach (priv->albums_list, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv->albums_list);
+
+  priv->albums_list = NULL;
+  priv->n_albums = 0;
+}
+
+guint
+frogr_main_view_model_n_albums (FrogrMainViewModel *self)
+{
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  return priv->n_albums;
+}
+
+GSList *
+frogr_main_view_model_get_albums (FrogrMainViewModel *self)
+{
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  return priv->albums_list;
+}
+
+void
+frogr_main_view_model_set_albums (FrogrMainViewModel *self,
+                                  GSList *albums_list)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  priv->albums_list = albums_list;
+  priv->n_albums = g_slist_length (albums_list);
 }
