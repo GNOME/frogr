@@ -87,7 +87,6 @@ fsp_data_new                            (FspDataType type)
       new_data->photo_set.title = NULL;
       new_data->photo_set.description = NULL;
       new_data->photo_set.primary_photo_id = NULL;
-      new_data->photo_set.url = NULL;
       new_data->photo_set.n_photos = -1;
       break;
 
@@ -161,7 +160,6 @@ fsp_data_copy                           (const FspData *data)
       new_data->photo_set.title = g_strdup(data->photo_set.title);
       new_data->photo_set.description = g_strdup(data->photo_set.description);
       new_data->photo_set.primary_photo_id = g_strdup(data->photo_set.primary_photo_id);
-      new_data->photo_set.url = g_strdup(data->photo_set.url);
       new_data->photo_set.n_photos = data->photo_set.n_photos;
       break;
 
@@ -203,7 +201,7 @@ fsp_data_free                           (FspData *data)
 
       g_free(data->photo_info.title);
       g_free (data->photo_info.description);
-      if (data->auth_token.user_profile)
+      if (data->photo_info.owner)
         fsp_data_free (FSP_DATA (data->photo_info.owner));
       break;
 
@@ -212,7 +210,6 @@ fsp_data_free                           (FspData *data)
       g_free (data->photo_set.title);
       g_free (data->photo_set.description);
       g_free (data->photo_set.primary_photo_id);
-      g_free (data->photo_set.url);
       break;
 
     default:

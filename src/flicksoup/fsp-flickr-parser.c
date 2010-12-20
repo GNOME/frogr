@@ -69,11 +69,19 @@ _photo_get_upload_result_parser         (xmlDoc  *doc,
 static gpointer
 _get_photo_info_parser                  (xmlDoc  *doc,
                                          GError **error);
+static gpointer
+_get_photosets_list_parser              (xmlDoc  *doc,
+                                         GError **error);
+
 static FspDataUserProfile *
 _get_user_profile_from_node             (xmlNode *node);
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node);
+
+static FspDataPhotoSet *
+_get_photo_set_from_node                (xmlNode *node);
+
 
 /* Private API */
 
@@ -459,6 +467,54 @@ _get_photo_info_parser                  (xmlDoc  *doc,
   return pinfo;
 }
 
+static gpointer
+_get_photosets_list_parser              (xmlDoc  *doc,
+                                         GError **error)
+{
+  g_return_val_if_fail (doc != NULL, NULL);
+
+  xmlXPathContext *xpathCtx = NULL;
+  xmlXPathObject * xpathObj = NULL;
+  int numNodes = 0;
+  GSList *photosetsList = NULL;
+  FspDataPhotoSet *photoset = NULL;
+  GError *err = NULL;
+
+  xpathCtx = xmlXPathNewContext (doc);
+  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/photosets/photoset", xpathCtx);
+  numNodes = xpathObj->nodesetval->nodeNr;
+
+  if ((xpathObj != NULL) && (numNodes > 0))
+    {
+      /* Matching nodes found */
+      xmlNode *node = NULL;
+      int i = 0;
+
+      /* Extract per photoset information and add it to the list */
+      for (i = 0; i < numNodes; i++)
+        {
+          node = xpathObj->nodesetval->nodeTab[i];
+          if (node != NULL)
+            photoset = _get_photo_set_from_node (node);
+
+          if (photoset != NULL)
+            photosetsList = g_slist_append (photosetsList, photoset);
+        }
+    }
+  else
+    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                       "No photosets found in the response");
+  /* Free */
+  xmlXPathFreeObject (xpathObj);
+  xmlXPathFreeContext (xpathCtx);
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  return photosetsList;
+}
+
 static FspDataUserProfile *
 _get_user_profile_from_node             (xmlNode *node)
 {
@@ -657,6 +713,60 @@ _get_photo_info_from_node               (xmlNode *node)
   return pinfo;
 }
 
+static FspDataPhotoSet *
+_get_photo_set_from_node                (xmlNode *node)
+{
+  g_return_val_if_fail (node != NULL, NULL);
+
+  FspDataPhotoSet *photoSet = NULL;
+  xmlAttr *attr = NULL;
+  xmlChar *content = NULL;
+
+  /* Create and fill the FspDataPhotoInfo */
+  photoSet = FSP_DATA_PHOTO_SET (fsp_data_new (FSP_PHOTO_SET));
+  for (attr = node->properties; attr != NULL; attr = attr->next)
+    {
+      /* Id */
+      if (!g_strcmp0 ((gchar *)attr->name, "id"))
+        photoSet->id = g_strdup ((gchar *) attr->children->content);
+
+      /* Primary Photo ID */
+      if (!g_strcmp0 ((gchar *)attr->name, "primary"))
+        photoSet->primary_photo_id = g_strdup ((gchar *) attr->children->content);
+
+      /* Number of photos */
+      if (!g_strcmp0 ((gchar *)attr->name, "photos"))
+        {
+          gchar *val = (gchar *) attr->children->content;
+          photoSet->n_photos = (FspLicense) g_ascii_strtoll (val, NULL, 10);
+        }
+    }
+
+  /* Get data from inner nodes */
+  for (node = node->children; node != NULL; node = node->next)
+    {
+      if (node->type != XML_ELEMENT_NODE)
+        continue;
+
+      /* Title */
+      if (!g_strcmp0 ((gchar *) node->name, "title"))
+        {
+          content = xmlNodeGetContent (node);
+          photoSet->title = g_strdup ((gchar *) content);
+          xmlFree (content);
+        }
+
+      /* Description */
+      if (!g_strcmp0 ((gchar *) node->name, "description"))
+        {
+          content = xmlNodeGetContent (node);
+          photoSet->description = g_strdup ((gchar *) content);
+          xmlFree (content);
+        }
+    }
+
+  return photoSet;
+}
 
 /* Public API */
 
@@ -754,8 +864,17 @@ fsp_flickr_parser_get_photosets_list    (FspFlickrParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  /* TODO Implement */
-  return NULL;
+  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  GSList *photoSets_list = NULL;
+
+  /* Process the response */
+  photoSets_list = (GSList*) _process_xml_response (self, buffer, buf_size,
+                                                    _get_photosets_list_parser,
+                                                    error);
+  /* Return value */
+  return photoSets_list;
 }
 
 gpointer

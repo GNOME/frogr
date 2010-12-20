@@ -157,7 +157,6 @@ struct _FspDataPhotoSet
   gchar       *title;
   gchar       *description;
   gchar       *primary_photo_id;
-  gchar       *url;
   gint         n_photos;
 };
 

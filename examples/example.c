@@ -30,6 +30,46 @@
 #define TEST_PHOTO "./examples/testphoto.png"
 
 void
+get_photosets_cb                        (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  GError *error = NULL;
+  GSList *photosets_list =
+    fsp_photos_mgr_get_photosets_finish (photos_mgr, res, &error);
+
+  if (error != NULL)
+    {
+      g_print ("Error getting photosets: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[get_photosets_cb]::Success! Number of photosets found: %d\n",
+               g_slist_length (photosets_list));
+
+      gint i = 0;
+      GSList *item = NULL;
+      FspDataPhotoSet *photoset = NULL;
+      for (item = photosets_list; item; item = g_slist_next (item))
+        {
+          photoset = FSP_DATA_PHOTO_SET (item->data);
+          g_print ("[get_photosets_cb]::\tPhotoset #%d\n", i++);
+          g_print ("[get_photosets_cb]::\t\tPhotoset id: %s\n", photoset->id);
+          g_print ("[get_photosets_cb]::\t\tPhotoset title: %s\n", photoset->title);
+          g_print ("[get_photosets_cb]::\t\tPhotoset description: %s\n", photoset->description);
+          g_print ("[get_photosets_cb]::\t\tPhotoset primary photo id: %s\n", photoset->primary_photo_id);
+          g_print ("[get_photosets_cb]::\t\tPhotoset number of photos: %d\n", photoset->n_photos);
+
+          fsp_data_free (FSP_DATA (photoset));
+        }
+
+      g_slist_free (photosets_list);
+    }
+}
+
+void
 photo_get_info_cb                       (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
@@ -68,6 +108,17 @@ photo_get_info_cb                       (GObject      *object,
       g_print ("[photo_get_info_cb]::\tPhoto permaddmeta: %d\n", photo_info->perm_add_meta);
       g_print ("[photo_get_info_cb]::\tPhoto cancomment: %d\n", photo_info->can_comment);
       g_print ("[photo_get_info_cb]::\tPhoto canaddmeta: %d\n", photo_info->can_add_meta);
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue getting the list of photosets */
+      g_print ("Getting list of photosets...\n");
+      fsp_photos_mgr_get_photosets_async (photos_mgr, NULL,
+                                          get_photosets_cb, NULL);
+
+      fsp_data_free (FSP_DATA (photo_info));
     }
 }
 
@@ -93,10 +144,11 @@ upload_cb                               (GObject      *object,
       g_print ("Press ENTER to continue...\n\n");
       getchar ();
 
-      /* Continue finishing the authorization */
+      /* Continue getting info about the picture */
       g_print ("Getting info for photo %s...\n", photo_id);
       fsp_photos_mgr_get_info_async (photos_mgr, photo_id, NULL,
                                      photo_get_info_cb, NULL);
+      g_free (photo_id);
     }
 }
 
@@ -176,6 +228,8 @@ get_auth_url_cb                         (GObject      *object,
       /* Continue finishing the authorization */
       g_print ("Finishing authorization...\n");
       fsp_session_complete_auth_async (session, NULL, complete_auth_cb, NULL);
+
+      g_free (auth_url);
     }
 }
 
