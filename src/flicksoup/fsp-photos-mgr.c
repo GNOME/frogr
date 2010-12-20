@@ -363,11 +363,14 @@ _load_file_contents_cb                  (GObject      *object,
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
       FspPhotosMgr *self = NULL;
+      SoupSession *soup_session = NULL;
       SoupMessage *msg = NULL;
 
       /* Get the proxy and the associated message */
       self = FSP_PHOTOS_MGR (ga_clos->object);
       msg = _get_soup_message_for_upload (file, contents, length, extra_params);
+
+      soup_session = _get_soup_session (self);
 
       /* Connect to the "cancelled" signal thread safely */
       if (ga_clos->cancellable)
@@ -375,13 +378,13 @@ _load_file_contents_cb                  (GObject      *object,
           ga_clos->cancellable_id =
             g_cancellable_connect (ga_clos->cancellable,
                                    G_CALLBACK (_upload_cancelled_cb),
-                                   self->priv->soup_session,
+                                   soup_session,
                                    NULL);
         }
 
       /* Perform the async request */
-      soup_session_queue_message (self->priv->soup_session,
-                                  msg, _photo_upload_soup_session_cb, ga_clos);
+      soup_session_queue_message (soup_session, msg,
+                                  _photo_upload_soup_session_cb, ga_clos);
 
       g_debug ("\nRequested URL:\n%s\n", FLICKR_API_UPLOAD_URL);
 
@@ -591,6 +594,7 @@ fsp_photos_mgr_get_info_async           (FspPhotosMgr        *self,
   g_return_if_fail (photo_id != NULL);
 
   FspPhotosMgrPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
   const gchar *secret = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
@@ -608,7 +612,8 @@ fsp_photos_mgr_get_info_async           (FspPhotosMgr        *self,
   g_free (signed_query);
 
   /* Perform the async request */
-  perform_async_request (priv->soup_session, url,
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
                          _photo_get_info_soup_session_cb, G_OBJECT (self),
                          cancellable, callback, fsp_photos_mgr_get_info_async, data);
 
@@ -641,6 +646,7 @@ fsp_photos_mgr_get_photosets_async      (FspPhotosMgr        *self,
   g_return_if_fail (FSP_IS_PHOTOS_MGR (self));
 
   FspPhotosMgrPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
   const gchar *secret = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
@@ -657,7 +663,8 @@ fsp_photos_mgr_get_photosets_async      (FspPhotosMgr        *self,
   g_free (signed_query);
 
   /* Perform the async request */
-  perform_async_request (priv->soup_session, url,
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
                          _get_photosets_soup_session_cb, G_OBJECT (self),
                          cancellable, callback, fsp_photos_mgr_get_photosets_async, data);
 
@@ -693,6 +700,7 @@ fsp_photos_mgr_add_to_photoset_async    (FspPhotosMgr        *self,
   g_return_if_fail (photoset_id != NULL);
 
   FspPhotosMgrPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
   const gchar *secret = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
@@ -711,7 +719,8 @@ fsp_photos_mgr_add_to_photoset_async    (FspPhotosMgr        *self,
   g_free (signed_query);
 
   /* Perform the async request */
-  perform_async_request (priv->soup_session, url,
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
                          _add_to_photoset_soup_session_cb, G_OBJECT (self),
                          cancellable, callback, fsp_photos_mgr_add_to_photoset_async, data);
 
@@ -749,6 +758,7 @@ fsp_photos_mgr_create_photoset_async    (FspPhotosMgr        *self,
   g_return_if_fail (primary_photo_id != NULL);
 
   FspPhotosMgrPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
   const gchar *secret = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
@@ -768,6 +778,7 @@ fsp_photos_mgr_create_photoset_async    (FspPhotosMgr        *self,
   g_free (signed_query);
 
   /* Perform the async request */
+  soup_session = _get_soup_session (self);
   perform_async_request (priv->soup_session, url,
                          _create_photoset_soup_session_cb, G_OBJECT (self),
                          cancellable, callback, fsp_photos_mgr_create_photoset_async, data);
