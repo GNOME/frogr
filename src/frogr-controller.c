@@ -95,12 +95,12 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   auth_url = fsp_session_get_auth_url_finish (priv->session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Error getting auth URL: %s\n", error->message);
+      g_debug ("Error getting auth URL: %s", error->message);
       g_error_free (error);
       return;
     }
 
-  g_debug ("Auth URL: %s\n", auth_url ? auth_url : "No URL got");
+  g_debug ("Auth URL: %s", auth_url ? auth_url : "No URL got");
 
   /* Open url in the default application */
   if (auth_url != NULL)
@@ -147,7 +147,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 
   if (error != NULL)
     {
-      g_debug ("Authorization failed: %s\n", error->message);
+      g_debug ("Authorization failed: %s", error->message);
       g_error_free (error);
     }
 

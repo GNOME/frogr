@@ -43,7 +43,7 @@ frogr_util_open_url_in_browser (const gchar *url)
 
   if (error != NULL)
     {
-      g_debug ("Error opening URL %s: %s\n", url, error->message);
+      g_debug ("Error opening URL %s: %s", url, error->message);
       g_error_free (error);
     }
 #else

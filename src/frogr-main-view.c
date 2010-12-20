@@ -898,7 +898,7 @@ _open_browser_to_edit_details (FrogrMainView *self,
   edition_url =
     g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
                      ids_str);
-  g_debug ("Opening edition url: %s\n", edition_url);
+  g_debug ("Opening edition url: %s", edition_url);
 
   /* Redirect to URL for setting more properties about the pictures */
   frogr_util_open_url_in_browser (edition_url);
@@ -918,12 +918,12 @@ _on_pictures_uploaded (FrogrMainView *self,
   if (!error)
     {
       _open_browser_to_edit_details (self, fpuploader);
-      g_debug ("Success uploading picture\n\n");
+      g_debug ("Success uploading picture!");
     }
   else
     {
       _notify_pictures_not_uploaded (self, error);
-      g_debug ("Error uploading picture: %s\n", error->message);
+      g_debug ("Error uploading picture: %s", error->message);
       g_error_free (error);
     }
 

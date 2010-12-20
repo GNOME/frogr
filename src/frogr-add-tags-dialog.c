@@ -72,7 +72,7 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
           GSList *item;
           guint n_pictures;
 
-          g_debug ("Adding tags to picture(s): %s\n", tags);
+          g_debug ("Adding tags to picture(s): %s", tags);
 
           /* Iterate over the rest of elements */
           n_pictures = g_slist_length (priv->pictures);
