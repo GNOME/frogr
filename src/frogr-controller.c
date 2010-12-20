@@ -511,7 +511,7 @@ frogr_controller_upload_picture (FrogrController *self,
 }
 
 void
-frogr_controller_cancel_upload (FrogrController *self)
+frogr_controller_cancel_ongoing_request (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 

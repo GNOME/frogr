@@ -850,7 +850,8 @@ _progress_dialog_response (GtkDialog *dialog,
                            gpointer user_data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
-  _cancel_upload_process (self);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  frogr_controller_cancel_ongoing_request (priv->controller);
 }
 
 static void
@@ -859,14 +860,8 @@ _progress_dialog_delete_event (GtkWidget *widget,
                                gpointer user_data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
-  _cancel_upload_process (self);
-}
-
-static void
-_cancel_upload_process (FrogrMainView *self)
-{
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_cancel_upload (priv->controller);
+  frogr_controller_cancel_ongoing_request (priv->controller);
 }
 
 /* Event handlers */

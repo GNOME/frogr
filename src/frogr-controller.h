@@ -88,7 +88,7 @@ void frogr_controller_upload_picture (FrogrController *self,
                                       FCPictureUploadedCallback picture_uploaded_cb,
                                       GObject *object);
 
-void frogr_controller_cancel_upload (FrogrController *self);
+void frogr_controller_cancel_ongoing_request (FrogrController *self);
 
 G_END_DECLS
 
