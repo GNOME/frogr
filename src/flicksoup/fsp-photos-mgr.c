@@ -368,6 +368,8 @@ _load_file_contents_cb                  (GObject      *object,
       soup_session_queue_message (self->priv->soup_session,
                                   msg, _photo_upload_soup_session_cb, ga_clos);
 
+      g_debug ("\nRequested URL:\n%s\n", FLICKR_API_UPLOAD_URL);
+
       /* Free */
       g_hash_table_unref (extra_params);
       g_object_unref (file);
