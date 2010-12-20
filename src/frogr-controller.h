@@ -86,7 +86,7 @@ void frogr_controller_revoke_authorization (FrogrController *self);
 void frogr_controller_upload_picture (FrogrController *self,
                                       FrogrPicture *fpicture,
                                       FCPictureUploadedCallback picture_uploaded_cb,
-                                      gpointer object);
+                                      GObject *object);
 
 void frogr_controller_cancel_upload (FrogrController *self);
 

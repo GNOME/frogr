@@ -106,7 +106,7 @@ _upload_next_picture (FrogrPictureUploader *self)
       frogr_controller_upload_picture (priv->controller,
                                        picture,
                                        _upload_next_picture_cb,
-                                       self);
+                                       G_OBJECT (self));
     }
   else
     {

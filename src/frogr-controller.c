@@ -71,7 +71,7 @@ typedef struct {
   FrogrController *controller;
   FrogrPicture *picture;
   FCPictureUploadedCallback callback;
-  gpointer object;
+  GObject *object;
 } upload_picture_st;
 
 /* Prototypes */
@@ -477,7 +477,7 @@ void
 frogr_controller_upload_picture (FrogrController *self,
                                  FrogrPicture *picture,
                                  FCPictureUploadedCallback picture_uploaded_cb,
-                                 gpointer object)
+                                 GObject *object)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
