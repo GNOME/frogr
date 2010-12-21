@@ -38,6 +38,14 @@ G_BEGIN_DECLS
 typedef struct _FrogrPictureLoader FrogrPictureLoader;
 typedef struct _FrogrPictureLoaderClass FrogrPictureLoaderClass;
 
+/* Callback to be executed after every single load */
+typedef void (*FrogrPictureLoadedCallback) (GObject *source,
+                                            FrogrPicture *picture);
+
+/* Callback to be executed after all the pictures are loaded */
+typedef void (*FrogrPicturesLoadedCallback) (GObject *source,
+                                             FrogrPictureLoader *self);
+
 struct _FrogrPictureLoader
 {
   GObject parent_instance;
@@ -52,8 +60,8 @@ struct _FrogrPictureLoaderClass
 GType frogr_picture_loader_get_type(void) G_GNUC_CONST;
 
 FrogrPictureLoader *frogr_picture_loader_new (GSList *filepaths,
-                                              GFunc picture_loaded_cb,
-                                              GFunc pictures_loaded_cb,
+                                              FrogrPictureLoadedCallback picture_loaded_cb,
+                                              FrogrPicturesLoadedCallback pictures_loaded_cb,
                                               gpointer object);
 void frogr_picture_loader_load (FrogrPictureLoader *self);
 

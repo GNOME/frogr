@@ -72,18 +72,35 @@ static FrogrController *_instance = NULL;
 typedef struct {
   FrogrController *controller;
   FrogrPicture *picture;
-  FCPictureUploadedCallback callback;
+  FrogrPictureUploadedCallback callback;
   GObject *object;
 } upload_picture_st;
 
 
 /* Prototypes */
 
+static void _set_state (FrogrController *self, FrogrControllerState state);
+
 static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
 
 static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data);
 
+static void _upload_picture (FrogrController *self, FrogrPicture *picture,
+                             FrogrPictureUploadedCallback picture_uploaded_cb,
+                             GObject *object);
+
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader);
+
+static void _on_pictures_uploaded (FrogrController *self,
+                                   FrogrPictureUploader *fpuploader,
+                                   GError *error);
+
+static void _notify_pictures_not_uploaded (FrogrController *self,
+                                           GError *error);
+static void _open_browser_to_edit_details (FrogrController *self,
+                                           FrogrPictureUploader *fpuploader);
 
 static void _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data);
 
@@ -91,6 +108,17 @@ static gboolean _show_add_to_album_dialog_on_idle (GSList *pictures);
 
 
 /* Private functions */
+
+void
+_set_state (FrogrController *self, FrogrControllerState state)
+{
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->state = state;
+
+  /* Always update UI after a state change */
+  frogr_main_view_update_ui (priv->mainview);
+}
+
 
 static void
 _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
@@ -152,7 +180,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           g_debug ("Authorization successfully completed!");
 
           /* Pre-fetch the list of albums right after this */
-          frogr_controller_fetch_albums (controller);
+          frogr_controller_fetch_albums (controller, TRUE);
         }
     }
 
@@ -179,6 +207,40 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 }
 
 static void
+_upload_picture (FrogrController *self, FrogrPicture *picture,
+                 FrogrPictureUploadedCallback picture_uploaded_cb,
+                 GObject *object)
+{
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  upload_picture_st *up_st;
+
+  /* Create cancellable */
+  priv->cancellable = g_cancellable_new ();
+
+  /* Create structure to pass to the thread */
+  up_st = g_slice_new (upload_picture_st);
+  up_st->controller = self;
+  up_st->picture = picture;
+  up_st->callback = picture_uploaded_cb;
+  up_st->object = object;
+
+  g_object_ref (picture);
+
+  fsp_photos_mgr_upload_async (priv->photos_mgr,
+                               frogr_picture_get_filepath (picture),
+                               frogr_picture_get_title (picture),
+                               frogr_picture_get_description (picture),
+                               frogr_picture_get_tags (picture),
+                               frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                               frogr_picture_is_family (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                               frogr_picture_is_friend (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                               FSP_SAFETY_LEVEL_NONE,  /* Hard coded at the moment */
+                               FSP_CONTENT_TYPE_PHOTO, /* Hard coded at the moment */
+                               FSP_SEARCH_SCOPE_NONE,  /* Hard coded at the moment */
+                               priv->cancellable, _upload_picture_cb, up_st);
+}
+
+static void
 _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspPhotosMgr *photos_mgr = NULL;
@@ -186,7 +248,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
-  FCPictureUploadedCallback callback = NULL;
+  FrogrPictureUploadedCallback callback = NULL;
   gpointer source_object = NULL;
   GError *error = NULL;
   gchar *photo_id = NULL;
@@ -219,6 +281,122 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
     callback (source_object, picture, error);
 
   g_object_unref (picture);
+}
+
+static void
+_on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader)
+{
+  FrogrControllerPrivate *priv = NULL;
+
+  /* Update UI */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  frogr_main_view_update_ui (priv->mainview);
+  g_object_unref (fploader);
+
+  _set_state (self, FROGR_STATE_IDLE);
+}
+
+static void
+_on_pictures_uploaded (FrogrController *self,
+                       FrogrPictureUploader *fpuploader,
+                       GError *error)
+{
+  if (!error)
+    {
+      _open_browser_to_edit_details (self, fpuploader);
+      g_debug ("Success uploading picture!");
+    }
+  else
+    {
+      _notify_pictures_not_uploaded (self, error);
+      g_debug ("Error uploading picture: %s", error->message);
+      g_error_free (error);
+    }
+
+  /* Free memory */
+  g_object_unref (fpuploader);
+
+  _set_state (self, FROGR_STATE_IDLE);
+}
+
+static void
+_notify_pictures_not_uploaded (FrogrController *self, GError *error)
+{
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  void (* error_function) (GtkWindow *, const gchar *) = NULL;
+  GtkWindow *window = NULL;
+  gchar *msg = NULL;
+
+  error_function = frogr_util_show_error_dialog;
+  switch (error->code)
+    {
+    case FSP_ERROR_NOT_AUTHENTICATED:
+      frogr_controller_revoke_authorization (self);
+      msg = g_strdup_printf (_("%s is not properly authorized to upload pictures "
+                               "to flickr.\nPlease re-authorize it."), PACKAGE_NAME);
+      break;
+
+    case FSP_ERROR_CANCELLED:
+      msg = g_strdup_printf (_("Process cancelled by the user."), PACKAGE_NAME);
+      error_function = frogr_util_show_warning_dialog;
+      break;
+
+    default:
+      // General error: just dump the raw error description 
+      msg = g_strdup_printf (_("And error happened while uploading a picture: %s"),
+                             error->message);
+    }
+
+  window = frogr_main_view_get_window (priv->mainview);
+  error_function (window, msg);
+  g_free (msg);
+}
+
+static void
+_open_browser_to_edit_details (FrogrController *self,
+                               FrogrPictureUploader *fpuploader)
+{
+  FrogrControllerPrivate *priv;
+  FrogrMainViewModel *mainview_model = NULL;
+  GSList *pictures;
+  GSList *item;
+  guint index;
+  guint n_pictures;
+  gchar **str_array;
+  gchar *ids_str;
+  gchar *edition_url;
+  const gchar *id;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+
+  pictures = frogr_main_view_model_get_pictures (mainview_model);
+  n_pictures = frogr_main_view_model_n_pictures (mainview_model);
+
+  /* Build the photo edition url */
+  str_array = g_new (gchar*, n_pictures + 1);
+
+  index = 0;
+  for (item = pictures; item; item = g_slist_next (item))
+    {
+      id = frogr_picture_get_id (FROGR_PICTURE (item->data));
+      if (id != NULL)
+        str_array[index++] = g_strdup (id);
+    }
+  str_array[index] = NULL;
+
+  ids_str = g_strjoinv (",", str_array);
+  edition_url =
+    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
+                     ids_str);
+  g_debug ("Opening edition url: %s", edition_url);
+
+  /* Redirect to URL for setting more properties about the pictures */
+  frogr_util_open_url_in_browser (edition_url);
+
+  g_free (edition_url);
+  g_free (ids_str);
+  g_strfreev (str_array);
 }
 
 static void
@@ -274,7 +452,8 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* Update main view's model */
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_albums (mainview_model, albums_list);
-  frogr_controller_set_state (controller, FROGR_STATE_IDLE);
+
+  _set_state (controller, FROGR_STATE_IDLE);
 }
 
 static gboolean
@@ -463,18 +642,6 @@ frogr_controller_quit_app (FrogrController *self)
   return FALSE;
 }
 
-void
-frogr_controller_set_state (FrogrController *self, FrogrControllerState state)
-{
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->state = state;
-
-  /* Always update UI after a state change */
-  frogr_main_view_update_ui (priv->mainview);
-}
-
 FrogrControllerState
 frogr_controller_get_state (FrogrController *self)
 {
@@ -539,7 +706,7 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
 
 void
 frogr_controller_show_add_to_album_dialog (FrogrController *self,
-                                           GSList *fpictures)
+                                           GSList *pictures)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -553,10 +720,10 @@ frogr_controller_show_add_to_album_dialog (FrogrController *self,
 
   /* Fetch the albums first if needed */
   if (g_slist_length (albums) == 0)
-    frogr_controller_fetch_albums (self);
+    frogr_controller_fetch_albums (self, FALSE);
 
   /* Show the dialog when possible */
-  g_idle_add ((GSourceFunc) _show_add_to_album_dialog_on_idle, fpictures);
+  g_idle_add ((GSourceFunc) _show_add_to_album_dialog_on_idle, pictures);
 }
 
 void
@@ -598,44 +765,68 @@ frogr_controller_revoke_authorization (FrogrController *self)
 }
 
 void
-frogr_controller_upload_picture (FrogrController *self,
-                                 FrogrPicture *picture,
-                                 FCPictureUploadedCallback picture_uploaded_cb,
-                                 GObject *object)
+frogr_controller_load_pictures (FrogrController *self,
+                                GSList *filepaths,
+                                FrogrPictureLoadedCallback picture_loaded_cb,
+                                gpointer object)
+{
+  FrogrPictureLoader *fploader;
+  fploader = frogr_picture_loader_new (filepaths,
+                                       picture_loaded_cb,
+                                       (FrogrPicturesLoadedCallback) _on_pictures_loaded,
+                                       object);
+  /* Load the pictures! */
+  _set_state (self, FROGR_STATE_BUSY);
+
+  frogr_picture_loader_load (fploader);
+}
+
+void
+frogr_controller_upload_pictures (FrogrController *self,
+                                  FrogrPictureUploadedCallback picture_uploaded_cb,
+                                  gpointer object)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  upload_picture_st *up_st;
 
-  /* Create cancellable */
-  priv->cancellable = g_cancellable_new ();
+  /* Upload pictures */
+  if (!frogr_controller_is_authorized (self))
+    {
+      GtkWindow *window = NULL;
+      gchar *msg = NULL;
 
-  /* Create structure to pass to the thread */
-  up_st = g_slice_new (upload_picture_st);
-  up_st->controller = self;
-  up_st->picture = picture;
-  up_st->callback = picture_uploaded_cb;
-  up_st->object = object;
+      msg = g_strdup_printf (_("You need to properly authorize %s before"
+                               " uploading any picture to flickr.\n"
+                               "Please re-authorize it."), PACKAGE_NAME);
 
-  g_object_ref (picture);
+      window = frogr_main_view_get_window (priv->mainview);
+      frogr_util_show_error_dialog (window, msg);
+      g_free (msg);
+    }
+  else
+    {
+      FrogrMainViewModel *mainview_model = NULL;
+      mainview_model = frogr_main_view_get_model (priv->mainview);
 
-  fsp_photos_mgr_upload_async (priv->photos_mgr,
-                               frogr_picture_get_filepath (picture),
-                               frogr_picture_get_title (picture),
-                               frogr_picture_get_description (picture),
-                               frogr_picture_get_tags (picture),
-                               frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                               frogr_picture_is_family (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                               frogr_picture_is_friend (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                               FSP_SAFETY_LEVEL_NONE,  /* Hard coded at the moment */
-                               FSP_CONTENT_TYPE_PHOTO, /* Hard coded at the moment */
-                               FSP_SEARCH_SCOPE_NONE,  /* Hard coded at the moment */
-                               priv->cancellable, _upload_picture_cb, up_st);
+      if (frogr_main_view_model_n_pictures (mainview_model) > 0)
+        {
+          GSList *pictures = frogr_main_view_model_get_pictures (mainview_model);
+          FrogrPictureUploader *fpuploader =
+            frogr_picture_uploader_new (pictures,
+                                        (FrogrPictureUploadFunc) _upload_picture,
+                                        picture_uploaded_cb,
+                                       (FrogrPicturesUploadedCallback) _on_pictures_uploaded,
+                                        object);
+          /* Load the pictures! */
+          _set_state (self, FROGR_STATE_BUSY);
+          frogr_picture_uploader_upload (fpuploader);
+        }
+    }
 }
 
 void
-frogr_controller_fetch_albums (FrogrController *self)
+frogr_controller_fetch_albums (FrogrController *self, gboolean background)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -644,7 +835,10 @@ frogr_controller_fetch_albums (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->cancellable = g_cancellable_new ();
 
-  frogr_controller_set_state (self, FROGR_STATE_BUSY);
+  /* We only want to block the controller when fetching ondemand, not
+     when it's a pre-fetch done in background */
+  if (!background)
+    _set_state (self, FROGR_STATE_BUSY);
 
   fsp_photos_mgr_get_photosets_async (priv->photos_mgr,
                                       priv->cancellable,

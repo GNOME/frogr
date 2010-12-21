@@ -151,18 +151,6 @@ static void _progress_dialog_delete_event (GtkWidget *widget,
 /* Event handlers */
 static void _on_picture_loaded (FrogrMainView *self,
                                 FrogrPicture *picture);
-static void _on_pictures_loaded (FrogrMainView *self,
-                                 FrogrPictureLoader *fploader);
-static void _on_pictures_uploaded (FrogrMainView *self,
-                                   FrogrPictureUploader *fpuploader,
-                                   GError *error);
-
-static void _notify_pictures_not_uploaded (FrogrMainView *self,
-                                           GError *error);
-
-static void _open_browser_to_edit_details (FrogrMainView *self,
-                                           FrogrPictureUploader *fpuploader);
-
 
 /* Private API */
 
@@ -536,7 +524,7 @@ _on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
   else
     {
       /* If authorized, try to pre-fetch some data from the server */
-      frogr_controller_fetch_albums (priv->controller);
+      frogr_controller_fetch_albums (priv->controller, TRUE);
     }
 }
 
@@ -773,43 +761,20 @@ _remove_selected_pictures (FrogrMainView *self)
 static void
 _load_pictures (FrogrMainView *self, GSList *filepaths)
 {
-  FrogrPictureLoader *fploader;
-  fploader =
-    frogr_picture_loader_new (filepaths,
-                              (GFunc)_on_picture_loaded,
-                              (GFunc)_on_pictures_loaded,
-                              self);
-  /* Load the pictures! */
-  frogr_picture_loader_load (fploader);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  frogr_controller_load_pictures (priv->controller,
+                                  filepaths,
+                                  (FrogrPictureLoadedCallback) _on_picture_loaded,
+                                  self);
 }
 
 static void
 _upload_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  /* Upload pictures */
-  if (!frogr_controller_is_authorized (priv->controller))
-    {
-      gchar *msg = NULL;
-      msg = g_strdup_printf (_("You need to properly authorize %s before"
-                               " uploading any picture to flickr.\n"
-                               "Please re-authorize it."), PACKAGE_NAME);
-
-      frogr_util_show_error_dialog (priv->window, msg);
-      g_free (msg);
-    }
-  else if (frogr_main_view_model_n_pictures (priv->model) > 0)
-    {
-      GSList *pictures = frogr_main_view_model_get_pictures (priv->model);
-      FrogrPictureUploader *fpuploader =
-        frogr_picture_uploader_new (pictures,
+  frogr_controller_upload_pictures (priv->controller,
                                     NULL,
-                                    (FPUploaderPicturesUploaded)_on_pictures_uploaded,
                                     self);
-      /* Load the pictures! */
-      frogr_picture_uploader_upload (fpuploader);
-    }
 }
 
 static void
@@ -846,114 +811,6 @@ _on_picture_loaded (FrogrMainView *self, FrogrPicture *picture)
   _add_picture_to_ui (self, picture);
 
   g_object_unref (picture);
-}
-
-static void
-_on_pictures_loaded (FrogrMainView *self,
-                     FrogrPictureLoader *fploader)
-{
-  /* Update UI */
-  frogr_main_view_update_ui (self);
-  g_object_unref (fploader);
-}
-
-static void
-_open_browser_to_edit_details (FrogrMainView *self,
-                               FrogrPictureUploader *fpuploader)
-{
-  FrogrMainViewPrivate *priv;
-  GSList *pictures;
-  GSList *item;
-  guint index;
-  guint n_pictures;
-  gchar **str_array;
-  gchar *ids_str;
-  gchar *edition_url;
-  const gchar *id;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  pictures = frogr_main_view_model_get_pictures (priv->model);
-  n_pictures = frogr_main_view_model_n_pictures (priv->model);;
-
-  /* Build the photo edition url */
-  str_array = g_new (gchar*, n_pictures + 1);
-
-  index = 0;
-  for (item = pictures; item; item = g_slist_next (item))
-    {
-      id = frogr_picture_get_id (FROGR_PICTURE (item->data));
-      if (id != NULL)
-        str_array[index++] = g_strdup (id);
-    }
-  str_array[index] = NULL;
-
-  ids_str = g_strjoinv (",", str_array);
-  edition_url =
-    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
-                     ids_str);
-  g_debug ("Opening edition url: %s", edition_url);
-
-  /* Redirect to URL for setting more properties about the pictures */
-  frogr_util_open_url_in_browser (edition_url);
-
-  g_free (edition_url);
-  g_free (ids_str);
-  g_strfreev (str_array);
-}
-
-static void
-_on_pictures_uploaded (FrogrMainView *self,
-                       FrogrPictureUploader *fpuploader,
-                       GError *error)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (!error)
-    {
-      _open_browser_to_edit_details (self, fpuploader);
-      g_debug ("Success uploading picture!");
-    }
-  else
-    {
-      _notify_pictures_not_uploaded (self, error);
-      g_debug ("Error uploading picture: %s", error->message);
-      g_error_free (error);
-    }
-
-  /* Free memory */
-  g_object_unref (fpuploader);
-}
-
-static void
-_notify_pictures_not_uploaded (FrogrMainView *self, GError *error)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  void (* error_function) (GtkWindow *, const gchar *) = NULL;
-  gchar *msg = NULL;
-
-  error_function = frogr_util_show_error_dialog;
-  switch (error->code)
-    {
-    case FSP_ERROR_NOT_AUTHENTICATED:
-      frogr_controller_revoke_authorization (priv->controller);
-      msg = g_strdup_printf (_("%s is not properly authorized to upload pictures "
-                               "to flickr.\nPlease re-authorize it."), PACKAGE_NAME);
-      break;
-
-    case FSP_ERROR_CANCELLED:
-      msg = g_strdup_printf (_("Process cancelled by the user."), PACKAGE_NAME);
-      error_function = frogr_util_show_warning_dialog;
-      break;
-
-    default:
-      // General error: just dump the raw error description 
-      msg = g_strdup_printf (_("And error happened while uploading a picture: %s"),
-                             error->message);
-    }
-
-  error_function (priv->window, msg);
-  g_free (msg);
 }
 
 static void

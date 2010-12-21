@@ -25,6 +25,7 @@
 
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
+#include "frogr-picture-loader.h"
 #include "frogr-picture-uploader.h"
 
 #include <glib.h>
@@ -57,17 +58,6 @@ typedef enum {
   FROGR_STATE_BUSY
 } FrogrControllerState;
 
-/* Callback to be executed after every single upload */
-typedef void (*FCPictureUploadedCallback) (FrogrPictureUploader *self,
-                                           FrogrPicture *picture,
-                                           GError *error);
-
-/* Callback to be executed after receiving the list of albums */
-typedef void (*FCAlbumsFetchedCallback) (GObject *object,
-                                         GSList *albums_list,
-                                         gpointer data,
-                                         GError *error);
-
 GType frogr_controller_get_type (void) G_GNUC_CONST;
 
 FrogrController *frogr_controller_get_instance (void);
@@ -76,18 +66,17 @@ FrogrMainView *frogr_controller_get_main_view (FrogrController *self);
 gboolean frogr_controller_run_app (FrogrController *self);
 gboolean frogr_controller_quit_app (FrogrController *self);
 
-void frogr_controller_set_state (FrogrController *self, FrogrControllerState state);
 FrogrControllerState frogr_controller_get_state (FrogrController *self);
 
 void frogr_controller_show_about_dialog (FrogrController *self);
 void frogr_controller_show_auth_dialog (FrogrController *self);
 void frogr_controller_show_details_dialog (FrogrController *self,
-                                           GSList *fpictures);
+                                           GSList *pictures);
 void frogr_controller_show_add_tags_dialog (FrogrController *self,
-                                            GSList *fpictures);
+                                            GSList *pictures);
 
 void frogr_controller_show_add_to_album_dialog (FrogrController *self,
-                                                GSList *fpictures);
+                                                GSList *pictures);
 
 void frogr_controller_open_auth_url (FrogrController *self);
 
@@ -97,12 +86,16 @@ gboolean frogr_controller_is_authorized (FrogrController *self);
 
 void frogr_controller_revoke_authorization (FrogrController *self);
 
-void frogr_controller_upload_picture (FrogrController *self,
-                                      FrogrPicture *fpicture,
-                                      FCPictureUploadedCallback picture_uploaded_cb,
-                                      GObject *object);
+void frogr_controller_load_pictures (FrogrController *self,
+                                     GSList *filepaths,
+                                     FrogrPictureLoadedCallback picture_loaded_cb,
+                                     gpointer object);
 
-void frogr_controller_fetch_albums (FrogrController *self);
+void frogr_controller_upload_pictures (FrogrController *self,
+                                       FrogrPictureUploadedCallback picture_uploaded_cb,
+                                       gpointer object);
+
+void frogr_controller_fetch_albums (FrogrController *self, gboolean background);
 
 void frogr_controller_cancel_ongoing_request (FrogrController *self);
 

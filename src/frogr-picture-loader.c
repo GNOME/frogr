@@ -47,14 +47,16 @@ G_DEFINE_TYPE (FrogrPictureLoader, frogr_picture_loader, G_TYPE_OBJECT);
 typedef struct _FrogrPictureLoaderPrivate FrogrPictureLoaderPrivate;
 struct _FrogrPictureLoaderPrivate
 {
+  FrogrController *controller;
   FrogrMainView *mainview;
+
   GSList *filepaths;
   GSList *current;
   guint index;
   guint n_pictures;
 
-  GFunc picture_loaded_cb;
-  GFunc pictures_loaded_cb;
+  FrogrPictureLoadedCallback picture_loaded_cb;
+  FrogrPicturesLoadedCallback pictures_loaded_cb;
   gpointer object;
 };
 
@@ -180,18 +182,12 @@ _load_next_picture (FrogrPictureLoader *self)
     }
   else
     {
-      FrogrController *controller = NULL;
-
       /* Update status and progress */
       _update_status_and_progress (self);
 
-      /* Set proper state */
-      controller = frogr_controller_get_instance ();
-      frogr_controller_set_state (controller, FROGR_STATE_IDLE);
-
       /* Execute final callback */
       if (priv->pictures_loaded_cb)
-        priv->pictures_loaded_cb (priv->object, self);
+        priv->pictures_loaded_cb (G_OBJECT (priv->controller), self);
     }
 }
 
@@ -295,6 +291,12 @@ _frogr_picture_loader_dispose (GObject* object)
       priv->mainview = NULL;
     }
 
+  if (priv->controller)
+    {
+      g_object_unref (priv->controller);
+      priv->controller = NULL;
+    }
+
   G_OBJECT_CLASS (frogr_picture_loader_parent_class)->dispose(object);
 }
 
@@ -328,13 +330,11 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   FrogrPictureLoaderPrivate *priv =
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
-  FrogrController *controller = NULL;
-
   /* Init private data */
 
   /* We need the controller to get the main window */
-  controller = frogr_controller_get_instance ();
-  priv->mainview = g_object_ref (frogr_controller_get_main_view (controller));
+  priv->controller = g_object_ref (frogr_controller_get_instance ());
+  priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
 
   /* Init the rest of private data */
   priv->filepaths = NULL;
@@ -347,8 +347,8 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
 
 FrogrPictureLoader *
 frogr_picture_loader_new (GSList *filepaths,
-                          GFunc picture_loaded_cb,
-                          GFunc pictures_loaded_cb,
+                          FrogrPictureLoadedCallback picture_loaded_cb,
+                          FrogrPicturesLoadedCallback pictures_loaded_cb,
                           gpointer object)
 {
   FrogrPictureLoader *self =
@@ -379,15 +379,9 @@ frogr_picture_loader_load (FrogrPictureLoader *self)
   FrogrPictureLoaderPrivate *priv =
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
-  FrogrController *controller = NULL;
-
   /* Check first whether there's something to load */
   if (priv->filepaths == NULL)
     return;
-
-  /* Set proper state */
-  controller = frogr_controller_get_instance ();
-  frogr_controller_set_state (controller, FROGR_STATE_BUSY);
 
   /* Update status and progress */
   _update_status_and_progress (self);

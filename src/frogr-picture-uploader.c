@@ -41,13 +41,16 @@ struct _FrogrPictureUploaderPrivate
 {
   FrogrController *controller;
   FrogrMainView *mainview;
+
   GError *error;
   GSList *pictures;
   GSList *current;
   guint index;
   guint n_pictures;
-  FPUploaderPictureUploaded picture_uploaded_cb;
-  FPUploaderPicturesUploaded pictures_uploaded_cb;
+
+  FrogrPictureUploadFunc picture_upload_func;
+  FrogrPictureUploadedCallback picture_uploaded_cb;
+  FrogrPicturesUploadedCallback pictures_uploaded_cb;
   gpointer object;
 };
 
@@ -103,22 +106,19 @@ _upload_next_picture (FrogrPictureUploader *self)
       FrogrPicture *picture = FROGR_PICTURE (priv->current->data);
 
       /* Delegate on controller and notify UI */
-      frogr_controller_upload_picture (priv->controller,
-                                       picture,
-                                       _upload_next_picture_cb,
-                                       G_OBJECT (self));
+      priv->picture_upload_func (G_OBJECT (priv->controller),
+                                 picture,
+                                 (FrogrPictureUploadedCallback) _upload_next_picture_cb,
+                                 G_OBJECT (self));
     }
   else
     {
       /* Update status and progress bars */
       _update_status_and_progress (self);
 
-      /* Set proper state */
-      frogr_controller_set_state (priv->controller, FROGR_STATE_IDLE);
-
       /* Execute final callback */
       if (priv->pictures_uploaded_cb)
-        priv->pictures_uploaded_cb (priv->object, self, priv->error);
+        priv->pictures_uploaded_cb (G_OBJECT (priv->controller), self, priv->error);
     }
 }
 
@@ -139,7 +139,7 @@ _upload_next_picture_cb (FrogrPictureUploader *self,
 
   /* Execute 'picture-uploaded' callback */
   if (priv->picture_uploaded_cb)
-    priv->picture_uploaded_cb (priv->object, picture);
+    priv->picture_uploaded_cb (priv->object, picture, error);
 
   /* Update values on error */
   if (error)
@@ -210,8 +210,9 @@ frogr_picture_uploader_init (FrogrPictureUploader *self)
 
 FrogrPictureUploader *
 frogr_picture_uploader_new (GSList *pictures,
-                            FPUploaderPictureUploaded picture_uploaded_cb,
-                            FPUploaderPicturesUploaded pictures_uploaded_cb,
+                            FrogrPictureUploadFunc picture_upload_func,
+                            FrogrPictureUploadedCallback picture_uploaded_cb,
+                            FrogrPicturesUploadedCallback pictures_uploaded_cb,
                             gpointer object)
 {
   FrogrPictureUploader *self =
@@ -230,6 +231,7 @@ frogr_picture_uploader_new (GSList *pictures,
   priv->n_pictures = g_slist_length (priv->pictures);
 
   /* Callback data */
+  priv->picture_upload_func = picture_upload_func;
   priv->picture_uploaded_cb = picture_uploaded_cb;
   priv->pictures_uploaded_cb = pictures_uploaded_cb;
   priv->object = object;
@@ -248,9 +250,6 @@ frogr_picture_uploader_upload (FrogrPictureUploader *self)
   /* Check first whether there's something to upload */
   if (priv->pictures == NULL)
     return;
-
-  /* Set proper state */
-  frogr_controller_set_state (priv->controller, FROGR_STATE_BUSY);
 
   /* Update status and progress bars */
   _update_status_and_progress (self);

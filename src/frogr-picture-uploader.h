@@ -39,13 +39,19 @@ typedef struct _FrogrPictureUploader FrogrPictureUploader;
 typedef struct _FrogrPictureUploaderClass FrogrPictureUploaderClass;
 
 /* Callback to be executed after every single upload */
-typedef void (*FPUploaderPictureUploaded) (GObject *source,
-                                           FrogrPicture *picture);
+typedef void (*FrogrPictureUploadedCallback) (GObject *source,
+                                              FrogrPicture *picture,
+                                              GError *error);
 
-/* Callback to be executed after every all the pictures upload */
-typedef void (*FPUploaderPicturesUploaded) (GObject *source,
-                                            FrogrPictureUploader *self,
-                                            GError *error);
+/* Callback to be executed after all the pictures are uploaded */
+typedef void (*FrogrPicturesUploadedCallback) (GObject *source,
+                                               FrogrPictureUploader *self,
+                                               GError *error);
+
+/* Callback to actually upload every picture */
+typedef void (*FrogrPictureUploadFunc) (GObject *self, FrogrPicture *picture,
+                                        FrogrPictureUploadedCallback picture_uploaded_cb,
+                                        GObject *object);
 
 struct _FrogrPictureUploader
 {
@@ -61,8 +67,9 @@ struct _FrogrPictureUploaderClass
 GType frogr_picture_uploader_get_type(void) G_GNUC_CONST;
 
 FrogrPictureUploader *frogr_picture_uploader_new (GSList *pictures,
-                                                  FPUploaderPictureUploaded picture_uploaded_cb,
-                                                  FPUploaderPicturesUploaded pictures_uploaded_cb,
+                                                  FrogrPictureUploadFunc picture_upload_func,
+                                                  FrogrPictureUploadedCallback picture_uploaded_cb,
+                                                  FrogrPicturesUploadedCallback pictures_uploaded_cb,
                                                   gpointer object);
 
 void frogr_picture_uploader_upload (FrogrPictureUploader *self);
