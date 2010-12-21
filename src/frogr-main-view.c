@@ -24,8 +24,6 @@
 
 #include "frogr-controller.h"
 #include "frogr-main-view-model.h"
-#include "frogr-picture-loader.h"
-#include "frogr-picture-uploader.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
 
@@ -152,12 +150,12 @@ static void _controller_state_changed (FrogrController *self,
                                        FrogrControllerState state,
                                        gpointer data);
 
+static void _controller_picture_loaded (FrogrController *self,
+                                        FrogrPicture *picture,
+                                        gpointer data);
+
 static void _update_ui (FrogrMainView *self);
 
-
-/* Event handlers */
-static void _on_picture_loaded (FrogrMainView *self,
-                                FrogrPicture *picture);
 
 /* Private API */
 
@@ -769,19 +767,14 @@ static void
 _load_pictures (FrogrMainView *self, GSList *filepaths)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_load_pictures (priv->controller,
-                                  filepaths,
-                                  (FrogrPictureLoadedCallback) _on_picture_loaded,
-                                  self);
+  frogr_controller_load_pictures (priv->controller, filepaths);
 }
 
 static void
 _upload_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_upload_pictures (priv->controller,
-                                    NULL,
-                                    self);
+  frogr_controller_upload_pictures (priv->controller);
 }
 
 static void
@@ -811,6 +804,15 @@ _controller_state_changed (FrogrController *self,
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   _update_ui (mainview);
+}
+
+static void
+_controller_picture_loaded (FrogrController *self,
+                            FrogrPicture *picture,
+                            gpointer data)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  _add_picture_to_ui (mainview, picture);
 }
 
 static void
@@ -844,23 +846,6 @@ _update_ui (FrogrMainView *self)
     default:
       g_warning ("Invalid state reached!!");
     }
-}
-
-
-/* Event handlers */
-
-static void
-_on_picture_loaded (FrogrMainView *self, FrogrPicture *picture)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  g_object_ref (picture);
-
-  /* Add to model and UI*/
-  frogr_main_view_model_add_picture (priv->model, picture);
-  _add_picture_to_ui (self, picture);
-
-  g_object_unref (picture);
 }
 
 static void
@@ -1054,6 +1039,8 @@ frogr_main_view_init (FrogrMainView *self)
   g_signal_connect (G_OBJECT (priv->controller), "state-changed",
                     G_CALLBACK (_controller_state_changed), self);
 
+  g_signal_connect (G_OBJECT (priv->controller), "picture-loaded",
+                    G_CALLBACK (_controller_picture_loaded), self);
 
   gtk_builder_connect_signals (builder, self);
   g_object_unref (G_OBJECT (builder));

@@ -86,14 +86,9 @@ gboolean frogr_controller_is_authorized (FrogrController *self);
 
 void frogr_controller_revoke_authorization (FrogrController *self);
 
-void frogr_controller_load_pictures (FrogrController *self,
-                                     GSList *filepaths,
-                                     FrogrPictureLoadedCallback picture_loaded_cb,
-                                     gpointer object);
+void frogr_controller_load_pictures (FrogrController *self, GSList *filepaths);
 
-void frogr_controller_upload_pictures (FrogrController *self,
-                                       FrogrPictureUploadedCallback picture_uploaded_cb,
-                                       gpointer object);
+void frogr_controller_upload_pictures (FrogrController *self);
 
 void frogr_controller_fetch_albums (FrogrController *self, gboolean background);
 

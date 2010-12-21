@@ -71,6 +71,8 @@ struct _FrogrControllerPrivate
 /* Signals */
 enum {
   STATE_CHANGED,
+  PICTURE_LOADED,
+  PICTURE_UPLOADED,
   N_SIGNALS
 };
 
@@ -100,7 +102,11 @@ static void _upload_picture (FrogrController *self, FrogrPicture *picture,
 
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
 
+static void _on_picture_loaded (FrogrController *self, FrogrPicture *picture);
+
 static void _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader);
+
+static void _on_picture_uploaded (FrogrController *self, FrogrPicture *picture);
 
 static void _on_pictures_uploaded (FrogrController *self,
                                    FrogrPictureUploader *fpuploader,
@@ -292,6 +298,19 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 }
 
 static void
+_on_picture_loaded (FrogrController *self, FrogrPicture *picture)
+{
+  FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+
+  frogr_main_view_model_add_picture (mainview_model, picture);
+  g_signal_emit (self, signals[PICTURE_LOADED], 0, picture);
+}
+
+static void
 _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader)
 {
   FrogrControllerPrivate *priv = NULL;
@@ -301,6 +320,12 @@ _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader)
   g_object_unref (fploader);
 
   _set_state (self, FROGR_STATE_IDLE);
+}
+
+static void
+_on_picture_uploaded (FrogrController *self, FrogrPicture *picture)
+{
+  g_signal_emit (self, signals[PICTURE_UPLOADED], 0, picture);
 }
 
 static void
@@ -559,6 +584,22 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   g_cclosure_marshal_VOID__INT,
                   G_TYPE_NONE, 1, G_TYPE_INT);
 
+  signals[PICTURE_LOADED] =
+    g_signal_new ("picture-loaded",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__POINTER,
+                  G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
+
+  signals[PICTURE_UPLOADED] =
+    g_signal_new ("picture-uploaded",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__POINTER,
+                  G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
+
   g_type_class_add_private (obj_class, sizeof (FrogrControllerPrivate));
 }
 
@@ -781,15 +822,13 @@ frogr_controller_revoke_authorization (FrogrController *self)
 
 void
 frogr_controller_load_pictures (FrogrController *self,
-                                GSList *filepaths,
-                                FrogrPictureLoadedCallback picture_loaded_cb,
-                                gpointer object)
+                                GSList *filepaths)
 {
   FrogrPictureLoader *fploader;
   fploader = frogr_picture_loader_new (filepaths,
-                                       picture_loaded_cb,
+                                       (FrogrPictureLoadedCallback) _on_picture_loaded,
                                        (FrogrPicturesLoadedCallback) _on_pictures_loaded,
-                                       object);
+                                       self);
   /* Load the pictures! */
   _set_state (self, FROGR_STATE_BUSY);
 
@@ -797,9 +836,7 @@ frogr_controller_load_pictures (FrogrController *self,
 }
 
 void
-frogr_controller_upload_pictures (FrogrController *self,
-                                  FrogrPictureUploadedCallback picture_uploaded_cb,
-                                  gpointer object)
+frogr_controller_upload_pictures (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -830,9 +867,9 @@ frogr_controller_upload_pictures (FrogrController *self,
           FrogrPictureUploader *fpuploader =
             frogr_picture_uploader_new (pictures,
                                         (FrogrPictureUploadFunc) _upload_picture,
-                                        picture_uploaded_cb,
-                                       (FrogrPicturesUploadedCallback) _on_pictures_uploaded,
-                                        object);
+                                        (FrogrPictureUploadedCallback) _on_picture_uploaded,
+                                        (FrogrPicturesUploadedCallback) _on_pictures_uploaded,
+                                        self);
           /* Load the pictures! */
           _set_state (self, FROGR_STATE_BUSY);
           frogr_picture_uploader_upload (fpuploader);
