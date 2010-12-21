@@ -94,10 +94,7 @@ void frogr_controller_upload_picture (FrogrController *self,
                                       FCPictureUploadedCallback picture_uploaded_cb,
                                       GObject *object);
 
-void frogr_controller_fetch_albums (FrogrController *self,
-                                    FCAlbumsFetchedCallback albums_fetched_cb,
-                                    GObject *object,
-                                    gpointer data);
+void frogr_controller_fetch_albums (FrogrController *self);
 
 void frogr_controller_cancel_ongoing_request (FrogrController *self);
 

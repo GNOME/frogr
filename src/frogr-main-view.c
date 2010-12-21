@@ -130,10 +130,7 @@ static void _update_ui (FrogrMainView *self);
 static GSList *_get_selected_pictures (FrogrMainView *self);
 static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _remove_pictures_from_ui (FrogrMainView *self, GSList *pictures);
-static void _albums_list_fetched_cb (FrogrMainView *self,
-                                     GSList *albums,
-                                     gpointer data,
-                                     GError *error);
+
 static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
                                               gint response,
                                               gpointer data);
@@ -541,9 +538,7 @@ _on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
   else
     {
       /* If authorized, try to pre-fetch some data from the server */
-      frogr_controller_fetch_albums (priv->controller,
-                                     (FCAlbumsFetchedCallback) _albums_list_fetched_cb,
-                                     G_OBJECT (self), NULL);
+      frogr_controller_fetch_albums (priv->controller);
     }
 }
 
@@ -685,20 +680,6 @@ _remove_pictures_from_ui (FrogrMainView *self, GSList *pictures)
             }
           while (gtk_tree_model_iter_next (tree_model, &iter));
         }
-    }
-}
-
-static void
-_albums_list_fetched_cb (FrogrMainView *self, GSList *albums, gpointer data, GError *error)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  frogr_main_view_model_set_albums (priv->model, albums);
-
-  if (error != NULL)
-    {
-      g_debug ("Error fetching list of albums: %s", error->message);
-      g_error_free (error);
     }
 }
 
@@ -1241,6 +1222,15 @@ frogr_main_view_set_state (FrogrMainView *self,
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   priv->state = state;
   _update_ui (self);
+}
+
+FrogrMainViewState
+frogr_main_view_get_state (FrogrMainView *self)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  return priv->state;
 }
 
 void

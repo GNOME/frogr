@@ -74,13 +74,6 @@ typedef struct {
   GObject *object;
 } upload_picture_st;
 
-typedef struct {
-  FrogrController *controller;
-  FCAlbumsFetchedCallback callback;
-  GObject *object;
-  gpointer data;
-} fetch_albums_st;
-
 
 /* Prototypes */
 
@@ -92,9 +85,8 @@ static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer dat
 
 static void _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data);
 
-static void _albums_list_fetched_cb (FrogrController *self, GSList *albums, gpointer data, GError *error);
+static gboolean _show_add_to_album_dialog_on_idle (GSList *pictures);
 
-static void _albums_list_fetched_and_show_dialog_cb (FrogrController *self, GSList *albums, gpointer data, GError *error);
 
 /* Private functions */
 
@@ -158,9 +150,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           g_debug ("Authorization successfully completed!");
 
           /* Pre-fetch the list of albums right after this */
-          frogr_controller_fetch_albums (controller,
-                                         (FCAlbumsFetchedCallback) _albums_list_fetched_cb,
-                                         G_OBJECT (controller), NULL);
+          frogr_controller_fetch_albums (controller);
         }
     }
 
@@ -233,24 +223,15 @@ static void
 _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspPhotosMgr *photos_mgr = NULL;
-  fetch_albums_st *fa_st = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FCAlbumsFetchedCallback callback = NULL;
-  GObject *source_object = NULL;
-  gpointer source_data = NULL;
-  GError *error = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
   GSList *photosets_list = NULL;
   GSList *albums_list = NULL;
+  GError *error = NULL;
 
   photos_mgr = FSP_PHOTOS_MGR (object);
-  fa_st = (fetch_albums_st*) data;
-
-  controller = fa_st->controller;
-  callback = fa_st->callback;
-  source_object = fa_st->object;
-  source_data = fa_st->data;
-  g_slice_free (fetch_albums_st, fa_st);
+  controller = FROGR_CONTROLLER (data);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   if (priv->cancellable)
@@ -260,6 +241,12 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   photosets_list = fsp_photos_mgr_get_photosets_finish (photos_mgr, res, &error);
+  if (error != NULL)
+    {
+      g_debug ("Error fetching list of albums: %s", error->message);
+      g_error_free (error);
+    }
+
   if (photosets_list)
     {
       GSList *item = NULL;
@@ -282,66 +269,37 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
       g_slist_free (photosets_list);
     }
 
+  /* Update main view's model */
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  frogr_main_view_model_set_albums (mainview_model, albums_list);
   frogr_main_view_set_state (priv->mainview, FROGR_STATE_IDLE);
-
-  /* Execute callback */
-  if (callback)
-    callback (source_object, albums_list, source_data, error);
 }
 
-static void
-_albums_list_fetched_cb (FrogrController *self, GSList *albums, gpointer data, GError *error)
+static gboolean
+_show_add_to_album_dialog_on_idle (GSList *pictures)
 {
+  FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
+  GSList *albums = NULL;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  controller = controller = frogr_controller_get_instance ();
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview_model = frogr_main_view_get_model (priv->mainview);
+  albums = frogr_main_view_model_get_albums (mainview_model);
 
-  frogr_main_view_model_set_albums (mainview_model, albums);
-
-  if (error != NULL)
+  if (frogr_main_view_get_state (priv->mainview) != FROGR_STATE_FETCHING)
     {
-      g_debug ("Error fetching list of albums: %s", error->message);
-      g_error_free (error);
-    }
-}
+      /* Albums already pre-fetched: show the dialog */
+      GtkWindow *window = NULL;
+      window = frogr_main_view_get_window (priv->mainview);
+      frogr_add_to_album_dialog_show (window, pictures, albums);
 
-static void
-_albums_list_fetched_and_show_dialog_cb (FrogrController *self, GSList *albums, gpointer data, GError *error)
-{
-  FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
-  GtkWindow *window = NULL;
-  GSList *pictures = NULL;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
-  window = frogr_main_view_get_window (priv->mainview);
-  pictures = (GSList *) data;
-
-  frogr_main_view_model_set_albums (mainview_model, albums);
-
-  if (error != NULL)
-    {
-      gchar *error_message = NULL;
-      error_message = g_strdup_printf (_("Error fetching the list of albums: %s"),
-                                       error->message);
-      frogr_util_show_error_dialog (window, error_message);
-      g_debug ("Error fetching list of albums: %s", error->message);
-
-      g_error_free (error);
-      g_free (error_message);
-
-      /* Needed to free the list of pictures initially passed */
-      g_slist_foreach (pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (pictures);
-
-      return;
+      return FALSE;
     }
 
-  /* No errors, just continnue with the process */
-  frogr_add_to_album_dialog_show (window, pictures, albums);
+  /* Keep the source in the main loop */
+  return TRUE;
 }
 
 static GObject *
@@ -569,20 +527,12 @@ frogr_controller_show_add_to_album_dialog (FrogrController *self,
   mainview_model = frogr_main_view_get_model (priv->mainview);
   albums = frogr_main_view_model_get_albums (mainview_model);
 
-  if (g_slist_length (albums) > 0)
-    {
-      /* Albums already pre-fetched: show the dialog */
-      GtkWindow *window = NULL;
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_add_to_album_dialog_show (window, fpictures, albums);
-    }
-  else
-    {
-      /* We need to fetch the albums before showing the dialog */
-      frogr_controller_fetch_albums (self,
-                                     (FCAlbumsFetchedCallback) _albums_list_fetched_and_show_dialog_cb,
-                                     G_OBJECT (self), fpictures);
-    }
+  /* Fetch the albums first if needed */
+  if (g_slist_length (albums) == 0)
+    frogr_controller_fetch_albums (self);
+
+  /* Show the dialog when possible */
+  g_idle_add ((GSourceFunc) _show_add_to_album_dialog_on_idle, fpictures);
 }
 
 void
@@ -661,30 +611,21 @@ frogr_controller_upload_picture (FrogrController *self,
 }
 
 void
-frogr_controller_fetch_albums (FrogrController *self,
-                               FCAlbumsFetchedCallback albums_fetched_cb,
-                               GObject *object,
-                               gpointer data)
+frogr_controller_fetch_albums (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = NULL;
-  fetch_albums_st *fa_st;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  fa_st = g_slice_new (fetch_albums_st);
-  fa_st->controller = self;
-  fa_st->callback = albums_fetched_cb;
-  fa_st->object = object;
-  fa_st->data = data;
+  priv->cancellable = g_cancellable_new ();
 
   frogr_main_view_set_state (priv->mainview, FROGR_STATE_FETCHING);
-  priv->cancellable = g_cancellable_new ();
 
   fsp_photos_mgr_get_photosets_async (priv->photos_mgr,
                                       priv->cancellable,
                                       _fetch_albums_cb,
-                                      fa_st);
+                                      self);
 }
 
 void
