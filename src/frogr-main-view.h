@@ -63,8 +63,6 @@ void frogr_main_view_set_progress (FrogrMainView *self,
 
 FrogrMainViewModel *frogr_main_view_get_model (FrogrMainView *self);
 
-void frogr_main_view_update_ui (FrogrMainView *self);
-
 G_END_DECLS
 
 #endif /* FROGR_MAIN_VIEW_H */

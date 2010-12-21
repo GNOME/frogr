@@ -67,6 +67,15 @@ struct _FrogrControllerPrivate
   gboolean app_running;
 };
 
+
+/* Signals */
+enum {
+  STATE_CHANGED,
+  N_SIGNALS
+};
+
+static guint signals[N_SIGNALS] = { 0 };
+
 static FrogrController *_instance = NULL;
 
 typedef struct {
@@ -113,10 +122,9 @@ void
 _set_state (FrogrController *self, FrogrControllerState state)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->state = state;
 
-  /* Always update UI after a state change */
-  frogr_main_view_update_ui (priv->mainview);
+  priv->state = state;
+  g_signal_emit (self, signals[STATE_CHANGED], 0, state);
 }
 
 
@@ -290,7 +298,6 @@ _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader)
 
   /* Update UI */
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_update_ui (priv->mainview);
   g_object_unref (fploader);
 
   _set_state (self, FROGR_STATE_IDLE);
@@ -543,6 +550,14 @@ frogr_controller_class_init (FrogrControllerClass *klass)
 
   obj_class->constructor = _frogr_controller_constructor;
   obj_class->dispose = _frogr_controller_dispose;
+
+  signals[STATE_CHANGED] =
+    g_signal_new ("state-changed",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__INT,
+                  G_TYPE_NONE, 1, G_TYPE_INT);
 
   g_type_class_add_private (obj_class, sizeof (FrogrControllerPrivate));
 }

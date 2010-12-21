@@ -119,7 +119,7 @@ void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
 
 static void _on_main_view_map_event (GtkWidget *widget,
                                      GdkEvent *event,
-                                     gpointer user_data);
+                                     gpointer data);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
@@ -143,10 +143,17 @@ static void _upload_pictures (FrogrMainView *self);
 
 static void _progress_dialog_response (GtkDialog *dialog,
                                        gint response_id,
-                                       gpointer user_data);
+                                       gpointer data);
 static void _progress_dialog_delete_event (GtkWidget *widget,
                                            GdkEvent *event,
-                                           gpointer user_data);
+                                           gpointer data);
+
+static void _controller_state_changed (FrogrController *self,
+                                       FrogrControllerState state,
+                                       gpointer data);
+
+static void _update_ui (FrogrMainView *self);
+
 
 /* Event handlers */
 static void _on_picture_loaded (FrogrMainView *self,
@@ -511,9 +518,9 @@ _on_about_menu_item_activate (GtkWidget *widget, gpointer self)
 }
 
 static void
-_on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
+_on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-  FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   if (!frogr_controller_is_authorized (priv->controller))
@@ -751,7 +758,7 @@ _remove_selected_pictures (FrogrMainView *self)
     _remove_pictures_from_ui (self, selected_pictures);
 
   /* Update UI */
-  frogr_main_view_update_ui (self);
+  _update_ui (self);
 
   /* Free */
   g_slist_foreach (selected_pictures, (GFunc)g_object_unref, NULL);
@@ -780,9 +787,9 @@ _upload_pictures (FrogrMainView *self)
 static void
 _progress_dialog_response (GtkDialog *dialog,
                            gint response_id,
-                           gpointer user_data)
+                           gpointer data)
 {
-  FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   frogr_controller_cancel_ongoing_request (priv->controller);
 }
@@ -790,12 +797,55 @@ _progress_dialog_response (GtkDialog *dialog,
 static void
 _progress_dialog_delete_event (GtkWidget *widget,
                                GdkEvent *event,
-                               gpointer user_data)
+                               gpointer data)
 {
-  FrogrMainView *self = FROGR_MAIN_VIEW (user_data);
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   frogr_controller_cancel_ongoing_request (priv->controller);
 }
+
+static void
+_controller_state_changed (FrogrController *self,
+                           FrogrControllerState state,
+                           gpointer data)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  _update_ui (mainview);
+}
+
+static void
+_update_ui (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  gboolean pictures_loaded;
+  guint npics;
+
+  /* Set sensitiveness */
+  switch (frogr_controller_get_state (priv->controller))
+    {
+    case FROGR_STATE_BUSY:
+      gtk_widget_set_sensitive (priv->add_button, FALSE);
+      gtk_widget_set_sensitive (priv->remove_button, FALSE);
+      gtk_widget_set_sensitive (priv->upload_button, FALSE);
+      break;
+
+    case FROGR_STATE_IDLE:
+      npics = frogr_main_view_model_n_pictures (priv->model);
+      pictures_loaded = frogr_main_view_model_n_pictures (priv->model);
+
+      gtk_widget_set_sensitive (priv->add_button, TRUE);
+      gtk_widget_set_sensitive (priv->remove_button, pictures_loaded);
+      gtk_widget_set_sensitive (priv->upload_button, npics > 0);
+
+      /* Hide progress bar, just in case */
+      gtk_widget_hide (priv->progress_dialog);
+      break;
+
+    default:
+      g_warning ("Invalid state reached!!");
+    }
+}
+
 
 /* Event handlers */
 
@@ -1001,6 +1051,10 @@ frogr_main_view_init (FrogrMainView *self)
                     G_CALLBACK(_progress_dialog_delete_event),
                     self);
 
+  g_signal_connect (G_OBJECT (priv->controller), "state-changed",
+                    G_CALLBACK (_controller_state_changed), self);
+
+
   gtk_builder_connect_signals (builder, self);
   g_object_unref (G_OBJECT (builder));
 
@@ -1008,7 +1062,7 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_widget_show_all (GTK_WIDGET(priv->window));
 
   /* Update UI */
-  frogr_main_view_update_ui (FROGR_MAIN_VIEW (self));
+  _update_ui (FROGR_MAIN_VIEW (self));
 }
 
 
@@ -1078,37 +1132,4 @@ frogr_main_view_get_model (FrogrMainView *self)
 
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   return priv->model;
-}
-
-void
-frogr_main_view_update_ui (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gboolean pictures_loaded;
-  guint npics;
-
-  /* Set sensitiveness */
-  switch (frogr_controller_get_state (priv->controller))
-    {
-    case FROGR_STATE_BUSY:
-      gtk_widget_set_sensitive (priv->add_button, FALSE);
-      gtk_widget_set_sensitive (priv->remove_button, FALSE);
-      gtk_widget_set_sensitive (priv->upload_button, FALSE);
-      break;
-
-    case FROGR_STATE_IDLE:
-      npics = frogr_main_view_model_n_pictures (priv->model);
-      pictures_loaded = frogr_main_view_model_n_pictures (priv->model);
-
-      gtk_widget_set_sensitive (priv->add_button, TRUE);
-      gtk_widget_set_sensitive (priv->remove_button, pictures_loaded);
-      gtk_widget_set_sensitive (priv->upload_button, npics > 0);
-
-      /* Hide progress bar, just in case */
-      gtk_widget_hide (priv->progress_dialog);
-      break;
-
-    default:
-      g_warning ("Invalid state reached!!");
-    }
 }
