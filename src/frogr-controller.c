@@ -74,7 +74,9 @@ struct _FrogrControllerPrivate
 enum {
   STATE_CHANGED,
   PICTURE_LOADED,
+  PICTURES_LOADED,
   PICTURE_UPLOADED,
+  PICTURES_UPLOADED,
   N_SIGNALS
 };
 
@@ -322,6 +324,7 @@ _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader)
   g_object_unref (fploader);
 
   _set_state (self, FROGR_STATE_IDLE);
+  g_signal_emit (self, signals[PICTURES_LOADED], 0);
 }
 
 static void
@@ -351,6 +354,8 @@ _on_pictures_uploaded (FrogrController *self,
   g_object_unref (fpuploader);
 
   _set_state (self, FROGR_STATE_IDLE);
+
+  g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
 }
 
 static void
@@ -594,6 +599,14 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   g_cclosure_marshal_VOID__POINTER,
                   G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
 
+  signals[PICTURES_LOADED] =
+    g_signal_new ("pictures-loaded",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
+
   signals[PICTURE_UPLOADED] =
     g_signal_new ("picture-uploaded",
                   G_OBJECT_CLASS_TYPE (klass),
@@ -601,6 +614,14 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__POINTER,
                   G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
+
+  signals[PICTURES_UPLOADED] =
+    g_signal_new ("pictures-uploaded",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
 
   g_type_class_add_private (obj_class, sizeof (FrogrControllerPrivate));
 }
