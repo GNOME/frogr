@@ -60,8 +60,14 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *icon_view;
   GtkWidget *status_bar;
   GtkWidget *add_button;
+  GtkWidget *add_menu_item;
   GtkWidget *remove_button;
+  GtkWidget *remove_menu_item;
   GtkWidget *upload_button;
+  GtkWidget *upload_menu_item;
+  GtkWidget *edit_details_menu_item;
+  GtkWidget *add_tags_menu_item;
+  GtkWidget *add_to_album_menu_item;
   GtkWidget *ctxt_menu;
 
   GtkWidget *progress_dialog;
@@ -111,8 +117,11 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
 void _on_authorize_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_add_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_remove_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_upload_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_edit_details_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_add_tags_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_add_to_album_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_upload_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
 
 static void _on_main_view_map_event (GtkWidget *widget,
@@ -124,6 +133,7 @@ static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             gpointer self);
 
 static GSList *_get_selected_pictures (FrogrMainView *self);
+static gint _n_selected_pictures (FrogrMainView *self);
 static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _remove_pictures_from_ui (FrogrMainView *self, GSList *pictures);
 
@@ -187,18 +197,14 @@ _populate_menu_bar (FrogrMainView *self)
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_add_menu_item_activate),
                     self);
+  priv->add_menu_item = menu_item;
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove pictures"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_remove_menu_item_activate),
                     self);
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Upload"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_upload_menu_item_activate),
-                    self);
+  priv->remove_menu_item = menu_item;
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
@@ -207,6 +213,42 @@ _populate_menu_bar (FrogrMainView *self)
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_quit_menu_item_activate),
                     self);
+  /* Actions menu */
+  menubar_item = gtk_menu_item_new_with_mnemonic (_("A_ctions"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
+
+  menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Edit _details..."));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_edit_details_menu_item_activate),
+                    self);
+  priv->edit_details_menu_item = menu_item;
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Add _tags..."));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_add_tags_menu_item_activate),
+                    self);
+  priv->add_tags_menu_item = menu_item;
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to al_bum..."));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_add_to_album_menu_item_activate),
+                    self);
+  priv->add_to_album_menu_item = menu_item;
+
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Upload all"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_upload_menu_item_activate),
+                    self);
+  priv->upload_menu_item = menu_item;
 
   /* Help menu */
   menubar_item = gtk_menu_item_new_with_mnemonic (_("_Help"));
@@ -217,7 +259,6 @@ _populate_menu_bar (FrogrMainView *self)
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_About"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_about_menu_item_activate),
                     self);
@@ -495,17 +536,56 @@ _on_remove_menu_item_activate (GtkWidget *widget, gpointer self)
 }
 
 void
-_on_upload_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _upload_pictures (mainview);
-}
-
-void
 _on_quit_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   frogr_controller_quit_app (priv->controller);
+}
+
+void
+_on_edit_details_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+
+  if (_n_selected_pictures (self) > 0)
+    _edit_selected_pictures (mainview);
+  else
+    frogr_util_show_error_dialog (priv->window,
+                                  _("You need to select some pictures first"));
+}
+
+void
+_on_add_tags_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+
+  if (_n_selected_pictures (self) > 0)
+    _add_tags_to_pictures (mainview);
+  else
+    frogr_util_show_error_dialog (priv->window,
+                                  _("You need to select some pictures first"));
+}
+
+void
+_on_add_to_album_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+
+  if (_n_selected_pictures (self) > 0)
+    _add_pictures_to_album (mainview);
+  else
+    frogr_util_show_error_dialog (priv->window,
+                                  _("You need to select some pictures first"));
+}
+
+void
+_on_upload_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  _upload_pictures (mainview);
 }
 
 void
@@ -574,6 +654,18 @@ _get_selected_pictures (FrogrMainView *self)
     }
 
   return pictures;
+}
+
+static gint
+_n_selected_pictures (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  GList *selected_pictures;
+
+  selected_pictures =
+    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
+
+  return g_list_length (selected_pictures);
 }
 
 static void
@@ -827,17 +919,28 @@ _update_ui (FrogrMainView *self)
     {
     case FROGR_STATE_BUSY:
       gtk_widget_set_sensitive (priv->add_button, FALSE);
+      gtk_widget_set_sensitive (priv->add_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->remove_button, FALSE);
+      gtk_widget_set_sensitive (priv->remove_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->upload_button, FALSE);
+      gtk_widget_set_sensitive (priv->upload_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->edit_details_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->add_tags_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->add_to_album_menu_item, FALSE);
       break;
 
     case FROGR_STATE_IDLE:
       npics = frogr_main_view_model_n_pictures (priv->model);
-      pictures_loaded = frogr_main_view_model_n_pictures (priv->model);
 
       gtk_widget_set_sensitive (priv->add_button, TRUE);
-      gtk_widget_set_sensitive (priv->remove_button, pictures_loaded);
+      gtk_widget_set_sensitive (priv->add_menu_item, TRUE);
+      gtk_widget_set_sensitive (priv->remove_button, npics > 0);
+      gtk_widget_set_sensitive (priv->remove_menu_item, npics > 0);
       gtk_widget_set_sensitive (priv->upload_button, npics > 0);
+      gtk_widget_set_sensitive (priv->upload_menu_item, npics > 0);
+      gtk_widget_set_sensitive (priv->edit_details_menu_item, npics > 0);
+      gtk_widget_set_sensitive (priv->add_tags_menu_item, npics > 0);
+      gtk_widget_set_sensitive (priv->add_to_album_menu_item, npics > 0);
 
       /* Hide progress bar, just in case */
       gtk_widget_hide (priv->progress_dialog);
