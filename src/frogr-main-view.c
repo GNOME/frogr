@@ -940,7 +940,6 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_tags_menu_item, npics > 0);
       gtk_widget_set_sensitive (priv->add_to_album_menu_item, npics > 0);
 
-      /* Hide progress bar, just in case */
       gtk_widget_hide (priv->progress_dialog);
       break;
 

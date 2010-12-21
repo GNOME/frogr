@@ -56,6 +56,7 @@ typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
 struct _FrogrControllerPrivate
 {
   FrogrControllerState state;
+  FrogrControllerState internal_state;
 
   FrogrMainView *mainview;
   FrogrConfig *config;
@@ -87,14 +88,18 @@ static FrogrController *_instance = NULL;
 typedef struct {
   FrogrController *controller;
   FrogrPicture *picture;
+  GSList *albums;
   FrogrPictureUploadedCallback callback;
   GObject *object;
+  GError *error;
 } upload_picture_st;
 
 
 /* Prototypes */
 
 static void _set_state (FrogrController *self, FrogrControllerState state);
+
+static void _set_internal_state (FrogrController *self, FrogrControllerState state);
 
 static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
 
@@ -105,6 +110,8 @@ static void _upload_picture (FrogrController *self, FrogrPicture *picture,
                              GObject *object);
 
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static void _on_picture_loaded (FrogrController *self, FrogrPicture *picture);
 
@@ -134,9 +141,19 @@ _set_state (FrogrController *self, FrogrControllerState state)
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   priv->state = state;
+  _set_internal_state (self, state);
+
   g_signal_emit (self, signals[STATE_CHANGED], 0, state);
 }
 
+
+void
+_set_internal_state (FrogrController *self, FrogrControllerState state)
+{
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  priv->internal_state = state;
+}
 
 static void
 _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
@@ -236,14 +253,17 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   priv->cancellable = g_cancellable_new ();
 
   /* Create structure to pass to the thread */
-  up_st = g_slice_new (upload_picture_st);
+  up_st = g_slice_new0 (upload_picture_st);
   up_st->controller = self;
   up_st->picture = picture;
+  up_st->albums = NULL;
   up_st->callback = picture_uploaded_cb;
   up_st->object = object;
+  up_st->error = NULL;
 
   g_object_ref (picture);
 
+  _set_internal_state (self, FROGR_STATE_BUSY);
   fsp_photos_mgr_upload_async (priv->photos_mgr,
                                frogr_picture_get_filepath (picture),
                                frogr_picture_get_title (picture),
@@ -258,10 +278,9 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
                                priv->cancellable, _upload_picture_cb, up_st);
 }
 
-static void
-_upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
+static gboolean
+_complete_picture_upload_on_idle (gpointer data)
 {
-  FspPhotosMgr *photos_mgr = NULL;
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
@@ -269,23 +288,50 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrPictureUploadedCallback callback = NULL;
   gpointer source_object = NULL;
   GError *error = NULL;
-  gchar *photo_id = NULL;
 
-  photos_mgr = FSP_PHOTOS_MGR (object);
   up_st = (upload_picture_st*) data;
-
   controller = up_st->controller;
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  /* Keep the source while busy */
+  if (priv->internal_state == FROGR_STATE_BUSY)
+    return TRUE;
+
   picture = up_st->picture;
   callback = up_st->callback;
   source_object = up_st->object;
+  error = up_st->error;
   g_slice_free (upload_picture_st, up_st);
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   if (priv->cancellable)
     {
       g_object_unref (priv->cancellable);
       priv->cancellable = NULL;
     }
+
+  /* Execute callback */
+  if (callback)
+    callback (source_object, picture, error);
+
+  g_object_unref (picture);
+
+  return FALSE;
+}
+
+static void
+_upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspPhotosMgr *photos_mgr = NULL;
+  upload_picture_st *up_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrPicture *picture = NULL;
+  GError *error = NULL;
+  gchar *photo_id = NULL;
+
+  photos_mgr = FSP_PHOTOS_MGR (object);
+  up_st = (upload_picture_st*) data;
+  controller = up_st->controller;
+  picture = up_st->picture;
 
   photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
   if (photo_id)
@@ -294,11 +340,73 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       g_free (photo_id);
     }
 
-  /* Execute callback */
-  if (callback)
-    callback (source_object, picture, error);
+  _set_internal_state (controller, FROGR_STATE_IDLE);
 
-  g_object_unref (picture);
+  /* Check whether it's needed or not to add the picture to the album */
+  if (!error)
+    {
+      GSList *albums = NULL;
+      albums = frogr_picture_get_albums (picture);
+
+      if (g_slist_length (albums) > 0)
+        {
+          FrogrAlbum *album = NULL;
+
+          /* Add picture to albums as requested */
+          _set_internal_state (controller, FROGR_STATE_BUSY);
+
+          album = FROGR_ALBUM (albums->data);
+          up_st->albums = g_slist_next (albums);
+          fsp_photos_mgr_add_to_photoset_async (photos_mgr,
+                                                frogr_picture_get_id (picture),
+                                                frogr_album_get_id (album),
+                                                NULL, _add_to_photoset_cb,
+                                                up_st);
+        }
+    }
+
+  /* Complete the upload process when possible */
+  up_st->error = error;
+  g_idle_add (_complete_picture_upload_on_idle, up_st);
+}
+
+static void
+_add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspPhotosMgr *photos_mgr = NULL;
+  upload_picture_st *up_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrPicture *picture = NULL;
+  GSList *albums = NULL;
+  GError *error = NULL;
+
+  photos_mgr = FSP_PHOTOS_MGR (object);
+  up_st = (upload_picture_st*) data;
+  controller = up_st->controller;
+  picture = up_st->picture;
+  albums = up_st->albums;
+
+  fsp_photos_mgr_add_to_photoset_finish (photos_mgr, res, &error);
+  up_st->error = error;
+
+  if (!error)
+    {
+      if (g_slist_length (albums) > 0)
+        {
+          FrogrAlbum *album = NULL;
+
+          album = FROGR_ALBUM (albums->data);
+          up_st->albums = g_slist_next (albums);
+          fsp_photos_mgr_add_to_photoset_async (photos_mgr,
+                                                frogr_picture_get_id (picture),
+                                                frogr_album_get_id (album),
+                                                NULL, _add_to_photoset_cb,
+                                                up_st);
+          return;
+        }
+    }
+
+  _set_internal_state (controller, FROGR_STATE_IDLE);
 }
 
 static void
@@ -354,7 +462,6 @@ _on_pictures_uploaded (FrogrController *self,
   g_object_unref (fpuploader);
 
   _set_state (self, FROGR_STATE_IDLE);
-
   g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
 }
 
@@ -505,21 +612,20 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
 
   controller = controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  /* Keep the source while busy */
+  if (priv->state == FROGR_STATE_BUSY)
+    return TRUE;
+
   mainview_model = frogr_main_view_get_model (priv->mainview);
   albums = frogr_main_view_model_get_albums (mainview_model);
 
-  if (frogr_controller_get_state (controller) != FROGR_STATE_BUSY)
-    {
-      /* Albums already pre-fetched: show the dialog */
-      GtkWindow *window = NULL;
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_add_to_album_dialog_show (window, pictures, albums);
+  /* Albums already pre-fetched: show the dialog */
+  GtkWindow *window = NULL;
+  window = frogr_main_view_get_window (priv->mainview);
+  frogr_add_to_album_dialog_show (window, pictures, albums);
 
-      return FALSE;
-    }
-
-  /* Keep the source in the main loop */
-  return TRUE;
+  return FALSE;
 }
 
 static GObject *
