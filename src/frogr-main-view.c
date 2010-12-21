@@ -546,39 +546,21 @@ void
 _on_edit_details_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-
-  if (_n_selected_pictures (self) > 0)
-    _edit_selected_pictures (mainview);
-  else
-    frogr_util_show_error_dialog (priv->window,
-                                  _("You need to select some pictures first"));
+  _edit_selected_pictures (mainview);
 }
 
 void
 _on_add_tags_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-
-  if (_n_selected_pictures (self) > 0)
-    _add_tags_to_pictures (mainview);
-  else
-    frogr_util_show_error_dialog (priv->window,
-                                  _("You need to select some pictures first"));
+  _add_tags_to_pictures (mainview);
 }
 
 void
 _on_add_to_album_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-
-  if (_n_selected_pictures (self) > 0)
-    _add_pictures_to_album (mainview);
-  else
-    frogr_util_show_error_dialog (priv->window,
-                                  _("You need to select some pictures first"));
+  _add_pictures_to_album (mainview);
 }
 
 void
@@ -789,42 +771,51 @@ static void
 _add_tags_to_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GSList *pictures;
 
-  /* Get selected pictures */
-  pictures = _get_selected_pictures (self);
+  if (_n_selected_pictures (self) == 0)
+    {
+      frogr_util_show_error_dialog (priv->window,
+                                    _("You need to select some pictures first"));
+      return;
+    }
 
   /* Call the controller to add tags to them */
-  if (pictures != NULL)
-    frogr_controller_show_add_tags_dialog (priv->controller, pictures);
+ frogr_controller_show_add_tags_dialog (priv->controller,
+                                        _get_selected_pictures (self));
 }
 
 static void
 _add_pictures_to_album (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GSList *pictures;
 
-  /* Get selected pictures and available albums */
-  pictures = _get_selected_pictures (self);
+  if (_n_selected_pictures (self) == 0)
+    {
+      frogr_util_show_error_dialog (priv->window,
+                                    _("You need to select some pictures first"));
+      return;
+    }
 
-  /* Call the controller to add tags to them */
-  if (pictures != NULL)
-    frogr_controller_show_add_to_album_dialog (priv->controller, pictures);
+  /* Call the controller to add the pictures to albums */
+  frogr_controller_show_add_to_album_dialog (priv->controller,
+                                               _get_selected_pictures (self));
 }
 
 static void
 _edit_selected_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GSList *pictures = NULL;
 
-  /* Get the selected pictures */
-  pictures = _get_selected_pictures (self);
+  if (_n_selected_pictures (self) == 0)
+    {
+      frogr_util_show_error_dialog (priv->window,
+                                    _("You need to select some pictures first"));
+      return;
+    }
 
   /* Call the controller to edit them */
-  if (pictures != NULL)
-    frogr_controller_show_details_dialog (priv->controller, pictures);
+  frogr_controller_show_details_dialog (priv->controller,
+                                        _get_selected_pictures (self));
 }
 
 
@@ -834,6 +825,13 @@ _remove_selected_pictures (FrogrMainView *self)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GSList *selected_pictures;
   GSList *item;
+
+  if (_n_selected_pictures (self) == 0)
+    {
+      frogr_util_show_error_dialog (priv->window,
+                                    _("You need to select some pictures first"));
+      return;
+    }
 
   /* Remove from model */
   selected_pictures = _get_selected_pictures (self);
