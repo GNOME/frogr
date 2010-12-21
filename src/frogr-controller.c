@@ -53,6 +53,8 @@ G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
 typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
 struct _FrogrControllerPrivate
 {
+  FrogrControllerState state;
+
   FrogrMainView *mainview;
   FrogrConfig *config;
   FrogrAccount *account;
@@ -272,7 +274,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* Update main view's model */
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_albums (mainview_model, albums_list);
-  frogr_main_view_set_state (priv->mainview, FROGR_STATE_IDLE);
+  frogr_controller_set_state (controller, FROGR_STATE_IDLE);
 }
 
 static gboolean
@@ -288,7 +290,7 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
   mainview_model = frogr_main_view_get_model (priv->mainview);
   albums = frogr_main_view_model_get_albums (mainview_model);
 
-  if (frogr_main_view_get_state (priv->mainview) != FROGR_STATE_FETCHING)
+  if (frogr_controller_get_state (controller) != FROGR_STATE_BUSY)
     {
       /* Albums already pre-fetched: show the dialog */
       GtkWindow *window = NULL;
@@ -373,6 +375,7 @@ frogr_controller_init (FrogrController *self)
   const gchar *token;
 
   /* Default variables */
+  priv->state = FROGR_STATE_IDLE;
   priv->mainview = NULL;
   priv->config = frogr_config_get_instance ();
   priv->account = frogr_config_get_account (priv->config);
@@ -458,6 +461,27 @@ frogr_controller_quit_app (FrogrController *self)
 
   /* Nothing happened */
   return FALSE;
+}
+
+void
+frogr_controller_set_state (FrogrController *self, FrogrControllerState state)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->state = state;
+
+  /* Always update UI after a state change */
+  frogr_main_view_update_ui (priv->mainview);
+}
+
+FrogrControllerState
+frogr_controller_get_state (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  return priv->state;
 }
 
 void
@@ -620,7 +644,7 @@ frogr_controller_fetch_albums (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->cancellable = g_cancellable_new ();
 
-  frogr_main_view_set_state (priv->mainview, FROGR_STATE_FETCHING);
+  frogr_controller_set_state (self, FROGR_STATE_BUSY);
 
   fsp_photos_mgr_get_photosets_async (priv->photos_mgr,
                                       priv->cancellable,

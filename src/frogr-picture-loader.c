@@ -180,11 +180,14 @@ _load_next_picture (FrogrPictureLoader *self)
     }
   else
     {
+      FrogrController *controller = NULL;
+
       /* Update status and progress */
       _update_status_and_progress (self);
 
       /* Set proper state */
-      frogr_main_view_set_state (priv->mainview, FROGR_STATE_IDLE);
+      controller = frogr_controller_get_instance ();
+      frogr_controller_set_state (controller, FROGR_STATE_IDLE);
 
       /* Execute final callback */
       if (priv->pictures_loaded_cb)
@@ -376,12 +379,15 @@ frogr_picture_loader_load (FrogrPictureLoader *self)
   FrogrPictureLoaderPrivate *priv =
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
+  FrogrController *controller = NULL;
+
   /* Check first whether there's something to load */
   if (priv->filepaths == NULL)
     return;
 
   /* Set proper state */
-  frogr_main_view_set_state (priv->mainview, FROGR_STATE_LOADING);
+  controller = frogr_controller_get_instance ();
+  frogr_controller_set_state (controller, FROGR_STATE_BUSY);
 
   /* Update status and progress */
   _update_status_and_progress (self);

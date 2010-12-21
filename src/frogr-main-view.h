@@ -48,21 +48,11 @@ struct _FrogrMainView
   GObject parent;
 };
 
-typedef enum {
-  FROGR_STATE_IDLE,     /* self-explained */
-  FROGR_STATE_LOADING,  /* loading pictures from disk */
-  FROGR_STATE_UPLOADING,/* uploading pictures to flickr */
-  FROGR_STATE_FETCHING  /* fetching information from flickr */
-} FrogrMainViewState;
-
 GType frogr_main_view_get_type (void) G_GNUC_CONST;
 
 FrogrMainView *frogr_main_view_new (void);
 
 GtkWindow *frogr_main_view_get_window (FrogrMainView *self);
-
-void frogr_main_view_set_state (FrogrMainView *self,
-                                FrogrMainViewState state);
 
 void frogr_main_view_set_status_text (FrogrMainView *self,
                                       const gchar *text);
@@ -72,6 +62,8 @@ void frogr_main_view_set_progress (FrogrMainView *self,
                                    const gchar *text);
 
 FrogrMainViewModel *frogr_main_view_get_model (FrogrMainView *self);
+
+void frogr_main_view_update_ui (FrogrMainView *self);
 
 G_END_DECLS
 

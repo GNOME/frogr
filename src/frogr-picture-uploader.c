@@ -114,7 +114,7 @@ _upload_next_picture (FrogrPictureUploader *self)
       _update_status_and_progress (self);
 
       /* Set proper state */
-      frogr_main_view_set_state (priv->mainview, FROGR_STATE_IDLE);
+      frogr_controller_set_state (priv->controller, FROGR_STATE_IDLE);
 
       /* Execute final callback */
       if (priv->pictures_uploaded_cb)
@@ -250,7 +250,7 @@ frogr_picture_uploader_upload (FrogrPictureUploader *self)
     return;
 
   /* Set proper state */
-  frogr_main_view_set_state (priv->mainview, FROGR_STATE_UPLOADING);
+  frogr_controller_set_state (priv->controller, FROGR_STATE_BUSY);
 
   /* Update status and progress bars */
   _update_status_and_progress (self);

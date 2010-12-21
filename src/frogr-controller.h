@@ -52,6 +52,11 @@ struct _FrogrController
   GObject parent;
 };
 
+typedef enum {
+  FROGR_STATE_IDLE,
+  FROGR_STATE_BUSY
+} FrogrControllerState;
+
 /* Callback to be executed after every single upload */
 typedef void (*FCPictureUploadedCallback) (FrogrPictureUploader *self,
                                            FrogrPicture *picture,
@@ -70,6 +75,9 @@ FrogrMainView *frogr_controller_get_main_view (FrogrController *self);
 
 gboolean frogr_controller_run_app (FrogrController *self);
 gboolean frogr_controller_quit_app (FrogrController *self);
+
+void frogr_controller_set_state (FrogrController *self, FrogrControllerState state);
+FrogrControllerState frogr_controller_get_state (FrogrController *self);
 
 void frogr_controller_show_about_dialog (FrogrController *self);
 void frogr_controller_show_auth_dialog (FrogrController *self);
