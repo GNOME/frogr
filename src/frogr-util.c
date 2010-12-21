@@ -61,6 +61,7 @@ frogr_util_show_message_dialog (GtkWindow *parent, const gchar *message, GtkMess
                             type,
                             GTK_BUTTONS_CLOSE,
                             message);
+  gtk_window_set_title (GTK_WINDOW (dialog), PACKAGE);
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (gtk_widget_destroy), dialog);
