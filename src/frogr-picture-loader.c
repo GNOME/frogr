@@ -57,7 +57,7 @@ struct _FrogrPictureLoaderPrivate
 
   FrogrPictureLoadedCallback picture_loaded_cb;
   FrogrPicturesLoadedCallback pictures_loaded_cb;
-  gpointer object;
+  GObject *object;
 };
 
 static const gchar *valid_mimetypes[] = {
@@ -187,7 +187,7 @@ _load_next_picture (FrogrPictureLoader *self)
 
       /* Execute final callback */
       if (priv->pictures_loaded_cb)
-        priv->pictures_loaded_cb (G_OBJECT (priv->controller), self);
+        priv->pictures_loaded_cb (priv->object, self);
     }
 }
 

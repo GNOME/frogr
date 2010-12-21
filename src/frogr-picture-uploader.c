@@ -51,7 +51,7 @@ struct _FrogrPictureUploaderPrivate
   FrogrPictureUploadFunc picture_upload_func;
   FrogrPictureUploadedCallback picture_uploaded_cb;
   FrogrPicturesUploadedCallback pictures_uploaded_cb;
-  gpointer object;
+  GObject *object;
 };
 
 /* Prototypes */
@@ -118,7 +118,7 @@ _upload_next_picture (FrogrPictureUploader *self)
 
       /* Execute final callback */
       if (priv->pictures_uploaded_cb)
-        priv->pictures_uploaded_cb (G_OBJECT (priv->controller), self, priv->error);
+        priv->pictures_uploaded_cb (priv->object, self, priv->error);
     }
 }
 
