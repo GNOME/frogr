@@ -237,6 +237,8 @@ frogr_main_view_model_set_albums (FrogrMainViewModel *self,
   FrogrMainViewModelPrivate *priv =
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
+  frogr_main_view_model_remove_all_albums (self);
+
   priv->albums_list = albums_list;
   priv->n_albums = g_slist_length (albums_list);
 }

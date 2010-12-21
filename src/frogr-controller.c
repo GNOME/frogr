@@ -90,6 +90,8 @@ static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer dat
 
 static void _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data);
 
+static void _albums_list_fetched_cb (FrogrController *self, GSList *albums, GError *error);
+
 /* Private functions */
 
 static void
@@ -150,6 +152,11 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           success = TRUE;
 
           g_debug ("Authorization successfully completed!");
+
+          /* Pre-fetch the list of albums right after this */
+          frogr_controller_fetch_albums (controller,
+                                         (FCAlbumsFetchedCallback) _albums_list_fetched_cb,
+                                         G_OBJECT (controller));
         }
     }
 
@@ -272,6 +279,24 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* Execute callback */
   if (callback)
     callback (source_object, albums_list, error);
+}
+
+static void
+_albums_list_fetched_cb (FrogrController *self, GSList *albums, GError *error)
+{
+  FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+
+  frogr_main_view_model_set_albums (mainview_model, albums);
+
+  if (error != NULL)
+    {
+      g_debug ("Error fetching list of albums: %s", error->message);
+      g_error_free (error);
+    }
 }
 
 static GObject *

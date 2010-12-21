@@ -70,6 +70,7 @@ void frogr_main_view_set_progress (FrogrMainView *self,
                                    double fraction,
                                    const gchar *text);
 
+FrogrMainViewModel *frogr_main_view_get_model (FrogrMainView *self);
 
 G_END_DECLS
 
