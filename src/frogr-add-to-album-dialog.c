@@ -71,8 +71,13 @@ static GtkWidget *_create_tree_view (FrogrAddToAlbumDialog *self);
 
 static void _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self);
 
-static void _album_toggled_cb (GtkCellRendererToggle *celltoggle, gchar *path_string,
+static void _album_toggled_cb (GtkCellRendererToggle *celltoggle,
+                               gchar *path_string,
                                GtkTreeView *treeview);
+
+static GSList *_get_selected_albums (FrogrAddToAlbumDialog *self);
+
+static void _update_pictures (FrogrAddToAlbumDialog *self);
 
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
@@ -155,7 +160,8 @@ _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self)
 }
 
 static void
-_album_toggled_cb (GtkCellRendererToggle *celltoggle, gchar *path_string,
+_album_toggled_cb (GtkCellRendererToggle *celltoggle,
+                   gchar *path_string,
                    GtkTreeView *treeview)
 {
   GtkTreeModel *model = NULL;
@@ -167,43 +173,82 @@ _album_toggled_cb (GtkCellRendererToggle *celltoggle, gchar *path_string,
   g_return_if_fail (GTK_IS_TREE_VIEW (treeview));
 
   model = gtk_tree_view_get_model (treeview);
-  if (model == NULL)
-    return;
-
   path = gtk_tree_path_new_from_string (path_string);
-  if (!gtk_tree_model_get_iter (model,
-                                &iter, path))
-    {
-      g_warning ("%s: bad path?", G_STRLOC);
-      return;
-    }
+
+  gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_path_free (path);
 
-  gtk_tree_model_get (GTK_TREE_MODEL (model),
-                      &iter,
-                      CHECKBOX_COL,
-                      &active,
-                      -1);
+  gtk_tree_model_get (GTK_TREE_MODEL (model), &iter,
+                      CHECKBOX_COL, &active, -1);
 
-  gtk_list_store_set (GTK_LIST_STORE (model),
-                      &iter,
-                      CHECKBOX_COL,
-                      !active,
-                      -1);
-
-  g_print ("toggled!");
+  gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+                      CHECKBOX_COL, !active, -1);
 }
 
-static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
+static GSList *
+_get_selected_albums (FrogrAddToAlbumDialog *self)
+{
+  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  GtkTreeIter iter;
+  gboolean selected = FALSE;
+  FrogrAlbum *album = NULL;
+  GSList *selected_albums = NULL;
+
+  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+
+  /* No albums, nothing to do */
+  if (g_slist_length (priv->albums) == 0)
+    return NULL;
+
+  /* Iterate over all the items */
+  gtk_tree_model_get_iter_first (priv->treemodel, &iter);
+  do
+    {
+      gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
+                          CHECKBOX_COL, &selected, -1);
+      if (!selected)
+        continue;
+
+      gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
+                          ALBUM_COL, &album, -1);
+
+      if (FROGR_IS_ALBUM (album))
+          selected_albums = g_slist_append (selected_albums, album);
+    }
+  while (gtk_tree_model_iter_next (priv->treemodel, &iter));
+
+  return selected_albums;
+}
+
+static void
+_update_pictures (FrogrAddToAlbumDialog *self)
+{
+  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+  GSList *selected_albums = NULL;
+  GSList *item = NULL;
+
+  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+
+  selected_albums = _get_selected_albums (self);
+  for (item = priv->pictures; item; item = g_slist_next (item))
+    {
+      picture = FROGR_PICTURE (item->data);
+      frogr_picture_set_albums (picture, selected_albums);
+    }
+
+  g_slist_free (selected_albums);
+}
+
+static void
+_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   if (response == GTK_RESPONSE_OK)
     {
       FrogrAddToAlbumDialog *self = NULL;
-      FrogrAddToAlbumDialogPrivate *priv = NULL;
 
       self = FROGR_ADD_TO_ALBUM_DIALOG (dialog);
-      priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
-
+      _update_pictures (self);
     }
 
   /* Destroy the dialog */
