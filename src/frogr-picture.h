@@ -23,6 +23,8 @@
 #ifndef _FROGR_PICTURE_H
 #define _FROGR_PICTURE_H
 
+#include "frogr-album.h"
+
 #include <glib.h>
 #include <glib-object.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -95,6 +97,9 @@ void frogr_picture_set_family (FrogrPicture *self,
 GdkPixbuf *frogr_picture_get_pixbuf (FrogrPicture *self);
 void frogr_picture_set_pixbuf (FrogrPicture *self,
                                GdkPixbuf *pixbuf);
+
+GSList *frogr_picture_get_albums (FrogrPicture *self);
+void frogr_picture_set_albums (FrogrPicture *self, GSList *albums);
 
 G_END_DECLS
 

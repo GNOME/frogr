@@ -42,6 +42,8 @@ struct _FrogrPicturePrivate
   gchar *tags_string;
   GSList *tags_list;
 
+  GSList *albums;
+
   gboolean is_public;
   gboolean is_friend;
   gboolean is_family;
@@ -261,6 +263,13 @@ _frogr_picture_dispose (GObject* object)
       priv->pixbuf = NULL;
     }
 
+  if (priv->albums)
+    {
+      g_slist_foreach (priv->albums, (GFunc) g_object_unref, NULL);
+      g_slist_free (priv->albums);
+      priv->albums = NULL;
+    }
+
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class)->dispose(object);
 }
@@ -384,7 +393,9 @@ frogr_picture_init (FrogrPicture *self)
   priv->title = NULL;
   priv->description = NULL;
   priv->tags_string = NULL;
+
   priv->tags_list = NULL;
+  priv->albums = NULL;
 
   priv->is_public = FALSE;
   priv->is_friend = FALSE;
@@ -662,4 +673,41 @@ frogr_picture_set_pixbuf (FrogrPicture *self,
       priv->pixbuf = pixbuf;
       g_object_ref (priv->pixbuf);
     }
+}
+
+GSList *
+frogr_picture_get_albums (FrogrPicture *self)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
+
+  FrogrPicturePrivate *priv = NULL;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  return priv->albums;
+}
+
+void
+frogr_picture_set_albums (FrogrPicture *self, GSList *albums)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  GSList *new_list = NULL;
+  GSList *item = NULL;
+  FrogrAlbum *album = NULL;
+  FrogrPicturePrivate *priv = NULL;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+
+  /* First remove all the previous albums list */
+  g_slist_foreach (priv->albums, (GFunc) g_object_unref, NULL);
+  g_slist_free (priv->albums);
+  priv->albums = NULL;
+
+  for (item = albums; item; item = g_slist_next (item))
+    {
+      album = FROGR_ALBUM (item->data);
+      new_list = g_slist_append (new_list, g_object_ref (album));
+    }
+
+  priv->albums = new_list;
 }
