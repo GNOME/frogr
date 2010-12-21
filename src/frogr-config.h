@@ -24,9 +24,10 @@
 #ifndef _FROGR_CONFIG_H
 #define _FROGR_CONFIG_H
 
+#include "frogr-account.h"
+
 #include <glib.h>
 #include <glib-object.h>
-#include "frogr-account.h"
 
 G_BEGIN_DECLS
 

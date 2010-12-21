@@ -20,10 +20,12 @@
  *
  */
 
+#include "frogr-add-tags-dialog.h"
+
+#include "frogr-picture.h"
+
 #include <config.h>
 #include <glib/gi18n.h>
-#include "frogr-picture.h"
-#include "frogr-add-tags-dialog.h"
 
 #define FROGR_ADD_TAGS_DIALOG_GET_PRIVATE(object)               \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \

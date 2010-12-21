@@ -20,11 +20,11 @@
  *
  */
 
+#include "frogr-controller.h"
+
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-
-#include "frogr-controller.h"
 
 int
 main (int argc, char **argv)

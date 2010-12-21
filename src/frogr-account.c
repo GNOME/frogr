@@ -21,9 +21,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "frogr-account.h"
+
 #include <libxml/parser.h>
 #include <errno.h>
-#include "frogr-account.h"
 
 #define FROGR_ACCOUNT_GET_PRIVATE(object)               \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \

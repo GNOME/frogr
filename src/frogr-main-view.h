@@ -23,8 +23,9 @@
 #ifndef FROGR_MAIN_VIEW_H
 #define FROGR_MAIN_VIEW_H
 
-#include <gtk/gtk.h>
 #include "frogr-main-view-model.h"
+
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

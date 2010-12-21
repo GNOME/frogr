@@ -30,6 +30,8 @@
 #include "frogr-config.h"
 #include "frogr-details-dialog.h"
 #include "frogr-main-view.h"
+#include "frogr-picture-loader.h"
+#include "frogr-picture-uploader.h"
 #include "frogr-util.h"
 
 #include <config.h>

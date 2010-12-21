@@ -19,11 +19,14 @@
  * Boston, MA 02111-1307, USA.
  *
  */
-#include <glib/gi18n.h>
+
+#include "frogr-picture-uploader.h"
+
 #include "frogr-controller.h"
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
-#include "frogr-picture-uploader.h"
+
+#include <glib/gi18n.h>
 
 #define PICTURE_WIDTH 100
 #define PICTURE_HEIGHT 100

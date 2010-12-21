@@ -20,13 +20,15 @@
  *
  */
 
-#include <config.h>
-#include <glib/gi18n.h>
-#include <gio/gio.h>
+#include "frogr-picture-loader.h"
+
 #include "frogr-controller.h"
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
-#include "frogr-picture-loader.h"
+
+#include <config.h>
+#include <glib/gi18n.h>
+#include <gio/gio.h>
 
 #ifdef MAEMO
 #   define PICTURE_WIDTH 180

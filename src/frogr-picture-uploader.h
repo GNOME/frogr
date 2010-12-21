@@ -23,6 +23,8 @@
 #ifndef _FROGR_PICTURE_UPLOADER_H
 #define _FROGR_PICTURE_UPLOADER_H
 
+#include "frogr-picture.h"
+
 #include <glib.h>
 #include <glib-object.h>
 

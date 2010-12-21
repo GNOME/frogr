@@ -25,8 +25,6 @@
 
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
-#include "frogr-picture-loader.h"
-#include "frogr-picture-uploader.h"
 
 #include <glib.h>
 #include <glib-object.h>
