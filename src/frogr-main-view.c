@@ -37,8 +37,8 @@
 
 #define MAIN_VIEW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
 
-#define MINIMUM_WINDOW_WIDTH 540
-#define MINIMUM_WINDOW_HEIGHT 420
+#define MINIMUM_WINDOW_WIDTH 800
+#define MINIMUM_WINDOW_HEIGHT 600
 
 #define ITEM_WIDTH 120
 
@@ -132,6 +132,7 @@ static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _remove_pictures_from_ui (FrogrMainView *self, GSList *pictures);
 static void _albums_list_fetched_cb (FrogrMainView *self,
                                      GSList *albums,
+                                     gpointer data,
                                      GError *error);
 static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
                                               gint response,
@@ -542,7 +543,7 @@ _on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
       /* If authorized, try to pre-fetch some data from the server */
       frogr_controller_fetch_albums (priv->controller,
                                      (FCAlbumsFetchedCallback) _albums_list_fetched_cb,
-                                     G_OBJECT (self));
+                                     G_OBJECT (self), NULL);
     }
 }
 
@@ -568,6 +569,7 @@ _update_ui (FrogrMainView *self)
     {
     case FROGR_STATE_LOADING:
     case FROGR_STATE_UPLOADING:
+    case FROGR_STATE_FETCHING:
       gtk_widget_set_sensitive (priv->add_button, FALSE);
       gtk_widget_set_sensitive (priv->remove_button, FALSE);
       gtk_widget_set_sensitive (priv->upload_button, FALSE);
@@ -687,7 +689,7 @@ _remove_pictures_from_ui (FrogrMainView *self, GSList *pictures)
 }
 
 static void
-_albums_list_fetched_cb (FrogrMainView *self, GSList *albums, GError *error)
+_albums_list_fetched_cb (FrogrMainView *self, GSList *albums, gpointer data, GError *error)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
@@ -774,7 +776,7 @@ _add_pictures_to_album (FrogrMainView *self)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GSList *pictures;
 
-  /* Get selected pictures */
+  /* Get selected pictures and available albums */
   pictures = _get_selected_pictures (self);
 
   /* Call the controller to add tags to them */

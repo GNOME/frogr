@@ -51,7 +51,8 @@ struct _FrogrMainView
 typedef enum {
   FROGR_STATE_IDLE,     /* self-explained */
   FROGR_STATE_LOADING,  /* loading pictures from disk */
-  FROGR_STATE_UPLOADING /* uploading pictures to flickr */
+  FROGR_STATE_UPLOADING,/* uploading pictures to flickr */
+  FROGR_STATE_FETCHING  /* fetching information from flickr */
 } FrogrMainViewState;
 
 GType frogr_main_view_get_type (void) G_GNUC_CONST;

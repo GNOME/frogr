@@ -60,6 +60,7 @@ typedef void (*FCPictureUploadedCallback) (FrogrPictureUploader *self,
 /* Callback to be executed after receiving the list of albums */
 typedef void (*FCAlbumsFetchedCallback) (GObject *object,
                                          GSList *albums_list,
+                                         gpointer data,
                                          GError *error);
 
 GType frogr_controller_get_type (void) G_GNUC_CONST;
@@ -95,7 +96,8 @@ void frogr_controller_upload_picture (FrogrController *self,
 
 void frogr_controller_fetch_albums (FrogrController *self,
                                     FCAlbumsFetchedCallback albums_fetched_cb,
-                                    GObject *object);
+                                    GObject *object,
+                                    gpointer data);
 
 void frogr_controller_cancel_ongoing_request (FrogrController *self);
 
