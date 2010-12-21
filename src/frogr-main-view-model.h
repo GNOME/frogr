@@ -63,6 +63,7 @@ void frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
 void frogr_main_view_model_remove_all_pictures (FrogrMainViewModel *self);
 
 guint frogr_main_view_model_n_pictures (FrogrMainViewModel *self);
+
 GSList *frogr_main_view_model_get_pictures (FrogrMainViewModel *self);
 
 void frogr_main_view_model_add_album (FrogrMainViewModel *self,
@@ -72,7 +73,9 @@ void frogr_main_view_model_remove_album (FrogrMainViewModel *self,
 void frogr_main_view_model_remove_all_albums (FrogrMainViewModel *self);
 
 guint frogr_main_view_model_n_albums (FrogrMainViewModel *self);
+
 GSList *frogr_main_view_model_get_albums (FrogrMainViewModel *self);
+
 void frogr_main_view_model_set_albums (FrogrMainViewModel *self,
                                        GSList *albums_list);
 

@@ -62,14 +62,18 @@ FrogrController *frogr_controller_get_instance (void);
 FrogrMainView *frogr_controller_get_main_view (FrogrController *self);
 
 gboolean frogr_controller_run_app (FrogrController *self);
+
 gboolean frogr_controller_quit_app (FrogrController *self);
 
 FrogrControllerState frogr_controller_get_state (FrogrController *self);
 
 void frogr_controller_show_about_dialog (FrogrController *self);
+
 void frogr_controller_show_auth_dialog (FrogrController *self);
+
 void frogr_controller_show_details_dialog (FrogrController *self,
                                            GSList *pictures);
+
 void frogr_controller_show_add_tags_dialog (FrogrController *self,
                                             GSList *pictures);
 
