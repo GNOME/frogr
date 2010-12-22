@@ -22,6 +22,6 @@ noinst_PROGRAMS = \
 
 example_SOURCES = example.c
 example_LDADD = 					\
-	$(top_srcdir)/src/flicksoup/libflicksoup.a	\
+	$(top_builddir)/src/flicksoup/libflicksoup.a	\
 	$(LIBSOUP_LIBS)		  			\
 	$(LIBXML2_LIBS)

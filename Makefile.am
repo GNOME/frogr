@@ -43,42 +43,45 @@ SUBDIRS = src po examples
 ACLOCAL_AMFLAGS=-I m4
 
 pixmapdir = $(datadir)/icons
-pixmap_DATA = $(srcdir)/data/icons/frogr.xpm
+pixmap_DATA = data/icons/frogr.xpm
 icon16dir = $(datadir)/icons/hicolor/16x16/apps
-icon16_DATA = $(srcdir)/data/icons/hicolor/16x16/apps/frogr.png
+icon16_DATA = data/icons/hicolor/16x16/apps/frogr.png
 icon24dir = $(datadir)/icons/hicolor/24x24/apps
-icon24_DATA = $(srcdir)/data/icons/hicolor/24x24/apps/frogr.png
+icon24_DATA = data/icons/hicolor/24x24/apps/frogr.png
 icon32dir = $(datadir)/icons/hicolor/32x32/apps
-icon32_DATA = $(srcdir)/data/icons/hicolor/32x32/apps/frogr.png
+icon32_DATA = data/icons/hicolor/32x32/apps/frogr.png
 icon48dir = $(datadir)/icons/hicolor/48x48/apps
-icon48_DATA = $(srcdir)/data/icons/hicolor/48x48/apps/frogr.png
+icon48_DATA = data/icons/hicolor/48x48/apps/frogr.png
 icon64dir = $(datadir)/icons/hicolor/64x64/apps
-icon64_DATA = $(srcdir)/data/icons/hicolor/64x64/apps/frogr.png
+icon64_DATA = data/icons/hicolor/64x64/apps/frogr.png
 icon128dir = $(datadir)/icons/hicolor/128x128/apps
-icon128_DATA = $(srcdir)/data/icons/hicolor/128x128/apps/frogr.png
+icon128_DATA = data/icons/hicolor/128x128/apps/frogr.png
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
-iconscalable_DATA = $(srcdir)/data/icons/hicolor/scalable/apps/frogr.svg
+iconscalable_DATA = data/icons/hicolor/scalable/apps/frogr.svg
 
 imagesdir = $(appdatadir)/images
-images_DATA = $(srcdir)/data/images/mpictures.png
+images_DATA = data/images/mpictures.png
 
 gtkbuilderdir = $(appdatadir)/gtkbuilder
-gtkbuilder_DATA = $(srcdir)/data/gtkbuilder/frogr-main-view.xml \
-	$(srcdir)/data/gtkbuilder/frogr-details-dialog.xml
+gtkbuilder_DATA = data/gtkbuilder/frogr-main-view.xml \
+	data/gtkbuilder/frogr-details-dialog.xml
 
 desktopentrydir = $(datadir)/applications
-desktopentry_DATA = $(srcdir)/data/frogr.desktop
+desktopentry_DATA = $(builddir)/data/frogr.desktop
 
 edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
 
-$(srcdir)/data/frogr.desktop: $(srcdir)/data/frogr.desktop.in
-	$(edit) $(srcdir)/data/frogr.desktop.in > $(srcdir)/data/frogr.desktop
+data/frogr.desktop: data/frogr.desktop.in
+	mkdir -p $(builddir)/data
+	$(edit) $(srcdir)/data/frogr.desktop.in > $(builddir)/data/frogr.desktop
+
+DISTCLEANFILES = $(builddir)/data/frogr.desktop
 
 EXTRA_DIST = \
-	$(srcdir)/MAINTAINERS \
-	$(srcdir)/TRANSLATORS \
-	$(srcdir)/TODO \
-	$(srcdir)/data/frogr.desktop.in \
+	MAINTAINERS \
+	TRANSLATORS \
+	TODO \
+	data/frogr.desktop.in \
 	$(pixmap_DATA) \
 	$(icon16_DATA) \
 	$(icon24_DATA) \
