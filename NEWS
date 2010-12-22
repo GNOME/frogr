@@ -1,3 +1,24 @@
+0.3 (?? Dec 2010)
+
+  * Fixed problems building debian packages.
+  * Committed patches related to GNOME 3.0 integration (Javier Jardón).
+  * New 'Add tags' dialog to easily add tags to existing ones.
+  * Got rid of libcurl and improved integration with the mainloop by
+    replacing the flickcurl library with our asynchronous (implements
+    the GAsync API) library based in libsoup: flicksoup.
+  * Improved authentication process. Made it more seamless and less
+    error prone. Also, added a menu item to re-authorize if needed.
+  * Better error handling, properly reporting the user when needed.
+  * Cleaned up a lot the code of frogr and flicksoup. Made it more
+    simple, hackable and robust. Still not perfect, though :-).
+  * Allow cancelling uploads in progress, and resume them later.
+  * Fixed bug uploading files with special characters in its name.
+  * Added support for flickr albums. Now it's possible to select which
+    album the pictures should be assigned to once uploaded.
+  * New layout in the menu bar.
+  * Updated translations.
+  * Lots of bugfixes, as well as several minor and major improvements.
+
 0.2 (12 Oct 2009)
 
   * Generate ChangeLog from git log with 'make dist'
