@@ -711,3 +711,17 @@ frogr_picture_set_albums (FrogrPicture *self, GSList *albums)
 
   priv->albums = new_list;
 }
+
+gboolean
+frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  FrogrPicturePrivate *priv = NULL;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  if (g_slist_index (priv->albums, album) != -1)
+    return TRUE;
+
+  return FALSE;
+}

@@ -100,6 +100,7 @@ void frogr_picture_set_pixbuf (FrogrPicture *self,
 
 GSList *frogr_picture_get_albums (FrogrPicture *self);
 void frogr_picture_set_albums (FrogrPicture *self, GSList *albums);
+gboolean frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album);
 
 G_END_DECLS
 
