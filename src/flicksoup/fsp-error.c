@@ -22,11 +22,12 @@
 
 #include "fsp-error.h"
 
-#define N_ERRORS 120
+#define N_SPECIFIC_ERRORS 10
+#define N_GENERAL_ERRORS 110
+#define N_ERRORS (N_SPECIFIC_ERRORS + N_GENERAL_ERRORS)
 
-static const FspError error_translations [N_ERRORS] = {
-  FSP_ERROR_UNKNOWN,                    // 0
-  FSP_ERROR_PHOTO_NOT_FOUND,            // 1
+static const FspError photo_upload_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                    // 1
   FSP_ERROR_UPLOAD_MISSING_PHOTO,       // 2
   FSP_ERROR_UPLOAD_GENERAL_FAILURE,     // 3
   FSP_ERROR_UPLOAD_INVALID_FILE,        // 4
@@ -36,6 +37,61 @@ static const FspError error_translations [N_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 8
   FSP_ERROR_UNKNOWN,                    // 9
   FSP_ERROR_UNKNOWN,                    // 10
+};
+
+static const FspError photo_get_info_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_PHOTO_NOT_FOUND,            // 1
+  FSP_ERROR_UNKNOWN,                    // 2
+  FSP_ERROR_UNKNOWN,                    // 3
+  FSP_ERROR_UNKNOWN,                    // 4
+  FSP_ERROR_UNKNOWN,                    // 5
+  FSP_ERROR_UNKNOWN,                    // 6
+  FSP_ERROR_UNKNOWN,                    // 7
+  FSP_ERROR_UNKNOWN,                    // 8
+  FSP_ERROR_UNKNOWN,                    // 9
+  FSP_ERROR_UNKNOWN,                    // 10
+};
+
+static const FspError photoset_create_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_PHOTOSET_TITLE_MISSING,     // 1
+  FSP_ERROR_PHOTO_NOT_FOUND,            // 2
+  FSP_ERROR_PHOTOSET_CAN_CREATE,        // 3
+  FSP_ERROR_UNKNOWN,                    // 4
+  FSP_ERROR_UNKNOWN,                    // 5
+  FSP_ERROR_UNKNOWN,                    // 6
+  FSP_ERROR_UNKNOWN,                    // 7
+  FSP_ERROR_UNKNOWN,                    // 8
+  FSP_ERROR_UNKNOWN,                    // 9
+  FSP_ERROR_UNKNOWN,                    // 10
+};
+
+static const FspError photoset_get_list_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_USER_NOT_FOUND,             // 1
+  FSP_ERROR_UNKNOWN,                    // 2
+  FSP_ERROR_UNKNOWN,                    // 3
+  FSP_ERROR_UNKNOWN,                    // 4
+  FSP_ERROR_UNKNOWN,                    // 5
+  FSP_ERROR_UNKNOWN,                    // 6
+  FSP_ERROR_UNKNOWN,                    // 7
+  FSP_ERROR_UNKNOWN,                    // 8
+  FSP_ERROR_UNKNOWN,                    // 9
+  FSP_ERROR_UNKNOWN,                    // 10
+};
+
+static const FspError photoset_add_photo_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_PHOTOSET_NOT_FOUND,         // 1
+  FSP_ERROR_PHOTO_NOT_FOUND,            // 2
+  FSP_ERROR_ALREADY_IN_PHOTOSET,        // 3
+  FSP_ERROR_UNKNOWN,                    // 4
+  FSP_ERROR_UNKNOWN,                    // 5
+  FSP_ERROR_UNKNOWN,                    // 6
+  FSP_ERROR_UNKNOWN,                    // 7
+  FSP_ERROR_UNKNOWN,                    // 8
+  FSP_ERROR_UNKNOWN,                    // 9
+  FSP_ERROR_UNKNOWN,                    // 10
+};
+
+static const FspError general_translations [N_GENERAL_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 11
   FSP_ERROR_UNKNOWN,                    // 12
   FSP_ERROR_UNKNOWN,                    // 13
@@ -144,16 +200,55 @@ static const FspError error_translations [N_ERRORS] = {
   FSP_ERROR_OTHER,                      // 116
   FSP_ERROR_UNKNOWN,                    // 117
   FSP_ERROR_UNKNOWN,                    // 118
-  FSP_ERROR_UNKNOWN                     // 119
+  FSP_ERROR_UNKNOWN,                    // 119
+  FSP_ERROR_UNKNOWN                     // 120
 };
 
 FspError
-fsp_error_get_from_response_code        (gint code)
+fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
 {
   FspError retval = FSP_ERROR_UNKNOWN;
 
-  if (code >= 0 && code < N_ERRORS)
-    retval = error_translations[code];
+  /* Method specific errors */
+  if (code > 0 && code <= N_SPECIFIC_ERRORS)
+    {
+      switch (method)
+        {
+        case FSP_ERROR_METHOD_GET_FROB:
+        case FSP_ERROR_METHOD_GET_AUTH_TOKEN:
+          /* We shouldn't get errors in this range for these two
+             methods, return FSP_ERROR_UNKNOWN in case it happened. */
+          retval = FSP_ERROR_UNKNOWN;
+          break;
+
+        case FSP_ERROR_METHOD_PHOTO_UPLOAD:
+          retval = photo_upload_translations[code - 1];
+          break;
+
+        case FSP_ERROR_METHOD_PHOTO_GET_INFO:
+          retval = photo_get_info_translations[code - 1];
+          break;
+
+        case FSP_ERROR_METHOD_PHOTOSET_CREATE:
+          retval = photoset_create_translations[code - 1];
+          break;
+
+        case FSP_ERROR_METHOD_PHOTOSET_GET_LIST:
+          retval = photoset_get_list_translations[code - 1];
+          break;
+
+        case FSP_ERROR_METHOD_PHOTOSET_ADD_PHOTO:
+          retval = photoset_add_photo_translations[code - 1];
+          break;
+
+        default:
+          retval = FSP_ERROR_UNKNOWN;
+        }
+    }
+
+  /* Generic errors */
+  if (code > N_SPECIFIC_ERRORS && code <= N_ERRORS)
+    retval = general_translations[code - N_SPECIFIC_ERRORS - 1];
 
   return retval;
 }

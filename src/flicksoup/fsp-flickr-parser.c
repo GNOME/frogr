@@ -44,10 +44,12 @@ static RestResponseType
 _get_response_type                      (xmlDoc *doc);
 
 static GError *
-_get_error_from_response                (xmlDoc *doc);
+_get_error_from_response                (xmlDoc *doc,
+                                         FspErrorMethod error_method);
 
 static GError *
-_parse_error_from_node                  (xmlNode *error_node);
+_parse_error_from_node                  (xmlNode *error_node,
+                                         FspErrorMethod error_method);
 
 static gpointer
 _process_xml_response                   (FspFlickrParser  *self,
@@ -57,6 +59,10 @@ _process_xml_response                   (FspFlickrParser  *self,
                                                           (xmlDoc  *doc,
                                                            GError **error),
                                          GError          **error);
+static FspErrorMethod
+_get_error_method_from_parser           (gpointer (*body_parser)
+                                         (xmlDoc  *doc,
+                                          GError **error));
 static gpointer
 _get_frob_parser                        (xmlDoc  *doc,
                                          GError **error);
@@ -71,6 +77,9 @@ _get_photo_info_parser                  (xmlDoc  *doc,
                                          GError **error);
 static gpointer
 _get_photosets_list_parser              (xmlDoc  *doc,
+                                         GError **error);
+static gpointer
+_added_to_photoset_parser               (xmlDoc  *doc,
                                          GError **error);
 static gpointer
 _photoset_created_parser                (xmlDoc  *doc,
@@ -150,7 +159,8 @@ _get_response_type                      (xmlDoc *doc)
 }
 
 static GError *
-_get_error_from_response                (xmlDoc *doc)
+_get_error_from_response                (xmlDoc *doc,
+                                         FspErrorMethod error_method)
 {
   RestResponseType rsp_type = REST_RESPONSE_UNKNOWN;
   GError *err = NULL;
@@ -182,7 +192,7 @@ _get_error_from_response                (xmlDoc *doc)
         {
           /* Parse the actual error found in the response */
           g_error_free (err);
-          err = _parse_error_from_node (node);
+          err = _parse_error_from_node (node, error_method);
         }
     }
 
@@ -190,7 +200,8 @@ _get_error_from_response                (xmlDoc *doc)
 }
 
 static GError *
-_parse_error_from_node                  (xmlNode *error_node)
+_parse_error_from_node                  (xmlNode *error_node,
+                                         FspErrorMethod error_method)
 {
   g_return_val_if_fail (error_node != NULL, NULL);
 
@@ -207,7 +218,7 @@ _parse_error_from_node                  (xmlNode *error_node)
   code = (gint) g_ascii_strtoll (code_str, NULL, 10);
 
   /* Get error code and message */
-  error = fsp_error_get_from_response_code (code);
+  error = fsp_error_get_from_response_code (error_method, code);
   if ((error == FSP_ERROR_UNKNOWN) || (msg == NULL))
     error_msg = g_strdup ("Unknown error in response");
   else
@@ -221,6 +232,32 @@ _parse_error_from_node                  (xmlNode *error_node)
   g_free (error_msg);
 
   return err;
+}
+
+
+static FspErrorMethod
+_get_error_method_from_parser           (gpointer (*body_parser)
+                                         (xmlDoc  *doc,
+                                          GError **error))
+{
+  FspErrorMethod error_method = FSP_ERROR_METHOD_UNDEFINED;
+
+  if (body_parser ==  _get_frob_parser)
+    error_method = FSP_ERROR_METHOD_GET_FROB;
+  else if (body_parser ==  _get_auth_token_parser)
+    error_method = FSP_ERROR_METHOD_GET_AUTH_TOKEN;
+  else if (body_parser == _photo_get_upload_result_parser)
+    error_method = FSP_ERROR_METHOD_PHOTO_UPLOAD;
+  else if (body_parser == _get_photo_info_parser)
+    error_method = FSP_ERROR_METHOD_PHOTO_GET_INFO;
+  else if (body_parser == _photoset_created_parser)
+    error_method = FSP_ERROR_METHOD_PHOTOSET_CREATE;
+  else if (body_parser == _get_photosets_list_parser)
+    error_method = FSP_ERROR_METHOD_PHOTOSET_GET_LIST;
+  else if (body_parser == _added_to_photoset_parser)
+    error_method = FSP_ERROR_METHOD_PHOTOSET_ADD_PHOTO;
+
+  return error_method;
 }
 
 static gpointer
@@ -251,7 +288,12 @@ _process_xml_response                   (FspFlickrParser  *self,
       if (type == REST_RESPONSE_OK)
         retval = body_parser ? body_parser (doc, &err) : NULL;
       else
-        err = _get_error_from_response (doc);
+        {
+          FspErrorMethod error_method = FSP_ERROR_METHOD_UNDEFINED;
+
+          error_method = _get_error_method_from_parser (body_parser);
+          err = _get_error_from_response (doc, error_method);
+        }
 
       xmlFreeDoc (doc);
     }
@@ -516,6 +558,14 @@ _get_photosets_list_parser              (xmlDoc  *doc,
     g_propagate_error (error, err);
 
   return photosetsList;
+}
+
+static gpointer
+_added_to_photoset_parser               (xmlDoc  *doc,
+                                         GError **error)
+{
+  /* Dummy parser, as there is no response for this method */
+  return NULL;
 }
 
 static gpointer
@@ -925,7 +975,8 @@ fsp_flickr_parser_added_to_photoset     (FspFlickrParser  *self,
   g_return_val_if_fail (buffer != NULL, NULL);
 
   /* Process the response */
-  _process_xml_response (self, buffer, buf_size, NULL, error);
+  _process_xml_response (self, buffer, buf_size,
+                         _added_to_photoset_parser, error);
 
   /* No return value for this method */
   return GINT_TO_POINTER ((gint)(*error == NULL));
