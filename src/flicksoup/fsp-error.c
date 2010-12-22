@@ -55,7 +55,7 @@ static const FspError photo_get_info_translations [N_SPECIFIC_ERRORS] = {
 static const FspError photoset_create_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_PHOTOSET_TITLE_MISSING,     // 1
   FSP_ERROR_PHOTO_NOT_FOUND,            // 2
-  FSP_ERROR_PHOTOSET_CAN_CREATE,        // 3
+  FSP_ERROR_PHOTOSET_CANT_CREATE,        // 3
   FSP_ERROR_UNKNOWN,                    // 4
   FSP_ERROR_UNKNOWN,                    // 5
   FSP_ERROR_UNKNOWN,                    // 6
