@@ -591,7 +591,7 @@ _on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer data)
   else
     {
       /* If authorized, try to pre-fetch some data from the server */
-      frogr_controller_fetch_albums (priv->controller, TRUE);
+      frogr_controller_fetch_albums (priv->controller);
     }
 }
 

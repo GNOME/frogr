@@ -215,7 +215,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           g_debug ("Authorization successfully completed!");
 
           /* Pre-fetch the list of albums right after this */
-          frogr_controller_fetch_albums (controller, TRUE);
+          frogr_controller_fetch_albums (controller);
         }
     }
 
@@ -905,7 +905,7 @@ frogr_controller_show_add_to_album_dialog (FrogrController *self,
 
   /* Fetch the albums first if needed */
   if (g_slist_length (albums) == 0)
-    frogr_controller_fetch_albums (self, FALSE);
+    frogr_controller_fetch_albums (self);
 
   /* Show the dialog when possible */
   g_idle_add ((GSourceFunc) _show_add_to_album_dialog_on_idle, pictures);
@@ -1007,7 +1007,7 @@ frogr_controller_upload_pictures (FrogrController *self)
 }
 
 void
-frogr_controller_fetch_albums (FrogrController *self, gboolean background)
+frogr_controller_fetch_albums (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -1018,8 +1018,7 @@ frogr_controller_fetch_albums (FrogrController *self, gboolean background)
 
   /* We only want to block the controller when fetching ondemand, not
      when it's a pre-fetch done in background */
-  if (!background)
-    _set_state (self, FROGR_STATE_BUSY);
+  _set_state (self, FROGR_STATE_BUSY);
 
   fsp_photos_mgr_get_photosets_async (priv->photos_mgr,
                                       priv->cancellable,
