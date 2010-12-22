@@ -208,8 +208,6 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
         {
           gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb),
                                               is_public_val != is_public);
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb),
-                                              is_public_val != is_public);
         }
       if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb)))
         {
