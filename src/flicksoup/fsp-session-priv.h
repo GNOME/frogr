@@ -24,7 +24,6 @@
 #define _FSP_SESSION_PRIV_H
 
 #include "fsp-session.h"
-#include "fsp-flickr-proxy.h"
 
 #include <libsoup/soup.h>
 
