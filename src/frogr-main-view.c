@@ -142,6 +142,9 @@ static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
                                               gpointer data);
 
 static void _add_pictures_dialog (FrogrMainView *self);
+
+
+static gboolean _pictures_selected_required_check (FrogrMainView *self);
 static void _add_tags_to_pictures (FrogrMainView *self);
 static void _add_pictures_to_album (FrogrMainView *self);
 static void _edit_selected_pictures (FrogrMainView *self);
@@ -767,8 +770,8 @@ _add_pictures_dialog (FrogrMainView *self)
   gtk_widget_show_all (dialog);
 }
 
-static void
-_add_tags_to_pictures (FrogrMainView *self)
+static gboolean
+_pictures_selected_required_check (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
@@ -776,8 +779,19 @@ _add_tags_to_pictures (FrogrMainView *self)
     {
       frogr_util_show_error_dialog (priv->window,
                                     _("You need to select some pictures first"));
-      return;
+      return FALSE;
     }
+
+  return TRUE;
+}
+
+static void
+_add_tags_to_pictures (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  if (!_pictures_selected_required_check (self))
+    return;
 
   /* Call the controller to add tags to them */
  frogr_controller_show_add_tags_dialog (priv->controller,
@@ -789,12 +803,8 @@ _add_pictures_to_album (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  if (_n_selected_pictures (self) == 0)
-    {
-      frogr_util_show_error_dialog (priv->window,
-                                    _("You need to select some pictures first"));
-      return;
-    }
+  if (!_pictures_selected_required_check (self))
+    return;
 
   /* Call the controller to add the pictures to albums */
   frogr_controller_show_add_to_album_dialog (priv->controller,
@@ -806,12 +816,8 @@ _edit_selected_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  if (_n_selected_pictures (self) == 0)
-    {
-      frogr_util_show_error_dialog (priv->window,
-                                    _("You need to select some pictures first"));
-      return;
-    }
+  if (!_pictures_selected_required_check (self))
+    return;
 
   /* Call the controller to edit them */
   frogr_controller_show_details_dialog (priv->controller,
@@ -826,12 +832,8 @@ _remove_selected_pictures (FrogrMainView *self)
   GSList *selected_pictures;
   GSList *item;
 
-  if (_n_selected_pictures (self) == 0)
-    {
-      frogr_util_show_error_dialog (priv->window,
-                                    _("You need to select some pictures first"));
-      return;
-    }
+  if (!_pictures_selected_required_check (self))
+    return;
 
   /* Remove from model */
   selected_pictures = _get_selected_pictures (self);
