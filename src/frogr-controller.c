@@ -102,6 +102,9 @@ static void _set_state (FrogrController *self, FrogrControllerState state);
 
 static void _set_internal_state (FrogrController *self, FrogrControllerState state);
 
+static void _notify_error_to_user (FrogrController *self,
+                                   GError *error);
+
 static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
 
 static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data);
@@ -126,8 +129,6 @@ static void _on_pictures_uploaded (FrogrController *self,
                                    FrogrPictureUploader *fpuploader,
                                    GError *error);
 
-static void _notify_pictures_not_uploaded (FrogrController *self,
-                                           GError *error);
 static void _open_browser_to_edit_details (FrogrController *self,
                                            FrogrPictureUploader *fpuploader);
 
@@ -149,13 +150,96 @@ _set_state (FrogrController *self, FrogrControllerState state)
   g_signal_emit (self, signals[STATE_CHANGED], 0, state);
 }
 
-
 void
 _set_internal_state (FrogrController *self, FrogrControllerState state)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   priv->internal_state = state;
+}
+
+static void
+_notify_error_to_user (FrogrController *self, GError *error)
+{
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  void (* error_function) (GtkWindow *, const gchar *) = NULL;
+  gchar *msg = NULL;
+
+  switch (error->code)
+    {
+    case FSP_ERROR_CANCELLED:
+      msg = g_strdup (_("Process cancelled by the user"));
+      error_function = frogr_util_show_warning_dialog;
+      break;
+
+    case FSP_ERROR_NETWORK_ERROR:
+      msg = g_strdup (_("Connection error:\nNetwork not available"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_CLIENT_ERROR:
+      msg = g_strdup (_("Connection error:\nBad request"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_SERVER_ERROR:
+      msg = g_strdup (_("Connection error:\nServer side error"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_UPLOAD_INVALID_FILE:
+      msg = g_strdup (_("Error uploading picture:\nFile invalid"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_UPLOAD_QUOTA_EXCEEDED:
+      msg = g_strdup (_("Error uploading picture:\nQuota exceeded"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_PHOTO_NOT_FOUND:
+      msg = g_strdup (_("Error:\nPhoto not found"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_ALREADY_IN_PHOTOSET:
+      msg = g_strdup (_("Error:\nPhoto already in photoset"));
+      error_function = NULL; /* Don't notify the user about this */
+      break;
+
+    case FSP_ERROR_AUTHENTICATION_FAILED:
+      msg = g_strdup_printf (_("Authorization failed.\n" "Please try again"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_NOT_AUTHENTICATED:
+      frogr_controller_revoke_authorization (self);
+      msg = g_strdup_printf (_("Error\n%s is not properly authorized to upload pictures "
+                               "to flickr.\nPlease re-authorize it"), PACKAGE_NAME);
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_SERVICE_UNAVAILABLE:
+      msg = g_strdup_printf (_("Error:\nService not available"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    default:
+      // General error: just dump the raw error description 
+      msg = g_strdup_printf (_("And error happened while uploading a picture: %s."),
+                             error->message);
+      error_function = frogr_util_show_error_dialog;
+    }
+
+  if (error_function)
+    {
+      GtkWindow *window = NULL;
+      window = frogr_main_view_get_window (priv->mainview);
+      error_function (window, msg);
+    }
+
+  g_debug (msg);
+  g_free (msg);
 }
 
 static void
@@ -169,6 +253,7 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   auth_url = fsp_session_get_auth_url_finish (priv->session, res, &error);
   if (error != NULL)
     {
+      _notify_error_to_user (self, error);
       g_debug ("Error getting auth URL: %s", error->message);
       g_error_free (error);
       return;
@@ -196,10 +281,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  GtkWidget *dialog = NULL;
-  GtkWindow *window = NULL;
   GError *error = NULL;
-  gboolean success = FALSE;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
@@ -213,7 +295,6 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           /* Set and save the auth token and the settings to disk */
           frogr_account_set_token (priv->account, token);
           frogr_config_save (priv->config);
-          success = TRUE;
 
           g_debug ("Authorization successfully completed!");
 
@@ -224,24 +305,17 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 
   if (error != NULL)
     {
+      _notify_error_to_user (controller, error);
       g_debug ("Authorization failed: %s", error->message);
       g_error_free (error);
     }
+  else
+    {
+      GtkWindow *window = NULL;
 
-  /* Report result to the user */
-  window = frogr_main_view_get_window (priv->mainview);
-  dialog = gtk_message_dialog_new (window,
-                                   GTK_DIALOG_MODAL,
-                                   success ? GTK_MESSAGE_INFO : GTK_MESSAGE_ERROR,
-                                   GTK_BUTTONS_OK,
-                                   success
-                                   ? _("Authorization successfully completed!")
-                                   : _("Authorization failed.\n" "Please try again"));
-
-  g_signal_connect (G_OBJECT (dialog), "response",
-                    G_CALLBACK (gtk_widget_destroy), NULL);
-
-  gtk_widget_show_all (dialog);
+      window = frogr_main_view_get_window (priv->mainview);
+      frogr_util_show_info_dialog (window, _("Authorization successfully completed!"));
+    }
 }
 
 static void
@@ -456,7 +530,7 @@ _on_pictures_uploaded (FrogrController *self,
     }
   else
     {
-      _notify_pictures_not_uploaded (self, error);
+      _notify_error_to_user (self, error);
       g_debug ("Error uploading picture: %s", error->message);
       g_error_free (error);
     }
@@ -466,39 +540,6 @@ _on_pictures_uploaded (FrogrController *self,
 
   _set_state (self, FROGR_STATE_IDLE);
   g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
-}
-
-static void
-_notify_pictures_not_uploaded (FrogrController *self, GError *error)
-{
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  void (* error_function) (GtkWindow *, const gchar *) = NULL;
-  GtkWindow *window = NULL;
-  gchar *msg = NULL;
-
-  error_function = frogr_util_show_error_dialog;
-  switch (error->code)
-    {
-    case FSP_ERROR_NOT_AUTHENTICATED:
-      frogr_controller_revoke_authorization (self);
-      msg = g_strdup_printf (_("%s is not properly authorized to upload pictures "
-                               "to flickr.\nPlease re-authorize it."), PACKAGE_NAME);
-      break;
-
-    case FSP_ERROR_CANCELLED:
-      msg = g_strdup (_("Process cancelled by the user."));
-      error_function = frogr_util_show_warning_dialog;
-      break;
-
-    default:
-      // General error: just dump the raw error description 
-      msg = g_strdup_printf (_("And error happened while uploading a picture: %s"),
-                             error->message);
-    }
-
-  window = frogr_main_view_get_window (priv->mainview);
-  error_function (window, msg);
-  g_free (msg);
 }
 
 static void
