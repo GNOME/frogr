@@ -238,7 +238,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
       error_function (window, msg);
     }
 
-  g_debug (msg);
+  g_debug ("%s", msg);
   g_free (msg);
 }
 

@@ -60,7 +60,7 @@ frogr_util_show_message_dialog (GtkWindow *parent, const gchar *message, GtkMess
                             GTK_DIALOG_MODAL,
                             type,
                             GTK_BUTTONS_CLOSE,
-                            message);
+                            "%s", message);
   gtk_window_set_title (GTK_WINDOW (dialog), PACKAGE);
 
   g_signal_connect (G_OBJECT (dialog), "response",
