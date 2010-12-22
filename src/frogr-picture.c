@@ -715,7 +715,7 @@ frogr_picture_set_albums (FrogrPicture *self, GSList *albums)
 gboolean
 frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album)
 {
-  g_return_if_fail(FROGR_IS_PICTURE(self));
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   FrogrPicturePrivate *priv = NULL;
 

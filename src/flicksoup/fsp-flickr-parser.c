@@ -757,7 +757,6 @@ _get_photo_set_from_node                (xmlNode *node)
   g_return_val_if_fail (node != NULL, NULL);
 
   FspDataPhotoSet *photoSet = NULL;
-  xmlAttr *attr = NULL;
   xmlChar *content = NULL;
   gchar *id = NULL;
   gchar *primaryPhotoId = NULL;

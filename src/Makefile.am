@@ -27,6 +27,7 @@ frogr_LDADD = 				\
 	$(FROGR_LIBS)
 
 frogr_CFLAGS = $(FROGR_CFLAGS) \
+	$(EXTRA_CFLAGS) \
 	-DAPP_DATA_DIR=\"$(appdatadir)\" \
 	-DICONS_DIR=\"$(iconsdir)\"
 

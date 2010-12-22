@@ -15,7 +15,8 @@
 AM_CFLAGS =			  \
 	-I$(top_srcdir)/src 	  \
 	$(LIBSOUP_CFLAGS)	  \
-	$(LIBXML2_CFLAGS)
+	$(LIBXML2_CFLAGS)	  \
+	$(EXTRA_CFLAGS)
 
 noinst_LIBRARIES = libflicksoup.a
 

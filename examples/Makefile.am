@@ -14,7 +14,8 @@
 
 AM_CPPFLAGS = 			\
 	-I$(top_srcdir)/src	\
-	$(GLIB_CFLAGS)
+	$(GLIB_CFLAGS)		\
+	$(EXTRA_CFLAGS)
 
 noinst_PROGRAMS = \
 	example

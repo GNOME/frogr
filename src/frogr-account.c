@@ -58,7 +58,6 @@ _frogr_account_set_property (GObject      *object,
                              GParamSpec   *pspec)
 {
   FrogrAccount *self = FROGR_ACCOUNT (object);
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
 
   switch (property_id)
     {

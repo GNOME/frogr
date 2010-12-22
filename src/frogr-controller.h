@@ -52,6 +52,7 @@ struct _FrogrController
 };
 
 typedef enum {
+  FROGR_STATE_UKNOWN,
   FROGR_STATE_IDLE,
   FROGR_STATE_BUSY
 } FrogrControllerState;

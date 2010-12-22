@@ -74,8 +74,6 @@ static void _fill_dialog_with_data (FrogrDetailsDialog *self);
 static gboolean _validate_dialog_data (FrogrDetailsDialog *self);
 static gboolean _save_data (FrogrDetailsDialog *self);
 
-static void _show_error_saving_data_dialog (FrogrDetailsDialog *self, const gchar *message);
-
 void _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
                                          gpointer data);
 void _on_family_friend_cbutton_toggled (GtkToggleButton *tbutton,
@@ -573,7 +571,6 @@ void
 frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures)
 {
   GtkWidget *dialog = NULL;
-  gboolean saved;
 
   dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_DETAILS_DIALOG,
                                      "modal", TRUE,

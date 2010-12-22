@@ -26,6 +26,7 @@
 #include "frogr-about-dialog.h"
 #include "frogr-account.h"
 #include "frogr-add-tags-dialog.h"
+#include "frogr-add-to-album-dialog.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-config.h"
 #include "frogr-details-dialog.h"
@@ -112,6 +113,8 @@ static void _upload_picture (FrogrController *self, FrogrPicture *picture,
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static void _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static gboolean _complete_picture_upload_on_idle (gpointer data);
 
 static void _on_picture_loaded (FrogrController *self, FrogrPicture *picture);
 
@@ -278,46 +281,6 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
                                priv->cancellable, _upload_picture_cb, up_st);
 }
 
-static gboolean
-_complete_picture_upload_on_idle (gpointer data)
-{
-  upload_picture_st *up_st = NULL;
-  FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
-  FrogrPicture *picture = NULL;
-  FrogrPictureUploadedCallback callback = NULL;
-  gpointer source_object = NULL;
-  GError *error = NULL;
-
-  up_st = (upload_picture_st*) data;
-  controller = up_st->controller;
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-
-  /* Keep the source while busy */
-  if (priv->internal_state == FROGR_STATE_BUSY)
-    return TRUE;
-
-  picture = up_st->picture;
-  callback = up_st->callback;
-  source_object = up_st->object;
-  error = up_st->error;
-  g_slice_free (upload_picture_st, up_st);
-
-  if (priv->cancellable)
-    {
-      g_object_unref (priv->cancellable);
-      priv->cancellable = NULL;
-    }
-
-  /* Execute callback */
-  if (callback)
-    callback (source_object, picture, error);
-
-  g_object_unref (picture);
-
-  return FALSE;
-}
-
 static void
 _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
@@ -409,6 +372,46 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   _set_internal_state (controller, FROGR_STATE_IDLE);
 }
 
+static gboolean
+_complete_picture_upload_on_idle (gpointer data)
+{
+  upload_picture_st *up_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+  FrogrPictureUploadedCallback callback = NULL;
+  gpointer source_object = NULL;
+  GError *error = NULL;
+
+  up_st = (upload_picture_st*) data;
+  controller = up_st->controller;
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  /* Keep the source while busy */
+  if (priv->internal_state == FROGR_STATE_BUSY)
+    return TRUE;
+
+  picture = up_st->picture;
+  callback = up_st->callback;
+  source_object = up_st->object;
+  error = up_st->error;
+  g_slice_free (upload_picture_st, up_st);
+
+  if (priv->cancellable)
+    {
+      g_object_unref (priv->cancellable);
+      priv->cancellable = NULL;
+    }
+
+  /* Execute callback */
+  if (callback)
+    callback (source_object, picture, error);
+
+  g_object_unref (picture);
+
+  return FALSE;
+}
+
 static void
 _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
 {
@@ -483,7 +486,7 @@ _notify_pictures_not_uploaded (FrogrController *self, GError *error)
       break;
 
     case FSP_ERROR_CANCELLED:
-      msg = g_strdup_printf (_("Process cancelled by the user."), PACKAGE_NAME);
+      msg = g_strdup (_("Process cancelled by the user."));
       error_function = frogr_util_show_warning_dialog;
       break;
 
@@ -610,7 +613,7 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
   FrogrMainViewModel *mainview_model = NULL;
   GSList *albums = NULL;
 
-  controller = controller = frogr_controller_get_instance ();
+  controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while busy */
@@ -830,7 +833,7 @@ frogr_controller_quit_app (FrogrController *self)
 FrogrControllerState
 frogr_controller_get_state (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UKNOWN);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return priv->state;

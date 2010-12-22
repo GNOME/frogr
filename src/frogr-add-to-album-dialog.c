@@ -214,7 +214,6 @@ _album_toggled_cb (GtkCellRendererToggle *celltoggle,
                    GtkTreeView *treeview)
 {
   GtkTreeModel *model = NULL;
-  GtkTreeModelSort *sort_model = NULL;
   GtkTreePath *path;
   GtkTreeIter iter;
   gboolean active = FALSE;
@@ -373,14 +372,6 @@ _frogr_add_to_album_dialog_dispose (GObject *object)
 }
 
 static void
-_frogr_add_to_album_dialog_finalize (GObject *object)
-{
-  FrogrAddToAlbumDialogPrivate *priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (object);
-
-  G_OBJECT_CLASS(frogr_add_to_album_dialog_parent_class)->finalize (object);
-}
-
-static void
 frogr_add_to_album_dialog_class_init (FrogrAddToAlbumDialogClass *klass)
 {
   GObjectClass *obj_class = (GObjectClass *)klass;
@@ -390,7 +381,6 @@ frogr_add_to_album_dialog_class_init (FrogrAddToAlbumDialogClass *klass)
   obj_class->set_property = _frogr_add_to_album_dialog_set_property;
   obj_class->get_property = _frogr_add_to_album_dialog_get_property;
   obj_class->dispose = _frogr_add_to_album_dialog_dispose;
-  obj_class->finalize = _frogr_add_to_album_dialog_finalize;
 
   /* Install properties */
   pspec = g_param_spec_pointer ("pictures",
@@ -418,8 +408,6 @@ frogr_add_to_album_dialog_init (FrogrAddToAlbumDialog *self)
   FrogrAddToAlbumDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *widget = NULL;
-  GtkTreeViewColumn *col = NULL;
-  GtkCellRenderer *rend = NULL;
 
   priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
   priv->pictures = NULL;

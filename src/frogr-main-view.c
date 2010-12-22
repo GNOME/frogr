@@ -909,7 +909,6 @@ static void
 _update_ui (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gboolean pictures_loaded;
   guint npics;
 
   /* Set sensitiveness */
@@ -960,7 +959,7 @@ _frogr_main_view_dispose (GObject *object)
       priv->model = NULL;
     }
 
-  if (priv->controller = NULL)
+  if (priv->controller)
     {
       g_object_unref (priv->controller);
       priv->controller = NULL;
@@ -1215,7 +1214,7 @@ frogr_main_view_set_progress (FrogrMainView *self,
 FrogrMainViewModel *
 frogr_main_view_get_model (FrogrMainView *self)
 {
-  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW (self), NULL);
 
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   return priv->model;

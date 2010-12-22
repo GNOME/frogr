@@ -118,15 +118,6 @@ _frogr_album_get_property (GObject *object,
 }
 
 static void
-_frogr_album_dispose (GObject* object)
-{
-  FrogrAlbumPrivate *priv = FROGR_ALBUM_GET_PRIVATE (object);
-
-  /* call super class */
-  G_OBJECT_CLASS (frogr_album_parent_class)->dispose(object);
-}
-
-static void
 _frogr_album_finalize (GObject* object)
 {
   FrogrAlbumPrivate *priv = FROGR_ALBUM_GET_PRIVATE (object);
@@ -149,7 +140,6 @@ frogr_album_class_init(FrogrAlbumClass *klass)
   /* GtkObject signals */
   obj_class->set_property = _frogr_album_set_property;
   obj_class->get_property = _frogr_album_get_property;
-  obj_class->finalize = _frogr_album_dispose;
   obj_class->finalize = _frogr_album_finalize;
 
   /* Install properties */
