@@ -189,7 +189,7 @@ static const FspError general_translations [N_GENERAL_ERRORS] = {
   FSP_ERROR_SERVICE_UNAVAILABLE,        // 105
   FSP_ERROR_UNKNOWN,                    // 106
   FSP_ERROR_UNKNOWN,                    // 107
-  FSP_ERROR_OTHER,                      // 108
+  FSP_ERROR_AUTHENTICATION_FAILED,      // 108
   FSP_ERROR_UNKNOWN,                    // 109
   FSP_ERROR_UNKNOWN,                    // 110
   FSP_ERROR_OTHER,                      // 111
