@@ -2,7 +2,6 @@
 
   * Fixed problems building debian packages.
   * Committed patches related to GNOME 3.0 integration (Javier Jardón).
-  * New 'Add tags' dialog to easily add tags to existing ones.
   * Got rid of libcurl and improved integration with the mainloop by
     replacing the flickcurl library with our asynchronous (implements
     the GAsync API) library based in libsoup: flicksoup.
@@ -17,7 +16,7 @@
     album the pictures should be assigned to once uploaded.
   * New layout in the menu bar.
   * Updated translations.
-  * Lots of bugfixes, as well as several minor and major improvements.
+  * Lots of bugfixes, as well as several minor improvements.
 
 0.2 (12 Oct 2009)
 
@@ -51,4 +50,5 @@
   * Bugfixes and several (minor and major) improvements
 
 0.0.20090603 (03 Jun 2009)
+
   * Initial pre-release, right after getting the basic stuff together.

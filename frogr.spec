@@ -50,8 +50,30 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Dec 22 2010 Mario Sanchez Prada <msanchez at, igalia.com> 0.3-1
+- Updated for 0.3
+- New upstream release
+- Replaced flickcurl with flicksoup (asynchronous library)
+- Improved authentication process. Made it more seamless
+- Better error handling and reporting to the user
+- Added support to allow cancelling uploads
+- Added support for adding pictures to albums
+- Menubar redesigned
+- Updated translations
+- Lots of cleanups. Simplified code both in frogr and flicksoup
+- Lots of bugfixes and minor improvements
+
 * Mon Oct 12 2009 Mario Sanchez Prada <msanchez at, igalia.com> 0.2-1
 - Updated for 0.2
+- New upstream release
+- Added .spec file for fedora
+- Added drag'n'drop support for dragging files into the UI
+- Added support to 'add tags' to pictures (instead of replacing)
+- Added i18n support and es_ES translation
+- Support silent build rules
+- Lots of bugfixes and minor improvements
 
 * Sat Aug 22 2009 Adrian Perez <aperez at, igalia.com> 0.1.1-1
 - First packaged release
+- Bugfixing release
+- Fixed problems with 'make dist' (missing files in EXTRA_DIST)

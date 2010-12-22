@@ -13,7 +13,7 @@ Compiling from source code
 
 To compile and try the application you can just do this:
 
- $ ./configure
+ $ ./autogen.sh
  $ make
  $ sudo make install
  $ frogr
