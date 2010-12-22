@@ -2,6 +2,7 @@
 
 src/frogr-about-dialog.c
 src/frogr-add-tags-dialog.c
+src/frogr-add-to-album-dialog.c
 src/frogr-auth-dialog.c
 src/frogr-controller.c
 src/frogr-details-dialog.c

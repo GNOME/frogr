@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-18 02:29+0100\n"
+"POT-Creation-Date: 2010-12-22 03:33+0100\n"
 "PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Alejandro Pinheiro <apinheiro@igalia.com>\n"
 "Language-Team: English\n"
@@ -21,9 +21,21 @@ msgstr ""
 msgid "A Flickr remote organizer for GNOME\n"
 msgstr "Un organizador remoto de Flickr para GNOME\n"
 
-#: ../src/frogr-add-tags-dialog.c:217
+#: ../src/frogr-add-tags-dialog.c:221
 msgid "Add tags"
-msgstr "Añadir tags"
+msgstr "Añadir etiquetas"
+
+#: ../src/frogr-add-to-album-dialog.c:120
+msgid "Album's title"
+msgstr "Título del álbum"
+
+#: ../src/frogr-add-to-album-dialog.c:129
+msgid "Photos"
+msgstr "Fotos"
+
+#: ../src/frogr-add-to-album-dialog.c:467
+msgid "Add to album"
+msgstr "Añadir a álbumes"
 
 #: ../src/frogr-auth-dialog.c:31
 #, c-format
@@ -45,11 +57,11 @@ msgstr ""
 "Presione el botón para empezar a usar %s una vez lo haya registrado en su "
 "cuenta de flickr"
 
-#: ../src/frogr-controller.c:161
+#: ../src/frogr-controller.c:238
 msgid "Authorization successfully completed!"
 msgstr "Registro completado con éxito!"
 
-#: ../src/frogr-controller.c:162
+#: ../src/frogr-controller.c:239
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -57,81 +69,7 @@ msgstr ""
 "Fallo en el registro.\n"
 "Pruebe de nuevo por favor"
 
-#: ../src/frogr-details-dialog.c:263
-#, c-format
-msgid "(Editing %d pictures)"
-msgstr "(Editando %d imágenes)"
-
-#. This shows a dialog notifying the problem to the user
-#: ../src/frogr-details-dialog.c:384
-msgid "Missing data required"
-msgstr "Falta información necesaria"
-
-#: ../src/frogr-details-dialog.c:587
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:2
-msgid "Edit picture details"
-msgstr "Editar detalles de la imagen"
-
-#. File menu
-#: ../src/frogr-main-view.c:179
-msgid "_File"
-msgstr "_Archivo"
-
-#: ../src/frogr-main-view.c:185
-msgid "Authorize _frogr"
-msgstr "Autorizar _frogr"
-
-#: ../src/frogr-main-view.c:193
-msgid "_Add pictures"
-msgstr "_Añadir imágenes"
-
-#: ../src/frogr-main-view.c:199
-msgid "_Remove pictures"
-msgstr "_Eliminar imágenes"
-
-#: ../src/frogr-main-view.c:205
-msgid "_Upload"
-msgstr "_Subir"
-
-#: ../src/frogr-main-view.c:213
-msgid "_Quit"
-msgstr "_Salir"
-
-#. Help menu
-#: ../src/frogr-main-view.c:220
-msgid "_Help"
-msgstr "Ay_uda"
-
-#: ../src/frogr-main-view.c:226
-msgid "_About"
-msgstr "_Acerca de"
-
-#: ../src/frogr-main-view.c:244
-msgid "Add tags..."
-msgstr "Añadir tags"
-
-#: ../src/frogr-main-view.c:245
-msgid "Edit details..."
-msgstr "Editar detalles"
-
-#: ../src/frogr-main-view.c:246
-msgid "Remove"
-msgstr "Eliminar"
-
-#: ../src/frogr-main-view.c:692
-msgid "Select a picture"
-msgstr "Seleccionar una imagen"
-
-#: ../src/frogr-main-view.c:795
-#, c-format
-msgid ""
-"You need to properly authorize %s before uploading any picture to flickr.\n"
-"Please re-authorize it."
-msgstr ""
-"Es necesario autorizar %s para poder subir fotos a flickr.\n"
-"Por favor autorícelo de nuevo."
-
-#: ../src/frogr-main-view.c:946
+#: ../src/frogr-controller.c:484
 #, c-format
 msgid ""
 "%s is not properly authorized to upload pictures to flickr.\n"
@@ -140,28 +78,131 @@ msgstr ""
 "%s no está adecuadamente autorizado para subir fotos a flickr.Por favor "
 "autorícelo de nuevo."
 
-#: ../src/frogr-main-view.c:951
-#, c-format
+#: ../src/frogr-controller.c:489
 msgid "Process cancelled by the user."
 msgstr "Proceso cancelado por el usuario"
 
 #. General error: just dump the raw error description
-#: ../src/frogr-main-view.c:957
+#: ../src/frogr-controller.c:495
 #, c-format
 msgid "And error happened while uploading a picture: %s"
 msgstr "Ha ocurrido un error subiendo una imagen: %s"
 
-#: ../src/frogr-main-view.c:1111
+#: ../src/frogr-controller.c:983
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any picture to flickr.\n"
+"Please re-authorize it."
+msgstr ""
+"Es necesario autorizar %s para poder subir fotos a flickr.\n"
+"Por favor autorícelo de nuevo."
+
+#: ../src/frogr-details-dialog.c:259
+#, c-format
+msgid "(Editing %d pictures)"
+msgstr "(Editando %d imágenes)"
+
+#. This shows a dialog notifying the problem to the user
+#: ../src/frogr-details-dialog.c:380
+msgid "Missing data required"
+msgstr "Falta información necesaria"
+
+#: ../src/frogr-details-dialog.c:582
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:2
+msgid "Edit picture details"
+msgstr "Editar detalles de la imagen"
+
+#. File menu
+#: ../src/frogr-main-view.c:181
+msgid "_File"
+msgstr "_Archivo"
+
+#: ../src/frogr-main-view.c:187
+msgid "Authorize _frogr"
+msgstr "Autorizar _frogr"
+
+#: ../src/frogr-main-view.c:195
+msgid "_Add pictures"
+msgstr "_Añadir imágenes"
+
+#: ../src/frogr-main-view.c:202
+msgid "_Remove pictures"
+msgstr "_Eliminar imágenes"
+
+#: ../src/frogr-main-view.c:211
+msgid "_Quit"
+msgstr "_Salir"
+
+#. Actions menu
+#: ../src/frogr-main-view.c:217
+msgid "A_ctions"
+msgstr "A_cciones"
+
+#: ../src/frogr-main-view.c:223
+msgid "Edit _details..."
+msgstr "Editar _detalles"
+
+#: ../src/frogr-main-view.c:230
+msgid "Add _tags..."
+msgstr "Añadir e_tiquetas"
+
+#: ../src/frogr-main-view.c:237
+msgid "Add to al_bum..."
+msgstr "Añadir a ál_bumes"
+
+#: ../src/frogr-main-view.c:246
+msgid "_Upload all"
+msgstr "_Subir todo"
+
+#. Help menu
+#: ../src/frogr-main-view.c:254
+msgid "_Help"
+msgstr "Ay_uda"
+
+#: ../src/frogr-main-view.c:260
+msgid "_About"
+msgstr "_Acerca de"
+
+#. Edit details
+#: ../src/frogr-main-view.c:276
+msgid "Edit details..."
+msgstr "Editar detalles"
+
+#. Add Tags
+#: ../src/frogr-main-view.c:284
+msgid "Add tags..."
+msgstr "Añadir etiquetas"
+
+#. Add to album
+#: ../src/frogr-main-view.c:292
+msgid "Add to album..."
+msgstr "Añadir a álbumes"
+
+#. Remove
+#: ../src/frogr-main-view.c:302
+msgid "Remove"
+msgstr "Eliminar"
+
+#: ../src/frogr-main-view.c:745
+msgid "Select a picture"
+msgstr "Seleccionar una imagen"
+
+#: ../src/frogr-main-view.c:778 ../src/frogr-main-view.c:795
+#: ../src/frogr-main-view.c:812 ../src/frogr-main-view.c:832
+msgid "You need to select some pictures first"
+msgstr "Necesita seleccionar alguna imagen primero"
+
+#: ../src/frogr-main-view.c:1089
 msgid "Uploading pictures..."
 msgstr "Subiendo imágenes..."
 
-#: ../src/frogr-picture-loader.c:90
+#: ../src/frogr-picture-loader.c:94
 #, c-format
 msgid "Loading pictures %d / %d"
 msgstr "Cargando imágenes %d / %d"
 
 #. Update progress
-#: ../src/frogr-picture-uploader.c:79
+#: ../src/frogr-picture-uploader.c:85
 #, c-format
 msgid "Uploading '%s'..."
 msgstr "Subiendo '%s'..."

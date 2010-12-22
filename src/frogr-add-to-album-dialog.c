@@ -106,7 +106,7 @@ _create_tree_view (FrogrAddToAlbumDialog *self)
 
   /* Checkbox */
   rend = gtk_cell_renderer_toggle_new ();
-  col = gtk_tree_view_column_new_with_attributes (_("Select"),
+  col = gtk_tree_view_column_new_with_attributes (NULL,
                                                   rend,
                                                   "active", CHECKBOX_COL,
                                                   NULL);
