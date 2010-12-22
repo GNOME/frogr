@@ -204,7 +204,7 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 
   priv->entry = gtk_entry_new ();
   gtk_box_pack_start (GTK_BOX (vbox), priv->entry, TRUE, FALSE, 6);
-  gtk_widget_set_size_request (GTK_WIDGET (self), 200, -1);
+  gtk_widget_set_size_request (GTK_WIDGET (self), 300, -1);
 
   /* Show the UI */
   gtk_widget_show_all (GTK_WIDGET (self));
