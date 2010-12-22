@@ -71,6 +71,8 @@ static GtkWidget *_create_tree_view (FrogrAddToAlbumDialog *self);
 
 static void _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self);
 
+static void _fill_dialog_with_data (FrogrAddToAlbumDialog *self);
+
 static void _album_toggled_cb (GtkCellRendererToggle *celltoggle,
                                gchar *path_string,
                                GtkTreeView *treeview);
@@ -88,7 +90,9 @@ _on_dialog_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
   FrogrAddToAlbumDialog *self = NULL;
   self = FROGR_ADD_TO_ALBUM_DIALOG (widget);
+
   _populate_treemodel_with_albums (self);
+  _fill_dialog_with_data (self);
 }
 
 static GtkWidget *
@@ -157,6 +161,51 @@ _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self)
                           -1);
       g_free (n_photos_str);
     }
+}
+
+static void
+_fill_dialog_with_data (FrogrAddToAlbumDialog *self)
+{
+  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  GtkTreeIter iter;
+  gint n_albums;
+  gint n_pictures;
+
+  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+  n_albums = g_slist_length (priv->albums);
+  n_pictures = g_slist_length (priv->pictures);
+
+  /* No albums, nothing to do */
+  if (n_albums == 0 || n_pictures == 0)
+    return;
+
+  /* Iterate over all the items */
+  gtk_tree_model_get_iter_first (priv->treemodel, &iter);
+  do
+    {
+      FrogrAlbum *album = NULL;
+      GSList *p_item = NULL;
+      gboolean do_check = TRUE;
+
+      gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
+                          ALBUM_COL, &album, -1);
+
+      for (p_item = priv->pictures; p_item; p_item = g_slist_next (p_item))
+        {
+          FrogrPicture *picture = NULL;
+
+          picture = FROGR_PICTURE (p_item->data);
+          if (!frogr_picture_in_album (picture, album))
+            {
+              do_check = FALSE;
+              break;
+            }
+        }
+
+      gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
+                          CHECKBOX_COL, do_check, -1);
+    }
+  while (gtk_tree_model_iter_next (priv->treemodel, &iter));
 }
 
 static void
