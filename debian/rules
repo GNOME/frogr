@@ -3,6 +3,7 @@
 
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/class/gnome.mk
 
 DEB_INSTALL_DIRS_ALL := usr/bin
 DEB_INSTALL_DOCS_ALL := README NEWS AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
