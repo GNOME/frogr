@@ -13,11 +13,10 @@ BuildRequires:	gtk2-devel > 2.12, glib2-devel, libsoup-devel, libxml2-devel
 Requires:	gtk2 > 2.12, glib > 2.16, libsoup > 2.24, libxml2
 
 %description
-Frogr intends to be a complete GNOME application to remotely manage a
-flickr account from the desktop. It uses flicksoup to communicate with
-the server through the publicly available flickr REST API.
-
-For more information please refer to the Frogr website.
+Frogr is a small application for the GNOME desktop that allows users
+to manage their accounts in the Flickr image hosting website. It
+supports all the basic tasks, including uploading pictures, adding
+descriptions, setting tags and managing sets.
 
 %prep
 %setup -q

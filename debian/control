@@ -10,5 +10,7 @@ Package: frogr
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Flickr Remote Organizer for GNOME
- Frogr intends to be a complete GNOME application to remotely manage a
- flickr account from the desktop.
+ Frogr is a small application for the GNOME desktop that allows users
+ to manage their accounts in the Flickr image hosting website. It
+ supports all the basic tasks, including uploading pictures, adding
+ descriptions, setting tags and managing sets.
