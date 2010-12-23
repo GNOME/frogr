@@ -1,4 +1,4 @@
-0.3 (?? Dec 2010)
+0.3 (22 Dec 2010)
 
   * Fixed problems building debian packages.
   * Committed patches related to GNOME 3.0 integration (Javier Jardón).
