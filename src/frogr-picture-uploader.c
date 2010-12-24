@@ -82,7 +82,7 @@ _update_status_and_progress (FrogrPictureUploader *self)
       gchar *title = g_strdup (frogr_picture_get_title (picture));
 
       /* Update progress */
-      status_text = g_strdup_printf (_("Uploading '%s'..."), title);
+      status_text = g_strdup_printf (_("Uploading '%s'…"), title);
       progress_bar_text = g_strdup_printf ("%d / %d",
                                            priv->index,
                                            priv->n_pictures);

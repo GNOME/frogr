@@ -223,21 +223,21 @@ _populate_menu_bar (FrogrMainView *self)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Edit _Details..."));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Edit _Details…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_edit_details_menu_item_activate),
                     self);
   priv->edit_details_menu_item = menu_item;
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add _Tags..."));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Add _Tags…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_add_tags_menu_item_activate),
                     self);
   priv->add_tags_menu_item = menu_item;
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to Al_bum..."));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to Al_bum…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_add_to_album_menu_item_activate),
@@ -276,7 +276,7 @@ _ctxt_menu_create (FrogrMainView *self)
   ctxt_menu = gtk_menu_new ();
 
   /* Edit details */
-  item = gtk_menu_item_new_with_label (_("Edit Details..."));
+  item = gtk_menu_item_new_with_label (_("Edit Details…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect(item,
                    "activate",
@@ -284,7 +284,7 @@ _ctxt_menu_create (FrogrMainView *self)
                    self);
 
   /* Add Tags */
-  item = gtk_menu_item_new_with_label (_("Add Tags..."));
+  item = gtk_menu_item_new_with_label (_("Add Tags…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect(item,
                    "activate",
@@ -292,7 +292,7 @@ _ctxt_menu_create (FrogrMainView *self)
                    self);
 
   /* Add to album */
-  item = gtk_menu_item_new_with_label (_("Add to Album..."));
+  item = gtk_menu_item_new_with_label (_("Add to Album…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect(item,
                    "activate",
@@ -1088,7 +1088,7 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
   progress_vbox = gtk_dialog_get_content_area (GTK_DIALOG (progress_dialog));
   progress_bar = gtk_progress_bar_new ();
-  gtk_box_pack_start (GTK_BOX (progress_vbox), gtk_label_new (_("Uploading pictures...")), FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (progress_vbox), gtk_label_new (_("Uploading pictures…")), FALSE, FALSE, 6);
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
 
   gtk_widget_hide (progress_dialog);
