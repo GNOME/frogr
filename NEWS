@@ -1,7 +1,7 @@
 0.3 (22 Dec 2010)
 
   * Fixed problems building debian packages.
-  * Committed patches related to GNOME 3.0 integration (Javier JardÛn).
+  * Committed patches related to GNOME 3.0 integration (Javier Jard√≥n).
   * Got rid of libcurl and improved integration with the mainloop by
     replacing the flickcurl library with our asynchronous (implements
     the GAsync API) library based in libsoup: flicksoup.
@@ -21,14 +21,14 @@
 0.2 (12 Oct 2009)
 
   * Generate ChangeLog from git log with 'make dist'
-  * Added .spec file for fedora 11 packaging system (Adri·n PÈrez)
+  * Added .spec file for fedora 11 packaging system (Adri√°n P√©rez)
   * Added drag'n'drop support for loading pictures in frogr
   * Added support to add tags to pictures (instead of just replacing)
   * Fixed (legacy) support for libgnome2 to compile in debian lenny
   * Use accesor functions instead direct access and removed some
-    deprecated GTK+ symbols (Javier JardÛn)
-  * Added i18n support and a es_ES lang file (Alejandro PiÒeiro)
-  * Support silent build rules with automake 1.11 (Javier JardÛn)
+    deprecated GTK+ symbols (Javier Jard√≥n)
+  * Added i18n support and a es_ES lang file (Alejandro Pi√±eiro)
+  * Support silent build rules with automake 1.11 (Javier Jard√≥n)
   * Bugfixes and several minor improvements
 
 0.1.1 (22 Aug 2009)
@@ -38,7 +38,7 @@
 0.1 (21 Aug 2009)
 
   * A better UI. Faster and better user experience
-  * Basic configuration management to store account details (Adri·n PÈrez)
+  * Basic configuration management to store account details (Adri√°n P√©rez)
   * Support for editing details of multiple pictures at the same time
   * Added status and improved the progress bar usage to show the status
     of async operations, giving a much better feedback to the end user.

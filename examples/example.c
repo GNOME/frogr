@@ -285,10 +285,10 @@ complete_auth_cb                        (GObject      *object,
                                        TEST_PHOTO,
                                        "title",
                                        "description",
-                                       "áèïôu "
-                                       "çÇ*+[]{} "
+                                       "Ã¡Ã¨Ã¯Ã´u "
+                                       "Ã§Ã‡*+[]{} "
                                        "qwerty "
-                                       "!·$%&/(@#~^*+ "
+                                       "!Â·$%&/(@#~^*+ "
                                        "\"Tag With Spaces\"",
                                        FSP_VISIBILITY_NO,
                                        FSP_VISIBILITY_YES,
