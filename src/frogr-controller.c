@@ -183,7 +183,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
       break;
 
     case FSP_ERROR_SERVER_ERROR:
-      msg = g_strdup (_("Connection error:\nServer side error"));
+      msg = g_strdup (_("Connection error:\nServer-side error"));
       error_function = frogr_util_show_error_dialog;
       break;
 
@@ -226,7 +226,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
 
     default:
       // General error: just dump the raw error description 
-      msg = g_strdup_printf (_("And error happened while uploading a picture: %s."),
+      msg = g_strdup_printf (_("An error happened while uploading a picture: %s."),
                              error->message);
       error_function = frogr_util_show_error_dialog;
     }
@@ -1022,7 +1022,7 @@ frogr_controller_upload_pictures (FrogrController *self)
       gchar *msg = NULL;
 
       msg = g_strdup_printf (_("You need to properly authorize %s before"
-                               " uploading any picture to flickr.\n"
+                               " uploading any pictures to flickr.\n"
                                "Please re-authorize it."), PACKAGE_NAME);
 
       window = frogr_main_view_get_window (priv->mainview);
