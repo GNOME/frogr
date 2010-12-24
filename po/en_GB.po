@@ -1,0 +1,314 @@
+# frogr 0.3 British English translation
+# Copyright (C) 2010 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# Philip Withnall <philip@tecnocode.co.uk>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr 0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-12-24 17:20+0000\n"
+"PO-Revision-Date: 2010-12-24 17:07+0000\n"
+"Last-Translator: Philip Withnall <philip@tecnocode.co.uk>\n"
+"Language-Team: British English <en@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/frogr-about-dialog.c:44
+msgid "A Flickr remote organizer for GNOME\n"
+msgstr "A Flickr remote organiser for GNOME\n"
+
+#: ../src/frogr-add-tags-dialog.c:221
+msgid "Add Tags"
+msgstr "Add Tags"
+
+#: ../src/frogr-add-to-album-dialog.c:120
+msgid "Album Title"
+msgstr "Album Title"
+
+#: ../src/frogr-add-to-album-dialog.c:129
+msgid "Photos"
+msgstr "Photos"
+
+#: ../src/frogr-add-to-album-dialog.c:467
+msgid "Add to Album"
+msgstr "Add to Album"
+
+#: ../src/frogr-auth-dialog.c:31
+#, c-format
+msgid ""
+"You have not properly authorized %s in flickr.\n"
+"Please press the button to authorize %s and then come back to this screen to "
+"complete the process."
+msgstr ""
+"You have not properly authorised %s in flickr.\n"
+"Please press the button to authorise %s and then come back to this screen to "
+"complete the process."
+
+#: ../src/frogr-auth-dialog.c:36
+#, c-format
+msgid ""
+"Press the button to start using %s once you've authorized it in your flickr "
+"account."
+msgstr ""
+"Press the button to start using %s once you've authorised it in your flickr "
+"account."
+
+#: ../src/frogr-controller.c:171
+msgid "Process cancelled by the user"
+msgstr "Process cancelled by the user"
+
+#: ../src/frogr-controller.c:176
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+"Connection error:\n"
+"Network not available"
+
+#: ../src/frogr-controller.c:181
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+"Connection error:\n"
+"Bad request"
+
+#: ../src/frogr-controller.c:186
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+"Connection error:\n"
+"Server-side error"
+
+#: ../src/frogr-controller.c:191
+msgid ""
+"Error uploading picture:\n"
+"File invalid"
+msgstr ""
+"Error uploading picture:\n"
+"File invalid"
+
+#: ../src/frogr-controller.c:196
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+"Error uploading picture:\n"
+"Quota exceeded"
+
+#: ../src/frogr-controller.c:201
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+"Error:\n"
+"Photo not found"
+
+#: ../src/frogr-controller.c:206
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+"Error:\n"
+"Photo already in photoset"
+
+#: ../src/frogr-controller.c:211
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"Authorisation failed.\n"
+"Please try again"
+
+#: ../src/frogr-controller.c:217
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to flickr.\n"
+"Please re-authorize it"
+msgstr ""
+"Error\n"
+"%s is not properly authorised to upload pictures to flickr.\n"
+"Please re-authorise it"
+
+#: ../src/frogr-controller.c:223
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"Error:\n"
+"Service not available"
+
+#. General error: just dump the raw error description
+#: ../src/frogr-controller.c:229
+#, c-format
+msgid "An error happened while uploading a picture: %s."
+msgstr "An error happened while uploading a picture: %s."
+
+#: ../src/frogr-controller.c:317
+msgid "Authorization successfully completed!"
+msgstr "Authorisation successfully completed!"
+
+#: ../src/frogr-controller.c:1024
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to flickr.\n"
+"Please re-authorize it."
+msgstr ""
+"You need to properly authorise %s before uploading any pictures to flickr.\n"
+"Please re-authorise it."
+
+#: ../src/frogr-details-dialog.c:259
+#, c-format
+msgid "(Editing %d pictures)"
+msgstr "(Editing %d pictures)"
+
+#. This shows a dialog notifying the problem to the user
+#: ../src/frogr-details-dialog.c:380
+msgid "Missing data required"
+msgstr "Missing data required"
+
+#: ../src/frogr-details-dialog.c:582
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:2
+msgid "Edit Picture Details"
+msgstr "Edit Picture Details"
+
+#. File menu
+#: ../src/frogr-main-view.c:184
+msgid "_File"
+msgstr "_File"
+
+#: ../src/frogr-main-view.c:190
+msgid "Authorize _frogr"
+msgstr "Authorise _frogr"
+
+#: ../src/frogr-main-view.c:198
+msgid "_Add Pictures"
+msgstr "_Add Pictures"
+
+#: ../src/frogr-main-view.c:205
+msgid "_Remove Pictures"
+msgstr "_Remove Pictures"
+
+#: ../src/frogr-main-view.c:214
+msgid "_Quit"
+msgstr "_Quit"
+
+#. Actions menu
+#: ../src/frogr-main-view.c:220
+msgid "A_ctions"
+msgstr "A_ctions"
+
+#: ../src/frogr-main-view.c:226
+msgid "Edit _Details…"
+msgstr "Edit _Details…"
+
+#: ../src/frogr-main-view.c:233
+msgid "Add _Tags…"
+msgstr "Add _Tags…"
+
+#: ../src/frogr-main-view.c:240
+msgid "Add to Al_bum…"
+msgstr "Add to Al_bum…"
+
+#: ../src/frogr-main-view.c:249
+msgid "_Upload All"
+msgstr "_Upload All"
+
+#. Help menu
+#: ../src/frogr-main-view.c:257
+msgid "_Help"
+msgstr "_Help"
+
+#: ../src/frogr-main-view.c:263
+msgid "_About"
+msgstr "_About"
+
+#. Edit details
+#: ../src/frogr-main-view.c:279
+msgid "Edit Details…"
+msgstr "Edit Details…"
+
+#. Add Tags
+#: ../src/frogr-main-view.c:287
+msgid "Add Tags…"
+msgstr "Add Tags…"
+
+#. Add to album
+#: ../src/frogr-main-view.c:295
+msgid "Add to Album…"
+msgstr "Add to Album…"
+
+#. Remove
+#: ../src/frogr-main-view.c:305 ../data/gtkbuilder/frogr-main-view.xml.h:2
+msgid "Remove"
+msgstr "Remove"
+
+#: ../src/frogr-main-view.c:748
+msgid "Select a Picture"
+msgstr "Select a Picture"
+
+#: ../src/frogr-main-view.c:781
+msgid "You need to select some pictures first"
+msgstr "You need to select some pictures first"
+
+#: ../src/frogr-main-view.c:1091
+msgid "Uploading pictures…"
+msgstr "Uploading pictures…"
+
+#: ../src/frogr-picture-loader.c:94
+#, c-format
+msgid "Loading pictures %d / %d"
+msgstr "Loading pictures %d / %d"
+
+#. Update progress
+#: ../src/frogr-picture-uploader.c:85
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Uploading '%s'…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:1
+msgid "Add"
+msgstr "Add"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:3
+msgid "Upload"
+msgstr "Upload"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:4
+msgid "frogr"
+msgstr "frogr"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:1
+msgid "Description:"
+msgstr "Description:"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:3
+msgid "Family"
+msgstr "Family"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:4
+msgid "Friend"
+msgstr "Friend"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:5
+msgid "Private"
+msgstr "Private"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:6
+msgid "Public"
+msgstr "Public"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:7
+msgid "Tags:"
+msgstr "Tags:"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
+msgid "Title:"
+msgstr "Title:"
