@@ -579,7 +579,7 @@ frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures)
                                      "width-request", DIALOG_MIN_WIDTH,
                                      "height-request", DIALOG_MIN_HEIGHT,
                                      "resizable", TRUE,
-                                     "title", _("Edit picture details"),
+                                     "title", _("Edit Picture Details"),
                                      NULL));
 
   g_signal_connect (G_OBJECT (dialog), "response",

@@ -218,7 +218,7 @@ frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures)
   GtkWidget *dialog = NULL;
 
   dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_ADD_TAGS_DIALOG,
-                                     "title", _("Add tags"),
+                                     "title", _("Add Tags"),
                                      "modal", TRUE,
                                      "pictures", pictures,
                                      "transient-for", parent,

@@ -117,7 +117,7 @@ _create_tree_view (FrogrAddToAlbumDialog *self)
 
   /* Title */
   rend = gtk_cell_renderer_text_new ();
-  col = gtk_tree_view_column_new_with_attributes (_("Album's title"),
+  col = gtk_tree_view_column_new_with_attributes (_("Album Title"),
                                                   rend,
                                                   "text", TITLE_COL,
                                                   NULL);
@@ -464,7 +464,7 @@ frogr_add_to_album_dialog_show (GtkWindow *parent, GSList *pictures, GSList *alb
   GtkWidget *dialog = NULL;
 
   dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_ADD_TO_ALBUM_DIALOG,
-                                     "title", _("Add to album"),
+                                     "title", _("Add to Album"),
                                      "modal", TRUE,
                                      "pictures", pictures,
                                      "albums", albums,
