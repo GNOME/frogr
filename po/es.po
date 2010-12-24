@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-22 15:30+0100\n"
+"POT-Creation-Date: 2010-12-24 15:00+0100\n"
 "PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Alejandro Pinheiro <apinheiro@igalia.com>\n"
 "Language-Team: English\n"
@@ -236,7 +236,7 @@ msgid "Add to album..."
 msgstr "Añadir a álbumes"
 
 #. Remove
-#: ../src/frogr-main-view.c:305
+#: ../src/frogr-main-view.c:305 ../data/gtkbuilder/frogr-main-view.xml.h:2
 msgid "Remove"
 msgstr "Eliminar"
 
@@ -264,12 +264,8 @@ msgid "Uploading '%s'..."
 msgstr "Subiendo '%s'..."
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:1
-msgid "Add pictures"
-msgstr "Añadir imágenes"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:2
-msgid "Remove pictures"
-msgstr "Eliminar imágenes"
+msgid "Add"
+msgstr "Añadir"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:3
 msgid "Upload"
@@ -306,3 +302,9 @@ msgstr "Tags:"
 #: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
 msgid "Title:"
 msgstr "Título:"
+
+#~ msgid "Add pictures"
+#~ msgstr "Añadir imágenes"
+
+#~ msgid "Remove pictures"
+#~ msgstr "Eliminar imágenes"
