@@ -62,6 +62,10 @@ static const gchar *license =
   "This program uses flickr API through the flicksoup\n"
   "library (which comes bundled-in with frogr), but\n"
   "it's neither approved nor certified by flickr.";
+static const char translators_tpl[] =
+"%s (es)\n* Alejandro Piñeiro Iglesias <apinheiro@igalia.com>\n"
+         "* Mario Sanchez Prada <msanchez@igalia.com>\n\n"
+"%s (en_GB)\n* Philip Withnall <philip@tecnocode.co.uk>";
 
 static void
 _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
@@ -76,12 +80,20 @@ _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
 void
 frogr_about_dialog_show (GtkWindow *parent)
 {
-  GdkPixbuf *logo = gdk_pixbuf_new_from_file (ABOUT_DIALOG_ICON, NULL);
+  GdkPixbuf *logo = NULL;
+  char *translators = NULL;
+
+  logo = gdk_pixbuf_new_from_file (ABOUT_DIALOG_ICON, NULL);
 
   /* Install about dialog hooks */
   gtk_about_dialog_set_url_hook (_frogr_about_dialog_uri_hook, "", NULL);
   gtk_about_dialog_set_email_hook (_frogr_about_dialog_uri_hook, "mailto:",
                                    NULL);
+
+  /* Translated list of translators */
+  translators = g_strdup_printf (translators_tpl,
+                                 _("Spanish"),
+                                 _("British English"));
 
   /* Show about dialog */
   gtk_show_about_dialog (GTK_WINDOW (parent),
@@ -94,8 +106,10 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "version", VERSION,
                          "website", website,
                          "logo", logo,
+                         "translator-credits", translators,
                          "modal", TRUE,
                          NULL);
 
   g_object_unref (logo);
+  g_free (translators);
 }
