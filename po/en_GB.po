@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-24 17:20+0000\n"
+"POT-Creation-Date: 2010-12-26 18:30+0100\n"
 "PO-Revision-Date: 2010-12-24 17:07+0000\n"
 "Last-Translator: Philip Withnall <philip@tecnocode.co.uk>\n"
 "Language-Team: British English <en@li.org>\n"
@@ -19,6 +19,14 @@ msgstr ""
 #: ../src/frogr-about-dialog.c:44
 msgid "A Flickr remote organizer for GNOME\n"
 msgstr "A Flickr remote organiser for GNOME\n"
+
+#: ../src/frogr-about-dialog.c:95
+msgid "Spanish"
+msgstr "Spanish"
+
+#: ../src/frogr-about-dialog.c:96
+msgid "British English"
+msgstr "British English"
 
 #: ../src/frogr-add-tags-dialog.c:221
 msgid "Add Tags"
