@@ -16,6 +16,42 @@ TODO list for the uploader:
 
  * Allow adding pictures by just selecting its folder.
 
+ * Create albums along with the upload process, assigning pictures to
+   them.
+
+ * Fix startup to be faster and more responsive (no more waiting for
+   albums).
+
+ * Continously try to retrieve albums till max tries, to improve user
+   experience? (not sure about this).
+
+ * Allow setting license type for the pictures in the details dialog.
+
+ * More descriptive strings in detail window (e.g. s/'friend'/'visible
+   to friends'))
+
+ * Fix multiphoto picture (which is horrible atm) in details window.
+
+ * Retrieve and store more user info (username, fullname, nsid, quota,
+   limit, pro/normal...)
+
+ * Allow uploading the selected pictures only ? (not sure about this).
+
+ * Retrieve list of tags (and suggest them to the user when needed).
+
+ * Preferences dialog: allow the user to specify some things, such as
+   'open browser after upload', pictures visibility by default...
+
+ * Allow handling multiple flickr accounts.
+
+ * Add HTTP/HTTPS proxy support.
+
+ * Get rid of multiple icons (just leave the scalable one).
+
+ * Move frogr.xpm to /usr/share/pixmaps when installing.
+
+ * Bugs/leaks hunting.
+
  * etc...
 
 
