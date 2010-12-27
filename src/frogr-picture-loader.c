@@ -22,6 +22,7 @@
 
 #include "frogr-picture-loader.h"
 
+#include "frogr-config.h"
 #include "frogr-controller.h"
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
@@ -51,6 +52,7 @@ struct _FrogrPictureLoaderPrivate
 {
   FrogrController *controller;
   FrogrMainView *mainview;
+  FrogrConfig *config;
 
   GSList *filepaths;
   GSList *current;
@@ -232,7 +234,12 @@ _load_next_picture_cb (GObject *object,
           s_pixbuf = _get_scaled_pixbuf (pixbuf);
 
           /* Build the FrogrPicture and set pixbuf */
-          fpicture = frogr_picture_new (filepath, filename, FALSE);
+          fpicture = frogr_picture_new (filepath,
+                                        filename,
+                                        frogr_config_get_default_public (priv->config),
+                                        frogr_config_get_default_family (priv->config),
+                                        frogr_config_get_default_friend (priv->config));
+
           frogr_picture_set_pixbuf (fpicture, s_pixbuf);
 
           /* Free */
@@ -299,6 +306,12 @@ _frogr_picture_loader_dispose (GObject* object)
       priv->controller = NULL;
     }
 
+  if (priv->config)
+    {
+      g_object_unref (priv->config);
+      priv->config = NULL;
+    }
+
   G_OBJECT_CLASS (frogr_picture_loader_parent_class)->dispose(object);
 }
 
@@ -337,6 +350,8 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   /* We need the controller to get the main window */
   priv->controller = g_object_ref (frogr_controller_get_instance ());
   priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
+  priv->config = frogr_config_get_instance ();
+  g_object_ref (priv->config);
 
   /* Init the rest of private data */
   priv->filepaths = NULL;

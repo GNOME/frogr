@@ -564,7 +564,12 @@ _on_pictures_uploaded (FrogrController *self,
 {
   if (!error)
     {
-      _open_browser_to_edit_details (self, fpuploader);
+      FrogrControllerPrivate *priv = NULL;
+      priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+      if (frogr_config_get_open_browser_after_upload (priv->config))
+        _open_browser_to_edit_details (self, fpuploader);
+
       g_debug ("Success uploading picture!");
     }
   else

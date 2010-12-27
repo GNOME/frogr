@@ -410,7 +410,9 @@ frogr_picture_init (FrogrPicture *self)
 FrogrPicture *
 frogr_picture_new (const gchar *filepath,
                    const gchar *title,
-                   gboolean public)
+                   gboolean public,
+                   gboolean family,
+                   gboolean friend)
 {
   g_return_val_if_fail (filepath, NULL);
   g_return_val_if_fail (title, NULL);
@@ -419,6 +421,8 @@ frogr_picture_new (const gchar *filepath,
                               "filepath", filepath,
                               "title", title,
                               "is-public", public,
+                              "is-family", family,
+                              "is-friend", friend,
                               NULL);
   return FROGR_PICTURE (new);
 }

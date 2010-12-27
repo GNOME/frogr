@@ -57,7 +57,9 @@ GType frogr_picture_get_type(void) G_GNUC_CONST;
 /* Constructor */
 FrogrPicture *frogr_picture_new (const gchar *filepath,
                                  const gchar *title,
-                                 gboolean public);
+                                 gboolean public,
+                                 gboolean family,
+                                 gboolean friend);
 
 /* Data managing methods */
 
