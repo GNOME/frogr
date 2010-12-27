@@ -30,6 +30,7 @@
 #include <string.h>
 #include <errno.h>
 
+#define ACCOUNTS_FILENAME "accounts.xml"
 #define FROGR_CONFIG_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
                                 FROGR_TYPE_CONFIG,      \
@@ -60,7 +61,6 @@ static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
                                          const gchar *xml_name,
                                          GObject     *object,
                                          const gchar *prop_name);
-
 
 /* Private functions */
 
@@ -102,10 +102,10 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
 static void
 _frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
 {
-  FrogrConfigPrivate *priv;
-  gchar *xml_path;
+  FrogrConfigPrivate *priv = NULL;
+  gchar *xml_path = NULL;
   gboolean load_ok = FALSE;
-  xmlNodePtr node;
+  xmlNodePtr node = NULL;
   xmlDocPtr xml = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
@@ -113,54 +113,46 @@ _frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
 
-  xml_path = g_build_filename (config_dir, "accounts.xml", NULL);
+  xml_path = g_build_filename (config_dir, ACCOUNTS_FILENAME, NULL);
   if (g_file_test (xml_path, G_FILE_TEST_IS_REGULAR))
     xml = xmlParseFile (xml_path);
 
-  if (xml == NULL)
-    {
-      g_debug ("Could not load '%s/accounts.xml'", config_dir);
-      goto cleanup_path;
-    }
-
-  if ((node = xmlDocGetRootElement (xml)) == NULL)
-    {
-      g_warning ("File '%s/accounts.xml' is empty", config_dir);
-      goto cleanup_parser;
-    }
-
-  if (node->name == NULL ||
-      xmlStrcmp (node->name, (const xmlChar*) "accounts") != 0)
-    {
-      g_warning ("File '%s/accounts.xml' does not start with "
-                 "an <accounts> tag", config_dir);
-      goto cleanup_parser;
-    }
-
-  /* Iterate over children nodes and extract accounts. */
-  for (node = node->children; node != NULL; node = node->next)
-    {
-      /* Node "account" found, stop searching */
-      if (xmlStrcmp (node->name, (const xmlChar*) "account") == 0)
-        break;
-    }
-
-  if (node != NULL && !_frogr_config_load_account_xml (priv->account, xml, node))
-    {
-      g_warning ("Malformed account in '%s/accounts.xml', "
-                 "skipping it", config_dir);
-    }
+  if (xml)
+    node = xmlDocGetRootElement (xml);
   else
+    g_debug ("Could not load '%s/%s'", config_dir, ACCOUNTS_FILENAME);
+
+  if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "accounts"))
     {
-      /* Everything was loaded okay */
-      load_ok = TRUE;
+      /* Iterate over children nodes and extract accounts. */
+      for (node = node->children; node != NULL; node = node->next)
+        {
+          /* Node "account" found, stop searching */
+          if (xmlStrcmp (node->name, (const xmlChar*) "account") == 0)
+            break;
+        }
+    }
+  else if (node && node->name)
+    {
+      g_warning ("File '%s/%s' does not start with "
+                 "an <accounts> tag", config_dir, ACCOUNTS_FILENAME);
+    }
+  else if (!node && xml)
+    {
+      g_warning ("File '%s/%s' is empty", config_dir, ACCOUNTS_FILENAME);
     }
 
- cleanup_parser:
-  xmlFreeDoc (xml);
-  xmlCleanupParser ();
+  if (node && _frogr_config_load_account_xml (priv->account, xml, node))
+    load_ok = TRUE;
+  else if (node)
+    g_warning ("Malformed account in '%s/%s', "
+               "skipping it", config_dir, ACCOUNTS_FILENAME);
+  if (xml)
+    {
+      xmlFreeDoc (xml);
+      xmlCleanupParser ();
+    }
 
- cleanup_path:
   if (!load_ok)
     g_remove (xml_path);
 
@@ -303,7 +295,7 @@ frogr_config_class_init (FrogrConfigClass *klass)
   g_type_class_add_private (klass, sizeof (FrogrConfigPrivate));
 
   obj_class->constructor = _frogr_config_constructor;
-  obj_class->dispose    = _frogr_config_dispose;
+  obj_class->dispose = _frogr_config_dispose;
 }
 
 static void
@@ -354,5 +346,6 @@ frogr_config_get_account (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
 
-  return FROGR_CONFIG_GET_PRIVATE (self)->account;
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->account;
 }
