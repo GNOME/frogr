@@ -44,6 +44,11 @@ typedef struct _FrogrConfigPrivate FrogrConfigPrivate;
 struct _FrogrConfigPrivate
 {
   FrogrAccount *account;
+
+  gboolean default_public;
+  gboolean default_family;
+  gboolean default_friend;
+  gboolean open_browser_after_upload;
 };
 
 static FrogrConfig *_instance = NULL;
@@ -53,10 +58,14 @@ static FrogrConfig *_instance = NULL;
 static gboolean _frogr_config_load_account_xml (FrogrAccount *faccount,
                                                 xmlDocPtr     xml,
                                                 xmlNodePtr    rootnode);
+
 static void _frogr_config_load (FrogrConfig *self, const gchar *config_dir);
+
 static void _frogr_config_load_account (FrogrConfig *self,
                                         const gchar *config_dir);
+
 static gboolean _frogr_config_save_account (FrogrConfig *self);
+
 static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
                                          const gchar *xml_name,
                                          GObject     *object,
@@ -313,6 +322,12 @@ frogr_config_init (FrogrConfig *self)
     }
 
   priv->account = frogr_account_new ();
+
+  priv->default_public = FALSE;
+  priv->default_family = FALSE;
+  priv->default_friend = FALSE;
+  priv->open_browser_after_upload = FALSE;
+
   _frogr_config_load (self, config_dir);
 
   g_free (config_dir);
@@ -348,4 +363,76 @@ frogr_config_get_account (FrogrConfig *self)
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->account;
+}
+
+void
+frogr_config_set_default_public (FrogrConfig *self, gboolean value)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->default_public = value;
+}
+
+gboolean
+frogr_config_get_default_public (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->default_public;
+}
+
+void
+frogr_config_set_default_family (FrogrConfig *self, gboolean value)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->default_family = value;
+}
+
+gboolean
+frogr_config_get_default_family (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->default_family;
+}
+
+void
+frogr_config_set_default_friend (FrogrConfig *self, gboolean value)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->default_friend = value;
+}
+
+gboolean
+frogr_config_get_default_friend (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->default_friend;
+}
+
+void
+frogr_config_set_open_browser_after_upload (FrogrConfig *self, gboolean value)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->open_browser_after_upload = value;
+}
+
+gboolean
+frogr_config_get_open_browser_after_upload (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->open_browser_after_upload;
 }

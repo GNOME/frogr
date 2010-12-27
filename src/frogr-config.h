@@ -41,7 +41,6 @@ G_BEGIN_DECLS
 typedef struct _FrogrConfig        FrogrConfig;
 typedef struct _FrogrConfigClass   FrogrConfigClass;
 
-
 struct _FrogrConfig
 {
   GObject parent_instance;
@@ -64,6 +63,22 @@ FrogrAccount* frogr_config_get_account (FrogrConfig *self);
 
 void frogr_config_set_account (FrogrConfig  *self,
                                FrogrAccount *faccount);
+
+void frogr_config_set_default_public (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_default_public (FrogrConfig *self);
+
+void frogr_config_set_default_family (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_default_family (FrogrConfig *self);
+
+void frogr_config_set_default_friend (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_default_friend (FrogrConfig *self);
+
+void frogr_config_set_open_browser_after_upload (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_open_browser_after_upload (FrogrConfig *self);
 
 G_END_DECLS
 
