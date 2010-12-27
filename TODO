@@ -32,6 +32,8 @@ TODO list for the uploader:
 
  * Add HTTP/HTTPS proxy support.
 
+ * Add video uploading support (see http://code.google.com/p/frogr/issues/detail?id=8)
+
  * Bugs/leaks hunting.
 
  * etc...
