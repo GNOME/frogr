@@ -396,7 +396,7 @@ _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
                                     gpointer data)
 {
   FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (data);
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (data);
+  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
 
   /* Reset consistence and update UI */
   gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb),
