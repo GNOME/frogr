@@ -748,6 +748,12 @@ _frogr_controller_dispose (GObject* object)
       priv->config = NULL;
     }
 
+  if (priv->account)
+    {
+      g_object_unref (priv->account);
+      priv->account = NULL;
+    }
+
   if (priv->session)
     {
       g_object_unref (priv->session);
@@ -823,8 +829,13 @@ frogr_controller_init (FrogrController *self)
   /* Default variables */
   priv->state = FROGR_STATE_IDLE;
   priv->mainview = NULL;
+
   priv->config = frogr_config_get_instance ();
+  g_object_ref (priv->config);
+
   priv->account = frogr_config_get_account (priv->config);
+  g_object_ref (priv->account);
+
   priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
   priv->photos_mgr = fsp_photos_mgr_new (priv->session);
   priv->cancellable = NULL;
