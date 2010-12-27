@@ -108,6 +108,10 @@ static void _set_internal_state (FrogrController *self, FrogrControllerState sta
 static void _notify_error_to_user (FrogrController *self,
                                    GError *error);
 
+static void _show_auth_failed_dialog (GtkWindow *parent, const gchar *message);
+
+static void _auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
+
 static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
 
 static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data);
@@ -212,7 +216,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
 
     case FSP_ERROR_AUTHENTICATION_FAILED:
       msg = g_strdup_printf (_("Authorization failed.\n" "Please try again"));
-      error_function = frogr_util_show_error_dialog;
+      error_function = _show_auth_failed_dialog;
       break;
 
     case FSP_ERROR_NOT_AUTHENTICATED:
@@ -243,6 +247,37 @@ _notify_error_to_user (FrogrController *self, GError *error)
 
   g_debug ("%s", msg);
   g_free (msg);
+}
+
+static void
+_show_auth_failed_dialog (GtkWindow *parent, const gchar *message)
+{
+  GtkWidget *dialog = NULL;
+
+  dialog = gtk_message_dialog_new (parent,
+                                   GTK_DIALOG_MODAL,
+                                   GTK_MESSAGE_ERROR,
+                                   GTK_BUTTONS_OK,
+                                   "%s", message);
+  gtk_window_set_title (GTK_WINDOW (dialog), PACKAGE);
+
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (_auth_failed_dialog_response_cb),
+                    NULL);
+
+  gtk_widget_show_all (dialog);
+}
+
+static void
+_auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
+{
+  if (response == GTK_RESPONSE_OK)
+    {
+      frogr_controller_show_auth_dialog (frogr_controller_get_instance ());
+      g_debug ("Showing the authorization dialog once again...");
+    }
+
+  gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 static void
