@@ -24,9 +24,6 @@ TODO list for the uploader:
 
  * Allow setting license type for the pictures in the details dialog.
 
- * More descriptive strings in detail window (e.g. s/'friend'/'visible
-   to friends'))
-
  * Fix multiphoto picture (which is horrible atm) in details window.
 
  * Retrieve and store more user info (username, fullname, nsid, quota,

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-26 18:30+0100\n"
+"POT-Creation-Date: 2010-12-27 15:05+0100\n"
 "PO-Revision-Date: 2010-12-24 17:07+0000\n"
 "Last-Translator: Philip Withnall <philip@tecnocode.co.uk>\n"
 "Language-Team: British English <en@li.org>\n"
@@ -64,11 +64,11 @@ msgstr ""
 "Press the button to start using %s once you've authorised it in your flickr "
 "account."
 
-#: ../src/frogr-controller.c:171
+#: ../src/frogr-controller.c:178
 msgid "Process cancelled by the user"
 msgstr "Process cancelled by the user"
 
-#: ../src/frogr-controller.c:176
+#: ../src/frogr-controller.c:183
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -76,7 +76,7 @@ msgstr ""
 "Connection error:\n"
 "Network not available"
 
-#: ../src/frogr-controller.c:181
+#: ../src/frogr-controller.c:188
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -84,7 +84,7 @@ msgstr ""
 "Connection error:\n"
 "Bad request"
 
-#: ../src/frogr-controller.c:186
+#: ../src/frogr-controller.c:193
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -92,7 +92,7 @@ msgstr ""
 "Connection error:\n"
 "Server-side error"
 
-#: ../src/frogr-controller.c:191
+#: ../src/frogr-controller.c:198
 msgid ""
 "Error uploading picture:\n"
 "File invalid"
@@ -100,7 +100,7 @@ msgstr ""
 "Error uploading picture:\n"
 "File invalid"
 
-#: ../src/frogr-controller.c:196
+#: ../src/frogr-controller.c:203
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -108,7 +108,7 @@ msgstr ""
 "Error uploading picture:\n"
 "Quota exceeded"
 
-#: ../src/frogr-controller.c:201
+#: ../src/frogr-controller.c:208
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -116,7 +116,7 @@ msgstr ""
 "Error:\n"
 "Photo not found"
 
-#: ../src/frogr-controller.c:206
+#: ../src/frogr-controller.c:213
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -124,7 +124,7 @@ msgstr ""
 "Error:\n"
 "Photo already in photoset"
 
-#: ../src/frogr-controller.c:211
+#: ../src/frogr-controller.c:218
 #, c-format
 msgid ""
 "Authorization failed.\n"
@@ -133,7 +133,7 @@ msgstr ""
 "Authorisation failed.\n"
 "Please try again"
 
-#: ../src/frogr-controller.c:217
+#: ../src/frogr-controller.c:224
 #, c-format
 msgid ""
 "Error\n"
@@ -144,7 +144,7 @@ msgstr ""
 "%s is not properly authorised to upload pictures to flickr.\n"
 "Please re-authorise it"
 
-#: ../src/frogr-controller.c:223
+#: ../src/frogr-controller.c:230
 #, c-format
 msgid ""
 "Error:\n"
@@ -154,16 +154,16 @@ msgstr ""
 "Service not available"
 
 #. General error: just dump the raw error description
-#: ../src/frogr-controller.c:229
+#: ../src/frogr-controller.c:236
 #, c-format
 msgid "An error happened while uploading a picture: %s."
 msgstr "An error happened while uploading a picture: %s."
 
-#: ../src/frogr-controller.c:317
+#: ../src/frogr-controller.c:355
 msgid "Authorization successfully completed!"
 msgstr "Authorisation successfully completed!"
 
-#: ../src/frogr-controller.c:1024
+#: ../src/frogr-controller.c:1065
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -258,15 +258,15 @@ msgstr "Add to Album…"
 msgid "Remove"
 msgstr "Remove"
 
-#: ../src/frogr-main-view.c:748
+#: ../src/frogr-main-view.c:743
 msgid "Select a Picture"
 msgstr "Select a Picture"
 
-#: ../src/frogr-main-view.c:781
+#: ../src/frogr-main-view.c:776
 msgid "You need to select some pictures first"
 msgstr "You need to select some pictures first"
 
-#: ../src/frogr-main-view.c:1091
+#: ../src/frogr-main-view.c:1086
 msgid "Uploading pictures…"
 msgstr "Uploading pictures…"
 
@@ -298,25 +298,25 @@ msgid "Description:"
 msgstr "Description:"
 
 #: ../data/gtkbuilder/frogr-details-dialog.xml.h:3
-msgid "Family"
-msgstr "Family"
-
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:4
-msgid "Friend"
-msgstr "Friend"
-
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:5
 msgid "Private"
 msgstr "Private"
 
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:6
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:4
 msgid "Public"
 msgstr "Public"
 
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:7
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:5
 msgid "Tags:"
 msgstr "Tags:"
 
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:6
 msgid "Title:"
 msgstr "Title:"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:7
+msgid "Visible to family"
+msgstr "Visible to family"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
+msgid "Visible to friends"
+msgstr "Visible to friends"
