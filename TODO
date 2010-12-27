@@ -40,8 +40,6 @@ TODO list for the uploader:
 
  * Add HTTP/HTTPS proxy support.
 
- * Get rid of multiple icons (just leave the scalable one).
-
  * Bugs/leaks hunting.
 
  * etc...
