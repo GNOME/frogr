@@ -22,7 +22,6 @@
 
 #include "frogr-settings-dialog.h"
 
-#include "frogr-account.h"
 #include "frogr-config.h"
 #include "frogr-util.h"
 
@@ -38,7 +37,6 @@ G_DEFINE_TYPE (FrogrSettingsDialog, frogr_settings_dialog, GTK_TYPE_DIALOG);
 
 typedef struct _FrogrSettingsDialogPrivate {
   FrogrConfig *config;
-  FrogrAccount *account;
 
   GtkWidget *public_rb;
   GtkWidget *private_rb;
@@ -60,8 +58,6 @@ static FrogrSettingsDialog *_instance = NULL;
 static void _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook);
 
 static void _fill_dialog_with_data (FrogrSettingsDialog *self);
-
-static gboolean _validate_dialog_data (FrogrSettingsDialog *self);
 
 static gboolean _save_data (FrogrSettingsDialog *self);
 
@@ -185,62 +181,57 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 static void
 _fill_dialog_with_data (FrogrSettingsDialog *self)
 {
-  /* FrogrSettingsDialogPrivate *priv = */
-  /*   FROGR_SETTINGS_DIALOG_GET_PRIVATE (self); */
+  FrogrSettingsDialogPrivate *priv =
+    FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
-  /* TODO: set widgets values according to current configuration */
-}
+  priv->public_visibility = frogr_config_get_default_public (priv->config);
+  priv->family_visibility = frogr_config_get_default_family (priv->config);
+  priv->friend_visibility = frogr_config_get_default_friend (priv->config);
+  priv->open_browser_after_upload =
+    frogr_config_get_open_browser_after_upload (priv->config);
 
-static gboolean
-_validate_dialog_data (FrogrSettingsDialog *self)
-{
-  /* FrogrSettingsDialogPrivate *priv = */
-  /*   FROGR_SETTINGS_DIALOG_GET_PRIVATE (self); */
-
-  gboolean result = TRUE;
-
-  /* TODO */
-
-  /* Validated if reached */
-  return result;
+  _update_ui (self);
 }
 
 static gboolean
 _save_data (FrogrSettingsDialog *self)
 {
-  /* FrogrSettingsDialogPrivate *priv = */
-  /*   FROGR_SETTINGS_DIALOG_GET_PRIVATE (self); */
+  FrogrSettingsDialogPrivate *priv =
+    FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
-  gboolean result = TRUE;
+  frogr_config_set_default_public (priv->config, priv->public_visibility);
+  frogr_config_set_default_family (priv->config, priv->family_visibility);
+  frogr_config_set_default_friend (priv->config, priv->friend_visibility);
+  frogr_config_set_open_browser_after_upload (priv->config,
+                                              priv->open_browser_after_upload);
+  frogr_config_save_settings (priv->config);
 
-  /* validate dialog */
-  if (_validate_dialog_data (self))
-    {
-      /* TODO */
-    }
-  else
-    {
-      /* This shows a dialog notifying the problem to the user */
-
-      /* TODO: Put a more descriptive error message here */
-      frogr_util_show_error_dialog (GTK_WINDOW (self), _("Error saving settings"));
-    }
-
-  /* Return result */
-  return result;
+  /* While no validation process is used, always return TRUR */
+  return TRUE;
 }
 
 static void
 _update_ui (FrogrSettingsDialog *self)
 {
   FrogrSettingsDialogPrivate *priv = NULL;
-  gboolean active = FALSE;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
-  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->public_rb));
 
-  gtk_widget_set_sensitive (priv->friend_cb, !active);
-  gtk_widget_set_sensitive (priv->family_cb, !active);
+  /* Update widgets' values */
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->public_rb),
+                                priv->public_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->private_rb),
+                                !priv->public_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb),
+                                priv->family_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb),
+                                priv->friend_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->open_browser_after_upload_cb),
+                                priv->open_browser_after_upload);
+
+  /* Sensitiveness */
+  gtk_widget_set_sensitive (priv->friend_cb, !priv->public_visibility);
+  gtk_widget_set_sensitive (priv->family_cb, !priv->public_visibility);
 }
 
 static void
@@ -313,12 +304,6 @@ _frogr_settings_dialog_dispose (GObject *object)
       priv->config = NULL;
     }
 
-  if (priv->account)
-    {
-      g_object_unref (priv->account);
-      priv->account = NULL;
-    }
-
   G_OBJECT_CLASS(frogr_settings_dialog_parent_class)->dispose (object);
 }
 
@@ -343,9 +328,6 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
 
   priv->config = frogr_config_get_instance ();
   g_object_ref (priv->config);
-
-  priv->account = frogr_config_get_account (priv->config);
-  g_object_ref (priv->account);
 
   priv->public_rb = NULL;
   priv->private_rb = NULL;
@@ -390,8 +372,6 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   gtk_widget_show_all (GTK_WIDGET (self));
   gtk_dialog_set_default_response (GTK_DIALOG (self),
                                    GTK_RESPONSE_OK);
-
-  _update_ui (self);
 }
 
 
