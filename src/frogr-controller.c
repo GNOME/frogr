@@ -333,7 +333,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
         {
           /* Set and save the auth token and the settings to disk */
           frogr_account_set_token (priv->account, token);
-          frogr_config_save (priv->config);
+          frogr_config_save_account (priv->config);
 
           g_debug ("Authorization successfully completed!");
 
@@ -917,6 +917,9 @@ frogr_controller_quit_app (FrogrController *self)
       g_object_unref (priv->mainview);
 
       priv->app_running = FALSE;
+
+      frogr_config_save_all (priv->config);
+
       return TRUE;
     }
 
@@ -1056,7 +1059,7 @@ frogr_controller_revoke_authorization (FrogrController *self)
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   fsp_session_set_token (priv->session, NULL);
   frogr_account_set_token (priv->account, NULL);
-  frogr_config_save (priv->config);
+  frogr_config_save_account (priv->config);
 }
 
 void

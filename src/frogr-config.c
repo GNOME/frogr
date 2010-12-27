@@ -72,12 +72,13 @@ static gboolean _frogr_config_load_account_xml (FrogrAccount *faccount,
 static void _frogr_config_load_account (FrogrConfig *self,
                                         const gchar *config_dir);
 
+static gboolean _frogr_config_save_settings (FrogrConfig *self);
+
 static gboolean _frogr_config_save_account (FrogrConfig *self);
 
 static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
                                          const gchar *xml_name,
-                                         GObject     *object,
-                                         const gchar *prop_name);
+                                         const gchar *content);
 
 /* Private functions */
 
@@ -294,32 +295,36 @@ _frogr_config_load (FrogrConfig *self, const gchar *config_dir)
 }
 
 static gboolean
-_frogr_config_save_account (FrogrConfig *self)
+_frogr_config_save_settings (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv;
+  FrogrConfigPrivate *priv = NULL;
+  xmlDocPtr xml = NULL;
+  xmlNodePtr root = NULL;
+  xmlNodePtr node = NULL;
+  gchar *xml_path = NULL;
   gboolean retval = TRUE;
-  xmlDocPtr xml;
-  xmlNodePtr node, root;
-  GObject *account;
-  gchar *xml_path;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   xml = xmlNewDoc ((const xmlChar*) "1.0");
-  root = xmlNewNode (NULL, (const xmlChar*) "accounts");
+  root = xmlNewNode (NULL, (const xmlChar*) "settings");
   xmlDocSetRootElement (xml, root);
 
-  /* Handle account */
-  if ((account = G_OBJECT (priv->account)) != NULL) {
-    node = xmlNewNode (NULL, (const xmlChar*) "account");
-    _xml_add_string_child (node, "token", account, "token");
-    xmlAddChild (root, node);
-  }
+  /* Default visibility */
+  node = xmlNewNode (NULL, (const xmlChar*) "default-visibility");
+  _xml_add_string_child (node, "public", priv->default_public ? "1" : "0");
+  _xml_add_string_child (node, "family", priv->default_family ? "1" : "0");
+  _xml_add_string_child (node, "friend", priv->default_friend ? "1" : "0");
+  xmlAddChild (root, node);
+
+  /* Default actions */
+  _xml_add_string_child (root, "open-browser-after-upload",
+                         priv->open_browser_after_upload ? "1" : "0");
 
   xml_path = g_build_filename (g_get_user_config_dir (),
-                               "frogr", "accounts.xml", NULL);
+                               g_get_prgname (), SETTINGS_FILENAME, NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
     g_critical ("Unable to open '%s' for saving", xml_path);
@@ -333,28 +338,62 @@ _frogr_config_save_account (FrogrConfig *self)
   return retval;
 }
 
+static gboolean
+_frogr_config_save_account (FrogrConfig *self)
+{
+  FrogrConfigPrivate *priv = NULL;
+  xmlDocPtr xml = NULL;
+  xmlNodePtr root = NULL;
+  xmlNodePtr node = NULL;
+  gchar *xml_path = NULL;
+  gboolean retval = TRUE;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+
+  xml = xmlNewDoc ((const xmlChar*) "1.0");
+  root = xmlNewNode (NULL, (const xmlChar*) "accounts");
+  xmlDocSetRootElement (xml, root);
+
+  /* Handle account */
+  if (priv->account) {
+    node = xmlNewNode (NULL, (const xmlChar*) "account");
+    _xml_add_string_child (node, "token", frogr_account_get_token (priv->account));
+    xmlAddChild (root, node);
+  }
+
+  xml_path = g_build_filename (g_get_user_config_dir (),
+                               g_get_prgname (), ACCOUNTS_FILENAME, NULL);
+
+  if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
+    g_critical ("Unable to open '%s' for saving", xml_path);
+    retval = FALSE;
+  }
+
+  /* Free */
+  xmlFreeDoc (xml);
+  g_free (xml_path);
+
+  return retval;
+}
 
 static xmlNodePtr
 _xml_add_string_child (xmlNodePtr   parent,
                        const gchar *xml_name,
-                       GObject     *object,
-                       const gchar *prop_name)
+                       const gchar *content)
 {
   xmlNodePtr node;
   xmlChar *enc;
-  gchar *value;
 
-  g_return_val_if_fail (parent    != NULL, NULL);
-  g_return_val_if_fail (xml_name  != NULL, NULL);
-  g_return_val_if_fail (object    != NULL, NULL);
-  g_return_val_if_fail (prop_name != NULL, NULL);
-
-  g_object_get (object, prop_name, &value, NULL);
+  g_return_val_if_fail (parent != NULL, NULL);
+  g_return_val_if_fail (xml_name != NULL, NULL);
+  g_return_val_if_fail (content != NULL, NULL);
 
   node = xmlNewNode (NULL, (const xmlChar*) xml_name);
-  enc = xmlEncodeEntitiesReentrant (NULL, (const xmlChar*) value);
+  enc = xmlEncodeEntitiesReentrant (NULL, (const xmlChar*) content);
   xmlNodeSetContent (node, enc);
-  g_free (value);
+
   xmlFree (enc);
   xmlAddChild (parent, node);
 
@@ -365,11 +404,30 @@ _xml_add_string_child (xmlNodePtr   parent,
 /* Public functions */
 
 gboolean
-frogr_config_save (FrogrConfig *self)
+frogr_config_save_all (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
+  gboolean retval = FALSE;
+
+  retval =_frogr_config_save_account (self);
+  retval = retval && _frogr_config_save_settings (self);
+
+  return retval;
+}
+
+gboolean
+frogr_config_save_account (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
   return _frogr_config_save_account (self);
+}
+
+gboolean
+frogr_config_save_settings (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+  return _frogr_config_save_settings (self);
 }
 
 static void

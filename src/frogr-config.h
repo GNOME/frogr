@@ -57,7 +57,11 @@ GType frogr_config_get_type (void) G_GNUC_CONST;
 
 FrogrConfig* frogr_config_get_instance (void);
 
-gboolean frogr_config_save (FrogrConfig *self);
+gboolean frogr_config_save_all (FrogrConfig *self);
+
+gboolean frogr_config_save_account (FrogrConfig *self);
+
+gboolean frogr_config_save_settings (FrogrConfig *self);
 
 FrogrAccount* frogr_config_get_account (FrogrConfig *self);
 
