@@ -19,9 +19,6 @@ TODO list for the uploader:
  * Create albums along with the upload process, assigning pictures to
    them.
 
- * Fix startup to be faster and more responsive (no more waiting for
-   albums).
-
  * Continously try to retrieve albums till max tries, to improve user
    experience? (not sure about this).
 

@@ -56,7 +56,10 @@ G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
 typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
 struct _FrogrControllerPrivate
 {
+  /* Used for processes globally affecting the application */
   FrogrControllerState state;
+
+  /* Use for processes just affecting the controller (e.g. fetch albums) */
   FrogrControllerState internal_state;
 
   FrogrMainView *mainview;
@@ -643,7 +646,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_albums (mainview_model, albums_list);
 
-  _set_state (controller, FROGR_STATE_IDLE);
+  _set_internal_state (controller, FROGR_STATE_IDLE);
 }
 
 static gboolean
@@ -657,8 +660,8 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
-  /* Keep the source while busy */
-  if (priv->state == FROGR_STATE_BUSY)
+  /* Keep the source while internally busy */
+  if (priv->internal_state == FROGR_STATE_BUSY)
     return TRUE;
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
@@ -839,6 +842,9 @@ frogr_controller_run_app (FrogrController *self)
                              (gpointer) & priv->mainview);
   /* Update flag */
   priv->app_running = TRUE;
+
+  /* Try to pre-fetch some data from the server right after launch */
+  frogr_controller_fetch_albums (self);
 
   /* Run UI */
   gtk_main ();
@@ -1057,12 +1063,15 @@ frogr_controller_fetch_albums (FrogrController *self)
 
   FrogrControllerPrivate *priv = NULL;
 
+  if (!frogr_controller_is_authorized (self))
+    return;
+
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->cancellable = g_cancellable_new ();
 
-  /* We only want to block the controller when fetching ondemand, not
-     when it's a pre-fetch done in background */
-  _set_state (self, FROGR_STATE_BUSY);
+  /* Use the internal state for this command as we do not want to
+     interfere at all with the rest of the application */
+  _set_internal_state (self, FROGR_STATE_BUSY);
 
   fsp_photos_mgr_get_photosets_async (priv->photos_mgr,
                                       priv->cancellable,

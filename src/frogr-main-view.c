@@ -591,11 +591,6 @@ _on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer data)
       /* Show authorization dialog if needed */
       frogr_controller_show_auth_dialog (priv->controller);
     }
-  else
-    {
-      /* If authorized, try to pre-fetch some data from the server */
-      frogr_controller_fetch_albums (priv->controller);
-    }
 }
 
 static gboolean
