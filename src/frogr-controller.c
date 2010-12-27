@@ -33,6 +33,7 @@
 #include "frogr-main-view.h"
 #include "frogr-picture-loader.h"
 #include "frogr-picture-uploader.h"
+#include "frogr-settings-dialog.h"
 #include "frogr-util.h"
 
 #include <config.h>
@@ -955,6 +956,19 @@ frogr_controller_show_auth_dialog (FrogrController *self)
 
   /* Run the auth dialog */
   frogr_auth_dialog_show (window, REQUEST_AUTHORIZATION);
+}
+
+void
+frogr_controller_show_settings_dialog (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrController *controller = FROGR_CONTROLLER (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
+
+  /* Run the auth dialog */
+  frogr_settings_dialog_show (window);
 }
 
 void

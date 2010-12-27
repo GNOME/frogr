@@ -114,9 +114,10 @@ gboolean _on_icon_view_key_press_event (GtkWidget *widget,
 gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            GdkEventButton *event,
                                            gpointer data);
-void _on_authorize_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_add_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_remove_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_authorize_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_settings_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_edit_details_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_add_tags_menu_item_activate (GtkWidget *widget, gpointer self);
@@ -187,14 +188,6 @@ _populate_menu_bar (FrogrMainView *self)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Authorize _frogr"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_authorize_menu_item_activate),
-                    self);
-
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Add Pictures"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
@@ -208,6 +201,20 @@ _populate_menu_bar (FrogrMainView *self)
                     G_CALLBACK (_on_remove_menu_item_activate),
                     self);
   priv->remove_menu_item = menu_item;
+
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Authorize _frogr"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_authorize_menu_item_activate),
+                    self);
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Settings…"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_settings_menu_item_activate),
+                    self);
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
@@ -518,13 +525,6 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 }
 
 void
-_on_authorize_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_show_auth_dialog (priv->controller);
-}
-
-void
 _on_add_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
@@ -536,6 +536,20 @@ _on_remove_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
   _remove_selected_pictures (mainview);
+}
+
+void
+_on_authorize_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  frogr_controller_show_auth_dialog (priv->controller);
+}
+
+void
+_on_settings_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  frogr_controller_show_settings_dialog (priv->controller);
 }
 
 void

@@ -62,6 +62,8 @@ frogr_SOURCES = \
 	frogr-picture-uploader.h \
 	frogr-picture.c \
 	frogr-picture.h \
+	frogr-settings-dialog.c \
+	frogr-settings-dialog.h \
 	frogr-util.c \
 	frogr-util.h \
 	main.c

@@ -72,6 +72,8 @@ void frogr_controller_show_about_dialog (FrogrController *self);
 
 void frogr_controller_show_auth_dialog (FrogrController *self);
 
+void frogr_controller_show_settings_dialog (FrogrController *self);
+
 void frogr_controller_show_details_dialog (FrogrController *self,
                                            GSList *pictures);
 
