@@ -42,8 +42,6 @@ TODO list for the uploader:
 
  * Get rid of multiple icons (just leave the scalable one).
 
- * Move frogr.xpm to /usr/share/pixmaps when installing.
-
  * Bugs/leaks hunting.
 
  * etc...

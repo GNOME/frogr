@@ -40,7 +40,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_bindir}/%{name}
 %{_datadir}/%{name}/*
-%{_datadir}/icons/%{name}.xpm
+%{_datadir}/pixmaps/%{name}.xpm
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
 %{_datadir}/applications/%{name}.desktop

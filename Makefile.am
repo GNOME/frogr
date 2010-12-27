@@ -42,8 +42,8 @@ SUBDIRS = src po examples
 
 ACLOCAL_AMFLAGS=-I m4
 
-pixmapdir = $(datadir)/icons
-pixmap_DATA = data/icons/frogr.xpm
+pixmapdir = $(datadir)/pixmaps
+pixmap_DATA = data/pixmaps/frogr.xpm
 icon16dir = $(datadir)/icons/hicolor/16x16/apps
 icon16_DATA = data/icons/hicolor/16x16/apps/frogr.png
 icon24dir = $(datadir)/icons/hicolor/24x24/apps
