@@ -23,9 +23,6 @@
 
 #include "frogr-account.h"
 
-#include <libxml/parser.h>
-#include <errno.h>
-
 #define FROGR_ACCOUNT_GET_PRIVATE(object)               \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
                                 FROGR_TYPE_ACCOUNT,     \
