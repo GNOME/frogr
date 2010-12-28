@@ -958,11 +958,17 @@ frogr_controller_set_proxy (FrogrController *self, const char *proxy)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
+  FrogrControllerPrivate *priv = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* We need to split the proxy string into the fields */
+
   if (proxy == NULL || *proxy == '\0') {
-    g_unsetenv("http_proxy");
+    fsp_session_set_http_proxy (priv->session, NULL);
     g_debug ("%s", "Not using HTTP proxy");
   } else {
-    g_setenv("http_proxy", proxy, 1);
+    fsp_session_set_http_proxy (priv->session, proxy);
     g_debug ("Using HTTP proxy: %s", proxy);
   }
 }
