@@ -664,19 +664,10 @@ frogr_picture_set_pixbuf (FrogrPicture *self,
   FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (self);
 
-  /* Unref previous pixbuf, if present */
   if (priv->pixbuf)
-    {
-      g_object_unref (priv->pixbuf);
-      priv->pixbuf = NULL;
-    }
+    g_object_unref (priv->pixbuf);
 
-  /* Add new pixbuf, if not NULL */
-  if (pixbuf)
-    {
-      priv->pixbuf = pixbuf;
-      g_object_ref (priv->pixbuf);
-    }
+  priv->pixbuf = GDK_IS_PIXBUF (pixbuf) ? g_object_ref (pixbuf) : NULL;
 }
 
 GSList *

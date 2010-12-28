@@ -638,8 +638,10 @@ frogr_config_set_account (FrogrConfig  *self,
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
 
-  g_object_unref (priv->account);
-  priv->account = faccount ? g_object_ref (faccount) : NULL;
+  if (priv->account)
+    g_object_unref (priv->account);
+
+  priv->account = FROGR_IS_ACCOUNT (faccount) ? g_object_ref (faccount) : NULL;
 }
 
 FrogrAccount*
