@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-27 16:24+0100\n"
+"POT-Creation-Date: 2010-12-28 01:10+0100\n"
 "PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Mario Sanchez Prada <msanchez@igalia.com>\n"
 "Language-Team: English\n"
@@ -153,7 +153,11 @@ msgstr "Ha ocurrido un error subiendo una imagen: %s"
 msgid "Authorization successfully completed!"
 msgstr "Registro completado con éxito!"
 
-#: ../src/frogr-controller.c:1090
+#: ../src/frogr-controller.c:575
+msgid "Operation successfully completed!"
+msgstr "Registro completado con éxito!"
+
+#: ../src/frogr-controller.c:1102
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -264,7 +268,7 @@ msgstr "Necesita seleccionar alguna imagen primero"
 msgid "Uploading pictures…"
 msgstr "Subiendo imágenes…"
 
-#: ../src/frogr-picture-loader.c:94
+#: ../src/frogr-picture-loader.c:96
 #, c-format
 msgid "Loading pictures %d / %d"
 msgstr "Cargando imágenes %d / %d"
@@ -274,6 +278,46 @@ msgstr "Cargando imágenes %d / %d"
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Subiendo '%s'…"
+
+#: ../src/frogr-settings-dialog.c:96
+msgid "Default Visibility"
+msgstr "Visibilidad por defecto"
+
+#: ../src/frogr-settings-dialog.c:108
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:4
+msgid "Public"
+msgstr "Público"
+
+#: ../src/frogr-settings-dialog.c:115
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:3
+msgid "Private"
+msgstr "Privado"
+
+#: ../src/frogr-settings-dialog.c:125
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:7
+msgid "Visible to family"
+msgstr "Visible a familiares"
+
+#: ../src/frogr-settings-dialog.c:131
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
+msgid "Visible to friends"
+msgstr "Visible a amigos"
+
+#: ../src/frogr-settings-dialog.c:159
+msgid "Default Actions"
+msgstr "Acciones por defecto"
+
+#: ../src/frogr-settings-dialog.c:167
+msgid "Open browser after uploading pictures"
+msgstr "Abrir el navegador después de subir imágenes"
+
+#: ../src/frogr-settings-dialog.c:178
+msgid "General"
+msgstr "General"
+
+#: ../src/frogr-settings-dialog.c:391
+msgid "Settings"
+msgstr "Ajustes"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:1
 msgid "Add"
@@ -291,14 +335,6 @@ msgstr "frogr"
 msgid "Description:"
 msgstr "Descripción:"
 
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:3
-msgid "Private"
-msgstr "Privado"
-
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:4
-msgid "Public"
-msgstr "Público"
-
 #: ../data/gtkbuilder/frogr-details-dialog.xml.h:5
 msgid "Tags:"
 msgstr "Tags:"
@@ -306,11 +342,3 @@ msgstr "Tags:"
 #: ../data/gtkbuilder/frogr-details-dialog.xml.h:6
 msgid "Title:"
 msgstr "Título:"
-
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:7
-msgid "Visible to family"
-msgstr "Visible a familiares"
-
-#: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
-msgid "Visible to friends"
-msgstr "Visible a amigos"

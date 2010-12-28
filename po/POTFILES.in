@@ -9,5 +9,6 @@ src/frogr-details-dialog.c
 src/frogr-main-view.c
 src/frogr-picture-loader.c
 src/frogr-picture-uploader.c
+src/frogr-settings-dialog.c
 [type: gettext/glade]data/gtkbuilder/frogr-main-view.xml
 [type: gettext/glade]data/gtkbuilder/frogr-details-dialog.xml
