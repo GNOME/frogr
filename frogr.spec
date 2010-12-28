@@ -46,6 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/locale/es/LC_MESSAGES/frogr.mo
 %{_datadir}/locale/en_GB/LC_MESSAGES/frogr.mo
+%{_mandir}/man1/frogr.1.*
 %doc README NEWS COPYING AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
 
 

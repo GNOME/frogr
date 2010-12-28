@@ -69,6 +69,8 @@ gtkbuilder_DATA = data/gtkbuilder/frogr-main-view.xml \
 desktopentrydir = $(datadir)/applications
 desktopentry_DATA = $(builddir)/data/frogr.desktop
 
+man1_MANS = data/manpages/frogr.1
+
 edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
 
 data/frogr.desktop: data/frogr.desktop.in
@@ -91,7 +93,8 @@ EXTRA_DIST = \
 	$(icon128_DATA) \
 	$(iconscalable_DATA) \
 	$(gtkbuilder_DATA) \
-	$(images_DATA)
+	$(images_DATA) \
+	$(man1_MANS)
 
 dist-hook:
 	@if test -d "$(srcdir)/.git"; \
