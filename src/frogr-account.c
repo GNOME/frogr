@@ -318,3 +318,28 @@ frogr_account_set_fullname (FrogrAccount *self, const gchar *fullname)
   g_free (priv->fullname);
   priv->fullname = g_strdup (fullname);
 }
+
+gboolean
+frogr_account_is_valid (FrogrAccount *self)
+{
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+
+  if (priv->token == NULL || priv->token[0] == '\0')
+    return FALSE;
+
+  if (priv->permissions == NULL || priv->permissions[0] == '\0')
+    return FALSE;
+
+  if (priv->id == NULL || priv->id[0] == '\0')
+    return FALSE;
+
+  if (priv->username == NULL || priv->username[0] == '\0')
+    return FALSE;
+
+  if (priv->fullname == NULL || priv->fullname[0] == '\0')
+    return FALSE;
+
+  return TRUE;
+}

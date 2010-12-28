@@ -83,6 +83,8 @@ const gchar* frogr_account_get_fullname (FrogrAccount *self);
 void frogr_account_set_fullname (FrogrAccount *self,
                                  const gchar *fullname);
 
+gboolean frogr_account_is_valid (FrogrAccount *self);
+
 G_END_DECLS
 
 #endif /* FROGR_ACCOUNT_H */
