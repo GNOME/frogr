@@ -565,17 +565,21 @@ _on_pictures_uploaded (FrogrController *self,
   if (!error)
     {
       FrogrControllerPrivate *priv = NULL;
+      GtkWindow *window = NULL;
       priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
       if (frogr_config_get_open_browser_after_upload (priv->config))
         _open_browser_to_edit_details (self, fpuploader);
 
-      g_debug ("Success uploading picture!");
+        window = frogr_main_view_get_window (priv->mainview);
+        frogr_util_show_info_dialog (window, _("Operation successfully completed!"));
+
+      g_debug ("Success uploading pictures!");
     }
   else
     {
       _notify_error_to_user (self, error);
-      g_debug ("Error uploading picture: %s", error->message);
+      g_debug ("Error uploading pictures: %s", error->message);
       g_error_free (error);
     }
 
