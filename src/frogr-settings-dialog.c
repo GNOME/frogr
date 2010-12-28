@@ -164,7 +164,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  cbutton = gtk_check_button_new_with_label (_("Open browser after upload"));
+  cbutton = gtk_check_button_new_with_label (_("Open browser after uploading pictures"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), cbutton);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
