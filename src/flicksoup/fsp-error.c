@@ -27,6 +27,7 @@
 #define N_ERRORS (N_SPECIFIC_ERRORS + N_GENERAL_ERRORS)
 
 static const FspError photo_upload_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                    // 0
   FSP_ERROR_UNKNOWN,                    // 1
   FSP_ERROR_UPLOAD_MISSING_PHOTO,       // 2
   FSP_ERROR_UPLOAD_GENERAL_FAILURE,     // 3
@@ -36,10 +37,10 @@ static const FspError photo_upload_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 7
   FSP_ERROR_UNKNOWN,                    // 8
   FSP_ERROR_UNKNOWN,                    // 9
-  FSP_ERROR_UNKNOWN,                    // 10
 };
 
 static const FspError photo_get_info_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                    // 0
   FSP_ERROR_PHOTO_NOT_FOUND,            // 1
   FSP_ERROR_UNKNOWN,                    // 2
   FSP_ERROR_UNKNOWN,                    // 3
@@ -49,23 +50,23 @@ static const FspError photo_get_info_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 7
   FSP_ERROR_UNKNOWN,                    // 8
   FSP_ERROR_UNKNOWN,                    // 9
-  FSP_ERROR_UNKNOWN,                    // 10
 };
 
 static const FspError photoset_create_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                    // 0
   FSP_ERROR_PHOTOSET_TITLE_MISSING,     // 1
   FSP_ERROR_PHOTO_NOT_FOUND,            // 2
-  FSP_ERROR_PHOTOSET_CANT_CREATE,        // 3
+  FSP_ERROR_PHOTOSET_CANT_CREATE,       // 3
   FSP_ERROR_UNKNOWN,                    // 4
   FSP_ERROR_UNKNOWN,                    // 5
   FSP_ERROR_UNKNOWN,                    // 6
   FSP_ERROR_UNKNOWN,                    // 7
   FSP_ERROR_UNKNOWN,                    // 8
   FSP_ERROR_UNKNOWN,                    // 9
-  FSP_ERROR_UNKNOWN,                    // 10
 };
 
 static const FspError photoset_get_list_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                    // 0
   FSP_ERROR_USER_NOT_FOUND,             // 1
   FSP_ERROR_UNKNOWN,                    // 2
   FSP_ERROR_UNKNOWN,                    // 3
@@ -75,10 +76,10 @@ static const FspError photoset_get_list_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 7
   FSP_ERROR_UNKNOWN,                    // 8
   FSP_ERROR_UNKNOWN,                    // 9
-  FSP_ERROR_UNKNOWN,                    // 10
 };
 
 static const FspError photoset_add_photo_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                    // 0
   FSP_ERROR_PHOTOSET_NOT_FOUND,         // 1
   FSP_ERROR_PHOTO_NOT_FOUND,            // 2
   FSP_ERROR_ALREADY_IN_PHOTOSET,        // 3
@@ -88,10 +89,10 @@ static const FspError photoset_add_photo_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 7
   FSP_ERROR_UNKNOWN,                    // 8
   FSP_ERROR_UNKNOWN,                    // 9
-  FSP_ERROR_UNKNOWN,                    // 10
 };
 
 static const FspError general_translations [N_GENERAL_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                    // 10
   FSP_ERROR_UNKNOWN,                    // 11
   FSP_ERROR_UNKNOWN,                    // 12
   FSP_ERROR_UNKNOWN,                    // 13
@@ -201,7 +202,6 @@ static const FspError general_translations [N_GENERAL_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 117
   FSP_ERROR_UNKNOWN,                    // 118
   FSP_ERROR_UNKNOWN,                    // 119
-  FSP_ERROR_UNKNOWN                     // 120
 };
 
 FspError
@@ -210,7 +210,7 @@ fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
   FspError retval = FSP_ERROR_UNKNOWN;
 
   /* Method specific errors */
-  if (code > 0 && code <= N_SPECIFIC_ERRORS)
+  if (code > 0 && code < N_SPECIFIC_ERRORS)
     {
       switch (method)
         {
@@ -222,23 +222,23 @@ fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
           break;
 
         case FSP_ERROR_METHOD_PHOTO_UPLOAD:
-          retval = photo_upload_translations[code - 1];
+          retval = photo_upload_translations[code];
           break;
 
         case FSP_ERROR_METHOD_PHOTO_GET_INFO:
-          retval = photo_get_info_translations[code - 1];
+          retval = photo_get_info_translations[code];
           break;
 
         case FSP_ERROR_METHOD_PHOTOSET_CREATE:
-          retval = photoset_create_translations[code - 1];
+          retval = photoset_create_translations[code];
           break;
 
         case FSP_ERROR_METHOD_PHOTOSET_GET_LIST:
-          retval = photoset_get_list_translations[code - 1];
+          retval = photoset_get_list_translations[code];
           break;
 
         case FSP_ERROR_METHOD_PHOTOSET_ADD_PHOTO:
-          retval = photoset_add_photo_translations[code - 1];
+          retval = photoset_add_photo_translations[code];
           break;
 
         default:
@@ -247,8 +247,8 @@ fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
     }
 
   /* Generic errors */
-  if (code > N_SPECIFIC_ERRORS && code <= N_ERRORS)
-    retval = general_translations[code - N_SPECIFIC_ERRORS - 1];
+  if (code >= N_SPECIFIC_ERRORS && code < N_ERRORS)
+    retval = general_translations[code - N_SPECIFIC_ERRORS];
 
   return retval;
 }
