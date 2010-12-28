@@ -75,6 +75,10 @@ static void
 _get_auth_token_soup_session_cb         (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
+static void
+_get_upload_status_soup_session_cb      (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
 
 /* Private API */
 
@@ -235,6 +239,20 @@ _get_auth_token_soup_session_cb         (SoupSession *session,
   /* Handle message with the right parser */
   handle_soup_response (msg,
                         (FspFlickrParserFunc) fsp_flickr_parser_get_auth_token,
+                        data);
+}
+
+static void
+_get_upload_status_soup_session_cb      (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_upload_status,
                         data);
 }
 
@@ -411,11 +429,12 @@ fsp_session_complete_auth_async         (FspSession          *self,
   g_return_if_fail (cb != NULL);
 
   FspSessionPrivate *priv = self->priv;
-  gchar *signed_query = NULL;
-  gchar *url = NULL;
 
   if (priv->frob != NULL)
     {
+      gchar *signed_query = NULL;
+      gchar *url = NULL;
+
       /* Build the signed url */
       signed_query = get_signed_query (priv->secret,
                                        "method", "flickr.auth.getToken",
@@ -427,7 +446,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
 
       /* Perform the async request */
       perform_async_request (priv->soup_session, url,
-                             _get_auth_token_soup_session_cb, G_OBJECT (self), 
+                             _get_auth_token_soup_session_cb, G_OBJECT (self),
                              c, cb, fsp_session_complete_auth_async, data);
 
       g_free (url);
@@ -463,4 +482,64 @@ fsp_session_complete_auth_finish        (FspSession    *self,
     fsp_session_set_token (self, auth_token->token);
 
   return auth_token;
+}
+
+void
+fsp_session_get_upload_status_async     (FspSession          *self,
+                                         GCancellable        *c,
+                                         GAsyncReadyCallback cb,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (cb != NULL);
+
+  FspSessionPrivate *priv = self->priv;
+
+  if (priv->token != NULL)
+    {
+      gchar *signed_query = NULL;
+      gchar *url = NULL;
+
+      /* Build the signed url */
+      signed_query = get_signed_query (priv->secret,
+                                       "method", "flickr.people.getUploadStatus",
+                                       "api_key", priv->api_key,
+                                       "auth_token", priv->token,
+                                       NULL);
+      url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+      g_free (signed_query);
+
+      /* Perform the async request */
+      perform_async_request (priv->soup_session, url,
+                             _get_upload_status_soup_session_cb, G_OBJECT (self),
+                             c, cb, fsp_session_get_upload_status_async, data);
+
+      g_free (url);
+    }
+  else
+    {
+      GError *err = NULL;
+
+      /* Build and report error */
+      err = g_error_new (FSP_ERROR, FSP_ERROR_NOT_AUTHENTICATED, "No authenticated");
+      g_simple_async_report_gerror_in_idle (G_OBJECT (self),
+                                            cb, data, err);
+    }
+}
+
+FspDataUploadStatus *
+fsp_session_get_upload_status_finish    (FspSession    *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  FspDataUploadStatus *upload_status = NULL;
+
+  upload_status =
+    FSP_DATA_UPLOAD_STATUS (finish_async_request (G_OBJECT (self), res,
+                                                  fsp_session_get_upload_status_async,
+                                                  error));
+  return upload_status;
 }

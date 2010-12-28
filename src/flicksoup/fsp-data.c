@@ -45,19 +45,22 @@ fsp_data_new                            (FspDataType type)
   new_data->type = type;
   switch (type)
     {
-    case FSP_USER_PROFILE:
-      new_data->user_profile.id = NULL;
-      new_data->user_profile.username = NULL;
-      new_data->user_profile.fullname = NULL;
-      new_data->user_profile.url = NULL;
-      break;
-
     case FSP_AUTH_TOKEN:
       new_data->auth_token.token = NULL;
       new_data->auth_token.permissions = NULL;
       new_data->auth_token.nsid = NULL;
       new_data->auth_token.username = NULL;
       new_data->auth_token.fullname = NULL;
+      break;
+
+    case FSP_UPLOAD_STATUS:
+      new_data->upload_status.id = NULL;
+      new_data->upload_status.username = NULL;
+      new_data->upload_status.pro_user = FALSE;
+      new_data->upload_status.bw_max_kb = G_MAXUINT32;
+      new_data->upload_status.bw_used_kb = G_MAXUINT32;
+      new_data->upload_status.bw_remaining_kb = G_MAXUINT32;
+      new_data->upload_status.fs_max_kb = G_MAXUINT32;
       break;
 
     case FSP_PHOTO_INFO:
@@ -110,19 +113,22 @@ fsp_data_copy                           (const FspData *data)
 
   switch (data->type)
     {
-    case FSP_USER_PROFILE:
-      new_data->user_profile.id = g_strdup (data->user_profile.id);
-      new_data->user_profile.username = g_strdup (data->user_profile.username);
-      new_data->user_profile.fullname = g_strdup (data->user_profile.fullname);
-      new_data->user_profile.url = g_strdup (data->user_profile.url);
-      break;
-
     case FSP_AUTH_TOKEN:
       new_data->auth_token.token = g_strdup (data->auth_token.token);
       new_data->auth_token.permissions = g_strdup (data->auth_token.permissions);
       new_data->auth_token.nsid = g_strdup (data->auth_token.nsid);
       new_data->auth_token.username = g_strdup (data->auth_token.username);
       new_data->auth_token.fullname = g_strdup (data->auth_token.fullname);
+      break;
+
+    case FSP_UPLOAD_STATUS:
+      new_data->upload_status.id = g_strdup (data->upload_status.id);
+      new_data->upload_status.username = g_strdup (data->upload_status.username);
+      new_data->upload_status.pro_user = data->upload_status.pro_user;
+      new_data->upload_status.bw_max_kb = data->upload_status.bw_max_kb;
+      new_data->upload_status.bw_used_kb = data->upload_status.bw_used_kb;
+      new_data->upload_status.bw_remaining_kb = data->upload_status.bw_remaining_kb;
+      new_data->upload_status.fs_max_kb = data->upload_status.fs_max_kb;
       break;
 
     case FSP_PHOTO_INFO:
@@ -170,19 +176,17 @@ fsp_data_free                           (FspData *data)
 
   switch (data->type)
     {
-    case FSP_USER_PROFILE:
-      g_free (data->user_profile.id);
-      g_free (data->user_profile.username);
-      g_free (data->user_profile.fullname);
-      g_free (data->user_profile.url);
-      break;
-
     case FSP_AUTH_TOKEN:
       g_free (data->auth_token.token);
       g_free (data->auth_token.permissions);
       g_free (data->auth_token.nsid);
       g_free (data->auth_token.username);
       g_free (data->auth_token.fullname);
+      break;
+
+    case FSP_UPLOAD_STATUS:
+      g_free (data->upload_status.id);
+      g_free (data->upload_status.username);
       break;
 
     case FSP_PHOTO_INFO:

@@ -39,6 +39,7 @@ void added_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photo_get_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void complete_auth_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_auth_url_cb (GObject *object, GAsyncResult *res, gpointer unused);
 gboolean do_work (gpointer unused);
@@ -252,28 +253,38 @@ photo_get_info_cb                       (GObject      *object,
 }
 
 void
-complete_auth_cb                        (GObject      *object,
-                                         GAsyncResult *res,
-                                         gpointer      user_data)
+get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
 {
   FspSession* session = FSP_SESSION (object);
+  FspDataUploadStatus *upload_status = NULL;
   GError *error = NULL;
 
-  fsp_session_complete_auth_finish (session, res, &error);
+  upload_status = fsp_session_get_upload_status_finish (session, res, &error);
   if (error != NULL)
     {
-      g_print ("Error completing authorization: %s\n", error->message);
+      g_print ("Error retrieving upload status: %s\n", error->message);
       g_error_free (error);
     }
   else
     {
       FspPhotosMgr *photos_mgr = NULL;
-      const gchar *token = NULL;
 
-      g_print ("[complete_auth_cb]::Result: Success!\n\n");
+      g_print ("[get_upload_status_cb]::Success! Upload status:\n");
+      g_print ("[get_upload_status_cb]::\tUser id: %s\n", upload_status->id);
+      g_print ("[get_upload_status_cb]::\tUser is pro?: %s\n",
+               upload_status->pro_user ? "YES" : "NO");
+      g_print ("[get_upload_status_cb]::\tBandwitdh Max KB: %d\n",
+               upload_status->bw_max_kb);
+      g_print ("[get_upload_status_cb]::\tBandwitdh Used KB: %d\n",
+               upload_status->bw_used_kb);
+      g_print ("[get_upload_status_cb]::\tBandwitdh Remaining KB: %d\n",
+               upload_status->bw_remaining_kb);
+      g_print ("[get_upload_status_cb]::\tFilesize Max KB: %d\n",
+               upload_status->fs_max_kb);
 
-      token = fsp_session_get_token (session);
-      g_print ("[complete_auth_cb]::Auth token = %s\n", token);
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
 
       /* Continue uploading a picture */
       g_print ("Uploading a picture...\n");
@@ -294,6 +305,46 @@ complete_auth_cb                        (GObject      *object,
                                    FSP_CONTENT_TYPE_PHOTO,
                                    FSP_SEARCH_SCOPE_NONE,
                                    NULL, upload_cb, complete_auth_cb);
+
+      fsp_data_free (FSP_DATA (upload_status));
+    }
+}
+
+void
+complete_auth_cb                        (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspSession* session = FSP_SESSION (object);
+  FspDataAuthToken *auth_token = NULL;
+  GError *error = NULL;
+
+  auth_token = fsp_session_complete_auth_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error completing authorization: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[complete_auth_cb]::Result: Success!\n\n");
+
+      g_print ("[complete_auth_cb]::Auth token\n");
+      g_print ("[complete_auth_cb]::\ttoken = %s\n", auth_token->token);
+      g_print ("[complete_auth_cb]::\tpermissions = %s\n", auth_token->permissions);
+      g_print ("[complete_auth_cb]::\tnsid = %s\n", auth_token->nsid);
+      g_print ("[complete_auth_cb]::\tusername = %s\n", auth_token->username);
+      g_print ("[complete_auth_cb]::\tfullname = %s\n", auth_token->fullname);
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue getting the upload status */
+      g_print ("Retrieving upload status...\n");
+      fsp_session_get_upload_status_async (session, NULL, get_upload_status_cb, NULL);
+
+      fsp_data_free (FSP_DATA (auth_token));
     }
 }
 

@@ -81,6 +81,12 @@ fsp_flickr_parser_get_auth_token        (FspFlickrParser  *self,
                                          gulong            buf_size,
                                          GError          **error);
 
+FspDataUploadStatus *
+fsp_flickr_parser_get_upload_status     (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
 gchar *
 fsp_flickr_parser_get_upload_result     (FspFlickrParser  *self,
                                          const gchar      *buffer,

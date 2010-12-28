@@ -70,6 +70,9 @@ static gpointer
 _get_auth_token_parser                  (xmlDoc  *doc,
                                          GError **error);
 static gpointer
+_get_upload_status_parser               (xmlDoc  *doc,
+                                         GError **error);
+static gpointer
 _photo_get_upload_result_parser         (xmlDoc  *doc,
                                          GError **error);
 static gpointer
@@ -84,11 +87,6 @@ _added_to_photoset_parser               (xmlDoc  *doc,
 static gpointer
 _photoset_created_parser                (xmlDoc  *doc,
                                          GError **error);
-
-#if 0
-static FspDataUserProfile *
-_get_user_profile_from_node             (xmlNode *node);
-#endif
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node);
@@ -248,6 +246,8 @@ _get_error_method_from_parser           (gpointer (*body_parser)
     error_method = FSP_ERROR_METHOD_GET_FROB;
   else if (body_parser == _get_auth_token_parser)
     error_method = FSP_ERROR_METHOD_GET_AUTH_TOKEN;
+  else if (body_parser == _get_upload_status_parser)
+    error_method = FSP_ERROR_METHOD_GET_UPLOAD_STATUS;
   else if (body_parser == _photo_get_upload_result_parser)
     error_method = FSP_ERROR_METHOD_PHOTO_UPLOAD;
   else if (body_parser == _get_photo_info_parser)
@@ -422,7 +422,7 @@ _get_auth_token_parser                  (xmlDoc  *doc,
 
       if (!auth_token->token)
         {
-          /* If a problem happened we will just return NULL */
+          /* If we don't get enough information, return NULL */
           g_object_unref (auth_token);
           auth_token = NULL;
 
@@ -442,6 +442,103 @@ _get_auth_token_parser                  (xmlDoc  *doc,
     g_propagate_error (error, err);
 
   return auth_token;
+}
+
+static gpointer
+_get_upload_status_parser               (xmlDoc  *doc,
+                                         GError **error)
+{
+  g_return_val_if_fail (doc != NULL, NULL);
+
+  xmlXPathContext *xpathCtx = NULL;
+  xmlXPathObject * xpathObj = NULL;
+  FspDataUploadStatus *upload_status = NULL;
+  GError *err = NULL;
+
+  xpathCtx = xmlXPathNewContext (doc);
+  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/user", xpathCtx);
+
+  if ((xpathObj != NULL) && (xpathObj->nodesetval->nodeNr > 0))
+    {
+      /* Matching nodes found */
+      xmlNode *node = NULL;
+      xmlChar *content = NULL;
+      xmlChar *value = NULL;
+
+      upload_status = FSP_DATA_UPLOAD_STATUS (fsp_data_new (FSP_UPLOAD_STATUS));
+
+      /* First read attributes of the root node */
+      node = xpathObj->nodesetval->nodeTab[0];
+
+      value = xmlGetProp (node, (const xmlChar *) "id");
+      upload_status->id = g_strdup ((gchar *) value);
+      xmlFree (value);
+
+      value = xmlGetProp (node, (const xmlChar *) "ispro");
+      upload_status->pro_user = (gboolean) g_ascii_strtoll ((gchar *) value, NULL, 10);
+      xmlFree (value);
+
+      /* Traverse children of the 'auth' node */
+      for (node = node->children; node != NULL; node = node->next)
+        {
+          if (node->type != XML_ELEMENT_NODE)
+            continue;
+
+          /* Username */
+          if (!g_strcmp0 ((gchar *) node->name, "username"))
+            {
+              content = xmlNodeGetContent (node);
+              upload_status->username = g_strdup ((gchar *) content);
+              xmlFree (content);
+            }
+
+          /* Bandwith */
+          if (!g_strcmp0 ((gchar *) node->name, "bandwidth"))
+            {
+              value = xmlGetProp (node, (const xmlChar *) "maxkb");
+              upload_status->bw_max_kb = (guint32) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              xmlFree (value);
+
+              value = xmlGetProp (node, (const xmlChar *) "usedkb");
+              upload_status->bw_used_kb = (guint32) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              xmlFree (value);
+
+              value = xmlGetProp (node, (const xmlChar *) "remainingkb");
+              upload_status->bw_remaining_kb = (guint32) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              xmlFree (value);
+            }
+
+          /* Filesize */
+          if (!g_strcmp0 ((gchar *) node->name, "filesize"))
+            {
+              value = xmlGetProp (node, (const xmlChar *) "maxkb");
+              upload_status->fs_max_kb = (guint32) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              xmlFree (value);
+            }
+        }
+
+      if (!upload_status->id)
+        {
+          /* If we don't get enough information, return NULL */
+          g_object_unref (upload_status);
+          upload_status = NULL;
+
+          err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                             "No token found in the response");
+        }
+    }
+  else
+    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                       "No 'auth' node found in the response");
+  /* Free */
+  xmlXPathFreeObject (xpathObj);
+  xmlXPathFreeContext (xpathCtx);
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  return upload_status;
 }
 
 static gpointer
@@ -620,43 +717,6 @@ _photoset_created_parser                (xmlDoc  *doc,
 
   return photosetId;
 }
-
-#if 0
-static FspDataUserProfile *
-_get_user_profile_from_node             (xmlNode *node)
-{
-  g_return_val_if_fail (node != NULL, NULL);
-
-  FspDataUserProfile *uprofile = NULL;
-
-  gchar *name = (gchar *) node->name;
-  if (g_strcmp0 (name, "user"))
-    return NULL;
-
-  xmlChar *id = xmlGetProp (node, (const xmlChar *) "nsid");
-  xmlChar *uname = xmlGetProp (node, (const xmlChar *) "username");
-  xmlChar *fname = xmlGetProp (node, (const xmlChar *) "fullname");
-  xmlChar *url = xmlGetProp (node, (const xmlChar *) "url");
-  xmlChar *loc = xmlGetProp (node, (const xmlChar *) "location");
-
-  /* Build the FspUserProfile struct */
-  uprofile = FSP_DATA_USER_PROFILE (fsp_data_new (FSP_USER_PROFILE));
-  uprofile->id = g_strdup ((gchar *) id);
-  uprofile->username = g_strdup ((gchar *) uname);
-  uprofile->fullname = g_strdup ((gchar *) fname);
-  uprofile->url = g_strdup ((gchar *) url);
-  uprofile->location = g_strdup ((gchar *) loc);
-
-  /* Free */
-  xmlFree (id);
-  xmlFree (uname);
-  xmlFree (fname);
-  xmlFree (url);
-  xmlFree (loc);
-
-  return uprofile;
-}
-#endif
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node)
@@ -919,6 +979,27 @@ fsp_flickr_parser_get_auth_token        (FspFlickrParser  *self,
 
   /* Return value */
   return auth_token;
+}
+
+FspDataUploadStatus *
+fsp_flickr_parser_get_upload_status     (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error)
+{
+  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  FspDataUploadStatus *upload_status = NULL;
+
+  /* Process the response */
+  upload_status =
+    FSP_DATA_UPLOAD_STATUS (_process_xml_response (self, buffer, buf_size,
+                                                   _get_upload_status_parser,
+                                                   error));
+
+  /* Return value */
+  return upload_status;
 }
 
 gchar *

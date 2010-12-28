@@ -27,27 +27,27 @@
 
 G_BEGIN_DECLS
 
-#define FSP_TYPE_DATA               (fsp_data_get_type ())
-#define FSP_DATA(data)              ((FspData*) data)
-#define FSP_DATA_USER_PROFILE(data) ((FspDataUserProfile*) data)
-#define FSP_DATA_AUTH_TOKEN(data)   ((FspDataAuthToken*) data)
-#define FSP_DATA_PHOTO_INFO(data)   ((FspDataPhotoInfo*) data)
-#define FSP_DATA_PHOTO_SET(data)    ((FspDataPhotoSet*) data)
+#define FSP_TYPE_DATA                (fsp_data_get_type ())
+#define FSP_DATA(data)               ((FspData*) data)
+#define FSP_DATA_AUTH_TOKEN(data)    ((FspDataAuthToken*) data)
+#define FSP_DATA_UPLOAD_STATUS(data) ((FspDataUploadStatus*) data)
+#define FSP_DATA_PHOTO_INFO(data)    ((FspDataPhotoInfo*) data)
+#define FSP_DATA_PHOTO_SET(data)     ((FspDataPhotoSet*) data)
 
-typedef struct _FspDataUserProfile FspDataUserProfile;
-typedef struct _FspDataAuthToken   FspDataAuthToken;
-typedef struct _FspDataPhotoInfo   FspDataPhotoInfo;
-typedef struct _FspDataPhotoSet    FspDataPhotoSet;
+typedef struct _FspDataAuthToken    FspDataAuthToken;
+typedef struct _FspDataUploadStatus FspDataUploadStatus;
+typedef struct _FspDataPhotoInfo    FspDataPhotoInfo;
+typedef struct _FspDataPhotoSet     FspDataPhotoSet;
 
 typedef union  _FspData	    FspData;
 
 typedef enum
 {
-  FSP_UNKNOWN	   = -1,
-  FSP_USER_PROFILE = 0,
-  FSP_AUTH_TOKEN   = 1,
-  FSP_PHOTO_INFO   = 2,
-  FSP_PHOTO_SET    = 3,
+  FSP_UNKNOWN	    = -1,
+  FSP_AUTH_TOKEN    = 0,
+  FSP_UPLOAD_STATUS = 1,
+  FSP_PHOTO_INFO    = 2,
+  FSP_PHOTO_SET     = 3,
   FSP_DATA_LAST
 } FspDataType;
 
@@ -105,17 +105,6 @@ typedef enum {
   FSP_SEARCH_SCOPE_HIDDEN = 2
 } FspSearchScope;
 
-struct _FspDataUserProfile
-{
-  FspDataType type;
-
-  gchar *id;
-  gchar *username;
-  gchar *fullname;
-  gchar *url;
-  gchar *location;
-};
-
 struct _FspDataAuthToken
 {
   FspDataType  type;
@@ -124,6 +113,18 @@ struct _FspDataAuthToken
   gchar       *nsid;
   gchar       *username;
   gchar       *fullname;
+};
+
+struct _FspDataUploadStatus
+{
+  FspDataType  type;
+  gchar       *id;
+  gchar       *username;
+  gboolean     pro_user;
+  guint32      bw_max_kb;       /* Bandwith max KB */
+  guint32      bw_used_kb;      /* Bandwith used KB */
+  guint32      bw_remaining_kb; /* Bandwith remaining KB */
+  guint32      fs_max_kb;       /* Filesize max KB */
 };
 
 struct _FspDataPhotoInfo
@@ -163,11 +164,11 @@ struct _FspDataPhotoSet
 
 union _FspData
 {
-  FspDataType        type;
-  FspDataUserProfile user_profile;
-  FspDataAuthToken   auth_token;
-  FspDataPhotoInfo   photo_info;
-  FspDataPhotoSet    photo_set;
+  FspDataType         type;
+  FspDataAuthToken    auth_token;
+  FspDataUploadStatus upload_status;
+  FspDataPhotoInfo    photo_info;
+  FspDataPhotoSet     photo_set;
 };
 
 GType

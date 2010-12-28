@@ -216,8 +216,9 @@ fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
         {
         case FSP_ERROR_METHOD_GET_FROB:
         case FSP_ERROR_METHOD_GET_AUTH_TOKEN:
-          /* We shouldn't get errors in this range for these two
-             methods, return FSP_ERROR_UNKNOWN in case it happened. */
+        case FSP_ERROR_METHOD_GET_UPLOAD_STATUS:
+          /* We shouldn't get errors in this range for these methods,
+             return FSP_ERROR_UNKNOWN in case it happened. */
           retval = FSP_ERROR_UNKNOWN;
           break;
 
