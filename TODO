@@ -21,12 +21,7 @@ TODO list for the uploader:
  * Retrieve and store more user info (username, fullname, nsid, quota,
    limit, pro/normal...)
 
- * Allow uploading the selected pictures only ? (not sure about this).
-
  * Retrieve list of tags (and suggest them to the user when needed).
-
- * Preferences dialog: allow the user to specify some things, such as
-   'open browser after upload', pictures visibility by default...
 
  * Allow handling multiple flickr accounts.
 
