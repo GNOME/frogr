@@ -44,10 +44,17 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *family_cb;
   GtkWidget *open_browser_after_upload_cb;
 
+  GtkWidget *use_proxy_cb;
+  GtkWidget *use_proxy_label;
+  GtkWidget *proxy_address_entry;
+
   gboolean public_visibility;
   gboolean family_visibility;
   gboolean friend_visibility;
   gboolean open_browser_after_upload;
+
+  gboolean use_proxy;;
+  gchar *proxy_address;
 } FrogrSettingsDialogPrivate;
 
 
@@ -56,6 +63,8 @@ static FrogrSettingsDialog *_instance = NULL;
 /* Prototypes */
 
 static void _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook);
+
+static void _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook);
 
 static void _fill_dialog_with_data (FrogrSettingsDialog *self);
 
@@ -179,6 +188,51 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 }
 
 static void
+_add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
+{
+  FrogrSettingsDialogPrivate *priv = NULL;
+  GtkWidget *vbox = NULL;
+  GtkWidget *hbox = NULL;
+  GtkWidget *align = NULL;
+  GtkWidget *cbutton = NULL;
+  GtkWidget *label = NULL;
+  GtkWidget *entry = NULL;
+
+  priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
+  vbox = gtk_vbox_new (FALSE, 0);
+
+  /* Proxy settings */
+
+  cbutton = gtk_check_button_new_with_label (_("Use HTTP proxy"));
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), cbutton);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  priv->use_proxy_cb = cbutton;
+
+  hbox = gtk_hbox_new (FALSE, 0);
+
+  label = gtk_label_new (_("Proxy address:"));
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (hbox), align, FALSE, FALSE, 6);
+  priv->use_proxy_label = label;
+
+  entry = gtk_entry_new ();
+  gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 6);
+  priv->proxy_address_entry = entry;
+
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 6);
+
+  /* Connect signals */
+  g_signal_connect (G_OBJECT (priv->use_proxy_cb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_notebook_append_page(notebook, vbox, gtk_label_new(_("Connection")));
+}
+
+static void
 _fill_dialog_with_data (FrogrSettingsDialog *self)
 {
   FrogrSettingsDialogPrivate *priv =
@@ -187,8 +241,11 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->public_visibility = frogr_config_get_default_public (priv->config);
   priv->family_visibility = frogr_config_get_default_family (priv->config);
   priv->friend_visibility = frogr_config_get_default_friend (priv->config);
-  priv->open_browser_after_upload =
-    frogr_config_get_open_browser_after_upload (priv->config);
+  priv->open_browser_after_upload = frogr_config_get_open_browser_after_upload (priv->config);
+  priv->use_proxy = frogr_config_get_use_proxy (priv->config);
+
+  g_free (priv->proxy_address);
+  priv->proxy_address = g_strdup (frogr_config_get_proxy_address (priv->config));
 
   _update_ui (self);
 }
@@ -202,8 +259,14 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_public (priv->config, priv->public_visibility);
   frogr_config_set_default_family (priv->config, priv->family_visibility);
   frogr_config_set_default_friend (priv->config, priv->friend_visibility);
-  frogr_config_set_open_browser_after_upload (priv->config,
-                                              priv->open_browser_after_upload);
+  frogr_config_set_open_browser_after_upload (priv->config, priv->open_browser_after_upload);
+  frogr_config_set_use_proxy (priv->config, priv->use_proxy);
+
+  g_free (priv->proxy_address);
+  priv->proxy_address = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_address_entry)));
+
+  frogr_config_set_proxy_address (priv->config, priv->proxy_address);
+
   frogr_config_save_settings (priv->config);
 
   /* While no validation process is used, always return TRUR */
@@ -228,10 +291,15 @@ _update_ui (FrogrSettingsDialog *self)
                                 priv->friend_visibility);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->open_browser_after_upload_cb),
                                 priv->open_browser_after_upload);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
+                                priv->use_proxy);
+  gtk_entry_set_text (GTK_ENTRY (priv->proxy_address_entry), priv->proxy_address);
 
   /* Sensitiveness */
   gtk_widget_set_sensitive (priv->friend_cb, !priv->public_visibility);
   gtk_widget_set_sensitive (priv->family_cb, !priv->public_visibility);
+  gtk_widget_set_sensitive (priv->use_proxy_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_address_entry, priv->use_proxy);
 }
 
 static void
@@ -245,28 +313,34 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
   active = gtk_toggle_button_get_active (button);
 
-  if (priv->public_rb == GTK_WIDGET (button))
+  if (GTK_WIDGET (button) == priv->public_rb)
     {
       priv->public_visibility = active;
       g_debug ("general visibility set to %s", active ? "Public" : "Private");
     }
 
-  if (priv->family_cb == GTK_WIDGET (button))
+  if (GTK_WIDGET (button) == priv->family_cb)
     {
       priv->family_visibility = active;
       g_debug ("family visibility set to %s", active ? "TRUE" : "FALSE");
     }
 
-  if (priv->friend_cb == GTK_WIDGET (button))
+  if (GTK_WIDGET (button) == priv->friend_cb)
     {
       priv->friend_visibility = active;
       g_debug ("friend visibility set to %s", active ? "TRUE" : "FALSE");
     }
 
-  if (priv->open_browser_after_upload_cb == GTK_WIDGET (button))
+  if (GTK_WIDGET (button) == priv->open_browser_after_upload_cb)
     {
       priv->open_browser_after_upload = active;
       g_debug ("Open browser after upload set to %s", active ? "TRUE" : "FALSE");
+    }
+
+  if (GTK_WIDGET (button) == priv->use_proxy_cb)
+    {
+      priv->use_proxy = active;
+      g_debug ("Use HTTP proxy: %s", active ? "YES" : "NO");
     }
 
   _update_ui (self);
@@ -308,11 +382,20 @@ _frogr_settings_dialog_dispose (GObject *object)
 }
 
 static void
+_frogr_settings_dialog_finalize (GObject *object)
+{
+  FrogrSettingsDialogPrivate *priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (object);
+  g_free (priv->proxy_address);
+  G_OBJECT_CLASS(frogr_settings_dialog_parent_class)->finalize (object);
+}
+
+static void
 frogr_settings_dialog_class_init (FrogrSettingsDialogClass *klass)
 {
   GObjectClass *obj_class = (GObjectClass *)klass;
 
   obj_class->dispose = _frogr_settings_dialog_dispose;
+  obj_class->finalize = _frogr_settings_dialog_finalize;
 
   g_type_class_add_private (obj_class, sizeof (FrogrSettingsDialogPrivate));
 }
@@ -334,10 +417,15 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->friend_cb = NULL;
   priv->family_cb = NULL;
   priv->open_browser_after_upload_cb = NULL;
+  priv->use_proxy_cb = NULL;
+  priv->use_proxy_label = NULL;
+  priv->proxy_address_entry = NULL;
   priv->public_visibility = FALSE;
   priv->family_visibility = FALSE;
   priv->friend_visibility = FALSE;
   priv->open_browser_after_upload = FALSE;
+  priv->use_proxy = FALSE;
+  priv->proxy_address = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -358,6 +446,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (notebook), TRUE, TRUE, 6);
 
   _add_general_page (self, notebook);
+  _add_connection_page (self, notebook);
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (self), "response",

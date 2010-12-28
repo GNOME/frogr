@@ -84,6 +84,14 @@ void frogr_config_set_open_browser_after_upload (FrogrConfig *self, gboolean val
 
 gboolean frogr_config_get_open_browser_after_upload (FrogrConfig *self);
 
+void frogr_config_set_use_proxy (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_use_proxy (FrogrConfig *self);
+
+void frogr_config_set_proxy_address (FrogrConfig *self, const gchar *address);
+
+const gchar *frogr_config_get_proxy_address (FrogrConfig *self);
+
 G_END_DECLS
 
 #endif /* !_FROGR_CONFIG_H */
