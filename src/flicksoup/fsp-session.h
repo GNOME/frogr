@@ -23,6 +23,8 @@
 #ifndef _FSP_SESSION_H
 #define _FSP_SESSION_H
 
+#include "fsp-data.h"
+
 #include <glib.h>
 #include <glib-object.h>
 #include <gio/gio.h>
@@ -97,7 +99,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
                                          gpointer             data);
-gboolean
+FspDataAuthToken *
 fsp_session_complete_auth_finish        (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error);

@@ -55,7 +55,9 @@ fsp_data_new                            (FspDataType type)
     case FSP_AUTH_TOKEN:
       new_data->auth_token.token = NULL;
       new_data->auth_token.permissions = NULL;
-      new_data->auth_token.user_profile = NULL;
+      new_data->auth_token.nsid = NULL;
+      new_data->auth_token.username = NULL;
+      new_data->auth_token.fullname = NULL;
       break;
 
     case FSP_PHOTO_INFO:
@@ -118,12 +120,9 @@ fsp_data_copy                           (const FspData *data)
     case FSP_AUTH_TOKEN:
       new_data->auth_token.token = g_strdup (data->auth_token.token);
       new_data->auth_token.permissions = g_strdup (data->auth_token.permissions);
-      if (data->auth_token.user_profile)
-        {
-          FspData *user_profile = FSP_DATA (data->auth_token.user_profile);
-          new_data->auth_token.user_profile =
-            FSP_DATA_USER_PROFILE (fsp_data_copy (user_profile));
-        }
+      new_data->auth_token.nsid = g_strdup (data->auth_token.nsid);
+      new_data->auth_token.username = g_strdup (data->auth_token.username);
+      new_data->auth_token.fullname = g_strdup (data->auth_token.fullname);
       break;
 
     case FSP_PHOTO_INFO:
@@ -181,9 +180,9 @@ fsp_data_free                           (FspData *data)
     case FSP_AUTH_TOKEN:
       g_free (data->auth_token.token);
       g_free (data->auth_token.permissions);
-
-      if (data->auth_token.user_profile)
-        fsp_data_free (FSP_DATA (data->auth_token.user_profile));
+      g_free (data->auth_token.nsid);
+      g_free (data->auth_token.username);
+      g_free (data->auth_token.fullname);
       break;
 
     case FSP_PHOTO_INFO:

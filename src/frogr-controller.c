@@ -320,19 +320,20 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  FspDataAuthToken *auth_token = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
-  if (fsp_session_complete_auth_finish (session, result, &error))
+  auth_token = fsp_session_complete_auth_finish (session, result, &error);
+  if (auth_token)
     {
-      const gchar *token = fsp_session_get_token (session);
-      if (token)
+      if (auth_token->token)
         {
           /* Set and save the auth token and the settings to disk */
-          frogr_account_set_token (priv->account, token);
+          frogr_account_set_token (priv->account, auth_token->token);
           frogr_config_save_account (priv->config);
 
           g_debug ("Authorization successfully completed!");
@@ -340,6 +341,8 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           /* Pre-fetch the list of albums right after this */
           frogr_controller_fetch_albums (controller);
         }
+
+      fsp_data_free (FSP_DATA (auth_token));
     }
 
   if (error != NULL)

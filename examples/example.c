@@ -258,8 +258,8 @@ complete_auth_cb                        (GObject      *object,
 {
   FspSession* session = FSP_SESSION (object);
   GError *error = NULL;
-  gboolean auth_done = fsp_session_complete_auth_finish (session, res, &error);
 
+  fsp_session_complete_auth_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error completing authorization: %s\n", error->message);
@@ -267,37 +267,33 @@ complete_auth_cb                        (GObject      *object,
     }
   else
     {
-      g_print ("[complete_auth_cb]::Result: %s\n\n",
-               auth_done ? "Success!" : "Not authorized");
-      if (auth_done)
-        {
+      FspPhotosMgr *photos_mgr = NULL;
+      const gchar *token = NULL;
 
-          FspPhotosMgr *photos_mgr = NULL;
-          const gchar *token = NULL;
+      g_print ("[complete_auth_cb]::Result: Success!\n\n");
 
-          token = fsp_session_get_token (session);
-          g_print ("[complete_auth_cb]::Auth token = %s\n", token);
+      token = fsp_session_get_token (session);
+      g_print ("[complete_auth_cb]::Auth token = %s\n", token);
 
-          /* Continue uploading a picture */
-          g_print ("Uploading a picture...\n");
-          photos_mgr = fsp_photos_mgr_new (session);
-          fsp_photos_mgr_upload_async (photos_mgr,
-                                       TEST_PHOTO,
-                                       "title",
-                                       "description",
-                                       "áèïôu "
-                                       "çÇ*+[]{} "
-                                       "qwerty "
-                                       "!·$%&/(@#~^*+ "
-                                       "\"Tag With Spaces\"",
-                                       FSP_VISIBILITY_NO,
-                                       FSP_VISIBILITY_YES,
-                                       FSP_VISIBILITY_NONE,
-                                       FSP_SAFETY_LEVEL_NONE,
-                                       FSP_CONTENT_TYPE_PHOTO,
-                                       FSP_SEARCH_SCOPE_NONE,
-                                       NULL, upload_cb, complete_auth_cb);
-        }
+      /* Continue uploading a picture */
+      g_print ("Uploading a picture...\n");
+      photos_mgr = fsp_photos_mgr_new (session);
+      fsp_photos_mgr_upload_async (photos_mgr,
+                                   TEST_PHOTO,
+                                   "title",
+                                   "description",
+                                   "áèïôu "
+                                   "çÇ*+[]{} "
+                                   "qwerty "
+                                   "!·$%&/(@#~^*+ "
+                                   "\"Tag With Spaces\"",
+                                   FSP_VISIBILITY_NO,
+                                   FSP_VISIBILITY_YES,
+                                   FSP_VISIBILITY_NONE,
+                                   FSP_SAFETY_LEVEL_NONE,
+                                   FSP_CONTENT_TYPE_PHOTO,
+                                   FSP_SEARCH_SCOPE_NONE,
+                                   NULL, upload_cb, complete_auth_cb);
     }
 }
 

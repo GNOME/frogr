@@ -443,7 +443,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
     }
 }
 
-gboolean
+FspDataAuthToken *
 fsp_session_complete_auth_finish        (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
@@ -459,12 +459,8 @@ fsp_session_complete_auth_finish        (FspSession    *self,
                                                error));
 
   /* Complete the authorization saving the token if present */
-  if (auth_token != NULL)
-    {
-      fsp_session_set_token (self, auth_token->token);
-      fsp_data_free (FSP_DATA (auth_token));
-      return TRUE;
-    }
+  if (auth_token != NULL && auth_token->token != NULL)
+    fsp_session_set_token (self, auth_token->token);
 
-  return FALSE;
+  return auth_token;
 }

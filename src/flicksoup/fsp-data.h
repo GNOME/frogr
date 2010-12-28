@@ -118,10 +118,12 @@ struct _FspDataUserProfile
 
 struct _FspDataAuthToken
 {
-  FspDataType         type;
-  gchar              *token;
-  gchar              *permissions;
-  FspDataUserProfile *user_profile;
+  FspDataType  type;
+  gchar       *token;
+  gchar       *permissions;
+  gchar       *nsid;
+  gchar       *username;
+  gchar       *fullname;
 };
 
 struct _FspDataPhotoInfo

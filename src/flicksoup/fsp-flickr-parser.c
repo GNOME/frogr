@@ -85,8 +85,10 @@ static gpointer
 _photoset_created_parser                (xmlDoc  *doc,
                                          GError **error);
 
+#if 0
 static FspDataUserProfile *
 _get_user_profile_from_node             (xmlNode *node);
+#endif
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node);
@@ -244,7 +246,7 @@ _get_error_method_from_parser           (gpointer (*body_parser)
 
   if (body_parser ==  _get_frob_parser)
     error_method = FSP_ERROR_METHOD_GET_FROB;
-  else if (body_parser ==  _get_auth_token_parser)
+  else if (body_parser == _get_auth_token_parser)
     error_method = FSP_ERROR_METHOD_GET_AUTH_TOKEN;
   else if (body_parser == _photo_get_upload_result_parser)
     error_method = FSP_ERROR_METHOD_PHOTO_UPLOAD;
@@ -371,11 +373,13 @@ _get_auth_token_parser                  (xmlDoc  *doc,
   if ((xpathObj != NULL) && (xpathObj->nodesetval->nodeNr > 0))
     {
       /* Matching nodes found */
-      FspDataUserProfile *uprofile = NULL;
       xmlNode *node = NULL;
       xmlChar *content = NULL;
       gchar *token = NULL;
       gchar *perms = NULL;
+      gchar *nsid = NULL;
+      gchar *username = NULL;
+      gchar *fullname = NULL;
 
       /* Traverse children of the 'auth' node */
       node = xpathObj->nodesetval->nodeTab[0];
@@ -402,7 +406,11 @@ _get_auth_token_parser                  (xmlDoc  *doc,
 
           /* User profile */
           if (!g_strcmp0 ((gchar *) node->name, "user"))
-            uprofile = _get_user_profile_from_node (node);
+            {
+              nsid = (gchar *) xmlGetProp (node, (const xmlChar *) "nsid");
+              username = (gchar *) xmlGetProp (node, (const xmlChar *) "username");
+              fullname = (gchar *) xmlGetProp (node, (const xmlChar *) "fullname");
+            }
         }
 
       /* Build the FspDataAuthToken struct */
@@ -411,7 +419,9 @@ _get_auth_token_parser                  (xmlDoc  *doc,
           auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
           auth_token->token = token;
           auth_token->permissions = perms;
-          auth_token->user_profile = uprofile;
+          auth_token->nsid = nsid;
+          auth_token->username = username;
+          auth_token->fullname = fullname;
         }
       else
         err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
@@ -608,6 +618,7 @@ _photoset_created_parser                (xmlDoc  *doc,
   return photosetId;
 }
 
+#if 0
 static FspDataUserProfile *
 _get_user_profile_from_node             (xmlNode *node)
 {
@@ -642,6 +653,7 @@ _get_user_profile_from_node             (xmlNode *node)
 
   return uprofile;
 }
+#endif
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node)
