@@ -148,13 +148,13 @@ _get_response_type                      (xmlDoc *doc)
   gchar *name = (gchar *) root->name;
   if (!g_strcmp0 (name, "rsp"))
     {
-      gchar *value = (gchar *) xmlGetProp (root, (const xmlChar *) "stat");
-      if (!g_strcmp0 (value, "ok"))
+      xmlChar *value = xmlGetProp (root, (const xmlChar *) "stat");
+      if (!g_strcmp0 ((gchar *) value, "ok"))
         retval = REST_RESPONSE_OK;
-      else if (!g_strcmp0 (value, "fail"))
+      else if (!g_strcmp0 ((gchar *) value, "fail"))
         retval = REST_RESPONSE_FAIL;
 
-      g_free (value);
+      xmlFree (value);
     }
 
   return retval;
@@ -208,29 +208,29 @@ _parse_error_from_node                  (xmlNode *error_node,
   g_return_val_if_fail (error_node != NULL, NULL);
 
   FspError error;
-  gchar *code_str;
-  gchar *msg;
+  xmlChar *code_str;
+  xmlChar *msg;
   gchar *error_msg;
   gint code;
   GError *err;
 
   /* Get data from XML */
-  code_str = (gchar *) xmlGetProp (error_node, (const xmlChar *) "code");
-  msg = (gchar *) xmlGetProp (error_node, (const xmlChar *) "msg");
-  code = (gint) g_ascii_strtoll (code_str, NULL, 10);
+  code_str = xmlGetProp (error_node, (const xmlChar *) "code");
+  msg = xmlGetProp (error_node, (const xmlChar *) "msg");
+  code = (gint) g_ascii_strtoll ((gchar *) code_str, NULL, 10);
 
   /* Get error code and message */
   error = fsp_error_get_from_response_code (error_method, code);
   if ((error == FSP_ERROR_UNKNOWN) || (msg == NULL))
     error_msg = g_strdup ("Unknown error in response");
   else
-    error_msg = g_strdup (msg);
+    error_msg = g_strdup ((gchar *) msg);
 
   /* Create the GError */
   err = g_error_new_literal (FSP_ERROR, error, error_msg);
 
-  g_free (code_str);
-  g_free (msg);
+  xmlFree (code_str);
+  xmlFree (msg);
   g_free (error_msg);
 
   return err;
@@ -375,11 +375,8 @@ _get_auth_token_parser                  (xmlDoc  *doc,
       /* Matching nodes found */
       xmlNode *node = NULL;
       xmlChar *content = NULL;
-      gchar *token = NULL;
-      gchar *perms = NULL;
-      gchar *nsid = NULL;
-      gchar *username = NULL;
-      gchar *fullname = NULL;
+
+      auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
 
       /* Traverse children of the 'auth' node */
       node = xpathObj->nodesetval->nodeTab[0];
@@ -392,7 +389,7 @@ _get_auth_token_parser                  (xmlDoc  *doc,
           if (!g_strcmp0 ((gchar *) node->name, "token"))
             {
               content = xmlNodeGetContent (node);
-              token = g_strdup ((gchar *) content);
+              auth_token->token = g_strdup ((gchar *) content);
               xmlFree (content);
             }
 
@@ -400,32 +397,38 @@ _get_auth_token_parser                  (xmlDoc  *doc,
           if (!g_strcmp0 ((gchar *) node->name, "perms"))
             {
               content = xmlNodeGetContent (node);
-              perms = g_strdup ((gchar *) content);
+              auth_token->permissions = g_strdup ((gchar *) content);
               xmlFree (content);
             }
 
           /* User profile */
           if (!g_strcmp0 ((gchar *) node->name, "user"))
             {
-              nsid = (gchar *) xmlGetProp (node, (const xmlChar *) "nsid");
-              username = (gchar *) xmlGetProp (node, (const xmlChar *) "username");
-              fullname = (gchar *) xmlGetProp (node, (const xmlChar *) "fullname");
+              xmlChar *value = NULL;
+
+              value = xmlGetProp (node, (const xmlChar *) "nsid");
+              auth_token->nsid = g_strdup ((gchar *) value);
+              xmlFree (value);
+
+              value = xmlGetProp (node, (const xmlChar *) "username");
+              auth_token->username = g_strdup ((gchar *) value);
+              xmlFree (value);
+
+              value = xmlGetProp (node, (const xmlChar *) "fullname");
+              auth_token->fullname = g_strdup ((gchar *) value);
+              xmlFree (value);
             }
         }
 
-      /* Build the FspDataAuthToken struct */
-      if (token != NULL)
+      if (!auth_token->token)
         {
-          auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
-          auth_token->token = token;
-          auth_token->permissions = perms;
-          auth_token->nsid = nsid;
-          auth_token->username = username;
-          auth_token->fullname = fullname;
+          /* If a problem happened we will just return NULL */
+          g_object_unref (auth_token);
+          auth_token = NULL;
+
+          err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                             "No token found in the response");
         }
-      else
-        err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
-                           "No token found in the response");
     }
   else
     err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
@@ -596,13 +599,13 @@ _photoset_created_parser                (xmlDoc  *doc,
     {
       /* Matching nodes found */
       xmlNode *node = NULL;
-      gchar *id = NULL;
+      xmlChar *id = NULL;
 
       /* Get the photoid */
       node = xpathObj->nodesetval->nodeTab[0];
-      id = (gchar *) xmlGetProp (node, (const xmlChar *) "id");
-      photosetId = g_strdup (id);
-      g_free (id);
+      id = xmlGetProp (node, (const xmlChar *) "id");
+      photosetId = g_strdup ((gchar *) id);
+      xmlFree (id);
     }
   else
     err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
@@ -630,26 +633,26 @@ _get_user_profile_from_node             (xmlNode *node)
   if (g_strcmp0 (name, "user"))
     return NULL;
 
-  gchar *id = (gchar *) xmlGetProp (node, (const xmlChar *) "nsid");
-  gchar *uname = (gchar *) xmlGetProp (node, (const xmlChar *) "username");
-  gchar *fname = (gchar *) xmlGetProp (node, (const xmlChar *) "fullname");
-  gchar *url = (gchar *) xmlGetProp (node, (const xmlChar *) "url");
-  gchar *loc = (gchar *) xmlGetProp (node, (const xmlChar *) "location");
+  xmlChar *id = xmlGetProp (node, (const xmlChar *) "nsid");
+  xmlChar *uname = xmlGetProp (node, (const xmlChar *) "username");
+  xmlChar *fname = xmlGetProp (node, (const xmlChar *) "fullname");
+  xmlChar *url = xmlGetProp (node, (const xmlChar *) "url");
+  xmlChar *loc = xmlGetProp (node, (const xmlChar *) "location");
 
   /* Build the FspUserProfile struct */
   uprofile = FSP_DATA_USER_PROFILE (fsp_data_new (FSP_USER_PROFILE));
-  uprofile->id = g_strdup (id);
-  uprofile->username = g_strdup (uname);
-  uprofile->fullname = g_strdup (fname);
-  uprofile->url = g_strdup (url);
-  uprofile->location = g_strdup (loc);
+  uprofile->id = g_strdup ((gchar *) id);
+  uprofile->username = g_strdup ((gchar *) uname);
+  uprofile->fullname = g_strdup ((gchar *) fname);
+  uprofile->url = g_strdup ((gchar *) url);
+  uprofile->location = g_strdup ((gchar *) loc);
 
   /* Free */
-  g_free (id);
-  g_free (uname);
-  g_free (fname);
-  g_free (url);
-  g_free (loc);
+  xmlFree (id);
+  xmlFree (uname);
+  xmlFree (fname);
+  xmlFree (url);
+  xmlFree (loc);
 
   return uprofile;
 }
@@ -820,27 +823,27 @@ _get_photo_set_from_node                (xmlNode *node)
 
   FspDataPhotoSet *photoSet = NULL;
   xmlChar *content = NULL;
-  gchar *id = NULL;
-  gchar *primaryPhotoId = NULL;
-  gchar *numPhotos = NULL;
+  xmlChar *id = NULL;
+  xmlChar *primaryPhotoId = NULL;
+  xmlChar *numPhotos = NULL;
 
   if (g_strcmp0 ((gchar *) node->name, "photoset"))
     return NULL;
 
-  id = (gchar *) xmlGetProp (node, (const xmlChar *) "id");
-  primaryPhotoId = (gchar *) xmlGetProp (node, (const xmlChar *) "primary");
-  numPhotos =  (gchar *) xmlGetProp (node, (const xmlChar *) "photos");
+  id = xmlGetProp (node, (const xmlChar *) "id");
+  primaryPhotoId = xmlGetProp (node, (const xmlChar *) "primary");
+  numPhotos = xmlGetProp (node, (const xmlChar *) "photos");
 
   /* Create and fill basic data for the FspDataPhotoSet */
   photoSet = FSP_DATA_PHOTO_SET (fsp_data_new (FSP_PHOTO_SET));
-  photoSet->id = g_strdup (id);
-  photoSet->primary_photo_id = g_strdup (primaryPhotoId);
+  photoSet->id = g_strdup ((gchar *) id);
+  photoSet->primary_photo_id = g_strdup ((gchar *) primaryPhotoId);
   if (numPhotos != NULL)
-    photoSet->n_photos = (gint) g_ascii_strtoll (numPhotos, NULL, 10);
+    photoSet->n_photos = (gint) g_ascii_strtoll ((gchar *) numPhotos, NULL, 10);
 
-  g_free (id);
-  g_free (primaryPhotoId);
-  g_free (numPhotos);
+  xmlFree (id);
+  xmlFree (primaryPhotoId);
+  xmlFree (numPhotos);
 
   /* Get data from inner nodes */
   for (node = node->children; node != NULL; node = node->next)
