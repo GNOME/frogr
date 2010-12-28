@@ -332,12 +332,17 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
     {
       if (auth_token->token)
         {
+          FrogrAccount *account = NULL;
+
           /* Set and save the auth token and the settings to disk */
-          frogr_account_set_token (priv->account, auth_token->token);
-          frogr_account_set_permissions (priv->account, auth_token->permissions);
-          frogr_account_set_id (priv->account, auth_token->nsid);
-          frogr_account_set_username (priv->account, auth_token->username);
-          frogr_account_set_fullname (priv->account, auth_token->fullname);
+          account = frogr_account_new_with_token (auth_token->token);
+          frogr_account_set_permissions (account, auth_token->permissions);
+          frogr_account_set_id (account, auth_token->nsid);
+          frogr_account_set_username (account, auth_token->username);
+          frogr_account_set_fullname (account, auth_token->fullname);
+
+          frogr_config_set_account (priv->config, account);
+          g_object_unref (account);
 
           frogr_config_save_account (priv->config);
 
@@ -851,18 +856,22 @@ frogr_controller_init (FrogrController *self)
   priv->config = frogr_config_get_instance ();
   g_object_ref (priv->config);
 
-  priv->account = frogr_config_get_account (priv->config);
-  g_object_ref (priv->account);
-
   priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
   priv->photos_mgr = fsp_photos_mgr_new (priv->session);
   priv->cancellable = NULL;
   priv->app_running = FALSE;
 
-  /* If available, set token */
-  token = frogr_account_get_token (priv->account);
-  if (token != NULL)
-    fsp_session_set_token (priv->session, token);
+  /* Get account, if any */
+  priv->account = frogr_config_get_account (priv->config);
+  if (priv->account)
+    {
+      g_object_ref (priv->account);
+
+      /* If available, set token */
+      token = frogr_account_get_token (priv->account);
+      if (token != NULL)
+        fsp_session_set_token (priv->session, token);
+    }
 
   /* Set HTTP proxy if needed */
   if (frogr_config_get_use_proxy (priv->config))
@@ -1102,6 +1111,9 @@ frogr_controller_revoke_authorization (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  if (!priv->account)
+    return;
+
   fsp_session_set_token (priv->session, NULL);
   frogr_account_set_token (priv->account, NULL);
   frogr_config_save_account (priv->config);

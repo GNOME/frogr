@@ -274,9 +274,18 @@ _frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
           /* Node "account" found, stop searching */
           if (!xmlStrcmp (node->name, (const xmlChar*) "account"))
             {
-              if (!_frogr_config_load_account_xml (priv->account, xml, node))
-                g_warning ("Malformed account in '%s/%s', "
-                           "skipping it", config_dir, ACCOUNTS_FILENAME);
+              FrogrAccount *account = frogr_account_new ();
+              if (_frogr_config_load_account_xml (account, xml, node))
+                {
+                  /* Everything went fine, so save the account */
+                  priv->account = account;
+                }
+              else
+                {
+                  g_warning ("Malformed account in '%s/%s', "
+                             "skipping it", config_dir, ACCOUNTS_FILENAME);
+                  g_object_unref (account);
+                }
             }
         }
     }
@@ -305,8 +314,7 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
                                 xmlNodePtr    rootnode)
 {
   xmlNodePtr node;
-  xmlChar *token = NULL;
-  gboolean retval = FALSE;
+  xmlChar *content = NULL;
 
   g_return_val_if_fail (faccount != NULL, FALSE);
   g_return_val_if_fail (xml      != NULL, FALSE);
@@ -319,19 +327,45 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
         continue;
 
       if (xmlStrcmp (node->name, (const xmlChar*) "token") == 0)
-        token = xmlNodeGetContent (node);
+        {
+          content = xmlNodeGetContent (node);
+          if (content != NULL && content[0] != '\0')
+            frogr_account_set_token (faccount, (gchar *)content);
+        }
+
+      if (xmlStrcmp (node->name, (const xmlChar*) "permissions") == 0)
+        {
+          content = xmlNodeGetContent (node);
+          if (content != NULL && content[0] != '\0')
+            frogr_account_set_permissions (faccount, (gchar *)content);
+        }
+
+      if (xmlStrcmp (node->name, (const xmlChar*) "id") == 0)
+        {
+          content = xmlNodeGetContent (node);
+          if (content != NULL && content[0] != '\0')
+            frogr_account_set_id (faccount, (gchar *)content);
+        }
+
+      if (xmlStrcmp (node->name, (const xmlChar*) "username") == 0)
+        {
+          content = xmlNodeGetContent (node);
+          if (content != NULL && content[0] != '\0')
+            frogr_account_set_username (faccount, (gchar *)content);
+        }
+
+      if (xmlStrcmp (node->name, (const xmlChar*) "fullname") == 0)
+        {
+          content = xmlNodeGetContent (node);
+          if (content != NULL && content[0] != '\0')
+            frogr_account_set_fullname (faccount, (gchar *)content);
+        }
+
+      if (content != NULL)
+        xmlFree (content);
     }
 
-  /* The account object is created if some minimum requirements are met */
-  if (token != NULL && token[0] != '\0')
-    {
-      frogr_account_set_token (faccount, (gchar *)token);
-      retval = TRUE;
-    }
-
-  if (token != NULL) xmlFree (token);
-
-  return retval;
+  return frogr_account_is_valid (faccount);
 }
 
 static void
@@ -416,6 +450,10 @@ _frogr_config_save_account (FrogrConfig *self)
   if (priv->account) {
     node = xmlNewNode (NULL, (const xmlChar*) "account");
     _xml_add_string_child (node, "token", frogr_account_get_token (priv->account));
+    _xml_add_string_child (node, "permissions", frogr_account_get_permissions (priv->account));
+    _xml_add_string_child (node, "id", frogr_account_get_id (priv->account));
+    _xml_add_string_child (node, "username", frogr_account_get_username (priv->account));
+    _xml_add_string_child (node, "fullname", frogr_account_get_fullname (priv->account));
     xmlAddChild (root, node);
   }
 
@@ -560,7 +598,7 @@ frogr_config_init (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
 
-  priv->account = frogr_account_new ();
+  priv->account = NULL;
   priv->default_public = FALSE;
   priv->default_family = FALSE;
   priv->default_friend = FALSE;
