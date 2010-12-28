@@ -15,6 +15,7 @@
     values for the visibility of the pictures, and to choose whether
     to open the browser or not after a successful upload process.
   * Added support for specifying an HTTP proxy.
+  * Added basic man page (Alberto Garcia)..
 
 0.3 (22 Dec 2010)
 
