@@ -603,7 +603,10 @@ frogr_config_init (FrogrConfig *self)
   priv->default_public = FALSE;
   priv->default_family = FALSE;
   priv->default_friend = FALSE;
-  priv->open_browser_after_upload = FALSE;
+
+  /* Open browser by default (e.g. no config file found) */
+  priv->open_browser_after_upload = TRUE;
+
   priv->use_proxy = FALSE;
   priv->proxy_address = NULL;
 
