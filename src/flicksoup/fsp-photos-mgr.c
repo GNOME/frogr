@@ -218,7 +218,11 @@ _get_soup_session                       (FspPhotosMgr *self)
   FspPhotosMgrPrivate *priv = self->priv;
 
   if (priv->soup_session == NULL)
-    priv->soup_session = g_object_ref (fsp_session_get_soup_session (priv->session));
+    {
+      SoupSession *session = NULL;
+      session = fsp_session_get_soup_session (priv->session);
+      priv->soup_session = session ? g_object_ref (session) : NULL;
+    }
 
   return priv->soup_session;
 }
