@@ -55,11 +55,33 @@ struct _FrogrAccountClass
 GType frogr_account_get_type(void) G_GNUC_CONST;
 
 FrogrAccount* frogr_account_new (void);
+
 FrogrAccount* frogr_account_new_with_token (const gchar *token);
 
 const gchar* frogr_account_get_token (FrogrAccount *self);
+
 void frogr_account_set_token (FrogrAccount *self,
                               const gchar *token);
+
+const gchar* frogr_account_get_permissions (FrogrAccount *self);
+
+void frogr_account_set_permissions (FrogrAccount *self,
+                                    const gchar *permissions);
+
+const gchar* frogr_account_get_id (FrogrAccount *self);
+
+void frogr_account_set_id (FrogrAccount *self,
+                           const gchar *id);
+
+const gchar* frogr_account_get_username (FrogrAccount *self);
+
+void frogr_account_set_username (FrogrAccount *self,
+                                 const gchar *username);
+
+const gchar* frogr_account_get_fullname (FrogrAccount *self);
+
+void frogr_account_set_fullname (FrogrAccount *self,
+                                 const gchar *fullname);
 
 G_END_DECLS
 

@@ -334,6 +334,11 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
         {
           /* Set and save the auth token and the settings to disk */
           frogr_account_set_token (priv->account, auth_token->token);
+          frogr_account_set_permissions (priv->account, auth_token->permissions);
+          frogr_account_set_id (priv->account, auth_token->nsid);
+          frogr_account_set_username (priv->account, auth_token->username);
+          frogr_account_set_fullname (priv->account, auth_token->fullname);
+
           frogr_config_save_account (priv->config);
 
           g_debug ("Authorization successfully completed!");
