@@ -25,8 +25,6 @@ TODO list for the uploader:
 
  * Allow handling multiple flickr accounts.
 
- * Add HTTP/HTTPS proxy support.
-
  * Add video uploading support (see http://code.google.com/p/frogr/issues/detail?id=8)
 
  * Bugs/leaks hunting.

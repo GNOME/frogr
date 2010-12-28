@@ -855,6 +855,14 @@ frogr_controller_init (FrogrController *self)
   token = frogr_account_get_token (priv->account);
   if (token != NULL)
     fsp_session_set_token (priv->session, token);
+
+  /* Set HTTP proxy if needed */
+  if (frogr_config_get_use_proxy (priv->config))
+    {
+      const gchar *proxy_address = NULL;
+      proxy_address = frogr_config_get_proxy_address (priv->config);
+      frogr_controller_set_proxy (self, proxy_address);
+    }
 }
 
 
@@ -943,6 +951,20 @@ frogr_controller_get_state (FrogrController *self)
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return priv->state;
+}
+
+void
+frogr_controller_set_proxy (FrogrController *self, const char *proxy)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  if (proxy == NULL || *proxy == '\0') {
+    g_unsetenv("http_proxy");
+    g_debug ("%s", "Not using HTTP proxy");
+  } else {
+    g_setenv("http_proxy", proxy, 1);
+    g_debug ("Using HTTP proxy: %s", proxy);
+  }
 }
 
 void

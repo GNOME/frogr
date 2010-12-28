@@ -23,6 +23,7 @@
 #include "frogr-settings-dialog.h"
 
 #include "frogr-config.h"
+#include "frogr-controller.h"
 #include "frogr-util.h"
 
 #include <config.h>
@@ -36,6 +37,7 @@
 G_DEFINE_TYPE (FrogrSettingsDialog, frogr_settings_dialog, GTK_TYPE_DIALOG);
 
 typedef struct _FrogrSettingsDialogPrivate {
+  FrogrController *controller;
   FrogrConfig *config;
 
   GtkWidget *public_rb;
@@ -359,10 +361,17 @@ _on_dialog_delete_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   FrogrSettingsDialog *self = FROGR_SETTINGS_DIALOG (dialog);
+  FrogrSettingsDialogPrivate *priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
   /* Try to save data if response is OK */
   if (response == GTK_RESPONSE_OK && _save_data (self) == FALSE)
       return;
+
+  /* Update proxy status */
+  if (priv->use_proxy)
+    frogr_controller_set_proxy (priv->controller, priv->proxy_address);
+  else
+    frogr_controller_set_proxy (priv->controller, NULL);
 
   gtk_widget_hide (GTK_WIDGET (self));
 }
@@ -371,6 +380,12 @@ static void
 _frogr_settings_dialog_dispose (GObject *object)
 {
   FrogrSettingsDialogPrivate *priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (object);
+
+  if (priv->controller)
+    {
+      g_object_unref (priv->controller);
+      priv->controller = NULL;
+    }
 
   if (priv->config)
     {
@@ -409,6 +424,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
+  priv->controller = g_object_ref (frogr_controller_get_instance ());
   priv->config = frogr_config_get_instance ();
   g_object_ref (priv->config);
 

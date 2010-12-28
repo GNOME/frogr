@@ -68,6 +68,8 @@ gboolean frogr_controller_quit_app (FrogrController *self);
 
 FrogrControllerState frogr_controller_get_state (FrogrController *self);
 
+void frogr_controller_set_proxy (FrogrController *self, const char *proxy);
+
 void frogr_controller_show_about_dialog (FrogrController *self);
 
 void frogr_controller_show_auth_dialog (FrogrController *self);
