@@ -3,7 +3,7 @@
   * Fixed (more) problems building debian packages.
   * Modified package description for fedora and debian.
   * Converted remaining files in latin1 to utf-8.
-  * Fixed caiptalization problems in translatable strings (Philip Withnall).
+  * Fixed capitalization problems in translatable strings (Philip Withnall).
   * Added en_GB translation (Philip Withnall).
   * Use Unicode ellipsis instead of three dots (Philip Withnall).
   * Added 'Translated by' tab to about dialog.
