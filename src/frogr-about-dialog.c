@@ -82,6 +82,7 @@ frogr_about_dialog_show (GtkWindow *parent)
 {
   GdkPixbuf *logo = NULL;
   char *translators = NULL;
+  char *version = NULL;
 
   logo = gdk_pixbuf_new_from_file (ABOUT_DIALOG_ICON, NULL);
 
@@ -95,6 +96,9 @@ frogr_about_dialog_show (GtkWindow *parent)
                                  _("Spanish"),
                                  _("British English"));
 
+  /* XXX: Show clearly that this is an unreleased version */
+  version = g_strdup_printf ("%s~unreleased", VERSION);
+
   /* Show about dialog */
   gtk_show_about_dialog (GTK_WINDOW (parent),
                          "name", PACKAGE,
@@ -103,7 +107,7 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "comments", _(appdescr),
                          "copyright", copyright,
                          "license", license,
-                         "version", VERSION,
+                         "version", version,
                          "website", website,
                          "logo", logo,
                          "translator-credits", translators,
@@ -112,4 +116,5 @@ frogr_about_dialog_show (GtkWindow *parent)
 
   g_object_unref (logo);
   g_free (translators);
+  g_free (version);
 }

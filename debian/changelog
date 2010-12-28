@@ -1,3 +1,9 @@
+frogr (0.4~unreleased) unstable; urgency=low
+
+  * New upstream release
+
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Tue, 28 Oct 2009 01:21:15 +0200
+
 frogr (0.3) unstable; urgency=low
 
   * New upstream release
@@ -11,7 +17,7 @@ frogr (0.3) unstable; urgency=low
   * Lots of cleanups. Simplified code both in frogr and flicksoup
   * Lots of bugfixes and minor improvements
 
- -- Mario Sanchez Prada <msanchez@igalia.com>  Mon, 12 Oct 2009 17:00:36 +0200
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Wed, 22 Dec 2010 17:00:36 +0200
 
 frogr (0.2) unstable; urgency=low
 

@@ -1,3 +1,20 @@
+0.4 (??)
+
+  * Fixed (more) problems building debian packages.
+  * Modified package description for fedora and debian.
+  * Converted remaining files in latin1 to utf-8.
+  * Fixed caiptalization problems in translatable strings (Philip Withnall).
+  * Added en_GB translation (Philip Withnall).
+  * Use Unicode ellipsis instead of three dots (Philip Withnall).
+  * Added 'Translated by' tab to about dialog.
+  * Fixed slow startup (no longer wait for albums to be loaded).
+  * Automatically re-show the authorization dialog if needed.
+  * Automatically show an informative dialog when everybody went fine.
+  * More descriptive strings in picture details dialog.
+  * Implemented new settings dialog, allowing to pre-set default
+    values for the visibility of the pictures, and to choose whether
+    to open the browser or not after a successful upload process.
+
 0.3 (22 Dec 2010)
 
   * Fixed problems building debian packages.
