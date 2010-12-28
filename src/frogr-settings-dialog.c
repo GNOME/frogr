@@ -248,7 +248,8 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
 
   g_free (priv->proxy_address);
   priv->proxy_address = g_strdup (frogr_config_get_proxy_address (priv->config));
-  g_strstrip (priv->proxy_address);
+  if (priv->proxy_address)
+    g_strstrip (priv->proxy_address);
 
   _update_ui (self);
 }
@@ -267,7 +268,8 @@ _save_data (FrogrSettingsDialog *self)
 
   g_free (priv->proxy_address);
   priv->proxy_address = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_address_entry)));
-  g_strstrip (priv->proxy_address);
+  if (priv->proxy_address)
+    g_strstrip (priv->proxy_address);
 
   frogr_config_set_proxy_address (priv->config, priv->proxy_address);
 
