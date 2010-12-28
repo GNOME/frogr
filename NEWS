@@ -14,6 +14,7 @@
   * Implemented new settings dialog, allowing to pre-set default
     values for the visibility of the pictures, and to choose whether
     to open the browser or not after a successful upload process.
+  * Added support for specifying an HTTP proxy.
 
 0.3 (22 Dec 2010)
 
