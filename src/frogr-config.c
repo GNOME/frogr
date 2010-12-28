@@ -236,6 +236,7 @@ _frogr_config_load_proxy_data_xml (FrogrConfig *self,
           content = xmlNodeGetContent (node);
           g_free (priv->proxy_address);
           priv->proxy_address = g_strdup ((gchar *) content);
+          g_strstrip (priv->proxy_address);
         }
 
       if (content)
