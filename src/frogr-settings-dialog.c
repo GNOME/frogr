@@ -295,7 +295,8 @@ _update_ui (FrogrSettingsDialog *self)
                                 priv->open_browser_after_upload);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
-  gtk_entry_set_text (GTK_ENTRY (priv->proxy_address_entry), priv->proxy_address);
+  if (priv->proxy_address)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_address_entry), priv->proxy_address);
 
   /* Sensitiveness */
   gtk_widget_set_sensitive (priv->friend_cb, !priv->public_visibility);
