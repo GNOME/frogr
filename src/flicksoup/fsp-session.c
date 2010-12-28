@@ -265,6 +265,39 @@ fsp_session_new                         (const gchar *api_key,
   return FSP_SESSION (object);
 }
 
+void
+fsp_session_set_http_proxy              (FspSession *self,
+                                         const gchar *proxy_address)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+
+  SoupURI *proxy_uri = NULL;
+  if (proxy_address != NULL)
+    {
+      gchar *lowercase_address = NULL;
+      gchar *proxy_uri_str = NULL;
+
+      lowercase_address = g_ascii_strdown (proxy_address, -1);
+
+      /* Check whether the 'http://' prefix is present */
+      if (g_str_has_prefix (lowercase_address, "http://"))
+        proxy_uri_str = g_strdup (proxy_address);
+      else
+        proxy_uri_str = g_strdup_printf ("http://%s", proxy_address);
+
+      g_free (lowercase_address);
+
+      proxy_uri = soup_uri_new (proxy_uri_str);
+      g_free (proxy_uri_str);
+    }
+
+  /* Set/unset the proxy */
+  g_object_set (G_OBJECT (self->priv->soup_session),
+                SOUP_SESSION_PROXY_URI,
+                proxy_uri,
+                NULL);
+}
+
 const gchar *
 fsp_session_get_api_key                 (FspSession *self)
 {
