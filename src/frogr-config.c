@@ -439,18 +439,25 @@ _xml_add_string_child (xmlNodePtr   parent,
                        const gchar *xml_name,
                        const gchar *content)
 {
-  xmlNodePtr node;
-  xmlChar *enc;
+  xmlNodePtr node = NULL;
+  xmlChar *enc = NULL;
+  gchar *actual_content = NULL;
 
   g_return_val_if_fail (parent != NULL, NULL);
   g_return_val_if_fail (xml_name != NULL, NULL);
-  g_return_val_if_fail (content != NULL, NULL);
+
+  if (content == NULL)
+    actual_content = g_strdup ("");
+  else
+    actual_content = g_strdup (content);
 
   node = xmlNewNode (NULL, (const xmlChar*) xml_name);
-  enc = xmlEncodeEntitiesReentrant (NULL, (const xmlChar*) content);
+  enc = xmlEncodeEntitiesReentrant (NULL, (const xmlChar*) actual_content);
   xmlNodeSetContent (node, enc);
 
   xmlFree (enc);
+  g_free (actual_content);
+
   xmlAddChild (parent, node);
 
   return node;
