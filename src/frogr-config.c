@@ -447,15 +447,15 @@ _frogr_config_save_account (FrogrConfig *self)
   xmlDocSetRootElement (xml, root);
 
   /* Handle account */
+  node = xmlNewNode (NULL, (const xmlChar*) "account");
   if (priv->account) {
-    node = xmlNewNode (NULL, (const xmlChar*) "account");
     _xml_add_string_child (node, "token", frogr_account_get_token (priv->account));
     _xml_add_string_child (node, "permissions", frogr_account_get_permissions (priv->account));
     _xml_add_string_child (node, "id", frogr_account_get_id (priv->account));
     _xml_add_string_child (node, "username", frogr_account_get_username (priv->account));
     _xml_add_string_child (node, "fullname", frogr_account_get_fullname (priv->account));
-    xmlAddChild (root, node);
   }
+  xmlAddChild (root, node);
 
   xml_path = g_build_filename (g_get_user_config_dir (),
                                g_get_prgname (), ACCOUNTS_FILENAME, NULL);
@@ -635,12 +635,11 @@ frogr_config_set_account (FrogrConfig  *self,
                           FrogrAccount *faccount)
 {
   g_return_if_fail (FROGR_IS_CONFIG (self));
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   g_object_unref (priv->account);
-  priv->account = g_object_ref (faccount);
+  priv->account = faccount ? g_object_ref (faccount) : NULL;
 }
 
 FrogrAccount*

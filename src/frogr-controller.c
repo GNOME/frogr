@@ -675,6 +675,10 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   if (error != NULL)
     {
       g_debug ("Error fetching list of albums: %s", error->message);
+
+      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
+        frogr_controller_revoke_authorization (controller);
+
       g_error_free (error);
     }
 
@@ -1102,7 +1106,7 @@ frogr_controller_is_authorized (FrogrController *self)
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  return (fsp_session_get_token (priv->session) != NULL);
+  return (priv->account != NULL);
 }
 
 void
@@ -1111,11 +1115,17 @@ frogr_controller_revoke_authorization (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (!priv->account)
-    return;
 
   fsp_session_set_token (priv->session, NULL);
-  frogr_account_set_token (priv->account, NULL);
+
+  if (priv->account)
+    {
+      g_object_unref (priv->account);
+      priv->account = NULL;
+    }
+
+  /* Ensure there's the account is no longer active */
+  frogr_config_set_account (priv->config, NULL);
   frogr_config_save_account (priv->config);
 }
 
