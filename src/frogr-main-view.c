@@ -162,17 +162,23 @@ static void _progress_dialog_delete_event (GtkWidget *widget,
                                            GdkEvent *event,
                                            gpointer data);
 
-static void _controller_state_changed (FrogrController *self,
+static void _controller_state_changed (FrogrController *controller,
                                        FrogrControllerState state,
                                        gpointer data);
 
-static void _controller_picture_loaded (FrogrController *self,
+static void _controller_account_changed (FrogrController *controller,
+                                         FrogrAccount *account,
+                                         gpointer data);
+
+static void _controller_picture_loaded (FrogrController *controller,
                                         FrogrPicture *picture,
                                         gpointer data);
 
-static void _update_ui (FrogrMainView *self);
+static gchar *_craft_account_description (FrogrMainView *mainview);
 
-static void _update_idle_status_bar (FrogrMainView *self);
+static gchar *_get_datasize_string (gulong bandwidth);
+
+static void _update_ui (FrogrMainView *self);
 
 
 /* Private API */
@@ -913,7 +919,7 @@ _progress_dialog_delete_event (GtkWidget *widget,
 }
 
 static void
-_controller_state_changed (FrogrController *self,
+_controller_state_changed (FrogrController *controller,
                            FrogrControllerState state,
                            gpointer data)
 {
@@ -922,7 +928,28 @@ _controller_state_changed (FrogrController *self,
 }
 
 static void
-_controller_picture_loaded (FrogrController *self,
+_controller_account_changed (FrogrController *controller,
+                             FrogrAccount *account,
+                             gpointer data)
+{
+  FrogrMainView *mainview = NULL;
+  FrogrMainViewPrivate *priv = NULL;
+  gchar *description = NULL;
+
+  mainview = FROGR_MAIN_VIEW (data);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+
+  description = _craft_account_description (mainview);
+  frogr_main_view_model_set_account_description (priv->model, description);
+
+  frogr_main_view_set_status_text (mainview, description);
+
+  g_debug ("Account details changed: %s", description);
+  g_free (description);
+}
+
+static void
+_controller_picture_loaded (FrogrController *controller,
                             FrogrPicture *picture,
                             gpointer data)
 {
@@ -930,10 +957,112 @@ _controller_picture_loaded (FrogrController *self,
   _add_picture_to_ui (mainview, picture);
 }
 
+static gchar *_craft_account_description (FrogrMainView *mainview)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  FrogrAccount *account = NULL;
+  const gchar *login = NULL;
+  gchar *description = NULL;
+  gchar *bandwidth_str = NULL;
+  gboolean is_pro = FALSE;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+  account = frogr_controller_get_account (priv->controller);
+
+  if (!FROGR_IS_ACCOUNT (account))
+    return NULL;
+
+  /* Try to get the full name, or the username otherwise */
+  login = frogr_account_get_fullname (account);
+  if (login == NULL || login[0] == '\0')
+    login = frogr_account_get_username (account);
+
+  is_pro = frogr_account_get_is_pro (account);
+
+  /* Pro users do not have any limit of quota, so it makes no sense to
+     permanently show that they have 2.0 GB / 2.0 GB remaining */
+  if (!is_pro)
+    {
+      gchar *remaining_bw_str = NULL;
+      gchar *max_bw_str = NULL;
+      gulong remaining_bw;
+      gulong max_bw;
+
+      remaining_bw = frogr_account_get_remaining_bandwidth (account);
+      max_bw = frogr_account_get_max_bandwidth (account);
+
+      remaining_bw_str = _get_datasize_string (remaining_bw);
+      max_bw_str = _get_datasize_string (max_bw);
+
+      if (remaining_bw_str && max_bw_str)
+        {
+          bandwidth_str = g_strdup_printf (" - %s / %s %s",
+                                           remaining_bw_str,
+                                           max_bw_str,
+                                           _("remaining for the current month"));
+        }
+
+      g_free (remaining_bw_str);
+      g_free (max_bw_str);
+    }
+
+  description = g_strdup_printf ("%s %s%s%s",
+                                 _("Connected as"), login,
+                                 (is_pro ? _(" (PRO account)") : ""),
+                                 (bandwidth_str ? bandwidth_str : ""));
+  g_free (bandwidth_str);
+
+  return description;
+}
+
+static gchar *
+_get_datasize_string (gulong bandwidth)
+{
+  gchar *result = NULL;
+
+  if (bandwidth != G_MAXULONG)
+    {
+      gfloat bandwidth_float = G_MAXFLOAT;
+      gchar *unit_str = NULL;
+      int n_divisions = 0;
+
+      bandwidth_float = bandwidth;
+      while (bandwidth_float > 1000.0 && n_divisions < 3)
+        {
+          bandwidth_float /= 1024;
+          n_divisions++;
+        }
+
+      switch (n_divisions)
+        {
+        case 0:
+          unit_str = g_strdup ("KB");
+          break;
+        case 1:
+          unit_str = g_strdup ("MB");
+          break;
+        case 2:
+          unit_str = g_strdup ("GB");
+          break;
+        default:
+          unit_str = NULL;;
+        }
+
+      if (unit_str)
+        {
+          result = g_strdup_printf ("%.1f %s", bandwidth_float, unit_str);
+          g_free (unit_str);
+        }
+    }
+
+  return result;
+}
+
 static void
 _update_ui (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  gchar *account_description = NULL;
   guint npics;
 
   /* Set sensitiveness */
@@ -949,7 +1078,6 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->edit_details_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_tags_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_album_menu_item, FALSE);
-
       break;
 
     case FROGR_STATE_IDLE:
@@ -965,89 +1093,16 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_tags_menu_item, npics > 0);
       gtk_widget_set_sensitive (priv->add_to_album_menu_item, npics > 0);
 
+      /* Update status bar from model's account description */
+      account_description = frogr_main_view_model_get_account_description (priv->model);
+      frogr_main_view_set_status_text (self, account_description);
+
       gtk_widget_hide (priv->progress_dialog);
-
-      _update_idle_status_bar (self);
-
       break;
 
     default:
       g_warning ("Invalid state reached!!");
     }
-}
-
-static void
-_update_idle_status_bar (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  FrogrAccount *account = NULL;
-  gchar *text = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  account = frogr_main_view_model_get_account (priv->model);
-
-  if (account)
-    {
-      gulong remaining_bandwidth = G_MAXULONG;
-
-      remaining_bandwidth = frogr_account_get_remaining_bandwidth (account);
-      if (remaining_bandwidth != G_MAXULONG)
-        {
-          gfloat bandwidth_float = G_MAXFLOAT;
-          const gchar *login = NULL;
-          gchar *bandwidth_str = NULL;
-          gchar *unit_str = NULL;
-          gboolean is_pro = FALSE;
-          int n_divisions = 0;
-
-          bandwidth_float = remaining_bandwidth;
-          while (bandwidth_float > 1000.0 && n_divisions < 3)
-            {
-              bandwidth_float /= 1024;
-              n_divisions++;
-            }
-
-          switch (n_divisions)
-            {
-            case 0:
-              unit_str = g_strdup ("KB");
-              break;
-            case 1:
-              unit_str = g_strdup ("MB");
-              break;
-            case 2:
-              unit_str = g_strdup ("GB");
-              break;
-            default:
-              unit_str = NULL;;
-            }
-
-          if (unit_str)
-            {
-              is_pro = frogr_account_get_is_pro (account);
-              bandwidth_str = g_strdup_printf (" - %.1f %s %s",
-                                               bandwidth_float,
-                                               unit_str,
-                                               _("left this month"));
-              g_free (unit_str);
-            }
-
-          /* Try to get the full name, or the username otherwise */
-          login = frogr_account_get_fullname (account);
-          if (login == NULL || login[0] == '\0')
-            login = frogr_account_get_username (account);
-
-          text = g_strdup_printf ("%s %s%s%s",
-                                  _("Connected as"), login,
-                                  (is_pro ? _(" (Pro account)") : ""),
-                                  (bandwidth_str ? bandwidth_str : ""));
-
-          g_free (bandwidth_str);
-        }
-    }
-
-  frogr_main_view_set_status_text (self, text);
-  g_free (text);
 }
 
 static void
@@ -1116,10 +1171,16 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
   GList *icons;
+  gchar *account_description;
 
   /* Init model and controller */
   priv->model = frogr_main_view_model_new ();
   priv->controller = g_object_ref (frogr_controller_get_instance ());
+
+  /* Init main model's account description */
+  account_description = _craft_account_description (self);
+  frogr_main_view_model_set_account_description (priv->model, account_description);
+  g_free (account_description);
 
   /* Provide a default icon list in several sizes */
   icons = g_list_prepend (NULL,
@@ -1245,6 +1306,9 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->controller), "state-changed",
                     G_CALLBACK (_controller_state_changed), self);
+
+  g_signal_connect (G_OBJECT (priv->controller), "account-changed",
+                    G_CALLBACK (_controller_account_changed), self);
 
   g_signal_connect (G_OBJECT (priv->controller), "picture-loaded",
                     G_CALLBACK (_controller_picture_loaded), self);

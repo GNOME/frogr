@@ -80,10 +80,10 @@ GSList *frogr_main_view_model_get_albums (FrogrMainViewModel *self);
 void frogr_main_view_model_set_albums (FrogrMainViewModel *self,
                                        GSList *albums_list);
 
-FrogrAccount *frogr_main_view_model_get_account (FrogrMainViewModel *self);
+gchar *frogr_main_view_model_get_account_description (FrogrMainViewModel *self);
 
-void frogr_main_view_model_set_account (FrogrMainViewModel *self,
-                                        FrogrAccount *account);
+void frogr_main_view_model_set_account_description (FrogrMainViewModel *self,
+                                                    const gchar *description);
 
 G_END_DECLS
 

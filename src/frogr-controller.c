@@ -1096,7 +1096,6 @@ frogr_controller_run_app (FrogrController *self)
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  FrogrMainViewModel *mainview_model = NULL;
 
   if (priv->app_running)
     {
@@ -1108,20 +1107,15 @@ frogr_controller_run_app (FrogrController *self)
   priv->mainview = frogr_main_view_new ();
   g_object_add_weak_pointer (G_OBJECT (priv->mainview),
                              (gpointer) & priv->mainview);
-
-  /* Update UI model if there's a valid account */
-  if (priv->account)
-    {
-      mainview_model = frogr_main_view_get_model (priv->mainview);
-      frogr_main_view_model_set_account (mainview_model, priv->account);
-    }
-
   /* Update flag */
   priv->app_running = TRUE;
 
   /* Try to pre-fetch some data from the server right after launch */
   _fetch_albums (self);
   _fetch_extra_account_info (self);
+
+  /* Start on idle state */
+  _set_state (self, FROGR_STATE_IDLE);
 
   /* Run UI */
   gtk_main ();

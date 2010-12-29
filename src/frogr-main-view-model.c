@@ -43,7 +43,7 @@ struct _FrogrMainViewModelPrivate
   GSList *albums_list;
   guint n_albums;
 
-  FrogrAccount* account;
+  gchar* account_description;
 };
 
 /* Private API */
@@ -68,13 +68,15 @@ _frogr_main_view_model_dispose (GObject* object)
       priv->albums_list = NULL;
     }
 
-  if (priv->account)
-    {
-      g_object_unref (priv->account);
-      priv->account = NULL;
-    }
-
   G_OBJECT_CLASS (frogr_main_view_model_parent_class)->dispose (object);
+}
+
+static void
+_frogr_main_view_model_finalize (GObject* object)
+{
+  FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (object);
+  g_free (priv->account_description);
+  G_OBJECT_CLASS (frogr_main_view_model_parent_class)->finalize (object);
 }
 
 static void
@@ -82,6 +84,7 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
   obj_class->dispose = _frogr_main_view_model_dispose;
+  obj_class->finalize = _frogr_main_view_model_finalize;
   g_type_class_add_private (obj_class, sizeof (FrogrMainViewModelPrivate));
 }
 
@@ -98,7 +101,7 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
   priv->albums_list = NULL;
   priv->n_albums = 0;
 
-  priv->account = NULL;
+  priv->account_description = NULL;
 }
 
 /* Public API */
@@ -257,24 +260,24 @@ frogr_main_view_model_set_albums (FrogrMainViewModel *self,
   priv->n_albums = g_slist_length (albums_list);
 }
 
-FrogrAccount *
-frogr_main_view_model_get_account (FrogrMainViewModel *self)
+gchar *
+frogr_main_view_model_get_account_description (FrogrMainViewModel *self)
 {
   g_return_val_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
   FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->account;
+  return priv->account_description;
 }
 
 void
-frogr_main_view_model_set_account (FrogrMainViewModel *self,
-                                   FrogrAccount *account)
+frogr_main_view_model_set_account_description (FrogrMainViewModel *self,
+                                               const gchar *description)
 {
   g_return_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self));
 
   FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  if (priv->account)
-    g_object_unref (priv->account);
+  if (priv->account_description)
+    g_free (priv->account_description);
 
-  priv->account = FROGR_IS_ACCOUNT (account) ? g_object_ref (account) : NULL;
+  priv->account_description = g_strdup (description);
 }
