@@ -73,6 +73,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkWidget *progress_dialog;
   GtkWidget *progress_bar;
+  GtkWidget *progress_label;
 
   GtkTreeModel *tree_model;
   guint sb_context_id;
@@ -1103,6 +1104,7 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *progress_dialog;
   GtkWidget *progress_vbox;
   GtkWidget *progress_bar;
+  GtkWidget *progress_label;
   GList *icons;
 
   /* Init model and controller */
@@ -1176,14 +1178,18 @@ frogr_main_view_init (FrogrMainView *self)
                                                  GTK_RESPONSE_CANCEL,
                                                  NULL);
   gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
+  gtk_window_set_default_size (GTK_WINDOW (progress_dialog), 250, -1);
+
   progress_vbox = gtk_dialog_get_content_area (GTK_DIALOG (progress_dialog));
   progress_bar = gtk_progress_bar_new ();
-  gtk_box_pack_start (GTK_BOX (progress_vbox), gtk_label_new (_("Uploading pictures…")), FALSE, FALSE, 6);
+  progress_label = gtk_label_new (_("Uploading pictures…"));
+  gtk_box_pack_start (GTK_BOX (progress_vbox), progress_label, FALSE, FALSE, 6);
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
 
   gtk_widget_hide (progress_dialog);
   priv->progress_dialog = progress_dialog;
   priv->progress_bar = progress_bar;
+  priv->progress_label = progress_label;
 
   /* Initialize model */
   priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
@@ -1285,9 +1291,9 @@ frogr_main_view_set_status_text (FrogrMainView *self,
 }
 
 void
-frogr_main_view_set_progress (FrogrMainView *self,
-                              double fraction,
-                              const gchar *text)
+frogr_main_view_set_progress_status (FrogrMainView *self,
+                                     double fraction,
+                                     const gchar *text)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
@@ -1302,6 +1308,17 @@ frogr_main_view_set_progress (FrogrMainView *self,
   if (text != NULL)
     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
 }
+
+void
+frogr_main_view_set_progress_text (FrogrMainView *self,
+                                   const gchar *text)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  gtk_label_set_text (GTK_LABEL (priv->progress_label), text);
+}
+
 
 FrogrMainViewModel *
 frogr_main_view_get_model (FrogrMainView *self)

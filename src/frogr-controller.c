@@ -127,6 +127,10 @@ static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer dat
 
 static void _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data);
 
+static void _notify_adding_to_photoset (FrogrController *self,
+                                        FrogrPicture *picture,
+                                        FrogrAlbum *album);
+
 static gboolean _complete_picture_upload_on_idle (gpointer data);
 
 static void _on_picture_loaded (FrogrController *self, FrogrPicture *picture);
@@ -475,11 +479,14 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
           priv->adding_to_photoset = TRUE;
 
           album = FROGR_ALBUM (albums->data);
+          _notify_adding_to_photoset (controller, picture, album);
+
           up_st->albums = g_slist_next (albums);
           fsp_photos_mgr_add_to_photoset_async (photos_mgr,
                                                 frogr_picture_get_id (picture),
                                                 frogr_album_get_id (album),
-                                                NULL, _add_to_photoset_cb,
+                                                priv->cancellable,
+                                                _add_to_photoset_cb,
                                                 up_st);
         }
     }
@@ -509,6 +516,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   fsp_photos_mgr_add_to_photoset_finish (photos_mgr, res, &error);
   up_st->error = error;
 
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   if (!error)
     {
       if (g_slist_length (albums) > 0)
@@ -516,18 +524,42 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
           FrogrAlbum *album = NULL;
 
           album = FROGR_ALBUM (albums->data);
+          _notify_adding_to_photoset (controller, picture, album);
+
           up_st->albums = g_slist_next (albums);
           fsp_photos_mgr_add_to_photoset_async (photos_mgr,
                                                 frogr_picture_get_id (picture),
                                                 frogr_album_get_id (album),
-                                                NULL, _add_to_photoset_cb,
+                                                priv->cancellable,
+                                                _add_to_photoset_cb,
                                                 up_st);
           return;
         }
     }
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   priv->adding_to_photoset = FALSE;
+}
+
+static void _notify_adding_to_photoset (FrogrController *self,
+                                        FrogrPicture *picture,
+                                        FrogrAlbum *album)
+{
+  FrogrControllerPrivate *priv = NULL;
+  const gchar *picture_title = NULL;
+  const gchar *album_title = NULL;
+  gchar *progress_text = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  frogr_main_view_set_progress_text (priv->mainview,
+                                     _("Adding picture to photoset…"));
+
+  picture_title = frogr_picture_get_title (picture);
+  album_title = frogr_album_get_title (album);
+  progress_text = g_strdup_printf ("Adding picture %s to photoset %s…",
+                                   picture_title, album_title);
+  g_debug ("%s", progress_text);
+
+  g_free (progress_text);
 }
 
 static gboolean
