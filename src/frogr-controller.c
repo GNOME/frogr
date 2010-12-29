@@ -615,6 +615,9 @@ _on_pictures_uploaded (FrogrController *self,
 
   _set_state (self, FROGR_STATE_IDLE);
   g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
+
+  /* Re-check account info */
+  _fetch_extra_account_info (self);
 }
 
 static void
