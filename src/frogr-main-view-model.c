@@ -115,6 +115,7 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
                                    FrogrPicture *picture)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_PICTURE (picture));
 
   FrogrMainViewModelPrivate *priv =
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
@@ -180,6 +181,7 @@ frogr_main_view_model_add_album (FrogrMainViewModel *self,
                                  FrogrAlbum *album)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_ALBUM (album));
 
   FrogrMainViewModelPrivate *priv =
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);

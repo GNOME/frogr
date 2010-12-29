@@ -430,8 +430,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
   priv->controller = g_object_ref (frogr_controller_get_instance ());
-  priv->config = frogr_config_get_instance ();
-  g_object_ref (priv->config);
+  priv->config = g_object_ref (frogr_config_get_instance ());
 
   priv->public_rb = NULL;
   priv->private_rb = NULL;

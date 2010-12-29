@@ -279,6 +279,8 @@ _frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
               if (_frogr_config_load_account_xml (account, xml, node))
                 {
                   /* Everything went fine, so save the account */
+                  if (priv->account)
+                    g_object_unref (priv->account);
                   priv->account = account;
                 }
               else

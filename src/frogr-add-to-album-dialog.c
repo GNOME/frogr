@@ -149,6 +149,9 @@ _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self)
 
   for (current = priv->albums; current; current = g_slist_next (current))
     {
+      if (!FROGR_IS_ALBUM (current->data))
+        continue;
+
       album = FROGR_ALBUM (current->data);
       n_photos_str = g_strdup_printf ("%d", frogr_album_get_n_photos (album));
 
@@ -157,7 +160,7 @@ _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self)
                           CHECKBOX_COL, FALSE,
                           TITLE_COL, frogr_album_get_title (album),
                           N_PHOTOS_COL, n_photos_str,
-                          ALBUM_COL, g_object_ref (album),
+                          ALBUM_COL, album,
                           -1);
       g_free (n_photos_str);
     }
@@ -261,7 +264,10 @@ _get_selected_albums (FrogrAddToAlbumDialog *self)
                           ALBUM_COL, &album, -1);
 
       if (FROGR_IS_ALBUM (album))
+        {
           selected_albums = g_slist_append (selected_albums, album);
+          g_object_ref (album);
+        }
     }
   while (gtk_tree_model_iter_next (priv->treemodel, &iter));
 
@@ -285,6 +291,7 @@ _update_pictures (FrogrAddToAlbumDialog *self)
       frogr_picture_set_albums (picture, selected_albums);
     }
 
+  g_slist_foreach (selected_albums, (GFunc)g_object_unref, NULL);
   g_slist_free (selected_albums);
 }
 
@@ -360,7 +367,7 @@ _frogr_add_to_album_dialog_dispose (GObject *object)
     }
 
   if (priv->albums)
-    priv->pictures = NULL;
+    priv->albums = NULL;
 
   if (priv->treemodel)
     {

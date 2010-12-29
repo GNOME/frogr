@@ -350,8 +350,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   /* We need the controller to get the main window */
   priv->controller = g_object_ref (frogr_controller_get_instance ());
   priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
-  priv->config = frogr_config_get_instance ();
-  g_object_ref (priv->config);
+  priv->config = g_object_ref (frogr_config_get_instance ());
 
   /* Init the rest of private data */
   priv->filepaths = NULL;
