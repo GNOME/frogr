@@ -879,6 +879,8 @@ static void
 _upload_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
   frogr_controller_upload_pictures (priv->controller);
 }
 
