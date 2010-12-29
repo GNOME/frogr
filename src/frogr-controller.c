@@ -1129,6 +1129,15 @@ frogr_controller_quit_app (FrogrController *self)
   return FALSE;
 }
 
+FrogrAccount *
+frogr_controller_get_account (FrogrController *self)
+{
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UKNOWN);
+
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  return priv->account;
+}
+
 FrogrControllerState
 frogr_controller_get_state (FrogrController *self)
 {
