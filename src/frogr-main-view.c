@@ -377,12 +377,20 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
                                   guint info, guint time,
                                   gpointer data)
 {
-  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+  FrogrMainView *self = NULL;
+  FrogrMainViewPrivate *priv = NULL;
   GdkAtom target;
   GSList *filepaths_list = NULL;
-  const guchar *files_string;
+  const guchar *files_string = NULL;
   gchar **fileuris_array = NULL;
   gint i;
+
+  self = FROGR_MAIN_VIEW (data);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+
+  /* Do anything when the application is busy doing something else */
+  if (frogr_controller_get_state (priv->controller) == FROGR_STATE_BUSY)
+    return;
 
 #if GTK_CHECK_VERSION (2,14,0)
   target = gtk_selection_data_get_target (selection_data);
