@@ -104,6 +104,10 @@ typedef struct {
 
 static void _set_state (FrogrController *self, FrogrControllerState state);
 
+static void _set_user_account (FrogrController *self, FrogrAccount *account);
+
+static void _enable_cancellable (FrogrController *self, gboolean enable);
+
 static void _notify_error_to_user (FrogrController *self,
                                    GError *error);
 
@@ -158,6 +162,37 @@ _set_state (FrogrController *self, FrogrControllerState state)
 
   priv->state = state;
   g_signal_emit (self, signals[STATE_CHANGED], 0, state);
+}
+
+static void _set_user_account (FrogrController *self, FrogrAccount *account)
+{
+  FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  if (priv->account)
+    g_object_unref (priv->account);
+  priv->account = account;
+
+  /* Update main view's model */
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  frogr_main_view_model_set_account (mainview_model, account);
+
+  /* Update configuration system */
+  frogr_config_set_account (priv->config, account);
+  frogr_config_save_account (priv->config);
+}
+
+static void
+_enable_cancellable (FrogrController *self, gboolean enable)
+{
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  if (priv->cancellable)
+    g_object_unref (priv->cancellable);
+
+  priv->cancellable = enable ? g_cancellable_new () : NULL;
 }
 
 static void
@@ -326,7 +361,6 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
     {
       if (auth_token->token)
         {
-          FrogrMainViewModel *mainview_model = NULL;
           FrogrAccount *account = NULL;
 
           /* Set and save the auth token and the settings to disk */
@@ -336,22 +370,13 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           frogr_account_set_username (account, auth_token->username);
           frogr_account_set_fullname (account, auth_token->fullname);
 
-          /* Set the account in the UI, the config system and the controller */
-          mainview_model = frogr_main_view_get_model (priv->mainview);
-          frogr_main_view_model_set_account (mainview_model, account);
-
-          frogr_config_set_account (priv->config, account);
-          frogr_config_save_account (priv->config);
-
-          if (priv->account)
-            g_object_unref (priv->account);
-          priv->account = account;
-
-          g_debug ("Authorization successfully completed!");
+          _set_user_account (controller, account);
 
           /* Pre-fetch some data right after this */
           _fetch_albums (controller);
           _fetch_extra_account_info (controller);
+
+          g_debug ("Authorization successfully completed!");
         }
 
       fsp_data_free (FSP_DATA (auth_token));
@@ -377,11 +402,11 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
                  FrogrPictureUploadedCallback picture_uploaded_cb,
                  GObject *object)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  upload_picture_st *up_st;
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+  g_return_if_fail(FROGR_IS_PICTURE (picture));
 
-  /* Create cancellable */
-  priv->cancellable = g_cancellable_new ();
+  FrogrControllerPrivate *priv = NULL;
+  upload_picture_st *up_st = NULL;
 
   up_st = g_slice_new0 (upload_picture_st);
   up_st->controller = self;
@@ -391,9 +416,11 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   up_st->object = object;
   up_st->error = NULL;
 
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->uploading_picture = TRUE;
   g_object_ref (picture);
 
-  priv->uploading_picture = TRUE;
+  _enable_cancellable (self, TRUE);
   fsp_photos_mgr_upload_async (priv->photos_mgr,
                                frogr_picture_get_filepath (picture),
                                frogr_picture_get_title (picture),
@@ -528,11 +555,7 @@ _complete_picture_upload_on_idle (gpointer data)
   error = up_st->error;
   g_slice_free (upload_picture_st, up_st);
 
-  if (priv->cancellable)
-    {
-      g_object_unref (priv->cancellable);
-      priv->cancellable = NULL;
-    }
+  _enable_cancellable (controller, FALSE);
 
   /* Execute callback */
   if (callback)
@@ -546,6 +569,9 @@ _complete_picture_upload_on_idle (gpointer data)
 static void
 _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
 {
+  g_return_if_fail (FROGR_IS_CONTROLLER (self));
+  g_return_if_fail (FROGR_IS_PICTURE (picture));
+
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
 
@@ -559,6 +585,9 @@ _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
 static void
 _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader)
 {
+  g_return_if_fail (FROGR_IS_CONTROLLER (self));
+  g_return_if_fail (FROGR_IS_PICTURE_LOADER (fploader));
+
   FrogrControllerPrivate *priv = NULL;
 
   /* Update UI */
@@ -572,6 +601,9 @@ _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader)
 static void
 _on_picture_uploaded (FrogrController *self, FrogrPicture *picture)
 {
+  g_return_if_fail (FROGR_IS_CONTROLLER (self));
+  g_return_if_fail (FROGR_IS_PICTURE (picture));
+
   g_signal_emit (self, signals[PICTURE_UPLOADED], 0, picture);
 }
 
@@ -580,6 +612,9 @@ _on_pictures_uploaded (FrogrController *self,
                        FrogrPictureUploader *fpuploader,
                        GError *error)
 {
+  g_return_if_fail (FROGR_IS_CONTROLLER (self));
+  g_return_if_fail (FROGR_IS_PICTURE_UPLOADER (fpuploader));
+
   if (!error)
     {
       FrogrControllerPrivate *priv = NULL;
@@ -669,8 +704,8 @@ _fetch_albums (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   priv->fetching_albums = TRUE;
+
   fsp_photos_mgr_get_photosets_async (priv->photos_mgr, NULL,
                                       _fetch_albums_cb, self);
 }
@@ -740,8 +775,8 @@ static void _fetch_extra_account_info (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   priv->fetching_upload_status = TRUE;
+
   fsp_session_get_upload_status_async (priv->session, NULL,
                                       _fetch_extra_account_info_cb, self);
 }
@@ -862,6 +897,12 @@ _frogr_controller_dispose (GObject* object)
     {
       g_object_unref (priv->session);
       priv->session = NULL;
+    }
+
+  if (priv->photos_mgr)
+    {
+      g_object_unref (priv->photos_mgr);
+      priv->photos_mgr = NULL;
     }
 
   if (priv->cancellable)
@@ -1206,22 +1247,10 @@ frogr_controller_revoke_authorization (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  FrogrMainViewModel *mainview_model = NULL;
 
+  /* Ensure there's the token/account is no longer active anywhere */
   fsp_session_set_token (priv->session, NULL);
-
-  if (priv->account)
-    {
-      g_object_unref (priv->account);
-      priv->account = NULL;
-    }
-
-  /* Ensure there's the account is no longer active anywhere */
-  mainview_model = frogr_main_view_get_model (priv->mainview);
-  frogr_main_view_model_set_account (mainview_model, NULL);
-
-  frogr_config_set_account (priv->config, NULL);
-  frogr_config_save_account (priv->config);
+  _set_user_account (self, NULL);
 }
 
 void
@@ -1287,12 +1316,11 @@ frogr_controller_cancel_ongoing_request (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = NULL;
-  GCancellable *cancellable = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  cancellable = priv->cancellable;
+  if (!G_IS_CANCELLABLE (priv->cancellable)
+      || g_cancellable_is_cancelled (priv->cancellable))
+    return;
 
-  if (cancellable && !g_cancellable_is_cancelled (cancellable))
-    g_cancellable_cancel (cancellable);
-
+  g_cancellable_cancel (priv->cancellable);
 }
