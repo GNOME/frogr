@@ -83,6 +83,7 @@ enum {
   PICTURES_LOADED,
   PICTURE_UPLOADED,
   PICTURES_UPLOADED,
+  ACCOUNT_CHANGED,
   N_SIGNALS
 };
 
@@ -168,24 +169,28 @@ _set_state (FrogrController *self, FrogrControllerState state)
   g_signal_emit (self, signals[STATE_CHANGED], 0, state);
 }
 
-static void _set_user_account (FrogrController *self, FrogrAccount *account)
+static void
+_set_user_account (FrogrController *self, FrogrAccount *account)
 {
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
+  gboolean changed = FALSE;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   if (priv->account)
-    g_object_unref (priv->account);
+    {
+      /* Check whether data actually changed */
+      changed = frogr_account_equal (priv->account, account);
+      g_object_unref (priv->account);
+    }
   priv->account = account;
-
-  /* Update main view's model */
-  mainview_model = frogr_main_view_get_model (priv->mainview);
-  frogr_main_view_model_set_account (mainview_model, account);
 
   /* Update configuration system */
   frogr_config_set_account (priv->config, account);
   frogr_config_save_account (priv->config);
+
+  if (changed)
+    g_signal_emit (self, signals[ACCOUNT_CHANGED], 0, account);
 }
 
 static void
@@ -636,6 +641,9 @@ _on_picture_uploaded (FrogrController *self, FrogrPicture *picture)
   g_return_if_fail (FROGR_IS_CONTROLLER (self));
   g_return_if_fail (FROGR_IS_PICTURE (picture));
 
+  /* Re-check account info */
+  _fetch_extra_account_info (self);
+
   g_signal_emit (self, signals[PICTURE_UPLOADED], 0, picture);
 }
 
@@ -673,9 +681,6 @@ _on_pictures_uploaded (FrogrController *self,
 
   _set_state (self, FROGR_STATE_IDLE);
   g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
-
-  /* Re-check account info */
-  _fetch_extra_account_info (self);
 }
 
 static void
@@ -839,20 +844,35 @@ _fetch_extra_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
   if (upload_status)
     {
       FrogrControllerPrivate *priv = NULL;
+      gulong old_remaining_bw;
+      gulong old_max_bw;
+      gboolean old_is_pro;
+
       priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+      /* Check for changes */
+      old_remaining_bw = frogr_account_get_remaining_bandwidth (priv->account);
+      old_max_bw = frogr_account_get_max_bandwidth (priv->account);
+      old_is_pro = frogr_account_get_is_pro (priv->account);
 
       frogr_account_set_remaining_bandwidth (priv->account,
                                              upload_status->bw_remaining_kb);
+      frogr_account_set_max_bandwidth (priv->account, upload_status->bw_max_kb);
       frogr_account_set_is_pro (priv->account, upload_status->pro_user);
+
+      if (old_remaining_bw != upload_status->bw_remaining_kb
+          || old_max_bw != upload_status->bw_max_kb
+          || old_is_pro != upload_status->pro_user)
+        {
+          /* Emit signal if extra info changed */
+          g_signal_emit (controller, signals[ACCOUNT_CHANGED], 0, priv->account);
+        }
 
       fsp_data_free (FSP_DATA (upload_status));
     }
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   priv->fetching_upload_status = FALSE;
-
-  /* Force this to make the UI aware of this */
-  _set_state (controller, FROGR_STATE_IDLE);
 }
 
 static gboolean
@@ -993,6 +1013,14 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
+
+  signals[ACCOUNT_CHANGED] =
+    g_signal_new ("account-changed",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__POINTER,
+                  G_TYPE_NONE, 1, FROGR_TYPE_ACCOUNT);
 
   g_type_class_add_private (obj_class, sizeof (FrogrControllerPrivate));
 }
