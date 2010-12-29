@@ -450,3 +450,44 @@ frogr_account_is_valid (FrogrAccount *self)
 
   return TRUE;
 }
+
+gboolean
+frogr_account_equal (FrogrAccount *self, FrogrAccount *other)
+{
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
+
+  FrogrAccountPrivate *priv_a = NULL;
+  FrogrAccountPrivate *priv_b = NULL;
+
+  if (self == other)
+    return TRUE;
+
+  priv_a = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv_b = FROGR_ACCOUNT_GET_PRIVATE (self);
+
+  if (g_strcmp0 (priv_a->token, priv_b->token))
+    return FALSE;
+
+  if (g_strcmp0 (priv_a->permissions, priv_b->permissions))
+    return FALSE;
+
+  if (g_strcmp0 (priv_a->id, priv_b->id))
+    return FALSE;
+
+  if (g_strcmp0 (priv_a->username, priv_b->username))
+    return FALSE;
+
+  if (g_strcmp0 (priv_a->fullname, priv_b->fullname))
+    return FALSE;
+
+  if (priv_a->remaining_bandwidth != priv_b->remaining_bandwidth)
+    return FALSE;
+
+  if (priv_a->max_bandwidth != priv_b->max_bandwidth)
+    return FALSE;
+
+  if (priv_a->is_pro != priv_b->is_pro)
+    return FALSE;
+
+  return TRUE;
+}
