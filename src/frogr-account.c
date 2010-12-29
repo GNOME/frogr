@@ -412,8 +412,5 @@ frogr_account_is_valid (FrogrAccount *self)
   if (priv->username == NULL || priv->username[0] == '\0')
     return FALSE;
 
-  if (priv->fullname == NULL || priv->fullname[0] == '\0')
-    return FALSE;
-
   return TRUE;
 }
