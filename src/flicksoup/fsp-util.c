@@ -254,15 +254,16 @@ get_api_signature_from_hash_table       (const gchar *shared_secret,
       sign_str_array = g_new0 (gchar*, (2 * g_list_length (keys)) + 2);
 
       /* Fill arrays */
-      sign_str_array[i++] = (gchar *) shared_secret;
+      sign_str_array[i++] = g_strdup (shared_secret);
       for (k = keys; k; k = g_list_next (k))
         {
-          gchar *key = (gchar*) k->data;
-          gchar *value = soup_uri_decode (g_hash_table_lookup (params_table, key));
+          const gchar *key = (gchar*) k->data;
+          const gchar *value = g_hash_table_lookup (params_table, key);
 
-          sign_str_array[i++] = key;
-          sign_str_array[i++] = value;
+          sign_str_array[i++] = g_strdup (key);
+          sign_str_array[i++] = soup_uri_decode (value);
         }
+      sign_str_array[i] = NULL;
 
       /* Get the signature string and calculate the api_sig value */
       sign_str = g_strjoinv (NULL, sign_str_array);
@@ -270,7 +271,7 @@ get_api_signature_from_hash_table       (const gchar *shared_secret,
 
       /* Free */
       g_free (sign_str);
-      g_free (sign_str_array); /* Don't use g_strfreev here */
+      g_strfreev (sign_str_array);
     }
 
   g_list_free (keys);

@@ -1030,6 +1030,8 @@ _update_idle_status_bar (FrogrMainView *self)
                                   _("Connected as"), login,
                                   (is_pro ? _(" (Pro account)") : ""),
                                   (bandwidth_str ? bandwidth_str : ""));
+
+          g_free (bandwidth_str);
         }
     }
 
