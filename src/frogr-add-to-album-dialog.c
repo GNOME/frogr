@@ -42,6 +42,10 @@ typedef struct _FrogrAddToAlbumDialogPrivate {
   GtkWidget *treeview;
   GtkTreeModel *treemodel;
 
+  GtkTreeViewColumn *checkbox_col;
+  GtkTreeViewColumn *title_col;
+  GtkTreeViewColumn *n_elements_col;
+
   GSList *pictures;
   GSList *albums;
 } FrogrAddToAlbumDialogPrivate;
@@ -58,8 +62,9 @@ enum  {
 enum {
   CHECKBOX_COL,
   TITLE_COL,
-  N_PHOTOS_COL,
-  ALBUM_COL
+  N_ELEMENTS_COL,
+  ALBUM_COL,
+  N_COLS
 };
 
 
@@ -68,6 +73,17 @@ enum {
 static void _on_dialog_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data);
 
 static GtkWidget *_create_tree_view (FrogrAddToAlbumDialog *self);
+
+static void _column_clicked_cb (GtkTreeViewColumn *col, gpointer data);
+
+static void _toggle_column_sort_order (GtkTreeSortable *sortable,
+                                       GtkTreeViewColumn *col,
+                                       gint col_id);
+
+static gint _tree_iter_compare_n_elements_func (GtkTreeModel *model,
+                                                GtkTreeIter *a,
+                                                GtkTreeIter *b,
+                                                gpointer data);
 
 static void _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self);
 
@@ -98,10 +114,12 @@ _on_dialog_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
 static GtkWidget *
 _create_tree_view (FrogrAddToAlbumDialog *self)
 {
+  FrogrAddToAlbumDialogPrivate *priv = NULL;
   GtkWidget *treeview = NULL;
   GtkTreeViewColumn *col = NULL;
   GtkCellRenderer *rend = NULL;
 
+  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
   treeview = gtk_tree_view_new();
 
   /* Checkbox */
@@ -111,9 +129,16 @@ _create_tree_view (FrogrAddToAlbumDialog *self)
                                                   "active", CHECKBOX_COL,
                                                   NULL);
   gtk_tree_view_column_set_clickable (col, TRUE);
+  gtk_tree_view_column_set_sort_order (col, GTK_SORT_ASCENDING);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), col);
+
   g_signal_connect (rend, "toggled",
                     G_CALLBACK (_album_toggled_cb), treeview);
-  gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), col);
+
+  g_signal_connect (col, "clicked",
+                    G_CALLBACK (_column_clicked_cb), self);
+
+  priv->checkbox_col = col;
 
   /* Title */
   rend = gtk_cell_renderer_text_new ();
@@ -122,18 +147,98 @@ _create_tree_view (FrogrAddToAlbumDialog *self)
                                                   "text", TITLE_COL,
                                                   NULL);
   gtk_tree_view_column_set_clickable (col, TRUE);
+  gtk_tree_view_column_set_sort_order (col, GTK_SORT_DESCENDING);
   gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), col);
+
+  g_signal_connect (col, "clicked",
+                    G_CALLBACK (_column_clicked_cb), self);
+
+  priv->title_col = col;
 
   /* Description */
   rend = gtk_cell_renderer_text_new ();
-  col = gtk_tree_view_column_new_with_attributes (_("Photos"),
+  col = gtk_tree_view_column_new_with_attributes (_("Elements"),
                                                   rend,
-                                                  "text", N_PHOTOS_COL,
+                                                  "text", N_ELEMENTS_COL,
                                                   NULL);
   gtk_tree_view_column_set_clickable (col, TRUE);
+  gtk_tree_view_column_set_sort_order (col, GTK_SORT_DESCENDING);
   gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), col);
 
+  g_signal_connect (col, "clicked",
+                    G_CALLBACK (_column_clicked_cb), self);
+
+  priv->n_elements_col = col;
+
   return treeview;
+}
+
+static void
+_column_clicked_cb (GtkTreeViewColumn *col, gpointer data)
+{
+  FrogrAddToAlbumDialog *self = NULL;
+  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  GtkTreeModel *model = NULL;
+
+  self = FROGR_ADD_TO_ALBUM_DIALOG (data);
+  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+
+  model = gtk_tree_view_get_model (GTK_TREE_VIEW (priv->treeview));
+  if (!GTK_IS_TREE_SORTABLE (model))
+    return;
+
+  if (col == priv->checkbox_col)
+    _toggle_column_sort_order (GTK_TREE_SORTABLE (model), col, CHECKBOX_COL);
+  else if (col == priv->title_col)
+    _toggle_column_sort_order (GTK_TREE_SORTABLE (model), col, TITLE_COL);
+  else if (col == priv->n_elements_col)
+    _toggle_column_sort_order (GTK_TREE_SORTABLE (model), col, N_ELEMENTS_COL);
+  else
+    g_assert_not_reached ();
+}
+
+static void
+_toggle_column_sort_order (GtkTreeSortable *sortable,
+                           GtkTreeViewColumn *col,
+                           gint col_id)
+{
+  g_return_if_fail (GTK_IS_TREE_SORTABLE (sortable));
+  g_return_if_fail (GTK_IS_TREE_VIEW_COLUMN (col));
+  g_return_if_fail (col_id >= 0 && col_id < N_COLS);
+
+  GtkSortType current;
+  GtkSortType new;
+
+  current = gtk_tree_view_column_get_sort_order (col);
+  if (current == GTK_SORT_ASCENDING)
+    new = GTK_SORT_DESCENDING;
+  else
+    new = GTK_SORT_ASCENDING;
+
+  gtk_tree_view_column_set_sort_order (col, new);
+  gtk_tree_sortable_set_sort_column_id (sortable, col_id, new);
+}
+
+static gint
+_tree_iter_compare_n_elements_func (GtkTreeModel *model,
+                                    GtkTreeIter *a,
+                                    GtkTreeIter *b,
+                                    gpointer data)
+{
+  g_return_val_if_fail (GTK_IS_TREE_MODEL (model), 0);
+
+  gchar *a_str = NULL;
+  gchar *b_str = NULL;
+  gint a_value;
+  gint b_value;
+
+  gtk_tree_model_get (GTK_TREE_MODEL (model), a, N_ELEMENTS_COL, &a_str, -1);
+  gtk_tree_model_get (GTK_TREE_MODEL (model), b, N_ELEMENTS_COL, &b_str, -1);
+
+  a_value = g_ascii_strtoll (a_str, NULL, 10);
+  b_value = g_ascii_strtoll (b_str, NULL, 10);
+
+  return (a_value - b_value);
 }
 
 static void
@@ -143,7 +248,7 @@ _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self)
   FrogrAlbum *album = NULL;
   GtkTreeIter iter;
   GSList *current = NULL;
-  gchar *n_photos_str = NULL;
+  gchar *n_elements_str = NULL;
 
   priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
 
@@ -153,16 +258,16 @@ _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self)
         continue;
 
       album = FROGR_ALBUM (current->data);
-      n_photos_str = g_strdup_printf ("%d", frogr_album_get_n_photos (album));
+      n_elements_str = g_strdup_printf ("%d", frogr_album_get_n_photos (album));
 
       gtk_list_store_append (GTK_LIST_STORE (priv->treemodel), &iter);
       gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
                           CHECKBOX_COL, FALSE,
                           TITLE_COL, frogr_album_get_title (album),
-                          N_PHOTOS_COL, n_photos_str,
+                          N_ELEMENTS_COL, n_elements_str,
                           ALBUM_COL, album,
                           -1);
-      g_free (n_photos_str);
+      g_free (n_elements_str);
     }
 }
 
@@ -451,6 +556,12 @@ frogr_add_to_album_dialog_init (FrogrAddToAlbumDialog *self)
                                         G_TYPE_STRING, G_TYPE_STRING,
                                         G_TYPE_POINTER));
   gtk_tree_view_set_model (GTK_TREE_VIEW (priv->treeview), priv->treemodel);
+
+  /* Sorting function for the number of elements column */
+  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (priv->treemodel),
+                                   N_ELEMENTS_COL,
+                                   _tree_iter_compare_n_elements_func,
+                                   self, NULL);
 
   g_signal_connect (G_OBJECT (self), "map-event",
                     G_CALLBACK (_on_dialog_map_event), NULL);
