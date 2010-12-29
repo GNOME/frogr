@@ -36,6 +36,8 @@ G_BEGIN_DECLS
 typedef struct
 {
   GObject             *object;
+  SoupSession         *soup_session;
+  SoupMessage         *soup_message;
   GCancellable        *cancellable;
   gulong               cancellable_id;
   GAsyncReadyCallback  callback;
@@ -68,6 +70,10 @@ perform_async_request                   (SoupSession         *soup_session,
                                          GAsyncReadyCallback  callback,
                                          gpointer             source_tag,
                                          gpointer             data);
+
+void
+soup_session_cancelled_cb               (GCancellable *cancellable,
+                                         gpointer      data);
 
 void
 handle_soup_response                    (SoupMessage         *msg,

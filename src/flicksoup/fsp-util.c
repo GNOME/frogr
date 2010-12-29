@@ -33,7 +33,6 @@ typedef struct
   gulong               cancellable_id;
 } GCancellableData;
 
-
 static GHashTable *
 _get_params_table_from_valist           (const gchar *first_param,
                                          va_list      args)
@@ -131,16 +130,6 @@ _disconnect_cancellable_on_idle (GCancellableData *clos)
     }
 
   return FALSE;
-}
-
-static void
-_soup_session_cancelled_cb              (GCancellable *cancellable,
-                                         gpointer      data)
-{
-  SoupSession *soup_session = SOUP_SESSION (data);
-  soup_session_abort (soup_session);
-
-  g_debug ("Remote request cancelled!");
 }
 
 static gboolean
@@ -364,9 +353,14 @@ perform_async_request                   (SoupSession         *soup_session,
   GAsyncData *clos = NULL;
   SoupMessage *msg = NULL;
 
+  /* Build and queue the message */
+  msg = soup_message_new (SOUP_METHOD_GET, url);
+
   /* Save important data for the callback */
   clos = g_slice_new0 (GAsyncData);
   clos->object = source_object;
+  clos->soup_session = soup_session;
+  clos->soup_message = msg;
   clos->cancellable = cancellable;
   clos->callback = callback;
   clos->source_tag = source_tag;
@@ -377,16 +371,36 @@ perform_async_request                   (SoupSession         *soup_session,
     {
       clos->cancellable_id =
         g_cancellable_connect (clos->cancellable,
-                               G_CALLBACK (_soup_session_cancelled_cb),
-                               soup_session,
+                               G_CALLBACK (soup_session_cancelled_cb),
+                               clos,
                                NULL);
     }
 
-  /* Build and queue the message */
-  msg = soup_message_new (SOUP_METHOD_GET, url);
+  /* Queue the message */
   soup_session_queue_message (soup_session, msg, request_cb, clos);
 
   g_debug ("\nRequested URL:\n%s\n", url);
+}
+
+void
+soup_session_cancelled_cb               (GCancellable *cancellable,
+                                         gpointer      data)
+{
+  GAsyncData *clos = NULL;
+  GObject *object = NULL;
+  SoupSession *session = NULL;
+  SoupMessage *message = NULL;
+
+  clos = (GAsyncData *) data;
+
+  /* Get data from closure, and free it */
+  object = clos->object;
+  session = clos->soup_session;
+  message = clos->soup_message;
+
+  soup_session_cancel_message (session, message, SOUP_STATUS_CANCELLED);
+
+  g_debug ("Remote request cancelled!");
 }
 
 void

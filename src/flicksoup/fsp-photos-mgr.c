@@ -88,10 +88,6 @@ _load_file_contents_cb                  (GObject      *object,
                                          gpointer      data);
 
 static void
-_upload_cancelled_cb                    (GCancellable *cancellable,
-                                         gpointer      data);
-
-static void
 _photo_upload_soup_session_cb           (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
@@ -373,6 +369,7 @@ _load_file_contents_cb                  (GObject      *object,
       /* Get the proxy and the associated message */
       self = FSP_PHOTOS_MGR (ga_clos->object);
       msg = _get_soup_message_for_upload (file, contents, length, extra_params);
+      ga_clos->soup_message = msg;
 
       soup_session = _get_soup_session (self);
 
@@ -381,8 +378,8 @@ _load_file_contents_cb                  (GObject      *object,
         {
           ga_clos->cancellable_id =
             g_cancellable_connect (ga_clos->cancellable,
-                                   G_CALLBACK (_upload_cancelled_cb),
-                                   soup_session,
+                                   G_CALLBACK (soup_session_cancelled_cb),
+                                   ga_clos,
                                    NULL);
         }
 
@@ -405,16 +402,6 @@ _load_file_contents_cb                  (GObject      *object,
       error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file for upload");
       build_async_result_and_complete (ga_clos, NULL, error);
     }
-}
-
-static void
-_upload_cancelled_cb                    (GCancellable *cancellable,
-                                         gpointer      data)
-{
-  SoupSession *soup_session = SOUP_SESSION (data);
-  soup_session_abort (soup_session);
-
-  g_debug ("Upload cancelled!");
 }
 
 static void
@@ -558,6 +545,8 @@ fsp_photos_mgr_upload_async             (FspPhotosMgr        *self,
   /* Save important data for the callback */
   ga_clos = g_slice_new0 (GAsyncData);
   ga_clos->object = G_OBJECT (self);
+  ga_clos->soup_session = soup_session;
+  ga_clos->soup_message = NULL;
   ga_clos->cancellable = cancellable;
   ga_clos->callback = callback;
   ga_clos->source_tag = fsp_photos_mgr_upload_async;
