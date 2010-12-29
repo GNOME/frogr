@@ -1028,7 +1028,7 @@ _update_idle_status_bar (FrogrMainView *self)
 
           text = g_strdup_printf ("%s %s%s%s",
                                   _("Connected as"), login,
-                                  (is_pro ? " (Pro account)" : ""),
+                                  (is_pro ? _(" (Pro account)") : ""),
                                   (bandwidth_str ? bandwidth_str : ""));
         }
     }
