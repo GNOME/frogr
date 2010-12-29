@@ -268,6 +268,8 @@ _load_next_picture_cb (GObject *object,
       g_free (filename);
     }
 
+  g_object_unref (file);
+
   /* Update internal status */
   priv->current = g_slist_next (priv->current);
   priv->index++;
