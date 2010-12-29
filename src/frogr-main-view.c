@@ -1023,7 +1023,7 @@ _update_idle_status_bar (FrogrMainView *self)
 
           /* Try to get the full name, or the username otherwise */
           login = frogr_account_get_fullname (account);
-          if (login == NULL)
+          if (login == NULL || login[0] == '\0')
             login = frogr_account_get_username (account);
 
           text = g_strdup_printf ("%s %s%s%s",
