@@ -43,6 +43,7 @@ struct _FrogrAccountPrivate
 
   /* Following properties won't be persistent */
   gulong remaining_bandwidth;
+  gulong max_bandwidth;
   gboolean is_pro;
 };
 
@@ -56,6 +57,7 @@ enum {
   PROP_USERNAME,
   PROP_FULLNAME,
   PROP_REMAINING_BANDWIDTH,
+  PROP_MAX_BANDWIDTH,
   PROP_IS_PRO,
 };
 
@@ -94,6 +96,10 @@ _frogr_account_set_property (GObject      *object,
 
     case PROP_REMAINING_BANDWIDTH:
       frogr_account_set_remaining_bandwidth (self, g_value_get_ulong (value));
+      break;
+
+    case PROP_MAX_BANDWIDTH:
+      frogr_account_set_max_bandwidth (self, g_value_get_ulong (value));
       break;
 
     case PROP_IS_PRO:
@@ -137,6 +143,10 @@ _frogr_account_get_property (GObject    *object,
 
     case PROP_REMAINING_BANDWIDTH:
       g_value_set_ulong (value, priv->remaining_bandwidth);
+      break;
+
+    case PROP_MAX_BANDWIDTH:
+      g_value_set_ulong (value, priv->max_bandwidth);
       break;
 
     case PROP_IS_PRO:
@@ -215,6 +225,13 @@ frogr_account_class_init (FrogrAccountClass *klass)
                               G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_REMAINING_BANDWIDTH, pspec);
 
+  pspec = g_param_spec_ulong ("max-bandwidth",
+                              "max-bandwidth",
+                              "Max monthly bandwidth in KB",
+                              0, G_MAXULONG, G_MAXULONG,
+                              G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_MAX_BANDWIDTH, pspec);
+
   pspec = g_param_spec_boolean ("is-pro",
                                 "is-pro",
                                 "Whether the user has a Pro account or not",
@@ -235,6 +252,7 @@ frogr_account_init (FrogrAccount *self)
   priv->username = NULL;
   priv->fullname = NULL;
   priv->remaining_bandwidth = G_MAXULONG;
+  priv->max_bandwidth = G_MAXULONG;
   priv->is_pro = FALSE;
 }
 
@@ -373,6 +391,24 @@ frogr_account_set_remaining_bandwidth (FrogrAccount *self, gulong remaining_band
 
   FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv->remaining_bandwidth = remaining_bandwidth;
+}
+
+gulong
+frogr_account_get_max_bandwidth (FrogrAccount *self)
+{
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXULONG);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->max_bandwidth;
+}
+
+void
+frogr_account_set_max_bandwidth (FrogrAccount *self, gulong max_bandwidth)
+{
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->max_bandwidth = max_bandwidth;
 }
 
 gboolean

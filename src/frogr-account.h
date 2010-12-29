@@ -88,6 +88,11 @@ gulong frogr_account_get_remaining_bandwidth (FrogrAccount *self);
 void frogr_account_set_remaining_bandwidth (FrogrAccount *self,
                                             gulong remaining_bandwidth);
 
+gulong frogr_account_get_max_bandwidth (FrogrAccount *self);
+
+void frogr_account_set_max_bandwidth (FrogrAccount *self,
+                                      gulong max_bandwidth);
+
 gboolean frogr_account_get_is_pro (FrogrAccount *self);
 
 void frogr_account_set_is_pro (FrogrAccount *self, gboolean is_pro);
