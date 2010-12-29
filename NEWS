@@ -15,7 +15,12 @@
     values for the visibility of the pictures, and to choose whether
     to open the browser or not after a successful upload process.
   * Added support for specifying an HTTP proxy.
-  * Added basic man page (Alberto Garcia)..
+  * Added basic man page (Alberto Garcia).
+  * Fixed memory leaks thanks to valgrind.
+  * Report in the progress dialog when pictures are being added to
+    sets, and make that operation itself cancellable too.
+  * Allow changing sorting order in 'add to album' dialog.
+  * Better and safer implementation for cancelling operations.
 
 0.3 (22 Dec 2010)
 
