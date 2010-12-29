@@ -22,6 +22,8 @@
 
 #include "frogr-main-view-model.h"
 
+#include "frogr-account.h"
+
 #define TAGS_DELIMITER " "
 
 #define FROGR_MAIN_VIEW_MODEL_GET_PRIVATE(object)               \
@@ -40,6 +42,8 @@ struct _FrogrMainViewModelPrivate
 
   GSList *albums_list;
   guint n_albums;
+
+  FrogrAccount* account;
 };
 
 /* Private API */
@@ -62,6 +66,12 @@ _frogr_main_view_model_dispose (GObject* object)
       g_slist_foreach (priv->albums_list, (GFunc)g_object_unref, NULL);
       g_slist_free (priv->albums_list);
       priv->albums_list = NULL;
+    }
+
+  if (priv->account)
+    {
+      g_object_unref (priv->account);
+      priv->account = NULL;
     }
 
   G_OBJECT_CLASS (frogr_main_view_model_parent_class)->dispose (object);
@@ -87,6 +97,8 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
 
   priv->albums_list = NULL;
   priv->n_albums = 0;
+
+  priv->account = NULL;
 }
 
 /* Public API */
@@ -241,4 +253,26 @@ frogr_main_view_model_set_albums (FrogrMainViewModel *self,
 
   priv->albums_list = albums_list;
   priv->n_albums = g_slist_length (albums_list);
+}
+
+FrogrAccount *
+frogr_main_view_model_get_account (FrogrMainViewModel *self)
+{
+  g_return_val_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+
+  FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  return priv->account;
+}
+
+void
+frogr_main_view_model_set_account (FrogrMainViewModel *self,
+                                   FrogrAccount *account)
+{
+  g_return_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  if (priv->account)
+    g_object_unref (priv->account);
+
+  priv->account = FROGR_IS_ACCOUNT (account) ? g_object_ref (account) : NULL;
 }

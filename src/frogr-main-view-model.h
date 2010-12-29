@@ -23,6 +23,7 @@
 #ifndef _FROGR_MAIN_VIEW_MODEL_H
 #define _FROGR_MAIN_VIEW_MODEL_H
 
+#include "frogr-account.h"
 #include "frogr-album.h"
 #include "frogr-picture.h"
 
@@ -78,6 +79,11 @@ GSList *frogr_main_view_model_get_albums (FrogrMainViewModel *self);
 
 void frogr_main_view_model_set_albums (FrogrMainViewModel *self,
                                        GSList *albums_list);
+
+FrogrAccount *frogr_main_view_model_get_account (FrogrMainViewModel *self);
+
+void frogr_main_view_model_set_account (FrogrMainViewModel *self,
+                                        FrogrAccount *account);
 
 G_END_DECLS
 
