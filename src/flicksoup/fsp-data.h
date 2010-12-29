@@ -121,10 +121,10 @@ struct _FspDataUploadStatus
   gchar       *id;
   gchar       *username;
   gboolean     pro_user;
-  guint32      bw_max_kb;       /* Bandwith max KB */
-  guint32      bw_used_kb;      /* Bandwith used KB */
-  guint32      bw_remaining_kb; /* Bandwith remaining KB */
-  guint32      fs_max_kb;       /* Filesize max KB */
+  gulong      bw_max_kb;       /* Bandwith max KB */
+  gulong      bw_used_kb;      /* Bandwith used KB */
+  gulong      bw_remaining_kb; /* Bandwith remaining KB */
+  gulong      fs_max_kb;       /* Filesize max KB */
 };
 
 struct _FspDataPhotoInfo

@@ -273,13 +273,13 @@ get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
       g_print ("[get_upload_status_cb]::\tUser id: %s\n", upload_status->id);
       g_print ("[get_upload_status_cb]::\tUser is pro?: %s\n",
                upload_status->pro_user ? "YES" : "NO");
-      g_print ("[get_upload_status_cb]::\tBandwitdh Max KB: %d\n",
+      g_print ("[get_upload_status_cb]::\tBandwitdh Max KB: %lu\n",
                upload_status->bw_max_kb);
-      g_print ("[get_upload_status_cb]::\tBandwitdh Used KB: %d\n",
+      g_print ("[get_upload_status_cb]::\tBandwitdh Used KB: %lu\n",
                upload_status->bw_used_kb);
-      g_print ("[get_upload_status_cb]::\tBandwitdh Remaining KB: %d\n",
+      g_print ("[get_upload_status_cb]::\tBandwitdh Remaining KB: %lu\n",
                upload_status->bw_remaining_kb);
-      g_print ("[get_upload_status_cb]::\tFilesize Max KB: %d\n",
+      g_print ("[get_upload_status_cb]::\tFilesize Max KB: %lu\n",
                upload_status->fs_max_kb);
 
       /* Make a pause before continuing */

@@ -496,15 +496,15 @@ _get_upload_status_parser               (xmlDoc  *doc,
           if (!g_strcmp0 ((gchar *) node->name, "bandwidth"))
             {
               value = xmlGetProp (node, (const xmlChar *) "maxkb");
-              upload_status->bw_max_kb = (guint32) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              upload_status->bw_max_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
               xmlFree (value);
 
               value = xmlGetProp (node, (const xmlChar *) "usedkb");
-              upload_status->bw_used_kb = (guint32) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              upload_status->bw_used_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
               xmlFree (value);
 
               value = xmlGetProp (node, (const xmlChar *) "remainingkb");
-              upload_status->bw_remaining_kb = (guint32) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              upload_status->bw_remaining_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
               xmlFree (value);
             }
 
@@ -512,7 +512,7 @@ _get_upload_status_parser               (xmlDoc  *doc,
           if (!g_strcmp0 ((gchar *) node->name, "filesize"))
             {
               value = xmlGetProp (node, (const xmlChar *) "maxkb");
-              upload_status->fs_max_kb = (guint32) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              upload_status->fs_max_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
               xmlFree (value);
             }
         }
