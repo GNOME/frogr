@@ -395,7 +395,6 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   /* Create cancellable */
   priv->cancellable = g_cancellable_new ();
 
-  /* Create structure to pass to the thread */
   up_st = g_slice_new0 (upload_picture_st);
   up_st->controller = self;
   up_st->picture = picture;
