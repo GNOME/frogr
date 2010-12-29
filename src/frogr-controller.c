@@ -140,7 +140,13 @@ static void _on_pictures_uploaded (FrogrController *self,
 static void _open_browser_to_edit_details (FrogrController *self,
                                            FrogrPictureUploader *fpuploader);
 
+static void _fetch_albums (FrogrController *self);
+
 static void _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _fetch_extra_account_info (FrogrController *self);
+
+static void _fetch_extra_account_info_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static gboolean _show_add_to_album_dialog_on_idle (GSList *pictures);
 
@@ -332,6 +338,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
     {
       if (auth_token->token)
         {
+          FrogrMainViewModel *mainview_model = NULL;
           FrogrAccount *account = NULL;
 
           /* Set and save the auth token and the settings to disk */
@@ -341,15 +348,22 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           frogr_account_set_username (account, auth_token->username);
           frogr_account_set_fullname (account, auth_token->fullname);
 
-          frogr_config_set_account (priv->config, account);
-          g_object_unref (account);
+          /* Set the account in the UI, the config system and the controller */
+          mainview_model = frogr_main_view_get_model (priv->mainview);
+          frogr_main_view_model_set_account (mainview_model, account);
 
+          frogr_config_set_account (priv->config, account);
           frogr_config_save_account (priv->config);
+
+          if (priv->account)
+            g_object_unref (priv->account);
+          priv->account = account;
 
           g_debug ("Authorization successfully completed!");
 
-          /* Pre-fetch the list of albums right after this */
-          frogr_controller_fetch_albums (controller);
+          /* Pre-fetch some data right after this */
+          _fetch_albums (controller);
+          _fetch_extra_account_info (controller);
         }
 
       fsp_data_free (FSP_DATA (auth_token));
@@ -651,6 +665,26 @@ _open_browser_to_edit_details (FrogrController *self,
 }
 
 static void
+_fetch_albums (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = NULL;
+
+  if (!frogr_controller_is_authorized (self))
+    return;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Use the internal state for this command as we do not want to
+     interfere at all with the rest of the application */
+  _set_internal_state (self, FROGR_STATE_BUSY);
+
+  fsp_photos_mgr_get_photosets_async (priv->photos_mgr, NULL,
+                                      _fetch_albums_cb, self);
+}
+
+static void
 _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspPhotosMgr *photos_mgr = NULL;
@@ -663,13 +697,6 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   photos_mgr = FSP_PHOTOS_MGR (object);
   controller = FROGR_CONTROLLER (data);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if (priv->cancellable)
-    {
-      g_object_unref (priv->cancellable);
-      priv->cancellable = NULL;
-    }
 
   photosets_list = fsp_photos_mgr_get_photosets_finish (photos_mgr, res, &error);
   if (error != NULL)
@@ -705,10 +732,70 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   /* Update main view's model */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_albums (mainview_model, albums_list);
 
   _set_internal_state (controller, FROGR_STATE_IDLE);
+}
+
+static void _fetch_extra_account_info (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = NULL;
+
+  if (!frogr_controller_is_authorized (self))
+    return;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Use the internal state for this command as we do not want to
+     interfere at all with the rest of the application */
+  _set_internal_state (self, FROGR_STATE_BUSY);
+
+  fsp_session_get_upload_status_async (priv->session, NULL,
+                                      _fetch_extra_account_info_cb, self);
+}
+
+static void
+_fetch_extra_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspSession *session = NULL;
+  FrogrController *controller = NULL;
+  FspDataUploadStatus *upload_status = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  controller = FROGR_CONTROLLER (data);
+
+  upload_status = fsp_session_get_upload_status_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_debug ("Error fetching extra info from the account: %s", error->message);
+
+      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
+        frogr_controller_revoke_authorization (controller);
+
+      g_error_free (error);
+    }
+
+  if (upload_status)
+    {
+      FrogrControllerPrivate *priv = NULL;
+      priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+      frogr_account_set_remaining_bandwidth (priv->account,
+                                             upload_status->bw_remaining_kb);
+      frogr_account_set_is_pro (priv->account, upload_status->pro_user);
+
+      fsp_data_free (FSP_DATA (upload_status));
+    }
+
+  _set_internal_state (controller, FROGR_STATE_IDLE);
+
+  /* Force this to make the UI aware of this */
+  _set_state (controller, FROGR_STATE_IDLE);
 }
 
 static gboolean
@@ -914,6 +1001,7 @@ frogr_controller_run_app (FrogrController *self)
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrMainViewModel *mainview_model = NULL;
 
   if (priv->app_running)
     {
@@ -925,11 +1013,20 @@ frogr_controller_run_app (FrogrController *self)
   priv->mainview = frogr_main_view_new ();
   g_object_add_weak_pointer (G_OBJECT (priv->mainview),
                              (gpointer) & priv->mainview);
+
+  /* Update UI model if there's a valid account */
+  if (priv->account)
+    {
+      mainview_model = frogr_main_view_get_model (priv->mainview);
+      frogr_main_view_model_set_account (mainview_model, priv->account);
+    }
+
   /* Update flag */
   priv->app_running = TRUE;
 
   /* Try to pre-fetch some data from the server right after launch */
-  frogr_controller_fetch_albums (self);
+  _fetch_albums (self);
+  _fetch_extra_account_info (self);
 
   /* Run UI */
   gtk_main ();
@@ -1076,7 +1173,7 @@ frogr_controller_show_add_to_album_dialog (FrogrController *self,
 
   /* Fetch the albums first if needed */
   if (g_slist_length (albums) == 0)
-    frogr_controller_fetch_albums (self);
+    _fetch_albums (self);
 
   /* Show the dialog when possible */
   g_idle_add ((GSourceFunc) _show_add_to_album_dialog_on_idle, pictures);
@@ -1115,6 +1212,7 @@ frogr_controller_revoke_authorization (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrMainViewModel *mainview_model = NULL;
 
   fsp_session_set_token (priv->session, NULL);
 
@@ -1124,7 +1222,10 @@ frogr_controller_revoke_authorization (FrogrController *self)
       priv->account = NULL;
     }
 
-  /* Ensure there's the account is no longer active */
+  /* Ensure there's the account is no longer active anywhere */
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  frogr_main_view_model_set_account (mainview_model, NULL);
+
   frogr_config_set_account (priv->config, NULL);
   frogr_config_save_account (priv->config);
 }
@@ -1184,29 +1285,6 @@ frogr_controller_upload_pictures (FrogrController *self)
           frogr_picture_uploader_upload (fpuploader);
         }
     }
-}
-
-void
-frogr_controller_fetch_albums (FrogrController *self)
-{
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  FrogrControllerPrivate *priv = NULL;
-
-  if (!frogr_controller_is_authorized (self))
-    return;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->cancellable = g_cancellable_new ();
-
-  /* Use the internal state for this command as we do not want to
-     interfere at all with the rest of the application */
-  _set_internal_state (self, FROGR_STATE_BUSY);
-
-  fsp_photos_mgr_get_photosets_async (priv->photos_mgr,
-                                      priv->cancellable,
-                                      _fetch_albums_cb,
-                                      self);
 }
 
 void

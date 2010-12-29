@@ -97,8 +97,6 @@ void frogr_controller_load_pictures (FrogrController *self, GSList *filepaths);
 
 void frogr_controller_upload_pictures (FrogrController *self);
 
-void frogr_controller_fetch_albums (FrogrController *self);
-
 void frogr_controller_cancel_ongoing_request (FrogrController *self);
 
 G_END_DECLS

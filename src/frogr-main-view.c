@@ -22,6 +22,7 @@
 
 #include "frogr-main-view.h"
 
+#include "frogr-account.h"
 #include "frogr-controller.h"
 #include "frogr-main-view-model.h"
 #include "frogr-picture.h"
@@ -169,6 +170,8 @@ static void _controller_picture_loaded (FrogrController *self,
                                         gpointer data);
 
 static void _update_ui (FrogrMainView *self);
+
+static void _update_idle_status_bar (FrogrMainView *self);
 
 
 /* Private API */
@@ -935,6 +938,7 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->edit_details_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_tags_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_album_menu_item, FALSE);
+
       break;
 
     case FROGR_STATE_IDLE:
@@ -951,11 +955,86 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_to_album_menu_item, npics > 0);
 
       gtk_widget_hide (priv->progress_dialog);
+
+      _update_idle_status_bar (self);
+
       break;
 
     default:
       g_warning ("Invalid state reached!!");
     }
+}
+
+static void
+_update_idle_status_bar (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  FrogrAccount *account = NULL;
+  gchar *text = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  account = frogr_main_view_model_get_account (priv->model);
+
+  if (account)
+    {
+      gulong remaining_bandwidth = G_MAXULONG;
+
+      remaining_bandwidth = frogr_account_get_remaining_bandwidth (account);
+      if (remaining_bandwidth != G_MAXULONG)
+        {
+          gfloat bandwidth_float = G_MAXFLOAT;
+          const gchar *login = NULL;
+          gchar *bandwidth_str = NULL;
+          gchar *unit_str = NULL;
+          gboolean is_pro = FALSE;
+          int n_divisions = 0;
+
+          bandwidth_float = remaining_bandwidth;
+          while (bandwidth_float > 1000.0 && n_divisions < 3)
+            {
+              bandwidth_float /= 1024;
+              n_divisions++;
+            }
+
+          switch (n_divisions)
+            {
+            case 0:
+              unit_str = g_strdup ("KB");
+              break;
+            case 1:
+              unit_str = g_strdup ("MB");
+              break;
+            case 2:
+              unit_str = g_strdup ("GB");
+              break;
+            default:
+              unit_str = NULL;;
+            }
+
+          if (unit_str)
+            {
+              is_pro = frogr_account_get_is_pro (account);
+              bandwidth_str = g_strdup_printf (" - %.1f %s %s",
+                                               bandwidth_float,
+                                               unit_str,
+                                               _("left this month"));
+              g_free (unit_str);
+            }
+
+          /* Try to get the full name, or the username otherwise */
+          login = frogr_account_get_fullname (account);
+          if (login == NULL)
+            login = frogr_account_get_username (account);
+
+          text = g_strdup_printf ("%s %s%s%s",
+                                  _("Connected as"), login,
+                                  (is_pro ? " (Pro account)" : ""),
+                                  (bandwidth_str ? bandwidth_str : ""));
+        }
+    }
+
+  frogr_main_view_set_status_text (self, text);
+  g_free (text);
 }
 
 static void
