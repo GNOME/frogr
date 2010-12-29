@@ -40,6 +40,10 @@ struct _FrogrAccountPrivate
   gchar *id;
   gchar *username;
   gchar *fullname;
+
+  /* Following properties won't be persistent */
+  gulong remaining_bandwidth;
+  gboolean is_pro;
 };
 
 
@@ -51,6 +55,8 @@ enum {
   PROP_ID,
   PROP_USERNAME,
   PROP_FULLNAME,
+  PROP_REMAINING_BANDWIDTH,
+  PROP_IS_PRO,
 };
 
 
@@ -86,6 +92,14 @@ _frogr_account_set_property (GObject      *object,
       frogr_account_set_fullname (self, g_value_get_string (value));
       break;
 
+    case PROP_REMAINING_BANDWIDTH:
+      frogr_account_set_remaining_bandwidth (self, g_value_get_ulong (value));
+      break;
+
+    case PROP_IS_PRO:
+      frogr_account_set_is_pro (self, g_value_get_boolean (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -119,6 +133,14 @@ _frogr_account_get_property (GObject    *object,
 
     case PROP_FULLNAME:
       g_value_set_string (value, priv->fullname);
+      break;
+
+    case PROP_REMAINING_BANDWIDTH:
+      g_value_set_ulong (value, priv->remaining_bandwidth);
+      break;
+
+    case PROP_IS_PRO:
+      g_value_set_boolean (value, priv->is_pro);
       break;
 
     default:
@@ -186,6 +208,20 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_FULLNAME, pspec);
 
+  pspec = g_param_spec_ulong ("remaining-bandwidth",
+                              "remaining-bandwidth",
+                              "Remaining monthly bandwidth in KB",
+                              0, G_MAXULONG, G_MAXULONG,
+                              G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_REMAINING_BANDWIDTH, pspec);
+
+  pspec = g_param_spec_boolean ("is-pro",
+                                "is-pro",
+                                "Whether the user has a Pro account or not",
+                                FALSE,
+                                G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_IS_PRO, pspec);
+
   g_type_class_add_private (klass, sizeof (FrogrAccountPrivate));
 }
 
@@ -198,6 +234,8 @@ frogr_account_init (FrogrAccount *self)
   priv->id = NULL;
   priv->username = NULL;
   priv->fullname = NULL;
+  priv->remaining_bandwidth = G_MAXULONG;
+  priv->is_pro = FALSE;
 }
 
 FrogrAccount *
@@ -317,6 +355,42 @@ frogr_account_set_fullname (FrogrAccount *self, const gchar *fullname)
 
   g_free (priv->fullname);
   priv->fullname = g_strdup (fullname);
+}
+
+gulong
+frogr_account_get_remaining_bandwidth (FrogrAccount *self)
+{
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXULONG);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->remaining_bandwidth;
+}
+
+void
+frogr_account_set_remaining_bandwidth (FrogrAccount *self, gulong remaining_bandwidth)
+{
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->remaining_bandwidth = remaining_bandwidth;
+}
+
+gboolean
+frogr_account_get_is_pro (FrogrAccount *self)
+{
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->is_pro;
+}
+
+void
+frogr_account_set_is_pro (FrogrAccount *self, gboolean is_pro)
+{
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->is_pro = is_pro;
 }
 
 gboolean
