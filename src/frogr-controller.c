@@ -57,11 +57,7 @@ G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
 typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
 struct _FrogrControllerPrivate
 {
-  /* Used for processes globally affecting the application */
   FrogrControllerState state;
-
-  /* Use for processes just affecting the controller (e.g. fetch albums) */
-  FrogrControllerState internal_state;
 
   FrogrMainView *mainview;
   FrogrConfig *config;
@@ -73,6 +69,10 @@ struct _FrogrControllerPrivate
   GCancellable *cancellable;
 
   gboolean app_running;
+  gboolean uploading_picture;
+  gboolean fetching_albums;
+  gboolean fetching_upload_status;
+  gboolean adding_to_photoset;
 };
 
 
@@ -103,8 +103,6 @@ typedef struct {
 /* Prototypes */
 
 static void _set_state (FrogrController *self, FrogrControllerState state);
-
-static void _set_internal_state (FrogrController *self, FrogrControllerState state);
 
 static void _notify_error_to_user (FrogrController *self,
                                    GError *error);
@@ -159,17 +157,7 @@ _set_state (FrogrController *self, FrogrControllerState state)
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   priv->state = state;
-  _set_internal_state (self, state);
-
   g_signal_emit (self, signals[STATE_CHANGED], 0, state);
-}
-
-void
-_set_internal_state (FrogrController *self, FrogrControllerState state)
-{
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  priv->internal_state = state;
 }
 
 static void
@@ -405,7 +393,7 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
 
   g_object_ref (picture);
 
-  _set_internal_state (self, FROGR_STATE_BUSY);
+  priv->uploading_picture = TRUE;
   fsp_photos_mgr_upload_async (priv->photos_mgr,
                                frogr_picture_get_filepath (picture),
                                frogr_picture_get_title (picture),
@@ -426,6 +414,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspPhotosMgr *photos_mgr = NULL;
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GError *error = NULL;
   gchar *photo_id = NULL;
@@ -442,7 +431,8 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       g_free (photo_id);
     }
 
-  _set_internal_state (controller, FROGR_STATE_IDLE);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  priv->uploading_picture = FALSE;
 
   /* Check whether it's needed or not to add the picture to the album */
   if (!error)
@@ -455,7 +445,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
           FrogrAlbum *album = NULL;
 
           /* Add picture to albums as requested */
-          _set_internal_state (controller, FROGR_STATE_BUSY);
+          priv->adding_to_photoset = TRUE;
 
           album = FROGR_ALBUM (albums->data);
           up_st->albums = g_slist_next (albums);
@@ -478,6 +468,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspPhotosMgr *photos_mgr = NULL;
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GSList *albums = NULL;
   GError *error = NULL;
@@ -508,7 +499,8 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
         }
     }
 
-  _set_internal_state (controller, FROGR_STATE_IDLE);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  priv->adding_to_photoset = FALSE;
 }
 
 static gboolean
@@ -527,7 +519,7 @@ _complete_picture_upload_on_idle (gpointer data)
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while busy */
-  if (priv->internal_state == FROGR_STATE_BUSY)
+  if (priv->adding_to_photoset)
     return TRUE;
 
   picture = up_st->picture;
@@ -678,10 +670,7 @@ _fetch_albums (FrogrController *self)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  /* Use the internal state for this command as we do not want to
-     interfere at all with the rest of the application */
-  _set_internal_state (self, FROGR_STATE_BUSY);
-
+  priv->fetching_albums = TRUE;
   fsp_photos_mgr_get_photosets_async (priv->photos_mgr, NULL,
                                       _fetch_albums_cb, self);
 }
@@ -738,7 +727,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_albums (mainview_model, albums_list);
 
-  _set_internal_state (controller, FROGR_STATE_IDLE);
+  priv->fetching_albums = FALSE;
 }
 
 static void _fetch_extra_account_info (FrogrController *self)
@@ -752,10 +741,7 @@ static void _fetch_extra_account_info (FrogrController *self)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  /* Use the internal state for this command as we do not want to
-     interfere at all with the rest of the application */
-  _set_internal_state (self, FROGR_STATE_BUSY);
-
+  priv->fetching_upload_status = TRUE;
   fsp_session_get_upload_status_async (priv->session, NULL,
                                       _fetch_extra_account_info_cb, self);
 }
@@ -765,6 +751,7 @@ _fetch_extra_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
   FspDataUploadStatus *upload_status = NULL;
   GError *error = NULL;
 
@@ -794,7 +781,8 @@ _fetch_extra_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
       fsp_data_free (FSP_DATA (upload_status));
     }
 
-  _set_internal_state (controller, FROGR_STATE_IDLE);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  priv->fetching_upload_status = FALSE;
 
   /* Force this to make the UI aware of this */
   _set_state (controller, FROGR_STATE_IDLE);
@@ -812,7 +800,7 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while internally busy */
-  if (priv->internal_state == FROGR_STATE_BUSY)
+  if (priv->fetching_albums)
     return TRUE;
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
@@ -953,6 +941,10 @@ frogr_controller_init (FrogrController *self)
   priv->photos_mgr = fsp_photos_mgr_new (priv->session);
   priv->cancellable = NULL;
   priv->app_running = FALSE;
+  priv->uploading_picture = FALSE;
+  priv->fetching_albums = FALSE;
+  priv->fetching_upload_status = FALSE;
+  priv->adding_to_photoset = FALSE;
 
   /* Get account, if any */
   priv->account = frogr_config_get_account (priv->config);
