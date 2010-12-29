@@ -18,8 +18,7 @@ TODO list for the uploader:
 
  * Fix multiphoto picture (which is horrible atm) in details window.
 
- * Retrieve and store more user info (username, fullname, nsid, quota,
-   limit, pro/normal...)
+ * Allow changing sort order of the albums list.
 
  * Retrieve list of tags (and suggest them to the user when needed).
 
