@@ -293,7 +293,6 @@ _process_xml_response                   (FspFlickrParser  *self,
   GError *err = NULL;
 
   /* Get xml data from response */
-  xmlInitParser ();
   doc = xmlParseMemory (buffer, buf_size);
   if (doc != NULL)
     {
@@ -315,9 +314,6 @@ _process_xml_response                   (FspFlickrParser  *self,
   else
     err = g_error_new (FSP_ERROR, FSP_ERROR_WRONG_RESPONSE,
                        "Not a valid XML response");
-
-  /* Cleanup parser */
-  xmlCleanupParser();
 
   /* Propagate error */
   if (err != NULL)

@@ -25,6 +25,7 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <libxml/parser.h>
 
 int
 main (int argc, char **argv)
@@ -39,9 +40,15 @@ main (int argc, char **argv)
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
 
+  /* Init libxml2 library */
+  xmlInitParser ();
+
   /* Run app */
   fcontroller = frogr_controller_get_instance ();
   frogr_controller_run_app (fcontroller);
+
+  /* cleanup libxml2 library */
+  xmlCleanupParser();
 
   return 0;
 }

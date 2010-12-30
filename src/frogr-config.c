@@ -152,10 +152,7 @@ _frogr_config_load_settings (FrogrConfig *self, const gchar *config_dir)
     }
 
   if (xml)
-    {
-      xmlFreeDoc (xml);
-      xmlCleanupParser ();
-    }
+    xmlFreeDoc (xml);
 
   g_free (xml_path);
 }
@@ -303,10 +300,7 @@ _frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
     }
 
   if (xml)
-    {
-      xmlFreeDoc (xml);
-      xmlCleanupParser ();
-    }
+    xmlFreeDoc (xml);
 
   g_free (xml_path);
 }
