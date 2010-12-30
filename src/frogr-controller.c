@@ -71,7 +71,8 @@ struct _FrogrControllerPrivate
   gboolean app_running;
   gboolean uploading_picture;
   gboolean fetching_albums;
-  gboolean fetching_upload_status;
+  gboolean fetching_account_info;
+  gboolean fetching_account_extra_info;
   gboolean adding_to_photoset;
 };
 
@@ -151,9 +152,13 @@ static void _fetch_albums (FrogrController *self);
 
 static void _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data);
 
-static void _fetch_extra_account_info (FrogrController *self);
+static void _fetch_account_info (FrogrController *self);
 
-static void _fetch_extra_account_info_cb (GObject *object, GAsyncResult *res, gpointer data);
+static void _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _fetch_account_extra_info (FrogrController *self);
+
+static void _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static gboolean _show_add_to_album_dialog_on_idle (GSList *pictures);
 
@@ -382,8 +387,8 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           _set_user_account (controller, account);
 
           /* Pre-fetch some data right after this */
+          _fetch_account_extra_info (controller);
           _fetch_albums (controller);
-          _fetch_extra_account_info (controller);
 
           g_debug ("Authorization successfully completed!");
         }
@@ -642,7 +647,7 @@ _on_picture_uploaded (FrogrController *self, FrogrPicture *picture)
   g_return_if_fail (FROGR_IS_PICTURE (picture));
 
   /* Re-check account info */
-  _fetch_extra_account_info (self);
+  _fetch_account_extra_info (self);
 
   g_signal_emit (self, signals[PICTURE_UPLOADED], 0, picture);
 }
@@ -802,7 +807,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   priv->fetching_albums = FALSE;
 }
 
-static void _fetch_extra_account_info (FrogrController *self)
+static void _fetch_account_info (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -812,14 +817,83 @@ static void _fetch_extra_account_info (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->fetching_upload_status = TRUE;
+  priv->fetching_account_info = TRUE;
 
-  fsp_session_get_upload_status_async (priv->session, NULL,
-                                      _fetch_extra_account_info_cb, self);
+  fsp_session_check_auth_info_async (priv->session, NULL,
+                                     _fetch_account_info_cb, self);
 }
 
 static void
-_fetch_extra_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
+_fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspSession *session = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FspDataAuthToken *auth_token = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  controller = FROGR_CONTROLLER (data);
+
+  auth_token = fsp_session_check_auth_info_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_debug ("Error fetching basic info from the account: %s", error->message);
+
+      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
+        frogr_controller_revoke_authorization (controller);
+
+      g_error_free (error);
+    }
+
+  if (auth_token)
+    {
+      FrogrControllerPrivate *priv = NULL;
+      const gchar *old_username = NULL;
+      const gchar *old_fullname = NULL;
+
+      priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+      /* Check for changes (only for fields that it makes sense) */
+      old_username = frogr_account_get_username (priv->account);
+      old_fullname = frogr_account_get_fullname (priv->account);
+
+      frogr_account_set_username (priv->account, auth_token->username);
+      frogr_account_set_fullname (priv->account, auth_token->fullname);
+
+      if (g_strcmp0 (old_username, auth_token->username)
+          || g_strcmp0 (old_fullname, auth_token->fullname))
+        {
+          /* Save to disk and emit signal if basic info changed */
+          frogr_config_save_account (priv->config);
+          g_signal_emit (controller, signals[ACCOUNT_CHANGED], 0, priv->account);
+        }
+
+      fsp_data_free (FSP_DATA (auth_token));
+    }
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  priv->fetching_account_info = FALSE;
+}
+
+static void _fetch_account_extra_info (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = NULL;
+
+  if (!frogr_controller_is_authorized (self))
+    return;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->fetching_account_extra_info = TRUE;
+
+  fsp_session_get_upload_status_async (priv->session, NULL,
+                                      _fetch_account_extra_info_cb, self);
+}
+
+static void
+_fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
@@ -872,7 +946,7 @@ _fetch_extra_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  priv->fetching_upload_status = FALSE;
+  priv->fetching_account_extra_info = FALSE;
 }
 
 static gboolean
@@ -1044,7 +1118,7 @@ frogr_controller_init (FrogrController *self)
   priv->app_running = FALSE;
   priv->uploading_picture = FALSE;
   priv->fetching_albums = FALSE;
-  priv->fetching_upload_status = FALSE;
+  priv->fetching_account_extra_info = FALSE;
   priv->adding_to_photoset = FALSE;
 
   /* Get account, if any */
@@ -1111,8 +1185,9 @@ frogr_controller_run_app (FrogrController *self)
   priv->app_running = TRUE;
 
   /* Try to pre-fetch some data from the server right after launch */
+  _fetch_account_info (self);
+  _fetch_account_extra_info (self);
   _fetch_albums (self);
-  _fetch_extra_account_info (self);
 
   /* Start on idle state */
   _set_state (self, FROGR_STATE_IDLE);
