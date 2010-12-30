@@ -21,6 +21,8 @@
     sets, and make that operation itself cancellable too.
   * Allow changing sorting order in 'add to album' dialog.
   * Better and safer implementation for cancelling operations.
+  * Allow adding pictures to group pools.
+  * Be aware of changes in basic account info on startup.
 
 0.3 (22 Dec 2010)
 
