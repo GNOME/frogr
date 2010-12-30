@@ -82,7 +82,7 @@ static const FspError photoset_add_photo_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 0
   FSP_ERROR_PHOTOSET_NOT_FOUND,         // 1
   FSP_ERROR_PHOTO_NOT_FOUND,            // 2
-  FSP_ERROR_ALREADY_IN_PHOTOSET,        // 3
+  FSP_ERROR_PHOTOSET_PHOTO_ALREADY_IN,  // 3
   FSP_ERROR_UNKNOWN,                    // 4
   FSP_ERROR_UNKNOWN,                    // 5
   FSP_ERROR_UNKNOWN,                    // 6
@@ -95,12 +95,12 @@ static const FspError group_add_photo_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_UNKNOWN,                      // 0
   FSP_ERROR_PHOTO_NOT_FOUND,              // 1
   FSP_ERROR_GROUP_NOT_FOUND,              // 2
-  FSP_ERROR_ALREADY_IN_GROUP,             // 3
-  FSP_ERROR_PHOTO_IN_MAX_NUM_GROUPS,      // 4
+  FSP_ERROR_GROUP_PHOTO_ALREADY_IN,       // 3
+  FSP_ERROR_GROUP_PHOTO_IN_MAX_NUM,       // 4
   FSP_ERROR_GROUP_LIMIT_REACHED,          // 5
-  FSP_ERROR_PHOTO_ADDED_TO_GROUP_QUEUE,   // 6
-  FSP_ERROR_PHOTO_ALREADY_IN_GROUP_QUEUE, // 7
-  FSP_ERROR_UNKNOWN,                      // 8
+  FSP_ERROR_GROUP_PHOTO_ADDED_TO_QUEUE,   // 6
+  FSP_ERROR_GROUP_PHOTO_ALREADY_IN_QUEUE, // 7
+  FSP_ERROR_GROUP_CONTENT_NOT_ALLOWED,    // 8
   FSP_ERROR_UNKNOWN,                      // 9
 };
 

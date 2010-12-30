@@ -253,8 +253,38 @@ _notify_error_to_user (FrogrController *self, GError *error)
       error_function = frogr_util_show_error_dialog;
       break;
 
-    case FSP_ERROR_ALREADY_IN_PHOTOSET:
+    case FSP_ERROR_PHOTOSET_PHOTO_ALREADY_IN:
       msg = g_strdup (_("Error:\nPhoto already in photoset"));
+      error_function = NULL; /* Don't notify the user about this */
+      break;
+
+    case FSP_ERROR_GROUP_PHOTO_ALREADY_IN:
+      msg = g_strdup (_("Error:\nPhoto already in group"));
+      error_function = NULL; /* Don't notify the user about this */
+      break;
+
+    case FSP_ERROR_GROUP_PHOTO_IN_MAX_NUM:
+      msg = g_strdup (_("Error:\nPhoto already in the maximum number of groups possible"));
+      error_function = NULL; /* Don't notify the user about this */
+      break;
+
+    case FSP_ERROR_GROUP_LIMIT_REACHED:
+      msg = g_strdup (_("Error:\nGroup limit alrady reached"));
+      error_function = NULL; /* Don't notify the user about this */
+      break;
+
+    case FSP_ERROR_GROUP_PHOTO_ADDED_TO_QUEUE:
+      msg = g_strdup (_("Error:\nPhoto added to group's queue"));
+      error_function = NULL; /* Don't notify the user about this */
+      break;
+
+    case FSP_ERROR_GROUP_PHOTO_ALREADY_IN_QUEUE:
+      msg = g_strdup (_("Error:\nPhoto already added to group's queue"));
+      error_function = NULL; /* Don't notify the user about this */
+      break;
+
+    case FSP_ERROR_GROUP_CONTENT_NOT_ALLOWED:
+      msg = g_strdup (_("Error:\nContent not allowed for this group"));
       error_function = NULL; /* Don't notify the user about this */
       break;
 
