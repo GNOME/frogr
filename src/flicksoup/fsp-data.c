@@ -94,6 +94,13 @@ fsp_data_new                            (FspDataType type)
       new_data->photo_set.n_photos = -1;
       break;
 
+    case FSP_GROUP:
+      new_data->group.id = NULL;
+      new_data->group.name = NULL;
+      new_data->group.privacy = FSP_GROUP_PRIVACY_NONE;
+      new_data->group.n_photos = -1;
+      break;
+
     default:
       break;
     }
@@ -162,6 +169,13 @@ fsp_data_copy                           (const FspData *data)
       new_data->photo_set.n_photos = data->photo_set.n_photos;
       break;
 
+    case FSP_GROUP:
+      new_data->group.id = g_strdup (data->group.id);
+      new_data->group.name = g_strdup (data->group.name);
+      new_data->group.privacy = data->group.privacy;
+      new_data->group.n_photos = data->group.n_photos;
+      break;
+
     default:
       break;
     }
@@ -205,6 +219,11 @@ fsp_data_free                           (FspData *data)
       g_free (data->photo_set.title);
       g_free (data->photo_set.description);
       g_free (data->photo_set.primary_photo_id);
+      break;
+
+    case FSP_GROUP:
+      g_free (data->group.id);
+      g_free (data->group.name);
       break;
 
     default:

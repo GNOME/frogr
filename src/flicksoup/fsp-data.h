@@ -33,11 +33,13 @@ G_BEGIN_DECLS
 #define FSP_DATA_UPLOAD_STATUS(data) ((FspDataUploadStatus*) data)
 #define FSP_DATA_PHOTO_INFO(data)    ((FspDataPhotoInfo*) data)
 #define FSP_DATA_PHOTO_SET(data)     ((FspDataPhotoSet*) data)
+#define FSP_DATA_GROUP(data)         ((FspDataGroup*) data)
 
 typedef struct _FspDataAuthToken    FspDataAuthToken;
 typedef struct _FspDataUploadStatus FspDataUploadStatus;
 typedef struct _FspDataPhotoInfo    FspDataPhotoInfo;
 typedef struct _FspDataPhotoSet     FspDataPhotoSet;
+typedef struct _FspDataGroup        FspDataGroup;
 
 typedef union  _FspData	    FspData;
 
@@ -48,6 +50,7 @@ typedef enum
   FSP_UPLOAD_STATUS = 1,
   FSP_PHOTO_INFO    = 2,
   FSP_PHOTO_SET     = 3,
+  FSP_GROUP         = 4,
   FSP_DATA_LAST
 } FspDataType;
 
@@ -104,6 +107,13 @@ typedef enum {
   FSP_SEARCH_SCOPE_PUBLIC = 1,
   FSP_SEARCH_SCOPE_HIDDEN = 2
 } FspSearchScope;
+
+typedef enum {
+  FSP_GROUP_PRIVACY_NONE        = 0,
+  FSP_GROUP_PRIVACY_PRIVATE     = 1,
+  FSP_GROUP_PRIVACY_INVITE_ONLY = 2,
+  FSP_GROUP_PRIVACY_PUBLIC      = 3,
+} FspGroupPrivacy;
 
 struct _FspDataAuthToken
 {
@@ -162,6 +172,15 @@ struct _FspDataPhotoSet
   gint         n_photos;
 };
 
+struct _FspDataGroup
+{
+  FspDataType      type;
+  gchar           *id;
+  gchar           *name;
+  FspGroupPrivacy  privacy;
+  gint             n_photos;
+};
+
 union _FspData
 {
   FspDataType         type;
@@ -169,6 +188,7 @@ union _FspData
   FspDataUploadStatus upload_status;
   FspDataPhotoInfo    photo_info;
   FspDataPhotoSet     photo_set;
+  FspDataGroup        group;
 };
 
 GType
