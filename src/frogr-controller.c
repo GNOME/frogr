@@ -769,7 +769,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   photosets_list = fsp_photos_mgr_get_photosets_finish (photos_mgr, res, &error);
   if (error != NULL)
     {
-      g_debug ("Error fetching list of albums: %s", error->message);
+      g_debug ("Fetching list of albums: %s", error->message);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
@@ -838,7 +838,7 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
   auth_token = fsp_session_check_auth_info_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Error fetching basic info from the account: %s", error->message);
+      g_debug ("Fetching basic info from the account: %s", error->message);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
@@ -907,7 +907,7 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
   upload_status = fsp_session_get_upload_status_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Error fetching extra info from the account: %s", error->message);
+      g_debug ("Fetching extra info from the account: %s", error->message);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
