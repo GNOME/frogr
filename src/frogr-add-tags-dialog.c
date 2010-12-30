@@ -184,7 +184,9 @@ static void
 frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 {
   FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
-  GtkWidget *vbox;
+  GtkWidget *vbox = NULL;
+  GtkWidget *align = NULL;
+  GtkWidget *label = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -201,6 +203,11 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 #else
   vbox = GTK_DIALOG (self)->vbox;
 #endif
+
+  label = gtk_label_new (_("Enter a spaces separated list of tags:"));
+  align = gtk_alignment_new (0, 0, 0, 1);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
   priv->entry = gtk_entry_new ();
   gtk_box_pack_start (GTK_BOX (vbox), priv->entry, TRUE, FALSE, 6);
