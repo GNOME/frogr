@@ -318,7 +318,7 @@ _auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
   if (response == GTK_RESPONSE_OK)
     {
       frogr_controller_show_auth_dialog (frogr_controller_get_instance ());
-      g_debug ("Showing the authorization dialog once again...");
+      g_debug ("%s", "Showing the authorization dialog once again...");
     }
 
   gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -390,7 +390,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           _fetch_account_extra_info (controller);
           _fetch_albums (controller);
 
-          g_debug ("Authorization successfully completed!");
+          g_debug ("%s", "Authorization successfully completed!");
         }
 
       fsp_data_free (FSP_DATA (auth_token));
@@ -669,10 +669,10 @@ _on_pictures_uploaded (FrogrController *self,
       if (frogr_config_get_open_browser_after_upload (priv->config))
         _open_browser_to_edit_details (self, fpuploader);
 
-        window = frogr_main_view_get_window (priv->mainview);
-        frogr_util_show_info_dialog (window, _("Operation successfully completed!"));
+      window = frogr_main_view_get_window (priv->mainview);
+      frogr_util_show_info_dialog (window, _("Operation successfully completed!"));
 
-      g_debug ("Success uploading pictures!");
+      g_debug ("%s", "Success uploading pictures!");
     }
   else
     {
@@ -1173,7 +1173,7 @@ frogr_controller_run_app (FrogrController *self)
 
   if (priv->app_running)
     {
-      g_debug ("Application already running");
+      g_debug ("%s", "Application already running");
       return FALSE;
     }
 
@@ -1196,7 +1196,7 @@ frogr_controller_run_app (FrogrController *self)
   gtk_main ();
 
   /* Application shutting down from this point on */
-  g_debug ("Shutting down application...");
+  g_debug ("%s", "Shutting down application...");
 
   return TRUE;
 }
