@@ -24,7 +24,7 @@
 
 #include "fsp-data.h"
 #include "fsp-error.h"
-#include "fsp-flickr-parser.h"
+#include "fsp-parser.h"
 #include "fsp-session.h"
 #include "fsp-util.h"
 
@@ -291,7 +291,7 @@ _get_frob_soup_session_cb               (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_get_frob,
+                        (FspParserFunc) fsp_parser_get_frob,
                         data);
 }
 
@@ -305,7 +305,7 @@ _get_auth_token_soup_session_cb         (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_get_auth_token,
+                        (FspParserFunc) fsp_parser_get_auth_token,
                         data);
 }
 
@@ -319,7 +319,7 @@ _get_upload_status_soup_session_cb      (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_get_upload_status,
+                        (FspParserFunc) fsp_parser_get_upload_status,
                         data);
 }
 
@@ -514,7 +514,7 @@ _photo_upload_soup_session_cb           (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_get_upload_result,
+                        (FspParserFunc) fsp_parser_get_upload_result,
                         data);
 }
 
@@ -528,7 +528,7 @@ _photo_get_info_soup_session_cb         (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_get_photo_info,
+                        (FspParserFunc) fsp_parser_get_photo_info,
                         data);
 }
 
@@ -542,7 +542,7 @@ _get_photosets_soup_session_cb          (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_get_photosets_list,
+                        (FspParserFunc) fsp_parser_get_photosets_list,
                         data);
 }
 
@@ -556,7 +556,7 @@ _add_to_photoset_soup_session_cb        (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_added_to_photoset,
+                        (FspParserFunc) fsp_parser_added_to_photoset,
                         data);
 }
 
@@ -570,7 +570,7 @@ _create_photoset_soup_session_cb        (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_photoset_created,
+                        (FspParserFunc) fsp_parser_photoset_created,
                         data);
 }
 
@@ -584,7 +584,7 @@ _get_groups_soup_session_cb             (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_get_groups_list,
+                        (FspParserFunc) fsp_parser_get_groups_list,
                         data);
 }
 
@@ -598,7 +598,7 @@ _add_to_group_soup_session_cb           (SoupSession *session,
 
   /* Handle message with the right parser */
   handle_soup_response (msg,
-                        (FspFlickrParserFunc) fsp_flickr_parser_added_to_group,
+                        (FspParserFunc) fsp_parser_added_to_group,
                         data);
 }
 
@@ -1038,11 +1038,11 @@ fsp_session_get_info_async              (FspSession        *self,
 
   /* Build the signed url */
   signed_query = get_signed_query (priv->secret,
-                                    "method", "flickr.photos.getInfo",
-                                    "api_key", priv->api_key,
-                                    "auth_token", priv->token,
-                                    "photo_id", photo_id,
-                                    NULL);
+                                   "method", "flickr.photos.getInfo",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   "photo_id", photo_id,
+                                   NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
@@ -1088,10 +1088,10 @@ fsp_session_get_photosets_async         (FspSession        *self,
 
   /* Build the signed url */
   signed_query = get_signed_query (priv->secret,
-                                    "method", "flickr.photosets.getList",
-                                    "api_key", priv->api_key,
-                                    "auth_token", priv->token,
-                                    NULL);
+                                   "method", "flickr.photosets.getList",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
@@ -1140,12 +1140,12 @@ fsp_session_add_to_photoset_async       (FspSession        *self,
 
   /* Build the signed url */
   signed_query = get_signed_query (priv->secret,
-                                    "method", "flickr.photosets.addPhoto",
-                                    "api_key", priv->api_key,
-                                    "auth_token", priv->token,
-                                    "photo_id", photo_id,
-                                    "photoset_id", photoset_id,
-                                    NULL);
+                                   "method", "flickr.photosets.addPhoto",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   "photo_id", photo_id,
+                                   "photoset_id", photoset_id,
+                                   NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
@@ -1196,13 +1196,13 @@ fsp_session_create_photoset_async       (FspSession        *self,
 
   /* Build the signed url */
   signed_query = get_signed_query (priv->secret,
-                                    "method", "flickr.photosets.create",
-                                    "api_key", priv->api_key,
-                                    "auth_token", priv->token,
-                                    "title", title,
-                                    "description", description,
-                                    "primary_photo_id", primary_photo_id,
-                                    NULL);
+                                   "method", "flickr.photosets.create",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   "title", title,
+                                   "description", description,
+                                   "primary_photo_id", primary_photo_id,
+                                   NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
@@ -1248,10 +1248,10 @@ fsp_session_get_groups_async            (FspSession        *self,
 
   /* Build the signed url */
   signed_query = get_signed_query (priv->secret,
-                                    "method", "flickr.groups.pools.getGroups",
-                                    "api_key", priv->api_key,
-                                    "auth_token", priv->token,
-                                    NULL);
+                                   "method", "flickr.groups.pools.getGroups",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
@@ -1300,12 +1300,12 @@ fsp_session_add_to_group_async          (FspSession        *self,
 
   /* Build the signed url */
   signed_query = get_signed_query (priv->secret,
-                                    "method", "flickr.groups.pools.add",
-                                    "api_key", priv->api_key,
-                                    "auth_token", priv->token,
-                                    "photo_id", photo_id,
-                                    "group_id", group_id,
-                                    NULL);
+                                   "method", "flickr.groups.pools.add",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   "photo_id", photo_id,
+                                   "group_id", group_id,
+                                   NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);

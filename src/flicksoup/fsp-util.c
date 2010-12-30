@@ -134,7 +134,7 @@ _disconnect_cancellable_on_idle (GCancellableData *clos)
 
 static gboolean
 _check_errors_on_soup_response           (SoupMessage  *msg,
-                                         GError      **error)
+                                          GError      **error)
 {
   g_assert (SOUP_IS_MESSAGE (msg));
 
@@ -404,22 +404,22 @@ soup_session_cancelled_cb               (GCancellable *cancellable,
 }
 
 void
-handle_soup_response                    (SoupMessage         *msg,
-                                         FspFlickrParserFunc  parserFunc,
-                                         gpointer             data)
+handle_soup_response                    (SoupMessage   *msg,
+                                         FspParserFunc  parserFunc,
+                                         gpointer       data)
 {
   g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (parserFunc != NULL);
   g_assert (data != NULL);
 
-  FspFlickrParser *parser = NULL;
+  FspParser *parser = NULL;
   AsyncRequestData *clos = NULL;
   gpointer result = NULL;
   GError *err = NULL;
   gchar *response_str = NULL;
   gulong response_len = 0;
 
-  parser = fsp_flickr_parser_get_instance ();
+  parser = fsp_parser_get_instance ();
   clos = (AsyncRequestData *) data;
 
   response_str = g_strndup (msg->response_body->data, msg->response_body->length);

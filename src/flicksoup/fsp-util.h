@@ -23,7 +23,7 @@
 #ifndef _FSP_UTIL_H
 #define _FSP_UTIL_H
 
-#include <fsp-flickr-parser.h>
+#include <fsp-parser.h>
 
 #include <glib.h>
 #include <glib-object.h>
@@ -76,9 +76,9 @@ soup_session_cancelled_cb               (GCancellable *cancellable,
                                          gpointer      data);
 
 void
-handle_soup_response                    (SoupMessage         *msg,
-                                         FspFlickrParserFunc  parserFunc,
-                                         gpointer             data);
+handle_soup_response                    (SoupMessage   *msg,
+                                         FspParserFunc  parserFunc,
+                                         gpointer       data);
 
 void
 build_async_result_and_complete         (AsyncRequestData *clos,

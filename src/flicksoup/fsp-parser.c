@@ -1,5 +1,5 @@
 /*
- * fsp-flickr-parser.c
+ * fsp-parser.c
  *
  * Copyright (C) 2010 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
@@ -20,14 +20,14 @@
  *
  */
 
-#include "fsp-flickr-parser.h"
+#include "fsp-parser.h"
 
 #include "fsp-error.h"
 
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 
-G_DEFINE_TYPE (FspFlickrParser, fsp_flickr_parser, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FspParser, fsp_parser, G_TYPE_OBJECT);
 
 
 /* Types of responses */
@@ -52,13 +52,13 @@ _parse_error_from_node                  (xmlNode *error_node,
                                          FspErrorMethod error_method);
 
 static gpointer
-_process_xml_response                   (FspFlickrParser  *self,
-                                         const gchar      *buffer,
-                                         gulong            buf_size,
-                                         gpointer        (*body_parser)
-                                                          (xmlDoc  *doc,
-                                                           GError **error),
-                                         GError          **error);
+_process_xml_response                          (FspParser  *self,
+                                                const gchar      *buffer,
+                                                gulong            buf_size,
+                                                gpointer        (*body_parser)
+                                                (xmlDoc  *doc,
+                                                 GError **error),
+                                                GError          **error);
 static FspErrorMethod
 _get_error_method_from_parser           (gpointer (*body_parser)
                                          (xmlDoc  *doc,
@@ -106,22 +106,22 @@ _get_group_from_node                    (xmlNode *node);
 
 /* Private API */
 
-static FspFlickrParser *_instance = NULL;
+static FspParser *_instance = NULL;
 
 static GObject *
-fsp_flickr_parser_constructor           (GType                  type,
-                                         guint                  n_construct_properties,
-                                         GObjectConstructParam *construct_properties)
+fsp_parser_constructor           (GType                  type,
+                                  guint                  n_construct_properties,
+                                  GObjectConstructParam *construct_properties)
 {
   GObject *object;
 
   if (!_instance)
     {
       object =
-        G_OBJECT_CLASS (fsp_flickr_parser_parent_class)->constructor (type,
-                                                                      n_construct_properties,
-                                                                      construct_properties);
-      _instance = FSP_FLICKR_PARSER (object);
+        G_OBJECT_CLASS (fsp_parser_parent_class)->constructor (type,
+                                                               n_construct_properties,
+                                                               construct_properties);
+      _instance = FSP_PARSER (object);
     }
   else
     object = G_OBJECT (_instance);
@@ -130,16 +130,16 @@ fsp_flickr_parser_constructor           (GType                  type,
 }
 
 static void
-fsp_flickr_parser_class_init            (FspFlickrParserClass *klass)
+fsp_parser_class_init                   (FspParserClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
 
   /* Install GOBject methods */
-  obj_class->constructor = fsp_flickr_parser_constructor;
+  obj_class->constructor = fsp_parser_constructor;
 }
 
 static void
-fsp_flickr_parser_init                  (FspFlickrParser *self)
+fsp_parser_init                         (FspParser *self)
 {
   /* Nothing to do here */
 }
@@ -276,15 +276,15 @@ _get_error_method_from_parser           (gpointer (*body_parser)
 }
 
 static gpointer
-_process_xml_response                   (FspFlickrParser  *self,
-                                         const gchar      *buffer,
-                                         gulong            buf_size,
-                                         gpointer        (*body_parser)
-                                                          (xmlDoc  *doc,
-                                                           GError **error),
-                                         GError          **error)
+_process_xml_response                          (FspParser  *self,
+                                                const gchar      *buffer,
+                                                gulong            buf_size,
+                                                gpointer        (*body_parser)
+                                                (xmlDoc  *doc,
+                                                 GError **error),
+                                                GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   /* Get xml data from response */
@@ -1034,22 +1034,22 @@ _get_group_from_node                    (xmlNode *node)
 
 /* Public API */
 
-FspFlickrParser *
-fsp_flickr_parser_get_instance          (void)
+FspParser *
+fsp_parser_get_instance          (void)
 {
   if (_instance)
     return _instance;
 
-  return FSP_FLICKR_PARSER (g_object_new (FSP_TYPE_FLICKR_PARSER, NULL));
+  return FSP_PARSER (g_object_new (FSP_TYPE_PARSER, NULL));
 }
 
 gchar *
-fsp_flickr_parser_get_frob              (FspFlickrParser  *self,
+fsp_parser_get_frob                     (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   gchar *frob = NULL;
@@ -1063,12 +1063,12 @@ fsp_flickr_parser_get_frob              (FspFlickrParser  *self,
 }
 
 FspDataAuthToken *
-fsp_flickr_parser_get_auth_token        (FspFlickrParser  *self,
+fsp_parser_get_auth_token               (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   FspDataAuthToken *auth_token = NULL;
@@ -1083,12 +1083,12 @@ fsp_flickr_parser_get_auth_token        (FspFlickrParser  *self,
 }
 
 FspDataUploadStatus *
-fsp_flickr_parser_get_upload_status     (FspFlickrParser  *self,
+fsp_parser_get_upload_status            (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   FspDataUploadStatus *upload_status = NULL;
@@ -1104,12 +1104,12 @@ fsp_flickr_parser_get_upload_status     (FspFlickrParser  *self,
 }
 
 gchar *
-fsp_flickr_parser_get_upload_result     (FspFlickrParser  *self,
+fsp_parser_get_upload_result            (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   gchar *photo_id = NULL;
@@ -1123,12 +1123,12 @@ fsp_flickr_parser_get_upload_result     (FspFlickrParser  *self,
 }
 
 FspDataPhotoInfo *
-fsp_flickr_parser_get_photo_info        (FspFlickrParser  *self,
+fsp_parser_get_photo_info               (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   FspDataPhotoInfo *photo_info = NULL;
@@ -1144,12 +1144,12 @@ fsp_flickr_parser_get_photo_info        (FspFlickrParser  *self,
 
 
 GSList *
-fsp_flickr_parser_get_photosets_list    (FspFlickrParser  *self,
+fsp_parser_get_photosets_list           (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   GSList *photoSets_list = NULL;
@@ -1163,12 +1163,12 @@ fsp_flickr_parser_get_photosets_list    (FspFlickrParser  *self,
 }
 
 gpointer
-fsp_flickr_parser_added_to_photoset     (FspFlickrParser  *self,
+fsp_parser_added_to_photoset            (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   /* Process the response */
@@ -1180,12 +1180,12 @@ fsp_flickr_parser_added_to_photoset     (FspFlickrParser  *self,
 }
 
 gchar *
-fsp_flickr_parser_photoset_created      (FspFlickrParser  *self,
+fsp_parser_photoset_created             (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   gchar *photoset_id = NULL;
@@ -1199,12 +1199,12 @@ fsp_flickr_parser_photoset_created      (FspFlickrParser  *self,
 }
 
 GSList *
-fsp_flickr_parser_get_groups_list       (FspFlickrParser  *self,
+fsp_parser_get_groups_list              (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   GSList *groups_list = NULL;
@@ -1218,12 +1218,12 @@ fsp_flickr_parser_get_groups_list       (FspFlickrParser  *self,
 }
 
 gpointer
-fsp_flickr_parser_added_to_group        (FspFlickrParser  *self,
+fsp_parser_added_to_group               (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   /* Process the response */
