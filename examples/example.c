@@ -40,6 +40,7 @@ void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photo_get_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void check_auth_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void complete_auth_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_auth_url_cb (GObject *object, GAsyncResult *res, gpointer unused);
 gboolean do_work (gpointer unused);
@@ -311,6 +312,42 @@ get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
 }
 
 void
+check_auth_info_cb (GObject *object, GAsyncResult *res, gpointer unused)
+{
+  FspSession* session = FSP_SESSION (object);
+  FspDataAuthToken *auth_token = NULL;
+  GError *error = NULL;
+
+  auth_token = fsp_session_check_auth_info_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error checking authorization information: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[check_auth_info_cb]::Result: Success!\n\n");
+
+      g_print ("[check_auth_info_cb]::Auth token\n");
+      g_print ("[check_auth_info_cb]::\ttoken = %s\n", auth_token->token);
+      g_print ("[check_auth_info_cb]::\tpermissions = %s\n", auth_token->permissions);
+      g_print ("[check_auth_info_cb]::\tnsid = %s\n", auth_token->nsid);
+      g_print ("[check_auth_info_cb]::\tusername = %s\n", auth_token->username);
+      g_print ("[check_auth_info_cb]::\tfullname = %s\n", auth_token->fullname);
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue getting the upload status */
+      g_print ("Retrieving upload status...\n");
+      fsp_session_get_upload_status_async (session, NULL, get_upload_status_cb, NULL);
+
+      fsp_data_free (FSP_DATA (auth_token));
+    }
+}
+
+void
 complete_auth_cb                        (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
@@ -340,9 +377,9 @@ complete_auth_cb                        (GObject      *object,
       g_print ("Press ENTER to continue...\n\n");
       getchar ();
 
-      /* Continue getting the upload status */
-      g_print ("Retrieving upload status...\n");
-      fsp_session_get_upload_status_async (session, NULL, get_upload_status_cb, NULL);
+      /* Continue checking the authorization information */
+      g_print ("Checking the authorization information...\n");
+      fsp_session_check_auth_info_async (session, NULL, check_auth_info_cb, NULL);
 
       fsp_data_free (FSP_DATA (auth_token));
     }

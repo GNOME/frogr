@@ -103,6 +103,17 @@ FspDataAuthToken *
 fsp_session_complete_auth_finish        (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error);
+
+void
+fsp_session_check_auth_info_async       (FspSession          *self,
+                                         GCancellable        *c,
+                                         GAsyncReadyCallback cb,
+                                         gpointer             data);
+FspDataAuthToken *
+fsp_session_check_auth_info_finish      (FspSession    *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
 void
 fsp_session_get_upload_status_async     (FspSession          *self,
                                          GCancellable        *c,
