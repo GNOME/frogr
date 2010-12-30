@@ -24,6 +24,7 @@
 #define _FROGR_PICTURE_H
 
 #include "frogr-album.h"
+#include "frogr-group.h"
 
 #include <glib.h>
 #include <glib-object.h>
@@ -103,6 +104,10 @@ void frogr_picture_set_pixbuf (FrogrPicture *self,
 GSList *frogr_picture_get_albums (FrogrPicture *self);
 void frogr_picture_set_albums (FrogrPicture *self, GSList *albums);
 gboolean frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album);
+
+GSList *frogr_picture_get_groups (FrogrPicture *self);
+void frogr_picture_set_groups (FrogrPicture *self, GSList *groups);
+gboolean frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group);
 
 G_END_DECLS
 

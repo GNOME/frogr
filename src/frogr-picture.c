@@ -43,6 +43,7 @@ struct _FrogrPicturePrivate
   GSList *tags_list;
 
   GSList *albums;
+  GSList *groups;
 
   gboolean is_public;
   gboolean is_friend;
@@ -270,6 +271,13 @@ _frogr_picture_dispose (GObject* object)
       priv->albums = NULL;
     }
 
+  if (priv->groups)
+    {
+      g_slist_foreach (priv->groups, (GFunc) g_object_unref, NULL);
+      g_slist_free (priv->groups);
+      priv->groups = NULL;
+    }
+
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class)->dispose(object);
 }
@@ -396,6 +404,7 @@ frogr_picture_init (FrogrPicture *self)
 
   priv->tags_list = NULL;
   priv->albums = NULL;
+  priv->groups = NULL;
 
   priv->is_public = FALSE;
   priv->is_friend = FALSE;
@@ -716,6 +725,57 @@ frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album)
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   if (g_slist_index (priv->albums, album) != -1)
+    return TRUE;
+
+  return FALSE;
+}
+
+GSList *
+frogr_picture_get_groups (FrogrPicture *self)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
+
+  FrogrPicturePrivate *priv = NULL;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  return priv->groups;
+}
+
+void
+frogr_picture_set_groups (FrogrPicture *self, GSList *groups)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  GSList *new_list = NULL;
+  GSList *item = NULL;
+  FrogrGroup *group = NULL;
+  FrogrPicturePrivate *priv = NULL;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+
+  /* First remove all the previous groups list */
+  g_slist_foreach (priv->groups, (GFunc) g_object_unref, NULL);
+  g_slist_free (priv->groups);
+  priv->groups = NULL;
+
+  for (item = groups; item; item = g_slist_next (item))
+    {
+      group = FROGR_GROUP (item->data);
+      new_list = g_slist_append (new_list, g_object_ref (group));
+    }
+
+  priv->groups = new_list;
+}
+
+gboolean
+frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  FrogrPicturePrivate *priv = NULL;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  if (g_slist_index (priv->groups, group) != -1)
     return TRUE;
 
   return FALSE;
