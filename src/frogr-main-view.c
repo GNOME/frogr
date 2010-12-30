@@ -1301,7 +1301,7 @@ frogr_main_view_init (FrogrMainView *self)
 
   progress_vbox = gtk_dialog_get_content_area (GTK_DIALOG (progress_dialog));
   progress_bar = gtk_progress_bar_new ();
-  progress_label = gtk_label_new (_("Uploading pictures…"));
+  progress_label = gtk_label_new (NULL);
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_label, FALSE, FALSE, 6);
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
 
@@ -1422,13 +1422,14 @@ frogr_main_view_set_progress_status (FrogrMainView *self,
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Show the widget and set fraction */
-  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar),
                                  fraction);
 
   /* Set superimposed text, if specified */
   if (text != NULL)
     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
+
+  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
 void
@@ -1439,6 +1440,8 @@ frogr_main_view_set_progress_text (FrogrMainView *self,
 
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   gtk_label_set_text (GTK_LABEL (priv->progress_label), text);
+
+  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
 
