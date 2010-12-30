@@ -52,6 +52,8 @@ frogr_SOURCES = \
 	frogr-controller.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
+	frogr-group.c \
+	frogr-group.h \
 	frogr-main-view-model.c \
 	frogr-main-view-model.h \
 	frogr-main-view.c \
