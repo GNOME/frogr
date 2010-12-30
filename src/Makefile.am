@@ -42,6 +42,8 @@ frogr_SOURCES = \
 	frogr-add-tags-dialog.h \
 	frogr-add-to-album-dialog.c \
 	frogr-add-to-album-dialog.h \
+	frogr-add-to-group-dialog.c \
+	frogr-add-to-group-dialog.h \
 	frogr-album.c \
 	frogr-album.h \
 	frogr-auth-dialog.c \
