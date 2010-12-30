@@ -43,7 +43,7 @@ typedef struct
   GAsyncReadyCallback  callback;
   gpointer             source_tag;
   gpointer             data;
-} GAsyncData;
+} AsyncRequestData;
 
 gchar *
 get_api_signature                       (const gchar *shared_secret,
@@ -81,7 +81,7 @@ handle_soup_response                    (SoupMessage         *msg,
                                          gpointer             data);
 
 void
-build_async_result_and_complete         (GAsyncData *clos,
+build_async_result_and_complete         (AsyncRequestData *clos,
                                          gpointer    result,
                                          GError     *error);
 

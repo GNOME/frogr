@@ -350,14 +350,14 @@ perform_async_request                   (SoupSession         *soup_session,
   g_return_if_fail (request_cb != NULL);
   g_return_if_fail (callback != NULL);
 
-  GAsyncData *clos = NULL;
+  AsyncRequestData *clos = NULL;
   SoupMessage *msg = NULL;
 
   /* Build and queue the message */
   msg = soup_message_new (SOUP_METHOD_GET, url);
 
   /* Save important data for the callback */
-  clos = g_slice_new0 (GAsyncData);
+  clos = g_slice_new0 (AsyncRequestData);
   clos->object = source_object;
   clos->soup_session = soup_session;
   clos->soup_message = msg;
@@ -386,12 +386,12 @@ void
 soup_session_cancelled_cb               (GCancellable *cancellable,
                                          gpointer      data)
 {
-  GAsyncData *clos = NULL;
+  AsyncRequestData *clos = NULL;
   GObject *object = NULL;
   SoupSession *session = NULL;
   SoupMessage *message = NULL;
 
-  clos = (GAsyncData *) data;
+  clos = (AsyncRequestData *) data;
 
   /* Get data from closure, and free it */
   object = clos->object;
@@ -413,14 +413,14 @@ handle_soup_response                    (SoupMessage         *msg,
   g_assert (data != NULL);
 
   FspFlickrParser *parser = NULL;
-  GAsyncData *clos = NULL;
+  AsyncRequestData *clos = NULL;
   gpointer result = NULL;
   GError *err = NULL;
   gchar *response_str = NULL;
   gulong response_len = 0;
 
   parser = fsp_flickr_parser_get_instance ();
-  clos = (GAsyncData *) data;
+  clos = (AsyncRequestData *) data;
 
   response_str = g_strndup (msg->response_body->data, msg->response_body->length);
   response_len = (ulong) msg->response_body->length;
@@ -438,7 +438,7 @@ handle_soup_response                    (SoupMessage         *msg,
 }
 
 void
-build_async_result_and_complete         (GAsyncData *clos,
+build_async_result_and_complete         (AsyncRequestData *clos,
                                          gpointer    result,
                                          GError     *error)
 {
@@ -460,7 +460,7 @@ build_async_result_and_complete         (GAsyncData *clos,
   callback = clos->callback;
   source_tag = clos->source_tag;
   data = clos->data;
-  g_slice_free (GAsyncData, clos);
+  g_slice_free (AsyncRequestData, clos);
 
   /* Make sure the "cancelled" signal gets disconnected in another
      iteration of the main loop to avoid a dead-lock with itself */

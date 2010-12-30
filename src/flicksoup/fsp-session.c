@@ -56,7 +56,7 @@ struct _FspSessionPrivate
 
 typedef struct
 {
-  GAsyncData *gasync_data;
+  AsyncRequestData *gasync_data;
   GHashTable *extra_params;
 } UploadPhotoData;
 
@@ -446,7 +446,7 @@ _load_file_contents_cb                  (GObject      *object,
   g_return_if_fail (data != NULL);
 
   UploadPhotoData *up_clos = NULL;
-  GAsyncData *ga_clos = NULL;
+  AsyncRequestData *ga_clos = NULL;
   GHashTable *extra_params = NULL;
   GFile *file = NULL;
   GError *error = NULL;
@@ -965,7 +965,7 @@ fsp_session_upload_async                (FspSession        *self,
   FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   GHashTable *extra_params = NULL;
-  GAsyncData *ga_clos = NULL;
+  AsyncRequestData *ga_clos = NULL;
   UploadPhotoData *up_clos = NULL;
   GFile *file = NULL;
   const gchar *secret = NULL;
@@ -990,7 +990,7 @@ fsp_session_upload_async                (FspSession        *self,
   g_hash_table_insert (extra_params, g_strdup ("api_sig"), api_sig);
 
   /* Save important data for the callback */
-  ga_clos = g_slice_new0 (GAsyncData);
+  ga_clos = g_slice_new0 (AsyncRequestData);
   ga_clos->object = G_OBJECT (self);
   ga_clos->soup_session = soup_session;
   ga_clos->soup_message = NULL;
