@@ -1,4 +1,4 @@
- /*
+/*
  * fsp-session.c
  *
  * Copyright (C) 2010 Mario Sanchez Prada
@@ -25,12 +25,14 @@
 #include "fsp-data.h"
 #include "fsp-error.h"
 #include "fsp-flickr-parser.h"
-#include "fsp-global-defs.h"
-#include "fsp-session-priv.h"
+#include "fsp-session.h"
 #include "fsp-util.h"
 
 #include <libsoup/soup.h>
 #include <string.h>
+
+#define FLICKR_API_BASE_URL   "http://api.flickr.com/services/rest"
+#define FLICKR_API_UPLOAD_URL "http://api.flickr.com/services/upload"
 
 #define FSP_SESSION_GET_PRIVATE(object)                 \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
@@ -50,6 +52,13 @@ struct _FspSessionPrivate
 
   SoupSession *soup_session;
 };
+
+
+typedef struct
+{
+  GAsyncData *gasync_data;
+  GHashTable *extra_params;
+} UploadPhotoData;
 
 
 /* Properties */
@@ -79,6 +88,64 @@ static void
 _get_upload_status_soup_session_cb      (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
+
+static GHashTable *
+_get_upload_extra_params                (const gchar    *title,
+                                         const gchar    *description,
+                                         const gchar    *tags,
+                                         FspVisibility   is_public,
+                                         FspVisibility   is_family,
+                                         FspVisibility   is_friend,
+                                         FspSafetyLevel  safety_level,
+                                         FspContentType  content_type,
+                                         FspSearchScope  hidden);
+
+static SoupMessage *
+_get_soup_message_for_upload            (GFile       *file,
+                                         const gchar *contents,
+                                         gsize        length,
+                                         GHashTable  *extra_params);
+
+static void
+_load_file_contents_cb                  (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      data);
+
+static void
+_photo_upload_soup_session_cb           (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_photo_get_info_soup_session_cb         (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_get_photosets_soup_session_cb          (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_add_to_photoset_soup_session_cb        (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_create_photoset_soup_session_cb        (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_get_groups_soup_session_cb             (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
+static void
+_add_to_group_soup_session_cb           (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
 
 /* Private API */
 
@@ -256,14 +323,286 @@ _get_upload_status_soup_session_cb      (SoupSession *session,
                         data);
 }
 
-/* from fsp-session-priv.h */
-SoupSession *
-fsp_session_get_soup_session            (FspSession *self)
+static GHashTable *
+_get_upload_extra_params                (const gchar    *title,
+                                         const gchar    *description,
+                                         const gchar    *tags,
+                                         FspVisibility   is_public,
+                                         FspVisibility   is_family,
+                                         FspVisibility   is_friend,
+                                         FspSafetyLevel  safety_level,
+                                         FspContentType  content_type,
+                                         FspSearchScope  hidden)
 {
-  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  GHashTable *table = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                             (GDestroyNotify) g_free,
+                                             (GDestroyNotify) g_free);
+  /* Title */
+  if (title != NULL)
+    g_hash_table_insert (table, g_strdup ("title"), g_strdup (title));
 
-  return _get_soup_session (self);
+  /* Description */
+  if (description != NULL)
+    g_hash_table_insert (table, g_strdup ("description"), g_strdup (description));
+
+  /* Tags */
+  if (tags != NULL)
+    g_hash_table_insert (table, g_strdup ("tags"), g_strdup (tags));
+
+  /* Is public */
+  if (is_public != FSP_VISIBILITY_NONE)
+    g_hash_table_insert (table, g_strdup ("is_public"),
+                         g_strdup_printf ("%d", is_public));
+
+  /* Is family */
+  if (is_family != FSP_VISIBILITY_NONE)
+    g_hash_table_insert (table, g_strdup ("is_family"),
+                         g_strdup_printf ("%d", is_family));
+
+  /* Is friend */
+  if (is_friend != FSP_VISIBILITY_NONE)
+    g_hash_table_insert (table, g_strdup ("is_friend"),
+                         g_strdup_printf ("%d", is_friend));
+
+  /* Safety level */
+  if (safety_level != FSP_SAFETY_LEVEL_NONE)
+    g_hash_table_insert (table, g_strdup ("safety_level"),
+                         g_strdup_printf ("%d", safety_level));
+
+  /* Content type */
+  if (content_type != FSP_CONTENT_TYPE_NONE)
+    g_hash_table_insert (table, g_strdup ("content_type"),
+                         g_strdup_printf ("%d", content_type));
+
+  /* Hidden */
+  if (hidden != FSP_SEARCH_SCOPE_NONE)
+    g_hash_table_insert (table, g_strdup ("hidden"),
+                         g_strdup_printf ("%d", hidden));
+
+  return table;
 }
+
+static SoupMessage *
+_get_soup_message_for_upload            (GFile       *file,
+                                         const gchar *contents,
+                                         gsize        length,
+                                         GHashTable  *extra_params)
+{
+  GFileInfo *file_info = NULL;
+  SoupMessage *msg = NULL;
+  SoupMultipart *mpart = NULL;
+  SoupBuffer *buffer = NULL;
+  GHashTableIter iter;
+  gpointer key, value;
+  gchar *mime_type;
+  gchar *filepath;
+  gchar *fileuri;
+
+  /* Gather needed information */
+  filepath = g_file_get_path (file);
+  file_info = g_file_query_info (file,
+                                 G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                 G_FILE_QUERY_INFO_NONE,
+                                 NULL,
+                                 NULL);
+  /* Check mimetype */
+  mime_type = g_strdup (g_file_info_get_content_type (file_info));
+
+  /* Init multipart container */
+  mpart = soup_multipart_new (SOUP_FORM_MIME_TYPE_MULTIPART);
+
+  /* Traverse extra_params to append them to the message */
+  g_hash_table_iter_init (&iter, extra_params);
+
+  while (g_hash_table_iter_next (&iter, &key, &value))
+    soup_multipart_append_form_string (mpart, key, value);
+
+  /* Append the content of the file */
+  buffer = soup_buffer_new (SOUP_MEMORY_TAKE, contents, length);
+  fileuri = g_filename_to_uri (filepath, NULL, NULL);
+  soup_multipart_append_form_file (mpart, "photo", fileuri,
+                                   mime_type, buffer);
+  g_free (fileuri);
+
+  /* Get the associated message */
+  msg = soup_form_request_new_from_multipart (FLICKR_API_UPLOAD_URL, mpart);
+
+  /* Free */
+  soup_multipart_free (mpart);
+  g_free (filepath);
+  g_free (mime_type);
+
+  /* Return message */
+  return msg;
+}
+
+static void
+_load_file_contents_cb                  (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      data)
+{
+  g_return_if_fail (G_IS_FILE (object));
+  g_return_if_fail (G_IS_ASYNC_RESULT (res));
+  g_return_if_fail (data != NULL);
+
+  UploadPhotoData *up_clos = NULL;
+  GAsyncData *ga_clos = NULL;
+  GHashTable *extra_params = NULL;
+  GFile *file = NULL;
+  GError *error = NULL;
+  gchar *contents;
+  gsize length;
+
+  /* Get data from UploadPhotoData closure, and free it */
+  up_clos = (UploadPhotoData *) data;
+  ga_clos = up_clos->gasync_data;
+  extra_params = up_clos->extra_params;
+  g_slice_free (UploadPhotoData, up_clos);
+
+  file = G_FILE (object);
+  if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
+    {
+      FspSession *self = NULL;
+      SoupSession *soup_session = NULL;
+      SoupMessage *msg = NULL;
+
+      /* Get the proxy and the associated message */
+      self = FSP_SESSION (ga_clos->object);
+      msg = _get_soup_message_for_upload (file, contents, length, extra_params);
+      ga_clos->soup_message = msg;
+
+      soup_session = _get_soup_session (self);
+
+      /* Connect to the "cancelled" signal thread safely */
+      if (ga_clos->cancellable)
+        {
+          ga_clos->cancellable_id =
+            g_cancellable_connect (ga_clos->cancellable,
+                                   G_CALLBACK (soup_session_cancelled_cb),
+                                   ga_clos,
+                                   NULL);
+        }
+
+      /* Perform the async request */
+      soup_session_queue_message (soup_session, msg,
+                                  _photo_upload_soup_session_cb, ga_clos);
+
+      g_debug ("\nRequested URL:\n%s\n", FLICKR_API_UPLOAD_URL);
+
+      /* Free */
+      g_hash_table_unref (extra_params);
+      g_object_unref (file);
+    }
+  else
+    {
+      /* If an error happened here, report through the async callback */
+      g_warning ("Unable to get contents for file\n");
+      if (error)
+        g_error_free (error);
+      error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file for upload");
+      build_async_result_and_complete (ga_clos, NULL, error);
+    }
+}
+
+static void
+_photo_upload_soup_session_cb           (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_upload_result,
+                        data);
+}
+
+static void
+_photo_get_info_soup_session_cb         (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_photo_info,
+                        data);
+}
+
+static void
+_get_photosets_soup_session_cb          (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_photosets_list,
+                        data);
+}
+
+static void
+_add_to_photoset_soup_session_cb        (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_added_to_photoset,
+                        data);
+}
+
+static void
+_create_photoset_soup_session_cb        (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_photoset_created,
+                        data);
+}
+
+static void
+_get_groups_soup_session_cb             (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_get_groups_list,
+                        data);
+}
+
+static void
+_add_to_group_soup_session_cb           (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspFlickrParserFunc) fsp_flickr_parser_added_to_group,
+                        data);
+}
+
+
 
 /* Public API */
 
@@ -602,4 +941,410 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
                                                   fsp_session_get_upload_status_async,
                                                   error));
   return upload_status;
+}
+
+void
+fsp_session_upload_async                (FspSession        *self,
+                                         const gchar         *filepath,
+                                         const gchar         *title,
+                                         const gchar         *description,
+                                         const gchar         *tags,
+                                         FspVisibility        is_public,
+                                         FspVisibility        is_family,
+                                         FspVisibility        is_friend,
+                                         FspSafetyLevel       safety_level,
+                                         FspContentType       content_type,
+                                         FspSearchScope       hidden,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (filepath != NULL);
+
+  FspSessionPrivate *priv = NULL;
+  SoupSession *soup_session = NULL;
+  GHashTable *extra_params = NULL;
+  GAsyncData *ga_clos = NULL;
+  UploadPhotoData *up_clos = NULL;
+  GFile *file = NULL;
+  const gchar *secret = NULL;
+  gchar *api_sig = NULL;
+
+  /* Get flickr proxy and extra params (those actually used) */
+  priv = self->priv;
+  soup_session = _get_soup_session (self);
+  extra_params = _get_upload_extra_params (title, description, tags,
+                                           is_public, is_family, is_friend,
+                                           safety_level, content_type, hidden);
+
+  /* Add remaining parameters to the hash table */
+  g_hash_table_insert (extra_params, g_strdup ("api_key"),
+                       g_strdup (priv->api_key));
+  g_hash_table_insert (extra_params, g_strdup ("auth_token"),
+                       g_strdup (priv->token));
+
+  /* Build the api signature and add it to the hash table */
+  secret = fsp_session_get_secret (self);
+  api_sig = get_api_signature_from_hash_table (secret, extra_params);
+  g_hash_table_insert (extra_params, g_strdup ("api_sig"), api_sig);
+
+  /* Save important data for the callback */
+  ga_clos = g_slice_new0 (GAsyncData);
+  ga_clos->object = G_OBJECT (self);
+  ga_clos->soup_session = soup_session;
+  ga_clos->soup_message = NULL;
+  ga_clos->cancellable = cancellable;
+  ga_clos->callback = callback;
+  ga_clos->source_tag = fsp_session_upload_async;
+  ga_clos->data = data;
+
+  /* Save important data for the upload process itself */
+  up_clos = g_slice_new0 (UploadPhotoData);
+  up_clos->gasync_data = ga_clos;
+  up_clos->extra_params = extra_params;
+
+  /* Asynchronously load the contents of the file */
+  file = g_file_new_for_path (filepath);
+  g_file_load_contents_async (file, NULL, _load_file_contents_cb, up_clos);
+}
+
+gchar *
+fsp_session_upload_finish               (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+
+  gchar *photo_id = (gchar*) finish_async_request (G_OBJECT (self), res,
+                                                   fsp_session_upload_async,
+                                                   error);
+  return photo_id;
+}
+
+void
+fsp_session_get_info_async              (FspSession        *self,
+                                         const gchar         *photo_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+
+  FspSessionPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (self);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.photos.getInfo",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   "photo_id", photo_id,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
+                         _photo_get_info_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_session_get_info_async, data);
+
+  g_free (url);
+}
+
+FspDataPhotoInfo *
+fsp_session_get_info_finish             (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+
+  FspDataPhotoInfo *photo_info = NULL;
+
+  photo_info =
+    FSP_DATA_PHOTO_INFO (finish_async_request (G_OBJECT (self), res,
+                                               fsp_session_get_info_async,
+                                               error));
+  return photo_info;
+}
+
+void
+fsp_session_get_photosets_async         (FspSession        *self,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+
+  FspSessionPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (self);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.photosets.getList",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
+                         _get_photosets_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_session_get_photosets_async, data);
+
+  g_free (url);
+}
+
+GSList *
+fsp_session_get_photosets_finish        (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+
+  GSList *photosets_list = NULL;
+
+  photosets_list = (GSList*) finish_async_request (G_OBJECT (self), res,
+                                                   fsp_session_get_photosets_async,
+                                                   error);
+  return photosets_list;
+}
+
+void
+fsp_session_add_to_photoset_async       (FspSession        *self,
+                                         const gchar         *photo_id,
+                                         const gchar         *photoset_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+  g_return_if_fail (photoset_id != NULL);
+
+  FspSessionPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (self);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.photosets.addPhoto",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   "photo_id", photo_id,
+                                   "photoset_id", photoset_id,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
+                         _add_to_photoset_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_session_add_to_photoset_async, data);
+
+  g_free (url);
+}
+
+gboolean
+fsp_session_add_to_photoset_finish      (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  gpointer result = NULL;
+
+  result = finish_async_request (G_OBJECT (self), res,
+                                 fsp_session_add_to_photoset_async, error);
+
+  return result ? TRUE : FALSE;
+}
+
+void
+fsp_session_create_photoset_async       (FspSession        *self,
+                                         const gchar         *title,
+                                         const gchar         *description,
+                                         const gchar         *primary_photo_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (title != NULL);
+  g_return_if_fail (description != NULL);
+  g_return_if_fail (primary_photo_id != NULL);
+
+  FspSessionPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (self);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.photosets.create",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   "title", title,
+                                   "description", description,
+                                   "primary_photo_id", primary_photo_id,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  perform_async_request (priv->soup_session, url,
+                         _create_photoset_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_session_create_photoset_async, data);
+
+  g_free (url);
+}
+
+gchar *
+fsp_session_create_photoset_finish      (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+
+  gchar *photoset_id = NULL;
+
+  photoset_id =
+    (gchar*) finish_async_request (G_OBJECT (self), res,
+                                   fsp_session_create_photoset_async,
+                                   error);
+  return photoset_id;
+}
+
+void
+fsp_session_get_groups_async            (FspSession        *self,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+
+  FspSessionPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (self);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.groups.pools.getGroups",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
+                         _get_groups_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_session_get_groups_async, data);
+
+  g_free (url);
+}
+
+GSList *
+fsp_session_get_groups_finish           (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+
+  GSList *groups_list = NULL;
+
+  groups_list = (GSList*) finish_async_request (G_OBJECT (self), res,
+                                                fsp_session_get_groups_async,
+                                                error);
+  return groups_list;
+}
+
+void
+fsp_session_add_to_group_async          (FspSession        *self,
+                                         const gchar         *photo_id,
+                                         const gchar         *group_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+  g_return_if_fail (group_id != NULL);
+
+  FspSessionPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
+  const gchar *secret = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  secret = fsp_session_get_secret (self);
+  signed_query = get_signed_query (secret,
+                                   "method", "flickr.groups.pools.add",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   "photo_id", photo_id,
+                                   "group_id", group_id,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
+                         _add_to_group_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_session_add_to_group_async, data);
+
+  g_free (url);
+}
+
+gboolean
+fsp_session_add_to_group_finish         (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  gpointer result = NULL;
+
+  result = finish_async_request (G_OBJECT (self), res,
+                                 fsp_session_add_to_group_async, error);
+
+  return result ? TRUE : FALSE;
 }

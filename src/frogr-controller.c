@@ -65,8 +65,6 @@ struct _FrogrControllerPrivate
   FrogrAccount *account;
 
   FspSession *session;
-  FspPhotosMgr *photos_mgr;
-
   GCancellable *cancellable;
 
   gboolean app_running;
@@ -485,24 +483,24 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   g_object_ref (picture);
 
   _enable_cancellable (self, TRUE);
-  fsp_photos_mgr_upload_async (priv->photos_mgr,
-                               frogr_picture_get_filepath (picture),
-                               frogr_picture_get_title (picture),
-                               frogr_picture_get_description (picture),
-                               frogr_picture_get_tags (picture),
-                               frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                               frogr_picture_is_family (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                               frogr_picture_is_friend (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                               FSP_SAFETY_LEVEL_NONE,  /* Hard coded at the moment */
-                               FSP_CONTENT_TYPE_PHOTO, /* Hard coded at the moment */
-                               FSP_SEARCH_SCOPE_NONE,  /* Hard coded at the moment */
-                               priv->cancellable, _upload_picture_cb, up_st);
+  fsp_session_upload_async (priv->session,
+                            frogr_picture_get_filepath (picture),
+                            frogr_picture_get_title (picture),
+                            frogr_picture_get_description (picture),
+                            frogr_picture_get_tags (picture),
+                            frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                            frogr_picture_is_family (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                            frogr_picture_is_friend (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
+                            FSP_SAFETY_LEVEL_NONE,  /* Hard coded at the moment */
+                            FSP_CONTENT_TYPE_PHOTO, /* Hard coded at the moment */
+                            FSP_SEARCH_SCOPE_NONE,  /* Hard coded at the moment */
+                            priv->cancellable, _upload_picture_cb, up_st);
 }
 
 static void
 _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
-  FspPhotosMgr *photos_mgr = NULL;
+  FspSession *session = NULL;
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
@@ -510,12 +508,12 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   GError *error = NULL;
   gchar *photo_id = NULL;
 
-  photos_mgr = FSP_PHOTOS_MGR (object);
+  session = FSP_SESSION (object);
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
   picture = up_st->picture;
 
-  photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
+  photo_id = fsp_session_upload_finish (session, res, &error);
   if (photo_id)
     {
       frogr_picture_set_id (picture, photo_id);
@@ -545,12 +543,12 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
           _notify_adding_to_album (controller, picture, album);
 
           up_st->albums = g_slist_next (albums);
-          fsp_photos_mgr_add_to_photoset_async (photos_mgr,
-                                                frogr_picture_get_id (picture),
-                                                frogr_album_get_id (album),
-                                                priv->cancellable,
-                                                _add_to_photoset_cb,
-                                                up_st);
+          fsp_session_add_to_photoset_async (session,
+                                             frogr_picture_get_id (picture),
+                                             frogr_album_get_id (album),
+                                             priv->cancellable,
+                                             _add_to_photoset_cb,
+                                             up_st);
         }
 
       /* Pictures will be added to groups AFTER being added to albums,
@@ -570,7 +568,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 static void
 _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
-  FspPhotosMgr *photos_mgr = NULL;
+  FspSession *session = NULL;
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
@@ -579,13 +577,13 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   GError *error = NULL;
   gboolean keep_going = FALSE;
 
-  photos_mgr = FSP_PHOTOS_MGR (object);
+  session = FSP_SESSION (object);
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
   picture = up_st->picture;
   albums = up_st->albums;
 
-  fsp_photos_mgr_add_to_photoset_finish (photos_mgr, res, &error);
+  fsp_session_add_to_photoset_finish (session, res, &error);
   up_st->error = error;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
@@ -602,12 +600,12 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
           _notify_adding_to_album (controller, picture, album);
 
           up_st->albums = g_slist_next (albums);
-          fsp_photos_mgr_add_to_photoset_async (photos_mgr,
-                                                frogr_picture_get_id (picture),
-                                                frogr_album_get_id (album),
-                                                priv->cancellable,
-                                                _add_to_photoset_cb,
-                                                up_st);
+          fsp_session_add_to_photoset_async (session,
+                                             frogr_picture_get_id (picture),
+                                             frogr_album_get_id (album),
+                                             priv->cancellable,
+                                             _add_to_photoset_cb,
+                                             up_st);
           keep_going = TRUE;
         }
     }
@@ -628,7 +626,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
 static void
 _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
-  FspPhotosMgr *photos_mgr = NULL;
+  FspSession *session = NULL;
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
@@ -637,13 +635,13 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
   GError *error = NULL;
   gboolean keep_going = FALSE;
 
-  photos_mgr = FSP_PHOTOS_MGR (object);
+  session = FSP_SESSION (object);
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
   picture = up_st->picture;
   groups = up_st->groups;
 
-  fsp_photos_mgr_add_to_group_finish (photos_mgr, res, &error);
+  fsp_session_add_to_group_finish (session, res, &error);
   up_st->error = error;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
@@ -660,12 +658,12 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
           _notify_adding_to_group (controller, picture, group);
 
           up_st->groups = g_slist_next (groups);
-          fsp_photos_mgr_add_to_group_async (photos_mgr,
-                                             frogr_picture_get_id (picture),
-                                             frogr_group_get_id (group),
-                                             priv->cancellable,
-                                             _add_to_group_cb,
-                                             up_st);
+          fsp_session_add_to_group_async (session,
+                                          frogr_picture_get_id (picture),
+                                          frogr_group_get_id (group),
+                                          priv->cancellable,
+                                          _add_to_group_cb,
+                                          up_st);
           keep_going = TRUE;
         }
     }
@@ -689,7 +687,7 @@ _add_picture_to_groups_on_idle (gpointer data)
   upload_picture_st *up_st = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FspPhotosMgr *photos_mgr = NULL;
+  FspSession *session = NULL;
   FrogrPicture *picture = NULL;
   FrogrGroup *group = NULL;
   GSList *groups = NULL;
@@ -700,7 +698,7 @@ _add_picture_to_groups_on_idle (gpointer data)
   groups = up_st->groups;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  photos_mgr = priv->photos_mgr;
+  session = priv->session;
 
   /* Keep the source while busy */
   if (priv->adding_to_album)
@@ -713,12 +711,12 @@ _add_picture_to_groups_on_idle (gpointer data)
   _notify_adding_to_group (controller, picture, group);
 
   up_st->groups = g_slist_next (groups);
-  fsp_photos_mgr_add_to_group_async (photos_mgr,
-                                     frogr_picture_get_id (picture),
-                                     frogr_group_get_id (group),
-                                     priv->cancellable,
-                                     _add_to_group_cb,
-                                     up_st);
+  fsp_session_add_to_group_async (session,
+                                  frogr_picture_get_id (picture),
+                                  frogr_group_get_id (group),
+                                  priv->cancellable,
+                                  _add_to_group_cb,
+                                  up_st);
 
   return FALSE;
 }
@@ -944,14 +942,14 @@ _fetch_albums (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->fetching_albums = TRUE;
 
-  fsp_photos_mgr_get_photosets_async (priv->photos_mgr, NULL,
-                                      _fetch_albums_cb, self);
+  fsp_session_get_photosets_async (priv->session, NULL,
+                                   _fetch_albums_cb, self);
 }
 
 static void
 _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
-  FspPhotosMgr *photos_mgr = NULL;
+  FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
@@ -959,10 +957,10 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   GSList *albums_list = NULL;
   GError *error = NULL;
 
-  photos_mgr = FSP_PHOTOS_MGR (object);
+  session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
 
-  photosets_list = fsp_photos_mgr_get_photosets_finish (photos_mgr, res, &error);
+  photosets_list = fsp_session_get_photosets_finish (session, res, &error);
   if (error != NULL)
     {
       g_debug ("Fetching list of albums: %s", error->message);
@@ -1016,14 +1014,14 @@ _fetch_groups (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->fetching_groups = TRUE;
 
-  fsp_photos_mgr_get_groups_async (priv->photos_mgr, NULL,
-                                   _fetch_groups_cb, self);
+  fsp_session_get_groups_async (priv->session, NULL,
+                                _fetch_groups_cb, self);
 }
 
 static void
 _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
-  FspPhotosMgr *photos_mgr = NULL;
+  FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
@@ -1031,10 +1029,10 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   GSList *groups_list = NULL;
   GError *error = NULL;
 
-  photos_mgr = FSP_PHOTOS_MGR (object);
+  session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
 
-  data_groups_list = fsp_photos_mgr_get_groups_finish (photos_mgr, res, &error);
+  data_groups_list = fsp_session_get_groups_finish (session, res, &error);
   if (error != NULL)
     {
       g_debug ("Fetching list of groups: %s", error->message);
@@ -1318,12 +1316,6 @@ _frogr_controller_dispose (GObject* object)
       priv->session = NULL;
     }
 
-  if (priv->photos_mgr)
-    {
-      g_object_unref (priv->photos_mgr);
-      priv->photos_mgr = NULL;
-    }
-
   if (priv->cancellable)
     {
       g_object_unref (priv->cancellable);
@@ -1406,7 +1398,6 @@ frogr_controller_init (FrogrController *self)
   g_object_ref (priv->config);
 
   priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
-  priv->photos_mgr = fsp_photos_mgr_new (priv->session);
   priv->cancellable = NULL;
   priv->app_running = FALSE;
   priv->uploading_picture = FALSE;

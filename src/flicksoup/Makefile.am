@@ -28,11 +28,7 @@ libflicksoup_a_SOURCES =	\
 	fsp-error.h		\
 	fsp-flickr-parser.c	\
 	fsp-flickr-parser.h	\
-	fsp-global-defs.h	\
-	fsp-photos-mgr.c	\
-	fsp-photos-mgr.h	\
 	fsp-session.c		\
 	fsp-session.h		\
-	fsp-session-priv.h	\
 	fsp-util.c		\
 	fsp-util.h

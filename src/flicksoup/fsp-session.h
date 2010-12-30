@@ -124,6 +124,99 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error);
 
+void
+fsp_session_upload_async                (FspSession        *self,
+                                         const gchar         *filepath,
+                                         const gchar         *title,
+                                         const gchar         *description,
+                                         const gchar         *tags,
+                                         FspVisibility        is_public,
+                                         FspVisibility        is_family,
+                                         FspVisibility        is_friend,
+                                         FspSafetyLevel       safety_level,
+                                         FspContentType       content_type,
+                                         FspSearchScope       hidden,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+gchar *
+fsp_session_upload_finish               (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
+void
+fsp_session_get_info_async              (FspSession        *self,
+                                         const gchar         *photo_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+FspDataPhotoInfo *
+fsp_session_get_info_finish             (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+void
+fsp_session_get_photosets_async         (FspSession        *self,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+GSList *
+fsp_session_get_photosets_finish        (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
+void
+fsp_session_add_to_photoset_async       (FspSession        *self,
+                                         const gchar         *photo_id,
+                                         const gchar         *photoset_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+gboolean
+fsp_session_add_to_photoset_finish      (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+void
+fsp_session_create_photoset_async       (FspSession        *self,
+                                         const gchar         *title,
+                                         const gchar         *description,
+                                         const gchar         *primary_photo_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+gchar *
+fsp_session_create_photoset_finish      (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
+void
+fsp_session_get_groups_async            (FspSession        *self,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+GSList *
+fsp_session_get_groups_finish           (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
+void
+fsp_session_add_to_group_async          (FspSession        *self,
+                                         const gchar         *photo_id,
+                                         const gchar         *group_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+gboolean
+fsp_session_add_to_group_finish         (FspSession  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
 G_END_DECLS
 
 #endif

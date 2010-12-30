@@ -28,10 +28,9 @@ G_BEGIN_DECLS
 #include <glib.h>
 #include <glib-object.h>
 
+#include <flicksoup/fsp-session.h>
 #include <flicksoup/fsp-data.h>
 #include <flicksoup/fsp-error.h>
-#include <flicksoup/fsp-photos-mgr.h>
-#include <flicksoup/fsp-session.h>
 
 G_END_DECLS
 

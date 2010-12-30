@@ -55,11 +55,11 @@ upload_cb                               (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      source_func)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  FspSession *session = FSP_SESSION (object);
   GError *error = NULL;
 
   g_free (uploaded_photo_id);
-  uploaded_photo_id = fsp_photos_mgr_upload_finish (photos_mgr, res, &error);
+  uploaded_photo_id = fsp_session_upload_finish (session, res, &error);
 
   if (error != NULL)
     {
@@ -78,26 +78,26 @@ upload_cb                               (GObject      *object,
         {
           /* Continue getting info about the picture */
           g_print ("Getting info for photo %s...\n", uploaded_photo_id);
-          fsp_photos_mgr_get_info_async (photos_mgr, uploaded_photo_id, NULL,
-                                         photo_get_info_cb, NULL);
+          fsp_session_get_info_async (session, uploaded_photo_id, NULL,
+                                      photo_get_info_cb, NULL);
         }
       else if (source_func == photoset_created_cb)
         {
           /* Continue adding the picture to the photoset */
           g_print ("Creatine a new photoset...\n");
-          fsp_photos_mgr_add_to_photoset_async (photos_mgr,
-                                                uploaded_photo_id,
-                                                created_photoset_id,
-                                                NULL, added_to_photoset_cb, NULL);
+          fsp_session_add_to_photoset_async (session,
+                                             uploaded_photo_id,
+                                             created_photoset_id,
+                                             NULL, added_to_photoset_cb, NULL);
         }
       else if (source_func == get_groups_cb)
         {
           /* Continue adding the picture to the photoset */
           g_print ("Creatine a new photoset...\n");
-          fsp_photos_mgr_add_to_group_async (photos_mgr,
-                                             uploaded_photo_id,
-                                             first_group_id,
-                                             NULL, added_to_group_cb, NULL);
+          fsp_session_add_to_group_async (session,
+                                          uploaded_photo_id,
+                                          first_group_id,
+                                          NULL, added_to_group_cb, NULL);
         }
     }
 }
@@ -107,11 +107,11 @@ added_to_group_cb                       (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  FspSession *session = FSP_SESSION (object);
   GError *error = NULL;
   gboolean result = FALSE;
 
-  result = fsp_photos_mgr_add_to_group_finish (photos_mgr, res, &error);
+  result = fsp_session_add_to_group_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error creating group: %s\n", error->message);
@@ -129,11 +129,11 @@ get_groups_cb                           (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  FspSession *session = FSP_SESSION (object);
   GError *error = NULL;
   GSList *groups_list = NULL;
 
-  groups_list = fsp_photos_mgr_get_groups_finish (photos_mgr, res, &error);
+  groups_list = fsp_session_get_groups_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error getting groups: %s\n", error->message);
@@ -167,18 +167,18 @@ get_groups_cb                           (GObject      *object,
 
       /* Continue adding a picture to the group, but first upload a new one */
       g_print ("Uploading a new picture to be added to the group...");
-      fsp_photos_mgr_upload_async (photos_mgr,
-                                   TEST_PHOTO,
-                                   "Yet another title",
-                                   "Yet another description ",
-                                   "yet some other tags",
-                                   FSP_VISIBILITY_NO,
-                                   FSP_VISIBILITY_YES,
-                                   FSP_VISIBILITY_NONE,
-                                   FSP_SAFETY_LEVEL_NONE,
-                                   FSP_CONTENT_TYPE_PHOTO,
-                                   FSP_SEARCH_SCOPE_NONE,
-                                   NULL, upload_cb, get_groups_cb);
+      fsp_session_upload_async (session,
+                                TEST_PHOTO,
+                                "Yet another title",
+                                "Yet another description ",
+                                "yet some other tags",
+                                FSP_VISIBILITY_NO,
+                                FSP_VISIBILITY_YES,
+                                FSP_VISIBILITY_NONE,
+                                FSP_SAFETY_LEVEL_NONE,
+                                FSP_CONTENT_TYPE_PHOTO,
+                                FSP_SEARCH_SCOPE_NONE,
+                                NULL, upload_cb, get_groups_cb);
 
       g_slist_free (groups_list);
     }
@@ -189,11 +189,11 @@ added_to_photoset_cb                    (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  FspSession *session = FSP_SESSION (object);
   GError *error = NULL;
   gboolean result = FALSE;
 
-  result = fsp_photos_mgr_add_to_photoset_finish (photos_mgr, res, &error);
+  result = fsp_session_add_to_photoset_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error adding to photoset: %s\n", error->message);
@@ -210,8 +210,8 @@ added_to_photoset_cb                    (GObject      *object,
 
       /* Continue getting the list of groups */
       g_print ("Getting list of groups...\n");
-      fsp_photos_mgr_get_groups_async (photos_mgr, NULL,
-                                       get_groups_cb, NULL);
+      fsp_session_get_groups_async (session, NULL,
+                                    get_groups_cb, NULL);
     }
 }
 
@@ -220,10 +220,10 @@ photoset_created_cb                     (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  FspSession *session = FSP_SESSION (object);
   GError *error = NULL;
   created_photoset_id =
-    fsp_photos_mgr_create_photoset_finish (photos_mgr, res, &error);
+    fsp_session_create_photoset_finish (session, res, &error);
 
   if (error != NULL)
     {
@@ -239,18 +239,18 @@ photoset_created_cb                     (GObject      *object,
 
       /* Continue adding a picture to the photoset, but first upload a new one */
       g_print ("Uploading a new picture to be added to the photoset...");
-      fsp_photos_mgr_upload_async (photos_mgr,
-                                   TEST_PHOTO,
-                                   "Yet another title",
-                                   "Yet another description ",
-                                   "yet some other tags",
-                                   FSP_VISIBILITY_NO,
-                                   FSP_VISIBILITY_YES,
-                                   FSP_VISIBILITY_NONE,
-                                   FSP_SAFETY_LEVEL_NONE,
-                                   FSP_CONTENT_TYPE_PHOTO,
-                                   FSP_SEARCH_SCOPE_NONE,
-                                   NULL, upload_cb, photoset_created_cb);
+      fsp_session_upload_async (session,
+                                TEST_PHOTO,
+                                "Yet another title",
+                                "Yet another description ",
+                                "yet some other tags",
+                                FSP_VISIBILITY_NO,
+                                FSP_VISIBILITY_YES,
+                                FSP_VISIBILITY_NONE,
+                                FSP_SAFETY_LEVEL_NONE,
+                                FSP_CONTENT_TYPE_PHOTO,
+                                FSP_SEARCH_SCOPE_NONE,
+                                NULL, upload_cb, photoset_created_cb);
     }
 }
 
@@ -259,10 +259,10 @@ get_photosets_cb                        (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  FspSession *session = FSP_SESSION (object);
   GError *error = NULL;
   GSList *photosets_list =
-    fsp_photos_mgr_get_photosets_finish (photos_mgr, res, &error);
+    fsp_session_get_photosets_finish (session, res, &error);
 
   if (error != NULL)
     {
@@ -294,11 +294,11 @@ get_photosets_cb                        (GObject      *object,
 
       /* Continue creating a new photoset */
       g_print ("Creatine a new photoset...\n");
-      fsp_photos_mgr_create_photoset_async (photos_mgr,
-                                            "Photoset's title",
-                                            "Photoset's description",
-                                            uploaded_photo_id,
-                                            NULL, photoset_created_cb, NULL);
+      fsp_session_create_photoset_async (session,
+                                         "Photoset's title",
+                                         "Photoset's description",
+                                         uploaded_photo_id,
+                                         NULL, photoset_created_cb, NULL);
       g_slist_free (photosets_list);
     }
 }
@@ -308,10 +308,10 @@ photo_get_info_cb                       (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
-  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  FspSession *session = FSP_SESSION (object);
   GError *error = NULL;
   FspDataPhotoInfo *photo_info =
-    fsp_photos_mgr_get_info_finish (photos_mgr, res, &error);
+    fsp_session_get_info_finish (session, res, &error);
 
   if (error != NULL)
     {
@@ -349,8 +349,8 @@ photo_get_info_cb                       (GObject      *object,
 
       /* Continue getting the list of photosets */
       g_print ("Getting list of photosets...\n");
-      fsp_photos_mgr_get_photosets_async (photos_mgr, NULL,
-                                          get_photosets_cb, NULL);
+      fsp_session_get_photosets_async (session, NULL,
+                                       get_photosets_cb, NULL);
 
       fsp_data_free (FSP_DATA (photo_info));
     }
@@ -371,8 +371,6 @@ get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
     }
   else
     {
-      FspPhotosMgr *photos_mgr = NULL;
-
       g_print ("[get_upload_status_cb]::Success! Upload status:\n");
       g_print ("[get_upload_status_cb]::\tUser id: %s\n", upload_status->id);
       g_print ("[get_upload_status_cb]::\tUser is pro?: %s\n",
@@ -392,23 +390,22 @@ get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
 
       /* Continue uploading a picture */
       g_print ("Uploading a picture...\n");
-      photos_mgr = fsp_photos_mgr_new (session);
-      fsp_photos_mgr_upload_async (photos_mgr,
-                                   TEST_PHOTO,
-                                   "title",
-                                   "description",
-                                   "áèïôu "
-                                   "çÇ*+[]{} "
-                                   "qwerty "
-                                   "!·$%&/(@#~^*+ "
-                                   "\"Tag With Spaces\"",
-                                   FSP_VISIBILITY_NO,
-                                   FSP_VISIBILITY_YES,
-                                   FSP_VISIBILITY_NONE,
-                                   FSP_SAFETY_LEVEL_NONE,
-                                   FSP_CONTENT_TYPE_PHOTO,
-                                   FSP_SEARCH_SCOPE_NONE,
-                                   NULL, upload_cb, complete_auth_cb);
+      fsp_session_upload_async (session,
+                                TEST_PHOTO,
+                                "title",
+                                "description",
+                                "áèïôu "
+                                "çÇ*+[]{} "
+                                "qwerty "
+                                "!·$%&/(@#~^*+ "
+                                "\"Tag With Spaces\"",
+                                FSP_VISIBILITY_NO,
+                                FSP_VISIBILITY_YES,
+                                FSP_VISIBILITY_NONE,
+                                FSP_SAFETY_LEVEL_NONE,
+                                FSP_CONTENT_TYPE_PHOTO,
+                                FSP_SEARCH_SCOPE_NONE,
+                                NULL, upload_cb, complete_auth_cb);
 
       fsp_data_free (FSP_DATA (upload_status));
     }
