@@ -117,6 +117,17 @@ fsp_flickr_parser_photoset_created      (FspFlickrParser  *self,
                                          gulong            buf_size,
                                          GError          **error);
 
+GSList *
+fsp_flickr_parser_get_groups_list       (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
+gpointer
+fsp_flickr_parser_added_to_group        (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
 G_END_DECLS
 
 #endif

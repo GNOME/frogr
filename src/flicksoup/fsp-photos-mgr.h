@@ -138,6 +138,29 @@ fsp_photos_mgr_create_photoset_finish   (FspPhotosMgr  *self,
                                          GAsyncResult  *res,
                                          GError       **error);
 
+void
+fsp_photos_mgr_get_groups_async         (FspPhotosMgr        *self,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+GSList *
+fsp_photos_mgr_get_groups_finish        (FspPhotosMgr  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
+void
+fsp_photos_mgr_add_to_group_async       (FspPhotosMgr        *self,
+                                         const gchar         *photo_id,
+                                         const gchar         *group_id,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+gboolean
+fsp_photos_mgr_add_to_group_finish      (FspPhotosMgr  *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
 
 G_END_DECLS
 

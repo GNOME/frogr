@@ -31,10 +31,13 @@
 
 static gchar *uploaded_photo_id = NULL;
 static gchar *created_photoset_id = NULL;
+static gchar *first_group_id = NULL;
 
 /* Prototypes */
 
 void upload_cb (GObject *object, GAsyncResult *res, gpointer source_func);
+void added_to_group_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void get_groups_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void added_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
@@ -87,6 +90,97 @@ upload_cb                               (GObject      *object,
                                                 created_photoset_id,
                                                 NULL, added_to_photoset_cb, NULL);
         }
+      else if (source_func == get_groups_cb)
+        {
+          /* Continue adding the picture to the photoset */
+          g_print ("Creatine a new photoset...\n");
+          fsp_photos_mgr_add_to_group_async (photos_mgr,
+                                             uploaded_photo_id,
+                                             first_group_id,
+                                             NULL, added_to_group_cb, NULL);
+        }
+    }
+}
+
+void
+added_to_group_cb                       (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  GError *error = NULL;
+  gboolean result = FALSE;
+
+  result = fsp_photos_mgr_add_to_group_finish (photos_mgr, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error creating group: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[added_to_groups_cb]::Success! (%s)\n\n",
+               result ? "OK" : "FAIL");
+    }
+}
+
+void
+get_groups_cb                           (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspPhotosMgr *photos_mgr = FSP_PHOTOS_MGR (object);
+  GError *error = NULL;
+  GSList *groups_list = NULL;
+
+  groups_list = fsp_photos_mgr_get_groups_finish (photos_mgr, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error getting groups: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[get_groups_cb]::Success! Number of groups found: %d\n",
+               g_slist_length (groups_list));
+
+      gint i = 0;
+      GSList *item = NULL;
+      FspDataGroup *group = NULL;
+      for (item = groups_list; item; item = g_slist_next (item))
+        {
+          group = FSP_DATA_GROUP (item->data);
+          g_print ("[get_groups_cb]::\tGroup #%d\n", i++);
+          g_print ("[get_groups_cb]::\t\tGroup id: %s\n", group->id);
+          g_print ("[get_groups_cb]::\t\tGroup name: %s\n", group->name);
+          g_print ("[get_groups_cb]::\t\tGroup privacy: %d\n", group->privacy);
+          g_print ("[get_groups_cb]::\t\tGroup number of photos: %d\n", group->n_photos);
+
+          /* Store the ID of the first group to add a picture later */
+          if (item == groups_list)
+            first_group_id = g_strdup (group->id);
+
+          fsp_data_free (FSP_DATA (group));
+        }
+
+      getchar ();
+
+      /* Continue adding a picture to the group, but first upload a new one */
+      g_print ("Uploading a new picture to be added to the group...");
+      fsp_photos_mgr_upload_async (photos_mgr,
+                                   TEST_PHOTO,
+                                   "Yet another title",
+                                   "Yet another description ",
+                                   "yet some other tags",
+                                   FSP_VISIBILITY_NO,
+                                   FSP_VISIBILITY_YES,
+                                   FSP_VISIBILITY_NONE,
+                                   FSP_SAFETY_LEVEL_NONE,
+                                   FSP_CONTENT_TYPE_PHOTO,
+                                   FSP_SEARCH_SCOPE_NONE,
+                                   NULL, upload_cb, get_groups_cb);
+
+      g_slist_free (groups_list);
     }
 }
 
@@ -102,13 +196,22 @@ added_to_photoset_cb                    (GObject      *object,
   result = fsp_photos_mgr_add_to_photoset_finish (photos_mgr, res, &error);
   if (error != NULL)
     {
-      g_print ("Error creating photoset: %s\n", error->message);
+      g_print ("Error adding to photoset: %s\n", error->message);
       g_error_free (error);
     }
   else
     {
       g_print ("[added_to_photosets_cb]::Success! (%s)\n\n",
                result ? "OK" : "FAIL");
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue getting the list of groups */
+      g_print ("Getting list of groups...\n");
+      fsp_photos_mgr_get_groups_async (photos_mgr, NULL,
+                                       get_groups_cb, NULL);
     }
 }
 

@@ -87,12 +87,21 @@ _added_to_photoset_parser               (xmlDoc  *doc,
 static gpointer
 _photoset_created_parser                (xmlDoc  *doc,
                                          GError **error);
+static gpointer
+_get_groups_list_parser                 (xmlDoc  *doc,
+                                         GError **error);
+static gpointer
+_added_to_group_parser                  (xmlDoc  *doc,
+                                         GError **error);
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node);
 
 static FspDataPhotoSet *
-_get_photo_set_from_node                (xmlNode *node);
+_get_photoset_from_node                 (xmlNode *node);
+
+static FspDataGroup *
+_get_group_from_node                    (xmlNode *node);
 
 
 /* Private API */
@@ -252,12 +261,16 @@ _get_error_method_from_parser           (gpointer (*body_parser)
     error_method = FSP_ERROR_METHOD_PHOTO_UPLOAD;
   else if (body_parser == _get_photo_info_parser)
     error_method = FSP_ERROR_METHOD_PHOTO_GET_INFO;
-  else if (body_parser == _photoset_created_parser)
-    error_method = FSP_ERROR_METHOD_PHOTOSET_CREATE;
   else if (body_parser == _get_photosets_list_parser)
     error_method = FSP_ERROR_METHOD_PHOTOSET_GET_LIST;
   else if (body_parser == _added_to_photoset_parser)
     error_method = FSP_ERROR_METHOD_PHOTOSET_ADD_PHOTO;
+  else if (body_parser == _photoset_created_parser)
+    error_method = FSP_ERROR_METHOD_PHOTOSET_CREATE;
+  else if (body_parser == _get_groups_list_parser)
+    error_method = FSP_ERROR_METHOD_GROUP_GET_LIST;
+  else if (body_parser == _added_to_group_parser)
+    error_method = FSP_ERROR_METHOD_GROUP_ADD_PHOTO;
 
   return error_method;
 }
@@ -650,7 +663,7 @@ _get_photosets_list_parser              (xmlDoc  *doc,
         {
           node = xpathObj->nodesetval->nodeTab[i];
           if (node != NULL)
-            photoset = _get_photo_set_from_node (node);
+            photoset = _get_photoset_from_node (node);
 
           if (photoset != NULL)
             photosetsList = g_slist_append (photosetsList, photoset);
@@ -716,6 +729,62 @@ _photoset_created_parser                (xmlDoc  *doc,
     g_propagate_error (error, err);
 
   return photosetId;
+}
+
+static gpointer
+_get_groups_list_parser                 (xmlDoc  *doc,
+                                         GError **error)
+{
+  g_return_val_if_fail (doc != NULL, NULL);
+
+  xmlXPathContext *xpathCtx = NULL;
+  xmlXPathObject * xpathObj = NULL;
+  int numNodes = 0;
+  GSList *groupsList = NULL;
+  FspDataGroup *group = NULL;
+  GError *err = NULL;
+
+  xpathCtx = xmlXPathNewContext (doc);
+  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/groups/group", xpathCtx);
+  numNodes = xpathObj->nodesetval->nodeNr;
+
+  if ((xpathObj != NULL) && (numNodes > 0))
+    {
+      /* Matching nodes found */
+      xmlNode *node = NULL;
+      int i = 0;
+
+      /* Extract per group information and add it to the list */
+      for (i = 0; i < numNodes; i++)
+        {
+          node = xpathObj->nodesetval->nodeTab[i];
+          if (node != NULL)
+            group = _get_group_from_node (node);
+
+          if (group != NULL)
+            groupsList = g_slist_append (groupsList, group);
+        }
+    }
+  else
+    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                       "No groups found in the response");
+  /* Free */
+  xmlXPathFreeObject (xpathObj);
+  xmlXPathFreeContext (xpathCtx);
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  return groupsList;
+}
+
+static gpointer
+_added_to_group_parser                  (xmlDoc  *doc,
+                                         GError **error)
+{
+  /* Dummy parser, as there is no response for this method */
+  return NULL;
 }
 
 static FspDataPhotoInfo *
@@ -877,7 +946,7 @@ _get_photo_info_from_node               (xmlNode *node)
 }
 
 static FspDataPhotoSet *
-_get_photo_set_from_node                (xmlNode *node)
+_get_photoset_from_node                 (xmlNode *node)
 {
   g_return_val_if_fail (node != NULL, NULL);
 
@@ -929,6 +998,42 @@ _get_photo_set_from_node                (xmlNode *node)
     }
 
   return photoSet;
+}
+
+static FspDataGroup *
+_get_group_from_node                    (xmlNode *node)
+{
+  g_return_val_if_fail (node != NULL, NULL);
+
+  FspDataGroup *group = NULL;
+  xmlChar *id = NULL;
+  xmlChar *name = NULL;
+  xmlChar *privacy = NULL;
+  xmlChar *numPhotos = NULL;
+
+  if (g_strcmp0 ((gchar *) node->name, "group"))
+    return NULL;
+
+  id = xmlGetProp (node, (const xmlChar *) "nsid");
+  name = xmlGetProp (node, (const xmlChar *) "name");
+  privacy = xmlGetProp (node, (const xmlChar *) "privacy");
+  numPhotos = xmlGetProp (node, (const xmlChar *) "photos");
+
+  /* Create and fill basic data for the FspDataGroup */
+  group = FSP_DATA_GROUP (fsp_data_new (FSP_GROUP));
+  group->id = g_strdup ((gchar *) id);
+  group->name = g_strdup ((gchar *) name);
+  if (privacy != NULL)
+    group->privacy = (gint) g_ascii_strtoll ((gchar *) privacy, NULL, 10);
+  if (numPhotos != NULL)
+    group->n_photos = (gint) g_ascii_strtoll ((gchar *) numPhotos, NULL, 10);
+
+  xmlFree (id);
+  xmlFree (name);
+  xmlFree (privacy);
+  xmlFree (numPhotos);
+
+  return group;
 }
 
 /* Public API */
@@ -1097,3 +1202,38 @@ fsp_flickr_parser_photoset_created      (FspFlickrParser  *self,
   return photoset_id;
 }
 
+GSList *
+fsp_flickr_parser_get_groups_list       (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error)
+{
+  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  GSList *groups_list = NULL;
+
+  /* Process the response */
+  groups_list = (GSList*) _process_xml_response (self, buffer, buf_size,
+                                                 _get_groups_list_parser,
+                                                 error);
+  /* Return value */
+  return groups_list;
+}
+
+gpointer
+fsp_flickr_parser_added_to_group        (FspFlickrParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error)
+{
+  g_return_val_if_fail (FSP_IS_FLICKR_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  /* Process the response */
+  _process_xml_response (self, buffer, buf_size,
+                         _added_to_group_parser, error);
+
+  /* No return value for this method */
+  return GINT_TO_POINTER ((gint)(*error == NULL));
+}

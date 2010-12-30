@@ -91,6 +91,19 @@ static const FspError photoset_add_photo_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 9
 };
 
+static const FspError group_add_photo_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                      // 0
+  FSP_ERROR_PHOTO_NOT_FOUND,              // 1
+  FSP_ERROR_GROUP_NOT_FOUND,              // 2
+  FSP_ERROR_ALREADY_IN_GROUP,             // 3
+  FSP_ERROR_PHOTO_IN_MAX_NUM_GROUPS,      // 4
+  FSP_ERROR_GROUP_LIMIT_REACHED,          // 5
+  FSP_ERROR_PHOTO_ADDED_TO_GROUP_QUEUE,   // 6
+  FSP_ERROR_PHOTO_ALREADY_IN_GROUP_QUEUE, // 7
+  FSP_ERROR_UNKNOWN,                      // 8
+  FSP_ERROR_UNKNOWN,                      // 9
+};
+
 static const FspError general_translations [N_GENERAL_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    // 10
   FSP_ERROR_UNKNOWN,                    // 11
@@ -217,6 +230,7 @@ fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
         case FSP_ERROR_METHOD_GET_FROB:
         case FSP_ERROR_METHOD_GET_AUTH_TOKEN:
         case FSP_ERROR_METHOD_GET_UPLOAD_STATUS:
+        case FSP_ERROR_METHOD_GROUP_GET_LIST:
           /* We shouldn't get errors in this range for these methods,
              return FSP_ERROR_UNKNOWN in case it happened. */
           retval = FSP_ERROR_UNKNOWN;
@@ -240,6 +254,10 @@ fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
 
         case FSP_ERROR_METHOD_PHOTOSET_ADD_PHOTO:
           retval = photoset_add_photo_translations[code];
+          break;
+
+        case FSP_ERROR_METHOD_GROUP_ADD_PHOTO:
+          retval = group_add_photo_translations[code];
           break;
 
         default:
