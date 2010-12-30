@@ -43,6 +43,9 @@ struct _FrogrMainViewModelPrivate
   GSList *albums_list;
   guint n_albums;
 
+  GSList *groups_list;
+  guint n_groups;
+
   gchar* account_description;
 };
 
@@ -66,6 +69,13 @@ _frogr_main_view_model_dispose (GObject* object)
       g_slist_foreach (priv->albums_list, (GFunc)g_object_unref, NULL);
       g_slist_free (priv->albums_list);
       priv->albums_list = NULL;
+    }
+
+  if (priv->groups_list)
+    {
+      g_slist_foreach (priv->groups_list, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->groups_list);
+      priv->groups_list = NULL;
     }
 
   G_OBJECT_CLASS (frogr_main_view_model_parent_class)->dispose (object);
@@ -100,6 +110,9 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
 
   priv->albums_list = NULL;
   priv->n_albums = 0;
+
+  priv->groups_list = NULL;
+  priv->n_groups = 0;
 
   priv->account_description = NULL;
 }
@@ -258,6 +271,87 @@ frogr_main_view_model_set_albums (FrogrMainViewModel *self,
 
   priv->albums_list = albums_list;
   priv->n_albums = g_slist_length (albums_list);
+}
+
+void
+frogr_main_view_model_add_group (FrogrMainViewModel *self,
+                                 FrogrGroup *group)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_GROUP (group));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  g_object_ref (group);
+  priv->groups_list = g_slist_append (priv->groups_list, group);
+  priv->n_groups++;
+}
+
+void
+frogr_main_view_model_remove_group (FrogrMainViewModel *self,
+                                    FrogrGroup *group)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  priv->groups_list = g_slist_remove (priv->groups_list, group);
+  priv->n_groups--;
+  g_object_unref (group);
+}
+
+void
+frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  g_slist_foreach (priv->groups_list, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv->groups_list);
+
+  priv->groups_list = NULL;
+  priv->n_groups = 0;
+}
+
+guint
+frogr_main_view_model_n_groups (FrogrMainViewModel *self)
+{
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  return priv->n_groups;
+}
+
+GSList *
+frogr_main_view_model_get_groups (FrogrMainViewModel *self)
+{
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  return priv->groups_list;
+}
+
+void
+frogr_main_view_model_set_groups (FrogrMainViewModel *self,
+                                  GSList *groups_list)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  frogr_main_view_model_remove_all_groups (self);
+
+  priv->groups_list = groups_list;
+  priv->n_groups = g_slist_length (groups_list);
 }
 
 gchar *

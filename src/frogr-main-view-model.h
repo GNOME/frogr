@@ -80,6 +80,19 @@ GSList *frogr_main_view_model_get_albums (FrogrMainViewModel *self);
 void frogr_main_view_model_set_albums (FrogrMainViewModel *self,
                                        GSList *albums_list);
 
+void frogr_main_view_model_add_group (FrogrMainViewModel *self,
+                                      FrogrGroup *fgroup);
+void frogr_main_view_model_remove_group (FrogrMainViewModel *self,
+                                         FrogrGroup *fgroup);
+void frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self);
+
+guint frogr_main_view_model_n_groups (FrogrMainViewModel *self);
+
+GSList *frogr_main_view_model_get_groups (FrogrMainViewModel *self);
+
+void frogr_main_view_model_set_groups (FrogrMainViewModel *self,
+                                       GSList *groups_list);
+
 gchar *frogr_main_view_model_get_account_description (FrogrMainViewModel *self);
 
 void frogr_main_view_model_set_account_description (FrogrMainViewModel *self,
