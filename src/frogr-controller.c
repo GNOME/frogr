@@ -1526,12 +1526,21 @@ frogr_controller_quit_app (FrogrController *self)
 }
 
 FrogrAccount *
-frogr_controller_get_account (FrogrController *self)
+frogr_controller_get_active_account (FrogrController *self)
 {
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UKNOWN);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return priv->account;
+}
+
+GSList *
+frogr_controller_get_all_accounts (FrogrController *self)
+{
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UKNOWN);
+
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  return frogr_config_get_accounts (priv->config);
 }
 
 FrogrControllerState

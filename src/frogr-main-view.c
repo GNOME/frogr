@@ -1013,7 +1013,7 @@ static gchar *_craft_account_description (FrogrMainView *mainview)
   gboolean is_pro = FALSE;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-  account = frogr_controller_get_account (priv->controller);
+  account = frogr_controller_get_active_account (priv->controller);
 
   if (!FROGR_IS_ACCOUNT (account))
     return g_strdup (_("Not connected to flickr"));
