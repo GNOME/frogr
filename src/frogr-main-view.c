@@ -65,6 +65,8 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *remove_button;
   GtkWidget *remove_menu_item;
   GtkWidget *auth_item;
+  GtkWidget *accounts_item;
+  GtkWidget *accounts_menu;
   GtkWidget *upload_button;
   GtkWidget *upload_menu_item;
   GtkWidget *edit_details_menu_item;
@@ -92,6 +94,8 @@ enum {
 /* Prototypes */
 
 static void _populate_menu_bar (FrogrMainView *self);
+static void _populate_accounts_submenu (FrogrMainView *self);
+
 static GtkWidget *_ctxt_menu_create (FrogrMainView *self);
 static void _ctxt_menu_add_tags_item_activated (GtkWidget *widget,
                                                 gpointer data);
@@ -172,9 +176,10 @@ static void _controller_state_changed (FrogrController *controller,
                                        FrogrControllerState state,
                                        gpointer data);
 
-static void _controller_account_changed (FrogrController *controller,
-                                         FrogrAccount *account,
-                                         gpointer data);
+static void _controller_active_account_changed (FrogrController *controller,
+                                                FrogrAccount *account,
+                                                gpointer data);
+
 
 static void _controller_picture_loaded (FrogrController *controller,
                                         FrogrPicture *picture,
@@ -220,12 +225,21 @@ _populate_menu_bar (FrogrMainView *self)
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
+  /* Accounts menu item and submenu */
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Accounts"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  priv->accounts_item = menu_item;
+  priv->accounts_menu = NULL;
+
+  /* Authorize menu item */
   menu_item = gtk_menu_item_new_with_mnemonic (_("Authorize _frogr"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_authorize_menu_item_activate),
                     self);
   priv->auth_item = menu_item;
+
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("Settings…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
@@ -296,6 +310,38 @@ _populate_menu_bar (FrogrMainView *self)
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_about_menu_item_activate),
                     self);
+}
+
+static void
+_populate_accounts_submenu (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  FrogrAccount *account = NULL;
+  GtkWidget *menu_item = NULL;
+  GSList *accounts = NULL;
+  GSList *item = NULL;
+  const gchar *login = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv->accounts_menu = NULL;
+
+  accounts = frogr_controller_get_all_accounts (priv->controller);
+  if (g_slist_length (accounts) > 0)
+    priv->accounts_menu = gtk_menu_new ();
+
+  for (item = accounts; item; item = g_slist_next (item))
+    {
+      account = FROGR_ACCOUNT (item->data);
+
+      login = frogr_account_get_fullname (account);
+      if (login == NULL || login[0] == '\0')
+        login = frogr_account_get_username (account);
+
+      menu_item = gtk_menu_item_new_with_label (login);
+      gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
+    }
+
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->accounts_item), priv->accounts_menu);
 }
 
 static GtkWidget *
@@ -976,9 +1022,9 @@ _controller_state_changed (FrogrController *controller,
 }
 
 static void
-_controller_account_changed (FrogrController *controller,
-                             FrogrAccount *account,
-                             gpointer data)
+_controller_active_account_changed (FrogrController *controller,
+                                    FrogrAccount *account,
+                                    gpointer data)
 {
   FrogrMainView *mainview = NULL;
   FrogrMainViewPrivate *priv = NULL;
@@ -1122,6 +1168,7 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->remove_button, FALSE);
       gtk_widget_set_sensitive (priv->remove_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->auth_item, FALSE);
+      gtk_widget_set_sensitive (priv->accounts_item, FALSE);
       gtk_widget_set_sensitive (priv->upload_button, FALSE);
       gtk_widget_set_sensitive (priv->upload_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->edit_details_menu_item, FALSE);
@@ -1138,6 +1185,7 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->remove_button, npics > 0);
       gtk_widget_set_sensitive (priv->remove_menu_item, npics > 0);
       gtk_widget_set_sensitive (priv->auth_item, TRUE);
+      gtk_widget_set_sensitive (priv->accounts_item, TRUE);
       gtk_widget_set_sensitive (priv->upload_button, npics > 0);
       gtk_widget_set_sensitive (priv->upload_menu_item, npics > 0);
       gtk_widget_set_sensitive (priv->edit_details_menu_item, npics > 0);
@@ -1287,6 +1335,9 @@ frogr_main_view_init (FrogrMainView *self)
   /* populate menubar with items and submenus */
   _populate_menu_bar (self);
 
+  /* populate accounts submenu from model */
+  _populate_accounts_submenu (self);
+
   /* create contextual menus for right-clicks */
   priv->ctxt_menu = _ctxt_menu_create (self);
 
@@ -1360,7 +1411,7 @@ frogr_main_view_init (FrogrMainView *self)
                     G_CALLBACK (_controller_state_changed), self);
 
   g_signal_connect (G_OBJECT (priv->controller), "account-changed",
-                    G_CALLBACK (_controller_account_changed), self);
+                    G_CALLBACK (_controller_active_account_changed), self);
 
   g_signal_connect (G_OBJECT (priv->controller), "picture-loaded",
                     G_CALLBACK (_controller_picture_loaded), self);
