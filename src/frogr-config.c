@@ -301,8 +301,15 @@ _load_accounts (FrogrConfig *self, const gchar *config_dir)
               if (_load_account_xml (account, xml, node))
                 frogr_config_add_account (self, account);
               else
-                g_warning ("Malformed account in '%s/%s', "
-                           "skipping it", config_dir, ACCOUNTS_FILENAME);
+                {
+                  g_warning ("Malformed account in '%s/%s', "
+                             "skipping it", config_dir, ACCOUNTS_FILENAME);
+
+                  xmlUnlinkNode (node);
+                  xmlFreeNode (node);
+
+                  xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1);
+                }
 
               g_object_unref (account);
             }
