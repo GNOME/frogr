@@ -505,7 +505,7 @@ frogr_account_equal (FrogrAccount *self, FrogrAccount *other)
   g_return_val_if_fail (FROGR_IS_ACCOUNT (other), FALSE);
 
   priv_a = FROGR_ACCOUNT_GET_PRIVATE (self);
-  priv_b = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv_b = FROGR_ACCOUNT_GET_PRIVATE (other);
 
   if (g_strcmp0 (priv_a->token, priv_b->token))
     return FALSE;
