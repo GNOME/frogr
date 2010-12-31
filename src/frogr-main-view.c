@@ -1079,6 +1079,7 @@ _controller_accounts_changed (FrogrController *controller,
   /* Re-populate the accounts submenu */
   mainview = FROGR_MAIN_VIEW (data);
   _populate_accounts_submenu (mainview);
+  _update_ui (mainview);
 
   g_debug ("%s", "Accounts list changed");
 }
@@ -1198,6 +1199,7 @@ _update_ui (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   gchar *account_description = NULL;
+  gboolean has_accounts;
   guint npics;
 
   /* Set sensitiveness */
@@ -1220,13 +1222,14 @@ _update_ui (FrogrMainView *self)
 
     case FROGR_STATE_IDLE:
       npics = frogr_main_view_model_n_pictures (priv->model);
+      has_accounts = (priv->accounts_menu != NULL);
 
       gtk_widget_set_sensitive (priv->add_button, TRUE);
       gtk_widget_set_sensitive (priv->add_menu_item, TRUE);
       gtk_widget_set_sensitive (priv->remove_button, npics > 0);
       gtk_widget_set_sensitive (priv->remove_menu_item, npics > 0);
       gtk_widget_set_sensitive (priv->auth_menu_item, TRUE);
-      gtk_widget_set_sensitive (priv->accounts_menu_item, TRUE);
+      gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts);
       gtk_widget_set_sensitive (priv->upload_button, npics > 0);
       gtk_widget_set_sensitive (priv->upload_menu_item, npics > 0);
       gtk_widget_set_sensitive (priv->edit_details_menu_item, npics > 0);
