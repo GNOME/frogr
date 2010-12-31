@@ -40,6 +40,7 @@ struct _FrogrAccountPrivate
   gchar *id;
   gchar *username;
   gchar *fullname;
+  gboolean is_active;
 
   /* Following properties won't be persistent */
   gulong remaining_bandwidth;
@@ -56,6 +57,7 @@ enum {
   PROP_ID,
   PROP_USERNAME,
   PROP_FULLNAME,
+  PROP_IS_ACTIVE,
   PROP_REMAINING_BANDWIDTH,
   PROP_MAX_BANDWIDTH,
   PROP_IS_PRO,
@@ -92,6 +94,10 @@ _frogr_account_set_property (GObject      *object,
 
     case PROP_FULLNAME:
       frogr_account_set_fullname (self, g_value_get_string (value));
+      break;
+
+    case PROP_IS_ACTIVE:
+      frogr_account_set_is_active (self, g_value_get_boolean (value));
       break;
 
     case PROP_REMAINING_BANDWIDTH:
@@ -139,6 +145,10 @@ _frogr_account_get_property (GObject    *object,
 
     case PROP_FULLNAME:
       g_value_set_string (value, priv->fullname);
+      break;
+
+    case PROP_IS_ACTIVE:
+      g_value_set_boolean (value, priv->is_active);
       break;
 
     case PROP_REMAINING_BANDWIDTH:
@@ -218,6 +228,14 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_FULLNAME, pspec);
 
+
+  pspec = g_param_spec_boolean ("is-active",
+                                "is-active",
+                                "Whether the account is active or not",
+                                FALSE,
+                                G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_IS_ACTIVE, pspec);
+
   pspec = g_param_spec_ulong ("remaining-bandwidth",
                               "remaining-bandwidth",
                               "Remaining monthly bandwidth in KB",
@@ -251,6 +269,7 @@ frogr_account_init (FrogrAccount *self)
   priv->id = NULL;
   priv->username = NULL;
   priv->fullname = NULL;
+  priv->is_active = FALSE;
   priv->remaining_bandwidth = G_MAXULONG;
   priv->max_bandwidth = G_MAXULONG;
   priv->is_pro = FALSE;
@@ -373,6 +392,24 @@ frogr_account_set_fullname (FrogrAccount *self, const gchar *fullname)
 
   g_free (priv->fullname);
   priv->fullname = g_strdup (fullname);
+}
+
+gboolean
+frogr_account_is_active (FrogrAccount *self)
+{
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->is_active;
+}
+
+void
+frogr_account_set_is_active (FrogrAccount *self, gboolean is_active)
+{
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->is_active = is_active;
 }
 
 gulong

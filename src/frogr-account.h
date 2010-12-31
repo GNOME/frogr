@@ -83,6 +83,10 @@ const gchar* frogr_account_get_fullname (FrogrAccount *self);
 void frogr_account_set_fullname (FrogrAccount *self,
                                  const gchar *fullname);
 
+gboolean frogr_account_is_active (FrogrAccount *self);
+
+void frogr_account_set_is_active (FrogrAccount *self, gboolean is_active);
+
 gulong frogr_account_get_remaining_bandwidth (FrogrAccount *self);
 
 void frogr_account_set_remaining_bandwidth (FrogrAccount *self,
