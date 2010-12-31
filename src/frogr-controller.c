@@ -86,6 +86,7 @@ enum {
   PICTURE_UPLOADED,
   PICTURES_UPLOADED,
   ACTIVE_ACCOUNT_CHANGED,
+  ACCOUNTS_CHANGED,
   N_SIGNALS
 };
 
@@ -194,7 +195,7 @@ static void
 _set_active_account (FrogrController *self, FrogrAccount *account)
 {
   FrogrControllerPrivate *priv = NULL;
-  gboolean changed = FALSE;
+  gboolean active_changed = FALSE;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -210,19 +211,19 @@ _set_active_account (FrogrController *self, FrogrAccount *account)
                                    frogr_account_get_id (priv->account));
     }
 
+  /* Check whether data actually changed */
+  active_changed = !frogr_account_equal (priv->account, account);
+
   /* Update internal pointer in the controller */
   if (priv->account)
-    {
-      /* Check whether data actually changed */
-      changed = frogr_account_equal (priv->account, account);
-      g_object_unref (priv->account);
-    }
+    g_object_unref (priv->account);
   priv->account = account;
 
   /* Update configuration system */
   frogr_config_save_accounts (priv->config);
 
-  if (changed)
+  g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
+  if (active_changed)
     g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
 }
 
@@ -1392,6 +1393,14 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__POINTER,
                   G_TYPE_NONE, 1, FROGR_TYPE_ACCOUNT);
+
+  signals[ACCOUNTS_CHANGED] =
+    g_signal_new ("accounts-changed",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
 
   g_type_class_add_private (obj_class, sizeof (FrogrControllerPrivate));
 }
