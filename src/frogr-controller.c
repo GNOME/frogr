@@ -1192,7 +1192,7 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
       /* Check for changes */
       old_remaining_bw = frogr_account_get_remaining_bandwidth (priv->account);
       old_max_bw = frogr_account_get_max_bandwidth (priv->account);
-      old_is_pro = frogr_account_get_is_pro (priv->account);
+      old_is_pro = frogr_account_is_pro (priv->account);
 
       frogr_account_set_remaining_bandwidth (priv->account,
                                              upload_status->bw_remaining_kb);

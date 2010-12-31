@@ -1023,7 +1023,7 @@ static gchar *_craft_account_description (FrogrMainView *mainview)
   if (login == NULL || login[0] == '\0')
     login = frogr_account_get_username (account);
 
-  is_pro = frogr_account_get_is_pro (account);
+  is_pro = frogr_account_is_pro (account);
 
   /* Pro users do not have any limit of quota, so it makes no sense to
      permanently show that they have 2.0 GB / 2.0 GB remaining */
