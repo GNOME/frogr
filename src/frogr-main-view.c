@@ -1016,7 +1016,7 @@ static gchar *_craft_account_description (FrogrMainView *mainview)
   account = frogr_controller_get_account (priv->controller);
 
   if (!FROGR_IS_ACCOUNT (account))
-    return NULL;
+    return g_strdup (_("Not connected to flickr"));
 
   /* Try to get the full name, or the username otherwise */
   login = frogr_account_get_fullname (account);
