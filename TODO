@@ -13,8 +13,6 @@ TODO list for the uploader:
 
  * Create albums along with the upload process, assigning pictures to them.
 
- * Allow handling multiple flickr accounts.
-
  * Fix multiphoto picture (which is horrible atm) in details window.
 
  * Retrieve list of tags (and suggest them to the user when needed).
