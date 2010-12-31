@@ -59,14 +59,20 @@ FrogrConfig* frogr_config_get_instance (void);
 
 gboolean frogr_config_save_all (FrogrConfig *self);
 
-gboolean frogr_config_save_account (FrogrConfig *self);
+gboolean frogr_config_save_accounts (FrogrConfig *self);
 
 gboolean frogr_config_save_settings (FrogrConfig *self);
 
-FrogrAccount* frogr_config_get_account (FrogrConfig *self);
-
-void frogr_config_set_account (FrogrConfig  *self,
+void frogr_config_add_account (FrogrConfig  *self,
                                FrogrAccount *faccount);
+
+GSList *frogr_config_get_accounts (FrogrConfig *self);
+
+void frogr_config_set_active_account (FrogrConfig *self, const gchar *id);
+
+FrogrAccount *frogr_config_get_active_account (FrogrConfig *self);
+
+gboolean frogr_config_remove_account (FrogrConfig *self, const gchar *id);
 
 void frogr_config_set_default_public (FrogrConfig *self, gboolean value);
 

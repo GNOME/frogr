@@ -108,7 +108,7 @@ typedef struct {
 
 static void _set_state (FrogrController *self, FrogrControllerState state);
 
-static void _set_user_account (FrogrController *self, FrogrAccount *account);
+static void _set_active_account (FrogrController *self, FrogrAccount *account);
 
 static void _enable_cancellable (FrogrController *self, gboolean enable);
 
@@ -191,13 +191,26 @@ _set_state (FrogrController *self, FrogrControllerState state)
 }
 
 static void
-_set_user_account (FrogrController *self, FrogrAccount *account)
+_set_active_account (FrogrController *self, FrogrAccount *account)
 {
   FrogrControllerPrivate *priv = NULL;
   gboolean changed = FALSE;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
+  if (account)
+    {
+      frogr_account_set_is_active (account, TRUE);
+      frogr_config_add_account (priv->config, account);
+    }
+  else
+    {
+      /* If NULL was passed, the current account is no longer valid */
+      frogr_config_remove_account (priv->config,
+                                   frogr_account_get_id (priv->account));
+    }
+
+  /* Update internal pointer in the controller */
   if (priv->account)
     {
       /* Check whether data actually changed */
@@ -207,8 +220,7 @@ _set_user_account (FrogrController *self, FrogrAccount *account)
   priv->account = account;
 
   /* Update configuration system */
-  frogr_config_set_account (priv->config, account);
-  frogr_config_save_account (priv->config);
+  frogr_config_save_accounts (priv->config);
 
   if (changed)
     g_signal_emit (self, signals[ACCOUNT_CHANGED], 0, account);
@@ -430,7 +442,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           frogr_account_set_username (account, auth_token->username);
           frogr_account_set_fullname (account, auth_token->fullname);
 
-          _set_user_account (controller, account);
+          _set_active_account (controller, account);
 
           /* Pre-fetch some data right after this */
           _fetch_account_extra_info (controller);
@@ -1130,7 +1142,7 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
           || g_strcmp0 (old_fullname, auth_token->fullname))
         {
           /* Save to disk and emit signal if basic info changed */
-          frogr_config_save_account (priv->config);
+          frogr_config_save_accounts (priv->config);
           g_signal_emit (controller, signals[ACCOUNT_CHANGED], 0, priv->account);
         }
 
@@ -1408,7 +1420,7 @@ frogr_controller_init (FrogrController *self)
   priv->adding_to_group = FALSE;
 
   /* Get account, if any */
-  priv->account = frogr_config_get_account (priv->config);
+  priv->account = frogr_config_get_active_account (priv->config);
   if (priv->account)
     {
       g_object_ref (priv->account);
@@ -1697,7 +1709,7 @@ frogr_controller_revoke_authorization (FrogrController *self)
 
   /* Ensure there's the token/account is no longer active anywhere */
   fsp_session_set_token (priv->session, NULL);
-  _set_user_account (self, NULL);
+  _set_active_account (self, NULL);
 }
 
 void

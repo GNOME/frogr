@@ -45,7 +45,8 @@ G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT);
 typedef struct _FrogrConfigPrivate FrogrConfigPrivate;
 struct _FrogrConfigPrivate
 {
-  FrogrAccount *account;
+  GSList *accounts;
+  FrogrAccount *active_account;
 
   gboolean default_public;
   gboolean default_family;
@@ -60,28 +61,30 @@ static FrogrConfig *_instance = NULL;
 
 /* Prototypes */
 
-static void _frogr_config_load_settings (FrogrConfig *self, const gchar *config_dir);
+static FrogrAccount *_find_account_by_id (FrogrConfig *self, const gchar *id);
 
-static void _frogr_config_load_visibility_xml (FrogrConfig *self,
-                                               xmlDocPtr     xml,
-                                               xmlNodePtr    rootnode);
+static void _load_settings (FrogrConfig *self, const gchar *config_dir);
 
-static void _frogr_config_load_proxy_data_xml (FrogrConfig *self,
-                                               xmlDocPtr     xml,
-                                               xmlNodePtr    rootnode);
+static void _load_visibility_xml (FrogrConfig *self,
+                                  xmlDocPtr     xml,
+                                  xmlNodePtr    rootnode);
 
-static void _frogr_config_load (FrogrConfig *self, const gchar *config_dir);
+static void _load_proxy_data_xml (FrogrConfig *self,
+                                  xmlDocPtr     xml,
+                                  xmlNodePtr    rootnode);
 
-static gboolean _frogr_config_load_account_xml (FrogrAccount *faccount,
-                                                xmlDocPtr     xml,
-                                                xmlNodePtr    rootnode);
+static void _load_accounts (FrogrConfig *self,
+                            const gchar *config_dir);
 
-static void _frogr_config_load_account (FrogrConfig *self,
-                                        const gchar *config_dir);
+static gboolean _load_account_xml (FrogrAccount *faccount,
+                                   xmlDocPtr     xml,
+                                   xmlNodePtr    rootnode);
 
-static gboolean _frogr_config_save_settings (FrogrConfig *self);
+static gboolean _save_settings (FrogrConfig *self);
 
-static gboolean _frogr_config_save_account (FrogrConfig *self);
+static gboolean _save_accounts (FrogrConfig *self);
+
+static void _save_account_xml (FrogrAccount *faccount, xmlNodePtr parent);
 
 static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
                                          const gchar *xml_name,
@@ -89,8 +92,29 @@ static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
 
 /* Private functions */
 
+static FrogrAccount *
+_find_account_by_id (FrogrConfig *self, const gchar *id)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
+  g_return_val_if_fail (id != NULL, NULL);
+
+  FrogrConfigPrivate *priv = NULL;
+  FrogrAccount *current = NULL;
+  GSList *item = NULL;
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  for (item = priv->accounts; item; item = g_slist_next (item))
+    {
+      current = FROGR_ACCOUNT (item->data);
+      if (!g_strcmp0 (id, frogr_account_get_id (current)))
+        return current;
+    }
+
+  return NULL;
+}
+
 static void
-_frogr_config_load_settings (FrogrConfig *self, const gchar *config_dir)
+_load_settings (FrogrConfig *self, const gchar *config_dir)
 {
   FrogrConfigPrivate *priv = NULL;
   gchar *xml_path = NULL;
@@ -135,10 +159,10 @@ _frogr_config_load_settings (FrogrConfig *self, const gchar *config_dir)
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "default-visibility"))
-            _frogr_config_load_visibility_xml (self, xml, node);
+            _load_visibility_xml (self, xml, node);
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "http-proxy"))
-            _frogr_config_load_proxy_data_xml (self, xml, node);
+            _load_proxy_data_xml (self, xml, node);
         }
     }
   else if (node && node->name)
@@ -158,9 +182,9 @@ _frogr_config_load_settings (FrogrConfig *self, const gchar *config_dir)
 }
 
 static void
-_frogr_config_load_visibility_xml (FrogrConfig *self,
-                                   xmlDocPtr     xml,
-                                   xmlNodePtr    rootnode)
+_load_visibility_xml (FrogrConfig *self,
+                      xmlDocPtr     xml,
+                      xmlNodePtr    rootnode)
 {
   FrogrConfigPrivate *priv = NULL;
   xmlNodePtr node;
@@ -202,9 +226,9 @@ _frogr_config_load_visibility_xml (FrogrConfig *self,
 }
 
 static void
-_frogr_config_load_proxy_data_xml (FrogrConfig *self,
-                                   xmlDocPtr     xml,
-                                   xmlNodePtr    rootnode)
+_load_proxy_data_xml (FrogrConfig *self,
+                      xmlDocPtr     xml,
+                      xmlNodePtr    rootnode)
 {
   FrogrConfigPrivate *priv = NULL;
   xmlNodePtr node;
@@ -243,7 +267,7 @@ _frogr_config_load_proxy_data_xml (FrogrConfig *self,
 }
 
 static void
-_frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
+_load_accounts (FrogrConfig *self, const gchar *config_dir)
 {
   FrogrConfigPrivate *priv = NULL;
   gchar *xml_path = NULL;
@@ -273,19 +297,14 @@ _frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
           if (!xmlStrcmp (node->name, (const xmlChar*) "account"))
             {
               FrogrAccount *account = frogr_account_new ();
-              if (_frogr_config_load_account_xml (account, xml, node))
-                {
-                  /* Everything went fine, so save the account */
-                  if (priv->account)
-                    g_object_unref (priv->account);
-                  priv->account = account;
-                }
+
+              if (_load_account_xml (account, xml, node))
+                frogr_config_add_account (self, account);
               else
-                {
-                  g_warning ("Malformed account in '%s/%s', "
-                             "skipping it", config_dir, ACCOUNTS_FILENAME);
-                  g_object_unref (account);
-                }
+                g_warning ("Malformed account in '%s/%s', "
+                           "skipping it", config_dir, ACCOUNTS_FILENAME);
+
+              g_object_unref (account);
             }
         }
     }
@@ -306,9 +325,9 @@ _frogr_config_load_account (FrogrConfig *self, const gchar *config_dir)
 }
 
 static gboolean
-_frogr_config_load_account_xml (FrogrAccount *faccount,
-                                xmlDocPtr     xml,
-                                xmlNodePtr    rootnode)
+_load_account_xml (FrogrAccount *faccount,
+                   xmlDocPtr     xml,
+                   xmlNodePtr    rootnode)
 {
   xmlNodePtr node;
   xmlChar *content = NULL;
@@ -358,6 +377,17 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
             frogr_account_set_fullname (faccount, (gchar *)content);
         }
 
+      if (!xmlStrcmp (node->name, (const xmlChar*) "active"))
+        {
+          gboolean is_active = FALSE;
+
+          content = xmlNodeGetContent (node);
+          if (content != NULL && content[0] != '\0')
+            is_active = !xmlStrcmp (content, (const xmlChar*) "1");
+
+          frogr_account_set_is_active (faccount, is_active);
+        }
+
       if (content != NULL)
         xmlFree (content);
     }
@@ -365,18 +395,8 @@ _frogr_config_load_account_xml (FrogrAccount *faccount,
   return frogr_account_is_valid (faccount);
 }
 
-static void
-_frogr_config_load (FrogrConfig *self, const gchar *config_dir)
-{
-  g_return_if_fail (FROGR_IS_CONFIG (self));
-  g_return_if_fail (config_dir != NULL);
-
-  _frogr_config_load_settings (self, config_dir);
-  _frogr_config_load_account (self, config_dir);
-}
-
 static gboolean
-_frogr_config_save_settings (FrogrConfig *self)
+_save_settings (FrogrConfig *self)
 {
   FrogrConfigPrivate *priv = NULL;
   xmlDocPtr xml = NULL;
@@ -426,12 +446,13 @@ _frogr_config_save_settings (FrogrConfig *self)
 }
 
 static gboolean
-_frogr_config_save_account (FrogrConfig *self)
+_save_accounts (FrogrConfig *self)
 {
   FrogrConfigPrivate *priv = NULL;
+  FrogrAccount *account = NULL;
+  GSList *item = NULL;
   xmlDocPtr xml = NULL;
   xmlNodePtr root = NULL;
-  xmlNodePtr node = NULL;
   gchar *xml_path = NULL;
   gboolean retval = TRUE;
 
@@ -443,16 +464,12 @@ _frogr_config_save_account (FrogrConfig *self)
   root = xmlNewNode (NULL, (const xmlChar*) "accounts");
   xmlDocSetRootElement (xml, root);
 
-  /* Handle account */
-  node = xmlNewNode (NULL, (const xmlChar*) "account");
-  if (priv->account) {
-    _xml_add_string_child (node, "token", frogr_account_get_token (priv->account));
-    _xml_add_string_child (node, "permissions", frogr_account_get_permissions (priv->account));
-    _xml_add_string_child (node, "id", frogr_account_get_id (priv->account));
-    _xml_add_string_child (node, "username", frogr_account_get_username (priv->account));
-    _xml_add_string_child (node, "fullname", frogr_account_get_fullname (priv->account));
-  }
-  xmlAddChild (root, node);
+  /* Handle accounts */
+  for (item = priv->accounts; item; item = g_slist_next (item))
+    {
+      account = FROGR_ACCOUNT (item->data);
+      _save_account_xml (account, root);
+    }
 
   xml_path = g_build_filename (g_get_user_config_dir (),
                                g_get_prgname (), ACCOUNTS_FILENAME, NULL);
@@ -467,6 +484,23 @@ _frogr_config_save_account (FrogrConfig *self)
   g_free (xml_path);
 
   return retval;
+}
+
+static void
+_save_account_xml (FrogrAccount *faccount, xmlNodePtr parent)
+{
+  xmlNodePtr node = NULL;
+
+  node = xmlNewNode (NULL, (const xmlChar*) "account");
+  if (faccount) {
+    _xml_add_string_child (node, "token", frogr_account_get_token (faccount));
+    _xml_add_string_child (node, "permissions", frogr_account_get_permissions (faccount));
+    _xml_add_string_child (node, "id", frogr_account_get_id (faccount));
+    _xml_add_string_child (node, "username", frogr_account_get_username (faccount));
+    _xml_add_string_child (node, "fullname", frogr_account_get_fullname (faccount));
+    _xml_add_string_child (node, "active", frogr_account_is_active (faccount) ? "1": "0");
+  }
+  xmlAddChild (parent, node);
 }
 
 static xmlNodePtr
@@ -508,35 +542,36 @@ frogr_config_save_all (FrogrConfig *self)
 
   gboolean retval = FALSE;
 
-  retval =_frogr_config_save_account (self);
-  retval = retval && _frogr_config_save_settings (self);
+  retval =_save_accounts (self);
+  retval = retval && _save_settings (self);
 
   return retval;
 }
 
 gboolean
-frogr_config_save_account (FrogrConfig *self)
+frogr_config_save_accounts (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-  return _frogr_config_save_account (self);
+  return _save_accounts (self);
 }
 
 gboolean
 frogr_config_save_settings (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-  return _frogr_config_save_settings (self);
+  return _save_settings (self);
 }
 
 static void
-_frogr_config_dispose (GObject *object)
+_dispose (GObject *object)
 {
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
 
-  if (priv->account)
+  if (priv->accounts)
     {
-      g_object_unref (priv->account);
-      priv->account = NULL;
+      g_slist_foreach (priv->accounts, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->accounts);
+      priv->accounts = NULL;
     }
 
   /* Call superclass */
@@ -544,7 +579,7 @@ _frogr_config_dispose (GObject *object)
 }
 
 static void
-_frogr_config_finalize (GObject *object)
+_finalize (GObject *object)
 {
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
 
@@ -555,9 +590,9 @@ _frogr_config_finalize (GObject *object)
 }
 
 static GObject*
-_frogr_config_constructor (GType type,
-                           guint n_construct_properties,
-                           GObjectConstructParam *construct_properties)
+_constructor (GType type,
+              guint n_construct_properties,
+              GObjectConstructParam *construct_properties)
 {
   GObject *object;
 
@@ -582,9 +617,9 @@ frogr_config_class_init (FrogrConfigClass *klass)
 
   g_type_class_add_private (klass, sizeof (FrogrConfigPrivate));
 
-  obj_class->constructor = _frogr_config_constructor;
-  obj_class->dispose = _frogr_config_dispose;
-  obj_class->finalize = _frogr_config_finalize;
+  obj_class->constructor = _constructor;
+  obj_class->dispose = _dispose;
+  obj_class->finalize = _finalize;
 }
 
 static void
@@ -595,7 +630,8 @@ frogr_config_init (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
 
-  priv->account = NULL;
+  priv->active_account = NULL;
+  priv->accounts = NULL;
   priv->default_public = FALSE;
   priv->default_family = FALSE;
   priv->default_friend = FALSE;
@@ -615,7 +651,8 @@ frogr_config_init (FrogrConfig *self)
     }
 
   /* Load data */
-  _frogr_config_load (self, config_dir);
+  _load_settings (self, config_dir);
+  _load_accounts (self, config_dir);
 
   g_free (config_dir);
 }
@@ -631,26 +668,97 @@ frogr_config_get_instance (void)
 
 
 void
-frogr_config_set_account (FrogrConfig  *self,
+frogr_config_add_account (FrogrConfig  *self,
                           FrogrAccount *faccount)
 {
   g_return_if_fail (FROGR_IS_CONFIG (self));
+  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  FrogrConfigPrivate *priv = NULL;
+  FrogrAccount *found_account = NULL;
+  const gchar *account_id = NULL;
 
-  if (priv->account)
-    g_object_unref (priv->account);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
-  priv->account = FROGR_IS_ACCOUNT (faccount) ? g_object_ref (faccount) : NULL;
+  /* Only add the account if not already in */
+  account_id = frogr_account_get_id (faccount);
+  found_account = _find_account_by_id (self, account_id);
+  if (found_account)
+    g_debug ("Account of ID %s already in the configuration system", account_id);
+
+  /* Remove old account if found */
+  if (found_account)
+    frogr_config_remove_account (self, account_id);
+
+  priv->accounts = g_slist_append (priv->accounts, g_object_ref (faccount));
+
+  /* Set it as active if needed */
+  if (frogr_account_is_active (faccount))
+    frogr_config_set_active_account (self, account_id);
 }
 
-FrogrAccount*
-frogr_config_get_account (FrogrConfig *self)
+GSList *
+frogr_config_get_accounts (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->account;
+  return priv->accounts;
+}
+
+void
+frogr_config_set_active_account (FrogrConfig *self, const gchar *id)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  FrogrAccount *current = NULL;
+  GSList *item = NULL;
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  for (item = priv->accounts; item; item = g_slist_next (item))
+    {
+      current = FROGR_ACCOUNT (item->data);
+
+      if (!g_strcmp0 (id, frogr_account_get_id (current)))
+        frogr_account_set_is_active (current, TRUE);
+      else
+        frogr_account_set_is_active (current, FALSE);
+    }
+
+  priv->active_account = current;
+}
+
+FrogrAccount *
+frogr_config_get_active_account (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->active_account;
+}
+
+gboolean
+frogr_config_remove_account (FrogrConfig *self, const gchar *id)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+  g_return_val_if_fail (id != NULL, FALSE);
+
+  FrogrConfigPrivate *priv = NULL;
+  FrogrAccount *found_account = NULL;
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  found_account = _find_account_by_id (self, id);
+
+  if (found_account)
+    {
+      priv->accounts = g_slist_remove (priv->accounts, found_account);
+      g_object_unref (found_account);
+
+      return TRUE;
+    }
+
+  return FALSE;
 }
 
 void
