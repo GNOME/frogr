@@ -491,13 +491,18 @@ frogr_account_is_valid (FrogrAccount *self)
 gboolean
 frogr_account_equal (FrogrAccount *self, FrogrAccount *other)
 {
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
-
   FrogrAccountPrivate *priv_a = NULL;
   FrogrAccountPrivate *priv_b = NULL;
 
+  /* This function should gracefully handle NULL values */
   if (self == other)
     return TRUE;
+  else if (self == NULL || other == NULL)
+    return FALSE;
+
+  /* If not NULL, passed parameters must be instances of FrogrAccount */
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (other), FALSE);
 
   priv_a = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv_b = FROGR_ACCOUNT_GET_PRIVATE (self);
