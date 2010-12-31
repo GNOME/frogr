@@ -64,8 +64,8 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *add_menu_item;
   GtkWidget *remove_button;
   GtkWidget *remove_menu_item;
-  GtkWidget *auth_item;
-  GtkWidget *accounts_item;
+  GtkWidget *auth_menu_item;
+  GtkWidget *accounts_menu_item;
   GtkWidget *accounts_menu;
   GtkWidget *upload_button;
   GtkWidget *upload_menu_item;
@@ -230,7 +230,7 @@ _populate_menu_bar (FrogrMainView *self)
   /* Accounts menu item and submenu */
   menu_item = gtk_menu_item_new_with_mnemonic (_("Accounts"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  priv->accounts_item = menu_item;
+  priv->accounts_menu_item = menu_item;
   priv->accounts_menu = NULL;
 
   /* Authorize menu item */
@@ -239,7 +239,7 @@ _populate_menu_bar (FrogrMainView *self)
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_authorize_menu_item_activate),
                     self);
-  priv->auth_item = menu_item;
+  priv->auth_menu_item = menu_item;
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
@@ -343,7 +343,7 @@ _populate_accounts_submenu (FrogrMainView *self)
       gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
     }
 
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->accounts_item), priv->accounts_menu);
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->accounts_menu_item), priv->accounts_menu);
   gtk_widget_show_all (priv->accounts_menu);
 }
 
@@ -1183,8 +1183,8 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->remove_button, FALSE);
       gtk_widget_set_sensitive (priv->remove_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->auth_item, FALSE);
-      gtk_widget_set_sensitive (priv->accounts_item, FALSE);
+      gtk_widget_set_sensitive (priv->auth_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->upload_button, FALSE);
       gtk_widget_set_sensitive (priv->upload_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->edit_details_menu_item, FALSE);
@@ -1200,8 +1200,8 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_menu_item, TRUE);
       gtk_widget_set_sensitive (priv->remove_button, npics > 0);
       gtk_widget_set_sensitive (priv->remove_menu_item, npics > 0);
-      gtk_widget_set_sensitive (priv->auth_item, TRUE);
-      gtk_widget_set_sensitive (priv->accounts_item, TRUE);
+      gtk_widget_set_sensitive (priv->auth_menu_item, TRUE);
+      gtk_widget_set_sensitive (priv->accounts_menu_item, TRUE);
       gtk_widget_set_sensitive (priv->upload_button, npics > 0);
       gtk_widget_set_sensitive (priv->upload_menu_item, npics > 0);
       gtk_widget_set_sensitive (priv->edit_details_menu_item, npics > 0);
