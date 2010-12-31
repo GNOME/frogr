@@ -23,6 +23,7 @@
   * Better and safer implementation for cancelling operations.
   * Allow adding pictures to group pools.
   * Be aware of changes in basic account info on startup.
+  * Added support for handling multiple accounts.
 
 0.3 (22 Dec 2010)
 
