@@ -63,8 +63,8 @@ gboolean frogr_config_save_accounts (FrogrConfig *self);
 
 gboolean frogr_config_save_settings (FrogrConfig *self);
 
-void frogr_config_add_account (FrogrConfig  *self,
-                               FrogrAccount *faccount);
+gboolean frogr_config_add_account (FrogrConfig  *self,
+                                   FrogrAccount *faccount);
 
 GSList *frogr_config_get_accounts (FrogrConfig *self);
 

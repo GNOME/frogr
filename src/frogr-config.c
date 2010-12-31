@@ -674,12 +674,12 @@ frogr_config_get_instance (void)
 }
 
 
-void
+gboolean
 frogr_config_add_account (FrogrConfig  *self,
                           FrogrAccount *faccount)
 {
-  g_return_if_fail (FROGR_IS_CONFIG (self));
-  g_return_if_fail (FROGR_IS_ACCOUNT (faccount));
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
 
   FrogrConfigPrivate *priv = NULL;
   FrogrAccount *found_account = NULL;
@@ -690,18 +690,22 @@ frogr_config_add_account (FrogrConfig  *self,
   /* Only add the account if not already in */
   account_id = frogr_account_get_id (faccount);
   found_account = _find_account_by_id (self, account_id);
-  if (found_account)
-    g_debug ("Account of ID %s already in the configuration system", account_id);
 
   /* Remove old account if found */
   if (found_account)
-    frogr_config_remove_account (self, account_id);
+    {
+      frogr_config_remove_account (self, account_id);
+      g_debug ("Account of ID %s already in the configuration system", account_id);
+    }
 
   priv->accounts = g_slist_append (priv->accounts, g_object_ref (faccount));
 
   /* Set it as active if needed */
   if (frogr_account_is_active (faccount))
     frogr_config_set_active_account (self, account_id);
+
+  /* Return TRUE if a new account was actually added */
+  return !found_account;
 }
 
 GSList *
