@@ -407,11 +407,6 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 
           frogr_controller_set_active_account (controller, account);
 
-          /* Pre-fetch some data right after this */
-          _fetch_account_extra_info (controller);
-          _fetch_albums (controller);
-          _fetch_groups (controller);
-
           g_debug ("%s", "Authorization successfully completed!");
         }
 
@@ -1503,36 +1498,51 @@ frogr_controller_set_active_account (FrogrController *self,
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = NULL;
-  gboolean active_changed = FALSE;
+  FrogrAccount *new_account = NULL;
+  gboolean accounts_changed = FALSE;
+  const gchar *token = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  if (account)
+  /* Do nothing if we're setting the same account active again*/
+  if (frogr_account_equal (priv->account, account))
+    return;
+
+  new_account = FROGR_IS_ACCOUNT (account) ? g_object_ref (account) : NULL;
+  if (new_account)
     {
-      frogr_account_set_is_active (account, TRUE);
-      frogr_config_add_account (priv->config, account);
+      frogr_account_set_is_active (new_account, TRUE);
+      accounts_changed = frogr_config_add_account (priv->config, new_account);
+
+      /* Get the token for setting it later on */
+      token = frogr_account_get_token (new_account);
     }
   else
     {
-      /* If NULL was passed, the current account is no longer valid */
-      frogr_config_remove_account (priv->config,
-                                   frogr_account_get_id (priv->account));
+      const gchar *account_id = frogr_account_get_id (priv->account);
+      accounts_changed = frogr_config_remove_account (priv->config, account_id);
     }
 
-  /* Check whether data actually changed */
-  active_changed = !frogr_account_equal (priv->account, account);
-
-  /* Update internal pointer in the controller */
+ /* Update internal pointer in the controller and token in the session */
   if (priv->account)
     g_object_unref (priv->account);
-  priv->account = account;
 
-  /* Update configuration system */
-  frogr_config_save_accounts (priv->config);
+  priv->account = new_account;
+  fsp_session_set_token (priv->session, token);
 
-  g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
-  if (active_changed)
-    g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
+  /* Prefetch info for this user */
+  if (new_account)
+    {
+      _fetch_account_info (self);
+      _fetch_account_extra_info (self);
+      _fetch_albums (self);
+      _fetch_groups (self);
+    }
+
+  /* Emit proper signals */
+  g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
+  if (accounts_changed)
+    g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
 }
 
 FrogrAccount *

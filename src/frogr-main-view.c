@@ -126,6 +126,7 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            gpointer data);
 void _on_add_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_remove_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_account_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_authorize_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_settings_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
@@ -340,11 +341,17 @@ _populate_accounts_submenu (FrogrMainView *self)
         login = frogr_account_get_username (account);
 
       menu_item = gtk_menu_item_new_with_label (login);
+      g_object_set_data (G_OBJECT (menu_item), "frogr-account", account);
+      g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_account_menu_item_activate),
+                    self);
       gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
     }
 
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->accounts_menu_item), priv->accounts_menu);
-  gtk_widget_show_all (priv->accounts_menu);
+
+  if (priv->accounts_menu)
+    gtk_widget_show_all (priv->accounts_menu);
 }
 
 static GtkWidget *
@@ -631,6 +638,24 @@ _on_remove_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
   _remove_selected_pictures (mainview);
+}
+
+void
+_on_account_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  FrogrAccount *account = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  account = g_object_get_data (G_OBJECT (widget), "frogr-account");
+
+  if (account && FROGR_IS_ACCOUNT (account))
+    {
+      frogr_controller_set_active_account (priv->controller, account);
+      g_debug ("Selected account %s (%s)",
+               frogr_account_get_id (account),
+               frogr_account_get_username (account));
+    }
 }
 
 void
