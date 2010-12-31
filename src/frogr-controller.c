@@ -85,7 +85,7 @@ enum {
   PICTURES_LOADED,
   PICTURE_UPLOADED,
   PICTURES_UPLOADED,
-  ACCOUNT_CHANGED,
+  ACTIVE_ACCOUNT_CHANGED,
   N_SIGNALS
 };
 
@@ -223,7 +223,7 @@ _set_active_account (FrogrController *self, FrogrAccount *account)
   frogr_config_save_accounts (priv->config);
 
   if (changed)
-    g_signal_emit (self, signals[ACCOUNT_CHANGED], 0, account);
+    g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
 }
 
 static void
@@ -1143,7 +1143,7 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
         {
           /* Save to disk and emit signal if basic info changed */
           frogr_config_save_accounts (priv->config);
-          g_signal_emit (controller, signals[ACCOUNT_CHANGED], 0, priv->account);
+          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
         }
 
       fsp_data_free (FSP_DATA (auth_token));
@@ -1216,7 +1216,7 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
           || old_is_pro != upload_status->pro_user)
         {
           /* Emit signal if extra info changed */
-          g_signal_emit (controller, signals[ACCOUNT_CHANGED], 0, priv->account);
+          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
         }
 
       fsp_data_free (FSP_DATA (upload_status));
@@ -1385,8 +1385,8 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
 
-  signals[ACCOUNT_CHANGED] =
-    g_signal_new ("account-changed",
+  signals[ACTIVE_ACCOUNT_CHANGED] =
+    g_signal_new ("active-account-changed",
                   G_OBJECT_CLASS_TYPE (klass),
                   G_SIGNAL_RUN_FIRST,
                   0, NULL, NULL,

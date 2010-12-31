@@ -1410,7 +1410,7 @@ frogr_main_view_init (FrogrMainView *self)
   g_signal_connect (G_OBJECT (priv->controller), "state-changed",
                     G_CALLBACK (_controller_state_changed), self);
 
-  g_signal_connect (G_OBJECT (priv->controller), "account-changed",
+  g_signal_connect (G_OBJECT (priv->controller), "active-account-changed",
                     G_CALLBACK (_controller_active_account_changed), self);
 
   g_signal_connect (G_OBJECT (priv->controller), "picture-loaded",
