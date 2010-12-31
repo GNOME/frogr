@@ -67,6 +67,9 @@ gboolean frogr_controller_run_app (FrogrController *self);
 
 gboolean frogr_controller_quit_app (FrogrController *self);
 
+void frogr_controller_set_active_account (FrogrController *self,
+                                          FrogrAccount *account);
+
 FrogrAccount *frogr_controller_get_active_account (FrogrController *self);
 
 GSList *frogr_controller_get_all_accounts (FrogrController *self);

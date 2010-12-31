@@ -109,8 +109,6 @@ typedef struct {
 
 static void _set_state (FrogrController *self, FrogrControllerState state);
 
-static void _set_active_account (FrogrController *self, FrogrAccount *account);
-
 static void _enable_cancellable (FrogrController *self, gboolean enable);
 
 static void _notify_error_to_user (FrogrController *self,
@@ -189,42 +187,6 @@ _set_state (FrogrController *self, FrogrControllerState state)
 
   priv->state = state;
   g_signal_emit (self, signals[STATE_CHANGED], 0, state);
-}
-
-static void
-_set_active_account (FrogrController *self, FrogrAccount *account)
-{
-  FrogrControllerPrivate *priv = NULL;
-  gboolean active_changed = FALSE;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  if (account)
-    {
-      frogr_account_set_is_active (account, TRUE);
-      frogr_config_add_account (priv->config, account);
-    }
-  else
-    {
-      /* If NULL was passed, the current account is no longer valid */
-      frogr_config_remove_account (priv->config,
-                                   frogr_account_get_id (priv->account));
-    }
-
-  /* Check whether data actually changed */
-  active_changed = !frogr_account_equal (priv->account, account);
-
-  /* Update internal pointer in the controller */
-  if (priv->account)
-    g_object_unref (priv->account);
-  priv->account = account;
-
-  /* Update configuration system */
-  frogr_config_save_accounts (priv->config);
-
-  g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
-  if (active_changed)
-    g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
 }
 
 static void
@@ -443,7 +405,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           frogr_account_set_username (account, auth_token->username);
           frogr_account_set_fullname (account, auth_token->fullname);
 
-          _set_active_account (controller, account);
+          frogr_controller_set_active_account (controller, account);
 
           /* Pre-fetch some data right after this */
           _fetch_account_extra_info (controller);
@@ -1534,6 +1496,45 @@ frogr_controller_quit_app (FrogrController *self)
   return FALSE;
 }
 
+void
+frogr_controller_set_active_account (FrogrController *self,
+                                     FrogrAccount *account)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = NULL;
+  gboolean active_changed = FALSE;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  if (account)
+    {
+      frogr_account_set_is_active (account, TRUE);
+      frogr_config_add_account (priv->config, account);
+    }
+  else
+    {
+      /* If NULL was passed, the current account is no longer valid */
+      frogr_config_remove_account (priv->config,
+                                   frogr_account_get_id (priv->account));
+    }
+
+  /* Check whether data actually changed */
+  active_changed = !frogr_account_equal (priv->account, account);
+
+  /* Update internal pointer in the controller */
+  if (priv->account)
+    g_object_unref (priv->account);
+  priv->account = account;
+
+  /* Update configuration system */
+  frogr_config_save_accounts (priv->config);
+
+  g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
+  if (active_changed)
+    g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
+}
+
 FrogrAccount *
 frogr_controller_get_active_account (FrogrController *self)
 {
@@ -1727,7 +1728,7 @@ frogr_controller_revoke_authorization (FrogrController *self)
 
   /* Ensure there's the token/account is no longer active anywhere */
   fsp_session_set_token (priv->session, NULL);
-  _set_active_account (self, NULL);
+  frogr_controller_set_active_account (self, NULL);
 }
 
 void
