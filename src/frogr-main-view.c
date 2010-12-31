@@ -180,6 +180,8 @@ static void _controller_active_account_changed (FrogrController *controller,
                                                 FrogrAccount *account,
                                                 gpointer data);
 
+static void _controller_accounts_changed (FrogrController *controller,
+                                          gpointer data);
 
 static void _controller_picture_loaded (FrogrController *controller,
                                         FrogrPicture *picture,
@@ -342,6 +344,7 @@ _populate_accounts_submenu (FrogrMainView *self)
     }
 
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->accounts_item), priv->accounts_menu);
+  gtk_widget_show_all (priv->accounts_menu);
 }
 
 static GtkWidget *
@@ -1043,6 +1046,19 @@ _controller_active_account_changed (FrogrController *controller,
 }
 
 static void
+_controller_accounts_changed (FrogrController *controller,
+                              gpointer data)
+{
+  FrogrMainView *mainview = NULL;
+
+  /* Re-populate the accounts submenu */
+  mainview = FROGR_MAIN_VIEW (data);
+  _populate_accounts_submenu (mainview);
+
+  g_debug ("%s", "Accounts list changed");
+}
+
+static void
 _controller_picture_loaded (FrogrController *controller,
                             FrogrPicture *picture,
                             gpointer data)
@@ -1412,6 +1428,9 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->controller), "active-account-changed",
                     G_CALLBACK (_controller_active_account_changed), self);
+
+  g_signal_connect (G_OBJECT (priv->controller), "accounts-changed",
+                    G_CALLBACK (_controller_accounts_changed), self);
 
   g_signal_connect (G_OBJECT (priv->controller), "picture-loaded",
                     G_CALLBACK (_controller_picture_loaded), self);
