@@ -902,8 +902,8 @@ _add_tags_to_pictures (FrogrMainView *self)
     return;
 
   /* Call the controller to add tags to them */
- frogr_controller_show_add_tags_dialog (priv->controller,
-                                        _get_selected_pictures (self));
+  frogr_controller_show_add_tags_dialog (priv->controller,
+                                         _get_selected_pictures (self));
 }
 
 static void
@@ -916,7 +916,7 @@ _add_pictures_to_album (FrogrMainView *self)
 
   /* Call the controller to add the pictures to albums */
   frogr_controller_show_add_to_album_dialog (priv->controller,
-                                               _get_selected_pictures (self));
+                                             _get_selected_pictures (self));
 }
 
 static void
