@@ -28,8 +28,7 @@
 #include <glib/gi18n.h>
 
 static gchar *unauth_txt =
-  N_("You have not properly authorized %s in flickr.\n"
-     "Please press the button to authorize %s "
+  N_("Please press the button to authorize %s "
      "and then come back to this screen to complete the process.");
 
 static gchar *auth_txt =
@@ -52,6 +51,8 @@ static void
 _ask_for_authorization (GtkWindow *parent)
 {
   GtkWidget *dialog = NULL;
+  gchar *title = NULL;
+
   dialog = gtk_message_dialog_new (parent,
                                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_INFO,
@@ -59,6 +60,10 @@ _ask_for_authorization (GtkWindow *parent)
                                    _(unauth_txt),
                                    PACKAGE_NAME,
                                    PACKAGE_NAME);
+
+  title = g_strdup_printf ("Authorize %s", PACKAGE);
+  gtk_window_set_title (GTK_WINDOW (dialog), title);
+  g_free (title);
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_ask_for_authorization_response_cb), NULL);
@@ -82,12 +87,17 @@ static void
 _ask_for_auth_confirmation (GtkWindow *parent)
 {
   GtkWidget *dialog = NULL;
+  gchar *title = NULL;
+
   dialog = gtk_message_dialog_new (parent,
                                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_INFO,
                                    GTK_BUTTONS_OK,
                                    _(auth_txt),
                                    PACKAGE_NAME);
+  title = g_strdup_printf ("Authorize %s", PACKAGE);
+  gtk_window_set_title (GTK_WINDOW (dialog), title);
+  g_free (title);
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_ask_for_auth_confirmation_response_cb), NULL);
