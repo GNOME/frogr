@@ -31,13 +31,8 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 
-#ifdef MAEMO
-#   define PICTURE_WIDTH 180
-#   define PICTURE_HEIGHT 180
-#else
-#   define PICTURE_WIDTH 100
-#   define PICTURE_HEIGHT 100
-#endif
+#define PICTURE_WIDTH 100
+#define PICTURE_HEIGHT 100
 
 #define FROGR_PICTURE_LOADER_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
