@@ -146,16 +146,14 @@ static void _notify_adding_to_group (FrogrController *self,
 
 static void _on_picture_loaded (FrogrController *self, FrogrPicture *picture);
 
-static void _on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader);
+static void _on_pictures_loaded (FrogrController *self);
 
 static void _on_picture_uploaded (FrogrController *self, FrogrPicture *picture);
 
 static void _on_pictures_uploaded (FrogrController *self,
-                                   FrogrPictureUploader *fpuploader,
                                    GError *error);
 
-static void _open_browser_to_edit_details (FrogrController *self,
-                                           FrogrPictureUploader *fpuploader);
+static void _open_browser_to_edit_details (FrogrController *self);
 
 static void _fetch_albums (FrogrController *self);
 
@@ -789,17 +787,11 @@ _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
 }
 
 static void
-_on_pictures_loaded (FrogrController *self, FrogrPictureLoader *fploader)
+_on_pictures_loaded (FrogrController *self)
 {
   g_return_if_fail (FROGR_IS_CONTROLLER (self));
-  g_return_if_fail (FROGR_IS_PICTURE_LOADER (fploader));
 
-  FrogrControllerPrivate *priv = NULL;
-
-  /* Update UI */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  g_object_unref (fploader);
-
+  /* Change state and emit signals */
   _set_state (self, FROGR_STATE_IDLE);
   g_signal_emit (self, signals[PICTURES_LOADED], 0);
 }
@@ -818,11 +810,9 @@ _on_picture_uploaded (FrogrController *self, FrogrPicture *picture)
 
 static void
 _on_pictures_uploaded (FrogrController *self,
-                       FrogrPictureUploader *fpuploader,
                        GError *error)
 {
   g_return_if_fail (FROGR_IS_CONTROLLER (self));
-  g_return_if_fail (FROGR_IS_PICTURE_UPLOADER (fpuploader));
 
   if (!error)
     {
@@ -831,7 +821,7 @@ _on_pictures_uploaded (FrogrController *self,
       priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
       if (frogr_config_get_open_browser_after_upload (priv->config))
-        _open_browser_to_edit_details (self, fpuploader);
+        _open_browser_to_edit_details (self);
 
       window = frogr_main_view_get_window (priv->mainview);
       frogr_util_show_info_dialog (window, _("Operation successfully completed!"));
@@ -845,16 +835,13 @@ _on_pictures_uploaded (FrogrController *self,
       g_error_free (error);
     }
 
-  /* Free memory */
-  g_object_unref (fpuploader);
-
+  /* Change state and emit signals */
   _set_state (self, FROGR_STATE_IDLE);
   g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
 }
 
 static void
-_open_browser_to_edit_details (FrogrController *self,
-                               FrogrPictureUploader *fpuploader)
+_open_browser_to_edit_details (FrogrController *self)
 {
   FrogrControllerPrivate *priv;
   FrogrMainViewModel *mainview_model = NULL;

@@ -186,7 +186,10 @@ _load_next_picture (FrogrPictureLoader *self)
 
       /* Execute final callback */
       if (priv->pictures_loaded_cb)
-        priv->pictures_loaded_cb (priv->object, self);
+        priv->pictures_loaded_cb (priv->object);
+
+      /* Process finished, self-destruct */
+      g_object_unref (self);
     }
 }
 

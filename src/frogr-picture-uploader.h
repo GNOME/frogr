@@ -47,7 +47,6 @@ typedef void (*FrogrPictureUploadedCallback) (GObject *source,
 
 /* Callback to be executed after all the pictures are uploaded */
 typedef void (*FrogrPicturesUploadedCallback) (GObject *source,
-                                               FrogrPictureUploader *self,
                                                GError *error);
 
 /* Callback to actually upload every picture */

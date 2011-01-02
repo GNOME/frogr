@@ -45,8 +45,7 @@ typedef void (*FrogrPictureLoadedCallback) (GObject *source,
                                             FrogrPicture *picture);
 
 /* Callback to be executed after all the pictures are loaded */
-typedef void (*FrogrPicturesLoadedCallback) (GObject *source,
-                                             FrogrPictureLoader *self);
+typedef void (*FrogrPicturesLoadedCallback) (GObject *source);
 
 struct _FrogrPictureLoader
 {

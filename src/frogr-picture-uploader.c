@@ -121,7 +121,10 @@ _upload_next_picture (FrogrPictureUploader *self)
 
       /* Execute final callback */
       if (priv->pictures_uploaded_cb)
-        priv->pictures_uploaded_cb (priv->object, self, priv->error);
+        priv->pictures_uploaded_cb (priv->object, priv->error);
+
+      /* Process finished, self-destruct */
+      g_object_unref (self);
     }
 }
 
