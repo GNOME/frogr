@@ -837,6 +837,9 @@ _on_pictures_uploaded (FrogrController *self,
       g_error_free (error);
     }
 
+  /* Fetch albums right after finishing */
+  _fetch_albums (self);
+
   /* Change state and emit signals */
   _set_state (self, FROGR_STATE_IDLE);
   g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
