@@ -155,6 +155,8 @@ static void _on_pictures_uploaded (FrogrController *self,
 
 static void _open_browser_to_edit_details (FrogrController *self);
 
+static void _fetch_everything (FrogrController *self);
+
 static void _fetch_albums (FrogrController *self);
 
 static void _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data);
@@ -887,6 +889,17 @@ _open_browser_to_edit_details (FrogrController *self)
 }
 
 static void
+_fetch_everything (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  _fetch_account_info (self);
+  _fetch_account_extra_info (self);
+  _fetch_albums (self);
+  _fetch_groups (self);
+}
+
+static void
 _fetch_albums (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
@@ -1436,10 +1449,7 @@ frogr_controller_run_app (FrogrController *self)
   priv->app_running = TRUE;
 
   /* Try to pre-fetch some data from the server right after launch */
-  _fetch_account_info (self);
-  _fetch_account_extra_info (self);
-  _fetch_albums (self);
-  _fetch_groups (self);
+  _fetch_everything (self);
 
   /* Start on idle state */
   _set_state (self, FROGR_STATE_IDLE);
@@ -1520,12 +1530,7 @@ frogr_controller_set_active_account (FrogrController *self,
 
   /* Prefetch info for this user */
   if (new_account)
-    {
-      _fetch_account_info (self);
-      _fetch_account_extra_info (self);
-      _fetch_albums (self);
-      _fetch_groups (self);
-    }
+    _fetch_everything (self);
 
   /* Emit proper signals */
   g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
