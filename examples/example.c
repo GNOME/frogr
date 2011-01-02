@@ -42,6 +42,7 @@ void added_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photo_get_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void check_auth_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void complete_auth_cb (GObject *object, GAsyncResult *res, gpointer unused);
@@ -74,7 +75,7 @@ upload_cb                               (GObject      *object,
       g_print ("Press ENTER to continue...\n\n");
       getchar ();
 
-      if (source_func == complete_auth_cb)
+      if (source_func == get_tags_list_cb)
         {
           /* Continue getting info about the picture */
           g_print ("Getting info for photo %s...\n", uploaded_photo_id);
@@ -357,6 +358,59 @@ photo_get_info_cb                       (GObject      *object,
 }
 
 void
+get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused)
+{
+  FspSession* session = FSP_SESSION (object);
+  GSList *tags_list = NULL;
+  GError *error = NULL;
+
+  tags_list = fsp_session_get_tags_list_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error retrieving tags: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[get_tags_list_cb]::Success! Number of tags found: %d\n",
+               g_slist_length (tags_list));
+
+      GSList *item = NULL;
+      gchar *tag = NULL;
+      for (item = tags_list; item; item = g_slist_next (item))
+        {
+          tag = (gchar *) item->data;
+          g_print ("[get_tags_list_cb]::\tTag: %s\n", tag);
+          g_free (tag);
+        }
+      g_slist_free (tags_list);
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue uploading a picture */
+      g_print ("Uploading a picture...\n");
+      fsp_session_upload_async (session,
+                                TEST_PHOTO,
+                                "title",
+                                "description",
+                                "áèïôu "
+                                "çÇ*+[]{} "
+                                "qwerty "
+                                "!·$%&/(@#~^*+ "
+                                "\"Tag With Spaces\"",
+                                FSP_VISIBILITY_NO,
+                                FSP_VISIBILITY_YES,
+                                FSP_VISIBILITY_NONE,
+                                FSP_SAFETY_LEVEL_NONE,
+                                FSP_CONTENT_TYPE_PHOTO,
+                                FSP_SEARCH_SCOPE_NONE,
+                                NULL, upload_cb, get_tags_list_cb);
+    }
+}
+
+void
 get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
 {
   FspSession* session = FSP_SESSION (object);
@@ -388,24 +442,10 @@ get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
       g_print ("Press ENTER to continue...\n\n");
       getchar ();
 
-      /* Continue uploading a picture */
-      g_print ("Uploading a picture...\n");
-      fsp_session_upload_async (session,
-                                TEST_PHOTO,
-                                "title",
-                                "description",
-                                "áèïôu "
-                                "çÇ*+[]{} "
-                                "qwerty "
-                                "!·$%&/(@#~^*+ "
-                                "\"Tag With Spaces\"",
-                                FSP_VISIBILITY_NO,
-                                FSP_VISIBILITY_YES,
-                                FSP_VISIBILITY_NONE,
-                                FSP_SAFETY_LEVEL_NONE,
-                                FSP_CONTENT_TYPE_PHOTO,
-                                FSP_SEARCH_SCOPE_NONE,
-                                NULL, upload_cb, complete_auth_cb);
+      /* Continue getting the list of tags */
+      g_print ("Getting the list of tags...\n");
+      fsp_session_get_tags_list_async (session, NULL,
+                                       get_tags_list_cb, NULL);
 
       fsp_data_free (FSP_DATA (upload_status));
     }

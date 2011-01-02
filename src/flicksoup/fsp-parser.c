@@ -93,6 +93,9 @@ _get_groups_list_parser                 (xmlDoc  *doc,
 static gpointer
 _added_to_group_parser                  (xmlDoc  *doc,
                                          GError **error);
+static gpointer
+_get_tags_list_parser                   (xmlDoc  *doc,
+                                         GError **error);
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node);
@@ -271,6 +274,8 @@ _get_error_method_from_parser           (gpointer (*body_parser)
     error_method = FSP_ERROR_METHOD_GROUP_GET_LIST;
   else if (body_parser == _added_to_group_parser)
     error_method = FSP_ERROR_METHOD_GROUP_ADD_PHOTO;
+  else if (body_parser == _get_tags_list_parser)
+    error_method = FSP_ERROR_METHOD_TAG_GET_LIST;
 
   return error_method;
 }
@@ -783,6 +788,61 @@ _added_to_group_parser                  (xmlDoc  *doc,
   return NULL;
 }
 
+static gpointer
+_get_tags_list_parser                   (xmlDoc  *doc,
+                                         GError **error)
+{
+  g_return_val_if_fail (doc != NULL, NULL);
+
+  xmlXPathContext *xpathCtx = NULL;
+  xmlXPathObject * xpathObj = NULL;
+  int numNodes = 0;
+  GSList *tagsList = NULL;
+  xmlChar *content = NULL;
+  gchar *tag = NULL;
+  GError *err = NULL;
+
+  xpathCtx = xmlXPathNewContext (doc);
+  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/who/tags/tag", xpathCtx);
+  numNodes = xpathObj->nodesetval->nodeNr;
+
+  if ((xpathObj != NULL) && (numNodes > 0))
+    {
+      /* Matching nodes found */
+      xmlNode *node = NULL;
+      int i = 0;
+
+      /* Extract per group information and add it to the list */
+      for (i = 0; i < numNodes; i++)
+        {
+          tag = NULL;
+
+          node = xpathObj->nodesetval->nodeTab[i];
+          content = xmlNodeGetContent (node);
+          if (content != NULL)
+            {
+              tag = g_strdup ((gchar *) content);
+              xmlFree (content);
+            }
+
+          if (tag != NULL)
+            tagsList = g_slist_append (tagsList, tag);
+        }
+    }
+  else
+    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                       "No tags found in the response");
+  /* Free */
+  xmlXPathFreeObject (xpathObj);
+  xmlXPathFreeContext (xpathCtx);
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  return tagsList;
+}
+
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node)
 {
@@ -1232,4 +1292,23 @@ fsp_parser_added_to_group               (FspParser  *self,
 
   /* No return value for this method */
   return GINT_TO_POINTER ((gint)(*error == NULL));
+}
+
+GSList *
+fsp_parser_get_tags_list                (FspParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error)
+{
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  GSList *tags_list = NULL;
+
+  /* Process the response */
+  tags_list = (GSList *) _process_xml_response (self, buffer, buf_size,
+                                                _get_tags_list_parser, error);
+
+  /* No return value for this method */
+  return tags_list;
 }

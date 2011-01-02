@@ -146,6 +146,11 @@ _add_to_group_soup_session_cb           (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
 
+static void
+_get_tags_list_soup_session_cb           (SoupSession *session,
+                                          SoupMessage *msg,
+                                          gpointer     data);
+
 
 /* Private API */
 
@@ -602,6 +607,20 @@ _add_to_group_soup_session_cb           (SoupSession *session,
                         data);
 }
 
+static void
+_get_tags_list_soup_session_cb           (SoupSession *session,
+                                          SoupMessage *msg,
+                                          gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  handle_soup_response (msg,
+                        (FspParserFunc) fsp_parser_get_tags_list,
+                        data);
+}
+
 
 
 /* Public API */
@@ -944,7 +963,7 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
 }
 
 void
-fsp_session_upload_async                (FspSession        *self,
+fsp_session_upload_async                (FspSession          *self,
                                          const gchar         *filepath,
                                          const gchar         *title,
                                          const gchar         *description,
@@ -1008,7 +1027,7 @@ fsp_session_upload_async                (FspSession        *self,
 }
 
 gchar *
-fsp_session_upload_finish               (FspSession  *self,
+fsp_session_upload_finish               (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
@@ -1022,7 +1041,7 @@ fsp_session_upload_finish               (FspSession  *self,
 }
 
 void
-fsp_session_get_info_async              (FspSession        *self,
+fsp_session_get_info_async              (FspSession          *self,
                                          const gchar         *photo_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
@@ -1057,7 +1076,7 @@ fsp_session_get_info_async              (FspSession        *self,
 }
 
 FspDataPhotoInfo *
-fsp_session_get_info_finish             (FspSession  *self,
+fsp_session_get_info_finish             (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
@@ -1074,7 +1093,7 @@ fsp_session_get_info_finish             (FspSession  *self,
 }
 
 void
-fsp_session_get_photosets_async         (FspSession        *self,
+fsp_session_get_photosets_async         (FspSession          *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
@@ -1106,7 +1125,7 @@ fsp_session_get_photosets_async         (FspSession        *self,
 }
 
 GSList *
-fsp_session_get_photosets_finish        (FspSession  *self,
+fsp_session_get_photosets_finish        (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
@@ -1122,7 +1141,7 @@ fsp_session_get_photosets_finish        (FspSession  *self,
 }
 
 void
-fsp_session_add_to_photoset_async       (FspSession        *self,
+fsp_session_add_to_photoset_async       (FspSession          *self,
                                          const gchar         *photo_id,
                                          const gchar         *photoset_id,
                                          GCancellable        *cancellable,
@@ -1160,7 +1179,7 @@ fsp_session_add_to_photoset_async       (FspSession        *self,
 }
 
 gboolean
-fsp_session_add_to_photoset_finish      (FspSession  *self,
+fsp_session_add_to_photoset_finish      (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
@@ -1176,7 +1195,7 @@ fsp_session_add_to_photoset_finish      (FspSession  *self,
 }
 
 void
-fsp_session_create_photoset_async       (FspSession        *self,
+fsp_session_create_photoset_async       (FspSession          *self,
                                          const gchar         *title,
                                          const gchar         *description,
                                          const gchar         *primary_photo_id,
@@ -1217,7 +1236,7 @@ fsp_session_create_photoset_async       (FspSession        *self,
 }
 
 gchar *
-fsp_session_create_photoset_finish      (FspSession  *self,
+fsp_session_create_photoset_finish      (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
@@ -1234,7 +1253,7 @@ fsp_session_create_photoset_finish      (FspSession  *self,
 }
 
 void
-fsp_session_get_groups_async            (FspSession        *self,
+fsp_session_get_groups_async            (FspSession          *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
@@ -1266,7 +1285,7 @@ fsp_session_get_groups_async            (FspSession        *self,
 }
 
 GSList *
-fsp_session_get_groups_finish           (FspSession  *self,
+fsp_session_get_groups_finish           (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
@@ -1282,7 +1301,7 @@ fsp_session_get_groups_finish           (FspSession  *self,
 }
 
 void
-fsp_session_add_to_group_async          (FspSession        *self,
+fsp_session_add_to_group_async          (FspSession          *self,
                                          const gchar         *photo_id,
                                          const gchar         *group_id,
                                          GCancellable        *cancellable,
@@ -1320,7 +1339,7 @@ fsp_session_add_to_group_async          (FspSession        *self,
 }
 
 gboolean
-fsp_session_add_to_group_finish         (FspSession  *self,
+fsp_session_add_to_group_finish         (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
@@ -1333,4 +1352,52 @@ fsp_session_add_to_group_finish         (FspSession  *self,
                                  fsp_session_add_to_group_async, error);
 
   return result ? TRUE : FALSE;
+}
+
+void
+fsp_session_get_tags_list_async         (FspSession          *self,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+
+  FspSessionPrivate *priv = self->priv;
+  SoupSession *soup_session = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  /* Build the signed url */
+  signed_query = get_signed_query (priv->secret,
+                                   "method", "flickr.tags.getListUser",
+                                   "api_key", priv->api_key,
+                                   "auth_token", priv->token,
+                                   NULL);
+
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  perform_async_request (soup_session, url,
+                         _get_tags_list_soup_session_cb, G_OBJECT (self),
+                         cancellable, callback, fsp_session_get_tags_list_async, data);
+
+  g_free (url);
+}
+
+GSList *
+fsp_session_get_tags_list_finish        (FspSession    *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  GSList *tags_list = NULL;
+
+  tags_list = (GSList*) finish_async_request (G_OBJECT (self), res,
+                                 fsp_session_get_tags_list_async, error);
+
+  return tags_list;
 }

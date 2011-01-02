@@ -128,6 +128,13 @@ fsp_parser_added_to_group               (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error);
+
+GSList *
+fsp_parser_get_tags_list                (FspParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
 G_END_DECLS
 
 #endif
