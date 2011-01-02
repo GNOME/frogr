@@ -1519,6 +1519,7 @@ frogr_controller_set_active_account (FrogrController *self,
     }
   else
     {
+      /* If NULL is passed it means 'delete current account' */
       const gchar *account_id = frogr_account_get_id (priv->account);
       accounts_changed = frogr_config_remove_account (priv->config, account_id);
     }
