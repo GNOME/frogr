@@ -661,6 +661,19 @@ frogr_config_init (FrogrConfig *self)
   _load_settings (self, config_dir);
   _load_accounts (self, config_dir);
 
+  /* Make sure at least one account is active, despite of not having
+     the <active> node present, for backwards compatibility */
+  if (g_slist_length (priv->accounts) > 0 && !priv->active_account)
+    {
+      FrogrAccount *account = NULL;
+      account = FROGR_ACCOUNT (priv->accounts->data);
+
+      frogr_account_set_is_active (account, TRUE);
+      priv->active_account = account;
+
+      _save_accounts (self);
+    }
+
   g_free (config_dir);
 }
 
