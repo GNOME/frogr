@@ -716,6 +716,22 @@ frogr_picture_set_albums (FrogrPicture *self, GSList *albums)
   priv->albums = new_list;
 }
 
+void
+frogr_picture_add_album (FrogrPicture *self, FrogrAlbum *album)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+  g_return_if_fail(FROGR_IS_ALBUM(album));
+
+  FrogrPicturePrivate *priv = NULL;
+
+  /* Do not add the same album twice */
+  if (frogr_picture_in_album (self, album))
+    return;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  priv->albums = g_slist_append (priv->albums, g_object_ref (album));
+}
+
 gboolean
 frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album)
 {

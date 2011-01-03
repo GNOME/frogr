@@ -61,6 +61,7 @@ typedef enum {
 GType frogr_controller_get_type (void) G_GNUC_CONST;
 
 FrogrController *frogr_controller_get_instance (void);
+
 FrogrMainView *frogr_controller_get_main_view (FrogrController *self);
 
 gboolean frogr_controller_run_app (FrogrController *self);
@@ -89,6 +90,9 @@ void frogr_controller_show_details_dialog (FrogrController *self,
 
 void frogr_controller_show_add_tags_dialog (FrogrController *self,
                                             GSList *pictures);
+
+void frogr_controller_show_create_new_album_dialog (FrogrController *self,
+                                                    GSList *pictures);
 
 void frogr_controller_show_add_to_album_dialog (FrogrController *self,
                                                 GSList *pictures);

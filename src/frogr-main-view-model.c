@@ -202,8 +202,10 @@ frogr_main_view_model_add_album (FrogrMainViewModel *self,
   FrogrMainViewModelPrivate *priv =
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
+  /* When adding one by one we prepend always to keep the order */
+  priv->albums_list = g_slist_prepend (priv->albums_list, album);
   g_object_ref (album);
-  priv->albums_list = g_slist_append (priv->albums_list, album);
+
   priv->n_albums++;
 }
 

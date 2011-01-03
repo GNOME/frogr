@@ -299,7 +299,7 @@ _populate_menu_bar (FrogrMainView *self)
   submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to new album…"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Create new album…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_add_to_new_album_menu_item_activate),
@@ -415,7 +415,7 @@ _ctxt_menu_create (FrogrMainView *self)
   ctxt_submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), ctxt_submenu);
 
-  item = gtk_menu_item_new_with_mnemonic (_("Add to new album…"));
+  item = gtk_menu_item_new_with_mnemonic (_("Create new album…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect(item,
                    "activate",
@@ -986,14 +986,14 @@ _add_tags_to_pictures (FrogrMainView *self)
 static void
 _add_pictures_to_new_album (FrogrMainView *self)
 {
-  /* FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self); */
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   if (!_pictures_selected_required_check (self))
     return;
 
-  /* /\* Call the controller to add the pictures to albums *\/ */
-  /* frogr_controller_show_create_new_album_dialog (priv->controller, */
-  /*                                                _get_selected_pictures (self)); */
+  /* Call the controller to add the pictures to albums */
+  frogr_controller_show_create_new_album_dialog (priv->controller,
+                                                 _get_selected_pictures (self));
 }
 
 static void

@@ -52,6 +52,8 @@ frogr_SOURCES = \
 	frogr-config.h \
 	frogr-controller.c \
 	frogr-controller.h \
+	frogr-create-new-album-dialog.c \
+	frogr-create-new-album-dialog.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
 	frogr-group.c \
