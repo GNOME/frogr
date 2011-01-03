@@ -1205,7 +1205,6 @@ fsp_session_create_photoset_async       (FspSession          *self,
 {
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (title != NULL);
-  g_return_if_fail (description != NULL);
   g_return_if_fail (primary_photo_id != NULL);
 
   FspSessionPrivate *priv = self->priv;
@@ -1219,7 +1218,7 @@ fsp_session_create_photoset_async       (FspSession          *self,
                                    "api_key", priv->api_key,
                                    "auth_token", priv->token,
                                    "title", title,
-                                   "description", description,
+                                   "description", description ? description : "",
                                    "primary_photo_id", primary_photo_id,
                                    NULL);
 
