@@ -1613,7 +1613,7 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   G_OBJECT_CLASS_TYPE (klass),
                   G_SIGNAL_RUN_FIRST,
                   0, NULL, NULL,
-                  g_cclosure_marshal_VOID__POINTER,
+                  g_cclosure_marshal_VOID__OBJECT,
                   G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
 
   signals[PICTURES_LOADED] =
@@ -1629,7 +1629,7 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   G_OBJECT_CLASS_TYPE (klass),
                   G_SIGNAL_RUN_FIRST,
                   0, NULL, NULL,
-                  g_cclosure_marshal_VOID__POINTER,
+                  g_cclosure_marshal_VOID__OBJECT,
                   G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
 
   signals[PICTURES_UPLOADED] =
@@ -1645,7 +1645,7 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   G_OBJECT_CLASS_TYPE (klass),
                   G_SIGNAL_RUN_FIRST,
                   0, NULL, NULL,
-                  g_cclosure_marshal_VOID__POINTER,
+                  g_cclosure_marshal_VOID__OBJECT,
                   G_TYPE_NONE, 1, FROGR_TYPE_ACCOUNT);
 
   signals[ACCOUNTS_CHANGED] =
