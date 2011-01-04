@@ -190,6 +190,8 @@ static void _fetch_tags (FrogrController *self);
 
 static void _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data);
 
+static gboolean _show_details_dialog_on_idle (GSList *pictures);
+
 static gboolean _show_add_tags_dialog_on_idle (GSList *pictures);
 
 static gboolean _show_create_new_album_dialog_on_idle (GSList *pictures);
@@ -1355,6 +1357,32 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 }
 
 static gboolean
+_show_details_dialog_on_idle (GSList *pictures)
+{
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+  GtkWindow *window = NULL;
+  GSList *tags_list = NULL;
+
+  controller = frogr_controller_get_instance ();
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  /* Keep the source while internally busy */
+  if (priv->fetching_tags)
+    return TRUE;
+
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  tags_list = frogr_main_view_model_get_tags_list (mainview_model);
+
+  /* Albums already pre-fetched: show the dialog */
+  window = frogr_main_view_get_window (priv->mainview);
+  frogr_details_dialog_show (window, pictures, tags_list);
+
+  return FALSE;
+}
+
+static gboolean
 _show_add_tags_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
@@ -1828,8 +1856,7 @@ frogr_controller_show_auth_dialog (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrController *controller = FROGR_CONTROLLER (self);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   GtkWindow *window = frogr_main_view_get_window (priv->mainview);
 
   /* Run the auth dialog */
@@ -1841,8 +1868,7 @@ frogr_controller_show_settings_dialog (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrController *controller = FROGR_CONTROLLER (self);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   GtkWindow *window = frogr_main_view_get_window (priv->mainview);
 
   /* Run the auth dialog */
@@ -1855,12 +1881,20 @@ frogr_controller_show_details_dialog (FrogrController *self,
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrController *controller = FROGR_CONTROLLER (self);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
+  FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+  GSList *tags_list = NULL;
 
-  /* Run the details dialog */
-  frogr_details_dialog_show (window, pictures);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  tags_list = frogr_main_view_model_get_tags_list (mainview_model);
+
+  /* Fetch the tags list first if needed */
+  if (g_slist_length (tags_list) == 0)
+    _fetch_tags (self);
+
+  /* Show the dialog when possible */
+  g_idle_add ((GSourceFunc) _show_details_dialog_on_idle, pictures);
 }
 
 void
