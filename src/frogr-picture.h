@@ -84,6 +84,7 @@ const GSList *frogr_picture_get_tags_list (FrogrPicture *self);
 const gchar *frogr_picture_get_tags (FrogrPicture *self);
 void frogr_picture_set_tags (FrogrPicture *self, const gchar *tags_string);
 void frogr_picture_add_tags (FrogrPicture *self, const gchar *tags_string);
+void frogr_picture_remove_tags (FrogrPicture *self);
 
 gboolean frogr_picture_is_public (FrogrPicture *self);
 void frogr_picture_set_public (FrogrPicture *self,

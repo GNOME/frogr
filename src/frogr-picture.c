@@ -584,6 +584,14 @@ frogr_picture_add_tags (FrogrPicture *self, const gchar *tags_string)
   _add_tags_to_tags_list (self, tags_string);
 }
 
+void
+frogr_picture_remove_tags (FrogrPicture *self)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  frogr_picture_set_tags (self, NULL);
+}
+
 gboolean
 frogr_picture_is_public (FrogrPicture *self)
 {
