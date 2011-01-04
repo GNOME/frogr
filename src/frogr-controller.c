@@ -1458,10 +1458,7 @@ _show_create_new_album_dialog_on_idle (GSList *pictures)
   albums = frogr_main_view_model_get_albums (mainview_model);
 
   window = frogr_main_view_get_window (priv->mainview);
-  if (frogr_main_view_model_n_albums (mainview_model) > 0)
-    frogr_create_new_album_dialog_show (window, pictures, albums);
-  else
-    frogr_util_show_info_dialog (window, _("No albums found"));
+  frogr_create_new_album_dialog_show (window, pictures, albums);
 
   return FALSE;
 }
