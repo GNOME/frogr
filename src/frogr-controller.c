@@ -74,6 +74,7 @@ struct _FrogrControllerPrivate
   gboolean fetching_account_extra_info;
   gboolean fetching_albums;
   gboolean fetching_groups;
+  gboolean fetching_tags;
   gboolean adding_to_album;
   gboolean adding_to_group;
 };
@@ -184,6 +185,12 @@ static void _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer
 static void _fetch_account_extra_info (FrogrController *self);
 
 static void _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _fetch_tags (FrogrController *self);
+
+static void _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static gboolean _show_add_tags_dialog_on_idle (GSList *pictures);
 
 static gboolean _show_create_new_album_dialog_on_idle (GSList *pictures);
 
@@ -938,8 +945,9 @@ _on_pictures_uploaded (FrogrController *self,
       window = frogr_main_view_get_window (priv->mainview);
       frogr_util_show_info_dialog (window, _("Operation successfully completed!"));
 
-      /* Fetch albums right after finishing */
+      /* Fetch albums and tags right after finishing */
       _fetch_albums (self);
+      _fetch_tags (self);
 
       g_debug ("%s", "Success uploading pictures!");
     }
@@ -1010,6 +1018,7 @@ _fetch_everything (FrogrController *self)
   _fetch_account_extra_info (self);
   _fetch_albums (self);
   _fetch_groups (self);
+  _fetch_tags (self);
 }
 
 static void
@@ -1297,6 +1306,80 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
   priv->fetching_account_extra_info = FALSE;
 }
 
+static void
+_fetch_tags (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  FrogrControllerPrivate *priv = NULL;
+
+  if (!frogr_controller_is_authorized (self))
+    return;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->fetching_tags = TRUE;
+
+  fsp_session_get_tags_list_async (priv->session, NULL, _fetch_tags_cb, self);
+}
+
+static void
+_fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspSession *session = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+  GSList *tags_list = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  controller = FROGR_CONTROLLER (data);
+
+  tags_list = fsp_session_get_tags_list_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_debug ("Fetching list of tags: %s", error->message);
+
+      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
+        frogr_controller_revoke_authorization (controller);
+
+      g_error_free (error);
+    }
+
+  /* Update main view's model */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  frogr_main_view_model_set_tags_list (mainview_model, tags_list);
+
+  priv->fetching_tags = FALSE;
+}
+
+static gboolean
+_show_add_tags_dialog_on_idle (GSList *pictures)
+{
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+  GtkWindow *window = NULL;
+  GSList *tags_list = NULL;
+
+  controller = frogr_controller_get_instance ();
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  /* Keep the source while internally busy */
+  if (priv->fetching_tags)
+    return TRUE;
+
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  tags_list = frogr_main_view_model_get_tags_list (mainview_model);
+
+  /* Albums already pre-fetched: show the dialog */
+  window = frogr_main_view_get_window (priv->mainview);
+  frogr_add_tags_dialog_show (window, pictures, tags_list);
+
+  return FALSE;
+}
+
 static gboolean
 _show_create_new_album_dialog_on_idle (GSList *pictures)
 {
@@ -1521,6 +1604,7 @@ frogr_controller_init (FrogrController *self)
   priv->fetching_albums = FALSE;
   priv->fetching_groups = FALSE;
   priv->fetching_account_extra_info = FALSE;
+  priv->fetching_tags = FALSE;
   priv->adding_to_album = FALSE;
   priv->adding_to_group = FALSE;
 
@@ -1785,12 +1869,20 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrController *controller = FROGR_CONTROLLER (self);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
+  FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+  GSList *tags_list = NULL;
 
-  /* Run the 'add tags' dialog */
-  frogr_add_tags_dialog_show (window, pictures);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  tags_list = frogr_main_view_model_get_tags_list (mainview_model);
+
+  /* Fetch the tags list first if needed */
+  if (g_slist_length (tags_list) == 0)
+    _fetch_tags (self);
+
+  /* Show the dialog when possible */
+  g_idle_add ((GSourceFunc) _show_add_tags_dialog_on_idle, pictures);
 }
 
 void

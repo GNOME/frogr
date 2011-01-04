@@ -57,10 +57,10 @@ enum {
 
 /* Prototypes */
 
-static void _populate_treemodel_with_tags (FrogrAddTagsDialog *self);
+static void _populate_treemodel_with_tags (FrogrAddTagsDialog *self, GSList *tags);
 
 static gboolean _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
-                           GtkTreeIter *iter, gpointer data);
+                                           GtkTreeIter *iter, gpointer data);
 
 static gboolean _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
                                                GtkTreeIter *iter, gpointer data);
@@ -70,23 +70,22 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 /* Private API */
 
 static void
-_populate_treemodel_with_tags (FrogrAddTagsDialog *self)
+_populate_treemodel_with_tags (FrogrAddTagsDialog *self, GSList *tags)
 {
   FrogrAddTagsDialogPrivate *priv = NULL;
+  GSList *item = NULL;
+  gchar *tag = NULL;
   GtkTreeIter iter;
 
   priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
 
-  /* TODO: fill with actual data */
-  gtk_list_store_append (GTK_LIST_STORE (priv->treemodel), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
-                      0, "Tag 1", -1);
-  gtk_list_store_append (GTK_LIST_STORE (priv->treemodel), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
-                      0, "Marca", -1);
-  gtk_list_store_append (GTK_LIST_STORE (priv->treemodel), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
-                      0, "Etiqueta", -1);
+  for (item = tags; item; item = g_slist_next (item))
+    {
+      tag = (gchar *) item->data;
+      gtk_list_store_append (GTK_LIST_STORE (priv->treemodel), &iter);
+      gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
+                          0, tag, -1);
+    }
 }
 
 static gboolean
@@ -375,7 +374,7 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 /* Public API */
 
 void
-frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures)
+frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures, GSList *tags)
 {
   FrogrAddTagsDialog *self = NULL;
   GObject *new = NULL;
@@ -390,7 +389,7 @@ frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures)
                       NULL);
 
   self = FROGR_ADD_TAGS_DIALOG (new);
-  _populate_treemodel_with_tags (self);
+  _populate_treemodel_with_tags (self, tags);
 
   gtk_widget_show_all (GTK_WIDGET (self));
 }
