@@ -1438,6 +1438,7 @@ _show_create_new_album_dialog_on_idle (GSList *pictures)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
+  GtkWindow *window = NULL;
   GSList *albums = NULL;
 
   controller = frogr_controller_get_instance ();
@@ -1456,10 +1457,11 @@ _show_create_new_album_dialog_on_idle (GSList *pictures)
   mainview_model = frogr_main_view_get_model (priv->mainview);
   albums = frogr_main_view_model_get_albums (mainview_model);
 
-  /* Albums already pre-fetched: show the dialog */
-  GtkWindow *window = NULL;
   window = frogr_main_view_get_window (priv->mainview);
-  frogr_create_new_album_dialog_show (window, pictures, albums);
+  if (frogr_main_view_model_n_albums (mainview_model) > 0)
+    frogr_create_new_album_dialog_show (window, pictures, albums);
+  else
+    frogr_util_show_info_dialog (window, _("No albums found"));
 
   return FALSE;
 }
@@ -1471,6 +1473,7 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
+  GtkWindow *window = NULL;
   GSList *albums = NULL;
 
   controller = frogr_controller_get_instance ();
@@ -1489,10 +1492,11 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
   mainview_model = frogr_main_view_get_model (priv->mainview);
   albums = frogr_main_view_model_get_albums (mainview_model);
 
-  /* Albums already pre-fetched: show the dialog */
-  GtkWindow *window = NULL;
   window = frogr_main_view_get_window (priv->mainview);
-  frogr_add_to_album_dialog_show (window, pictures, albums);
+  if (frogr_main_view_model_n_albums (mainview_model) > 0)
+    frogr_add_to_album_dialog_show (window, pictures, albums);
+  else
+    frogr_util_show_info_dialog (window, _("No albums found"));
 
   return FALSE;
 }
@@ -1504,6 +1508,7 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
+  GtkWindow *window = NULL;
   GSList *groups = NULL;
 
   controller = frogr_controller_get_instance ();
@@ -1522,10 +1527,11 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   mainview_model = frogr_main_view_get_model (priv->mainview);
   groups = frogr_main_view_model_get_groups (mainview_model);
 
-  /* Albums already pre-fetched: show the dialog */
-  GtkWindow *window = NULL;
   window = frogr_main_view_get_window (priv->mainview);
-  frogr_add_to_group_dialog_show (window, pictures, groups);
+  if (frogr_main_view_model_n_groups (mainview_model) > 0)
+    frogr_add_to_group_dialog_show (window, pictures, groups);
+  else
+    frogr_util_show_info_dialog (window, _("No groups found"));
 
   return FALSE;
 }
