@@ -25,6 +25,7 @@
   * Be aware of changes in basic account info on startup.
   * Added support for handling multiple accounts.
   * Added support for creating new albums right from frogr.
+  * Retrieve list of tags and use it in entry completions.
 
 0.3 (22 Dec 2010)
 
