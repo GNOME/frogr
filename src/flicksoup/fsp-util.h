@@ -46,20 +46,12 @@ typedef struct
 } AsyncRequestData;
 
 gchar *
-get_api_signature                       (const gchar *shared_secret,
-                                         const gchar *first_param,
-                                         ... );
-gchar *
 get_api_signature_from_hash_table       (const gchar *shared_secret,
                                          GHashTable  *params_table);
 gchar *
 get_signed_query                        (const gchar *shared_secret,
                                          const gchar *first_param,
                                          ... );
-
-gchar *
-get_signed_query_from_hash_table        (const gchar *shared_secret,
-                                         GHashTable  *params_table);
 
 void
 perform_async_request                   (SoupSession         *soup_session,

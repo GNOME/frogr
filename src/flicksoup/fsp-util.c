@@ -192,29 +192,6 @@ _check_async_errors_on_finish           (GObject       *object,
 }
 
 gchar *
-get_api_signature                      (const gchar *shared_secret,
-                                        const gchar *first_param,
-                                        ... )
-{
-  g_return_val_if_fail (shared_secret != NULL, NULL);
-
-  va_list args;
-  GHashTable *table = NULL;
-  gchar *api_sig = NULL;
-
-  va_start (args, first_param);
-
-  /* Get the hash table for the params and the API signature from it */
-  table = _get_params_table_from_valist (first_param, args);
-  api_sig = get_api_signature_from_hash_table (shared_secret, table);
-
-  g_hash_table_unref (table);
-  va_end (args);
-
-  return api_sig;
-}
-
-gchar *
 get_api_signature_from_hash_table       (const gchar *shared_secret,
                                          GHashTable  *params_table)
 {
@@ -309,28 +286,6 @@ get_signed_query                        (const gchar *shared_secret,
   g_free (api_sig);
 
   va_end (args);
-
-  return retval;
-}
-
-gchar *
-get_signed_query_from_hash_table        (const gchar *shared_secret,
-                                         GHashTable  *params_table)
-{
-  g_return_val_if_fail (shared_secret != NULL, NULL);
-  g_return_val_if_fail (params_table != NULL, NULL);
-
-  gchar *api_sig = NULL;
-  gchar *retval = NULL;
-
-  /* Get api signature */
-  api_sig = get_api_signature_from_hash_table (shared_secret, params_table);
-
-  /* Get the signed URL with the needed params */
-  if ((params_table != NULL) && (api_sig != NULL))
-    retval = _get_signed_query_with_params (api_sig, params_table);
-
-  g_free (api_sig);
 
   return retval;
 }
