@@ -109,6 +109,7 @@ gboolean frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album);
 
 GSList *frogr_picture_get_groups (FrogrPicture *self);
 void frogr_picture_set_groups (FrogrPicture *self, GSList *groups);
+void frogr_picture_remove_groups (FrogrPicture *self);
 gboolean frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group);
 
 G_END_DECLS

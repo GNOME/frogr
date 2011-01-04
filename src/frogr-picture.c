@@ -791,6 +791,14 @@ frogr_picture_set_groups (FrogrPicture *self, GSList *groups)
   priv->groups = new_list;
 }
 
+void
+frogr_picture_remove_groups (FrogrPicture *self)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  frogr_picture_set_groups (self, NULL);
+}
+
 gboolean
 frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group)
 {
