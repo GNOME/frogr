@@ -80,8 +80,9 @@ struct _FrogrControllerPrivate
   gboolean adding_to_album;
   gboolean adding_to_group;
 
-  /* We use this one to know when an empty list of tags means that the
+  /* We use these to know when an empty list of tags means that the
      user has no tags at all, as fetching already happened before */
+  gboolean albums_fetched;
   gboolean tags_fetched;
 };
 
@@ -1059,6 +1060,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   photosets_list = fsp_session_get_photosets_finish (session, res, &error);
   if (error != NULL)
@@ -1094,10 +1096,10 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   /* Update main view's model */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_albums (mainview_model, albums_list);
 
+  priv->albums_fetched = TRUE;
   priv->fetching_albums = FALSE;
 }
 
@@ -1342,6 +1344,7 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   tags_list = fsp_session_get_tags_list_finish (session, res, &error);
   if (error != NULL)
@@ -1355,14 +1358,11 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   /* Update main view's model */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_tags_list (mainview_model, tags_list);
 
-  priv->fetching_tags = FALSE;
-
-  /* This will be TRUE after the first fetch for the same user */
   priv->tags_fetched = TRUE;
+  priv->fetching_tags = FALSE;
 }
 
 static gboolean
@@ -1682,6 +1682,7 @@ frogr_controller_init (FrogrController *self)
   priv->fetching_tags = FALSE;
   priv->adding_to_album = FALSE;
   priv->adding_to_group = FALSE;
+  priv->albums_fetched = FALSE;
   priv->tags_fetched = FALSE;
 
   /* Get account, if any */
@@ -1830,6 +1831,7 @@ frogr_controller_set_active_account (FrogrController *self,
   fsp_session_set_token (priv->session, token);
 
   /* Prefetch info for this user */
+  priv->albums_fetched = FALSE;
   priv->tags_fetched = FALSE;
   if (new_account)
     _fetch_everything (self);
@@ -1996,7 +1998,7 @@ frogr_controller_show_create_new_album_dialog (FrogrController *self,
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
   /* Fetch the albums first if needed */
-  if (frogr_main_view_model_n_albums (mainview_model) == 0)
+  if (frogr_main_view_model_n_albums (mainview_model) == 0 && !priv->albums_fetched)
     _fetch_albums (self);
 
   /* Show the dialog when possible */
@@ -2016,7 +2018,7 @@ frogr_controller_show_add_to_album_dialog (FrogrController *self,
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
   /* Fetch the albums first if needed */
-  if (frogr_main_view_model_n_albums (mainview_model) == 0)
+  if (frogr_main_view_model_n_albums (mainview_model) == 0 && !priv->albums_fetched)
     _fetch_albums (self);
 
   /* Show the dialog when possible */
