@@ -820,7 +820,11 @@ _get_selected_pictures (FrogrMainView *self)
       /* Add the picture to the list */
       g_object_ref (picture);
       pictures = g_slist_prepend (pictures, picture);
+
+      gtk_tree_path_free (path);
     }
+
+  g_list_free (selected_pictures);
 
   return pictures;
 }
@@ -829,12 +833,18 @@ static gint
 _n_selected_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GList *selected_pictures;
+  GList *selected_pictures = NULL;
+  gint len = 0;
 
   selected_pictures =
     gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
 
-  return g_list_length (selected_pictures);
+  len = g_list_length (selected_pictures);
+
+  g_list_foreach (selected_pictures, (GFunc)gtk_tree_path_free, NULL);
+  g_list_free (selected_pictures);
+
+  return len;
 }
 
 static void

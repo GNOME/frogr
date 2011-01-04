@@ -226,6 +226,9 @@ _tree_iter_compare_n_elements_func (GtkTreeModel *model,
   a_value = g_ascii_strtoll (a_str, NULL, 10);
   b_value = g_ascii_strtoll (b_str, NULL, 10);
 
+  g_free (a_str);
+  g_free (b_str);
+
   return (a_value - b_value);
 }
 
