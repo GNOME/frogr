@@ -1590,6 +1590,18 @@ frogr_main_view_set_status_text (FrogrMainView *self,
 }
 
 void
+frogr_main_view_set_progress_text (FrogrMainView *self,
+                                   const gchar *text)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  gtk_label_set_text (GTK_LABEL (priv->progress_label), text);
+
+  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
+}
+
+void
 frogr_main_view_set_progress_status (FrogrMainView *self,
                                      double fraction,
                                      const gchar *text)
@@ -1610,17 +1622,29 @@ frogr_main_view_set_progress_status (FrogrMainView *self,
 }
 
 void
-frogr_main_view_set_progress_text (FrogrMainView *self,
-                                   const gchar *text)
+frogr_main_view_pulse_progress (FrogrMainView *self)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gtk_label_set_text (GTK_LABEL (priv->progress_label), text);
+
+  /* Show the widget and set fraction */
+  gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv->progress_bar));
+
+  /* Empty text for this */
+  gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), NULL);
 
   gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
+void
+frogr_main_view_hide_progress (FrogrMainView *self)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  gtk_widget_hide (GTK_WIDGET (priv->progress_dialog));
+}
 
 FrogrMainViewModel *
 frogr_main_view_get_model (FrogrMainView *self)

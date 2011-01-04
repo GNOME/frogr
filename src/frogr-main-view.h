@@ -57,11 +57,15 @@ GtkWindow *frogr_main_view_get_window (FrogrMainView *self);
 
 void frogr_main_view_set_status_text (FrogrMainView *self, const gchar *text);
 
+void frogr_main_view_set_progress_text (FrogrMainView *self, const gchar *text);
+
 void frogr_main_view_set_progress_status (FrogrMainView *self,
                                           double fraction,
                                           const gchar *text);
 
-void frogr_main_view_set_progress_text (FrogrMainView *self, const gchar *text);
+void frogr_main_view_pulse_progress (FrogrMainView *self);
+
+void frogr_main_view_hide_progress (FrogrMainView *self);
 
 FrogrMainViewModel *frogr_main_view_get_model (FrogrMainView *self);
 

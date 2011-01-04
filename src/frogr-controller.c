@@ -1370,16 +1370,23 @@ _show_details_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GtkWindow *window = NULL;
   GSList *tags_list = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_tags)
-    return TRUE;
+    {
+      frogr_main_view_set_progress_text (mainview, _("Retrieving list of tags…"));
+      frogr_main_view_pulse_progress (mainview);
+      return TRUE;
+    }
+  frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
   tags_list = frogr_main_view_model_get_tags_list (mainview_model);
@@ -1396,16 +1403,23 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GtkWindow *window = NULL;
   GSList *tags_list = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_tags)
-    return TRUE;
+    {
+      frogr_main_view_set_progress_text (mainview, _("Retrieving list of tags…"));
+      frogr_main_view_pulse_progress (mainview);
+      return TRUE;
+    }
+  frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
   tags_list = frogr_main_view_model_get_tags_list (mainview_model);
@@ -1422,15 +1436,22 @@ _show_create_new_album_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GSList *albums = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_albums)
-    return TRUE;
+    {
+      frogr_main_view_set_progress_text (mainview, _("Retrieving list of albums…"));
+      frogr_main_view_pulse_progress (mainview);
+      return TRUE;
+    }
+  frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
   albums = frogr_main_view_model_get_albums (mainview_model);
@@ -1448,15 +1469,22 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GSList *albums = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_albums)
-    return TRUE;
+    {
+      frogr_main_view_set_progress_text (mainview, _("Retrieving list of albums…"));
+      frogr_main_view_pulse_progress (mainview);
+      return TRUE;
+    }
+  frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
   albums = frogr_main_view_model_get_albums (mainview_model);
@@ -1474,15 +1502,22 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GSList *groups = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_groups)
-    return TRUE;
+    {
+      frogr_main_view_set_progress_text (mainview, _("Retrieving list of groups…"));
+      frogr_main_view_pulse_progress (mainview);
+      return TRUE;
+    }
+  frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
   groups = frogr_main_view_model_get_groups (mainview_model);
