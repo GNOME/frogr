@@ -427,6 +427,17 @@ frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self)
   priv->n_tags = 0;
 }
 
+guint
+frogr_main_view_model_n_tags (FrogrMainViewModel *self)
+{
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  return priv->n_tags;
+}
+
 gchar *
 frogr_main_view_model_get_account_description (FrogrMainViewModel *self)
 {

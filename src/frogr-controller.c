@@ -1890,7 +1890,7 @@ frogr_controller_show_details_dialog (FrogrController *self,
   tags_list = frogr_main_view_model_get_tags_list (mainview_model);
 
   /* Fetch the tags list first if needed */
-  if (g_slist_length (tags_list) == 0)
+  if (frogr_main_view_model_n_tags (mainview_model) == 0)
     _fetch_tags (self);
 
   /* Show the dialog when possible */
@@ -1905,14 +1905,12 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
 
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  GSList *tags_list = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  tags_list = frogr_main_view_model_get_tags_list (mainview_model);
 
   /* Fetch the tags list first if needed */
-  if (g_slist_length (tags_list) == 0)
+  if (frogr_main_view_model_n_tags (mainview_model) == 0)
     _fetch_tags (self);
 
   /* Show the dialog when possible */
@@ -1927,14 +1925,12 @@ frogr_controller_show_create_new_album_dialog (FrogrController *self,
 
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  GSList *albums = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  albums = frogr_main_view_model_get_albums (mainview_model);
 
   /* Fetch the albums first if needed */
-  if (g_slist_length (albums) == 0)
+  if (frogr_main_view_model_n_albums (mainview_model) == 0)
     _fetch_albums (self);
 
   /* Show the dialog when possible */
@@ -1949,14 +1945,12 @@ frogr_controller_show_add_to_album_dialog (FrogrController *self,
 
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  GSList *albums = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  albums = frogr_main_view_model_get_albums (mainview_model);
 
   /* Fetch the albums first if needed */
-  if (g_slist_length (albums) == 0)
+  if (frogr_main_view_model_n_albums (mainview_model) == 0)
     _fetch_albums (self);
 
   /* Show the dialog when possible */
@@ -1971,14 +1965,12 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
 
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  GSList *groups = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  groups = frogr_main_view_model_get_groups (mainview_model);
 
   /* Fetch the groups first if needed */
-  if (g_slist_length (groups) == 0)
+  if (frogr_main_view_model_n_groups (mainview_model) == 0)
     _fetch_groups (self);
 
   /* Show the dialog when possible */
