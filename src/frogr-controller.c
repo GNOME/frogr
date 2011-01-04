@@ -420,6 +420,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           frogr_account_set_fullname (account, auth_token->fullname);
 
           frogr_controller_set_active_account (controller, account);
+          frogr_config_save_accounts (priv->config);
 
           g_debug ("%s", "Authorization successfully completed!");
         }
