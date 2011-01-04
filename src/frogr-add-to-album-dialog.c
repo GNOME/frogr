@@ -70,8 +70,6 @@ enum {
 
 /* Prototypes */
 
-static void _on_dialog_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data);
-
 static GtkWidget *_create_tree_view (FrogrAddToAlbumDialog *self);
 
 static void _column_clicked_cb (GtkTreeViewColumn *col, gpointer data);
@@ -100,16 +98,6 @@ static void _update_pictures (FrogrAddToAlbumDialog *self);
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 /* Private API */
-
-static void
-_on_dialog_map_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
-{
-  FrogrAddToAlbumDialog *self = NULL;
-  self = FROGR_ADD_TO_ALBUM_DIALOG (widget);
-
-  _populate_treemodel_with_albums (self);
-  _fill_dialog_with_data (self);
-}
 
 static GtkWidget *
 _create_tree_view (FrogrAddToAlbumDialog *self)
@@ -563,8 +551,8 @@ frogr_add_to_album_dialog_init (FrogrAddToAlbumDialog *self)
                                    _tree_iter_compare_n_elements_func,
                                    self, NULL);
 
-  g_signal_connect (G_OBJECT (self), "map-event",
-                    G_CALLBACK (_on_dialog_map_event), NULL);
+  g_signal_connect (G_OBJECT (self), "response",
+                    G_CALLBACK (_dialog_response_cb), NULL);
 
   gtk_window_set_default_size (GTK_WINDOW (self),
                                MINIMUM_WINDOW_WIDTH,
@@ -579,20 +567,23 @@ frogr_add_to_album_dialog_init (FrogrAddToAlbumDialog *self)
 void
 frogr_add_to_album_dialog_show (GtkWindow *parent, GSList *pictures, GSList *albums)
 {
-  GtkWidget *dialog = NULL;
+  FrogrAddToAlbumDialog *self = NULL;
+  GObject *new = NULL;
 
-  dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_ADD_TO_ALBUM_DIALOG,
-                                     "title", _("Add to Album"),
-                                     "modal", TRUE,
-                                     "pictures", pictures,
-                                     "albums", albums,
-                                     "transient-for", parent,
-                                     "resizable", TRUE,
-                                     "has-separator", FALSE,
-                                     NULL));
+  new = g_object_new (FROGR_TYPE_ADD_TO_ALBUM_DIALOG,
+                      "title", _("Add to Album"),
+                      "modal", TRUE,
+                      "pictures", pictures,
+                      "albums", albums,
+                      "transient-for", parent,
+                      "resizable", TRUE,
+                      "has-separator", FALSE,
+                      NULL);
 
-  g_signal_connect (G_OBJECT (dialog), "response",
-                    G_CALLBACK (_dialog_response_cb), NULL);
+  self = FROGR_ADD_TO_ALBUM_DIALOG (new);
 
-  gtk_widget_show_all (dialog);
+  _populate_treemodel_with_albums (self);
+  _fill_dialog_with_data (self);
+
+  gtk_widget_show_all (GTK_WIDGET (self));
 }

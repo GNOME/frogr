@@ -95,6 +95,8 @@ enum {
 
 /* Prototypes */
 
+static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
+
 static void _populate_menu_bar (FrogrMainView *self);
 static void _populate_accounts_submenu (FrogrMainView *self);
 
@@ -141,10 +143,6 @@ void _on_add_to_existing_album_menu_item_activate (GtkWidget *widget, gpointer s
 void _on_add_to_group_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_upload_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
-
-static void _on_main_view_map_event (GtkWidget *widget,
-                                     GdkEvent *event,
-                                     gpointer data);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
@@ -202,6 +200,20 @@ static void _update_ui (FrogrMainView *self);
 
 
 /* Private API */
+
+static gboolean
+_maybe_show_auth_dialog_on_idle (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  if (!frogr_controller_is_authorized (priv->controller))
+    {
+      /* Show authorization dialog if needed */
+      frogr_controller_show_auth_dialog (priv->controller);
+    }
+
+  return FALSE;
+}
 
 static void
 _populate_menu_bar (FrogrMainView *self)
@@ -768,19 +780,6 @@ _on_about_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   frogr_controller_show_about_dialog (priv->controller);
-}
-
-static void
-_on_main_view_map_event (GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-  FrogrMainView *self = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (!frogr_controller_is_authorized (priv->controller))
-    {
-      /* Show authorization dialog if needed */
-      frogr_controller_show_auth_dialog (priv->controller);
-    }
 }
 
 static gboolean
@@ -1497,9 +1496,6 @@ frogr_main_view_init (FrogrMainView *self)
                                   "Status bar messages");
 
   /* Connect signals */
-  g_signal_connect (G_OBJECT (priv->window), "map-event",
-                    G_CALLBACK (_on_main_view_map_event), self);
-
   g_signal_connect (G_OBJECT (priv->window), "destroy",
                     G_CALLBACK (gtk_main_quit),
                     NULL);
@@ -1537,6 +1533,9 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* Update UI */
   _update_ui (FROGR_MAIN_VIEW (self));
+
+  /* Show the auth dialog, if needed, on idle */
+  g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
 }
 
 
