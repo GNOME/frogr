@@ -420,7 +420,6 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           frogr_account_set_fullname (account, auth_token->fullname);
 
           frogr_controller_set_active_account (controller, account);
-          frogr_config_save_accounts (priv->config);
 
           g_debug ("%s", "Authorization successfully completed!");
         }
@@ -1676,6 +1675,9 @@ frogr_controller_set_active_account (FrogrController *self,
   g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
   if (accounts_changed)
     g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
+
+  /* Save new state in configuration */
+  frogr_config_save_accounts (priv->config);
 }
 
 FrogrAccount *
