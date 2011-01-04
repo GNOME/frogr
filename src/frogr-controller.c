@@ -939,6 +939,9 @@ _on_pictures_uploaded (FrogrController *self,
       window = frogr_main_view_get_window (priv->mainview);
       frogr_util_show_info_dialog (window, _("Operation successfully completed!"));
 
+      /* Fetch albums right after finishing */
+      _fetch_albums (self);
+
       g_debug ("%s", "Success uploading pictures!");
     }
   else
@@ -947,9 +950,6 @@ _on_pictures_uploaded (FrogrController *self,
       g_debug ("Error uploading pictures: %s", error->message);
       g_error_free (error);
     }
-
-  /* Fetch albums right after finishing */
-  _fetch_albums (self);
 
   /* Change state and emit signals */
   _set_state (self, FROGR_STATE_IDLE);
