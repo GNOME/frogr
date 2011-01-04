@@ -68,6 +68,7 @@ struct _FrogrControllerPrivate
   FspSession *session;
   GCancellable *cancellable;
 
+  /* We use this booleans as flags */
   gboolean app_running;
   gboolean uploading_picture;
   gboolean fetching_account_info;
@@ -77,6 +78,10 @@ struct _FrogrControllerPrivate
   gboolean fetching_tags;
   gboolean adding_to_album;
   gboolean adding_to_group;
+
+  /* We use this one to know when an empty list of tags means that the
+     user has no tags at all, as fetching already happened before */
+  gboolean tags_fetched;
 };
 
 
@@ -1354,6 +1359,9 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   frogr_main_view_model_set_tags_list (mainview_model, tags_list);
 
   priv->fetching_tags = FALSE;
+
+  /* This will be TRUE after the first fetch for the same user */
+  priv->tags_fetched = TRUE;
 }
 
 static gboolean
@@ -1635,6 +1643,7 @@ frogr_controller_init (FrogrController *self)
   priv->fetching_tags = FALSE;
   priv->adding_to_album = FALSE;
   priv->adding_to_group = FALSE;
+  priv->tags_fetched = FALSE;
 
   /* Get account, if any */
   priv->account = frogr_config_get_active_account (priv->config);
@@ -1780,6 +1789,7 @@ frogr_controller_set_active_account (FrogrController *self,
   fsp_session_set_token (priv->session, token);
 
   /* Prefetch info for this user */
+  priv->tags_fetched = FALSE;
   if (new_account)
     _fetch_everything (self);
 
@@ -1890,7 +1900,7 @@ frogr_controller_show_details_dialog (FrogrController *self,
   tags_list = frogr_main_view_model_get_tags_list (mainview_model);
 
   /* Fetch the tags list first if needed */
-  if (frogr_main_view_model_n_tags (mainview_model) == 0)
+  if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
     _fetch_tags (self);
 
   /* Show the dialog when possible */
@@ -1910,7 +1920,7 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
   /* Fetch the tags list first if needed */
-  if (frogr_main_view_model_n_tags (mainview_model) == 0)
+  if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
     _fetch_tags (self);
 
   /* Show the dialog when possible */
