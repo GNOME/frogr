@@ -297,7 +297,7 @@ get_photosets_cb                        (GObject      *object,
       g_print ("Creatine a new photoset...\n");
       fsp_session_create_photoset_async (session,
                                          "Photoset's title",
-                                         "Photoset's description",
+                                         "Photoset's description\nasdasda",
                                          uploaded_photo_id,
                                          NULL, photoset_created_cb, NULL);
       g_slist_free (photosets_list);

@@ -4,6 +4,9 @@
  * Copyright (C) 2010 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
+ * Some parts of this file were based on source code from the libsoup
+ * library libsoup, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 3 of the GNU Lesser General
  * Public License as published by the Free Software Foundation.
@@ -54,12 +57,36 @@ _get_params_table_from_valist           (const gchar *first_param,
 
       /* Ignore parameter with no value */
       if (v != NULL)
-        g_hash_table_insert (table, g_strdup (p), soup_uri_encode (v, NULL));
+        g_hash_table_insert (table, g_strdup (p), g_strdup (v));
       else
-        g_warning ("Missing value for %s. Ignoring parameter.", p);
+        g_debug ("Missing value for %s. Ignoring parameter.", p);
     }
 
   return table;
+}
+
+/* This function is based in append_form_encoded() from libsoup's
+   SoupForm, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.) */
+static gchar *
+_encode_query_value (const char *value)
+{
+  GString *result = NULL;
+  const unsigned char *str = NULL;
+
+  result = g_string_new ("");
+  str = (const unsigned char *) value;
+
+  while (*str) {
+    if (*str == ' ') {
+      g_string_append_c (result, '+');
+      str++;
+    } else if (!g_ascii_isalnum (*str))
+      g_string_append_printf (result, "%%%02X", (int)*str++);
+    else
+      g_string_append_c (result, *str++);
+  }
+
+  return g_string_free (result, FALSE);
 }
 
 static gchar *
@@ -91,9 +118,18 @@ _get_signed_query_with_params           (const gchar      *api_sig,
       for (k = keys; k; k = g_list_next (k))
         {
           gchar *key = (gchar*) k->data;
-          gchar *value = soup_uri_decode (g_hash_table_lookup (params_table, key));
-          url_params_array[i++] = g_strdup_printf ("%s=%s", key, value);
-          g_free (value);
+          gchar *value = g_hash_table_lookup (params_table, key);
+          gchar *actual_value = NULL;
+
+          /* Do not encode basic pairs key-value */
+          if (g_strcmp0 (key, "api_key") && g_strcmp0 (key, "auth_token")
+              && g_strcmp0 (key, "method") && g_strcmp0 (key, "frob"))
+            actual_value = _encode_query_value (value);
+          else
+            actual_value = g_strdup (value);
+
+          url_params_array[i++] = g_strdup_printf ("%s=%s", key, actual_value);
+          g_free (actual_value);
         }
 
       /* Add those to the params array (space previously reserved) */
@@ -227,7 +263,7 @@ get_api_signature_from_hash_table       (const gchar *shared_secret,
           const gchar *value = g_hash_table_lookup (params_table, key);
 
           sign_str_array[i++] = g_strdup (key);
-          sign_str_array[i++] = soup_uri_decode (value);
+          sign_str_array[i++] = g_strdup (value);
         }
       sign_str_array[i] = NULL;
 
