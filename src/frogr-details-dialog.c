@@ -690,6 +690,9 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
   priv->mpictures_label =
     GTK_WIDGET (gtk_builder_get_object (builder, "mpictures_label"));
 
+  /* Don't accept tabs in description */
+  gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (priv->desc_tview), FALSE);
+
   /* Prepare auto completion for tags */
   completion = gtk_entry_completion_new ();
   gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (completion), TEXT_COL);

@@ -327,6 +327,7 @@ frogr_create_new_album_dialog_init (FrogrCreateNewAlbumDialog *self)
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroller),
                                        GTK_SHADOW_ETCHED_IN);
   gtk_container_add (GTK_CONTAINER (scroller), widget);
+  gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (widget), FALSE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (widget), GTK_WRAP_WORD);
   align = gtk_alignment_new (1, 0, 1, 1);
   gtk_container_add (GTK_CONTAINER (align), scroller);
