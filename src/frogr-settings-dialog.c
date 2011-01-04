@@ -112,40 +112,42 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  box1 = gtk_hbox_new (TRUE, 0);
-  box2 = gtk_vbox_new (FALSE, 0);
+  box1 = gtk_vbox_new (FALSE, 0);
+  box2 = gtk_hbox_new (TRUE, 0);
 
   rbutton = gtk_radio_button_new (NULL);
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Public"));
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), rbutton);
-  gtk_box_pack_start (GTK_BOX (box2), align, FALSE, FALSE, 6);
-  priv->public_rb = rbutton;
-
-  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->public_rb));
   gtk_button_set_label (GTK_BUTTON (rbutton), _("Private"));
-  align = gtk_alignment_new (0, 0, 0, 0);
+  align = gtk_alignment_new (0, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), rbutton);
-  gtk_box_pack_start (GTK_BOX (box2), align, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (box2), align, TRUE, TRUE, 6);
   priv->private_rb = rbutton;
+
+  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->private_rb));
+  gtk_button_set_label (GTK_BUTTON (rbutton), _("Public"));
+  align = gtk_alignment_new (0, 0, 1, 0);
+  gtk_container_add (GTK_CONTAINER (align), rbutton);
+  gtk_box_pack_start (GTK_BOX (box2), align, TRUE, TRUE, 6);
+  priv->public_rb = rbutton;
 
   gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 6);
 
-  box2 = gtk_vbox_new (FALSE, 0);
+  box2 = gtk_vbox_new (TRUE, 0);
 
   cbutton = gtk_check_button_new_with_label (_("Visible to family"));
-  align = gtk_alignment_new (0, 0, 0, 0);
+  align = gtk_alignment_new (0, 0, 0, 1);
   gtk_container_add (GTK_CONTAINER (align), cbutton);
   gtk_box_pack_start (GTK_BOX (box2), align, FALSE, FALSE, 6);
   priv->family_cb = cbutton;
 
   cbutton = gtk_check_button_new_with_label (_("Visible to friends"));
-  align = gtk_alignment_new (0, 0, 0, 0);
+  align = gtk_alignment_new (0, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), cbutton);
   gtk_box_pack_start (GTK_BOX (box2), align, FALSE, FALSE, 6);
   priv->friend_cb = cbutton;
 
-  gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 6);
+  align = gtk_alignment_new (0.1, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), box2);
+  gtk_box_pack_start (GTK_BOX (box1), align, TRUE, TRUE, 6);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 6);
 
@@ -496,7 +498,7 @@ frogr_settings_dialog_show (GtkWindow *parent)
       object = g_object_new (FROGR_TYPE_SETTINGS_DIALOG,
                              "modal", TRUE,
                              "transient-for", parent,
-                             "resizable", TRUE,
+                             "resizable", FALSE,
                              "title", _("Settings"),
                              NULL);
 
