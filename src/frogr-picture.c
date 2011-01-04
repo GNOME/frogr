@@ -732,6 +732,14 @@ frogr_picture_add_album (FrogrPicture *self, FrogrAlbum *album)
   priv->albums = g_slist_append (priv->albums, g_object_ref (album));
 }
 
+void
+frogr_picture_remove_albums (FrogrPicture *self)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  frogr_picture_set_albums (self, NULL);
+}
+
 gboolean
 frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album)
 {
