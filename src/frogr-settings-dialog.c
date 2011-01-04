@@ -85,6 +85,10 @@ static void _update_ui (FrogrSettingsDialog *self);
 
 static void _on_button_toggled (GtkToggleButton *button, gpointer data);
 
+static void _proxy_port_inserted_cb (GtkEditable *editable, gchar *new_text,
+                                     gint new_text_length, gint *position,
+                                     gpointer data);
+
 static gboolean _on_dialog_delete_event (GtkWidget *widget, GdkEvent *event, gpointer self);
 
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
@@ -295,6 +299,10 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     G_CALLBACK (_on_button_toggled),
                     self);
 
+  g_signal_connect (G_OBJECT (priv->proxy_port_entry), "insert-text",
+                    G_CALLBACK (_proxy_port_inserted_cb),
+                    NULL);
+
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_notebook_append_page(notebook, vbox, gtk_label_new(_("Connection")));
 }
@@ -464,6 +472,24 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
     }
 
   _update_ui (self);
+}
+
+static void
+_proxy_port_inserted_cb (GtkEditable *editable, gchar *new_text,
+                         gint new_text_length, gint *position,
+                         gpointer data)
+{
+  gint i = 0;
+  for (i = 0; i < new_text_length; i++)
+    {
+      /* Stop this signal's emission if one of the new characters is
+         not an integer, and stop searching, obviously */
+      if (!g_ascii_isdigit (new_text[i]))
+        {
+          g_signal_stop_emission_by_name (editable, "insert-text");
+          break;
+        }
+    }
 }
 
 static gboolean
