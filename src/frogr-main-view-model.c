@@ -266,13 +266,22 @@ frogr_main_view_model_set_albums (FrogrMainViewModel *self,
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+  GSList *item = NULL;
 
   frogr_main_view_model_remove_all_albums (self);
 
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->albums_list = albums_list;
   priv->n_albums = g_slist_length (albums_list);
+
+  /* Remove all the albums attached to every picture */
+  for (item = priv->pictures_list; item; item = g_slist_next (item))
+    {
+      picture = FROGR_PICTURE (item->data);
+      frogr_picture_remove_albums (picture);
+    }
 }
 
 void
@@ -347,13 +356,22 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+  GSList *item = NULL;
 
   frogr_main_view_model_remove_all_groups (self);
 
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->groups_list = groups_list;
   priv->n_groups = g_slist_length (groups_list);
+
+  /* Remove all the albums attached to every picture */
+  for (item = priv->groups_list; item; item = g_slist_next (item))
+    {
+      picture = FROGR_PICTURE (item->data);
+      frogr_picture_remove_groups (picture);
+    }
 }
 
 gchar *

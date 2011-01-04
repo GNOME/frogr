@@ -1037,11 +1037,8 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  FrogrPicture *picture = NULL;
   GSList *photosets_list = NULL;
   GSList *albums_list = NULL;
-  GSList *pictures_list = NULL;
-  GSList *item = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
@@ -1060,6 +1057,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   if (photosets_list)
     {
+      GSList *item = NULL;
       FspDataPhotoSet *current_photoset = NULL;
       FrogrAlbum *current_album = NULL;
       for (item = photosets_list; item; item = g_slist_next (item))
@@ -1083,14 +1081,6 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_albums (mainview_model, albums_list);
-
-  /* Remove all the albums attached to every picture */
-  pictures_list = frogr_main_view_model_get_pictures (mainview_model);
-  for (item = pictures_list; item; item = g_slist_next (item))
-    {
-      picture = FROGR_PICTURE (item->data);
-      frogr_picture_remove_albums (picture);
-    }
 
   priv->fetching_albums = FALSE;
 }
@@ -1119,11 +1109,8 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  FrogrPicture *picture = NULL;
   GSList *data_groups_list = NULL;
   GSList *groups_list = NULL;
-  GSList *pictures_list = NULL;
-  GSList *item = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
@@ -1142,6 +1129,7 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   if (data_groups_list)
     {
+      GSList *item = NULL;
       FspDataGroup *data_group = NULL;
       FrogrGroup *current_group = NULL;
       for (item = data_groups_list; item; item = g_slist_next (item))
@@ -1164,14 +1152,6 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_set_groups (mainview_model, groups_list);
-
-  /* Remove all the albums attached to every picture */
-  pictures_list = frogr_main_view_model_get_pictures (mainview_model);
-  for (item = pictures_list; item; item = g_slist_next (item))
-    {
-      picture = FROGR_PICTURE (item->data);
-      frogr_picture_remove_groups (picture);
-    }
 
   priv->fetching_groups = FALSE;
 }
