@@ -47,8 +47,14 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *open_browser_after_upload_cb;
 
   GtkWidget *use_proxy_cb;
-  GtkWidget *use_proxy_label;
-  GtkWidget *proxy_address_entry;
+  GtkWidget *proxy_host_label;
+  GtkWidget *proxy_host_entry;
+  GtkWidget *proxy_port_label;
+  GtkWidget *proxy_port_entry;
+  GtkWidget *proxy_username_label;
+  GtkWidget *proxy_username_entry;
+  GtkWidget *proxy_password_label;
+  GtkWidget *proxy_password_entry;
 
   gboolean public_visibility;
   gboolean family_visibility;
@@ -56,7 +62,10 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean open_browser_after_upload;
 
   gboolean use_proxy;;
-  gchar *proxy_address;
+  gchar *proxy_host;
+  gchar *proxy_port;
+  gchar *proxy_username;
+  gchar *proxy_password;
 } FrogrSettingsDialogPrivate;
 
 
@@ -196,7 +205,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 {
   FrogrSettingsDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
-  GtkWidget *hbox = NULL;
+  GtkWidget *table = NULL;
   GtkWidget *align = NULL;
   GtkWidget *cbutton = NULL;
   GtkWidget *label = NULL;
@@ -213,19 +222,73 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
   priv->use_proxy_cb = cbutton;
 
-  hbox = gtk_hbox_new (FALSE, 0);
+  /* Proxy host */
 
-  label = gtk_label_new (_("Proxy address:"));
-  align = gtk_alignment_new (0, 0, 0, 0);
+  table = gtk_table_new (2, 4, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 6);
+
+  label = gtk_label_new (_("Host:"));
+  align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (hbox), align, FALSE, FALSE, 6);
-  priv->use_proxy_label = label;
+  gtk_table_attach (GTK_TABLE (table), align, 0, 1, 0, 1,
+                    0, 0, 6, 6);
+  priv->proxy_host_label = label;
 
   entry = gtk_entry_new ();
-  gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 6);
-  priv->proxy_address_entry = entry;
+  align = gtk_alignment_new (1, 0, 1, 0);
+  gtk_container_add (GTK_CONTAINER (align), entry);
+  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 0, 1,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  priv->proxy_host_entry = entry;
 
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 6);
+  /* Proxy port */
+
+  label = gtk_label_new (_("Port:"));
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_table_attach (GTK_TABLE (table), align, 0, 1, 1, 2,
+                    0, 0, 6, 6);
+  priv->proxy_port_label = label;
+
+  entry = gtk_entry_new ();
+  align = gtk_alignment_new (1, 0, 1, 0);
+  gtk_container_add (GTK_CONTAINER (align), entry);
+  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 1, 2,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  priv->proxy_port_entry = entry;
+
+  /* Proxy username */
+
+  label = gtk_label_new (_("Username:\n(optional)"));
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_table_attach (GTK_TABLE (table), align, 0, 1, 2, 3,
+                    0, 0, 6, 6);
+  priv->proxy_username_label = label;
+
+  entry = gtk_entry_new ();
+  align = gtk_alignment_new (1, 0, 1, 0);
+  gtk_container_add (GTK_CONTAINER (align), entry);
+  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 2, 3,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  priv->proxy_username_entry = entry;
+
+  /* Proxy password */
+
+  label = gtk_label_new (_("Password:\n(optional)"));
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_table_attach (GTK_TABLE (table), align, 0, 1, 3, 4,
+                    0, 0, 6, 6);
+  priv->proxy_password_label = label;
+
+  entry = gtk_entry_new ();
+  gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
+  align = gtk_alignment_new (1, 0, 1, 0);
+  gtk_container_add (GTK_CONTAINER (align), entry);
+  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 3, 4,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  priv->proxy_password_entry = entry;
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (priv->use_proxy_cb), "toggled",
@@ -248,10 +311,25 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->open_browser_after_upload = frogr_config_get_open_browser_after_upload (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
-  g_free (priv->proxy_address);
-  priv->proxy_address = g_strdup (frogr_config_get_proxy_address (priv->config));
-  if (priv->proxy_address)
-    g_strstrip (priv->proxy_address);
+  g_free (priv->proxy_host);
+  priv->proxy_host = g_strdup (frogr_config_get_proxy_host (priv->config));
+  if (priv->proxy_host)
+    g_strstrip (priv->proxy_host);
+
+  g_free (priv->proxy_port);
+  priv->proxy_port = g_strdup (frogr_config_get_proxy_port (priv->config));
+  if (priv->proxy_port)
+    g_strstrip (priv->proxy_port);
+
+  g_free (priv->proxy_username);
+  priv->proxy_username = g_strdup (frogr_config_get_proxy_username (priv->config));
+  if (priv->proxy_username)
+    g_strstrip (priv->proxy_username);
+
+  g_free (priv->proxy_password);
+  priv->proxy_password = g_strdup (frogr_config_get_proxy_password (priv->config));
+  if (priv->proxy_password)
+    g_strstrip (priv->proxy_password);
 
   _update_ui (self);
 }
@@ -268,12 +346,30 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_open_browser_after_upload (priv->config, priv->open_browser_after_upload);
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 
-  g_free (priv->proxy_address);
-  priv->proxy_address = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_address_entry)));
-  if (priv->proxy_address)
-    g_strstrip (priv->proxy_address);
+  g_free (priv->proxy_host);
+  priv->proxy_host = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_host_entry)));
+  if (priv->proxy_host)
+    g_strstrip (priv->proxy_host);
 
-  frogr_config_set_proxy_address (priv->config, priv->proxy_address);
+  g_free (priv->proxy_port);
+  priv->proxy_port = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_port_entry)));
+  if (priv->proxy_port)
+    g_strstrip (priv->proxy_port);
+
+  g_free (priv->proxy_username);
+  priv->proxy_username = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_username_entry)));
+  if (priv->proxy_username)
+    g_strstrip (priv->proxy_username);
+
+  g_free (priv->proxy_password);
+  priv->proxy_password = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_password_entry)));
+  if (priv->proxy_password)
+    g_strstrip (priv->proxy_password);
+
+  frogr_config_set_proxy_host (priv->config, priv->proxy_host);
+  frogr_config_set_proxy_port (priv->config, priv->proxy_port);
+  frogr_config_set_proxy_username (priv->config, priv->proxy_username);
+  frogr_config_set_proxy_password (priv->config, priv->proxy_password);
 
   frogr_config_save_settings (priv->config);
 
@@ -301,14 +397,29 @@ _update_ui (FrogrSettingsDialog *self)
                                 priv->open_browser_after_upload);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
-  if (priv->proxy_address)
-    gtk_entry_set_text (GTK_ENTRY (priv->proxy_address_entry), priv->proxy_address);
+  if (priv->proxy_host)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_host_entry), priv->proxy_host);
+
+  if (priv->proxy_port)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_port_entry), priv->proxy_port);
+
+  if (priv->proxy_username)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_username_entry), priv->proxy_username);
+
+  if (priv->proxy_password)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_password_entry), priv->proxy_password);
 
   /* Sensitiveness */
   gtk_widget_set_sensitive (priv->friend_cb, !priv->public_visibility);
   gtk_widget_set_sensitive (priv->family_cb, !priv->public_visibility);
-  gtk_widget_set_sensitive (priv->use_proxy_label, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_address_entry, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_host_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_host_entry, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_port_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_port_entry, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_username_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_username_entry, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_password_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_password_entry, priv->use_proxy);
 }
 
 static void
@@ -376,9 +487,11 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 
   /* Update proxy status */
   if (priv->use_proxy)
-    frogr_controller_set_proxy (priv->controller, priv->proxy_address);
+    frogr_controller_set_proxy (priv->controller,
+                                priv->proxy_host, priv->proxy_port,
+                                priv->proxy_username, priv->proxy_password);
   else
-    frogr_controller_set_proxy (priv->controller, NULL);
+    frogr_controller_set_proxy (priv->controller, NULL, NULL, NULL, NULL);
 
   gtk_widget_hide (GTK_WIDGET (self));
 }
@@ -407,7 +520,10 @@ static void
 _frogr_settings_dialog_finalize (GObject *object)
 {
   FrogrSettingsDialogPrivate *priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (object);
-  g_free (priv->proxy_address);
+  g_free (priv->proxy_host);
+  g_free (priv->proxy_port);
+  g_free (priv->proxy_username);
+  g_free (priv->proxy_password);
   G_OBJECT_CLASS(frogr_settings_dialog_parent_class)->finalize (object);
 }
 
@@ -440,14 +556,23 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->family_cb = NULL;
   priv->open_browser_after_upload_cb = NULL;
   priv->use_proxy_cb = NULL;
-  priv->use_proxy_label = NULL;
-  priv->proxy_address_entry = NULL;
+  priv->proxy_host_label = NULL;
+  priv->proxy_host_entry = NULL;
+  priv->proxy_port_label = NULL;
+  priv->proxy_port_entry = NULL;
+  priv->proxy_username_label = NULL;
+  priv->proxy_username_entry = NULL;
+  priv->proxy_password_label = NULL;
+  priv->proxy_password_entry = NULL;
   priv->public_visibility = FALSE;
   priv->family_visibility = FALSE;
   priv->friend_visibility = FALSE;
   priv->open_browser_after_upload = FALSE;
   priv->use_proxy = FALSE;
-  priv->proxy_address = NULL;
+  priv->proxy_host = NULL;
+  priv->proxy_port = NULL;
+  priv->proxy_username = NULL;
+  priv->proxy_password = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),

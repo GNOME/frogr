@@ -77,7 +77,9 @@ GSList *frogr_controller_get_all_accounts (FrogrController *self);
 
 FrogrControllerState frogr_controller_get_state (FrogrController *self);
 
-void frogr_controller_set_proxy (FrogrController *self, const char *proxy);
+void frogr_controller_set_proxy (FrogrController *self,
+                                 const char *host, const char *port,
+                                 const char *username, const char *password);
 
 void frogr_controller_show_about_dialog (FrogrController *self);
 

@@ -54,7 +54,10 @@ struct _FrogrConfigPrivate
   gboolean open_browser_after_upload;
 
   gboolean use_proxy;
-  gchar *proxy_address;
+  gchar *proxy_host;
+  gchar *proxy_port;
+  gchar *proxy_username;
+  gchar *proxy_password;
 };
 
 static FrogrConfig *_instance = NULL;
@@ -199,6 +202,9 @@ _load_visibility_xml (FrogrConfig *self,
   /* Traverse child nodes and extract relevant information. */
   for (node = rootnode->children; node != NULL; node = node->next)
     {
+      /* We must initialize this always at the beginning of the loop */
+      content = NULL;
+
       if (node->type != XML_ELEMENT_NODE)
         continue;
 
@@ -243,6 +249,9 @@ _load_proxy_data_xml (FrogrConfig *self,
   /* Traverse child nodes and extract relevant information. */
   for (node = rootnode->children; node != NULL; node = node->next)
     {
+      /* We must initialize this always at the beginning of the loop */
+      content = NULL;
+
       if (node->type != XML_ELEMENT_NODE)
         continue;
 
@@ -252,13 +261,40 @@ _load_proxy_data_xml (FrogrConfig *self,
           priv->use_proxy = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
-      if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-address"))
+      if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-host"))
         {
           content = xmlNodeGetContent (node);
-          g_free (priv->proxy_address);
-          priv->proxy_address = g_strdup ((gchar *) content);
-          if (priv->proxy_address)
-            g_strstrip (priv->proxy_address);
+          g_free (priv->proxy_host);
+          priv->proxy_host = g_strdup ((gchar *) content);
+          if (priv->proxy_host)
+            g_strstrip (priv->proxy_host);
+        }
+
+      if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-port"))
+        {
+          content = xmlNodeGetContent (node);
+          g_free (priv->proxy_port);
+          priv->proxy_port = g_strdup ((gchar *) content);
+          if (priv->proxy_port)
+            g_strstrip (priv->proxy_port);
+        }
+
+      if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-username"))
+        {
+          content = xmlNodeGetContent (node);
+          g_free (priv->proxy_username);
+          priv->proxy_username = g_strdup ((gchar *) content);
+          if (priv->proxy_username)
+            g_strstrip (priv->proxy_username);
+        }
+
+      if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-password"))
+        {
+          content = xmlNodeGetContent (node);
+          g_free (priv->proxy_password);
+          priv->proxy_password = g_strdup ((gchar *) content);
+          if (priv->proxy_password)
+            g_strstrip (priv->proxy_password);
         }
 
       if (content)
@@ -336,7 +372,7 @@ _load_account_xml (FrogrAccount *faccount,
                    xmlDocPtr     xml,
                    xmlNodePtr    rootnode)
 {
-  xmlNodePtr node;
+  xmlNodePtr node = NULL;
   xmlChar *content = NULL;
 
   g_return_val_if_fail (faccount != NULL, FALSE);
@@ -346,6 +382,9 @@ _load_account_xml (FrogrAccount *faccount,
   /* Traverse child nodes and extract relevant information. */
   for (node = rootnode->children; node != NULL; node = node->next)
     {
+      /* We must initialize this always at the beginning of the loop */
+      content = NULL;
+
       if (node->type != XML_ELEMENT_NODE)
         continue;
 
@@ -434,7 +473,10 @@ _save_settings (FrogrConfig *self)
   /* Use proxy */
   node = xmlNewNode (NULL, (const xmlChar*) "http-proxy");
   _xml_add_string_child (node, "use-proxy", priv->use_proxy ? "1" : "0");
-  _xml_add_string_child (node, "proxy-address", priv->proxy_address);
+  _xml_add_string_child (node, "proxy-host", priv->proxy_host);
+  _xml_add_string_child (node, "proxy-port", priv->proxy_port);
+  _xml_add_string_child (node, "proxy-username", priv->proxy_username);
+  _xml_add_string_child (node, "proxy-password", priv->proxy_password);
   xmlAddChild (root, node);
 
   xml_path = g_build_filename (g_get_user_config_dir (),
@@ -590,7 +632,10 @@ _finalize (GObject *object)
 {
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
 
-  g_free (priv->proxy_address);
+  g_free (priv->proxy_host);
+  g_free (priv->proxy_port);
+  g_free (priv->proxy_username);
+  g_free (priv->proxy_password);
 
   /* Call superclass */
   G_OBJECT_CLASS (frogr_config_parent_class)->finalize (object);
@@ -647,7 +692,10 @@ frogr_config_init (FrogrConfig *self)
   priv->open_browser_after_upload = TRUE;
 
   priv->use_proxy = FALSE;
-  priv->proxy_address = NULL;
+  priv->proxy_host = NULL;
+  priv->proxy_port = NULL;
+  priv->proxy_username = NULL;
+  priv->proxy_password = NULL;
 
   /* Ensure that we have the config directory in place. */
   config_dir = g_build_filename (g_get_user_config_dir (), g_get_prgname (), NULL);
@@ -876,20 +924,77 @@ frogr_config_get_use_proxy (FrogrConfig *self)
 }
 
 void
-frogr_config_set_proxy_address (FrogrConfig *self, const gchar *address)
+frogr_config_set_proxy_host (FrogrConfig *self, const gchar *host)
 {
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  g_free (priv->proxy_address);
-  priv->proxy_address = g_strdup (address);
+  g_free (priv->proxy_host);
+  priv->proxy_host = g_strdup (host);
 }
 
 const gchar *
-frogr_config_get_proxy_address (FrogrConfig *self)
+frogr_config_get_proxy_host (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->proxy_address;
+  return priv->proxy_host;
+}
+
+void
+frogr_config_set_proxy_port (FrogrConfig *self, const gchar *port)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  g_free (priv->proxy_port);
+  priv->proxy_port = g_strdup (port);
+}
+
+const gchar *
+frogr_config_get_proxy_port (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->proxy_port;
+}
+
+void
+frogr_config_set_proxy_username (FrogrConfig *self, const gchar *username)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  g_free (priv->proxy_username);
+  priv->proxy_username = g_strdup (username);
+}
+
+const gchar *
+frogr_config_get_proxy_username (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->proxy_username;
+}
+
+void
+frogr_config_set_proxy_password (FrogrConfig *self, const gchar *password)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  g_free (priv->proxy_password);
+  priv->proxy_password = g_strdup (password);
+}
+
+const gchar *
+frogr_config_get_proxy_password (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->proxy_password;
 }

@@ -94,9 +94,21 @@ void frogr_config_set_use_proxy (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_use_proxy (FrogrConfig *self);
 
-void frogr_config_set_proxy_address (FrogrConfig *self, const gchar *address);
+void frogr_config_set_proxy_host (FrogrConfig *self, const gchar *host);
 
-const gchar *frogr_config_get_proxy_address (FrogrConfig *self);
+const gchar *frogr_config_get_proxy_host (FrogrConfig *self);
+
+void frogr_config_set_proxy_port (FrogrConfig *self, const gchar *port);
+
+const gchar *frogr_config_get_proxy_port (FrogrConfig *self);
+
+void frogr_config_set_proxy_username (FrogrConfig *self, const gchar *username);
+
+const gchar *frogr_config_get_proxy_username (FrogrConfig *self);
+
+void frogr_config_set_proxy_password (FrogrConfig *self, const gchar *password);
+
+const gchar *frogr_config_get_proxy_password (FrogrConfig *self);
 
 G_END_DECLS
 

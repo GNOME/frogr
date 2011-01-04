@@ -471,7 +471,6 @@ _load_file_contents_cb                  (GObject      *object,
       SoupSession *soup_session = NULL;
       SoupMessage *msg = NULL;
 
-      /* Get the proxy and the associated message */
       self = FSP_SESSION (ga_clos->object);
       msg = _get_soup_message_for_upload (file, contents, length, extra_params);
       ga_clos->soup_message = msg;
@@ -643,28 +642,40 @@ fsp_session_new                         (const gchar *api_key,
 
 void
 fsp_session_set_http_proxy              (FspSession *self,
-                                         const gchar *proxy_address)
+                                         const char *host, const char *port,
+                                         const char *username, const char *password)
 {
   g_return_if_fail (FSP_IS_SESSION (self));
 
   SoupURI *proxy_uri = NULL;
-  if (proxy_address != NULL)
+  if (host != NULL)
     {
-      gchar *lowercase_address = NULL;
-      gchar *proxy_uri_str = NULL;
+      const gchar *actual_user = NULL;
+      const gchar *actual_password = NULL;
+      guint actual_port = 0;
 
-      lowercase_address = g_ascii_strdown (proxy_address, -1);
-
-      /* Check whether the 'http://' prefix is present */
-      if (g_str_has_prefix (lowercase_address, "http://"))
-        proxy_uri_str = g_strdup (proxy_address);
+      /* Ensure no garbage is used for username */
+      if (username == NULL || *username == '\0')
+        actual_user = NULL;
       else
-        proxy_uri_str = g_strdup_printf ("http://%s", proxy_address);
+        actual_user = username;
 
-      g_free (lowercase_address);
+      /* Ensure no garbage is used for password */
+      if (password == NULL || *password == '\0')
+        actual_password = NULL;
+      else
+        actual_password = password;
 
-      proxy_uri = soup_uri_new (proxy_uri_str);
-      g_free (proxy_uri_str);
+      /* We need a numeric port */
+      actual_port = (guint) g_ascii_strtoll ((gchar *) port, NULL, 10);
+
+      /* Build the actual SoupURI object */
+      proxy_uri = soup_uri_new (NULL);
+      soup_uri_set_scheme (proxy_uri, SOUP_URI_SCHEME_HTTP);
+      soup_uri_set_host (proxy_uri, host);
+      soup_uri_set_port (proxy_uri, actual_port);
+      soup_uri_set_user (proxy_uri, actual_user);
+      soup_uri_set_password (proxy_uri, actual_password);
     }
 
   /* Set/unset the proxy */

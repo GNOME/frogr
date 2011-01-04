@@ -1702,9 +1702,11 @@ frogr_controller_init (FrogrController *self)
   /* Set HTTP proxy if needed */
   if (frogr_config_get_use_proxy (priv->config))
     {
-      const gchar *proxy_address = NULL;
-      proxy_address = frogr_config_get_proxy_address (priv->config);
-      frogr_controller_set_proxy (self, proxy_address);
+      const gchar *host = frogr_config_get_proxy_host (priv->config);
+      const gchar *port = frogr_config_get_proxy_port (priv->config);
+      const gchar *username = frogr_config_get_proxy_username (priv->config);
+      const gchar *password = frogr_config_get_proxy_password (priv->config);
+      frogr_controller_set_proxy (self, host, port, username, password);
     }
 }
 
@@ -1872,7 +1874,9 @@ frogr_controller_get_state (FrogrController *self)
 }
 
 void
-frogr_controller_set_proxy (FrogrController *self, const char *proxy)
+frogr_controller_set_proxy (FrogrController *self,
+                            const char *host, const char *port,
+                            const char *username, const char *password)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -1880,14 +1884,27 @@ frogr_controller_set_proxy (FrogrController *self, const char *proxy)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  /* We need to split the proxy string into the fields */
-
-  if (proxy == NULL || *proxy == '\0') {
-    fsp_session_set_http_proxy (priv->session, NULL);
+  /* The host is mandatory to set up a proxy */
+  if (host == NULL || *host == '\0') {
+    fsp_session_set_http_proxy (priv->session, NULL, NULL, NULL, NULL);
     g_debug ("%s", "Not using HTTP proxy");
   } else {
-    fsp_session_set_http_proxy (priv->session, proxy);
-    g_debug ("Using HTTP proxy: %s", proxy);
+    gboolean has_port = FALSE;
+    gboolean has_username = FALSE;
+    gboolean has_password = FALSE;
+    gchar *auth_part = NULL;
+
+    has_port = (port != NULL && *port != '\0');
+    has_username = (username != NULL && *username != '\0');
+    has_password = (password != NULL && *password != '\0');
+
+    if (has_username && has_password)
+      auth_part = g_strdup_printf ("%s:%s@", username, password);
+
+    g_debug ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
+    g_free (auth_part);
+
+    fsp_session_set_http_proxy (priv->session, host, port, username, password);
   }
 }
 

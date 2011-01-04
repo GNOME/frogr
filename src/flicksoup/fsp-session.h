@@ -69,7 +69,8 @@ fsp_session_new                         (const gchar *api_key,
                                          const gchar *token);
 void
 fsp_session_set_http_proxy              (FspSession *self,
-                                         const gchar *proxy_address);
+                                         const char *host, const char *port,
+                                         const char *username, const char *password);
 
 const gchar *
 fsp_session_get_api_key                 (FspSession *self);
