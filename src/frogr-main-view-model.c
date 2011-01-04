@@ -367,7 +367,7 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
   priv->n_groups = g_slist_length (groups_list);
 
   /* Remove all the albums attached to every picture */
-  for (item = priv->groups_list; item; item = g_slist_next (item))
+  for (item = priv->pictures_list; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
       frogr_picture_remove_groups (picture);
