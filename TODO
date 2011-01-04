@@ -11,8 +11,6 @@ groups depending on the scope of the application, which can be:
 TODO list for the uploader:
 ===========================
 
- * Retrieve list of tags (and suggest them to the user when needed).
-
  * Allow setting license type for the pictures in the details dialog.
 
  * Add video uploading support (see http://code.google.com/p/frogr/issues/detail?id=8)
