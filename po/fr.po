@@ -1,0 +1,481 @@
+# frogr 0.3 British English translation
+# Copyright (C) 2010 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# Alexandre Franke <alexandre.franke@gmail.com>, 2010
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr 0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-04 13:27+0100\n"
+"PO-Revision-Date: 2011-01-04 14:54+0100\n"
+"Last-Translator: Alexandre Franke <alexandre.franke@gmail.com>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/frogr-about-dialog.c:44
+msgid "A Flickr remote organizer for GNOME\n"
+msgstr "Un organisateur à distance Flickr pour GNOME\n"
+
+#: ../src/frogr-about-dialog.c:96
+msgid "Spanish"
+msgstr "Espagnol"
+
+#: ../src/frogr-about-dialog.c:97
+msgid "British English"
+msgstr "Anglais britannique"
+
+#: ../src/frogr-add-tags-dialog.c:207
+msgid "Enter a spaces separated list of tags:"
+msgstr "Saisissez une liste d'étiquettes séparées par des espaces :"
+
+#: ../src/frogr-add-tags-dialog.c:228
+msgid "Add Tags"
+msgstr "Ajouter des étiquettes"
+
+#: ../src/frogr-add-to-album-dialog.c:145
+msgid "Album Title"
+msgstr "Titre de l'album"
+
+#: ../src/frogr-add-to-album-dialog.c:160
+#: ../src/frogr-add-to-group-dialog.c:160
+msgid "Elements"
+msgstr "Éléments"
+
+#. Add to album
+#: ../src/frogr-add-to-album-dialog.c:585 ../src/frogr-main-view.c:412
+msgid "Add to Album"
+msgstr "Ajouter à l'album"
+
+#: ../src/frogr-add-to-group-dialog.c:145
+msgid "Group Name"
+msgstr "Nom du groupe"
+
+#: ../src/frogr-add-to-group-dialog.c:585
+msgid "Add to Group"
+msgstr "Ajouter au groupe"
+
+#: ../src/frogr-auth-dialog.c:31
+#, c-format
+msgid ""
+"Please press the button to authorize %s and then come back to this screen to "
+"complete the process."
+msgstr ""
+"Veuillez appuyer sur le bouton pour autoriser %s, puis revenir à cet écran "
+"pour compléter le processus."
+
+#: ../src/frogr-auth-dialog.c:35
+#, c-format
+msgid ""
+"Press the button to start using %s once you've authorized it in your flickr "
+"account."
+msgstr ""
+"Appuyer sur le bouton pour commencer à utiliser %s une fois que vous l'avez "
+"autorisé dans votre compte flickr."
+
+#: ../src/frogr-controller.c:227
+msgid "Process cancelled by the user"
+msgstr "Processus annulé par l'utilisateur"
+
+#: ../src/frogr-controller.c:232
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+"Erreur de connexion :\n"
+"Réseau indisponible"
+
+#: ../src/frogr-controller.c:237
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+"Erreur de connexion :\n"
+"Mauvaise requête"
+
+#: ../src/frogr-controller.c:242
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+"Erreur de connexion :\n"
+"Erreur côté serveur"
+
+#: ../src/frogr-controller.c:247
+msgid ""
+"Error uploading picture:\n"
+"File invalid"
+msgstr ""
+"Erreur pendant l'envoi de l'image :\n"
+"Fichier invalide"
+
+#: ../src/frogr-controller.c:252
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+"Erreur pendant l'envoi de l'image :\n"
+"Quota dépassé"
+
+#: ../src/frogr-controller.c:257
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+"Erreur :\n"
+"Photo introuvable"
+
+#: ../src/frogr-controller.c:262
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+"Erreur :\n"
+"Photo déjà présente dans l'ensemble"
+
+#: ../src/frogr-controller.c:267
+msgid ""
+"Error:\n"
+"Photo already in group"
+msgstr ""
+"Erreur :\n"
+"Photo déjà dans le groupe"
+
+#: ../src/frogr-controller.c:272
+msgid ""
+"Error:\n"
+"Photo already in the maximum number of groups possible"
+msgstr ""
+"Erreur :\n"
+"Photo déjà dans le nombre maximum de groupes possible"
+
+#: ../src/frogr-controller.c:277
+msgid ""
+"Error:\n"
+"Group limit alrady reached"
+msgstr ""
+"Erreur :\n"
+"Limite du groupe déjà atteinte"
+
+#: ../src/frogr-controller.c:282
+msgid ""
+"Error:\n"
+"Photo added to group's queue"
+msgstr ""
+"Erreur :\n"
+"Photo ajoutée à la file d'attente du groupe"
+
+#: ../src/frogr-controller.c:287
+msgid ""
+"Error:\n"
+"Photo already added to group's queue"
+msgstr ""
+"Erreur :\n"
+"Photo déjà ajoutée à la file d'attente du groupe"
+
+#: ../src/frogr-controller.c:292
+msgid ""
+"Error:\n"
+"Content not allowed for this group"
+msgstr ""
+"Erreur :\n"
+"Contenu non autorisé pour ce groupe"
+
+#: ../src/frogr-controller.c:297
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"Échec de l'autorisation.\n"
+"Veuillez réessayer"
+
+#: ../src/frogr-controller.c:303
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to flickr.\n"
+"Please re-authorize it"
+msgstr ""
+"Erreur\n"
+"%s n'est pas autorisé à envoyer des images vers flickr.\n"
+"Veuillez l'autoriser à nouveau"
+
+#: ../src/frogr-controller.c:309
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"Erreur :\n"
+"Service indisponible"
+
+#. General error: just dump the raw error description
+#: ../src/frogr-controller.c:315
+#, c-format
+msgid "An error happened while uploading a picture: %s."
+msgstr "Une erreur est survenue lors de l'envoi d'une image : %s."
+
+#: ../src/frogr-controller.c:441
+msgid "Authorization successfully completed!"
+msgstr "Autorisation accordée !"
+
+#: ../src/frogr-controller.c:826
+msgid "Creating new photoset…"
+msgstr "Création d'un nouvel ensemble…"
+
+#: ../src/frogr-controller.c:851
+msgid "Adding picture to photoset…"
+msgstr "Ajout d'une image à l'ensemble…"
+
+#: ../src/frogr-controller.c:874
+msgid "Adding picture to group…"
+msgstr "Ajout d'une image au groupe…"
+
+#: ../src/frogr-controller.c:939
+msgid "Operation successfully completed!"
+msgstr "Opération réussie !"
+
+#: ../src/frogr-controller.c:1926
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to flickr.\n"
+"Please re-authorize it."
+msgstr ""
+"Vous devez donner l'autorisation à %s avant l'envoi d'images vers flickr.\n"
+"Veuillez l'autoriser à nouveau."
+
+#. This shows a dialog notifying the problem to the user
+#: ../src/frogr-create-new-album-dialog.c:120
+#: ../src/frogr-details-dialog.c:380
+msgid "Missing data required"
+msgstr "Données manquantes requises"
+
+#: ../src/frogr-create-new-album-dialog.c:304
+msgid "Album's title:"
+msgstr "Titre de l'album :"
+
+#: ../src/frogr-create-new-album-dialog.c:317
+msgid "Album's description:"
+msgstr "Description de l'album :"
+
+#: ../src/frogr-create-new-album-dialog.c:355
+msgid "Create new Album"
+msgstr "Créer un nouvel album"
+
+#: ../src/frogr-details-dialog.c:259
+#, c-format
+msgid "(Editing %d pictures)"
+msgstr "(Modification de %d images)"
+
+#: ../src/frogr-details-dialog.c:582
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:2
+msgid "Edit Picture Details"
+msgstr "Modifier les détails d'une image"
+
+#. File menu
+#: ../src/frogr-main-view.c:216
+msgid "_File"
+msgstr "_Fichier"
+
+#: ../src/frogr-main-view.c:222
+msgid "_Add Pictures"
+msgstr "_Ajouter des images"
+
+#: ../src/frogr-main-view.c:229
+msgid "_Remove Pictures"
+msgstr "_Supprimer des images"
+
+#. Accounts menu item and submenu
+#: ../src/frogr-main-view.c:239
+msgid "Accounts"
+msgstr "Comptes"
+
+#. Authorize menu item
+#: ../src/frogr-main-view.c:245
+msgid "Authorize _frogr"
+msgstr "Autoriser _frogr"
+
+#: ../src/frogr-main-view.c:254
+msgid "Settings…"
+msgstr "Paramètres…"
+
+#: ../src/frogr-main-view.c:262
+msgid "_Quit"
+msgstr "_Quitter"
+
+#. Actions menu
+#: ../src/frogr-main-view.c:268
+msgid "A_ctions"
+msgstr "A_ctions"
+
+#: ../src/frogr-main-view.c:274
+msgid "Edit _Details…"
+msgstr "Modifier les _détails…"
+
+#: ../src/frogr-main-view.c:281
+msgid "Add _Tags…"
+msgstr "A_jouter des étiquettes…"
+
+#: ../src/frogr-main-view.c:288
+msgid "Add to _Group…"
+msgstr "Ajouter au _groupe…"
+
+#: ../src/frogr-main-view.c:295
+msgid "Add to Al_bum"
+msgstr "Ajouter à l'al_bum"
+
+#: ../src/frogr-main-view.c:302 ../src/frogr-main-view.c:418
+msgid "Create new album…"
+msgstr "Créer un nouvel album…"
+
+#: ../src/frogr-main-view.c:309 ../src/frogr-main-view.c:425
+msgid "Add to existing album…"
+msgstr "Ajouter à un album existant…"
+
+#: ../src/frogr-main-view.c:318
+msgid "_Upload All"
+msgstr "_Envoyer tout"
+
+#. Help menu
+#: ../src/frogr-main-view.c:326
+msgid "_Help"
+msgstr "Aid_e"
+
+#: ../src/frogr-main-view.c:332
+msgid "_About"
+msgstr "À _propos"
+
+#. Edit details
+#: ../src/frogr-main-view.c:388
+msgid "Edit Details…"
+msgstr "Modifier les détails…"
+
+#. Add Tags
+#: ../src/frogr-main-view.c:396
+msgid "Add Tags…"
+msgstr "Ajouter des étiquettes…"
+
+#. Add to group
+#: ../src/frogr-main-view.c:404
+msgid "Add to Group…"
+msgstr "Ajouter au groupe…"
+
+#. Remove
+#: ../src/frogr-main-view.c:435 ../data/gtkbuilder/frogr-main-view.xml.h:2
+msgid "Remove"
+msgstr "Supprimer"
+
+#: ../src/frogr-main-view.c:933
+msgid "Select a Picture"
+msgstr "Sélectionner une image"
+
+#: ../src/frogr-main-view.c:966
+msgid "You need to select some pictures first"
+msgstr "Vous devez d'abord sélectionner des images"
+
+#: ../src/frogr-main-view.c:1171
+msgid "Not connected to flickr"
+msgstr "Non connecté à flickr"
+
+#: ../src/frogr-main-view.c:1200
+msgid "remaining for the current month"
+msgstr "restant pour le mois en cours"
+
+#: ../src/frogr-main-view.c:1208
+msgid "Connected as"
+msgstr "Connecté en tant que"
+
+#: ../src/frogr-main-view.c:1209
+msgid " (PRO account)"
+msgstr "(compte PRO)"
+
+#: ../src/frogr-picture-loader.c:91
+#, c-format
+msgid "Loading pictures %d / %d"
+msgstr "Chargement des images %d / %d"
+
+#. Update progress
+#: ../src/frogr-picture-uploader.c:85
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Envoi de '%s'…"
+
+#: ../src/frogr-settings-dialog.c:107
+msgid "Default Visibility"
+msgstr "Visibilité par défaut"
+
+#: ../src/frogr-settings-dialog.c:119
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:4
+msgid "Public"
+msgstr "Public"
+
+#: ../src/frogr-settings-dialog.c:126
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:3
+msgid "Private"
+msgstr "Privé"
+
+#: ../src/frogr-settings-dialog.c:136
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:7
+msgid "Visible to family"
+msgstr "Visible pour la famille"
+
+#: ../src/frogr-settings-dialog.c:142
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:8
+msgid "Visible to friends"
+msgstr "Visible pour les amis"
+
+#: ../src/frogr-settings-dialog.c:170
+msgid "Default Actions"
+msgstr "Actions par défaut"
+
+#: ../src/frogr-settings-dialog.c:178
+msgid "Open browser after uploading pictures"
+msgstr "Ouvrir le navigateur après l'envoi d'images"
+
+#: ../src/frogr-settings-dialog.c:189
+msgid "General"
+msgstr "Général"
+
+#. Proxy settings
+#: ../src/frogr-settings-dialog.c:208
+msgid "Use HTTP proxy"
+msgstr "Utiliser le serveur mandataire HTTP"
+
+#: ../src/frogr-settings-dialog.c:216
+msgid "Proxy address:"
+msgstr "Adresse du serveur mandataire :"
+
+#: ../src/frogr-settings-dialog.c:234
+msgid "Connection"
+msgstr "Connexion"
+
+#: ../src/frogr-settings-dialog.c:500
+msgid "Settings"
+msgstr "Paramètres"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:1
+msgid "Add"
+msgstr "Ajouter"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:3
+msgid "Upload"
+msgstr "Envoyer"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:4
+msgid "frogr"
+msgstr "frogr"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:1
+msgid "Description:"
+msgstr "Description :"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:5
+msgid "Tags:"
+msgstr "Étiquettes :"
+
+#: ../data/gtkbuilder/frogr-details-dialog.xml.h:6
+msgid "Title:"
+msgstr "Titre :"

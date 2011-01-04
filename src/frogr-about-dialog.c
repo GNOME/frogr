@@ -65,7 +65,8 @@ static const gchar *license =
 static const char translators_tpl[] =
 "%s (es)\n* Alejandro Piñeiro Iglesias <apinheiro@igalia.com>\n"
          "* Mario Sanchez Prada <msanchez@igalia.com>\n\n"
-"%s (en_GB)\n* Philip Withnall <philip@tecnocode.co.uk>";
+"%s (en_GB)\n* Philip Withnall <philip@tecnocode.co.uk>\n\n"
+"%s (fr)\n* Alexandre Franke <alexandre.franke@gmail.com>";
 
 static void
 _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
@@ -94,7 +95,8 @@ frogr_about_dialog_show (GtkWindow *parent)
   /* Translated list of translators */
   translators = g_strdup_printf (translators_tpl,
                                  _("Spanish"),
-                                 _("British English"));
+                                 _("British English"),
+                                 _("French"));
 
   /* XXX: Show clearly that this is an unreleased version */
   version = g_strdup_printf ("%s~unreleased", VERSION);
