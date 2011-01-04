@@ -46,6 +46,9 @@ struct _FrogrMainViewModelPrivate
   GSList *groups_list;
   guint n_groups;
 
+  GSList *tags_list;
+  guint n_tags;
+
   gchar* account_description;
 };
 
@@ -76,6 +79,13 @@ _frogr_main_view_model_dispose (GObject* object)
       g_slist_foreach (priv->groups_list, (GFunc)g_object_unref, NULL);
       g_slist_free (priv->groups_list);
       priv->groups_list = NULL;
+    }
+
+  if (priv->tags_list)
+    {
+      g_slist_foreach (priv->tags_list, (GFunc)g_free, NULL);
+      g_slist_free (priv->tags_list);
+      priv->tags_list = NULL;
     }
 
   G_OBJECT_CLASS (frogr_main_view_model_parent_class)->dispose (object);
@@ -113,6 +123,9 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
 
   priv->groups_list = NULL;
   priv->n_groups = 0;
+
+  priv->tags_list = NULL;
+  priv->n_tags = 0;
 
   priv->account_description = NULL;
 }
@@ -366,12 +379,52 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
   priv->groups_list = groups_list;
   priv->n_groups = g_slist_length (groups_list);
 
-  /* Remove all the albums attached to every picture */
+  /* Remove all the groups attached to every picture */
   for (item = priv->pictures_list; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
       frogr_picture_remove_groups (picture);
     }
+}
+
+GSList *
+frogr_main_view_model_get_tags_list (FrogrMainViewModel *self)
+{
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  return priv->tags_list;
+}
+
+void
+frogr_main_view_model_set_tags_list (FrogrMainViewModel *self, GSList *tags_list)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv = NULL;
+
+  frogr_main_view_model_remove_all_tags (self);
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv->tags_list = tags_list;
+  priv->n_tags = g_slist_length (tags_list);
+}
+
+void
+frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv =
+    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  g_slist_foreach (priv->tags_list, (GFunc)g_free, NULL);
+  g_slist_free (priv->tags_list);
+
+  priv->tags_list = NULL;
+  priv->n_tags = 0;
 }
 
 gchar *

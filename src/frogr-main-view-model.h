@@ -93,6 +93,13 @@ GSList *frogr_main_view_model_get_groups (FrogrMainViewModel *self);
 void frogr_main_view_model_set_groups (FrogrMainViewModel *self,
                                        GSList *groups_list);
 
+GSList *frogr_main_view_model_get_tags_list (FrogrMainViewModel *self);
+
+void frogr_main_view_model_set_tags_list (FrogrMainViewModel *self,
+                                          GSList *tags_list);
+
+void frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self);
+
 gchar *frogr_main_view_model_get_account_description (FrogrMainViewModel *self);
 
 void frogr_main_view_model_set_account_description (FrogrMainViewModel *self,
