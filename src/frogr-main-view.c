@@ -32,7 +32,14 @@
 #include <flicksoup/flicksoup.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
+
+/* Access to old GDK names from GTK+ 2 when compiling with GTK+ 3 */
+#ifndef GTK_API_VERSION_2
+#include <gdk/gdkkeysyms-compat.h>
+#endif
+
 #include <glib/gi18n.h>
+
 
 #define MAIN_VIEW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
 

@@ -22,21 +22,47 @@ CPPFLAGS="$CPPFLAGS -DGSEAL_ENABLE"
 
 AC_CHECK_LIB(gthread-2.0, g_thread_init)
 
-PKG_CHECK_MODULES(GTK2, gtk+-2.0 >= 2.12)
+AC_MSG_CHECKING([Checking GTK+ version to use])
+AC_ARG_WITH([gtk],
+        [AS_HELP_STRING([--with-gtk=2.0|3.0], [GTK+ version to use (default: 2.0)])],
+        [case "$with_gtk" in
+        2.0|3.0) ;;
+        *) AC_MSG_ERROR([Wrong GTK+ version]) ;;
+        esac],
+        [with_gtk=2.0])
+AC_MSG_RESULT([$with_gtk])
+
+case "$with_gtk" in
+     2.0) GTK_MIN_VERSION=2.16
+          GTK_API_VERSION=2.0
+          ;;
+     3.0) GTK_MIN_VERSION=2.91
+          GTK_API_VERSION=3.0
+          ;;
+esac
+
+# Make GTK API version available to the code
+AC_SUBST([GTK_API_VERSION])
+AM_CONDITIONAL([GTK_API_VERSION_2],[test "$GTK_API_VERSION" = "2.0"])
+
+PKG_CHECK_MODULES(GTK2, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $GTK2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $GTK2_LIBS"
 
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.16)
+GLIB_MIN_VERSION=2.16
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $GLIB_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $GLIB_LIBS"
 
 # Extra checks for flicksoup internal library
 
-PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4 >= 2.24)
+LIBSOUP_MIN_VERSION=2.24
+PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4 >= $LIBSOUP_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBSOUP_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $LIBSOUP_LIBS"
 
-PKG_CHECK_MODULES(LIBXML2, libxml-2.0 >= 2.6.8)
+LIBXML2_MIN_VERSION=2.6.8
+PKG_CHECK_MODULES(LIBXML2, libxml-2.0 >= $LIBXML2_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBXML2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $LIBXML2_LIBS"
 
@@ -89,6 +115,9 @@ echo ""
 echo "*************************************"
 echo "*** frogr is ready to be compiled ***"
 echo "*************************************"
+echo ""
+echo "Using GTK+ version: $with_gtk"
+echo ""
 echo ""
 echo "Configure successful. Type 'make' to compile"
 echo ""
