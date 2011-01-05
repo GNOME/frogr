@@ -68,6 +68,7 @@ static const char translators_tpl[] =
 "%s (en_GB)\n* Philip Withnall <philip@tecnocode.co.uk>\n\n"
 "%s (fr)\n* Alexandre Franke <alexandre.franke@gmail.com>";
 
+#if !GTK_CHECK_VERSION (2,23,0)
 static void
 _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
                               const gchar *link,
@@ -77,6 +78,7 @@ _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
   frogr_util_open_url_in_browser (uri);
   g_free (uri);
 }
+#endif
 
 void
 frogr_about_dialog_show (GtkWindow *parent)
@@ -87,10 +89,12 @@ frogr_about_dialog_show (GtkWindow *parent)
 
   logo = gdk_pixbuf_new_from_file (ABOUT_DIALOG_ICON, NULL);
 
+#if !GTK_CHECK_VERSION (2,23,0)
   /* Install about dialog hooks */
   gtk_about_dialog_set_url_hook (_frogr_about_dialog_uri_hook, "", NULL);
   gtk_about_dialog_set_email_hook (_frogr_about_dialog_uri_hook, "mailto:",
                                    NULL);
+#endif
 
   /* Translated list of translators */
   translators = g_strdup_printf (translators_tpl,
