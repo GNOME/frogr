@@ -31,7 +31,7 @@ frogr_util_open_url_in_browser (const gchar *url)
   if (url == NULL)
     return;
 
-#ifdef HAVE_GTK_2_14
+#if GTK_CHECK_VERSION (2,14,0)
   gchar *command = NULL;
   GError *error = NULL;
 
