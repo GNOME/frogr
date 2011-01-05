@@ -580,7 +580,6 @@ frogr_add_to_album_dialog_show (GtkWindow *parent, GSList *pictures, GSList *alb
                       "albums", albums,
                       "transient-for", parent,
                       "resizable", TRUE,
-                      "has-separator", FALSE,
                       NULL);
 
   self = FROGR_ADD_TO_ALBUM_DIALOG (new);

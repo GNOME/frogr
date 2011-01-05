@@ -580,7 +580,6 @@ frogr_add_to_group_dialog_show (GtkWindow *parent, GSList *pictures, GSList *gro
                       "groups", groups,
                       "transient-for", parent,
                       "resizable", TRUE,
-                      "has-separator", FALSE,
                       NULL);
 
   self = FROGR_ADD_TO_GROUP_DIALOG (new);

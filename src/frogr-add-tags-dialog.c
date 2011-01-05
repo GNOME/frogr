@@ -385,7 +385,6 @@ frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures, GSList *tags)
                       "pictures", pictures,
                       "transient-for", parent,
                       "resizable", FALSE,
-                      "has-separator", FALSE,
                       NULL);
 
   self = FROGR_ADD_TAGS_DIALOG (new);

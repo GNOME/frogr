@@ -359,7 +359,6 @@ frogr_create_new_album_dialog_show (GtkWindow *parent, GSList *pictures, GSList 
                                      "albums", albums,
                                      "transient-for", parent,
                                      "resizable", FALSE,
-                                     "has-separator", FALSE,
                                      NULL));
 
   g_signal_connect (G_OBJECT (dialog), "response",
