@@ -166,7 +166,7 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
   matching_text_len = g_utf8_strlen (matching_text, -1);
 
   base_text = g_strndup (entry_text, entry_text_len - matching_text_len);
-  new_text = g_strdup_printf ("%s%s", base_text, tag);
+  new_text = g_strdup_printf ("%s%s ", base_text, tag);
 
   gtk_entry_set_text (GTK_ENTRY (priv->entry), new_text);
   gtk_editable_set_position (GTK_EDITABLE (priv->entry), -1);
