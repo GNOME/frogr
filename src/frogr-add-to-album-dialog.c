@@ -523,7 +523,7 @@ frogr_add_to_album_dialog_init (FrogrAddToAlbumDialog *self)
                           GTK_STOCK_CANCEL,
                           GTK_RESPONSE_CANCEL,
                           NULL);
-  gtk_container_set_border_width (GTK_CONTAINER (self), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (self), 12);
 
 #if GTK_CHECK_VERSION (2,14,0)
   vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));

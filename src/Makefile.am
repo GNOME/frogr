@@ -31,6 +31,12 @@ frogr_CFLAGS = $(FROGR_CFLAGS) \
 	-DAPP_DATA_DIR=\"$(appdatadir)\" \
 	-DICONS_DIR=\"$(iconsdir)\"
 
+
+if GTK_API_VERSION_2
+frogr_CFLAGS += \
+	-DGTK_API_VERSION_2=1
+endif
+
 frogr_LDFLAGS = -export-dynamic
 
 frogr_SOURCES = \

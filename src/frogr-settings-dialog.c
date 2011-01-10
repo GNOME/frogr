@@ -160,7 +160,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   align = gtk_alignment_new (0.1, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), box2);
-  gtk_box_pack_start (GTK_BOX (box1), align, TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (box1), align, TRUE, TRUE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 6);
 
@@ -607,7 +607,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
                           GTK_STOCK_CANCEL,
                           GTK_RESPONSE_CANCEL,
                           NULL);
-  gtk_container_set_border_width (GTK_CONTAINER (self), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (self), 12);
 
 #if GTK_CHECK_VERSION (2,14,0)
   vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
