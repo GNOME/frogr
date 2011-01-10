@@ -1,0 +1,28 @@
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">Frogr</name>
+  <shortname>frogr</shortname>
+  <shortdesc xml:lang="en">Flickr Remote Organizer for GNOME</shortdesc>
+  <description>A Flickr Remote Organizer for GNOME</description>
+  <homepage rdf:resource="http://live.gnome.org/Frogr" />
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Mario Sanchez Prada</foaf:name>
+      <foaf:mbox rdf:resource="mailto:msanchez@igalia.com" />
+      <gnome:userid>msanchez</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+
+  <repository>
+    <GitRepository>
+      <browse rdf:resource="http://git.gnome.org/cgit/frogr/"/>
+      <location rdf:resource="git://git.gnome.org/frogr"/>
+    </GitRepository>
+  </repository>
+
+</Project>
