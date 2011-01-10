@@ -31,13 +31,13 @@
 
 static const gchar *authors[] = {
   "Mario Sanchez Prada\n<msanchez@igalia.com>",
-  "",
   "Adrian Perez de Castro\n<aperez@igalia.com>",
+  "",
   NULL
 };
 
 static const gchar *artists[] = {
-  "Adrian Perez de Castro\n<aperez@igalia.com>",
+  "Adrian Perez de Castro\n<aperez@igalia.com>\n",
   NULL
 };
 
@@ -66,7 +66,7 @@ static const char translators_tpl[] =
 "%s (es)\n* Alejandro Piñeiro Iglesias <apinheiro@igalia.com>\n"
          "* Mario Sanchez Prada <msanchez@igalia.com>\n\n"
 "%s (en_GB)\n* Philip Withnall <philip@tecnocode.co.uk>\n\n"
-"%s (fr)\n* Alexandre Franke <alexandre.franke@gmail.com>";
+"%s (fr)\n* Alexandre Franke <alexandre.franke@gmail.com>\n";
 
 #if !GTK_CHECK_VERSION (2,23,0)
 static void
