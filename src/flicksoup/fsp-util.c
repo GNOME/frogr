@@ -1,7 +1,7 @@
 /*
  * fsp-util.c
  *
- * Copyright (C) 2010 Mario Sanchez Prada
+ * Copyright (C) 2010, 2011 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
  * Some parts of this file were based on source code from the libsoup
