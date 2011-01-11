@@ -33,7 +33,7 @@ AC_ARG_WITH([gtk],
 AC_MSG_RESULT([$with_gtk])
 
 case "$with_gtk" in
-     2.0) GTK_MIN_VERSION=2.16
+     2.0) GTK_MIN_VERSION=2.12
           GTK_API_VERSION=2.0
           ;;
      3.0) GTK_MIN_VERSION=2.91
