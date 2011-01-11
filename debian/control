@@ -4,13 +4,13 @@ Priority: optional
 Maintainer: Alberto Garcia <agarcia@igalia.com>
 Build-Depends: cdbs, intltool, debhelper (>= 5), libglib2.0-dev (>= 2.16), libgtk2.0-dev (>= 2.12), libsoup2.4-dev (>= 2.24), libxml2-dev (>= 2.6.8)
 Standards-Version: 3.7.3
-Homepage: http://code.google.com/p/frogr/
+Homepage: http://live.gnome.org/Frogr
 
 Package: frogr
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Flickr Remote Organizer for GNOME
  Frogr is a small application for the GNOME desktop that allows users
- to manage their accounts in the Flickr image hosting website. It
- supports all the basic tasks, including uploading pictures, adding
- descriptions, setting tags and managing sets.
+ to manage their accounts in the Flickr image hosting website.
+ It supports all the basic Flickr features, including uploading
+ pictures, adding descriptions, setting tags and managing sets.

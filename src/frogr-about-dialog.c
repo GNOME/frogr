@@ -43,7 +43,7 @@ static const gchar *artists[] = {
 
 static const gchar *appdescr = N_("A Flickr remote organizer for GNOME\n");
 static const gchar *copyright = "(c) 2009, 2010 Mario Sanchez Prada";
-static const gchar *website = "http://code.google.com/p/frogr";
+static const gchar *website = "http://live.gnome.org/Frogr";
 static const gchar *license =
   "frogr is free software: you can redistribute\n"
   "it and/or modify it under the terms of the GNU\n"

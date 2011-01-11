@@ -4,9 +4,9 @@ frogr - A Flickr Remote Organizer for GNOME
 Frogr intends to be a complete GNOME application to remotely manage a
 flickr account from the desktop.
 
-To get the source, please checkout the git repository at gitorious:
+To get the source, please checkout the git repository at gnome.org:
 
-    git clone git://gitorious.org/frogr/mainline.git
+    git clone git://git.gnome.org/frogr
 
 To work properly, frogr needs some libraries to be installed first::
 
@@ -18,7 +18,7 @@ To work properly, frogr needs some libraries to be installed first::
 -------------------------------------------
 
 frogr is (c) 2009, 2010 Mario Sanchez Prada
-http://code.google.com/p/frogr
+http://live.gnome.org/Frogr
 
 See AUTHORS file for details on authors
 
@@ -34,14 +34,8 @@ See the COPYING file for more details.
 
 -------------------------------------------
 
-Website: http://code.google.com/p/frogr
+Website: http://live.gnome.org/Frogr
 
-Source: http://gitorious.org/frogr
+Source: git://git.gnome.org/frogr
 
-Mailing lists:
-
-  General discussion:
-    http://groups.google.com/group/frogr-users
-
-  Technical discussion:
-   http://groups.google.com/group/frogr-devel
+Mailing list: http://mail.gnome.org/mailman/listinfo/frogr-list

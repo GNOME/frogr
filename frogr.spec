@@ -5,7 +5,7 @@ Release:	1%{?dist}
 
 Group:		Applications/Internet
 License:	GPLv3
-URL:		http://code.google.com/p/frogr
+URL:		http://live.gnome.org/Frogr
 Source0:	http://frogr.googlecode.com/files/%{name}-%{version}.tar.bz2
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
