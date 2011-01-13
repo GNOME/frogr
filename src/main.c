@@ -32,8 +32,6 @@ main (int argc, char **argv)
 {
   FrogrController *fcontroller = NULL;
 
-  gdk_threads_init ();
-
   gtk_init (&argc, &argv);
   g_set_application_name(PACKAGE);
 
