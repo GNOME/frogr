@@ -543,13 +543,13 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       if (g_slist_length (groups) > 0)
         {
           up_st->groups = groups;
-          g_timeout_add (DEFAULT_TIMEOUT, _add_picture_to_groups_on_idle, up_st);
+          gdk_threads_add_timeout (DEFAULT_TIMEOUT, _add_picture_to_groups_on_idle, up_st);
         }
     }
 
   /* Complete the upload process when possible */
   up_st->error = error;
-  g_timeout_add (DEFAULT_TIMEOUT, _complete_picture_upload_on_idle, up_st);
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, _complete_picture_upload_on_idle, up_st);
 }
 
 static gboolean
@@ -1962,7 +1962,7 @@ frogr_controller_show_details_dialog (FrogrController *self,
     _fetch_tags (self);
 
   /* Show the dialog when possible */
-  g_timeout_add (DEFAULT_TIMEOUT, (GSourceFunc) _show_details_dialog_on_idle, pictures);
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_details_dialog_on_idle, pictures);
 }
 
 void
@@ -1982,7 +1982,7 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
     _fetch_tags (self);
 
   /* Show the dialog when possible */
-  g_timeout_add (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_tags_dialog_on_idle, pictures);
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_tags_dialog_on_idle, pictures);
 }
 
 void
@@ -2002,7 +2002,7 @@ frogr_controller_show_create_new_album_dialog (FrogrController *self,
     _fetch_albums (self);
 
   /* Show the dialog when possible */
-  g_timeout_add (DEFAULT_TIMEOUT, (GSourceFunc) _show_create_new_album_dialog_on_idle, pictures);
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_create_new_album_dialog_on_idle, pictures);
 }
 
 void
@@ -2022,7 +2022,7 @@ frogr_controller_show_add_to_album_dialog (FrogrController *self,
     _fetch_albums (self);
 
   /* Show the dialog when possible */
-  g_timeout_add (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_album_dialog_on_idle, pictures);
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_album_dialog_on_idle, pictures);
 }
 
 void
@@ -2042,7 +2042,7 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
     _fetch_groups (self);
 
   /* Show the dialog when possible */
-  g_timeout_add (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_group_dialog_on_idle, pictures);
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_group_dialog_on_idle, pictures);
 }
 
 void
