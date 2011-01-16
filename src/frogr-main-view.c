@@ -87,7 +87,6 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *progress_dialog;
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
-  gboolean is_progress_cancellable;
 
   GtkTreeModel *tree_model;
   guint sb_context_id;
@@ -1106,7 +1105,9 @@ _progress_dialog_response (GtkDialog *dialog,
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
   frogr_controller_cancel_ongoing_request (priv->controller);
+  gtk_widget_hide (priv->progress_dialog);
 }
 
 static gboolean
@@ -1117,8 +1118,8 @@ _progress_dialog_delete_event (GtkWidget *widget,
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  if (priv->is_progress_cancellable)
-    frogr_controller_cancel_ongoing_request (priv->controller);
+  frogr_controller_cancel_ongoing_request (priv->controller);
+  gtk_widget_hide (priv->progress_dialog);
 
   return TRUE;
 }
@@ -1482,6 +1483,10 @@ frogr_main_view_init (FrogrMainView *self)
                                                  GTK_STOCK_CANCEL,
                                                  GTK_RESPONSE_CANCEL,
                                                  NULL);
+
+  gtk_dialog_set_response_sensitive (GTK_DIALOG (progress_dialog),
+                                     GTK_RESPONSE_CANCEL, TRUE);
+
   gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
   gtk_window_set_default_size (GTK_WINDOW (progress_dialog), 250, -1);
 
@@ -1495,7 +1500,6 @@ frogr_main_view_init (FrogrMainView *self)
   priv->progress_dialog = progress_dialog;
   priv->progress_bar = progress_bar;
   priv->progress_label = progress_label;
-  priv->is_progress_cancellable = FALSE;
 
   /* Initialize model */
   priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
@@ -1631,11 +1635,6 @@ frogr_main_view_set_progress_status (FrogrMainView *self,
   if (text != NULL)
     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
 
-  /* Allow cancelling this kind of processes */
-  priv->is_progress_cancellable = TRUE;
-  gtk_dialog_set_response_sensitive (GTK_DIALOG (priv->progress_dialog),
-                                     GTK_RESPONSE_CANCEL, TRUE);
-
   gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
@@ -1649,11 +1648,8 @@ frogr_main_view_pulse_progress (FrogrMainView *self)
   /* Show the widget and set fraction */
   gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv->progress_bar));
 
-  /* Empty text for this and no cancellation available for pulse dialogs */
-  priv->is_progress_cancellable = FALSE;
+  /* Empty text for this */
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), NULL);
-  gtk_dialog_set_response_sensitive (GTK_DIALOG (priv->progress_dialog),
-                                     GTK_RESPONSE_CANCEL, FALSE);
 
   gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }

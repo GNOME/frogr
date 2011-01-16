@@ -83,6 +83,7 @@ struct _FrogrControllerPrivate
   /* We use these to know when an empty list of tags means that the
      user has no tags at all, as fetching already happened before */
   gboolean albums_fetched;
+  gboolean groups_fetched;
   gboolean tags_fetched;
 };
 
@@ -1056,7 +1057,8 @@ _fetch_albums (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->fetching_albums = TRUE;
 
-  fsp_session_get_photosets_async (priv->session, NULL,
+  _enable_cancellable (self, TRUE);
+  fsp_session_get_photosets_async (priv->session, priv->cancellable,
                                    _fetch_albums_cb, self);
 }
 
@@ -1066,9 +1068,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
   GSList *photosets_list = NULL;
-  GSList *albums_list = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
@@ -1085,34 +1085,41 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       g_error_free (error);
     }
-
-  if (photosets_list)
+  else
     {
-      GSList *item = NULL;
-      FspDataPhotoSet *current_photoset = NULL;
-      FrogrAlbum *current_album = NULL;
-      for (item = photosets_list; item; item = g_slist_next (item))
+      FrogrMainViewModel *mainview_model = NULL;
+      GSList *albums_list = NULL;
+
+      priv->albums_fetched = TRUE;
+
+      if (photosets_list)
         {
-          current_photoset = FSP_DATA_PHOTO_SET (item->data);
-          current_album = frogr_album_new (current_photoset->title,
-                                           current_photoset->description);
-          frogr_album_set_id (current_album, current_photoset->id);
-          frogr_album_set_primary_photo_id (current_album, current_photoset->primary_photo_id);
-          frogr_album_set_n_photos (current_album, current_photoset->n_photos);
+          GSList *item = NULL;
+          FspDataPhotoSet *current_photoset = NULL;
+          FrogrAlbum *current_album = NULL;
+          for (item = photosets_list; item; item = g_slist_next (item))
+            {
+              current_photoset = FSP_DATA_PHOTO_SET (item->data);
+              current_album = frogr_album_new (current_photoset->title,
+                                               current_photoset->description);
+              frogr_album_set_id (current_album, current_photoset->id);
+              frogr_album_set_primary_photo_id (current_album, current_photoset->primary_photo_id);
+              frogr_album_set_n_photos (current_album, current_photoset->n_photos);
 
-          albums_list = g_slist_append (albums_list, current_album);
+              albums_list = g_slist_append (albums_list, current_album);
 
-          fsp_data_free (FSP_DATA (current_photoset));
+              fsp_data_free (FSP_DATA (current_photoset));
+            }
+
+          g_slist_free (photosets_list);
         }
 
-      g_slist_free (photosets_list);
+      /* Update main view's model */
+      mainview_model = frogr_main_view_get_model (priv->mainview);
+      frogr_main_view_model_set_albums (mainview_model, albums_list);
     }
+  _enable_cancellable (controller, FALSE);
 
-  /* Update main view's model */
-  mainview_model = frogr_main_view_get_model (priv->mainview);
-  frogr_main_view_model_set_albums (mainview_model, albums_list);
-
-  priv->albums_fetched = TRUE;
   priv->fetching_albums = FALSE;
 }
 
@@ -1129,7 +1136,8 @@ _fetch_groups (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->fetching_groups = TRUE;
 
-  fsp_session_get_groups_async (priv->session, NULL,
+  _enable_cancellable (self, TRUE);
+  fsp_session_get_groups_async (priv->session, priv->cancellable,
                                 _fetch_groups_cb, self);
 }
 
@@ -1139,13 +1147,12 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
   GSList *data_groups_list = NULL;
-  GSList *groups_list = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   data_groups_list = fsp_session_get_groups_finish (session, res, &error);
   if (error != NULL)
@@ -1157,32 +1164,40 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       g_error_free (error);
     }
-
-  if (data_groups_list)
+  else
     {
-      GSList *item = NULL;
-      FspDataGroup *data_group = NULL;
-      FrogrGroup *current_group = NULL;
-      for (item = data_groups_list; item; item = g_slist_next (item))
+      FrogrMainViewModel *mainview_model = NULL;
+      GSList *groups_list = NULL;
+
+      priv->groups_fetched = TRUE;
+
+      if (data_groups_list)
         {
-          data_group = FSP_DATA_GROUP (item->data);
-          current_group = frogr_group_new (data_group->id,
-                                           data_group->name,
-                                           data_group->privacy,
-                                           data_group->n_photos);
+          GSList *item = NULL;
+          FspDataGroup *data_group = NULL;
+          FrogrGroup *current_group = NULL;
+          for (item = data_groups_list; item; item = g_slist_next (item))
+            {
+              data_group = FSP_DATA_GROUP (item->data);
+              current_group = frogr_group_new (data_group->id,
+                                               data_group->name,
+                                               data_group->privacy,
+                                               data_group->n_photos);
 
-          groups_list = g_slist_append (groups_list, current_group);
+              groups_list = g_slist_append (groups_list, current_group);
 
-          fsp_data_free (FSP_DATA (data_group));
+              fsp_data_free (FSP_DATA (data_group));
+            }
+
+          g_slist_free (data_groups_list);
         }
 
-      g_slist_free (data_groups_list);
+      /* Update main view's model */
+      mainview_model = frogr_main_view_get_model (priv->mainview);
+      frogr_main_view_model_set_groups (mainview_model, groups_list);
     }
 
-  /* Update main view's model */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
-  frogr_main_view_model_set_groups (mainview_model, groups_list);
+  _enable_cancellable (controller, FALSE);
 
   priv->fetching_groups = FALSE;
 }
@@ -1342,7 +1357,8 @@ _fetch_tags (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->fetching_tags = TRUE;
 
-  fsp_session_get_tags_list_async (priv->session, NULL, _fetch_tags_cb, self);
+  _enable_cancellable (self, TRUE);
+  fsp_session_get_tags_list_async (priv->session, priv->cancellable, _fetch_tags_cb, self);
 }
 
 static void
@@ -1369,12 +1385,16 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       g_error_free (error);
     }
+  else
+    {
+      /* Update main view's model */
+      mainview_model = frogr_main_view_get_model (priv->mainview);
+      frogr_main_view_model_set_tags_list (mainview_model, tags_list);
 
-  /* Update main view's model */
-  mainview_model = frogr_main_view_get_model (priv->mainview);
-  frogr_main_view_model_set_tags_list (mainview_model, tags_list);
+      priv->tags_fetched = TRUE;
+    }
+  _enable_cancellable (controller, FALSE);
 
-  priv->tags_fetched = TRUE;
   priv->fetching_tags = FALSE;
 }
 
@@ -1505,7 +1525,7 @@ _show_add_to_album_dialog_on_idle (GSList *pictures)
   window = frogr_main_view_get_window (priv->mainview);
   if (frogr_main_view_model_n_albums (mainview_model) > 0)
     frogr_add_to_album_dialog_show (window, pictures, albums);
-  else
+  else if (priv->albums_fetched)
     frogr_util_show_info_dialog (window, _("No albums found"));
 
   return FALSE;
@@ -1540,7 +1560,7 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   window = frogr_main_view_get_window (priv->mainview);
   if (frogr_main_view_model_n_groups (mainview_model) > 0)
     frogr_add_to_group_dialog_show (window, pictures, groups);
-  else
+  else if (priv->groups_fetched)
     frogr_util_show_info_dialog (window, _("No groups found"));
 
   return FALSE;
@@ -1696,6 +1716,7 @@ frogr_controller_init (FrogrController *self)
   priv->adding_to_album = FALSE;
   priv->adding_to_group = FALSE;
   priv->albums_fetched = FALSE;
+  priv->groups_fetched = FALSE;
   priv->tags_fetched = FALSE;
 
   /* Get account, if any */
@@ -1845,6 +1866,7 @@ frogr_controller_set_active_account (FrogrController *self,
 
   /* Prefetch info for this user */
   priv->albums_fetched = FALSE;
+  priv->groups_fetched = FALSE;
   priv->tags_fetched = FALSE;
   if (new_account)
     _fetch_everything (self);
@@ -2051,7 +2073,7 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
   /* Fetch the groups first if needed */
-  if (frogr_main_view_model_n_groups (mainview_model) == 0)
+  if (frogr_main_view_model_n_groups (mainview_model) == 0 && !priv->groups_fetched)
     _fetch_groups (self);
 
   /* Show the dialog when possible */
