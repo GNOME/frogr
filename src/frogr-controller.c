@@ -225,9 +225,6 @@ _enable_cancellable (FrogrController *self, gboolean enable)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  if (priv->cancellable)
-    g_object_unref (priv->cancellable);
-
   priv->cancellable = enable ? g_cancellable_new () : NULL;
 }
 
@@ -829,8 +826,6 @@ _complete_picture_upload_on_idle (gpointer data)
   error = up_st->error;
   g_slice_free (upload_picture_st, up_st);
 
-  _enable_cancellable (controller, FALSE);
-
   /* Execute callback */
   if (callback)
     callback (source_object, picture, error);
@@ -1118,7 +1113,6 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
       mainview_model = frogr_main_view_get_model (priv->mainview);
       frogr_main_view_model_set_albums (mainview_model, albums_list);
     }
-  _enable_cancellable (controller, FALSE);
 
   priv->fetching_albums = FALSE;
 }
@@ -1197,8 +1191,6 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
       frogr_main_view_model_set_groups (mainview_model, groups_list);
     }
 
-  _enable_cancellable (controller, FALSE);
-
   priv->fetching_groups = FALSE;
 }
 
@@ -1214,6 +1206,7 @@ static void _fetch_account_info (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->fetching_account_info = TRUE;
 
+  _enable_cancellable (self, FALSE);
   fsp_session_check_auth_info_async (priv->session, NULL,
                                      _fetch_account_info_cb, self);
 }
@@ -1283,6 +1276,7 @@ static void _fetch_account_extra_info (FrogrController *self)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->fetching_account_extra_info = TRUE;
 
+  _enable_cancellable (self, FALSE);
   fsp_session_get_upload_status_async (priv->session, NULL,
                                        _fetch_account_extra_info_cb, self);
 }
@@ -1393,7 +1387,6 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       priv->tags_fetched = TRUE;
     }
-  _enable_cancellable (controller, FALSE);
 
   priv->fetching_tags = FALSE;
 }
@@ -2086,6 +2079,8 @@ frogr_controller_open_auth_url (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  _enable_cancellable (self, FALSE);
   fsp_session_get_auth_url_async (priv->session, NULL, _get_auth_url_cb, self);
 }
 
@@ -2095,6 +2090,8 @@ frogr_controller_complete_auth (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  _enable_cancellable (self, FALSE);
   fsp_session_complete_auth_async (priv->session, NULL, _complete_auth_cb, self);
 }
 
