@@ -49,6 +49,10 @@ struct _FrogrPicturePrivate
   gboolean is_friend;
   gboolean is_family;
 
+  FspSafetyLevel safety_level;
+  FspContentType content_type;
+  gboolean show_in_search;
+
   GdkPixbuf *pixbuf;
 };
 
@@ -63,6 +67,9 @@ enum  {
   PROP_IS_PUBLIC,
   PROP_IS_FAMILY,
   PROP_IS_FRIEND,
+  PROP_SAFETY_LEVEL,
+  PROP_CONTENT_TYPE,
+  PROP_SHOW_IN_SEARCH,
   PROP_PIXBUF
 };
 
@@ -200,6 +207,15 @@ _frogr_picture_set_property (GObject *object,
     case PROP_IS_FRIEND:
       frogr_picture_set_friend (self, g_value_get_boolean (value));
       break;
+    case PROP_SAFETY_LEVEL:
+      frogr_picture_set_safety_level (self, g_value_get_int (value));
+      break;
+    case PROP_CONTENT_TYPE:
+      frogr_picture_set_content_type (self, g_value_get_int (value));
+      break;
+    case PROP_SHOW_IN_SEARCH:
+      frogr_picture_set_show_in_search (self, g_value_get_boolean (value));
+      break;
     case PROP_PIXBUF:
       frogr_picture_set_pixbuf (self, GDK_PIXBUF (g_value_get_object (value)));
       break;
@@ -242,6 +258,15 @@ _frogr_picture_get_property (GObject *object,
       break;
     case PROP_IS_FRIEND:
       g_value_set_boolean (value, priv->is_friend);
+      break;
+    case PROP_SAFETY_LEVEL:
+      g_value_set_int (value, priv->safety_level);
+      break;
+    case PROP_CONTENT_TYPE:
+      g_value_set_int (value, priv->content_type);
+      break;
+    case PROP_SHOW_IN_SEARCH:
+      g_value_set_boolean (value, priv->show_in_search);
       break;
     case PROP_PIXBUF:
       g_value_set_object (value, priv->pixbuf);
@@ -379,6 +404,35 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                          FALSE,
                                                          G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
+                                   PROP_SAFETY_LEVEL,
+                                   g_param_spec_int ("safety-level",
+                                                     "safety-level",
+                                                     "Safety level for this picture "
+                                                     "(safe/moderate/restricted)",
+                                                     FSP_SAFETY_LEVEL_NONE,
+                                                     FSP_SAFETY_LEVEL_RESTRICTED,
+                                                     FSP_SAFETY_LEVEL_SAFE,
+                                                     G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_CONTENT_TYPE,
+                                   g_param_spec_int ("content-type",
+                                                     "content-type",
+                                                     "Content type for this picture "
+                                                     "(photo/screenshot/other)",
+                                                     FSP_CONTENT_TYPE_NONE,
+                                                     FSP_CONTENT_TYPE_OTHER,
+                                                     FSP_CONTENT_TYPE_PHOTO,
+                                                     G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_SHOW_IN_SEARCH,
+                                   g_param_spec_boolean ("show-in-search",
+                                                         "show-in-search",
+                                                         "Whether the show the "
+                                                         "picture in global "
+                                                         "search results",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
                                    PROP_PIXBUF,
                                    g_param_spec_object ("pixbuf",
                                                         "pixbuf",
@@ -410,6 +464,10 @@ frogr_picture_init (FrogrPicture *self)
   priv->is_friend = FALSE;
   priv->is_family = FALSE;
 
+  priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
+  priv->content_type = FSP_CONTENT_TYPE_PHOTO;
+  priv->show_in_search = TRUE;
+
   priv->pixbuf = NULL;
 }
 
@@ -432,6 +490,9 @@ frogr_picture_new (const gchar *filepath,
                               "is-public", public,
                               "is-family", family,
                               "is-friend", friend,
+                              "safety-level", FSP_SAFETY_LEVEL_SAFE,
+                              "content-type", FSP_CONTENT_TYPE_PHOTO,
+                              "show_in_search", TRUE,
                               NULL);
   return FROGR_PICTURE (new);
 }
@@ -659,6 +720,75 @@ frogr_picture_set_family (FrogrPicture *self,
     FROGR_PICTURE_GET_PRIVATE (self);
 
   priv->is_family = family;
+}
+
+FspSafetyLevel
+frogr_picture_get_safety_level (FrogrPicture *self)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  return priv->safety_level;
+}
+
+void
+frogr_picture_set_safety_level (FrogrPicture *self,
+                                FspSafetyLevel safety_level)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  priv->safety_level = safety_level;
+}
+
+FspContentType
+frogr_picture_get_content_type (FrogrPicture *self)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  return priv->content_type;
+}
+
+void
+frogr_picture_set_content_type (FrogrPicture *self,
+                                FspContentType content_type)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  priv->content_type = content_type;
+}
+
+gboolean
+frogr_picture_show_in_search (FrogrPicture *self)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  return priv->show_in_search;
+}
+
+void
+frogr_picture_set_show_in_search (FrogrPicture *self,
+                                  gboolean show_in_search)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  priv->show_in_search = show_in_search;
 }
 
 GdkPixbuf *

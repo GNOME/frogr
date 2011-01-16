@@ -98,6 +98,16 @@ gboolean frogr_picture_is_family (FrogrPicture *self);
 void frogr_picture_set_family (FrogrPicture *self,
                                gboolean family);
 
+FspSafetyLevel frogr_picture_get_safety_level (FrogrPicture *self);
+void frogr_picture_set_safety_level (FrogrPicture *self,
+                                     FspSafetyLevel safety_level);
+FspContentType frogr_picture_get_content_type (FrogrPicture *self);
+void frogr_picture_set_content_type (FrogrPicture *self,
+                                     FspContentType content_type);
+gboolean frogr_picture_show_in_search (FrogrPicture *self);
+void frogr_picture_set_show_in_search (FrogrPicture *self,
+                                       gboolean show_in_search);
+
 GdkPixbuf *frogr_picture_get_pixbuf (FrogrPicture *self);
 void frogr_picture_set_pixbuf (FrogrPicture *self,
                                GdkPixbuf *pixbuf);
