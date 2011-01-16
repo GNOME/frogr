@@ -29,7 +29,6 @@
 #include <config.h>
 #include <glib/gi18n.h>
 
-#define GTKBUILDER_FILE APP_DATA_DIR "/gtkbuilder/frogr-details-dialog.xml"
 #define MPICTURES_IMAGE APP_DATA_DIR "/images/mpictures.png"
 
 #define DIALOG_MIN_WIDTH 540
@@ -75,6 +74,8 @@ enum {
 
 /* Prototypes */
 
+static void _create_widgets (FrogrDetailsDialog *self);
+
 static void _populate_treemodel_with_tags (FrogrDetailsDialog *self, GSList *tags);
 
 static gboolean _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
@@ -93,16 +94,161 @@ static gboolean _validate_dialog_data (FrogrDetailsDialog *self);
 
 static gboolean _save_data (FrogrDetailsDialog *self);
 
-void _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
-                                         gpointer data);
+static void _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
+                                                gpointer data);
 
-void _on_family_friend_cbutton_toggled (GtkToggleButton *tbutton,
-                                        gpointer data);
+static void _on_family_friend_cbutton_toggled (GtkToggleButton *tbutton,
+                                               gpointer data);
 
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 
 /* Private API */
+
+static void
+_create_widgets (FrogrDetailsDialog *self)
+{
+  FrogrDetailsDialogPrivate *priv = NULL;
+  GtkWidget *main_vbox = NULL;
+  GtkWidget *vbox = NULL;
+  GtkWidget *hbox = NULL;
+  GtkWidget *visibility_vbox = NULL;
+  GtkWidget *private_vbox = NULL;
+  GtkWidget *align = NULL;
+  GtkWidget *widget = NULL;
+  GtkWidget *table = NULL;
+  GtkWidget *scroller = NULL;
+  GtkEntryCompletion *completion = NULL;
+  GtkTreeModel *model = NULL;
+
+  priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
+
+#if GTK_CHECK_VERSION (2,14,0)
+  main_vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
+#else
+  main_vbox = GTK_DIALOG (self)->vbox;
+#endif
+
+  hbox = gtk_hbox_new (FALSE, 6);
+  vbox = gtk_vbox_new (FALSE, 6);
+
+  /* Left side (image, radio buttons, checkboxes...) */
+
+  widget = gtk_image_new ();
+  priv->picture_img = widget;
+  gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 0);
+
+  widget = gtk_label_new (NULL);
+  priv->mpictures_label = widget;
+  gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 0);
+
+  visibility_vbox = gtk_vbox_new (FALSE, 6);
+
+  widget = gtk_radio_button_new (NULL);
+  gtk_button_set_label (GTK_BUTTON (widget), _("Public"));
+  gtk_box_pack_start (GTK_BOX (visibility_vbox), widget, FALSE, FALSE, 6);
+  priv->public_rb = widget;
+
+  widget = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->public_rb));
+  gtk_button_set_label (GTK_BUTTON (widget), _("Private"));
+  gtk_box_pack_start (GTK_BOX (visibility_vbox), widget, FALSE, FALSE, 6);
+  priv->private_rb = widget;
+
+  private_vbox = gtk_vbox_new (FALSE, 6);
+
+  widget = gtk_check_button_new_with_label (_("Visible to family"));
+  gtk_box_pack_start (GTK_BOX (private_vbox), widget, FALSE, FALSE, 6);
+  priv->family_cb = widget;
+
+  widget = gtk_check_button_new_with_label (_("Visible to friends"));
+  gtk_box_pack_start (GTK_BOX (private_vbox), widget, FALSE, FALSE, 6);
+  priv->friend_cb = widget;
+
+  gtk_box_pack_start (GTK_BOX (visibility_vbox), private_vbox, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), visibility_vbox, FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
+
+  /* Right side (text fields) */
+
+  table = gtk_table_new (3, 2, FALSE);
+
+  widget = gtk_label_new (_("Title:"));
+  gtk_table_attach (GTK_TABLE (table), widget, 0, 1, 0, 1,
+                    0, 0, 6, 6);
+  widget = gtk_entry_new ();
+  gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  priv->title_entry = widget;
+
+  widget = gtk_label_new (_("Description:"));
+  gtk_table_attach (GTK_TABLE (table), widget, 0, 1, 1, 2,
+                    0, 0, 6, 6);
+
+  widget = gtk_text_view_new ();
+  gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (widget), FALSE);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (widget), GTK_WRAP_WORD);
+
+  scroller = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroller),
+                                       GTK_SHADOW_ETCHED_IN);
+  gtk_container_add (GTK_CONTAINER (scroller), widget);
+
+  align = gtk_alignment_new (1, 0, 1, 1);
+  gtk_container_add (GTK_CONTAINER (align), scroller);
+  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 1, 2,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  priv->desc_tview = widget;
+  priv->text_buffer =
+    gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
+
+  widget = gtk_label_new (_("Tags:"));
+  gtk_table_attach (GTK_TABLE (table), widget, 0, 1, 2, 3,
+                    0, 0, 6, 6);
+  widget = gtk_entry_new ();
+  gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  priv->tags_entry = widget;
+
+  gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
+
+  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+
+
+  /* Prepare auto completion for tags */
+  completion = gtk_entry_completion_new ();
+  gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (completion), TEXT_COL);
+  gtk_entry_completion_set_inline_completion (GTK_ENTRY_COMPLETION (completion), TRUE);
+  gtk_entry_completion_set_match_func (GTK_ENTRY_COMPLETION (completion),
+                                       _tag_list_completion_func,
+                                       self, NULL);
+  gtk_entry_set_completion (GTK_ENTRY (priv->tags_entry), completion);
+
+  model = GTK_TREE_MODEL (gtk_list_store_new (1, G_TYPE_STRING));
+  gtk_entry_completion_set_model (GTK_ENTRY_COMPLETION (completion), model);
+  priv->treemodel = model;
+
+  /* Connect signals */
+  g_signal_connect (G_OBJECT (priv->public_rb), "toggled",
+                    G_CALLBACK (_on_public_private_rbutton_toggled), self);
+
+  g_signal_connect (G_OBJECT (priv->private_rb), "toggled",
+                    G_CALLBACK (_on_public_private_rbutton_toggled), self);
+
+  g_signal_connect (G_OBJECT (priv->family_cb), "toggled",
+                    G_CALLBACK (_on_family_friend_cbutton_toggled), self);
+
+  g_signal_connect (G_OBJECT (priv->friend_cb), "toggled",
+                    G_CALLBACK (_on_family_friend_cbutton_toggled), self);
+
+  g_signal_connect (G_OBJECT (completion), "match-selected",
+                    G_CALLBACK (_completion_match_selected_cb), self);
+
+  /* Show widgets */
+  gtk_widget_show_all (main_vbox);
+}
 
 static void
 _populate_treemodel_with_tags (FrogrDetailsDialog *self, GSList *tags)
@@ -520,7 +666,7 @@ _save_data (FrogrDetailsDialog *self)
 
 /* Event handlers */
 
-void
+static void
 _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
                                     gpointer data)
 {
@@ -535,7 +681,7 @@ _on_public_private_rbutton_toggled (GtkToggleButton *tbutton,
   _update_ui (self);
 }
 
-void
+static void
 _on_family_friend_cbutton_toggled (GtkToggleButton *tbutton,
                                    gpointer data)
 {
@@ -645,82 +791,25 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
   FrogrDetailsDialogPrivate *priv =
     FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
 
-  GtkBuilder *builder;
-  GtkWidget *main_vbox;
-  GtkEntryCompletion *completion = NULL;
-  GtkTreeModel *model = NULL;
+  priv->treemodel = NULL;
+  priv->pictures = NULL;
 
-  /* Create widgets */
-  builder = gtk_builder_new ();
-  gtk_builder_add_from_file (builder, GTKBUILDER_FILE, NULL);
-
-  main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main-vbox"));
-#if GTK_CHECK_VERSION (2,14,0)
-  gtk_widget_reparent (main_vbox,
-                       GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (self))));
-#else
-  gtk_widget_reparent (main_vbox,
-                       GTK_WIDGET (GTK_DIALOG (self)->vbox));
-#endif
+  _create_widgets (self);
 
   gtk_dialog_add_buttons (GTK_DIALOG (self),
                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                           GTK_STOCK_OK, GTK_RESPONSE_OK,
                           NULL);
-
-  /* Get widgets */
-  priv->title_entry =
-    GTK_WIDGET (gtk_builder_get_object (builder, "title_entry"));
-  priv->desc_tview =
-    GTK_WIDGET (gtk_builder_get_object (builder, "description_tview"));
-  priv->tags_entry =
-    GTK_WIDGET (gtk_builder_get_object (builder, "tags_entry"));
-  priv->text_buffer =
-    gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
-  priv->public_rb =
-    GTK_WIDGET (gtk_builder_get_object (builder, "public_rbutton"));
-  priv->private_rb =
-    GTK_WIDGET (gtk_builder_get_object (builder, "private_rbutton"));
-  priv->friend_cb =
-    GTK_WIDGET (gtk_builder_get_object (builder, "friend_cbutton"));
-  priv->family_cb =
-    GTK_WIDGET (gtk_builder_get_object (builder, "family_cbutton"));
-  priv->picture_img =
-    GTK_WIDGET (gtk_builder_get_object (builder, "picture_img"));
-  priv->mpictures_label =
-    GTK_WIDGET (gtk_builder_get_object (builder, "mpictures_label"));
-
-  /* Don't accept tabs in description */
-  gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (priv->desc_tview), FALSE);
-
-  /* Prepare auto completion for tags */
-  completion = gtk_entry_completion_new ();
-  gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (completion), TEXT_COL);
-  gtk_entry_completion_set_inline_completion (GTK_ENTRY_COMPLETION (completion), TRUE);
-  gtk_entry_completion_set_match_func (GTK_ENTRY_COMPLETION (completion),
-                                       _tag_list_completion_func,
-                                       self, NULL);
-  gtk_entry_set_completion (GTK_ENTRY (priv->tags_entry), completion);
-
-  model = GTK_TREE_MODEL (gtk_list_store_new (1, G_TYPE_STRING));
-  gtk_entry_completion_set_model (GTK_ENTRY_COMPLETION (completion), model);
-  priv->treemodel = model;
-
-  /* Connect signals */
-  gtk_builder_connect_signals (builder, self);
-
-  g_signal_connect (G_OBJECT (completion), "match-selected",
-                    G_CALLBACK (_completion_match_selected_cb), self);
+  gtk_container_set_border_width (GTK_CONTAINER (self), 12);
 
   g_signal_connect (G_OBJECT (self), "response",
                     G_CALLBACK (_dialog_response_cb), NULL);
 
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET (self));
   gtk_dialog_set_default_response (GTK_DIALOG (self),
                                    GTK_RESPONSE_OK);
-  /* Free */
-  g_object_unref (G_OBJECT (builder));
+
+  /* Show the UI */
+  gtk_widget_show_all (GTK_WIDGET (self));
 }
 
 

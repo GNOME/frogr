@@ -63,8 +63,7 @@ imagesdir = $(appdatadir)/images
 images_DATA = data/images/mpictures.png
 
 gtkbuilderdir = $(appdatadir)/gtkbuilder
-gtkbuilder_DATA = data/gtkbuilder/frogr-main-view.xml \
-	data/gtkbuilder/frogr-details-dialog.xml
+gtkbuilder_DATA = data/gtkbuilder/frogr-main-view.xml
 
 desktopentrydir = $(datadir)/applications
 desktopentry_DATA = $(builddir)/data/frogr.desktop
