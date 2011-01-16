@@ -468,6 +468,12 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
 
   FrogrControllerPrivate *priv = NULL;
   upload_picture_st *up_st = NULL;
+  FspVisibility public_visibility = FSP_VISIBILITY_NONE;
+  FspVisibility family_visibility = FSP_VISIBILITY_NONE;
+  FspVisibility friend_visibility = FSP_VISIBILITY_NONE;
+  FspSafetyLevel safety_level = FSP_SAFETY_LEVEL_NONE;
+  FspContentType content_type = FSP_CONTENT_TYPE_NONE;
+  FspSearchScope search_scope = FSP_SEARCH_SCOPE_NONE;
 
   up_st = g_slice_new0 (upload_picture_st);
   up_st->controller = self;
@@ -482,18 +488,25 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   priv->uploading_picture = TRUE;
   g_object_ref (picture);
 
+  public_visibility = frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO;
+  family_visibility = frogr_picture_is_family (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO;
+  friend_visibility = frogr_picture_is_friend (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO;
+  safety_level = frogr_picture_get_safety_level (picture);
+  content_type = frogr_picture_get_content_type (picture);
+  search_scope = frogr_picture_show_in_search (picture) ? FSP_SEARCH_SCOPE_PUBLIC : FSP_SEARCH_SCOPE_HIDDEN;
+
   _enable_cancellable (self, TRUE);
   fsp_session_upload_async (priv->session,
                             frogr_picture_get_filepath (picture),
                             frogr_picture_get_title (picture),
                             frogr_picture_get_description (picture),
                             frogr_picture_get_tags (picture),
-                            frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                            frogr_picture_is_family (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                            frogr_picture_is_friend (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO,
-                            FSP_SAFETY_LEVEL_NONE,  /* Hard coded at the moment */
-                            FSP_CONTENT_TYPE_PHOTO, /* Hard coded at the moment */
-                            FSP_SEARCH_SCOPE_NONE,  /* Hard coded at the moment */
+                            public_visibility,
+                            family_visibility,
+                            friend_visibility,
+                            safety_level,
+                            content_type,
+                            search_scope,
                             priv->cancellable, _upload_picture_cb, up_st);
 }
 
