@@ -48,9 +48,14 @@ struct _FrogrConfigPrivate
   GSList *accounts;
   FrogrAccount *active_account;
 
-  gboolean default_public;
-  gboolean default_family;
-  gboolean default_friend;
+  gboolean public;
+  gboolean family;
+  gboolean friend;
+  gboolean show_in_search;
+
+  FspSafetyLevel safety_level;
+  FspContentType content_type;
+
   gboolean open_browser_after_upload;
 
   gboolean use_proxy;
@@ -211,19 +216,19 @@ _load_visibility_xml (FrogrConfig *self,
       if (!xmlStrcmp (node->name, (const xmlChar*) "public"))
         {
           content = xmlNodeGetContent (node);
-          priv->default_public = !xmlStrcmp (content, (const xmlChar*) "1");
+          priv->public = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "family"))
         {
           content = xmlNodeGetContent (node);
-          priv->default_family = !xmlStrcmp (content, (const xmlChar*) "1");
+          priv->family = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "friend"))
         {
           content = xmlNodeGetContent (node);
-          priv->default_friend = !xmlStrcmp (content, (const xmlChar*) "1");
+          priv->friend = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (content)
@@ -461,9 +466,9 @@ _save_settings (FrogrConfig *self)
 
   /* Default visibility */
   node = xmlNewNode (NULL, (const xmlChar*) "default-visibility");
-  _xml_add_string_child (node, "public", priv->default_public ? "1" : "0");
-  _xml_add_string_child (node, "family", priv->default_family ? "1" : "0");
-  _xml_add_string_child (node, "friend", priv->default_friend ? "1" : "0");
+  _xml_add_string_child (node, "public", priv->public ? "1" : "0");
+  _xml_add_string_child (node, "family", priv->family ? "1" : "0");
+  _xml_add_string_child (node, "friend", priv->friend ? "1" : "0");
   xmlAddChild (root, node);
 
   /* Default actions */
@@ -684,9 +689,12 @@ frogr_config_init (FrogrConfig *self)
 
   priv->active_account = NULL;
   priv->accounts = NULL;
-  priv->default_public = FALSE;
-  priv->default_family = FALSE;
-  priv->default_friend = FALSE;
+  priv->public = FALSE;
+  priv->family = FALSE;
+  priv->friend = FALSE;
+  priv->show_in_search = FALSE;
+  priv->safety_level = FSP_SAFETY_LEVEL_NONE;
+  priv->content_type = FSP_CONTENT_TYPE_NONE;
 
   /* Open browser by default (e.g. no config file found) */
   priv->open_browser_after_upload = TRUE;
@@ -839,7 +847,7 @@ frogr_config_set_default_public (FrogrConfig *self, gboolean value)
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->default_public = value;
+  priv->public = value;
 }
 
 gboolean
@@ -848,7 +856,7 @@ frogr_config_get_default_public (FrogrConfig *self)
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->default_public;
+  return priv->public;
 }
 
 void
@@ -857,7 +865,7 @@ frogr_config_set_default_family (FrogrConfig *self, gboolean value)
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->default_family = value;
+  priv->family = value;
 }
 
 gboolean
@@ -866,7 +874,7 @@ frogr_config_get_default_family (FrogrConfig *self)
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->default_family;
+  return priv->family;
 }
 
 void
@@ -875,7 +883,7 @@ frogr_config_set_default_friend (FrogrConfig *self, gboolean value)
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->default_friend = value;
+  priv->friend = value;
 }
 
 gboolean
@@ -884,7 +892,63 @@ frogr_config_get_default_friend (FrogrConfig *self)
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->default_friend;
+  return priv->friend;
+}
+
+void
+frogr_config_set_default_safety_level (FrogrConfig *self,
+                                       FspSafetyLevel safety_level)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->safety_level = safety_level;
+}
+
+FspSafetyLevel
+frogr_config_get_default_safety_level (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->safety_level;
+}
+
+void
+frogr_config_set_default_content_type (FrogrConfig *self,
+                                       FspContentType content_type)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->content_type = content_type;
+}
+
+FspContentType
+frogr_config_get_default_content_type (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->content_type;
+}
+
+void
+frogr_config_set_default_show_in_search (FrogrConfig *self, gboolean value)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->show_in_search = value;
+}
+
+gboolean
+frogr_config_get_default_show_in_search (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->show_in_search;
 }
 
 void

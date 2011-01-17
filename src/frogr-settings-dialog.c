@@ -415,6 +415,9 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->public_visibility = frogr_config_get_default_public (priv->config);
   priv->family_visibility = frogr_config_get_default_family (priv->config);
   priv->friend_visibility = frogr_config_get_default_friend (priv->config);
+  priv->show_in_search = frogr_config_get_default_show_in_search (priv->config);
+  priv->content_type = frogr_config_get_default_content_type (priv->config);
+  priv->safety_level = frogr_config_get_default_safety_level (priv->config);
   priv->open_browser_after_upload = frogr_config_get_open_browser_after_upload (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
@@ -495,6 +498,11 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_public (priv->config, priv->public_visibility);
   frogr_config_set_default_family (priv->config, priv->family_visibility);
   frogr_config_set_default_friend (priv->config, priv->friend_visibility);
+  frogr_config_set_default_show_in_search (priv->config, priv->show_in_search);
+
+  frogr_config_set_default_content_type (priv->config, priv->content_type);
+  frogr_config_set_default_safety_level (priv->config, priv->safety_level);
+
   frogr_config_set_open_browser_after_upload (priv->config, priv->open_browser_after_upload);
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 

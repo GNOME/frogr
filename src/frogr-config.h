@@ -28,6 +28,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <flicksoup/flicksoup.h>
 
 G_BEGIN_DECLS
 
@@ -85,6 +86,20 @@ gboolean frogr_config_get_default_family (FrogrConfig *self);
 void frogr_config_set_default_friend (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_default_friend (FrogrConfig *self);
+
+void frogr_config_set_default_safety_level (FrogrConfig *self,
+                                            FspSafetyLevel safety_level);
+
+FspSafetyLevel frogr_config_get_default_safety_level (FrogrConfig *self);
+
+void frogr_config_set_default_content_type (FrogrConfig *self,
+                                            FspContentType content_type);
+
+FspContentType frogr_config_get_default_content_type (FrogrConfig *self);
+
+void frogr_config_set_default_show_in_search (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_default_show_in_search (FrogrConfig *self);
 
 void frogr_config_set_open_browser_after_upload (FrogrConfig *self, gboolean value);
 
