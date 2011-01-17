@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-01-18 00:37+0100\n"
-"PO-Revision-Date: 2011-01-18 00:44+0100\n"
+"PO-Revision-Date: 2011-01-18 00:49+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: \n"
@@ -64,12 +64,12 @@ msgstr "Lägg till i grupper"
 #: ../src/frogr-auth-dialog.c:31
 #, c-format
 msgid "Please press the button to authorize %s and then come back to this screen to complete the process."
-msgstr ""
+msgstr "Tryck på knappen för att auktorisera %s och kom sedan tillbaka till denna skärm för att färdigställa processen."
 
 #: ../src/frogr-auth-dialog.c:35
 #, c-format
 msgid "Press the button to start using %s once you've authorized it in your flickr account."
-msgstr ""
+msgstr "Tryck på knappen för att börja använda %s när du har auktoriserat det för ditt Flickr-konto."
 
 #: ../src/frogr-controller.c:241
 msgid "Process cancelled by the user"
@@ -185,7 +185,7 @@ msgstr ""
 
 #: ../src/frogr-controller.c:455
 msgid "Authorization successfully completed!"
-msgstr ""
+msgstr "Auktorisering genomförd!"
 
 #: ../src/frogr-controller.c:851
 msgid "Creating new photoset…"
@@ -493,7 +493,7 @@ msgstr "_Värd:"
 #. Proxy port
 #: ../src/frogr-settings-dialog.c:341
 msgid "_Port:"
-msgstr "c"
+msgstr "_Port:"
 
 #. Proxy username
 #: ../src/frogr-settings-dialog.c:359
