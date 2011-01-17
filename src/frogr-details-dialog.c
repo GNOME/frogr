@@ -117,6 +117,7 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *main_vbox = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *hbox = NULL;
+  GtkWidget *expander = NULL;
   GtkWidget *section_vbox = NULL;
   GtkWidget *internal_hbox = NULL;
   GtkWidget *visibility_vbox = NULL;
@@ -193,12 +194,12 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (visibility_vbox), internal_hbox, FALSE, FALSE, 0);
 
   internal_hbox = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (internal_hbox), visibility_vbox, FALSE, FALSE, 12);
+  gtk_box_pack_start (GTK_BOX (internal_hbox), visibility_vbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
 
   internal_hbox = gtk_hbox_new (FALSE, 0);
   widget = gtk_check_button_new_with_label (_("Show up in global search results"));
-  gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 12);
+  gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
   priv->show_in_search_cb = widget;
 
@@ -209,14 +210,14 @@ _create_widgets (FrogrDetailsDialog *self)
   section_vbox = gtk_vbox_new (FALSE, 6);
   content_type_hbox = gtk_hbox_new (FALSE, 6);
 
-  widget = gtk_label_new (NULL);
-  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Content type"));
-  gtk_label_set_markup (GTK_LABEL (widget), markup);
+  expander = gtk_expander_new (markup);
+  gtk_expander_set_use_markup (GTK_EXPANDER (expander), TRUE);
   g_free (markup);
+
   align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_container_add (GTK_CONTAINER (align), expander);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
   widget = gtk_radio_button_new (NULL);
@@ -234,7 +235,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
   priv->other_content_rb = widget;
 
-  gtk_box_pack_start (GTK_BOX (section_vbox), content_type_hbox, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (expander), content_type_hbox);
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
@@ -243,14 +244,14 @@ _create_widgets (FrogrDetailsDialog *self)
   section_vbox = gtk_vbox_new (FALSE, 6);
   safety_level_hbox = gtk_hbox_new (FALSE, 6);
 
-  widget = gtk_label_new (NULL);
-  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Safety level"));
-  gtk_label_set_markup (GTK_LABEL (widget), markup);
+  expander = gtk_expander_new (markup);
+  gtk_expander_set_use_markup (GTK_EXPANDER (expander), TRUE);
   g_free (markup);
+
   align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_container_add (GTK_CONTAINER (align), expander);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
   widget = gtk_radio_button_new (NULL);
@@ -268,7 +269,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
   priv->restricted_rb = widget;
 
-  gtk_box_pack_start (GTK_BOX (section_vbox), safety_level_hbox, FALSE, FALSE, 6);
+  gtk_container_add (GTK_CONTAINER (expander), safety_level_hbox);
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
 
