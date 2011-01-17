@@ -45,6 +45,13 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *friend_cb;
   GtkWidget *family_cb;
   GtkWidget *open_browser_after_upload_cb;
+  GtkWidget *show_in_search_cb;
+  GtkWidget *photo_content_rb;
+  GtkWidget *sshot_content_rb;
+  GtkWidget *other_content_rb;
+  GtkWidget *safe_rb;
+  GtkWidget *moderate_rb;
+  GtkWidget *restricted_rb;
 
   GtkWidget *use_proxy_cb;
   GtkWidget *proxy_host_label;
@@ -60,6 +67,9 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean family_visibility;
   gboolean friend_visibility;
   gboolean open_browser_after_upload;
+  gboolean show_in_search;
+  FspSafetyLevel safety_level;
+  FspContentType content_type;
 
   gboolean use_proxy;;
   gchar *proxy_host;
@@ -103,6 +113,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *vbox = NULL;
   GtkWidget *box1 = NULL;
   GtkWidget *box2 = NULL;
+  GtkWidget *padding_hbox = NULL;
   GtkWidget *align = NULL;
   GtkWidget *label = NULL;
   GtkWidget *rbutton = NULL;
@@ -110,7 +121,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gchar *markup = NULL;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
-  vbox = gtk_vbox_new (FALSE, 0);
+  vbox = gtk_vbox_new (FALSE, 6);
 
   /* Default Visibility */
 
@@ -125,46 +136,41 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  box1 = gtk_vbox_new (FALSE, 0);
-  box2 = gtk_hbox_new (TRUE, 0);
+  box1 = gtk_vbox_new (FALSE, 6);
+  box2 = gtk_hbox_new (FALSE, 12);
 
   rbutton = gtk_radio_button_new (NULL);
   gtk_button_set_label (GTK_BUTTON (rbutton), _("Private"));
-  align = gtk_alignment_new (0, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), rbutton);
-  gtk_box_pack_start (GTK_BOX (box2), align, TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (box2), rbutton, FALSE, FALSE, 0);
   priv->private_rb = rbutton;
 
   rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->private_rb));
   gtk_button_set_label (GTK_BUTTON (rbutton), _("Public"));
-  align = gtk_alignment_new (0, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), rbutton);
-  gtk_box_pack_start (GTK_BOX (box2), align, TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (box2), rbutton, FALSE, FALSE, 0);
   priv->public_rb = rbutton;
 
-  gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 0);
 
-  box2 = gtk_vbox_new (TRUE, 0);
+  box2 = gtk_vbox_new (FALSE, 6);
 
   cbutton = gtk_check_button_new_with_label (_("Visible to family"));
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), cbutton);
-  gtk_box_pack_start (GTK_BOX (box2), align, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (box2), cbutton, FALSE, FALSE, 0);
   priv->family_cb = cbutton;
 
   cbutton = gtk_check_button_new_with_label (_("Visible to friends"));
-  align = gtk_alignment_new (0, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), cbutton);
-  gtk_box_pack_start (GTK_BOX (box2), align, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (box2), cbutton, FALSE, FALSE, 0);
   priv->friend_cb = cbutton;
 
-  align = gtk_alignment_new (0.1, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), box2);
-  gtk_box_pack_start (GTK_BOX (box1), align, TRUE, TRUE, 0);
+  padding_hbox = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (padding_hbox), box2, FALSE, FALSE, 12);
+  gtk_box_pack_start (GTK_BOX (box1), padding_hbox, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 6);
+  cbutton = gtk_check_button_new_with_label (_("Show up in global search results"));
+  gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
+  priv->show_in_search_cb = cbutton;
 
-  /* Connect signals */
+  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+
   g_signal_connect (G_OBJECT (priv->public_rb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
@@ -174,6 +180,98 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     self);
 
   g_signal_connect (G_OBJECT (priv->friend_cb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->show_in_search_cb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  /* Default Content type */
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("Default Content Type"));
+  gtk_label_set_markup (GTK_LABEL (label), markup);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 1);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+
+  box1 = gtk_hbox_new (FALSE, 12);
+
+  rbutton = gtk_radio_button_new (NULL);
+  gtk_button_set_label (GTK_BUTTON (rbutton), _("Photo"));
+  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
+  priv->photo_content_rb = rbutton;
+
+  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb));
+  gtk_button_set_label (GTK_BUTTON (rbutton), _("Screenshot"));
+  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
+  priv->sshot_content_rb = rbutton;
+
+  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb));
+  gtk_button_set_label (GTK_BUTTON (rbutton), _("Other"));
+  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
+  priv->other_content_rb = rbutton;
+
+  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+
+  g_signal_connect (G_OBJECT (priv->photo_content_rb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->sshot_content_rb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->other_content_rb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  /* Default Safety level */
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("Default Safety Level"));
+  gtk_label_set_markup (GTK_LABEL (label), markup);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 1);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+
+  box1 = gtk_hbox_new (FALSE, 12);
+
+  rbutton = gtk_radio_button_new (NULL);
+  gtk_button_set_label (GTK_BUTTON (rbutton), _("Safe"));
+  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
+  priv->safe_rb = rbutton;
+
+  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->safe_rb));
+  gtk_button_set_label (GTK_BUTTON (rbutton), _("Moderate"));
+  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
+  priv->moderate_rb = rbutton;
+
+  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->safe_rb));
+  gtk_button_set_label (GTK_BUTTON (rbutton), _("Restricted"));
+  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
+  priv->restricted_rb = rbutton;
+
+  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+
+  g_signal_connect (G_OBJECT (priv->safe_rb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->moderate_rb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->restricted_rb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
 
@@ -191,9 +289,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
   cbutton = gtk_check_button_new_with_label (_("Open browser after uploading pictures"));
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), cbutton);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), cbutton, FALSE, FALSE, 0);
   priv->open_browser_after_upload_cb = cbutton;
 
   g_signal_connect (G_OBJECT (priv->open_browser_after_upload_cb), "toggled",
@@ -216,20 +312,20 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *entry = NULL;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
-  vbox = gtk_vbox_new (FALSE, 0);
+  vbox = gtk_vbox_new (FALSE, 6);
 
   /* Proxy settings */
 
   cbutton = gtk_check_button_new_with_label (_("Use HTTP proxy"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), cbutton);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
   priv->use_proxy_cb = cbutton;
 
   /* Proxy host */
 
   table = gtk_table_new (2, 4, FALSE);
-  gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
   label = gtk_label_new (_("Host:"));
   align = gtk_alignment_new (1, 0, 1, 0);
@@ -313,6 +409,8 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   FrogrSettingsDialogPrivate *priv =
     FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
+  /* Get data form configuration */
+
   priv->public_visibility = frogr_config_get_default_public (priv->config);
   priv->family_visibility = frogr_config_get_default_family (priv->config);
   priv->friend_visibility = frogr_config_get_default_friend (priv->config);
@@ -338,6 +436,51 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->proxy_password = g_strdup (frogr_config_get_proxy_password (priv->config));
   if (priv->proxy_password)
     g_strstrip (priv->proxy_password);
+
+  /* Update widgets' values */
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->public_rb),
+                                priv->public_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->private_rb),
+                                !priv->public_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb),
+                                priv->family_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb),
+                                priv->friend_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->open_browser_after_upload_cb),
+                                priv->open_browser_after_upload);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
+                                priv->show_in_search);
+
+  if (priv->content_type == FSP_CONTENT_TYPE_SCREENSHOT)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->sshot_content_rb), TRUE);
+  else if (priv->content_type == FSP_CONTENT_TYPE_OTHER)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->other_content_rb), TRUE);
+  else
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->photo_content_rb), TRUE);
+
+  if (priv->safety_level == FSP_SAFETY_LEVEL_MODERATE)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->moderate_rb), TRUE);
+  else if (priv->safety_level == FSP_SAFETY_LEVEL_RESTRICTED)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->restricted_rb), TRUE);
+  else
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->safe_rb), TRUE);
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
+                                priv->use_proxy);
+  if (priv->proxy_host)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_host_entry), priv->proxy_host);
+
+  if (priv->proxy_port)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_port_entry), priv->proxy_port);
+
+  if (priv->proxy_username)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_username_entry), priv->proxy_username);
+
+  if (priv->proxy_password)
+    gtk_entry_set_text (GTK_ENTRY (priv->proxy_password_entry), priv->proxy_password);
+
+  /* Update UI */
 
   _update_ui (self);
 }
@@ -392,31 +535,6 @@ _update_ui (FrogrSettingsDialog *self)
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
-  /* Update widgets' values */
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->public_rb),
-                                priv->public_visibility);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->private_rb),
-                                !priv->public_visibility);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb),
-                                priv->family_visibility);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb),
-                                priv->friend_visibility);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->open_browser_after_upload_cb),
-                                priv->open_browser_after_upload);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
-                                priv->use_proxy);
-  if (priv->proxy_host)
-    gtk_entry_set_text (GTK_ENTRY (priv->proxy_host_entry), priv->proxy_host);
-
-  if (priv->proxy_port)
-    gtk_entry_set_text (GTK_ENTRY (priv->proxy_port_entry), priv->proxy_port);
-
-  if (priv->proxy_username)
-    gtk_entry_set_text (GTK_ENTRY (priv->proxy_username_entry), priv->proxy_username);
-
-  if (priv->proxy_password)
-    gtk_entry_set_text (GTK_ENTRY (priv->proxy_password_entry), priv->proxy_password);
-
   /* Sensitiveness */
   gtk_widget_set_sensitive (priv->friend_cb, !priv->public_visibility);
   gtk_widget_set_sensitive (priv->family_cb, !priv->public_visibility);
@@ -463,6 +581,48 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
     {
       priv->open_browser_after_upload = active;
       g_debug ("Open browser after upload set to %s", active ? "TRUE" : "FALSE");
+    }
+
+  if (GTK_WIDGET (button) == priv->show_in_search_cb)
+    {
+      priv->show_in_search = active;
+      g_debug ("Show up in global search results set to %s", active ? "TRUE" : "FALSE");
+    }
+
+  if (active && GTK_WIDGET (button) == priv->photo_content_rb)
+    {
+      priv->content_type = FSP_CONTENT_TYPE_PHOTO;
+      g_debug ("Content type set to %d", priv->content_type);
+    }
+
+  if (active && GTK_WIDGET (button) == priv->sshot_content_rb)
+    {
+      priv->content_type = FSP_CONTENT_TYPE_SCREENSHOT;
+      g_debug ("Content type set to %d", priv->content_type);
+    }
+
+  if (active && GTK_WIDGET (button) == priv->other_content_rb)
+    {
+      priv->content_type = FSP_CONTENT_TYPE_OTHER;
+      g_debug ("Content type set to %d", priv->content_type);
+    }
+
+  if (active && GTK_WIDGET (button) == priv->safe_rb)
+    {
+      priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
+      g_debug ("Content type set to %d", priv->safety_level);
+    }
+
+  if (active && GTK_WIDGET (button) == priv->moderate_rb)
+    {
+      priv->safety_level = FSP_SAFETY_LEVEL_MODERATE;
+      g_debug ("Content type set to %d", priv->safety_level);
+    }
+
+  if (active && GTK_WIDGET (button) == priv->restricted_rb)
+    {
+      priv->safety_level = FSP_SAFETY_LEVEL_RESTRICTED;
+      g_debug ("Content type set to %d", priv->safety_level);
     }
 
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
@@ -581,6 +741,13 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->friend_cb = NULL;
   priv->family_cb = NULL;
   priv->open_browser_after_upload_cb = NULL;
+  priv->show_in_search_cb = NULL;
+  priv->photo_content_rb = NULL;
+  priv->sshot_content_rb = NULL;
+  priv->other_content_rb = NULL;
+  priv->safe_rb = NULL;
+  priv->moderate_rb = NULL;
+  priv->restricted_rb = NULL;
   priv->use_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
@@ -594,6 +761,9 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->family_visibility = FALSE;
   priv->friend_visibility = FALSE;
   priv->open_browser_after_upload = FALSE;
+  priv->show_in_search = FALSE;
+  priv->safety_level = FSP_SAFETY_LEVEL_NONE;
+  priv->content_type = FSP_CONTENT_TYPE_NONE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
@@ -649,7 +819,7 @@ frogr_settings_dialog_show (GtkWindow *parent)
       object = g_object_new (FROGR_TYPE_SETTINGS_DIALOG,
                              "modal", TRUE,
                              "transient-for", parent,
-                             "resizable", FALSE,
+                             "resizable", TRUE,
                              "title", _("Settings"),
                              NULL);
 

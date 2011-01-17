@@ -163,7 +163,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
-  internal_hbox = gtk_hbox_new (FALSE, 6);
+  internal_hbox = gtk_hbox_new (FALSE, 12);
 
   widget = gtk_radio_button_new (NULL);
   gtk_button_set_label (GTK_BUTTON (widget), _("Private"));
