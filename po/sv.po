@@ -1,0 +1,531 @@
+# Swedish translation for frogr.
+# Copyright (C) 2011 Free Software Foundation, Inc.
+# This file is distributed under the same license as the frogr package.
+# Daniel Nylander <po@danielnylander.se>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-18 00:37+0100\n"
+"PO-Revision-Date: 2011-01-18 00:44+0100\n"
+"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/frogr-about-dialog.c:44
+msgid "A Flickr remote organizer for GNOME\n"
+msgstr ""
+
+#: ../src/frogr-about-dialog.c:101
+msgid "Spanish"
+msgstr "Spanska"
+
+#: ../src/frogr-about-dialog.c:102
+msgid "British English"
+msgstr "Brittisk engelska"
+
+#: ../src/frogr-about-dialog.c:103
+msgid "French"
+msgstr "Franska"
+
+#: ../src/frogr-add-tags-dialog.c:342
+msgid "Enter a spaces separated list of tags:"
+msgstr ""
+
+#: ../src/frogr-add-tags-dialog.c:383
+msgid "Add Tags"
+msgstr "Lägg till taggar"
+
+#: ../src/frogr-add-to-album-dialog.c:133
+msgid "Album Title"
+msgstr "Albumtitel"
+
+#: ../src/frogr-add-to-album-dialog.c:148
+#: ../src/frogr-add-to-group-dialog.c:148
+msgid "Elements"
+msgstr "Element"
+
+#: ../src/frogr-add-to-album-dialog.c:577
+msgid "Add to Albums"
+msgstr "Lägg till i album"
+
+#: ../src/frogr-add-to-group-dialog.c:133
+msgid "Group Name"
+msgstr "Gruppnamn"
+
+#: ../src/frogr-add-to-group-dialog.c:577
+msgid "Add to Groups"
+msgstr "Lägg till i grupper"
+
+#: ../src/frogr-auth-dialog.c:31
+#, c-format
+msgid "Please press the button to authorize %s and then come back to this screen to complete the process."
+msgstr ""
+
+#: ../src/frogr-auth-dialog.c:35
+#, c-format
+msgid "Press the button to start using %s once you've authorized it in your flickr account."
+msgstr ""
+
+#: ../src/frogr-controller.c:241
+msgid "Process cancelled by the user"
+msgstr ""
+
+#: ../src/frogr-controller.c:246
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+
+#: ../src/frogr-controller.c:251
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+
+#: ../src/frogr-controller.c:256
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+
+#: ../src/frogr-controller.c:261
+msgid ""
+"Error uploading picture:\n"
+"File invalid"
+msgstr ""
+
+#: ../src/frogr-controller.c:266
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+
+#: ../src/frogr-controller.c:271
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+
+#: ../src/frogr-controller.c:276
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+
+#: ../src/frogr-controller.c:281
+msgid ""
+"Error:\n"
+"Photo already in group"
+msgstr ""
+
+#: ../src/frogr-controller.c:286
+msgid ""
+"Error:\n"
+"Photo already in the maximum number of groups possible"
+msgstr ""
+
+#: ../src/frogr-controller.c:291
+msgid ""
+"Error:\n"
+"Group limit alrady reached"
+msgstr ""
+
+#: ../src/frogr-controller.c:296
+msgid ""
+"Error:\n"
+"Photo added to group's queue"
+msgstr ""
+
+#: ../src/frogr-controller.c:301
+msgid ""
+"Error:\n"
+"Photo already added to group's queue"
+msgstr ""
+
+#: ../src/frogr-controller.c:306
+msgid ""
+"Error:\n"
+"Content not allowed for this group"
+msgstr ""
+
+#: ../src/frogr-controller.c:311
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+
+#: ../src/frogr-controller.c:317
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to flickr.\n"
+"Please re-authorize it"
+msgstr ""
+
+#: ../src/frogr-controller.c:323
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"Fel:\n"
+"Tjänsten är inte tillgänglig"
+
+#. General error: just dump the raw error description
+#: ../src/frogr-controller.c:329
+#, c-format
+msgid "An error happened while uploading a picture: %s."
+msgstr ""
+
+#: ../src/frogr-controller.c:455
+msgid "Authorization successfully completed!"
+msgstr ""
+
+#: ../src/frogr-controller.c:851
+msgid "Creating new photoset…"
+msgstr ""
+
+#: ../src/frogr-controller.c:876
+msgid "Adding picture to photoset…"
+msgstr ""
+
+#: ../src/frogr-controller.c:899
+msgid "Adding picture to group…"
+msgstr ""
+
+#: ../src/frogr-controller.c:964
+msgid "Operation successfully completed!"
+msgstr ""
+
+#: ../src/frogr-controller.c:1411
+#: ../src/frogr-controller.c:1444
+msgid "Retrieving list of tags…"
+msgstr ""
+
+#: ../src/frogr-controller.c:1477
+#: ../src/frogr-controller.c:1509
+msgid "Retrieving list of albums…"
+msgstr ""
+
+#: ../src/frogr-controller.c:1522
+msgid "No albums found"
+msgstr "Inga album hittades"
+
+#: ../src/frogr-controller.c:1544
+msgid "Retrieving list of groups…"
+msgstr ""
+
+#: ../src/frogr-controller.c:1557
+msgid "No groups found"
+msgstr "Inga grupper hittades"
+
+#: ../src/frogr-controller.c:2147
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to flickr.\n"
+"Please re-authorize it."
+msgstr ""
+
+#. This shows a dialog notifying the problem to the user
+#: ../src/frogr-create-new-album-dialog.c:120
+#: ../src/frogr-details-dialog.c:894
+msgid "Missing data required"
+msgstr ""
+
+#: ../src/frogr-create-new-album-dialog.c:304
+msgid "Album's title:"
+msgstr "Albumets titel:"
+
+#: ../src/frogr-create-new-album-dialog.c:317
+msgid "Album's description:"
+msgstr "Albumets beskrivning:"
+
+#: ../src/frogr-create-new-album-dialog.c:356
+msgid "Create new Album"
+msgstr "Skapa nytt album"
+
+#: ../src/frogr-details-dialog.c:160
+msgid "Visibility"
+msgstr "Synlighet"
+
+#: ../src/frogr-details-dialog.c:171
+#: ../src/frogr-settings-dialog.c:143
+msgid "_Private"
+msgstr "_Privat"
+
+#: ../src/frogr-details-dialog.c:175
+#: ../src/frogr-settings-dialog.c:147
+msgid "P_ublic"
+msgstr "P_ublik"
+
+#: ../src/frogr-details-dialog.c:183
+#: ../src/frogr-settings-dialog.c:155
+msgid "Visible to _Family"
+msgstr "Synlig för _familj"
+
+#: ../src/frogr-details-dialog.c:187
+#: ../src/frogr-settings-dialog.c:159
+msgid "Visible to F_riends"
+msgstr "Synlig för vä_nner"
+
+#: ../src/frogr-details-dialog.c:200
+#: ../src/frogr-settings-dialog.c:167
+msgid "_Show up in Global Search Results"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:213
+msgid "Content type"
+msgstr "Innehållstyp"
+
+#: ../src/frogr-details-dialog.c:222
+#: ../src/frogr-settings-dialog.c:204
+msgid "P_hoto"
+msgstr "F_oto"
+
+#: ../src/frogr-details-dialog.c:226
+#: ../src/frogr-settings-dialog.c:208
+msgid "Scree_nshot"
+msgstr "Skär_mbild"
+
+#: ../src/frogr-details-dialog.c:230
+#: ../src/frogr-settings-dialog.c:212
+msgid "Oth_er"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:244
+msgid "Safety level"
+msgstr "Säkerhetsnivå"
+
+#: ../src/frogr-details-dialog.c:253
+#: ../src/frogr-settings-dialog.c:245
+msgid "S_afe"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:257
+#: ../src/frogr-settings-dialog.c:249
+msgid "_Moderate"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:261
+#: ../src/frogr-settings-dialog.c:253
+msgid "Restr_icted"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:275
+msgid "_Title:"
+msgstr "_Titel:"
+
+#: ../src/frogr-details-dialog.c:287
+msgid "_Description:"
+msgstr "_Beskrivning:"
+
+#: ../src/frogr-details-dialog.c:313
+msgid "Ta_gs:"
+msgstr "Ta_ggar:"
+
+#: ../src/frogr-details-dialog.c:1075
+#: ../src/frogr-details-dialog.c:1080
+msgid "Edit Picture Details"
+msgstr "Redigera bilddetaljer"
+
+#. File menu
+#: ../src/frogr-main-view.c:235
+msgid "_File"
+msgstr "_Arkiv"
+
+#: ../src/frogr-main-view.c:241
+msgid "_Add Pictures"
+msgstr "_Lägg till bilder"
+
+#: ../src/frogr-main-view.c:248
+msgid "_Remove Pictures"
+msgstr "_Ta bort bilder"
+
+#. Accounts menu item and submenu
+#: ../src/frogr-main-view.c:258
+msgid "Accou_nts"
+msgstr "Ko_nton"
+
+#. Authorize menu item
+#: ../src/frogr-main-view.c:264
+msgid "Authorize _frogr"
+msgstr "Auktorisera _frogr"
+
+#: ../src/frogr-main-view.c:273
+msgid "_Settings…"
+msgstr "_Inställningar…"
+
+#: ../src/frogr-main-view.c:281
+msgid "_Quit"
+msgstr "A_vsluta"
+
+#. Actions menu
+#: ../src/frogr-main-view.c:287
+msgid "A_ctions"
+msgstr "Åt_gärder"
+
+#. Edit details
+#: ../src/frogr-main-view.c:293
+#: ../src/frogr-main-view.c:407
+msgid "Edit _Details…"
+msgstr "Redigera _detaljer…"
+
+#. Add Tags
+#: ../src/frogr-main-view.c:300
+#: ../src/frogr-main-view.c:415
+msgid "Add _Tags…"
+msgstr "Lägg till _taggar…"
+
+#. Add to group
+#: ../src/frogr-main-view.c:307
+#: ../src/frogr-main-view.c:423
+msgid "Add to _Group…"
+msgstr "Lägg till i _grupp…"
+
+#. Add to album
+#: ../src/frogr-main-view.c:314
+#: ../src/frogr-main-view.c:431
+msgid "Add to Al_bum"
+msgstr "Lägg till i al_bum"
+
+#: ../src/frogr-main-view.c:321
+#: ../src/frogr-main-view.c:437
+msgid "_Create New Album…"
+msgstr "_Skapa nytt album…"
+
+#: ../src/frogr-main-view.c:328
+#: ../src/frogr-main-view.c:444
+msgid "Add to _Existing Album…"
+msgstr "Lägg till i _befintligt album…"
+
+#: ../src/frogr-main-view.c:337
+msgid "_Upload All"
+msgstr "Ski_cka upp alla"
+
+#. Help menu
+#: ../src/frogr-main-view.c:345
+msgid "_Help"
+msgstr "_Hjälp"
+
+#: ../src/frogr-main-view.c:351
+msgid "_About"
+msgstr "_Om"
+
+#. Remove
+#: ../src/frogr-main-view.c:454
+msgid "_Remove"
+msgstr "_Ta bort"
+
+#: ../src/frogr-main-view.c:958
+msgid "Select a Picture"
+msgstr "Välj en bild"
+
+#: ../src/frogr-main-view.c:991
+msgid "You need to select some pictures first"
+msgstr "Du måste välja några bilder först"
+
+#: ../src/frogr-main-view.c:1202
+msgid "Not connected to flickr"
+msgstr "Inte ansluten till flickr"
+
+#: ../src/frogr-main-view.c:1231
+msgid "remaining for the current month"
+msgstr ""
+
+#: ../src/frogr-main-view.c:1239
+msgid "Connected as"
+msgstr "Ansluten som"
+
+#: ../src/frogr-main-view.c:1240
+msgid " (PRO account)"
+msgstr ""
+
+#: ../src/frogr-picture-loader.c:91
+#, c-format
+msgid "Loading pictures %d / %d"
+msgstr "Läser in bild %d / %d"
+
+#. Update progress
+#: ../src/frogr-picture-uploader.c:85
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Skickar upp \"%s\"…"
+
+#: ../src/frogr-settings-dialog.c:132
+msgid "Default Visibility"
+msgstr ""
+
+#: ../src/frogr-settings-dialog.c:194
+msgid "Default Content Type"
+msgstr ""
+
+#: ../src/frogr-settings-dialog.c:235
+msgid "Default Safety Level"
+msgstr ""
+
+#: ../src/frogr-settings-dialog.c:276
+msgid "Default Actions"
+msgstr "Standardåtgärder"
+
+#: ../src/frogr-settings-dialog.c:284
+msgid "Open _Browser after Uploading Pictures"
+msgstr ""
+
+#: ../src/frogr-settings-dialog.c:293
+msgid "_General"
+msgstr "_Allmänt"
+
+#. Proxy settings
+#: ../src/frogr-settings-dialog.c:312
+msgid "_Use HTTP Proxy"
+msgstr "A_nvänd HTTP-proxyserver"
+
+#: ../src/frogr-settings-dialog.c:323
+msgid "_Host:"
+msgstr "_Värd:"
+
+#. Proxy port
+#: ../src/frogr-settings-dialog.c:341
+msgid "_Port:"
+msgstr "c"
+
+#. Proxy username
+#: ../src/frogr-settings-dialog.c:359
+msgid "U_sername:"
+msgstr "An_vändarnamn:"
+
+#. Proxy password
+#: ../src/frogr-settings-dialog.c:377
+msgid "Pass_word:"
+msgstr "Lös_enord:"
+
+#: ../src/frogr-settings-dialog.c:404
+msgid "Connec_tion"
+msgstr "Anslu_tning"
+
+#: ../src/frogr-settings-dialog.c:832
+msgid "Settings"
+msgstr "Inställningar"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:1
+msgid "Add"
+msgstr "Lägg till"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:2
+msgid "Remove"
+msgstr "Ta bort"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:3
+msgid "Upload"
+msgstr "Skicka upp"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:4
+msgid "frogr"
+msgstr "frogr"
+
