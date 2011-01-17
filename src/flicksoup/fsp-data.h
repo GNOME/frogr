@@ -58,14 +58,16 @@ typedef enum {
   FSP_SAFETY_LEVEL_NONE       = 0,
   FSP_SAFETY_LEVEL_SAFE       = 1,
   FSP_SAFETY_LEVEL_MODERATE   = 2,
-  FSP_SAFETY_LEVEL_RESTRICTED = 3
+  FSP_SAFETY_LEVEL_RESTRICTED = 3,
+  FSP_SAFETY_LEVEL_LAST
 } FspSafetyLevel;
 
 typedef enum {
   FSP_CONTENT_TYPE_NONE       = 0,
   FSP_CONTENT_TYPE_PHOTO      = 1,
   FSP_CONTENT_TYPE_SCREENSHOT = 2,
-  FSP_CONTENT_TYPE_OTHER      = 3
+  FSP_CONTENT_TYPE_OTHER      = 3,
+  FSP_CONTENT_TYPE_LAST
 } FspContentType;
 
 typedef enum {
@@ -100,12 +102,14 @@ typedef enum {
   FSP_ROTATION_90   = 90,
   FSP_ROTATION_180  = 180,
   FSP_ROTATION_270  = 270,
+  FSP_ROTATION_LAST
 } FspRotation;
 
 typedef enum {
   FSP_SEARCH_SCOPE_NONE   = 0,
   FSP_SEARCH_SCOPE_PUBLIC = 1,
-  FSP_SEARCH_SCOPE_HIDDEN = 2
+  FSP_SEARCH_SCOPE_HIDDEN = 2,
+  FSP_SEARCH_SCOPE_LAST
 } FspSearchScope;
 
 typedef enum {
@@ -113,6 +117,7 @@ typedef enum {
   FSP_GROUP_PRIVACY_PRIVATE     = 1,
   FSP_GROUP_PRIVACY_INVITE_ONLY = 2,
   FSP_GROUP_PRIVACY_PUBLIC      = 3,
+  FSP_GROUP_PRIVACY_LAST
 } FspGroupPrivacy;
 
 struct _FspDataAuthToken
