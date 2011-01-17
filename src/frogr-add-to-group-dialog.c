@@ -574,7 +574,7 @@ frogr_add_to_group_dialog_show (GtkWindow *parent, GSList *pictures, GSList *gro
   GObject *new = NULL;
 
   new = g_object_new (FROGR_TYPE_ADD_TO_GROUP_DIALOG,
-                      "name", _("Add to Group"),
+                      "title", _("Add to Group"),
                       "modal", TRUE,
                       "pictures", pictures,
                       "groups", groups,
