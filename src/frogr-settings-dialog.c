@@ -140,13 +140,11 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box1 = gtk_vbox_new (FALSE, 6);
   box2 = gtk_hbox_new (FALSE, 12);
 
-  rbutton = gtk_radio_button_new (NULL);
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Private"));
+  rbutton = gtk_radio_button_new_with_mnemonic (NULL, _("_Private"));
   gtk_box_pack_start (GTK_BOX (box2), rbutton, FALSE, FALSE, 0);
   priv->private_rb = rbutton;
 
-  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->private_rb));
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Public"));
+  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->private_rb), _("P_ublic"));
   gtk_box_pack_start (GTK_BOX (box2), rbutton, FALSE, FALSE, 0);
   priv->public_rb = rbutton;
 
@@ -154,11 +152,11 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   box2 = gtk_vbox_new (FALSE, 6);
 
-  cbutton = gtk_check_button_new_with_label (_("Visible to family"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("Visible to _Family"));
   gtk_box_pack_start (GTK_BOX (box2), cbutton, FALSE, FALSE, 0);
   priv->family_cb = cbutton;
 
-  cbutton = gtk_check_button_new_with_label (_("Visible to friends"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("Visible to F_riends"));
   gtk_box_pack_start (GTK_BOX (box2), cbutton, FALSE, FALSE, 0);
   priv->friend_cb = cbutton;
 
@@ -166,7 +164,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_pack_start (GTK_BOX (padding_hbox), box2, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (box1), padding_hbox, FALSE, FALSE, 0);
 
-  cbutton = gtk_check_button_new_with_label (_("Show up in global search results"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("_Show up in Global Search Results"));
   gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
   priv->show_in_search_cb = cbutton;
 
@@ -203,18 +201,15 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   box1 = gtk_hbox_new (FALSE, 12);
 
-  rbutton = gtk_radio_button_new (NULL);
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Photo"));
+  rbutton = gtk_radio_button_new_with_mnemonic (NULL, _("P_hoto"));
   gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
   priv->photo_content_rb = rbutton;
 
-  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb));
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Screenshot"));
+  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb), _("Scree_nshot"));
   gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
   priv->sshot_content_rb = rbutton;
 
-  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb));
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Other"));
+  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb), _("Oth_er"));
   gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
   priv->other_content_rb = rbutton;
 
@@ -247,18 +242,15 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   box1 = gtk_hbox_new (FALSE, 12);
 
-  rbutton = gtk_radio_button_new (NULL);
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Safe"));
+  rbutton = gtk_radio_button_new_with_mnemonic (NULL, _("S_afe"));
   gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
   priv->safe_rb = rbutton;
 
-  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->safe_rb));
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Moderate"));
+  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->safe_rb), _("_Moderate"));
   gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
   priv->moderate_rb = rbutton;
 
-  rbutton = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->safe_rb));
-  gtk_button_set_label (GTK_BUTTON (rbutton), _("Restricted"));
+  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->safe_rb), _("Restr_icted"));
   gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
   priv->restricted_rb = rbutton;
 
@@ -289,7 +281,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  cbutton = gtk_check_button_new_with_label (_("Open browser after uploading pictures"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("Open _Browser after Uploading Pictures"));
   gtk_box_pack_start (GTK_BOX (vbox), cbutton, FALSE, FALSE, 0);
   priv->open_browser_after_upload_cb = cbutton;
 
@@ -298,7 +290,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     self);
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-  gtk_notebook_append_page(notebook, vbox, gtk_label_new(_("General")));
+  gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_General")));
 }
 
 static void
@@ -317,7 +309,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   /* Proxy settings */
 
-  cbutton = gtk_check_button_new_with_label (_("Use HTTP proxy"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("_Use HTTP Proxy"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), cbutton);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
@@ -328,7 +320,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   table = gtk_table_new (2, 4, FALSE);
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
-  label = gtk_label_new (_("Host:"));
+  label = gtk_label_new_with_mnemonic (_("_Host:"));
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 0, 1,
@@ -336,6 +328,8 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   priv->proxy_host_label = label;
 
   entry = gtk_entry_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
+
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), entry);
   gtk_table_attach (GTK_TABLE (table), align, 1, 2, 0, 1,
@@ -344,7 +338,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   /* Proxy port */
 
-  label = gtk_label_new (_("Port:"));
+  label = gtk_label_new_with_mnemonic (_("_Port:"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 1, 2,
@@ -352,6 +346,8 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   priv->proxy_port_label = label;
 
   entry = gtk_entry_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
+
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), entry);
   gtk_table_attach (GTK_TABLE (table), align, 1, 2, 1, 2,
@@ -360,7 +356,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   /* Proxy username */
 
-  label = gtk_label_new (_("Username:"));
+  label = gtk_label_new_with_mnemonic (_("_Username:"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 2, 3,
@@ -368,6 +364,8 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   priv->proxy_username_label = label;
 
   entry = gtk_entry_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
+
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), entry);
   gtk_table_attach (GTK_TABLE (table), align, 1, 2, 2, 3,
@@ -376,7 +374,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   /* Proxy password */
 
-  label = gtk_label_new (_("Password:"));
+  label = gtk_label_new_with_mnemonic (_("Pass_word:"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 3, 4,
@@ -384,6 +382,8 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   priv->proxy_password_label = label;
 
   entry = gtk_entry_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
+
   gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), entry);
@@ -401,7 +401,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     NULL);
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-  gtk_notebook_append_page(notebook, vbox, gtk_label_new(_("Connection")));
+  gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("Connec_tion")));
 }
 
 static void
