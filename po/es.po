@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-17 23:38+0100\n"
+"POT-Creation-Date: 2011-01-18 00:34+0100\n"
 "PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Mario Sanchez Prada <msanchez@igalia.com>\n"
 "Language-Team: English\n"
@@ -522,7 +522,7 @@ msgstr ""
 
 #. Proxy username
 #: ../src/frogr-settings-dialog.c:359
-msgid "_Username:"
+msgid "U_sername:"
 msgstr ""
 
 #. Proxy password

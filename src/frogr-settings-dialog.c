@@ -356,7 +356,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   /* Proxy username */
 
-  label = gtk_label_new_with_mnemonic (_("_Username:"));
+  label = gtk_label_new_with_mnemonic (_("U_sername:"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 2, 3,
