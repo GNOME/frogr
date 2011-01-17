@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <flicksoup/flicksoup.h>
 
 G_BEGIN_DECLS
 

@@ -28,6 +28,7 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
+#include <flicksoup/flicksoup.h>
 
 #define FROGR_SETTINGS_DIALOG_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \

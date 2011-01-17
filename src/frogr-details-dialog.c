@@ -28,6 +28,7 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
+#include <flicksoup/flicksoup.h>
 
 #define MPICTURES_IMAGE APP_DATA_DIR "/images/mpictures.png"
 
