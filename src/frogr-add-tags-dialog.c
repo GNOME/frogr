@@ -330,7 +330,7 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
                           GTK_STOCK_CANCEL,
                           GTK_RESPONSE_CANCEL,
                           NULL);
-  gtk_container_set_border_width (GTK_CONTAINER (self), 12);
+  gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
   /* Add Entry */
 #if GTK_CHECK_VERSION (2,14,0)
