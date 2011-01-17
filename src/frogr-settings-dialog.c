@@ -263,7 +263,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   /* Proxy username */
 
-  label = gtk_label_new (_("Username:\n(optional)"));
+  label = gtk_label_new (_("Username:"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 2, 3,
@@ -279,7 +279,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   /* Proxy password */
 
-  label = gtk_label_new (_("Password:\n(optional)"));
+  label = gtk_label_new (_("Password:"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 3, 4,
