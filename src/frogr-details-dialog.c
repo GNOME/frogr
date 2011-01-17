@@ -125,6 +125,7 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *content_type_hbox = NULL;
   GtkWidget *safety_level_hbox = NULL;
   GtkWidget *align = NULL;
+  GtkWidget *label = NULL;
   GtkWidget *widget = NULL;
   GtkWidget *table = NULL;
   GtkWidget *scroller = NULL;
@@ -155,25 +156,23 @@ _create_widgets (FrogrDetailsDialog *self)
   section_vbox = gtk_vbox_new (FALSE, 6);
   visibility_vbox = gtk_vbox_new (FALSE, 6);
 
-  widget = gtk_label_new (NULL);
-  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Visibility"));
-  gtk_label_set_markup (GTK_LABEL (widget), markup);
+  widget = gtk_label_new (markup);
+  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
+
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
   internal_hbox = gtk_hbox_new (FALSE, 6);
 
-  widget = gtk_radio_button_new (NULL);
-  gtk_button_set_label (GTK_BUTTON (widget), _("Private"));
+  widget = gtk_radio_button_new_with_mnemonic (NULL, _("_Private"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
   priv->private_rb = widget;
 
-  widget = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->private_rb));
-  gtk_button_set_label (GTK_BUTTON (widget), _("Public"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->private_rb), _("P_ublic"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
   priv->public_rb = widget;
 
@@ -181,11 +180,11 @@ _create_widgets (FrogrDetailsDialog *self)
 
   private_vbox = gtk_vbox_new (FALSE, 6);
 
-  widget = gtk_check_button_new_with_label (_("Visible to family"));
+  widget = gtk_check_button_new_with_mnemonic (_("Visible to _Family"));
   gtk_box_pack_start (GTK_BOX (private_vbox), widget, FALSE, FALSE, 0);
   priv->family_cb = widget;
 
-  widget = gtk_check_button_new_with_label (_("Visible to friends"));
+  widget = gtk_check_button_new_with_mnemonic (_("Visible to F_riends"));
   gtk_box_pack_start (GTK_BOX (private_vbox), widget, FALSE, FALSE, 0);
   priv->friend_cb = widget;
 
@@ -198,7 +197,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
 
   internal_hbox = gtk_hbox_new (FALSE, 0);
-  widget = gtk_check_button_new_with_label (_("Show up in global search results"));
+  widget = gtk_check_button_new_with_mnemonic (_("_Show up in Global Search Results"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
   priv->show_in_search_cb = widget;
@@ -220,18 +219,15 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_container_add (GTK_CONTAINER (align), expander);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
-  widget = gtk_radio_button_new (NULL);
-  gtk_button_set_label (GTK_BUTTON (widget), _("Photo"));
+  widget = gtk_radio_button_new_with_mnemonic (NULL, _("P_hoto"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
   priv->photo_content_rb = widget;
 
-  widget = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb));
-  gtk_button_set_label (GTK_BUTTON (widget), _("Screenshot"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb), _("Scree_nshot"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
   priv->sshot_content_rb = widget;
 
-  widget = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb));
-  gtk_button_set_label (GTK_BUTTON (widget), _("Other"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb), _("Oth_er"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
   priv->other_content_rb = widget;
 
@@ -254,18 +250,15 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_container_add (GTK_CONTAINER (align), expander);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
-  widget = gtk_radio_button_new (NULL);
-  gtk_button_set_label (GTK_BUTTON (widget), _("Safe"));
+  widget = gtk_radio_button_new_with_mnemonic (NULL, _("S_afe"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
   priv->safe_rb = widget;
 
-  widget = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->safe_rb));
-  gtk_button_set_label (GTK_BUTTON (widget), _("Moderate"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->safe_rb), _("_Moderate"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
   priv->moderate_rb = widget;
 
-  widget = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (priv->safe_rb));
-  gtk_button_set_label (GTK_BUTTON (widget), _("Restricted"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->safe_rb), _("Restr_icted"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
   priv->restricted_rb = widget;
 
@@ -279,23 +272,26 @@ _create_widgets (FrogrDetailsDialog *self)
 
   table = gtk_table_new (3, 2, FALSE);
 
-  widget = gtk_label_new (_("Title:"));
+  label = gtk_label_new_with_mnemonic (_("_Title:"));
   align = gtk_alignment_new (1, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 0, 1,
                     0, 0, 6, 6);
+
   widget = gtk_entry_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
   gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 0, 1,
                     GTK_EXPAND | GTK_FILL, 0, 6, 6);
   priv->title_entry = widget;
 
-  widget = gtk_label_new (_("Description:"));
+  label = gtk_label_new_with_mnemonic (_("_Description:"));
   align = gtk_alignment_new (1, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 1, 2,
                     0, GTK_EXPAND | GTK_FILL, 6, 6);
 
   widget = gtk_text_view_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
   gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (widget), FALSE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (widget), GTK_WRAP_WORD);
 
@@ -314,12 +310,14 @@ _create_widgets (FrogrDetailsDialog *self)
   priv->text_buffer =
     gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
 
-  widget = gtk_label_new (_("Tags:"));
+  label = gtk_label_new_with_mnemonic (_("Ta_gs:"));
   align = gtk_alignment_new (1, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 2, 3,
                     0, 0, 6, 6);
+
   widget = gtk_entry_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
   gtk_table_attach (GTK_TABLE (table), widget, 1, 2, 2, 3,
                     GTK_EXPAND | GTK_FILL, 0, 6, 6);
   priv->tags_entry = widget;
