@@ -574,7 +574,7 @@ frogr_add_to_album_dialog_show (GtkWindow *parent, GSList *pictures, GSList *alb
   GObject *new = NULL;
 
   new = g_object_new (FROGR_TYPE_ADD_TO_ALBUM_DIALOG,
-                      "title", _("Add to Album"),
+                      "title", _("Add to Albums"),
                       "modal", TRUE,
                       "pictures", pictures,
                       "albums", albums,
