@@ -255,7 +255,7 @@ _populate_menu_bar (FrogrMainView *self)
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
   /* Accounts menu item and submenu */
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Accounts"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Accou_nts"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   priv->accounts_menu_item = menu_item;
   priv->accounts_menu = NULL;
@@ -270,7 +270,7 @@ _populate_menu_bar (FrogrMainView *self)
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Settings…"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Settings…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_settings_menu_item_activate),
@@ -318,14 +318,14 @@ _populate_menu_bar (FrogrMainView *self)
   submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Create new album…"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Create New Album…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_add_to_new_album_menu_item_activate),
                     self);
   priv->add_to_new_album_menu_item = menu_item;
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to existing album…"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Album…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_add_to_existing_album_menu_item_activate),
@@ -404,7 +404,7 @@ _ctxt_menu_create (FrogrMainView *self)
   ctxt_menu = gtk_menu_new ();
 
   /* Edit details */
-  item = gtk_menu_item_new_with_label (_("Edit Details…"));
+  item = gtk_menu_item_new_with_mnemonic (_("Edit _Details…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect(item,
                    "activate",
@@ -412,7 +412,7 @@ _ctxt_menu_create (FrogrMainView *self)
                    self);
 
   /* Add Tags */
-  item = gtk_menu_item_new_with_label (_("Add Tags…"));
+  item = gtk_menu_item_new_with_mnemonic (_("Add _Tags…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect(item,
                    "activate",
@@ -420,7 +420,7 @@ _ctxt_menu_create (FrogrMainView *self)
                    self);
 
   /* Add to group */
-  item = gtk_menu_item_new_with_label (_("Add to Group…"));
+  item = gtk_menu_item_new_with_mnemonic (_("Add to _Group…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect(item,
                    "activate",
@@ -428,20 +428,20 @@ _ctxt_menu_create (FrogrMainView *self)
                    self);
 
   /* Add to album */
-  item = gtk_menu_item_new_with_label (_("Add to Album"));
+  item = gtk_menu_item_new_with_mnemonic (_("Add to Al_bum"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
 
   ctxt_submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), ctxt_submenu);
 
-  item = gtk_menu_item_new_with_mnemonic (_("Create new album…"));
+  item = gtk_menu_item_new_with_mnemonic (_("_Create New Album…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect(item,
                    "activate",
                    G_CALLBACK (_ctxt_menu_add_to_new_album_item_activated),
                    self);
 
-  item = gtk_menu_item_new_with_mnemonic (_("Add to existing album…"));
+  item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Album…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect(item,
                    "activate",
@@ -451,7 +451,7 @@ _ctxt_menu_create (FrogrMainView *self)
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), gtk_separator_menu_item_new ());
 
   /* Remove */
-  item = gtk_menu_item_new_with_label (_("Remove"));
+  item = gtk_menu_item_new_with_mnemonic (_("_Remove"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect(item,
                    "activate",
