@@ -619,6 +619,15 @@ _on_icon_view_key_press_event (GtkWidget *widget,
   if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
     _remove_selected_pictures (mainview);
 
+  /* Show contextual menu if pressed the 'Menu' key */
+  if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Menu)
+      && (_n_selected_pictures (mainview) > 0))
+    {
+      gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
+                      NULL, NULL, NULL, NULL,
+                      0, gtk_get_current_event_time ());
+    }
+
   return FALSE;
 }
 
