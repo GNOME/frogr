@@ -151,7 +151,6 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
           if (node->type != XML_ELEMENT_NODE)
             continue;
 
-          /* Node "account" found, stop searching */
           if (!xmlStrcmp (node->name, (const xmlChar*) "open-browser-after-upload"))
             {
               xmlChar *content = NULL;
@@ -161,6 +160,58 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
                 {
                   priv->open_browser_after_upload =
                     !xmlStrcmp (content, (const xmlChar*) "1");
+
+                  xmlFree (content);
+                }
+            }
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "default-content-type"))
+            {
+              xmlChar *content = NULL;
+
+              content = xmlNodeGetContent (node);
+              if (content)
+                {
+                  gint code = 0;
+
+                  code = (gint) g_ascii_strtoll ((gchar *) content, NULL, 10);
+                  switch (code)
+                    {
+                    case FSP_CONTENT_TYPE_SCREENSHOT:
+                      priv->content_type = FSP_CONTENT_TYPE_SCREENSHOT;
+                      break;
+                    case FSP_CONTENT_TYPE_OTHER:
+                      priv->content_type = FSP_CONTENT_TYPE_OTHER;
+                      break;
+                    default:
+                      priv->content_type = FSP_CONTENT_TYPE_PHOTO;
+                    }
+
+                  xmlFree (content);
+                }
+            }
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "default-safety-level"))
+            {
+              xmlChar *content = NULL;
+
+              content = xmlNodeGetContent (node);
+              if (content)
+                {
+                  gint code = 0;
+
+                  code = (gint) g_ascii_strtoll ((gchar *) content, NULL, 10);
+                  switch (code)
+                    {
+                    case FSP_SAFETY_LEVEL_MODERATE:
+                      priv->safety_level = FSP_SAFETY_LEVEL_MODERATE;
+                      break;
+                    case FSP_SAFETY_LEVEL_RESTRICTED:
+                      priv->safety_level = FSP_SAFETY_LEVEL_RESTRICTED;
+                      break;
+                    default:
+                      priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
+                    }
 
                   xmlFree (content);
                 }
@@ -229,6 +280,12 @@ _load_visibility_xml (FrogrConfig *self,
         {
           content = xmlNodeGetContent (node);
           priv->friend = !xmlStrcmp (content, (const xmlChar*) "1");
+        }
+
+      if (!xmlStrcmp (node->name, (const xmlChar*) "show-in-search"))
+        {
+          content = xmlNodeGetContent (node);
+          priv->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (content)
@@ -454,6 +511,7 @@ _save_settings (FrogrConfig *self)
   xmlNodePtr root = NULL;
   xmlNodePtr node = NULL;
   gchar *xml_path = NULL;
+  gchar *int_string = NULL;
   gboolean retval = TRUE;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
@@ -469,7 +527,17 @@ _save_settings (FrogrConfig *self)
   _xml_add_string_child (node, "public", priv->public ? "1" : "0");
   _xml_add_string_child (node, "family", priv->family ? "1" : "0");
   _xml_add_string_child (node, "friend", priv->friend ? "1" : "0");
+  _xml_add_string_child (node, "show-in-search", priv->show_in_search ? "1" : "0");
   xmlAddChild (root, node);
+
+  /* Default content type and safety level */
+  int_string = g_strdup_printf ("%d", priv->content_type);
+  _xml_add_string_child (root, "default-content-type", int_string);
+  g_free (int_string);
+
+  int_string = g_strdup_printf ("%d", priv->safety_level);
+  _xml_add_string_child (root, "default-safety-level", int_string);
+  g_free (int_string);
 
   /* Default actions */
   _xml_add_string_child (root, "open-browser-after-upload",
@@ -689,14 +757,14 @@ frogr_config_init (FrogrConfig *self)
 
   priv->active_account = NULL;
   priv->accounts = NULL;
+
+  /* Default values (if no config file found) */
   priv->public = FALSE;
   priv->family = FALSE;
   priv->friend = FALSE;
-  priv->show_in_search = FALSE;
-  priv->safety_level = FSP_SAFETY_LEVEL_NONE;
-  priv->content_type = FSP_CONTENT_TYPE_NONE;
-
-  /* Open browser by default (e.g. no config file found) */
+  priv->show_in_search = TRUE;
+  priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
+  priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->open_browser_after_upload = TRUE;
 
   priv->use_proxy = FALSE;
@@ -902,7 +970,12 @@ frogr_config_set_default_safety_level (FrogrConfig *self,
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->safety_level = safety_level;
+
+  /* Check out of bounds values */
+  if (safety_level <= FSP_SAFETY_LEVEL_NONE || safety_level >= FSP_SAFETY_LEVEL_LAST)
+    priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
+  else
+    priv->safety_level = safety_level;
 }
 
 FspSafetyLevel
@@ -921,7 +994,12 @@ frogr_config_set_default_content_type (FrogrConfig *self,
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->content_type = content_type;
+
+  /* Check out of bounds values */
+  if (content_type <= FSP_CONTENT_TYPE_NONE || content_type >= FSP_CONTENT_TYPE_LAST)
+    priv->content_type = FSP_CONTENT_TYPE_PHOTO;
+  else
+    priv->content_type = content_type;
 }
 
 FspContentType
