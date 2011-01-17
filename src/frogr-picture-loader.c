@@ -237,6 +237,12 @@ _load_next_picture_cb (GObject *object,
                                         frogr_config_get_default_public (priv->config),
                                         frogr_config_get_default_family (priv->config),
                                         frogr_config_get_default_friend (priv->config));
+          frogr_picture_set_show_in_search (fpicture,
+                                            frogr_config_get_default_show_in_search (priv->config));
+          frogr_picture_set_content_type (fpicture,
+                                          frogr_config_get_default_content_type (priv->config));
+          frogr_picture_set_safety_level (fpicture,
+                                          frogr_config_get_default_safety_level (priv->config));
 
           frogr_picture_set_pixbuf (fpicture, s_pixbuf);
 
