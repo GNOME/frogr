@@ -30,6 +30,7 @@
   * Do not accept tabs in text views, to allow keyboard navigation.
   * Added support for setting 'content type' and 'safety level'.
   * Added support to declare pictures to 'show up on global search results'.
+  * Added mnemonic to the 'Edit details' and the 'Settings' dialog.
 
 0.3 (22 Dec 2010)
 
