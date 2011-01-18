@@ -22,7 +22,7 @@ msgstr ""
 
 #: ../src/frogr-about-dialog.c:107
 msgid "translator-credits"
-msgstr ""
+msgstr "Daniel Nylander <po@danielnylander.se>"
 
 #: ../src/frogr-add-tags-dialog.c:342
 msgid "Enter a spaces separated list of tags:"

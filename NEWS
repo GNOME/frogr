@@ -4,7 +4,6 @@
   * Modified package description for fedora and debian.
   * Converted remaining files in latin1 to utf-8.
   * Fixed capitalization problems in translatable strings (Philip Withnall).
-  * Added British English (en_GB) translation (Philip Withnall).
   * Use Unicode ellipsis instead of three dots (Philip Withnall).
   * Added 'Translated by' tab to about dialog.
   * Fixed slow startup (no longer wait for albums to be loaded).
@@ -26,12 +25,13 @@
   * Added support for handling multiple accounts.
   * Added support for creating new albums right from frogr.
   * Retrieve list of tags and use it in entry completions.
-  * Added French (fr) translation (Alexandre Franke).
   * Do not accept tabs in text views, to allow keyboard navigation.
   * Added support for setting 'content type' and 'safety level'.
   * Added support to declare pictures to 'show up on global search results'.
   * Added mnemonic to the 'Edit details' and the 'Settings' dialog.
   * Renamed 'Albums' as 'Sets'.
+  * Added new translations: British English (en_GB), French (fr),
+    Swedish (sv) and Galician (gl). See TRANSLATORS for details.
 
 0.3 (22 Dec 2010)
 

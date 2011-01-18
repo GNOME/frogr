@@ -23,7 +23,7 @@ msgstr "Un organizador remoto de Flickr para GNOME\n"
 
 #: ../src/frogr-about-dialog.c:107
 msgid "translator-credits"
-msgstr ""
+msgstr "Fran Diéguez <frandieguez@ubuntu.com>"
 
 #: ../src/frogr-add-tags-dialog.c:342
 msgid "Enter a spaces separated list of tags:"
