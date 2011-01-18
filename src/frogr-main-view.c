@@ -147,7 +147,7 @@ static gboolean _on_main_view_delete_event (GtkWidget *widget,
 static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_selected_pictures (FrogrMainView *self);
 static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
-static void _remove_pictures_from_ui (FrogrMainView *self, GSList *pictures);
+static void _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture);
 
 static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
                                               gint response,
@@ -184,9 +184,13 @@ static void _controller_active_account_changed (FrogrController *controller,
 static void _controller_accounts_changed (FrogrController *controller,
                                           gpointer data);
 
-static void _controller_picture_loaded (FrogrController *controller,
-                                        FrogrPicture *picture,
-                                        gpointer data);
+static void _model_picture_added (FrogrController *controller,
+                                  FrogrPicture *picture,
+                                  gpointer data);
+
+static void _model_picture_removed (FrogrController *controller,
+                                    FrogrPicture *picture,
+                                    gpointer data);
 
 static gchar *_craft_account_description (FrogrMainView *mainview);
 
@@ -826,44 +830,38 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
 }
 
 static void
-_remove_pictures_from_ui (FrogrMainView *self, GSList *pictures)
+_remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GSList *item;
+  FrogrMainViewPrivate *priv = NULL;
+  GtkTreeModel *tree_model = NULL;
+  GtkTreeIter iter;
 
-  for (item = pictures; item; item = g_slist_next (item))
+  /* Check items in the icon_view */
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  tree_model = gtk_icon_view_get_model (GTK_ICON_VIEW (priv->icon_view));
+  if (gtk_tree_model_get_iter_first (tree_model, &iter))
     {
-      FrogrPicture *current_picture;
-      GtkTreeModel *tree_model;
-      GtkTreeIter iter;
-
-      /* Get picture */
-      current_picture = FROGR_PICTURE (item->data);
-
-      /* Check items in the icon_view */
-      tree_model = gtk_icon_view_get_model (GTK_ICON_VIEW (priv->icon_view));
-      if (gtk_tree_model_get_iter_first (tree_model, &iter))
+      /* Look for the picture and remove it */
+      do
         {
-          do
+          FrogrPicture *picture_from_ui;
+
+          /* Get needed information */
+          gtk_tree_model_get (priv->tree_model,
+                              &iter,
+                              FPICTURE_COL, &picture_from_ui,
+                              -1);
+
+          if (picture_from_ui == picture)
             {
-              FrogrPicture *picture_from_ui;
-
-              /* Get needed information */
-              gtk_tree_model_get (priv->tree_model,
-                                  &iter,
-                                  FPICTURE_COL, &picture_from_ui,
-                                  -1);
-
-              if (picture_from_ui == current_picture)
-                {
-                  /* Remove from the GtkIconView and break loop */
-                  gtk_list_store_remove (GTK_LIST_STORE (priv->tree_model), &iter);
-                  g_object_unref (current_picture);
-                  break;
-                }
+              /* Remove from the GtkIconView and break loop */
+              gtk_list_store_remove (GTK_LIST_STORE (priv->tree_model), &iter);
+              g_object_unref (picture);
+              break;
             }
-          while (gtk_tree_model_iter_next (tree_model, &iter));
         }
+      while (gtk_tree_model_iter_next (tree_model, &iter));
     }
 }
 
@@ -1020,10 +1018,6 @@ _remove_selected_pictures (FrogrMainView *self)
       frogr_main_view_model_remove_picture (priv->model, picture);
     }
 
-  /* Remove from UI */
-  if (selected_pictures != NULL)
-    _remove_pictures_from_ui (self, selected_pictures);
-
   /* Update UI */
   _update_ui (self);
 
@@ -1119,13 +1113,23 @@ _controller_accounts_changed (FrogrController *controller,
 }
 
 static void
-_controller_picture_loaded (FrogrController *controller,
-                            FrogrPicture *picture,
-                            gpointer data)
+_model_picture_added (FrogrController *controller,
+                      FrogrPicture *picture,
+                      gpointer data)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   _add_picture_to_ui (mainview, picture);
 }
+
+static void
+_model_picture_removed (FrogrController *controller,
+                        FrogrPicture *picture,
+                        gpointer data)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  _remove_picture_from_ui (mainview, picture);
+}
+
 
 static gchar *_craft_account_description (FrogrMainView *mainview)
 {
@@ -1499,8 +1503,11 @@ frogr_main_view_init (FrogrMainView *self)
   g_signal_connect (G_OBJECT (priv->controller), "accounts-changed",
                     G_CALLBACK (_controller_accounts_changed), self);
 
-  g_signal_connect (G_OBJECT (priv->controller), "picture-loaded",
-                    G_CALLBACK (_controller_picture_loaded), self);
+  g_signal_connect (G_OBJECT (priv->model), "picture-added",
+                    G_CALLBACK (_model_picture_added), self);
+
+  g_signal_connect (G_OBJECT (priv->model), "picture-removed",
+                    G_CALLBACK (_model_picture_removed), self);
 
   gtk_builder_connect_signals (builder, self);
   g_object_unref (G_OBJECT (builder));
