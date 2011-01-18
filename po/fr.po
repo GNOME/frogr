@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 00:34+0100\n"
+"POT-Creation-Date: 2011-01-18 12:58+0100\n"
 "PO-Revision-Date: 2011-01-04 14:54+0100\n"
 "Last-Translator: Alexandre Franke <alexandre.franke@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -33,11 +33,11 @@ msgid "Add Tags"
 msgstr "Ajouter des étiquettes"
 
 #: ../src/frogr-add-to-set-dialog.c:133
-msgid "Set Title"
-msgstr "Titre de l'album"
+#, fuzzy
+msgid "Title"
+msgstr "Titre :"
 
-#: ../src/frogr-add-to-set-dialog.c:148
-#: ../src/frogr-add-to-group-dialog.c:148
+#: ../src/frogr-add-to-set-dialog.c:148 ../src/frogr-add-to-group-dialog.c:148
 msgid "Elements"
 msgstr "Éléments"
 
@@ -47,8 +47,8 @@ msgid "Add to Sets"
 msgstr "Ajouter à l'album"
 
 #: ../src/frogr-add-to-group-dialog.c:133
-msgid "Group Name"
-msgstr "Nom du groupe"
+msgid "Name"
+msgstr ""
 
 #: ../src/frogr-add-to-group-dialog.c:577
 #, fuzzy
@@ -267,8 +267,7 @@ msgstr ""
 "Veuillez l'autoriser à nouveau."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:120
-#: ../src/frogr-details-dialog.c:894
+#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:894
 msgid "Missing data required"
 msgstr "Données manquantes requises"
 
@@ -418,8 +417,9 @@ msgstr "Ajouter au _groupe…"
 
 #. Add to set
 #: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:431
-msgid "Add to Al_bum"
-msgstr "Ajouter à l'al_bum"
+#, fuzzy
+msgid "Add to _Set"
+msgstr "Ajouter à l'album"
 
 #: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:437
 #, fuzzy
@@ -560,6 +560,15 @@ msgstr "Envoyer"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "frogr"
 msgstr "frogr"
+
+#~ msgid "Set Title"
+#~ msgstr "Titre de l'album"
+
+#~ msgid "Group Name"
+#~ msgstr "Nom du groupe"
+
+#~ msgid "Add to Al_bum"
+#~ msgstr "Ajouter à l'al_bum"
 
 #~ msgid "(Editing %d pictures)"
 #~ msgstr "(Modification de %d images)"

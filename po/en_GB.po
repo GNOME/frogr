@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 00:34+0100\n"
+"POT-Creation-Date: 2011-01-18 12:58+0100\n"
 "PO-Revision-Date: 2010-12-24 17:07+0000\n"
 "Last-Translator: Philip Withnall <philip@tecnocode.co.uk>\n"
 "Language-Team: British English <en@li.org>\n"
@@ -33,11 +33,11 @@ msgid "Add Tags"
 msgstr "Add Tags"
 
 #: ../src/frogr-add-to-set-dialog.c:133
-msgid "Set Title"
-msgstr "Set Title"
+#, fuzzy
+msgid "Title"
+msgstr "Title:"
 
-#: ../src/frogr-add-to-set-dialog.c:148
-#: ../src/frogr-add-to-group-dialog.c:148
+#: ../src/frogr-add-to-set-dialog.c:148 ../src/frogr-add-to-group-dialog.c:148
 msgid "Elements"
 msgstr ""
 
@@ -47,7 +47,7 @@ msgid "Add to Sets"
 msgstr "Add to Sets"
 
 #: ../src/frogr-add-to-group-dialog.c:133
-msgid "Group Name"
+msgid "Name"
 msgstr ""
 
 #: ../src/frogr-add-to-group-dialog.c:577
@@ -269,8 +269,7 @@ msgstr ""
 "Please re-authorise it."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:120
-#: ../src/frogr-details-dialog.c:894
+#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:894
 msgid "Missing data required"
 msgstr "Missing data required"
 
@@ -424,8 +423,8 @@ msgstr "Add to Al_bum…"
 #. Add to set
 #: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:431
 #, fuzzy
-msgid "Add to Al_bum"
-msgstr "Add to Set"
+msgid "Add to _Set"
+msgstr "Add to Sets"
 
 #: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:437
 msgid "_Create New Set…"
@@ -563,6 +562,13 @@ msgstr "Upload"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "frogr"
 msgstr "frogr"
+
+#~ msgid "Set Title"
+#~ msgstr "Set Title"
+
+#, fuzzy
+#~ msgid "Add to Al_bum"
+#~ msgstr "Add to Set"
 
 #~ msgid "(Editing %d pictures)"
 #~ msgstr "(Editing %d pictures)"

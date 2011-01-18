@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 00:37+0100\n"
+"POT-Creation-Date: 2011-01-18 12:58+0100\n"
 "PO-Revision-Date: 2011-01-18 00:49+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -20,17 +20,9 @@ msgstr ""
 msgid "A Flickr remote organizer for GNOME\n"
 msgstr ""
 
-#: ../src/frogr-about-dialog.c:101
-msgid "Spanish"
-msgstr "Spanska"
-
-#: ../src/frogr-about-dialog.c:102
-msgid "British English"
-msgstr "Brittisk engelska"
-
-#: ../src/frogr-about-dialog.c:103
-msgid "French"
-msgstr "Franska"
+#: ../src/frogr-about-dialog.c:107
+msgid "translator-credits"
+msgstr ""
 
 #: ../src/frogr-add-tags-dialog.c:342
 msgid "Enter a spaces separated list of tags:"
@@ -41,11 +33,11 @@ msgid "Add Tags"
 msgstr "Lägg till taggar"
 
 #: ../src/frogr-add-to-set-dialog.c:133
-msgid "Set Title"
-msgstr "Albumtitel"
+#, fuzzy
+msgid "Title"
+msgstr "_Titel:"
 
-#: ../src/frogr-add-to-set-dialog.c:148
-#: ../src/frogr-add-to-group-dialog.c:148
+#: ../src/frogr-add-to-set-dialog.c:148 ../src/frogr-add-to-group-dialog.c:148
 msgid "Elements"
 msgstr "Element"
 
@@ -54,8 +46,8 @@ msgid "Add to Sets"
 msgstr "Lägg till i album"
 
 #: ../src/frogr-add-to-group-dialog.c:133
-msgid "Group Name"
-msgstr "Gruppnamn"
+msgid "Name"
+msgstr ""
 
 #: ../src/frogr-add-to-group-dialog.c:577
 msgid "Add to Groups"
@@ -63,13 +55,21 @@ msgstr "Lägg till i grupper"
 
 #: ../src/frogr-auth-dialog.c:31
 #, c-format
-msgid "Please press the button to authorize %s and then come back to this screen to complete the process."
-msgstr "Tryck på knappen för att auktorisera %s och kom sedan tillbaka till denna skärm för att färdigställa processen."
+msgid ""
+"Please press the button to authorize %s and then come back to this screen to "
+"complete the process."
+msgstr ""
+"Tryck på knappen för att auktorisera %s och kom sedan tillbaka till denna "
+"skärm för att färdigställa processen."
 
 #: ../src/frogr-auth-dialog.c:35
 #, c-format
-msgid "Press the button to start using %s once you've authorized it in your flickr account."
-msgstr "Tryck på knappen för att börja använda %s när du har auktoriserat det för ditt Flickr-konto."
+msgid ""
+"Press the button to start using %s once you've authorized it in your flickr "
+"account."
+msgstr ""
+"Tryck på knappen för att börja använda %s när du har auktoriserat det för "
+"ditt Flickr-konto."
 
 #: ../src/frogr-controller.c:241
 msgid "Process cancelled by the user"
@@ -203,13 +203,11 @@ msgstr ""
 msgid "Operation successfully completed!"
 msgstr ""
 
-#: ../src/frogr-controller.c:1411
-#: ../src/frogr-controller.c:1444
+#: ../src/frogr-controller.c:1411 ../src/frogr-controller.c:1444
 msgid "Retrieving list of tags…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1477
-#: ../src/frogr-controller.c:1509
+#: ../src/frogr-controller.c:1477 ../src/frogr-controller.c:1509
 msgid "Retrieving list of sets…"
 msgstr ""
 
@@ -233,8 +231,7 @@ msgid ""
 msgstr ""
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:120
-#: ../src/frogr-details-dialog.c:894
+#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:894
 msgid "Missing data required"
 msgstr ""
 
@@ -254,28 +251,23 @@ msgstr "Skapa nytt album"
 msgid "Visibility"
 msgstr "Synlighet"
 
-#: ../src/frogr-details-dialog.c:171
-#: ../src/frogr-settings-dialog.c:143
+#: ../src/frogr-details-dialog.c:171 ../src/frogr-settings-dialog.c:143
 msgid "_Private"
 msgstr "_Privat"
 
-#: ../src/frogr-details-dialog.c:175
-#: ../src/frogr-settings-dialog.c:147
+#: ../src/frogr-details-dialog.c:175 ../src/frogr-settings-dialog.c:147
 msgid "P_ublic"
 msgstr "P_ublik"
 
-#: ../src/frogr-details-dialog.c:183
-#: ../src/frogr-settings-dialog.c:155
+#: ../src/frogr-details-dialog.c:183 ../src/frogr-settings-dialog.c:155
 msgid "Visible to _Family"
 msgstr "Synlig för _familj"
 
-#: ../src/frogr-details-dialog.c:187
-#: ../src/frogr-settings-dialog.c:159
+#: ../src/frogr-details-dialog.c:187 ../src/frogr-settings-dialog.c:159
 msgid "Visible to F_riends"
 msgstr "Synlig för vä_nner"
 
-#: ../src/frogr-details-dialog.c:200
-#: ../src/frogr-settings-dialog.c:167
+#: ../src/frogr-details-dialog.c:200 ../src/frogr-settings-dialog.c:167
 msgid "_Show up in Global Search Results"
 msgstr ""
 
@@ -283,18 +275,15 @@ msgstr ""
 msgid "Content type"
 msgstr "Innehållstyp"
 
-#: ../src/frogr-details-dialog.c:222
-#: ../src/frogr-settings-dialog.c:204
+#: ../src/frogr-details-dialog.c:222 ../src/frogr-settings-dialog.c:204
 msgid "P_hoto"
 msgstr "F_oto"
 
-#: ../src/frogr-details-dialog.c:226
-#: ../src/frogr-settings-dialog.c:208
+#: ../src/frogr-details-dialog.c:226 ../src/frogr-settings-dialog.c:208
 msgid "Scree_nshot"
 msgstr "Skär_mbild"
 
-#: ../src/frogr-details-dialog.c:230
-#: ../src/frogr-settings-dialog.c:212
+#: ../src/frogr-details-dialog.c:230 ../src/frogr-settings-dialog.c:212
 msgid "Oth_er"
 msgstr ""
 
@@ -302,18 +291,15 @@ msgstr ""
 msgid "Safety level"
 msgstr "Säkerhetsnivå"
 
-#: ../src/frogr-details-dialog.c:253
-#: ../src/frogr-settings-dialog.c:245
+#: ../src/frogr-details-dialog.c:253 ../src/frogr-settings-dialog.c:245
 msgid "S_afe"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:257
-#: ../src/frogr-settings-dialog.c:249
+#: ../src/frogr-details-dialog.c:257 ../src/frogr-settings-dialog.c:249
 msgid "_Moderate"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:261
-#: ../src/frogr-settings-dialog.c:253
+#: ../src/frogr-details-dialog.c:261 ../src/frogr-settings-dialog.c:253
 msgid "Restr_icted"
 msgstr ""
 
@@ -329,8 +315,7 @@ msgstr "_Beskrivning:"
 msgid "Ta_gs:"
 msgstr "Ta_ggar:"
 
-#: ../src/frogr-details-dialog.c:1075
-#: ../src/frogr-details-dialog.c:1080
+#: ../src/frogr-details-dialog.c:1075 ../src/frogr-details-dialog.c:1080
 msgid "Edit Picture Details"
 msgstr "Redigera bilddetaljer"
 
@@ -371,36 +356,31 @@ msgid "A_ctions"
 msgstr "Åt_gärder"
 
 #. Edit details
-#: ../src/frogr-main-view.c:293
-#: ../src/frogr-main-view.c:407
+#: ../src/frogr-main-view.c:293 ../src/frogr-main-view.c:407
 msgid "Edit _Details…"
 msgstr "Redigera _detaljer…"
 
 #. Add Tags
-#: ../src/frogr-main-view.c:300
-#: ../src/frogr-main-view.c:415
+#: ../src/frogr-main-view.c:300 ../src/frogr-main-view.c:415
 msgid "Add _Tags…"
 msgstr "Lägg till _taggar…"
 
 #. Add to group
-#: ../src/frogr-main-view.c:307
-#: ../src/frogr-main-view.c:423
+#: ../src/frogr-main-view.c:307 ../src/frogr-main-view.c:423
 msgid "Add to _Group…"
 msgstr "Lägg till i _grupp…"
 
 #. Add to set
-#: ../src/frogr-main-view.c:314
-#: ../src/frogr-main-view.c:431
-msgid "Add to Al_bum"
-msgstr "Lägg till i al_bum"
+#: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:431
+#, fuzzy
+msgid "Add to _Set"
+msgstr "Lägg till i album"
 
-#: ../src/frogr-main-view.c:321
-#: ../src/frogr-main-view.c:437
+#: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:437
 msgid "_Create New Set…"
 msgstr "_Skapa nytt album…"
 
-#: ../src/frogr-main-view.c:328
-#: ../src/frogr-main-view.c:444
+#: ../src/frogr-main-view.c:328 ../src/frogr-main-view.c:444
 msgid "Add to _Existing Set…"
 msgstr "Lägg till i _befintligt album…"
 
@@ -529,3 +509,20 @@ msgstr "Skicka upp"
 msgid "frogr"
 msgstr "frogr"
 
+#~ msgid "Spanish"
+#~ msgstr "Spanska"
+
+#~ msgid "British English"
+#~ msgstr "Brittisk engelska"
+
+#~ msgid "French"
+#~ msgstr "Franska"
+
+#~ msgid "Set Title"
+#~ msgstr "Albumtitel"
+
+#~ msgid "Group Name"
+#~ msgstr "Gruppnamn"
+
+#~ msgid "Add to Al_bum"
+#~ msgstr "Lägg till i al_bum"

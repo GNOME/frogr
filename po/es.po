@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 00:34+0100\n"
+"POT-Creation-Date: 2011-01-18 12:58+0100\n"
 "PO-Revision-Date: 2009-08-26 14:27+0200\n"
 "Last-Translator: Mario Sanchez Prada <msanchez@igalia.com>\n"
 "Language-Team: English\n"
@@ -36,11 +36,11 @@ msgid "Add Tags"
 msgstr "Añadir Etiquetas"
 
 #: ../src/frogr-add-to-set-dialog.c:133
-msgid "Set Title"
-msgstr "Título del Álbum"
+#, fuzzy
+msgid "Title"
+msgstr "Título:"
 
-#: ../src/frogr-add-to-set-dialog.c:148
-#: ../src/frogr-add-to-group-dialog.c:148
+#: ../src/frogr-add-to-set-dialog.c:148 ../src/frogr-add-to-group-dialog.c:148
 msgid "Elements"
 msgstr ""
 
@@ -50,7 +50,7 @@ msgid "Add to Sets"
 msgstr "Añadir a Álbumes"
 
 #: ../src/frogr-add-to-group-dialog.c:133
-msgid "Group Name"
+msgid "Name"
 msgstr ""
 
 #: ../src/frogr-add-to-group-dialog.c:577
@@ -253,8 +253,7 @@ msgstr ""
 "Por favor autorícelo de nuevo."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:120
-#: ../src/frogr-details-dialog.c:894
+#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:894
 msgid "Missing data required"
 msgstr "Falta información necesaria"
 
@@ -408,7 +407,7 @@ msgstr "Añadir a Álbumes…"
 #. Add to set
 #: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:431
 #, fuzzy
-msgid "Add to Al_bum"
+msgid "Add to _Set"
 msgstr "Añadir a Álbumes"
 
 #: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:437
@@ -547,6 +546,13 @@ msgstr "Subir"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "frogr"
 msgstr "frogr"
+
+#~ msgid "Set Title"
+#~ msgstr "Título del Álbum"
+
+#, fuzzy
+#~ msgid "Add to Al_bum"
+#~ msgstr "Añadir a Álbumes"
 
 #~ msgid "(Editing %d pictures)"
 #~ msgstr "(Editando %d imágenes)"
