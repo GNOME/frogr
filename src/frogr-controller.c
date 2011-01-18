@@ -830,6 +830,14 @@ _complete_picture_upload_on_idle (gpointer data)
   if (callback)
     callback (source_object, picture, error);
 
+  /* Remove it from the model if no error happened */
+  if (!error)
+    {
+      FrogrMainViewModel *mainview_model = NULL;
+      mainview_model = frogr_main_view_get_model (priv->mainview);
+      frogr_main_view_model_remove_picture (mainview_model, picture);
+    }
+
   g_object_unref (picture);
 
   return FALSE;
