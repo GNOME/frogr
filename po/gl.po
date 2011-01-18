@@ -385,7 +385,7 @@ msgid "Authorize _frogr"
 msgstr "Autorizar a _Frogr"
 
 #: ../src/frogr-main-view.c:273
-msgid "_Settings…"
+msgid "_Preferences…"
 msgstr "_Configuracións…"
 
 #: ../src/frogr-main-view.c:281
@@ -531,7 +531,7 @@ msgid "Connec_tion"
 msgstr "Conex_ión:"
 
 #: ../src/frogr-settings-dialog.c:832
-msgid "Settings"
+msgid "Preferences"
 msgstr "Configuracións"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:1

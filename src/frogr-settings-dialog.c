@@ -829,7 +829,7 @@ frogr_settings_dialog_show (GtkWindow *parent)
                              "modal", TRUE,
                              "transient-for", parent,
                              "resizable", TRUE,
-                             "title", _("Settings"),
+                             "title", _("Preferences"),
                              NULL);
 
       _instance = FROGR_SETTINGS_DIALOG (object);

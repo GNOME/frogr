@@ -270,7 +270,7 @@ _populate_menu_bar (FrogrMainView *self)
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Settings…"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Preferences…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_settings_menu_item_activate),

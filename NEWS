@@ -31,6 +31,7 @@
   * Added support for setting 'content type' and 'safety level'.
   * Added support to declare pictures to 'show up on global search results'.
   * Added mnemonic to the 'Edit details' and the 'Settings' dialog.
+  * Renamed 'Albums' as 'Sets'.
 
 0.3 (22 Dec 2010)
 

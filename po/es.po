@@ -377,8 +377,8 @@ msgstr "Autorizar _frogr"
 
 #: ../src/frogr-main-view.c:273
 #, fuzzy
-msgid "_Settings…"
-msgstr "Ajustes…"
+msgid "_Preferences…"
+msgstr "_Ajustes…"
 
 #: ../src/frogr-main-view.c:281
 msgid "_Quit"
@@ -529,7 +529,7 @@ msgid "Connec_tion"
 msgstr ""
 
 #: ../src/frogr-settings-dialog.c:832
-msgid "Settings"
+msgid "Preferences"
 msgstr "Ajustes"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:1
