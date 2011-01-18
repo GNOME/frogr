@@ -78,9 +78,9 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *upload_menu_item;
   GtkWidget *edit_details_menu_item;
   GtkWidget *add_tags_menu_item;
-  GtkWidget *add_to_album_menu_item;
-  GtkWidget *add_to_new_album_menu_item;
-  GtkWidget *add_to_existing_album_menu_item;
+  GtkWidget *add_to_set_menu_item;
+  GtkWidget *add_to_new_set_menu_item;
+  GtkWidget *add_to_existing_set_menu_item;
   GtkWidget *add_to_group_menu_item;
   GtkWidget *ctxt_menu;
 
@@ -110,10 +110,10 @@ static void _populate_accounts_submenu (FrogrMainView *self);
 static GtkWidget *_ctxt_menu_create (FrogrMainView *self);
 static void _ctxt_menu_add_tags_item_activated (GtkWidget *widget,
                                                 gpointer data);
-static void _ctxt_menu_add_to_new_album_item_activated (GtkWidget *widget,
-                                                        gpointer data);
-static void _ctxt_menu_add_to_existing_album_item_activated (GtkWidget *widget,
-                                                             gpointer data);
+static void _ctxt_menu_add_to_new_set_item_activated (GtkWidget *widget,
+                                                      gpointer data);
+static void _ctxt_menu_add_to_existing_set_item_activated (GtkWidget *widget,
+                                                           gpointer data);
 static void _ctxt_menu_add_to_group_item_activated (GtkWidget *widget,
                                                     gpointer data);
 static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget,
@@ -145,8 +145,8 @@ void _on_settings_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_edit_details_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_add_tags_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_add_to_new_album_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_add_to_existing_album_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_add_to_new_set_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_add_to_existing_set_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_add_to_group_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_upload_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
@@ -169,8 +169,8 @@ static void _add_pictures_dialog (FrogrMainView *self);
 
 static gboolean _pictures_selected_required_check (FrogrMainView *self);
 static void _add_tags_to_pictures (FrogrMainView *self);
-static void _add_pictures_to_new_album (FrogrMainView *self);
-static void _add_pictures_to_existing_album (FrogrMainView *self);
+static void _add_pictures_to_new_set (FrogrMainView *self);
+static void _add_pictures_to_existing_set (FrogrMainView *self);
 static void _add_pictures_to_group (FrogrMainView *self);
 static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
@@ -311,26 +311,26 @@ _populate_menu_bar (FrogrMainView *self)
                     self);
   priv->add_to_group_menu_item = menu_item;
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to Al_bum"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Set"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  priv->add_to_album_menu_item = menu_item;
+  priv->add_to_set_menu_item = menu_item;
 
   submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Create New Album…"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Create New Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_add_to_new_album_menu_item_activate),
+                    G_CALLBACK (_on_add_to_new_set_menu_item_activate),
                     self);
-  priv->add_to_new_album_menu_item = menu_item;
+  priv->add_to_new_set_menu_item = menu_item;
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Album…"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_add_to_existing_album_menu_item_activate),
+                    G_CALLBACK (_on_add_to_existing_set_menu_item_activate),
                     self);
-  priv->add_to_existing_album_menu_item = menu_item;
+  priv->add_to_existing_set_menu_item = menu_item;
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
@@ -383,8 +383,8 @@ _populate_accounts_submenu (FrogrMainView *self)
       menu_item = gtk_menu_item_new_with_label (login);
       g_object_set_data (G_OBJECT (menu_item), "frogr-account", account);
       g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_account_menu_item_activate),
-                    self);
+                        G_CALLBACK (_on_account_menu_item_activate),
+                        self);
       gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
     }
 
@@ -427,25 +427,25 @@ _ctxt_menu_create (FrogrMainView *self)
                    G_CALLBACK (_ctxt_menu_add_to_group_item_activated),
                    self);
 
-  /* Add to album */
-  item = gtk_menu_item_new_with_mnemonic (_("Add to Al_bum"));
+  /* Add to set */
+  item = gtk_menu_item_new_with_mnemonic (_("Add to _Set"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
 
   ctxt_submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), ctxt_submenu);
 
-  item = gtk_menu_item_new_with_mnemonic (_("_Create New Album…"));
+  item = gtk_menu_item_new_with_mnemonic (_("_Create New Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect(item,
                    "activate",
-                   G_CALLBACK (_ctxt_menu_add_to_new_album_item_activated),
+                   G_CALLBACK (_ctxt_menu_add_to_new_set_item_activated),
                    self);
 
-  item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Album…"));
+  item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect(item,
                    "activate",
-                   G_CALLBACK (_ctxt_menu_add_to_existing_album_item_activated),
+                   G_CALLBACK (_ctxt_menu_add_to_existing_set_item_activated),
                    self);
 
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), gtk_separator_menu_item_new ());
@@ -472,17 +472,17 @@ _ctxt_menu_add_tags_item_activated (GtkWidget *widget, gpointer data)
 }
 
 static void
-_ctxt_menu_add_to_new_album_item_activated (GtkWidget *widget, gpointer data)
+_ctxt_menu_add_to_new_set_item_activated (GtkWidget *widget, gpointer data)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _add_pictures_to_new_album (mainview);
+  _add_pictures_to_new_set (mainview);
 }
 
 static void
-_ctxt_menu_add_to_existing_album_item_activated (GtkWidget *widget, gpointer data)
+_ctxt_menu_add_to_existing_set_item_activated (GtkWidget *widget, gpointer data)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _add_pictures_to_existing_album (mainview);
+  _add_pictures_to_existing_set (mainview);
 }
 
 static void
@@ -764,17 +764,17 @@ _on_add_tags_menu_item_activate (GtkWidget *widget, gpointer self)
 }
 
 void
-_on_add_to_new_album_menu_item_activate (GtkWidget *widget, gpointer self)
+_on_add_to_new_set_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _add_pictures_to_new_album (mainview);
+  _add_pictures_to_new_set (mainview);
 }
 
 void
-_on_add_to_existing_album_menu_item_activate (GtkWidget *widget, gpointer self)
+_on_add_to_existing_set_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _add_pictures_to_existing_album (mainview);
+  _add_pictures_to_existing_set (mainview);
 }
 
 void
@@ -1009,29 +1009,29 @@ _add_tags_to_pictures (FrogrMainView *self)
 }
 
 static void
-_add_pictures_to_new_album (FrogrMainView *self)
+_add_pictures_to_new_set (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   if (!_pictures_selected_required_check (self))
     return;
 
-  /* Call the controller to add the pictures to albums */
-  frogr_controller_show_create_new_album_dialog (priv->controller,
-                                                 _get_selected_pictures (self));
+  /* Call the controller to add the pictures to sets */
+  frogr_controller_show_create_new_set_dialog (priv->controller,
+                                               _get_selected_pictures (self));
 }
 
 static void
-_add_pictures_to_existing_album (FrogrMainView *self)
+_add_pictures_to_existing_set (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   if (!_pictures_selected_required_check (self))
     return;
 
-  /* Call the controller to add the pictures to albums */
-  frogr_controller_show_add_to_album_dialog (priv->controller,
-                                             _get_selected_pictures (self));
+  /* Call the controller to add the pictures to sets */
+  frogr_controller_show_add_to_set_dialog (priv->controller,
+                                           _get_selected_pictures (self));
 }
 
 static void
@@ -1042,7 +1042,7 @@ _add_pictures_to_group (FrogrMainView *self)
   if (!_pictures_selected_required_check (self))
     return;
 
-  /* Call the controller to add the pictures to albums */
+  /* Call the controller to add the pictures to sets */
   frogr_controller_show_add_to_group_dialog (priv->controller,
                                              _get_selected_pictures (self));
 }
@@ -1309,9 +1309,9 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->upload_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->edit_details_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_tags_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->add_to_album_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->add_to_new_album_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->add_to_existing_album_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->add_to_set_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->add_to_new_set_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_group_menu_item, FALSE);
       break;
 
@@ -1329,9 +1329,9 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->upload_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->edit_details_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->add_tags_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->add_to_album_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->add_to_new_album_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->add_to_existing_album_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->add_to_set_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->add_to_new_set_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->add_to_group_menu_item, has_pics);
 
       /* Update status bar from model's account description */

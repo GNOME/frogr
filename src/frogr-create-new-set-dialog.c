@@ -1,5 +1,5 @@
 /*
- * frogr-create-new-album-dialog.c -- 'Create new album' dialog
+ * frogr-create-new-set-dialog.c -- 'Create new set' dialog
  *
  * Copyright (C) 2010, 2011 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
@@ -20,9 +20,9 @@
  *
  */
 
-#include "frogr-create-new-album-dialog.h"
+#include "frogr-create-new-set-dialog.h"
 
-#include "frogr-album.h"
+#include "frogr-photoset.h"
 #include "frogr-controller.h"
 #include "frogr-main-view-model.h"
 #include "frogr-main-view.h"
@@ -35,37 +35,37 @@
 #define MINIMUM_WINDOW_WIDTH 450
 #define MINIMUM_WINDOW_HEIGHT 280
 
-#define FROGR_CREATE_NEW_ALBUM_DIALOG_GET_PRIVATE(object)               \
+#define FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE(object)                 \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                               \
-                                FROGR_TYPE_CREATE_NEW_ALBUM_DIALOG,     \
-                                FrogrCreateNewAlbumDialogPrivate))
+                                FROGR_TYPE_CREATE_NEW_SET_DIALOG,       \
+                                FrogrCreateNewSetDialogPrivate))
 
-G_DEFINE_TYPE (FrogrCreateNewAlbumDialog, frogr_create_new_album_dialog, GTK_TYPE_DIALOG);
+G_DEFINE_TYPE (FrogrCreateNewSetDialog, frogr_create_new_set_dialog, GTK_TYPE_DIALOG);
 
-typedef struct _FrogrCreateNewAlbumDialogPrivate {
+typedef struct _FrogrCreateNewSetDialogPrivate {
   GtkWidget *title_entry;
   GtkWidget *description_tv;
   GtkTextBuffer *description_buffer;
 
   GSList *pictures;
-  GSList *albums;
-} FrogrCreateNewAlbumDialogPrivate;
+  GSList *sets;
+} FrogrCreateNewSetDialogPrivate;
 
 /* Properties */
 enum  {
   PROP_0,
   PROP_PICTURES,
-  PROP_ALBUMS
+  PROP_SETS
 };
 
 
 /* Prototypes */
 
-static gboolean _validate_dialog_data (FrogrCreateNewAlbumDialog *self);
+static gboolean _validate_dialog_data (FrogrCreateNewSetDialog *self);
 
-static gboolean _save_data (FrogrCreateNewAlbumDialog *self);
+static gboolean _save_data (FrogrCreateNewSetDialog *self);
 
-static gboolean _update_model (FrogrCreateNewAlbumDialog *self,
+static gboolean _update_model (FrogrCreateNewSetDialog *self,
                                const gchar *title,
                                const gchar *description);
 
@@ -74,15 +74,15 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 /* Private API */
 
 static gboolean
-_validate_dialog_data (FrogrCreateNewAlbumDialog *self)
+_validate_dialog_data (FrogrCreateNewSetDialog *self)
 {
-  FrogrCreateNewAlbumDialogPrivate *priv = NULL;
+  FrogrCreateNewSetDialogPrivate *priv = NULL;
   gchar *title = NULL;
   gboolean result = TRUE;
 
-  priv = FROGR_CREATE_NEW_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
 
-  /* Validate album's title */
+  /* Validate set's title */
   title = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
   if ((title == NULL) || g_str_equal (g_strstrip (title), ""))
     result = FALSE;
@@ -92,16 +92,16 @@ _validate_dialog_data (FrogrCreateNewAlbumDialog *self)
 }
 
 static gboolean
-_save_data (FrogrCreateNewAlbumDialog *self)
+_save_data (FrogrCreateNewSetDialog *self)
 {
-  FrogrCreateNewAlbumDialogPrivate *priv = NULL;
+  FrogrCreateNewSetDialogPrivate *priv = NULL;
   GtkTextIter start;
   GtkTextIter end;
   gchar *title = NULL;
   gchar *description = NULL;
   gboolean result = FALSE;
 
-  priv = FROGR_CREATE_NEW_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
 
   /* Save data */
   title = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
@@ -128,33 +128,33 @@ _save_data (FrogrCreateNewAlbumDialog *self)
 }
 
 static gboolean
-_update_model (FrogrCreateNewAlbumDialog *self,
+_update_model (FrogrCreateNewSetDialog *self,
                const gchar *title,
                const gchar *description)
 {
-  FrogrCreateNewAlbumDialogPrivate *priv = NULL;
+  FrogrCreateNewSetDialogPrivate *priv = NULL;
   FrogrController *controller = NULL;
   FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  FrogrAlbum *new_album = NULL;
+  FrogrPhotoSet *new_set = NULL;
   FrogrPicture *picture = NULL;
   GSList *item = NULL;
   gboolean result = FALSE;
 
-  priv = FROGR_CREATE_NEW_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   controller = frogr_controller_get_instance ();
   mainview = frogr_controller_get_main_view (controller);
   mainview_model = frogr_main_view_get_model (mainview);
 
-  /* Add the album to the model */
-  new_album = frogr_album_new (title, description);
-  frogr_main_view_model_add_album (mainview_model, new_album);
+  /* Add the set to the model */
+  new_set = frogr_photoset_new (title, description);
+  frogr_main_view_model_add_set (mainview_model, new_set);
 
-  /* Add the album to the list of albums for each picture */
+  /* Add the set to the list of sets for each picture */
   for (item = priv->pictures; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
-      frogr_picture_add_album (picture, new_album);
+      frogr_picture_add_set (picture, new_set);
       result = TRUE;
     }
 
@@ -164,32 +164,32 @@ _update_model (FrogrCreateNewAlbumDialog *self,
 static void
 _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
-  FrogrCreateNewAlbumDialog *self = NULL;
+  FrogrCreateNewSetDialog *self = NULL;
 
   /* Try to save data if response is OK */
-  self = FROGR_CREATE_NEW_ALBUM_DIALOG (dialog);
+  self = FROGR_CREATE_NEW_SET_DIALOG (dialog);
   if (response == GTK_RESPONSE_OK && _save_data (self) == FALSE)
-      return;
+    return;
 
   /* Destroy the dialog */
   gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 static void
-_frogr_create_new_album_dialog_set_property (GObject *object,
-                                             guint prop_id,
-                                             const GValue *value,
-                                             GParamSpec *pspec)
+_frogr_create_new_set_dialog_set_property (GObject *object,
+                                           guint prop_id,
+                                           const GValue *value,
+                                           GParamSpec *pspec)
 {
-  FrogrCreateNewAlbumDialogPrivate *priv = FROGR_CREATE_NEW_ALBUM_DIALOG_GET_PRIVATE (object);
+  FrogrCreateNewSetDialogPrivate *priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (object);
 
   switch (prop_id)
     {
     case PROP_PICTURES:
       priv->pictures = (GSList *) g_value_get_pointer (value);
       break;
-    case PROP_ALBUMS:
-      priv->albums = (GSList *) g_value_get_pointer (value);
+    case PROP_SETS:
+      priv->sets = (GSList *) g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -198,20 +198,20 @@ _frogr_create_new_album_dialog_set_property (GObject *object,
 }
 
 static void
-_frogr_create_new_album_dialog_get_property (GObject *object,
-                                             guint prop_id,
-                                             GValue *value,
-                                             GParamSpec *pspec)
+_frogr_create_new_set_dialog_get_property (GObject *object,
+                                           guint prop_id,
+                                           GValue *value,
+                                           GParamSpec *pspec)
 {
-  FrogrCreateNewAlbumDialogPrivate *priv = FROGR_CREATE_NEW_ALBUM_DIALOG_GET_PRIVATE (object);
+  FrogrCreateNewSetDialogPrivate *priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (object);
 
   switch (prop_id)
     {
     case PROP_PICTURES:
       g_value_set_pointer (value, priv->pictures);
       break;
-    case PROP_ALBUMS:
-      g_value_set_pointer (value, priv->albums);
+    case PROP_SETS:
+      g_value_set_pointer (value, priv->sets);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -220,9 +220,9 @@ _frogr_create_new_album_dialog_get_property (GObject *object,
 }
 
 static void
-_frogr_create_new_album_dialog_dispose (GObject *object)
+_frogr_create_new_set_dialog_dispose (GObject *object)
 {
-  FrogrCreateNewAlbumDialogPrivate *priv = FROGR_CREATE_NEW_ALBUM_DIALOG_GET_PRIVATE (object);
+  FrogrCreateNewSetDialogPrivate *priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (object);
 
   if (priv->pictures)
     {
@@ -231,47 +231,47 @@ _frogr_create_new_album_dialog_dispose (GObject *object)
       priv->pictures = NULL;
     }
 
-  if (priv->albums)
-    priv->albums = NULL;
+  if (priv->sets)
+    priv->sets = NULL;
 
-  G_OBJECT_CLASS(frogr_create_new_album_dialog_parent_class)->dispose (object);
+  G_OBJECT_CLASS(frogr_create_new_set_dialog_parent_class)->dispose (object);
 }
 
 static void
-frogr_create_new_album_dialog_class_init (FrogrCreateNewAlbumDialogClass *klass)
+frogr_create_new_set_dialog_class_init (FrogrCreateNewSetDialogClass *klass)
 {
   GObjectClass *obj_class = (GObjectClass *)klass;
   GParamSpec *pspec;
 
   /* GObject signals */
-  obj_class->set_property = _frogr_create_new_album_dialog_set_property;
-  obj_class->get_property = _frogr_create_new_album_dialog_get_property;
-  obj_class->dispose = _frogr_create_new_album_dialog_dispose;
+  obj_class->set_property = _frogr_create_new_set_dialog_set_property;
+  obj_class->get_property = _frogr_create_new_set_dialog_get_property;
+  obj_class->dispose = _frogr_create_new_set_dialog_dispose;
 
   /* Install properties */
   pspec = g_param_spec_pointer ("pictures",
                                 "pictures",
                                 "List of pictures for "
-                                "the 'add to album' dialog",
+                                "the 'add to set' dialog",
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (obj_class, PROP_PICTURES, pspec);
 
-  pspec = g_param_spec_pointer ("albums",
-                                "albums",
-                                "List of albums currently available "
-                                "for the 'add to album' dialog",
+  pspec = g_param_spec_pointer ("sets",
+                                "sets",
+                                "List of sets currently available "
+                                "for the 'add to set' dialog",
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
-  g_object_class_install_property (obj_class, PROP_ALBUMS, pspec);
+  g_object_class_install_property (obj_class, PROP_SETS, pspec);
 
-  g_type_class_add_private (obj_class, sizeof (FrogrCreateNewAlbumDialogPrivate));
+  g_type_class_add_private (obj_class, sizeof (FrogrCreateNewSetDialogPrivate));
 }
 
 static void
-frogr_create_new_album_dialog_init (FrogrCreateNewAlbumDialog *self)
+frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
 {
-  FrogrCreateNewAlbumDialogPrivate *priv = NULL;
+  FrogrCreateNewSetDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *table = NULL;
   GtkWidget *align = NULL;
@@ -279,9 +279,9 @@ frogr_create_new_album_dialog_init (FrogrCreateNewAlbumDialog *self)
   GtkWidget *widget = NULL;
   GdkGeometry hints;
 
-  priv = FROGR_CREATE_NEW_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   priv->pictures = NULL;
-  priv->albums = NULL;
+  priv->sets = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -301,7 +301,7 @@ frogr_create_new_album_dialog_init (FrogrCreateNewAlbumDialog *self)
   table = gtk_table_new (2, 2, FALSE);
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 6);
 
-  widget = gtk_label_new (_("Album's title:"));
+  widget = gtk_label_new (_("Set's title:"));
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 0, 1,
@@ -314,7 +314,7 @@ frogr_create_new_album_dialog_init (FrogrCreateNewAlbumDialog *self)
                     GTK_EXPAND | GTK_FILL, 0, 6, 6);
   priv->title_entry = widget;
 
-  widget = gtk_label_new (_("Album's description:"));
+  widget = gtk_label_new (_("Set's description:"));
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 1, 2,
@@ -349,14 +349,14 @@ frogr_create_new_album_dialog_init (FrogrCreateNewAlbumDialog *self)
 /* Public API */
 
 void
-frogr_create_new_album_dialog_show (GtkWindow *parent, GSList *pictures, GSList *albums)
+frogr_create_new_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *sets)
 {
   GtkWidget *dialog = NULL;
-  dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_CREATE_NEW_ALBUM_DIALOG,
-                                     "title", _("Create new Album"),
+  dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_CREATE_NEW_SET_DIALOG,
+                                     "title", _("Create new Set"),
                                      "modal", TRUE,
                                      "pictures", pictures,
-                                     "albums", albums,
+                                     "sets", sets,
                                      "transient-for", parent,
                                      "resizable", FALSE,
                                      NULL));

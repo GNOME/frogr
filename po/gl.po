@@ -41,17 +41,17 @@ msgstr "Escriba unha lista de etiquetas separadas por espacios:"
 msgid "Add Tags"
 msgstr "Engadir etiquetas"
 
-#: ../src/frogr-add-to-album-dialog.c:133
-msgid "Album Title"
+#: ../src/frogr-add-to-set-dialog.c:133
+msgid "Set Title"
 msgstr "Título do álbum"
 
-#: ../src/frogr-add-to-album-dialog.c:148
+#: ../src/frogr-add-to-set-dialog.c:148
 #: ../src/frogr-add-to-group-dialog.c:148
 msgid "Elements"
 msgstr "Elementos"
 
-#: ../src/frogr-add-to-album-dialog.c:577
-msgid "Add to Albums"
+#: ../src/frogr-add-to-set-dialog.c:577
+msgid "Add to Sets"
 msgstr "Engadir aos álbums"
 
 #: ../src/frogr-add-to-group-dialog.c:133
@@ -247,11 +247,11 @@ msgid "Retrieving list of tags…"
 msgstr "Obtendo a lista de etiquetas..."
 
 #: ../src/frogr-controller.c:1477 ../src/frogr-controller.c:1509
-msgid "Retrieving list of albums…"
+msgid "Retrieving list of sets…"
 msgstr "Obtendo a lista de álbums..."
 
 #: ../src/frogr-controller.c:1522
-msgid "No albums found"
+msgid "No sets found"
 msgstr "Non se encontrou ningún álbum"
 
 #: ../src/frogr-controller.c:1544
@@ -272,21 +272,21 @@ msgstr ""
 "Por favor autorícelo de novo."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-album-dialog.c:120
+#: ../src/frogr-create-new-set-dialog.c:120
 #: ../src/frogr-details-dialog.c:894
 msgid "Missing data required"
 msgstr "Falta información necesaria"
 
-#: ../src/frogr-create-new-album-dialog.c:304
-msgid "Album's title:"
+#: ../src/frogr-create-new-set-dialog.c:304
+msgid "Set's title:"
 msgstr "Título do álbum:"
 
-#: ../src/frogr-create-new-album-dialog.c:317
-msgid "Album's description:"
+#: ../src/frogr-create-new-set-dialog.c:317
+msgid "Set's description:"
 msgstr "Descrición:"
 
-#: ../src/frogr-create-new-album-dialog.c:356
-msgid "Create new Album"
+#: ../src/frogr-create-new-set-dialog.c:356
+msgid "Create new Set"
 msgstr "Crear novo álbum"
 
 #: ../src/frogr-details-dialog.c:160
@@ -412,17 +412,17 @@ msgstr "Engadir  _etiquetas…"
 msgid "Add to _Group…"
 msgstr "Engaidr ao _grupo…"
 
-#. Add to album
+#. Add to set
 #: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:431
 msgid "Add to Al_bum"
 msgstr "Engadir ao ál_bum..."
 
 #: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:437
-msgid "_Create New Album…"
+msgid "_Create New Set…"
 msgstr "_Crear novo álbum..."
 
 #: ../src/frogr-main-view.c:328 ../src/frogr-main-view.c:444
-msgid "Add to _Existing Album…"
+msgid "Add to _Existing Set…"
 msgstr "Engadir a un álbum _existente..."
 
 #: ../src/frogr-main-view.c:337

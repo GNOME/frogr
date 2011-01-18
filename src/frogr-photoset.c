@@ -1,5 +1,5 @@
 /*
- * frogr-album.c -- An album in frogr (a photoset from flickr)
+ * frogr-photoset.c -- An set in frogr (a photoset from flickr)
  *
  * Copyright (C) 2010, 2011 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
@@ -20,18 +20,18 @@
  *
  */
 
-#include "frogr-album.h"
+#include "frogr-photoset.h"
 
-#define FROGR_ALBUM_GET_PRIVATE(object)                 \
+#define FROGR_PHOTOSET_GET_PRIVATE(object)              \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FROGR_TYPE_ALBUM,       \
-                                FrogrAlbumPrivate))
+                                FROGR_TYPE_SET,         \
+                                FrogrPhotoSetPrivate))
 
-G_DEFINE_TYPE (FrogrAlbum, frogr_album, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrPhotoSet, frogr_photoset, G_TYPE_OBJECT);
 
 /* Private struct */
-typedef struct _FrogrAlbumPrivate FrogrAlbumPrivate;
-struct _FrogrAlbumPrivate
+typedef struct _FrogrPhotoSetPrivate FrogrPhotoSetPrivate;
+struct _FrogrPhotoSetPrivate
 {
   gchar *title;
   gchar *description;
@@ -56,29 +56,29 @@ enum  {
 /* Private API */
 
 static void
-_frogr_album_set_property (GObject *object,
-                           guint prop_id,
-                           const GValue *value,
-                           GParamSpec *pspec)
+_frogr_photoset_set_property (GObject *object,
+                              guint prop_id,
+                              const GValue *value,
+                              GParamSpec *pspec)
 {
-  FrogrAlbum *self = FROGR_ALBUM (object);
+  FrogrPhotoSet *self = FROGR_PHOTOSET (object);
 
   switch (prop_id)
     {
     case PROP_TITLE:
-      frogr_album_set_title (self, g_value_get_string (value));
+      frogr_photoset_set_title (self, g_value_get_string (value));
       break;
     case PROP_DESCRIPTION:
-      frogr_album_set_description (self, g_value_get_string (value));
+      frogr_photoset_set_description (self, g_value_get_string (value));
       break;
     case PROP_ID:
-      frogr_album_set_id (self, g_value_get_string (value));
+      frogr_photoset_set_id (self, g_value_get_string (value));
       break;
     case PROP_PRIMARY_PHOTO_ID:
-      frogr_album_set_primary_photo_id (self, g_value_get_string (value));
+      frogr_photoset_set_primary_photo_id (self, g_value_get_string (value));
       break;
     case PROP_N_PHOTOS:
-      frogr_album_set_n_photos (self, g_value_get_int (value));
+      frogr_photoset_set_n_photos (self, g_value_get_int (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -87,12 +87,12 @@ _frogr_album_set_property (GObject *object,
 }
 
 static void
-_frogr_album_get_property (GObject *object,
-                           guint prop_id,
-                           GValue *value,
-                           GParamSpec *pspec)
+_frogr_photoset_get_property (GObject *object,
+                              guint prop_id,
+                              GValue *value,
+                              GParamSpec *pspec)
 {
-  FrogrAlbumPrivate *priv = FROGR_ALBUM_GET_PRIVATE (object);
+  FrogrPhotoSetPrivate *priv = FROGR_PHOTOSET_GET_PRIVATE (object);
 
   switch (prop_id)
     {
@@ -118,9 +118,9 @@ _frogr_album_get_property (GObject *object,
 }
 
 static void
-_frogr_album_finalize (GObject* object)
+_frogr_photoset_finalize (GObject* object)
 {
-  FrogrAlbumPrivate *priv = FROGR_ALBUM_GET_PRIVATE (object);
+  FrogrPhotoSetPrivate *priv = FROGR_PHOTOSET_GET_PRIVATE (object);
 
   /* free strings */
   g_free (priv->title);
@@ -129,32 +129,32 @@ _frogr_album_finalize (GObject* object)
   g_free (priv->primary_photo_id);
 
   /* call super class */
-  G_OBJECT_CLASS (frogr_album_parent_class)->finalize(object);
+  G_OBJECT_CLASS (frogr_photoset_parent_class)->finalize(object);
 }
 
 static void
-frogr_album_class_init(FrogrAlbumClass *klass)
+frogr_photoset_class_init(FrogrPhotoSetClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
 
   /* GtkObject signals */
-  obj_class->set_property = _frogr_album_set_property;
-  obj_class->get_property = _frogr_album_get_property;
-  obj_class->finalize = _frogr_album_finalize;
+  obj_class->set_property = _frogr_photoset_set_property;
+  obj_class->get_property = _frogr_photoset_get_property;
+  obj_class->finalize = _frogr_photoset_finalize;
 
   /* Install properties */
   g_object_class_install_property (obj_class,
                                    PROP_TITLE,
                                    g_param_spec_string ("title",
                                                         "title",
-                                                        "Album's title",
+                                                        "Set's title",
                                                         NULL,
                                                         G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_DESCRIPTION,
                                    g_param_spec_string ("description",
                                                         "description",
-                                                        "Album's description",
+                                                        "Set's description",
                                                         NULL,
                                                         G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
@@ -170,7 +170,7 @@ frogr_album_class_init(FrogrAlbumClass *klass)
                                    g_param_spec_string ("primary-photo-id",
                                                         "primary-photo-id",
                                                         "ID of the primary photo "
-                                                        "for the album",
+                                                        "for the set",
                                                         NULL,
                                                         G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
@@ -178,19 +178,19 @@ frogr_album_class_init(FrogrAlbumClass *klass)
                                    g_param_spec_int ("n-photos",
                                                      "n-photos",
                                                      "Number of photos "
-                                                     "inside the album",
+                                                     "inside the set",
                                                      0,
                                                      G_MAXINT,
                                                      0,
                                                      G_PARAM_READWRITE));
 
-  g_type_class_add_private (obj_class, sizeof (FrogrAlbumPrivate));
+  g_type_class_add_private (obj_class, sizeof (FrogrPhotoSetPrivate));
 }
 
 static void
-frogr_album_init (FrogrAlbum *self)
+frogr_photoset_init (FrogrPhotoSet *self)
 {
-  FrogrAlbumPrivate *priv = FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv = FROGR_PHOTOSET_GET_PRIVATE (self);
 
   /* Default values */
   priv->title = NULL;
@@ -203,139 +203,139 @@ frogr_album_init (FrogrAlbum *self)
 
 /* Public API */
 
-FrogrAlbum *
-frogr_album_new (const gchar *title,
-                 const gchar *description)
+FrogrPhotoSet *
+frogr_photoset_new (const gchar *title,
+                    const gchar *description)
 {
   g_return_val_if_fail (title, NULL);
   g_return_val_if_fail (description, NULL);
 
-  GObject *new = g_object_new(FROGR_TYPE_ALBUM,
+  GObject *new = g_object_new(FROGR_TYPE_SET,
                               "title", title,
                               "description", description,
                               NULL);
-  return FROGR_ALBUM (new);
+  return FROGR_PHOTOSET (new);
 }
 
 
 /* Data Managing functions */
 
 const gchar *
-frogr_album_get_title (FrogrAlbum *self)
+frogr_photoset_get_title (FrogrPhotoSet *self)
 {
-  g_return_val_if_fail(FROGR_IS_ALBUM(self), NULL);
+  g_return_val_if_fail(FROGR_IS_SET(self), NULL);
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   return (const gchar *)priv->title;
 }
 
 void
-frogr_album_set_title (FrogrAlbum *self,
-                       const gchar *title)
+frogr_photoset_set_title (FrogrPhotoSet *self,
+                          const gchar *title)
 {
-  g_return_if_fail(FROGR_IS_ALBUM(self));
+  g_return_if_fail(FROGR_IS_SET(self));
   g_return_if_fail(title != NULL);
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   g_free (priv->title);
   priv->title = g_strdup (title);
 }
 
 const gchar *
-frogr_album_get_description (FrogrAlbum *self)
+frogr_photoset_get_description (FrogrPhotoSet *self)
 {
-  g_return_val_if_fail(FROGR_IS_ALBUM(self), NULL);
+  g_return_val_if_fail(FROGR_IS_SET(self), NULL);
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   return (const gchar *)priv->description;
 }
 
 void
-frogr_album_set_description (FrogrAlbum *self,
-                             const gchar *description)
+frogr_photoset_set_description (FrogrPhotoSet *self,
+                                const gchar *description)
 {
-  g_return_if_fail(FROGR_IS_ALBUM(self));
+  g_return_if_fail(FROGR_IS_SET(self));
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   g_free (priv->description);
   priv->description = g_strdup (description);
 }
 
 const gchar *
-frogr_album_get_id (FrogrAlbum *self)
+frogr_photoset_get_id (FrogrPhotoSet *self)
 {
-  g_return_val_if_fail(FROGR_IS_ALBUM(self), NULL);
+  g_return_val_if_fail(FROGR_IS_SET(self), NULL);
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   return (const gchar *)priv->id;
 }
 
 void
-frogr_album_set_id (FrogrAlbum *self,
-                    const gchar *id)
+frogr_photoset_set_id (FrogrPhotoSet *self,
+                       const gchar *id)
 {
-  g_return_if_fail(FROGR_IS_ALBUM(self));
+  g_return_if_fail(FROGR_IS_SET(self));
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   g_free (priv->id);
   priv->id = g_strdup (id);
 }
 
 const gchar *
-frogr_album_get_primary_photo_id (FrogrAlbum *self)
+frogr_photoset_get_primary_photo_id (FrogrPhotoSet *self)
 {
-  g_return_val_if_fail(FROGR_IS_ALBUM(self), NULL);
+  g_return_val_if_fail(FROGR_IS_SET(self), NULL);
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   return (const gchar *)priv->primary_photo_id;
 }
 
 void
-frogr_album_set_primary_photo_id (FrogrAlbum *self,
-                                  const gchar *primary_photo_id)
+frogr_photoset_set_primary_photo_id (FrogrPhotoSet *self,
+                                     const gchar *primary_photo_id)
 {
-  g_return_if_fail(FROGR_IS_ALBUM(self));
+  g_return_if_fail(FROGR_IS_SET(self));
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   g_free (priv->primary_photo_id);
   priv->primary_photo_id = g_strdup (primary_photo_id);
 }
 
 gint
-frogr_album_get_n_photos (FrogrAlbum *self)
+frogr_photoset_get_n_photos (FrogrPhotoSet *self)
 {
-  g_return_val_if_fail(FROGR_IS_ALBUM(self), FALSE);
+  g_return_val_if_fail(FROGR_IS_SET(self), FALSE);
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   return priv->n_photos;
 }
 
 void
-frogr_album_set_n_photos (FrogrAlbum *self,
-                          gint n)
+frogr_photoset_set_n_photos (FrogrPhotoSet *self,
+                             gint n)
 {
-  g_return_if_fail(FROGR_IS_ALBUM(self));
+  g_return_if_fail(FROGR_IS_SET(self));
 
-  FrogrAlbumPrivate *priv =
-    FROGR_ALBUM_GET_PRIVATE (self);
+  FrogrPhotoSetPrivate *priv =
+    FROGR_PHOTOSET_GET_PRIVATE (self);
 
   priv->n_photos = n;
 }

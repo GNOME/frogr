@@ -40,17 +40,17 @@ msgstr ""
 msgid "Add Tags"
 msgstr "Lägg till taggar"
 
-#: ../src/frogr-add-to-album-dialog.c:133
-msgid "Album Title"
+#: ../src/frogr-add-to-set-dialog.c:133
+msgid "Set Title"
 msgstr "Albumtitel"
 
-#: ../src/frogr-add-to-album-dialog.c:148
+#: ../src/frogr-add-to-set-dialog.c:148
 #: ../src/frogr-add-to-group-dialog.c:148
 msgid "Elements"
 msgstr "Element"
 
-#: ../src/frogr-add-to-album-dialog.c:577
-msgid "Add to Albums"
+#: ../src/frogr-add-to-set-dialog.c:577
+msgid "Add to Sets"
 msgstr "Lägg till i album"
 
 #: ../src/frogr-add-to-group-dialog.c:133
@@ -210,11 +210,11 @@ msgstr ""
 
 #: ../src/frogr-controller.c:1477
 #: ../src/frogr-controller.c:1509
-msgid "Retrieving list of albums…"
+msgid "Retrieving list of sets…"
 msgstr ""
 
 #: ../src/frogr-controller.c:1522
-msgid "No albums found"
+msgid "No sets found"
 msgstr "Inga album hittades"
 
 #: ../src/frogr-controller.c:1544
@@ -233,21 +233,21 @@ msgid ""
 msgstr ""
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-album-dialog.c:120
+#: ../src/frogr-create-new-set-dialog.c:120
 #: ../src/frogr-details-dialog.c:894
 msgid "Missing data required"
 msgstr ""
 
-#: ../src/frogr-create-new-album-dialog.c:304
-msgid "Album's title:"
+#: ../src/frogr-create-new-set-dialog.c:304
+msgid "Set's title:"
 msgstr "Albumets titel:"
 
-#: ../src/frogr-create-new-album-dialog.c:317
-msgid "Album's description:"
+#: ../src/frogr-create-new-set-dialog.c:317
+msgid "Set's description:"
 msgstr "Albumets beskrivning:"
 
-#: ../src/frogr-create-new-album-dialog.c:356
-msgid "Create new Album"
+#: ../src/frogr-create-new-set-dialog.c:356
+msgid "Create new Set"
 msgstr "Skapa nytt album"
 
 #: ../src/frogr-details-dialog.c:160
@@ -388,7 +388,7 @@ msgstr "Lägg till _taggar…"
 msgid "Add to _Group…"
 msgstr "Lägg till i _grupp…"
 
-#. Add to album
+#. Add to set
 #: ../src/frogr-main-view.c:314
 #: ../src/frogr-main-view.c:431
 msgid "Add to Al_bum"
@@ -396,12 +396,12 @@ msgstr "Lägg till i al_bum"
 
 #: ../src/frogr-main-view.c:321
 #: ../src/frogr-main-view.c:437
-msgid "_Create New Album…"
+msgid "_Create New Set…"
 msgstr "_Skapa nytt album…"
 
 #: ../src/frogr-main-view.c:328
 #: ../src/frogr-main-view.c:444
-msgid "Add to _Existing Album…"
+msgid "Add to _Existing Set…"
 msgstr "Lägg till i _befintligt album…"
 
 #: ../src/frogr-main-view.c:337

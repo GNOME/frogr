@@ -24,7 +24,7 @@
 #define _FROGR_MAIN_VIEW_MODEL_H
 
 #include "frogr-account.h"
-#include "frogr-album.h"
+#include "frogr-photoset.h"
 #include "frogr-picture.h"
 
 #include <glib.h>
@@ -58,27 +58,27 @@ GType frogr_main_view_model_get_type(void) G_GNUC_CONST;
 FrogrMainViewModel *frogr_main_view_model_new (void);
 
 void frogr_main_view_model_add_picture (FrogrMainViewModel *self,
-                                        FrogrPicture *falbum);
+                                        FrogrPicture *fset);
 void frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
-                                           FrogrPicture *falbum);
+                                           FrogrPicture *fset);
 void frogr_main_view_model_remove_all_pictures (FrogrMainViewModel *self);
 
 guint frogr_main_view_model_n_pictures (FrogrMainViewModel *self);
 
 GSList *frogr_main_view_model_get_pictures (FrogrMainViewModel *self);
 
-void frogr_main_view_model_add_album (FrogrMainViewModel *self,
-                                      FrogrAlbum *falbum);
-void frogr_main_view_model_remove_album (FrogrMainViewModel *self,
-                                         FrogrAlbum *falbum);
-void frogr_main_view_model_remove_all_albums (FrogrMainViewModel *self);
+void frogr_main_view_model_add_set (FrogrMainViewModel *self,
+                                    FrogrPhotoSet *fset);
+void frogr_main_view_model_remove_set (FrogrMainViewModel *self,
+                                       FrogrPhotoSet *fset);
+void frogr_main_view_model_remove_all_sets (FrogrMainViewModel *self);
 
-guint frogr_main_view_model_n_albums (FrogrMainViewModel *self);
+guint frogr_main_view_model_n_sets (FrogrMainViewModel *self);
 
-GSList *frogr_main_view_model_get_albums (FrogrMainViewModel *self);
+GSList *frogr_main_view_model_get_sets (FrogrMainViewModel *self);
 
-void frogr_main_view_model_set_albums (FrogrMainViewModel *self,
-                                       GSList *albums_list);
+void frogr_main_view_model_set_sets (FrogrMainViewModel *self,
+                                     GSList *sets_list);
 
 void frogr_main_view_model_add_group (FrogrMainViewModel *self,
                                       FrogrGroup *fgroup);

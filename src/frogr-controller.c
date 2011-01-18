@@ -26,11 +26,11 @@
 #include "frogr-about-dialog.h"
 #include "frogr-account.h"
 #include "frogr-add-tags-dialog.h"
-#include "frogr-add-to-album-dialog.h"
+#include "frogr-add-to-set-dialog.h"
 #include "frogr-add-to-group-dialog.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-config.h"
-#include "frogr-create-new-album-dialog.h"
+#include "frogr-create-new-set-dialog.h"
 #include "frogr-details-dialog.h"
 #include "frogr-main-view.h"
 #include "frogr-picture-loader.h"
@@ -74,15 +74,15 @@ struct _FrogrControllerPrivate
   gboolean uploading_picture;
   gboolean fetching_account_info;
   gboolean fetching_account_extra_info;
-  gboolean fetching_albums;
+  gboolean fetching_sets;
   gboolean fetching_groups;
   gboolean fetching_tags;
-  gboolean adding_to_album;
+  gboolean adding_to_set;
   gboolean adding_to_group;
 
   /* We use these to know when an empty list of tags means that the
      user has no tags at all, as fetching already happened before */
-  gboolean albums_fetched;
+  gboolean sets_fetched;
   gboolean groups_fetched;
   gboolean tags_fetched;
 };
@@ -107,7 +107,7 @@ static FrogrController *_instance = NULL;
 typedef struct {
   FrogrController *controller;
   FrogrPicture *picture;
-  GSList *albums;
+  GSList *sets;
   GSList *groups;
   FrogrPictureUploadedCallback callback;
   GObject *object;
@@ -138,10 +138,10 @@ static void _upload_picture (FrogrController *self, FrogrPicture *picture,
 
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
 
-static gboolean _create_album_or_add_picture (FrogrController *self,
-                                              GSList *albums,
-                                              FrogrPicture *picture,
-                                              upload_picture_st *up_st);
+static gboolean _create_set_or_add_picture (FrogrController *self,
+                                            GSList *sets,
+                                            FrogrPicture *picture,
+                                            upload_picture_st *up_st);
 
 static void _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data);
 
@@ -153,13 +153,13 @@ static gboolean _add_picture_to_groups_on_idle (gpointer data);
 
 static gboolean _complete_picture_upload_on_idle (gpointer data);
 
-static void _notify_creating_album (FrogrController *self,
-                                    FrogrPicture *picture,
-                                    FrogrAlbum *album);
+static void _notify_creating_set (FrogrController *self,
+                                  FrogrPicture *picture,
+                                  FrogrPhotoSet *set);
 
-static void _notify_adding_to_album (FrogrController *self,
-                                     FrogrPicture *picture,
-                                     FrogrAlbum *album);
+static void _notify_adding_to_set (FrogrController *self,
+                                   FrogrPicture *picture,
+                                   FrogrPhotoSet *set);
 
 static void _notify_adding_to_group (FrogrController *self,
                                      FrogrPicture *picture,
@@ -178,9 +178,9 @@ static void _open_browser_to_edit_details (FrogrController *self);
 
 static void _fetch_everything (FrogrController *self);
 
-static void _fetch_albums (FrogrController *self);
+static void _fetch_sets (FrogrController *self);
 
-static void _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data);
+static void _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static void _fetch_groups (FrogrController *self);
 
@@ -202,9 +202,9 @@ static gboolean _show_details_dialog_on_idle (GSList *pictures);
 
 static gboolean _show_add_tags_dialog_on_idle (GSList *pictures);
 
-static gboolean _show_create_new_album_dialog_on_idle (GSList *pictures);
+static gboolean _show_create_new_set_dialog_on_idle (GSList *pictures);
 
-static gboolean _show_add_to_album_dialog_on_idle (GSList *pictures);
+static gboolean _show_add_to_set_dialog_on_idle (GSList *pictures);
 
 static gboolean _show_add_to_group_dialog_on_idle (GSList *pictures);
 
@@ -476,7 +476,7 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   up_st = g_slice_new0 (upload_picture_st);
   up_st->controller = self;
   up_st->picture = picture;
-  up_st->albums = NULL;
+  up_st->sets = NULL;
   up_st->groups = NULL;
   up_st->callback = picture_uploaded_cb;
   up_st->object = object;
@@ -534,22 +534,22 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   priv->uploading_picture = FALSE;
 
-  /* Check whether it's needed or not to add the picture to the album */
+  /* Check whether it's needed or not to add the picture to the set */
   if (!error)
     {
-      GSList *albums = NULL;
+      GSList *sets = NULL;
       GSList *groups = NULL;
 
-      albums = frogr_picture_get_albums (picture);
+      sets = frogr_picture_get_sets (picture);
       groups = frogr_picture_get_groups (picture);
 
-      if (g_slist_length (albums) > 0)
+      if (g_slist_length (sets) > 0)
         {
-          priv->adding_to_album = TRUE;
-          _create_album_or_add_picture (controller, albums, picture, up_st);
+          priv->adding_to_set = TRUE;
+          _create_set_or_add_picture (controller, sets, picture, up_st);
         }
 
-      /* Pictures will be added to groups AFTER being added to albums,
+      /* Pictures will be added to groups AFTER being added to sets,
          so that's why we don't start the process now but on idle */
       if (g_slist_length (groups) > 0)
         {
@@ -564,42 +564,42 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 }
 
 static gboolean
-_create_album_or_add_picture (FrogrController *self,
-                              GSList *albums,
-                              FrogrPicture *picture,
-                              upload_picture_st *up_st)
+_create_set_or_add_picture (FrogrController *self,
+                            GSList *sets,
+                            FrogrPicture *picture,
+                            upload_picture_st *up_st)
 {
   gboolean result = FALSE;
 
-  if (g_slist_length (albums) > 0)
+  if (g_slist_length (sets) > 0)
     {
       FrogrControllerPrivate *priv = NULL;
-      FrogrAlbum *album = NULL;
+      FrogrPhotoSet *set = NULL;
       const gchar *id = NULL;
 
       priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-      album = FROGR_ALBUM (albums->data);
-      up_st->albums = albums;
+      set = FROGR_PHOTOSET (sets->data);
+      up_st->sets = sets;
 
-      id = frogr_album_get_id (album);
+      id = frogr_photoset_get_id (set);
       if (id != NULL)
         {
-          /* Album with ID: Add picture to it */
-          _notify_adding_to_album (self, picture, album);
+          /* Set with ID: Add picture to it */
+          _notify_adding_to_set (self, picture, set);
           fsp_session_add_to_photoset_async (priv->session,
                                              frogr_picture_get_id (picture),
-                                             frogr_album_get_id (album),
+                                             frogr_photoset_get_id (set),
                                              priv->cancellable,
                                              _add_to_photoset_cb,
                                              up_st);
         }
       else
         {
-          /* Album with ID: Create album aliong with this picture */
-          _notify_creating_album (self, picture, album);
+          /* Set with ID: Create set aliong with this picture */
+          _notify_creating_set (self, picture, set);
           fsp_session_create_photoset_async (priv->session,
-                                             frogr_album_get_title (album),
-                                             frogr_album_get_description (album),
+                                             frogr_photoset_get_title (set),
+                                             frogr_photoset_get_description (set),
                                              frogr_picture_get_id (picture),
                                              priv->cancellable,
                                              _create_photoset_cb,
@@ -620,8 +620,8 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
-  FrogrAlbum *album = NULL;
-  GSList *albums = NULL;
+  FrogrPhotoSet *set = NULL;
+  GSList *sets = NULL;
   gchar *photoset_id = NULL;
   GError *error = NULL;
   gboolean keep_going = FALSE;
@@ -630,35 +630,35 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
   picture = up_st->picture;
-  albums = up_st->albums;
+  sets = up_st->sets;
 
   photoset_id = fsp_session_create_photoset_finish (session, res, &error);
   up_st->error = error;
 
-  /* Update album with the new ID */
-  album = FROGR_ALBUM (albums->data);
-  frogr_album_set_id (album, photoset_id);
+  /* Update set with the new ID */
+  set = FROGR_PHOTOSET (sets->data);
+  frogr_photoset_set_id (set, photoset_id);
   g_free (photoset_id);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  albums = g_slist_next (albums);
+  sets = g_slist_next (sets);
 
-  /* When adding pictures to albums, we only stop if the process was
+  /* When adding pictures to sets, we only stop if the process was
      not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _create_album_or_add_picture (controller, albums, picture, up_st);
+    keep_going = _create_set_or_add_picture (controller, sets, picture, up_st);
 
   if (error && error->code != FSP_ERROR_CANCELLED)
     {
       /* We plainly ignore errors in this stage, as we don't want
          them to interrupt the global upload process */
-      g_debug ("Error creating album: %s", error->message);
+      g_debug ("Error creating set: %s", error->message);
       g_error_free (error);
       up_st->error = NULL;
     }
 
   if (!keep_going)
-    priv->adding_to_album = FALSE;
+    priv->adding_to_set = FALSE;
 }
 
 static void
@@ -669,7 +669,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
-  GSList *albums = NULL;
+  GSList *sets = NULL;
   GError *error = NULL;
   gboolean keep_going = FALSE;
 
@@ -677,30 +677,30 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
   picture = up_st->picture;
-  albums = up_st->albums;
+  sets = up_st->sets;
 
   fsp_session_add_to_photoset_finish (session, res, &error);
   up_st->error = error;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  albums = g_slist_next (albums);
+  sets = g_slist_next (sets);
 
-  /* When adding pictures to albums, we only stop if the process was
+  /* When adding pictures to sets, we only stop if the process was
      not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _create_album_or_add_picture (controller, albums, picture, up_st);
+    keep_going = _create_set_or_add_picture (controller, sets, picture, up_st);
 
   if (error && error->code != FSP_ERROR_CANCELLED)
     {
       /* We plainly ignore errors in this stage, as we don't want
          them to interrupt the global upload process */
-      g_debug ("Error adding picture to album: %s", error->message);
+      g_debug ("Error adding picture to set: %s", error->message);
       g_error_free (error);
       up_st->error = NULL;
     }
 
   if (!keep_going)
-    priv->adding_to_album = FALSE;
+    priv->adding_to_set = FALSE;
 }
 
 static void
@@ -781,7 +781,7 @@ _add_picture_to_groups_on_idle (gpointer data)
   session = priv->session;
 
   /* Keep the source while busy */
-  if (priv->adding_to_album)
+  if (priv->adding_to_set)
     return TRUE;
 
   /* Mark the start of the process */
@@ -817,7 +817,7 @@ _complete_picture_upload_on_idle (gpointer data)
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while busy */
-  if (priv->adding_to_album || priv->adding_to_group)
+  if (priv->adding_to_set || priv->adding_to_group)
     return TRUE;
 
   picture = up_st->picture;
@@ -836,14 +836,14 @@ _complete_picture_upload_on_idle (gpointer data)
 }
 
 static void
-_notify_creating_album (FrogrController *self,
-                        FrogrPicture *picture,
-                        FrogrAlbum *album)
+_notify_creating_set (FrogrController *self,
+                      FrogrPicture *picture,
+                      FrogrPhotoSet *set)
 {
   FrogrControllerPrivate *priv = NULL;
   const gchar *picture_title = NULL;
-  const gchar *album_title = NULL;
-  const gchar *album_desc = NULL;
+  const gchar *set_title = NULL;
+  const gchar *set_desc = NULL;
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -851,24 +851,24 @@ _notify_creating_album (FrogrController *self,
                                      _("Creating new photoset…"));
 
   picture_title = frogr_picture_get_title (picture);
-  album_title = frogr_album_get_title (album);
-  album_desc = frogr_album_get_description (album);
+  set_title = frogr_photoset_get_title (set);
+  set_desc = frogr_photoset_get_description (set);
   progress_text = g_strdup_printf ("Creating new photoset for picture %s. "
                                    "Title: %s / Description: %s",
-                                   picture_title, album_title, album_desc);
+                                   picture_title, set_title, set_desc);
   g_debug ("%s", progress_text);
 
   g_free (progress_text);
 }
 
 static void
-_notify_adding_to_album (FrogrController *self,
-                         FrogrPicture *picture,
-                         FrogrAlbum *album)
+_notify_adding_to_set (FrogrController *self,
+                       FrogrPicture *picture,
+                       FrogrPhotoSet *set)
 {
   FrogrControllerPrivate *priv = NULL;
   const gchar *picture_title = NULL;
-  const gchar *album_title = NULL;
+  const gchar *set_title = NULL;
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -876,9 +876,9 @@ _notify_adding_to_album (FrogrController *self,
                                      _("Adding picture to photoset…"));
 
   picture_title = frogr_picture_get_title (picture);
-  album_title = frogr_album_get_title (album);
+  set_title = frogr_photoset_get_title (set);
   progress_text = g_strdup_printf ("Adding picture %s to photoset %s…",
-                                   picture_title, album_title);
+                                   picture_title, set_title);
   g_debug ("%s", progress_text);
 
   g_free (progress_text);
@@ -963,8 +963,8 @@ _on_pictures_uploaded (FrogrController *self,
       window = frogr_main_view_get_window (priv->mainview);
       frogr_util_show_info_dialog (window, _("Operation successfully completed!"));
 
-      /* Fetch albums and tags right after finishing */
-      _fetch_albums (self);
+      /* Fetch sets and tags right after finishing */
+      _fetch_sets (self);
       _fetch_tags (self);
 
       g_debug ("%s", "Success uploading pictures!");
@@ -1034,13 +1034,13 @@ _fetch_everything (FrogrController *self)
 
   _fetch_account_info (self);
   _fetch_account_extra_info (self);
-  _fetch_albums (self);
+  _fetch_sets (self);
   _fetch_groups (self);
   _fetch_tags (self);
 }
 
 static void
-_fetch_albums (FrogrController *self)
+_fetch_sets (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -1050,15 +1050,15 @@ _fetch_albums (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->fetching_albums = TRUE;
+  priv->fetching_sets = TRUE;
 
   _enable_cancellable (self, TRUE);
   fsp_session_get_photosets_async (priv->session, priv->cancellable,
-                                   _fetch_albums_cb, self);
+                                   _fetch_sets_cb, self);
 }
 
 static void
-_fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
+_fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
@@ -1073,7 +1073,7 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   photosets_list = fsp_session_get_photosets_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Fetching list of albums: %s", error->message);
+      g_debug ("Fetching list of sets: %s", error->message);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
@@ -1083,27 +1083,27 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
   else
     {
       FrogrMainViewModel *mainview_model = NULL;
-      GSList *albums_list = NULL;
+      GSList *sets_list = NULL;
 
-      priv->albums_fetched = TRUE;
+      priv->sets_fetched = TRUE;
 
       if (photosets_list)
         {
           GSList *item = NULL;
-          FspDataPhotoSet *current_photoset = NULL;
-          FrogrAlbum *current_album = NULL;
+          FspDataPhotoSet *current_data_set = NULL;
+          FrogrPhotoSet *current_set = NULL;
           for (item = photosets_list; item; item = g_slist_next (item))
             {
-              current_photoset = FSP_DATA_PHOTO_SET (item->data);
-              current_album = frogr_album_new (current_photoset->title,
-                                               current_photoset->description);
-              frogr_album_set_id (current_album, current_photoset->id);
-              frogr_album_set_primary_photo_id (current_album, current_photoset->primary_photo_id);
-              frogr_album_set_n_photos (current_album, current_photoset->n_photos);
+              current_data_set = FSP_DATA_PHOTO_SET (item->data);
+              current_set = frogr_photoset_new (current_data_set->title,
+                                           current_data_set->description);
+              frogr_photoset_set_id (current_set, current_data_set->id);
+              frogr_photoset_set_primary_photo_id (current_set, current_data_set->primary_photo_id);
+              frogr_photoset_set_n_photos (current_set, current_data_set->n_photos);
 
-              albums_list = g_slist_append (albums_list, current_album);
+              sets_list = g_slist_append (sets_list, current_set);
 
-              fsp_data_free (FSP_DATA (current_photoset));
+              fsp_data_free (FSP_DATA (current_data_set));
             }
 
           g_slist_free (photosets_list);
@@ -1111,10 +1111,10 @@ _fetch_albums_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       /* Update main view's model */
       mainview_model = frogr_main_view_get_model (priv->mainview);
-      frogr_main_view_model_set_albums (mainview_model, albums_list);
+      frogr_main_view_model_set_sets (mainview_model, sets_list);
     }
 
-  priv->fetching_albums = FALSE;
+  priv->fetching_sets = FALSE;
 }
 
 static void
@@ -1417,7 +1417,7 @@ _show_details_dialog_on_idle (GSList *pictures)
   mainview_model = frogr_main_view_get_model (priv->mainview);
   tags_list = frogr_main_view_model_get_tags_list (mainview_model);
 
-  /* Albums already pre-fetched: show the dialog */
+  /* Sets already pre-fetched: show the dialog */
   window = frogr_main_view_get_window (priv->mainview);
   frogr_details_dialog_show (window, pictures, tags_list);
 
@@ -1450,7 +1450,7 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   mainview_model = frogr_main_view_get_model (priv->mainview);
   tags_list = frogr_main_view_model_get_tags_list (mainview_model);
 
-  /* Albums already pre-fetched: show the dialog */
+  /* Sets already pre-fetched: show the dialog */
   window = frogr_main_view_get_window (priv->mainview);
   frogr_add_tags_dialog_show (window, pictures, tags_list);
 
@@ -1458,68 +1458,68 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
 }
 
 static gboolean
-_show_create_new_album_dialog_on_idle (GSList *pictures)
+_show_create_new_set_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GtkWindow *window = NULL;
-  GSList *albums = NULL;
+  GSList *sets = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview = priv->mainview;
 
   /* Keep the source while internally busy */
-  if (priv->fetching_albums)
+  if (priv->fetching_sets)
     {
-      frogr_main_view_set_progress_text (mainview, _("Retrieving list of albums…"));
+      frogr_main_view_set_progress_text (mainview, _("Retrieving list of sets…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  albums = frogr_main_view_model_get_albums (mainview_model);
+  sets = frogr_main_view_model_get_sets (mainview_model);
 
   window = frogr_main_view_get_window (priv->mainview);
-  frogr_create_new_album_dialog_show (window, pictures, albums);
+  frogr_create_new_set_dialog_show (window, pictures, sets);
 
   return FALSE;
 }
 
 static gboolean
-_show_add_to_album_dialog_on_idle (GSList *pictures)
+_show_add_to_set_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GtkWindow *window = NULL;
-  GSList *albums = NULL;
+  GSList *sets = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview = priv->mainview;
 
   /* Keep the source while internally busy */
-  if (priv->fetching_albums)
+  if (priv->fetching_sets)
     {
-      frogr_main_view_set_progress_text (mainview, _("Retrieving list of albums…"));
+      frogr_main_view_set_progress_text (mainview, _("Retrieving list of sets…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  albums = frogr_main_view_model_get_albums (mainview_model);
+  sets = frogr_main_view_model_get_sets (mainview_model);
 
   window = frogr_main_view_get_window (priv->mainview);
-  if (frogr_main_view_model_n_albums (mainview_model) > 0)
-    frogr_add_to_album_dialog_show (window, pictures, albums);
-  else if (priv->albums_fetched)
-    frogr_util_show_info_dialog (window, _("No albums found"));
+  if (frogr_main_view_model_n_sets (mainview_model) > 0)
+    frogr_add_to_set_dialog_show (window, pictures, sets);
+  else if (priv->sets_fetched)
+    frogr_util_show_info_dialog (window, _("No sets found"));
 
   return FALSE;
 }
@@ -1702,13 +1702,13 @@ frogr_controller_init (FrogrController *self)
   priv->cancellable = NULL;
   priv->app_running = FALSE;
   priv->uploading_picture = FALSE;
-  priv->fetching_albums = FALSE;
+  priv->fetching_sets = FALSE;
   priv->fetching_groups = FALSE;
   priv->fetching_account_extra_info = FALSE;
   priv->fetching_tags = FALSE;
-  priv->adding_to_album = FALSE;
+  priv->adding_to_set = FALSE;
   priv->adding_to_group = FALSE;
-  priv->albums_fetched = FALSE;
+  priv->sets_fetched = FALSE;
   priv->groups_fetched = FALSE;
   priv->tags_fetched = FALSE;
 
@@ -1850,7 +1850,7 @@ frogr_controller_set_active_account (FrogrController *self,
       accounts_changed = frogr_config_remove_account (priv->config, account_id);
     }
 
- /* Update internal pointer in the controller and token in the session */
+  /* Update internal pointer in the controller and token in the session */
   if (priv->account)
     g_object_unref (priv->account);
 
@@ -1858,7 +1858,7 @@ frogr_controller_set_active_account (FrogrController *self,
   fsp_session_set_token (priv->session, token);
 
   /* Prefetch info for this user */
-  priv->albums_fetched = FALSE;
+  priv->sets_fetched = FALSE;
   priv->groups_fetched = FALSE;
   priv->tags_fetched = FALSE;
   if (new_account)
@@ -2014,8 +2014,8 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
 }
 
 void
-frogr_controller_show_create_new_album_dialog (FrogrController *self,
-                                               GSList *pictures)
+frogr_controller_show_create_new_set_dialog (FrogrController *self,
+                                             GSList *pictures)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -2025,17 +2025,17 @@ frogr_controller_show_create_new_album_dialog (FrogrController *self,
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
-  /* Fetch the albums first if needed */
-  if (frogr_main_view_model_n_albums (mainview_model) == 0 && !priv->albums_fetched)
-    _fetch_albums (self);
+  /* Fetch the sets first if needed */
+  if (frogr_main_view_model_n_sets (mainview_model) == 0 && !priv->sets_fetched)
+    _fetch_sets (self);
 
   /* Show the dialog when possible */
-  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_create_new_album_dialog_on_idle, pictures);
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_create_new_set_dialog_on_idle, pictures);
 }
 
 void
-frogr_controller_show_add_to_album_dialog (FrogrController *self,
-                                           GSList *pictures)
+frogr_controller_show_add_to_set_dialog (FrogrController *self,
+                                         GSList *pictures)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -2045,12 +2045,12 @@ frogr_controller_show_add_to_album_dialog (FrogrController *self,
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
-  /* Fetch the albums first if needed */
-  if (frogr_main_view_model_n_albums (mainview_model) == 0 && !priv->albums_fetched)
-    _fetch_albums (self);
+  /* Fetch the sets first if needed */
+  if (frogr_main_view_model_n_sets (mainview_model) == 0 && !priv->sets_fetched)
+    _fetch_sets (self);
 
   /* Show the dialog when possible */
-  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_album_dialog_on_idle, pictures);
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_set_dialog_on_idle, pictures);
 }
 
 void

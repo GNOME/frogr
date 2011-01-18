@@ -1,5 +1,5 @@
 /*
- * frogr-add-to-album-dialog.c -- 'Add to album' dialog
+ * frogr-add-to-set-dialog.c -- 'Add to set' dialog
  *
  * Copyright (C) 2010, 2011 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
@@ -20,9 +20,9 @@
  *
  */
 
-#include "frogr-add-to-album-dialog.h"
+#include "frogr-add-to-set-dialog.h"
 
-#include "frogr-album.h"
+#include "frogr-photoset.h"
 #include "frogr-picture.h"
 
 #include <config.h>
@@ -31,14 +31,14 @@
 #define MINIMUM_WINDOW_WIDTH 540
 #define MINIMUM_WINDOW_HEIGHT 420
 
-#define FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE(object)           \
+#define FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE(object)             \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_ADD_TO_ALBUM_DIALOG, \
-                                FrogrAddToAlbumDialogPrivate))
+                                FROGR_TYPE_ADD_TO_SET_DIALOG,   \
+                                FrogrAddToSetDialogPrivate))
 
-G_DEFINE_TYPE (FrogrAddToAlbumDialog, frogr_add_to_album_dialog, GTK_TYPE_DIALOG);
+G_DEFINE_TYPE (FrogrAddToSetDialog, frogr_add_to_set_dialog, GTK_TYPE_DIALOG);
 
-typedef struct _FrogrAddToAlbumDialogPrivate {
+typedef struct _FrogrAddToSetDialogPrivate {
   GtkWidget *treeview;
   GtkTreeModel *treemodel;
 
@@ -47,14 +47,14 @@ typedef struct _FrogrAddToAlbumDialogPrivate {
   GtkTreeViewColumn *n_elements_col;
 
   GSList *pictures;
-  GSList *albums;
-} FrogrAddToAlbumDialogPrivate;
+  GSList *sets;
+} FrogrAddToSetDialogPrivate;
 
 /* Properties */
 enum  {
   PROP_0,
   PROP_PICTURES,
-  PROP_ALBUMS
+  PROP_SETS
 };
 
 
@@ -63,14 +63,14 @@ enum {
   CHECKBOX_COL,
   TITLE_COL,
   N_ELEMENTS_COL,
-  ALBUM_COL,
+  SET_COL,
   N_COLS
 };
 
 
 /* Prototypes */
 
-static GtkWidget *_create_tree_view (FrogrAddToAlbumDialog *self);
+static GtkWidget *_create_tree_view (FrogrAddToSetDialog *self);
 
 static void _column_clicked_cb (GtkTreeViewColumn *col, gpointer data);
 
@@ -83,31 +83,31 @@ static gint _tree_iter_compare_n_elements_func (GtkTreeModel *model,
                                                 GtkTreeIter *b,
                                                 gpointer data);
 
-static void _populate_treemodel_with_albums (FrogrAddToAlbumDialog *self);
+static void _populate_treemodel_with_sets (FrogrAddToSetDialog *self);
 
-static void _fill_dialog_with_data (FrogrAddToAlbumDialog *self);
+static void _fill_dialog_with_data (FrogrAddToSetDialog *self);
 
-static void _album_toggled_cb (GtkCellRendererToggle *celltoggle,
-                               gchar *path_string,
-                               GtkTreeView *treeview);
+static void _set_toggled_cb (GtkCellRendererToggle *celltoggle,
+                             gchar *path_string,
+                             GtkTreeView *treeview);
 
-static GSList *_get_selected_albums (FrogrAddToAlbumDialog *self);
+static GSList *_get_selected_sets (FrogrAddToSetDialog *self);
 
-static void _update_pictures (FrogrAddToAlbumDialog *self);
+static void _update_pictures (FrogrAddToSetDialog *self);
 
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 /* Private API */
 
 static GtkWidget *
-_create_tree_view (FrogrAddToAlbumDialog *self)
+_create_tree_view (FrogrAddToSetDialog *self)
 {
-  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkWidget *treeview = NULL;
   GtkTreeViewColumn *col = NULL;
   GtkCellRenderer *rend = NULL;
 
-  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
   treeview = gtk_tree_view_new();
 
   /* Checkbox */
@@ -121,7 +121,7 @@ _create_tree_view (FrogrAddToAlbumDialog *self)
   gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), col);
 
   g_signal_connect (rend, "toggled",
-                    G_CALLBACK (_album_toggled_cb), treeview);
+                    G_CALLBACK (_set_toggled_cb), treeview);
 
   g_signal_connect (col, "clicked",
                     G_CALLBACK (_column_clicked_cb), self);
@@ -130,7 +130,7 @@ _create_tree_view (FrogrAddToAlbumDialog *self)
 
   /* Title */
   rend = gtk_cell_renderer_text_new ();
-  col = gtk_tree_view_column_new_with_attributes (_("Album Title"),
+  col = gtk_tree_view_column_new_with_attributes (_("Title"),
                                                   rend,
                                                   "text", TITLE_COL,
                                                   NULL);
@@ -164,12 +164,12 @@ _create_tree_view (FrogrAddToAlbumDialog *self)
 static void
 _column_clicked_cb (GtkTreeViewColumn *col, gpointer data)
 {
-  FrogrAddToAlbumDialog *self = NULL;
-  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  FrogrAddToSetDialog *self = NULL;
+  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkTreeModel *model = NULL;
 
-  self = FROGR_ADD_TO_ALBUM_DIALOG (data);
-  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+  self = FROGR_ADD_TO_SET_DIALOG (data);
+  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
   model = gtk_tree_view_get_model (GTK_TREE_VIEW (priv->treeview));
   if (!GTK_IS_TREE_SORTABLE (model))
@@ -233,68 +233,68 @@ _tree_iter_compare_n_elements_func (GtkTreeModel *model,
 }
 
 static void
-_populate_treemodel_with_albums (FrogrAddToAlbumDialog *self)
+_populate_treemodel_with_sets (FrogrAddToSetDialog *self)
 {
-  FrogrAddToAlbumDialogPrivate *priv = NULL;
-  FrogrAlbum *album = NULL;
+  FrogrAddToSetDialogPrivate *priv = NULL;
+  FrogrPhotoSet *set = NULL;
   GtkTreeIter iter;
   GSList *current = NULL;
   gchar *n_elements_str = NULL;
 
-  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
-  for (current = priv->albums; current; current = g_slist_next (current))
+  for (current = priv->sets; current; current = g_slist_next (current))
     {
-      if (!FROGR_IS_ALBUM (current->data))
+      if (!FROGR_IS_SET (current->data))
         continue;
 
-      album = FROGR_ALBUM (current->data);
-      n_elements_str = g_strdup_printf ("%d", frogr_album_get_n_photos (album));
+      set = FROGR_PHOTOSET (current->data);
+      n_elements_str = g_strdup_printf ("%d", frogr_photoset_get_n_photos (set));
 
       gtk_list_store_append (GTK_LIST_STORE (priv->treemodel), &iter);
       gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
                           CHECKBOX_COL, FALSE,
-                          TITLE_COL, frogr_album_get_title (album),
+                          TITLE_COL, frogr_photoset_get_title (set),
                           N_ELEMENTS_COL, n_elements_str,
-                          ALBUM_COL, album,
+                          SET_COL, set,
                           -1);
       g_free (n_elements_str);
     }
 }
 
 static void
-_fill_dialog_with_data (FrogrAddToAlbumDialog *self)
+_fill_dialog_with_data (FrogrAddToSetDialog *self)
 {
-  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkTreeIter iter;
-  gint n_albums;
+  gint n_sets;
   gint n_pictures;
 
-  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
-  n_albums = g_slist_length (priv->albums);
+  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
+  n_sets = g_slist_length (priv->sets);
   n_pictures = g_slist_length (priv->pictures);
 
-  /* No albums, nothing to do */
-  if (n_albums == 0 || n_pictures == 0)
+  /* No sets, nothing to do */
+  if (n_sets == 0 || n_pictures == 0)
     return;
 
   /* Iterate over all the items */
   gtk_tree_model_get_iter_first (priv->treemodel, &iter);
   do
     {
-      FrogrAlbum *album = NULL;
+      FrogrPhotoSet *set = NULL;
       GSList *p_item = NULL;
       gboolean do_check = TRUE;
 
       gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
-                          ALBUM_COL, &album, -1);
+                          SET_COL, &set, -1);
 
       for (p_item = priv->pictures; p_item; p_item = g_slist_next (p_item))
         {
           FrogrPicture *picture = NULL;
 
           picture = FROGR_PICTURE (p_item->data);
-          if (!frogr_picture_in_album (picture, album))
+          if (!frogr_picture_in_set (picture, set))
             {
               do_check = FALSE;
               break;
@@ -308,9 +308,9 @@ _fill_dialog_with_data (FrogrAddToAlbumDialog *self)
 }
 
 static void
-_album_toggled_cb (GtkCellRendererToggle *celltoggle,
-                   gchar *path_string,
-                   GtkTreeView *treeview)
+_set_toggled_cb (GtkCellRendererToggle *celltoggle,
+                 gchar *path_string,
+                 GtkTreeView *treeview)
 {
   GtkTreeModel *model = NULL;
   GtkTreePath *path;
@@ -333,18 +333,18 @@ _album_toggled_cb (GtkCellRendererToggle *celltoggle,
 }
 
 static GSList *
-_get_selected_albums (FrogrAddToAlbumDialog *self)
+_get_selected_sets (FrogrAddToSetDialog *self)
 {
-  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkTreeIter iter;
   gboolean selected = FALSE;
-  FrogrAlbum *album = NULL;
-  GSList *selected_albums = NULL;
+  FrogrPhotoSet *set = NULL;
+  GSList *selected_sets = NULL;
 
-  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
-  /* No albums, nothing to do */
-  if (g_slist_length (priv->albums) == 0)
+  /* No sets, nothing to do */
+  if (g_slist_length (priv->sets) == 0)
     return NULL;
 
   /* Iterate over all the items */
@@ -357,38 +357,38 @@ _get_selected_albums (FrogrAddToAlbumDialog *self)
         continue;
 
       gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
-                          ALBUM_COL, &album, -1);
+                          SET_COL, &set, -1);
 
-      if (FROGR_IS_ALBUM (album))
+      if (FROGR_IS_SET (set))
         {
-          selected_albums = g_slist_append (selected_albums, album);
-          g_object_ref (album);
+          selected_sets = g_slist_append (selected_sets, set);
+          g_object_ref (set);
         }
     }
   while (gtk_tree_model_iter_next (priv->treemodel, &iter));
 
-  return selected_albums;
+  return selected_sets;
 }
 
 static void
-_update_pictures (FrogrAddToAlbumDialog *self)
+_update_pictures (FrogrAddToSetDialog *self)
 {
-  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  FrogrAddToSetDialogPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
-  GSList *selected_albums = NULL;
+  GSList *selected_sets = NULL;
   GSList *item = NULL;
 
-  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
-  selected_albums = _get_selected_albums (self);
+  selected_sets = _get_selected_sets (self);
   for (item = priv->pictures; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
-      frogr_picture_set_albums (picture, selected_albums);
+      frogr_picture_set_sets (picture, selected_sets);
     }
 
-  g_slist_foreach (selected_albums, (GFunc)g_object_unref, NULL);
-  g_slist_free (selected_albums);
+  g_slist_foreach (selected_sets, (GFunc)g_object_unref, NULL);
+  g_slist_free (selected_sets);
 }
 
 static void
@@ -396,9 +396,9 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   if (response == GTK_RESPONSE_OK)
     {
-      FrogrAddToAlbumDialog *self = NULL;
+      FrogrAddToSetDialog *self = NULL;
 
-      self = FROGR_ADD_TO_ALBUM_DIALOG (dialog);
+      self = FROGR_ADD_TO_SET_DIALOG (dialog);
       _update_pictures (self);
     }
 
@@ -407,20 +407,20 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 }
 
 static void
-_frogr_add_to_album_dialog_set_property (GObject *object,
-                                         guint prop_id,
-                                         const GValue *value,
-                                         GParamSpec *pspec)
+_frogr_add_to_set_dialog_set_property (GObject *object,
+                                       guint prop_id,
+                                       const GValue *value,
+                                       GParamSpec *pspec)
 {
-  FrogrAddToAlbumDialogPrivate *priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (object);
+  FrogrAddToSetDialogPrivate *priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (object);
 
   switch (prop_id)
     {
     case PROP_PICTURES:
       priv->pictures = (GSList *) g_value_get_pointer (value);
       break;
-    case PROP_ALBUMS:
-      priv->albums = (GSList *) g_value_get_pointer (value);
+    case PROP_SETS:
+      priv->sets = (GSList *) g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -429,20 +429,20 @@ _frogr_add_to_album_dialog_set_property (GObject *object,
 }
 
 static void
-_frogr_add_to_album_dialog_get_property (GObject *object,
-                                         guint prop_id,
-                                         GValue *value,
-                                         GParamSpec *pspec)
+_frogr_add_to_set_dialog_get_property (GObject *object,
+                                       guint prop_id,
+                                       GValue *value,
+                                       GParamSpec *pspec)
 {
-  FrogrAddToAlbumDialogPrivate *priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (object);
+  FrogrAddToSetDialogPrivate *priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (object);
 
   switch (prop_id)
     {
     case PROP_PICTURES:
       g_value_set_pointer (value, priv->pictures);
       break;
-    case PROP_ALBUMS:
-      g_value_set_pointer (value, priv->albums);
+    case PROP_SETS:
+      g_value_set_pointer (value, priv->sets);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -451,9 +451,9 @@ _frogr_add_to_album_dialog_get_property (GObject *object,
 }
 
 static void
-_frogr_add_to_album_dialog_dispose (GObject *object)
+_frogr_add_to_set_dialog_dispose (GObject *object)
 {
-  FrogrAddToAlbumDialogPrivate *priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (object);
+  FrogrAddToSetDialogPrivate *priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (object);
 
   if (priv->pictures)
     {
@@ -462,8 +462,8 @@ _frogr_add_to_album_dialog_dispose (GObject *object)
       priv->pictures = NULL;
     }
 
-  if (priv->albums)
-    priv->albums = NULL;
+  if (priv->sets)
+    priv->sets = NULL;
 
   if (priv->treemodel)
     {
@@ -471,50 +471,50 @@ _frogr_add_to_album_dialog_dispose (GObject *object)
       priv->treemodel = NULL;
     }
 
-  G_OBJECT_CLASS(frogr_add_to_album_dialog_parent_class)->dispose (object);
+  G_OBJECT_CLASS(frogr_add_to_set_dialog_parent_class)->dispose (object);
 }
 
 static void
-frogr_add_to_album_dialog_class_init (FrogrAddToAlbumDialogClass *klass)
+frogr_add_to_set_dialog_class_init (FrogrAddToSetDialogClass *klass)
 {
   GObjectClass *obj_class = (GObjectClass *)klass;
   GParamSpec *pspec;
 
   /* GObject signals */
-  obj_class->set_property = _frogr_add_to_album_dialog_set_property;
-  obj_class->get_property = _frogr_add_to_album_dialog_get_property;
-  obj_class->dispose = _frogr_add_to_album_dialog_dispose;
+  obj_class->set_property = _frogr_add_to_set_dialog_set_property;
+  obj_class->get_property = _frogr_add_to_set_dialog_get_property;
+  obj_class->dispose = _frogr_add_to_set_dialog_dispose;
 
   /* Install properties */
   pspec = g_param_spec_pointer ("pictures",
                                 "pictures",
                                 "List of pictures for "
-                                "the 'add to album' dialog",
+                                "the 'add to set' dialog",
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (obj_class, PROP_PICTURES, pspec);
 
-  pspec = g_param_spec_pointer ("albums",
-                                "albums",
-                                "List of albums currently available "
-                                "for the 'add to album' dialog",
+  pspec = g_param_spec_pointer ("sets",
+                                "sets",
+                                "List of sets currently available "
+                                "for the 'add to set' dialog",
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
-  g_object_class_install_property (obj_class, PROP_ALBUMS, pspec);
+  g_object_class_install_property (obj_class, PROP_SETS, pspec);
 
-  g_type_class_add_private (obj_class, sizeof (FrogrAddToAlbumDialogPrivate));
+  g_type_class_add_private (obj_class, sizeof (FrogrAddToSetDialogPrivate));
 }
 
 static void
-frogr_add_to_album_dialog_init (FrogrAddToAlbumDialog *self)
+frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
 {
-  FrogrAddToAlbumDialogPrivate *priv = NULL;
+  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *widget = NULL;
 
-  priv = FROGR_ADD_TO_ALBUM_DIALOG_GET_PRIVATE (self);
+  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
   priv->pictures = NULL;
-  priv->albums = NULL;
+  priv->sets = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -568,23 +568,23 @@ frogr_add_to_album_dialog_init (FrogrAddToAlbumDialog *self)
 /* Public API */
 
 void
-frogr_add_to_album_dialog_show (GtkWindow *parent, GSList *pictures, GSList *albums)
+frogr_add_to_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *sets)
 {
-  FrogrAddToAlbumDialog *self = NULL;
+  FrogrAddToSetDialog *self = NULL;
   GObject *new = NULL;
 
-  new = g_object_new (FROGR_TYPE_ADD_TO_ALBUM_DIALOG,
-                      "title", _("Add to Albums"),
+  new = g_object_new (FROGR_TYPE_ADD_TO_SET_DIALOG,
+                      "title", _("Add to Sets"),
                       "modal", TRUE,
                       "pictures", pictures,
-                      "albums", albums,
+                      "sets", sets,
                       "transient-for", parent,
                       "resizable", TRUE,
                       NULL);
 
-  self = FROGR_ADD_TO_ALBUM_DIALOG (new);
+  self = FROGR_ADD_TO_SET_DIALOG (new);
 
-  _populate_treemodel_with_albums (self);
+  _populate_treemodel_with_sets (self);
   _fill_dialog_with_data (self);
 
   gtk_widget_show_all (GTK_WIDGET (self));

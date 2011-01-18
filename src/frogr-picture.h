@@ -23,7 +23,7 @@
 #ifndef _FROGR_PICTURE_H
 #define _FROGR_PICTURE_H
 
-#include "frogr-album.h"
+#include "frogr-photoset.h"
 #include "frogr-group.h"
 
 #include <glib.h>
@@ -113,11 +113,11 @@ GdkPixbuf *frogr_picture_get_pixbuf (FrogrPicture *self);
 void frogr_picture_set_pixbuf (FrogrPicture *self,
                                GdkPixbuf *pixbuf);
 
-GSList *frogr_picture_get_albums (FrogrPicture *self);
-void frogr_picture_set_albums (FrogrPicture *self, GSList *albums);
-void frogr_picture_add_album (FrogrPicture *self, FrogrAlbum *album);
-void frogr_picture_remove_albums (FrogrPicture *self);
-gboolean frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album);
+GSList *frogr_picture_get_sets (FrogrPicture *self);
+void frogr_picture_set_sets (FrogrPicture *self, GSList *sets);
+void frogr_picture_add_set (FrogrPicture *self, FrogrPhotoSet *set);
+void frogr_picture_remove_sets (FrogrPicture *self);
+gboolean frogr_picture_in_set (FrogrPicture *self, FrogrPhotoSet *set);
 
 GSList *frogr_picture_get_groups (FrogrPicture *self);
 void frogr_picture_set_groups (FrogrPicture *self, GSList *groups);

@@ -32,18 +32,18 @@ msgstr "Saisissez une liste d'étiquettes séparées par des espaces :"
 msgid "Add Tags"
 msgstr "Ajouter des étiquettes"
 
-#: ../src/frogr-add-to-album-dialog.c:133
-msgid "Album Title"
+#: ../src/frogr-add-to-set-dialog.c:133
+msgid "Set Title"
 msgstr "Titre de l'album"
 
-#: ../src/frogr-add-to-album-dialog.c:148
+#: ../src/frogr-add-to-set-dialog.c:148
 #: ../src/frogr-add-to-group-dialog.c:148
 msgid "Elements"
 msgstr "Éléments"
 
-#: ../src/frogr-add-to-album-dialog.c:577
+#: ../src/frogr-add-to-set-dialog.c:577
 #, fuzzy
-msgid "Add to Albums"
+msgid "Add to Sets"
 msgstr "Ajouter à l'album"
 
 #: ../src/frogr-add-to-group-dialog.c:133
@@ -241,11 +241,11 @@ msgid "Retrieving list of tags…"
 msgstr ""
 
 #: ../src/frogr-controller.c:1477 ../src/frogr-controller.c:1509
-msgid "Retrieving list of albums…"
+msgid "Retrieving list of sets…"
 msgstr ""
 
 #: ../src/frogr-controller.c:1522
-msgid "No albums found"
+msgid "No sets found"
 msgstr ""
 
 #: ../src/frogr-controller.c:1544
@@ -267,21 +267,21 @@ msgstr ""
 "Veuillez l'autoriser à nouveau."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-album-dialog.c:120
+#: ../src/frogr-create-new-set-dialog.c:120
 #: ../src/frogr-details-dialog.c:894
 msgid "Missing data required"
 msgstr "Données manquantes requises"
 
-#: ../src/frogr-create-new-album-dialog.c:304
-msgid "Album's title:"
+#: ../src/frogr-create-new-set-dialog.c:304
+msgid "Set's title:"
 msgstr "Titre de l'album :"
 
-#: ../src/frogr-create-new-album-dialog.c:317
-msgid "Album's description:"
+#: ../src/frogr-create-new-set-dialog.c:317
+msgid "Set's description:"
 msgstr "Description de l'album :"
 
-#: ../src/frogr-create-new-album-dialog.c:356
-msgid "Create new Album"
+#: ../src/frogr-create-new-set-dialog.c:356
+msgid "Create new Set"
 msgstr "Créer un nouvel album"
 
 #: ../src/frogr-details-dialog.c:160
@@ -416,19 +416,19 @@ msgstr "A_jouter des étiquettes…"
 msgid "Add to _Group…"
 msgstr "Ajouter au _groupe…"
 
-#. Add to album
+#. Add to set
 #: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:431
 msgid "Add to Al_bum"
 msgstr "Ajouter à l'al_bum"
 
 #: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:437
 #, fuzzy
-msgid "_Create New Album…"
+msgid "_Create New Set…"
 msgstr "Créer un nouvel album…"
 
 #: ../src/frogr-main-view.c:328 ../src/frogr-main-view.c:444
 #, fuzzy
-msgid "Add to _Existing Album…"
+msgid "Add to _Existing Set…"
 msgstr "Ajouter à un album existant…"
 
 #: ../src/frogr-main-view.c:337

@@ -130,7 +130,7 @@ _create_tree_view (FrogrAddToGroupDialog *self)
 
   /* Name */
   rend = gtk_cell_renderer_text_new ();
-  col = gtk_tree_view_column_new_with_attributes (_("Group Name"),
+  col = gtk_tree_view_column_new_with_attributes (_("Name"),
                                                   rend,
                                                   "text", NAME_COL,
                                                   NULL);

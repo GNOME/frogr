@@ -93,11 +93,11 @@ void frogr_controller_show_details_dialog (FrogrController *self,
 void frogr_controller_show_add_tags_dialog (FrogrController *self,
                                             GSList *pictures);
 
-void frogr_controller_show_create_new_album_dialog (FrogrController *self,
-                                                    GSList *pictures);
+void frogr_controller_show_create_new_set_dialog (FrogrController *self,
+                                                  GSList *pictures);
 
-void frogr_controller_show_add_to_album_dialog (FrogrController *self,
-                                                GSList *pictures);
+void frogr_controller_show_add_to_set_dialog (FrogrController *self,
+                                              GSList *pictures);
 
 void frogr_controller_show_add_to_group_dialog (FrogrController *self,
                                                 GSList *pictures);

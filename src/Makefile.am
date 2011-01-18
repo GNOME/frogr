@@ -46,20 +46,20 @@ frogr_SOURCES = \
 	frogr-account.h \
 	frogr-add-tags-dialog.c \
 	frogr-add-tags-dialog.h \
-	frogr-add-to-album-dialog.c \
-	frogr-add-to-album-dialog.h \
+	frogr-add-to-set-dialog.c \
+	frogr-add-to-set-dialog.h \
 	frogr-add-to-group-dialog.c \
 	frogr-add-to-group-dialog.h \
-	frogr-album.c \
-	frogr-album.h \
+	frogr-photoset.c \
+	frogr-photoset.h \
 	frogr-auth-dialog.c \
 	frogr-auth-dialog.h \
 	frogr-config.c \
 	frogr-config.h \
 	frogr-controller.c \
 	frogr-controller.h \
-	frogr-create-new-album-dialog.c \
-	frogr-create-new-album-dialog.h \
+	frogr-create-new-set-dialog.c \
+	frogr-create-new-set-dialog.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
 	frogr-group.c \

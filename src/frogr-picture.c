@@ -42,7 +42,7 @@ struct _FrogrPicturePrivate
   gchar *tags_string;
   GSList *tags_list;
 
-  GSList *albums;
+  GSList *sets;
   GSList *groups;
 
   gboolean is_public;
@@ -289,11 +289,11 @@ _frogr_picture_dispose (GObject* object)
       priv->pixbuf = NULL;
     }
 
-  if (priv->albums)
+  if (priv->sets)
     {
-      g_slist_foreach (priv->albums, (GFunc) g_object_unref, NULL);
-      g_slist_free (priv->albums);
-      priv->albums = NULL;
+      g_slist_foreach (priv->sets, (GFunc) g_object_unref, NULL);
+      g_slist_free (priv->sets);
+      priv->sets = NULL;
     }
 
   if (priv->groups)
@@ -457,7 +457,7 @@ frogr_picture_init (FrogrPicture *self)
   priv->tags_string = NULL;
 
   priv->tags_list = NULL;
-  priv->albums = NULL;
+  priv->sets = NULL;
   priv->groups = NULL;
 
   priv->is_public = FALSE;
@@ -818,75 +818,75 @@ frogr_picture_set_pixbuf (FrogrPicture *self,
 }
 
 GSList *
-frogr_picture_get_albums (FrogrPicture *self)
+frogr_picture_get_sets (FrogrPicture *self)
 {
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
   FrogrPicturePrivate *priv = NULL;
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->albums;
+  return priv->sets;
 }
 
 void
-frogr_picture_set_albums (FrogrPicture *self, GSList *albums)
+frogr_picture_set_sets (FrogrPicture *self, GSList *sets)
 {
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
   GSList *new_list = NULL;
   GSList *item = NULL;
-  FrogrAlbum *album = NULL;
+  FrogrPhotoSet *set = NULL;
   FrogrPicturePrivate *priv = NULL;
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
 
-  /* First remove all the previous albums list */
-  g_slist_foreach (priv->albums, (GFunc) g_object_unref, NULL);
-  g_slist_free (priv->albums);
-  priv->albums = NULL;
+  /* First remove all the previous sets list */
+  g_slist_foreach (priv->sets, (GFunc) g_object_unref, NULL);
+  g_slist_free (priv->sets);
+  priv->sets = NULL;
 
-  for (item = albums; item; item = g_slist_next (item))
+  for (item = sets; item; item = g_slist_next (item))
     {
-      album = FROGR_ALBUM (item->data);
-      new_list = g_slist_append (new_list, g_object_ref (album));
+      set = FROGR_PHOTOSET (item->data);
+      new_list = g_slist_append (new_list, g_object_ref (set));
     }
 
-  priv->albums = new_list;
+  priv->sets = new_list;
 }
 
 void
-frogr_picture_add_album (FrogrPicture *self, FrogrAlbum *album)
+frogr_picture_add_set (FrogrPicture *self, FrogrPhotoSet *set)
 {
   g_return_if_fail(FROGR_IS_PICTURE(self));
-  g_return_if_fail(FROGR_IS_ALBUM(album));
+  g_return_if_fail(FROGR_IS_SET(set));
 
   FrogrPicturePrivate *priv = NULL;
 
-  /* Do not add the same album twice */
-  if (frogr_picture_in_album (self, album))
+  /* Do not add the same set twice */
+  if (frogr_picture_in_set (self, set))
     return;
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->albums = g_slist_append (priv->albums, g_object_ref (album));
+  priv->sets = g_slist_append (priv->sets, g_object_ref (set));
 }
 
 void
-frogr_picture_remove_albums (FrogrPicture *self)
+frogr_picture_remove_sets (FrogrPicture *self)
 {
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  frogr_picture_set_albums (self, NULL);
+  frogr_picture_set_sets (self, NULL);
 }
 
 gboolean
-frogr_picture_in_album (FrogrPicture *self, FrogrAlbum *album)
+frogr_picture_in_set (FrogrPicture *self, FrogrPhotoSet *set)
 {
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   FrogrPicturePrivate *priv = NULL;
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
-  if (g_slist_index (priv->albums, album) != -1)
+  if (g_slist_index (priv->sets, set) != -1)
     return TRUE;
 
   return FALSE;
