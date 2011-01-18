@@ -30,14 +30,14 @@
 #define ABOUT_DIALOG_ICON ICONS_DIR "/hicolor/48x48/apps/frogr.png"
 
 static const gchar *authors[] = {
-  "Mario Sanchez Prada\n<msanchez@igalia.com>",
-  "Adrian Perez de Castro\n<aperez@igalia.com>",
+  "Mario Sanchez Prada <msanchez@igalia.com>",
+  "Adrian Perez de Castro <aperez@igalia.com>",
   "",
   NULL
 };
 
 static const gchar *artists[] = {
-  "Adrian Perez de Castro\n<aperez@igalia.com>\n",
+  "Adrian Perez de Castro <aperez@igalia.com>",
   NULL
 };
 
