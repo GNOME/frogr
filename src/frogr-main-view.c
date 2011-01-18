@@ -108,17 +108,6 @@ static void _populate_menu_bar (FrogrMainView *self);
 static void _populate_accounts_submenu (FrogrMainView *self);
 
 static GtkWidget *_ctxt_menu_create (FrogrMainView *self);
-static void _ctxt_menu_add_tags_item_activated (GtkWidget *widget,
-                                                gpointer data);
-static void _ctxt_menu_add_to_new_set_item_activated (GtkWidget *widget,
-                                                      gpointer data);
-static void _ctxt_menu_add_to_existing_set_item_activated (GtkWidget *widget,
-                                                           gpointer data);
-static void _ctxt_menu_add_to_group_item_activated (GtkWidget *widget,
-                                                    gpointer data);
-static void _ctxt_menu_edit_details_item_activated (GtkWidget *widget,
-                                                    gpointer data);
-static void _ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data);
 static void _initialize_drag_n_drop (FrogrMainView *self);
 static void _on_icon_view_drag_data_received (GtkWidget *widget,
                                               GdkDragContext *context,
@@ -406,26 +395,23 @@ _ctxt_menu_create (FrogrMainView *self)
   /* Edit details */
   item = gtk_menu_item_new_with_mnemonic (_("Edit _Details…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-  g_signal_connect(item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_edit_details_item_activated),
-                   self);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_edit_details_menu_item_activate),
+                    self);
 
   /* Add Tags */
   item = gtk_menu_item_new_with_mnemonic (_("Add _Tags…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-  g_signal_connect(item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_add_tags_item_activated),
-                   self);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_add_tags_menu_item_activate),
+                    self);
 
   /* Add to group */
   item = gtk_menu_item_new_with_mnemonic (_("Add to _Group…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-  g_signal_connect(item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_add_to_group_item_activated),
-                   self);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_add_to_group_menu_item_activate),
+                    self);
 
   /* Add to set */
   item = gtk_menu_item_new_with_mnemonic (_("Add to _Set"));
@@ -436,74 +422,29 @@ _ctxt_menu_create (FrogrMainView *self)
 
   item = gtk_menu_item_new_with_mnemonic (_("_Create New Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
-  g_signal_connect(item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_add_to_new_set_item_activated),
-                   self);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_add_to_new_set_menu_item_activate),
+                    self);
 
   item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
-  g_signal_connect(item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_add_to_existing_set_item_activated),
-                   self);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_add_to_existing_set_menu_item_activate),
+                    self);
 
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), gtk_separator_menu_item_new ());
 
   /* Remove */
-  item = gtk_menu_item_new_with_mnemonic (_("_Remove"));
+  item = gtk_menu_item_new_with_mnemonic (_("_Remove Pictures"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-  g_signal_connect(item,
-                   "activate",
-                   G_CALLBACK (_ctxt_menu_remove_item_activated),
-                   self);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_remove_menu_item_activate),
+                    self);
 
   /* Make menu and its widgets visible */
   gtk_widget_show_all (ctxt_menu);
 
   return ctxt_menu;
-}
-
-static void
-_ctxt_menu_add_tags_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _add_tags_to_pictures (mainview);
-}
-
-static void
-_ctxt_menu_add_to_new_set_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _add_pictures_to_new_set (mainview);
-}
-
-static void
-_ctxt_menu_add_to_existing_set_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _add_pictures_to_existing_set (mainview);
-}
-
-static void
-_ctxt_menu_add_to_group_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _add_pictures_to_group (mainview);
-}
-
-static void
-_ctxt_menu_edit_details_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _edit_selected_pictures (mainview);
-}
-
-static void
-_ctxt_menu_remove_item_activated (GtkWidget *widget, gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _remove_selected_pictures (mainview);
 }
 
 static void
