@@ -6,12 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&component=general\n"
-"POT-Creation-Date: 2011-01-18 15:00+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-18 23:06+0100\n"
 "PO-Revision-Date: 2011-01-18 19:53+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -59,8 +59,8 @@ msgid ""
 "Please press the button to authorize %s and then come back to this screen to "
 "complete the process."
 msgstr ""
-"Bitte klicken Sie den Knopf, um %s zu legitimieren. Kehren Sie dann zu diesem "
-"Fenster zurück, um den Vorgang abzuschließen."
+"Bitte klicken Sie den Knopf, um %s zu legitimieren. Kehren Sie dann zu "
+"diesem Fenster zurück, um den Vorgang abzuschließen."
 
 #: ../src/frogr-auth-dialog.c:35
 #, c-format
@@ -218,43 +218,43 @@ msgstr "Ein Fehler trat beim Hochladen eines Bildes auf: %s"
 msgid "Authorization successfully completed!"
 msgstr "Legitimierung wurde erfolgreich abgeschlossen!"
 
-#: ../src/frogr-controller.c:851
+#: ../src/frogr-controller.c:859
 msgid "Creating new photoset…"
 msgstr "Neues Album wird erstellt"
 
-#: ../src/frogr-controller.c:876
+#: ../src/frogr-controller.c:884
 msgid "Adding picture to photoset…"
 msgstr "Bild wird zum Album hinzugefügt …"
 
-#: ../src/frogr-controller.c:899
+#: ../src/frogr-controller.c:907
 msgid "Adding picture to group…"
 msgstr "Bild wird zur Gruppe hinzugefügt …"
 
-#: ../src/frogr-controller.c:964
+#: ../src/frogr-controller.c:972
 msgid "Operation successfully completed!"
 msgstr "Vorgang wurde erfolgreich abgeschlossen!"
 
-#: ../src/frogr-controller.c:1411 ../src/frogr-controller.c:1444
+#: ../src/frogr-controller.c:1419 ../src/frogr-controller.c:1452
 msgid "Retrieving list of tags…"
 msgstr "Markierungsliste wird geholt …"
 
-#: ../src/frogr-controller.c:1477 ../src/frogr-controller.c:1509
+#: ../src/frogr-controller.c:1485 ../src/frogr-controller.c:1517
 msgid "Retrieving list of sets…"
 msgstr "Albenliste wird geholt …"
 
-#: ../src/frogr-controller.c:1522
+#: ../src/frogr-controller.c:1530
 msgid "No sets found"
 msgstr "Keine Alben gefunden"
 
-#: ../src/frogr-controller.c:1544
+#: ../src/frogr-controller.c:1552
 msgid "Retrieving list of groups…"
 msgstr "Gruppenliste wird geholt …"
 
-#: ../src/frogr-controller.c:1557
+#: ../src/frogr-controller.c:1565
 msgid "No groups found"
 msgstr "Keine Gruppen gefunden"
 
-#: ../src/frogr-controller.c:2147
+#: ../src/frogr-controller.c:2155
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -354,104 +354,104 @@ msgid "Edit Picture Details"
 msgstr "Details des Bildes bearbeiten"
 
 #. File menu
-#: ../src/frogr-main-view.c:224
+#: ../src/frogr-main-view.c:228
 msgid "_File"
 msgstr "_Datei"
 
-#: ../src/frogr-main-view.c:230
+#: ../src/frogr-main-view.c:234
 msgid "_Add Pictures"
 msgstr "Bilder _hinzufügen"
 
 #. Remove
-#: ../src/frogr-main-view.c:237 ../src/frogr-main-view.c:438
+#: ../src/frogr-main-view.c:241 ../src/frogr-main-view.c:442
 msgid "_Remove Pictures"
 msgstr "Bilder entfe_rnen"
 
 #. Accounts menu item and submenu
-#: ../src/frogr-main-view.c:247
+#: ../src/frogr-main-view.c:251
 msgid "Accou_nts"
 msgstr "Ko_nten"
 
 #. Authorize menu item
-#: ../src/frogr-main-view.c:253
+#: ../src/frogr-main-view.c:257
 msgid "Authorize _frogr"
 msgstr "_Frogr legitimieren"
 
-#: ../src/frogr-main-view.c:262
+#: ../src/frogr-main-view.c:266
 msgid "_Preferences…"
 msgstr "_Einstellungen …"
 
-#: ../src/frogr-main-view.c:270
+#: ../src/frogr-main-view.c:274
 msgid "_Quit"
 msgstr "_Beenden"
 
 #. Actions menu
-#: ../src/frogr-main-view.c:276
+#: ../src/frogr-main-view.c:280
 msgid "A_ctions"
 msgstr "A_ktionen"
 
 #. Edit details
-#: ../src/frogr-main-view.c:282 ../src/frogr-main-view.c:396
+#: ../src/frogr-main-view.c:286 ../src/frogr-main-view.c:400
 msgid "Edit _Details…"
 msgstr "_Details bearbeiten …"
 
 #. Add Tags
-#: ../src/frogr-main-view.c:289 ../src/frogr-main-view.c:403
+#: ../src/frogr-main-view.c:293 ../src/frogr-main-view.c:407
 msgid "Add _Tags…"
 msgstr "_Markierungen hinzufügen …"
 
 #. Add to group
-#: ../src/frogr-main-view.c:296 ../src/frogr-main-view.c:410
+#: ../src/frogr-main-view.c:300 ../src/frogr-main-view.c:414
 msgid "Add to _Group…"
 msgstr "Zu _Gruppe hinzufügen …"
 
 #. Add to set
-#: ../src/frogr-main-view.c:303 ../src/frogr-main-view.c:417
+#: ../src/frogr-main-view.c:307 ../src/frogr-main-view.c:421
 msgid "Add to _Set"
 msgstr "Zu _Album hinzufügen …"
 
-#: ../src/frogr-main-view.c:310 ../src/frogr-main-view.c:423
+#: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:427
 msgid "_Create New Set…"
 msgstr "Neues Album _erstellen …"
 
-#: ../src/frogr-main-view.c:317 ../src/frogr-main-view.c:429
+#: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:433
 msgid "Add to _Existing Set…"
 msgstr "Zu _vorhandenem Album hinzufügen …"
 
-#: ../src/frogr-main-view.c:326
+#: ../src/frogr-main-view.c:330
 msgid "_Upload All"
 msgstr "_Alle hochladen"
 
 #. Help menu
-#: ../src/frogr-main-view.c:334
+#: ../src/frogr-main-view.c:338
 msgid "_Help"
 msgstr "_Hilfe"
 
-#: ../src/frogr-main-view.c:340
+#: ../src/frogr-main-view.c:344
 msgid "_About"
 msgstr "_Info"
 
-#: ../src/frogr-main-view.c:899
+#: ../src/frogr-main-view.c:897
 msgid "Select a Picture"
 msgstr "Ein Bild auswählen"
 
-#: ../src/frogr-main-view.c:932
+#: ../src/frogr-main-view.c:930
 msgid "You need to select some pictures first"
 msgstr "Sie müssen zunächst einige Bilder auswählen"
 
-#: ../src/frogr-main-view.c:1143
+#: ../src/frogr-main-view.c:1147
 msgid "Not connected to flickr"
 msgstr "Nicht mit Flickr verbunden"
 
-#: ../src/frogr-main-view.c:1172
+#: ../src/frogr-main-view.c:1176
 msgid "remaining for the current month"
 msgstr "verbleibend für den aktuellen Monat"
 
-#: ../src/frogr-main-view.c:1180
+#: ../src/frogr-main-view.c:1184
 msgid "Connected as"
 msgstr "Verbunden als"
 
-#: ../src/frogr-main-view.c:1181
+#: ../src/frogr-main-view.c:1185
 msgid " (PRO account)"
 msgstr " (PRO-Konto)"
 

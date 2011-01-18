@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 12:58+0100\n"
+"POT-Creation-Date: 2011-01-18 23:06+0100\n"
 "PO-Revision-Date: 2011-01-04 14:54+0100\n"
 "Last-Translator: Alexandre Franke <alexandre.franke@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -220,44 +220,44 @@ msgstr "Une erreur est survenue lors de l'envoi d'une image : %s."
 msgid "Authorization successfully completed!"
 msgstr "Autorisation accordée !"
 
-#: ../src/frogr-controller.c:851
+#: ../src/frogr-controller.c:859
 msgid "Creating new photoset…"
 msgstr "Création d'un nouvel ensemble…"
 
-#: ../src/frogr-controller.c:876
+#: ../src/frogr-controller.c:884
 msgid "Adding picture to photoset…"
 msgstr "Ajout d'une image à l'ensemble…"
 
-#: ../src/frogr-controller.c:899
+#: ../src/frogr-controller.c:907
 msgid "Adding picture to group…"
 msgstr "Ajout d'une image au groupe…"
 
-#: ../src/frogr-controller.c:964
+#: ../src/frogr-controller.c:972
 msgid "Operation successfully completed!"
 msgstr "Opération réussie !"
 
-#: ../src/frogr-controller.c:1411 ../src/frogr-controller.c:1444
+#: ../src/frogr-controller.c:1419 ../src/frogr-controller.c:1452
 msgid "Retrieving list of tags…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1477 ../src/frogr-controller.c:1509
+#: ../src/frogr-controller.c:1485 ../src/frogr-controller.c:1517
 msgid "Retrieving list of sets…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1522
+#: ../src/frogr-controller.c:1530
 msgid "No sets found"
 msgstr ""
 
-#: ../src/frogr-controller.c:1544
+#: ../src/frogr-controller.c:1552
 #, fuzzy
 msgid "Retrieving list of groups…"
 msgstr "Ajout d'une image au groupe…"
 
-#: ../src/frogr-controller.c:1557
+#: ../src/frogr-controller.c:1565
 msgid "No groups found"
 msgstr ""
 
-#: ../src/frogr-controller.c:2147
+#: ../src/frogr-controller.c:2155
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -363,114 +363,109 @@ msgid "Edit Picture Details"
 msgstr "Modifier les détails d'une image"
 
 #. File menu
-#: ../src/frogr-main-view.c:235
+#: ../src/frogr-main-view.c:228
 msgid "_File"
 msgstr "_Fichier"
 
-#: ../src/frogr-main-view.c:241
+#: ../src/frogr-main-view.c:234
 msgid "_Add Pictures"
 msgstr "_Ajouter des images"
 
-#: ../src/frogr-main-view.c:248
+#. Remove
+#: ../src/frogr-main-view.c:241 ../src/frogr-main-view.c:442
 msgid "_Remove Pictures"
 msgstr "_Supprimer des images"
 
 #. Accounts menu item and submenu
-#: ../src/frogr-main-view.c:258
+#: ../src/frogr-main-view.c:251
 #, fuzzy
 msgid "Accou_nts"
 msgstr "Comptes"
 
 #. Authorize menu item
-#: ../src/frogr-main-view.c:264
+#: ../src/frogr-main-view.c:257
 msgid "Authorize _frogr"
 msgstr "Autoriser _frogr"
 
-#: ../src/frogr-main-view.c:273
+#: ../src/frogr-main-view.c:266
 #, fuzzy
 msgid "_Preferences…"
 msgstr "_Paramètres…"
 
-#: ../src/frogr-main-view.c:281
+#: ../src/frogr-main-view.c:274
 msgid "_Quit"
 msgstr "_Quitter"
 
 #. Actions menu
-#: ../src/frogr-main-view.c:287
+#: ../src/frogr-main-view.c:280
 msgid "A_ctions"
 msgstr "A_ctions"
 
 #. Edit details
-#: ../src/frogr-main-view.c:293 ../src/frogr-main-view.c:407
+#: ../src/frogr-main-view.c:286 ../src/frogr-main-view.c:400
 msgid "Edit _Details…"
 msgstr "Modifier les _détails…"
 
 #. Add Tags
-#: ../src/frogr-main-view.c:300 ../src/frogr-main-view.c:415
+#: ../src/frogr-main-view.c:293 ../src/frogr-main-view.c:407
 msgid "Add _Tags…"
 msgstr "A_jouter des étiquettes…"
 
 #. Add to group
-#: ../src/frogr-main-view.c:307 ../src/frogr-main-view.c:423
+#: ../src/frogr-main-view.c:300 ../src/frogr-main-view.c:414
 msgid "Add to _Group…"
 msgstr "Ajouter au _groupe…"
 
 #. Add to set
-#: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:431
+#: ../src/frogr-main-view.c:307 ../src/frogr-main-view.c:421
 #, fuzzy
 msgid "Add to _Set"
 msgstr "Ajouter à l'album"
 
-#: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:437
+#: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:427
 #, fuzzy
 msgid "_Create New Set…"
 msgstr "Créer un nouvel album…"
 
-#: ../src/frogr-main-view.c:328 ../src/frogr-main-view.c:444
+#: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:433
 #, fuzzy
 msgid "Add to _Existing Set…"
 msgstr "Ajouter à un album existant…"
 
-#: ../src/frogr-main-view.c:337
+#: ../src/frogr-main-view.c:330
 msgid "_Upload All"
 msgstr "_Envoyer tout"
 
 #. Help menu
-#: ../src/frogr-main-view.c:345
+#: ../src/frogr-main-view.c:338
 msgid "_Help"
 msgstr "Aid_e"
 
-#: ../src/frogr-main-view.c:351
+#: ../src/frogr-main-view.c:344
 msgid "_About"
 msgstr "À _propos"
 
-#. Remove
-#: ../src/frogr-main-view.c:454
-#, fuzzy
-msgid "_Remove"
-msgstr "Supprimer"
-
-#: ../src/frogr-main-view.c:958
+#: ../src/frogr-main-view.c:897
 msgid "Select a Picture"
 msgstr "Sélectionner une image"
 
-#: ../src/frogr-main-view.c:991
+#: ../src/frogr-main-view.c:930
 msgid "You need to select some pictures first"
 msgstr "Vous devez d'abord sélectionner des images"
 
-#: ../src/frogr-main-view.c:1202
+#: ../src/frogr-main-view.c:1147
 msgid "Not connected to flickr"
 msgstr "Non connecté à flickr"
 
-#: ../src/frogr-main-view.c:1231
+#: ../src/frogr-main-view.c:1176
 msgid "remaining for the current month"
 msgstr "restant pour le mois en cours"
 
-#: ../src/frogr-main-view.c:1239
+#: ../src/frogr-main-view.c:1184
 msgid "Connected as"
 msgstr "Connecté en tant que"
 
-#: ../src/frogr-main-view.c:1240
+#: ../src/frogr-main-view.c:1185
 msgid " (PRO account)"
 msgstr "(compte PRO)"
 
@@ -560,6 +555,10 @@ msgstr "Envoyer"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "frogr"
 msgstr "frogr"
+
+#, fuzzy
+#~ msgid "_Remove"
+#~ msgstr "Supprimer"
 
 #~ msgid "Set Title"
 #~ msgstr "Titre de l'album"
