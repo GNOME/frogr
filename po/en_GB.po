@@ -20,17 +20,9 @@ msgstr ""
 msgid "A Flickr remote organizer for GNOME\n"
 msgstr "A Flickr remote organiser for GNOME\n"
 
-#: ../src/frogr-about-dialog.c:101
-msgid "Spanish"
-msgstr "Spanish"
-
-#: ../src/frogr-about-dialog.c:102
-msgid "British English"
-msgstr "British English"
-
-#: ../src/frogr-about-dialog.c:103
-msgid "French"
-msgstr ""
+#: ../src/frogr-about-dialog.c:107
+msgid "translator-credits"
+msgstr "Philip Withnall <philip@tecnocode.co.uk>"
 
 #: ../src/frogr-add-tags-dialog.c:342
 msgid "Enter a spaces separated list of tags:"

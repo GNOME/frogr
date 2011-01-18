@@ -62,11 +62,6 @@ static const gchar *license =
   "This program uses flickr API through the flicksoup\n"
   "library (which comes bundled-in with frogr), but\n"
   "it's neither approved nor certified by flickr.";
-static const char translators_tpl[] =
-"%s (es)\n* Alejandro Piñeiro Iglesias <apinheiro@igalia.com>\n"
-         "* Mario Sanchez Prada <msanchez@igalia.com>\n\n"
-"%s (en_GB)\n* Philip Withnall <philip@tecnocode.co.uk>\n\n"
-"%s (fr)\n* Alexandre Franke <alexandre.franke@gmail.com>\n";
 
 #if !GTK_CHECK_VERSION (2,23,0)
 static void
@@ -84,7 +79,6 @@ void
 frogr_about_dialog_show (GtkWindow *parent)
 {
   GdkPixbuf *logo = NULL;
-  char *translators = NULL;
   char *version = NULL;
 
   logo = gdk_pixbuf_new_from_file (ABOUT_DIALOG_ICON, NULL);
@@ -95,12 +89,6 @@ frogr_about_dialog_show (GtkWindow *parent)
   gtk_about_dialog_set_email_hook (_frogr_about_dialog_uri_hook, "mailto:",
                                    NULL);
 #endif
-
-  /* Translated list of translators */
-  translators = g_strdup_printf (translators_tpl,
-                                 _("Spanish"),
-                                 _("British English"),
-                                 _("French"));
 
   /* XXX: Show clearly that this is an unreleased version */
   version = g_strdup_printf ("%s~unreleased", VERSION);
@@ -116,11 +104,10 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "version", version,
                          "website", website,
                          "logo", logo,
-                         "translator-credits", translators,
+                         "translator-credits", _("translator-credits"),
                          "modal", TRUE,
                          NULL);
 
   g_object_unref (logo);
-  g_free (translators);
   g_free (version);
 }
