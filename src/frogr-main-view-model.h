@@ -61,7 +61,6 @@ void frogr_main_view_model_add_picture (FrogrMainViewModel *self,
                                         FrogrPicture *fset);
 void frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
                                            FrogrPicture *fset);
-void frogr_main_view_model_remove_all_pictures (FrogrMainViewModel *self);
 
 guint frogr_main_view_model_n_pictures (FrogrMainViewModel *self);
 

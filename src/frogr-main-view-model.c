@@ -166,21 +166,7 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
   priv->pictures_list = g_slist_remove (priv->pictures_list, picture);
   priv->n_pictures--;
   g_object_unref (picture);
-}
 
-void
-frogr_main_view_model_remove_all_pictures (FrogrMainViewModel *self)
-{
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
-
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
-  g_slist_foreach (priv->pictures_list, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv->pictures_list);
-
-  priv->pictures_list = NULL;
-  priv->n_pictures = 0;
 }
 
 guint
