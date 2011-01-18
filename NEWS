@@ -31,7 +31,8 @@
   * Added mnemonic to the 'Edit details' and the 'Settings' dialog.
   * Renamed 'Albums' as 'Sets'.
   * Added new translations: British English (en_GB), French (fr),
-    Swedish (sv) and Galician (gl). See TRANSLATORS for details.
+    Swedish (sv), Galician (gl), German (de) and Slovenian (sl).
+    See TRANSLATORS file for more details.
 
 0.3 (22 Dec 2010)
 
