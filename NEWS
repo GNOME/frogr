@@ -30,6 +30,7 @@
   * Added support to declare pictures to 'show up on global search results'.
   * Added mnemonic to the 'Edit details' and the 'Settings' dialog.
   * Renamed 'Albums' as 'Sets'.
+  * Remove pictures from UI as soon as they get uploaded.
   * Added new translations: British English (en_GB), French (fr),
     Swedish (sv), Galician (gl), German (de) and Slovenian (sl).
     See TRANSLATORS file for more details.
