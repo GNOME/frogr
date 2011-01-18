@@ -44,10 +44,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/locale/es/LC_MESSAGES/frogr.mo
+%{_datadir}/locale/de/LC_MESSAGES/frogr.mo
 %{_datadir}/locale/en_GB/LC_MESSAGES/frogr.mo
+%{_datadir}/locale/es/LC_MESSAGES/frogr.mo
 %{_datadir}/locale/fr/LC_MESSAGES/frogr.mo
 %{_datadir}/locale/gl/LC_MESSAGES/frogr.mo
+%{_datadir}/locale/sl/LC_MESSAGES/frogr.mo
 %{_datadir}/locale/sv/LC_MESSAGES/frogr.mo
 %{_mandir}/man1/frogr.1.*
 %doc README NEWS COPYING AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
