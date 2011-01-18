@@ -52,6 +52,15 @@ struct _FrogrMainViewModelPrivate
   gchar* account_description;
 };
 
+/* Signals */
+enum {
+  PICTURE_ADDED,
+  PICTURE_REMOVED,
+  N_SIGNALS
+};
+
+static guint signals[N_SIGNALS] = { 0 };
+
 /* Private API */
 
 static void
@@ -105,6 +114,23 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
   obj_class->dispose = _frogr_main_view_model_dispose;
   obj_class->finalize = _frogr_main_view_model_finalize;
+
+  signals[PICTURE_ADDED] =
+    g_signal_new ("picture-added",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__OBJECT,
+                  G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
+
+  signals[PICTURE_REMOVED] =
+    g_signal_new ("picture-removed",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__OBJECT,
+                  G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
+
   g_type_class_add_private (obj_class, sizeof (FrogrMainViewModelPrivate));
 }
 
@@ -152,6 +178,8 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
   g_object_ref (picture);
   priv->pictures_list = g_slist_append (priv->pictures_list, picture);
   priv->n_pictures++;
+
+  g_signal_emit (self, signals[PICTURE_ADDED], 0, picture);
 }
 
 void
@@ -167,6 +195,7 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
   priv->n_pictures--;
   g_object_unref (picture);
 
+  g_signal_emit (self, signals[PICTURE_REMOVED], 0, picture);
 }
 
 guint
