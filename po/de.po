@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 23:06+0100\n"
+"POT-Creation-Date: 2011-01-19 02:15+0100\n"
 "PO-Revision-Date: 2011-01-18 19:53+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -234,27 +234,27 @@ msgstr "Bild wird zur Gruppe hinzugefügt …"
 msgid "Operation successfully completed!"
 msgstr "Vorgang wurde erfolgreich abgeschlossen!"
 
-#: ../src/frogr-controller.c:1419 ../src/frogr-controller.c:1452
+#: ../src/frogr-controller.c:1429 ../src/frogr-controller.c:1462
 msgid "Retrieving list of tags…"
 msgstr "Markierungsliste wird geholt …"
 
-#: ../src/frogr-controller.c:1485 ../src/frogr-controller.c:1517
+#: ../src/frogr-controller.c:1495 ../src/frogr-controller.c:1527
 msgid "Retrieving list of sets…"
 msgstr "Albenliste wird geholt …"
 
-#: ../src/frogr-controller.c:1530
+#: ../src/frogr-controller.c:1540
 msgid "No sets found"
 msgstr "Keine Alben gefunden"
 
-#: ../src/frogr-controller.c:1552
+#: ../src/frogr-controller.c:1562
 msgid "Retrieving list of groups…"
 msgstr "Gruppenliste wird geholt …"
 
-#: ../src/frogr-controller.c:1565
+#: ../src/frogr-controller.c:1575
 msgid "No groups found"
 msgstr "Keine Gruppen gefunden"
 
-#: ../src/frogr-controller.c:2155
+#: ../src/frogr-controller.c:2165
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"

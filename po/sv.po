@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 23:06+0100\n"
+"POT-Creation-Date: 2011-01-19 02:15+0100\n"
 "PO-Revision-Date: 2011-01-18 00:49+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -203,27 +203,27 @@ msgstr ""
 msgid "Operation successfully completed!"
 msgstr ""
 
-#: ../src/frogr-controller.c:1419 ../src/frogr-controller.c:1452
+#: ../src/frogr-controller.c:1429 ../src/frogr-controller.c:1462
 msgid "Retrieving list of tags…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1485 ../src/frogr-controller.c:1517
+#: ../src/frogr-controller.c:1495 ../src/frogr-controller.c:1527
 msgid "Retrieving list of sets…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1530
+#: ../src/frogr-controller.c:1540
 msgid "No sets found"
 msgstr "Inga album hittades"
 
-#: ../src/frogr-controller.c:1552
+#: ../src/frogr-controller.c:1562
 msgid "Retrieving list of groups…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1565
+#: ../src/frogr-controller.c:1575
 msgid "No groups found"
 msgstr "Inga grupper hittades"
 
-#: ../src/frogr-controller.c:2155
+#: ../src/frogr-controller.c:2165
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
