@@ -8,7 +8,6 @@
   * Added 'Translated by' tab to about dialog.
   * Fixed slow startup (no longer wait for albums to be loaded).
   * Automatically re-show the authorization dialog if needed.
-  * Automatically show an informative dialog when everybody went fine.
   * More descriptive strings in picture details dialog.
   * Implemented new settings dialog, allowing to pre-set default
     values for the visibility of the pictures, and to choose whether
