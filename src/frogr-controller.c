@@ -1071,36 +1071,39 @@ _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  GSList *photosets_list = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
+  GSList *data_sets_list = NULL;
+  GSList *sets_list = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
-  photosets_list = fsp_session_get_photosets_finish (session, res, &error);
+  data_sets_list = fsp_session_get_photosets_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Fetching list of sets: %s", error->message);
+      g_debug ("Fetching list of sets: %s (%d)", error->message, error->code);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
+
+      /* If no photosets are found is a valid outcome */
+      if (error->code == FSP_ERROR_MISSING_DATA)
+        priv->sets_fetched = TRUE;
 
       g_error_free (error);
     }
   else
     {
-      FrogrMainViewModel *mainview_model = NULL;
-      GSList *sets_list = NULL;
-
       priv->sets_fetched = TRUE;
 
-      if (photosets_list)
+      if (data_sets_list)
         {
           GSList *item = NULL;
           FspDataPhotoSet *current_data_set = NULL;
           FrogrPhotoSet *current_set = NULL;
-          for (item = photosets_list; item; item = g_slist_next (item))
+          for (item = data_sets_list; item; item = g_slist_next (item))
             {
               current_data_set = FSP_DATA_PHOTO_SET (item->data);
               current_set = frogr_photoset_new (current_data_set->title,
@@ -1114,13 +1117,13 @@ _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
               fsp_data_free (FSP_DATA (current_data_set));
             }
 
-          g_slist_free (photosets_list);
+          g_slist_free (data_sets_list);
         }
-
-      /* Update main view's model */
-      mainview_model = frogr_main_view_get_model (priv->mainview);
-      frogr_main_view_model_set_sets (mainview_model, sets_list);
     }
+
+  /* Update main view's model */
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  frogr_main_view_model_set_sets (mainview_model, sets_list);
 
   priv->fetching_sets = FALSE;
 }
@@ -1149,7 +1152,9 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  FrogrMainViewModel *mainview_model = NULL;
   GSList *data_groups_list = NULL;
+  GSList *groups_list = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
@@ -1159,18 +1164,19 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   data_groups_list = fsp_session_get_groups_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Fetching list of groups: %s", error->message);
+      g_debug ("Fetching list of groups: %s (%d)", error->message, error->code);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
+
+      /* If no groups are found is a valid outcome */
+      if (error->code == FSP_ERROR_MISSING_DATA)
+        priv->groups_fetched = TRUE;
 
       g_error_free (error);
     }
   else
     {
-      FrogrMainViewModel *mainview_model = NULL;
-      GSList *groups_list = NULL;
-
       priv->groups_fetched = TRUE;
 
       if (data_groups_list)
@@ -1193,11 +1199,11 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 
           g_slist_free (data_groups_list);
         }
-
-      /* Update main view's model */
-      mainview_model = frogr_main_view_get_model (priv->mainview);
-      frogr_main_view_model_set_groups (mainview_model, groups_list);
     }
+
+  /* Update main view's model */
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  frogr_main_view_model_set_groups (mainview_model, groups_list);
 
   priv->fetching_groups = FALSE;
 }
@@ -1385,16 +1391,20 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
 
+      /* If no tags are found is a valid outcome */
+      if (error->code == FSP_ERROR_MISSING_DATA)
+        priv->tags_fetched = TRUE;
+
+      tags_list = NULL;
+
       g_error_free (error);
     }
   else
-    {
-      /* Update main view's model */
-      mainview_model = frogr_main_view_get_model (priv->mainview);
-      frogr_main_view_model_set_tags_list (mainview_model, tags_list);
+    priv->tags_fetched = TRUE;
 
-      priv->tags_fetched = TRUE;
-    }
+  /* Update main view's model */
+  mainview_model = frogr_main_view_get_model (priv->mainview);
+  frogr_main_view_model_set_tags_list (mainview_model, tags_list);
 
   priv->fetching_tags = FALSE;
 }
