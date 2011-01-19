@@ -962,14 +962,10 @@ _on_pictures_uploaded (FrogrController *self,
   if (!error)
     {
       FrogrControllerPrivate *priv = NULL;
-      GtkWindow *window = NULL;
       priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
       if (frogr_config_get_open_browser_after_upload (priv->config))
         _open_browser_to_edit_details (self);
-
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_util_show_info_dialog (window, _("Operation successfully completed!"));
 
       /* Fetch sets and tags right after finishing */
       _fetch_sets (self);
