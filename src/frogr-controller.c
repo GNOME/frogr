@@ -447,13 +447,6 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
       g_debug ("Authorization failed: %s", error->message);
       g_error_free (error);
     }
-  else
-    {
-      GtkWindow *window = NULL;
-
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_util_show_info_dialog (window, _("Authorization successfully completed!"));
-    }
 }
 
 static void
