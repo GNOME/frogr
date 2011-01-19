@@ -288,7 +288,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
       break;
 
     case FSP_ERROR_GROUP_LIMIT_REACHED:
-      msg = g_strdup (_("Error:\nGroup limit alrady reached"));
+      msg = g_strdup (_("Error:\nGroup limit already reached"));
       error_function = NULL; /* Don't notify the user about this */
       break;
 

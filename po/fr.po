@@ -152,7 +152,7 @@ msgstr ""
 #: ../src/frogr-controller.c:291
 msgid ""
 "Error:\n"
-"Group limit alrady reached"
+"Group limit already reached"
 msgstr ""
 "Erreur :\n"
 "Limite du groupe déjà atteinte"
