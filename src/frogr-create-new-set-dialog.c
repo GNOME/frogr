@@ -292,11 +292,7 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
-#if GTK_CHECK_VERSION (2,14,0)
   vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
-#else
-  vbox = GTK_DIALOG (self)->vbox;
-#endif
 
   table = gtk_table_new (2, 2, FALSE);
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 6);

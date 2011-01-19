@@ -11,7 +11,7 @@ To get the source, please checkout the git repository at gnome.org:
 To work properly, frogr needs some libraries to be installed first::
 
  - glib (version 2.16 or higher)
- - gtk+ (version 2.12 or higher)
+ - gtk+ (version 2.14 or higher)
  - libxml (version 2.6.8 or higher)
  - libsoup (version 2.24 or higher)
 

@@ -9,8 +9,8 @@ URL:		http://live.gnome.org/Frogr
 Source0:	http://frogr.googlecode.com/files/%{name}-%{version}.tar.bz2
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:	gtk2-devel > 2.12, glib2-devel, libsoup-devel, libxml2-devel
-Requires:	gtk2 > 2.12, glib > 2.16, libsoup > 2.24, libxml2
+BuildRequires:	gtk2-devel > 2.14, glib2-devel, libsoup-devel, libxml2-devel
+Requires:	gtk2 > 2.14, glib > 2.16, libsoup > 2.24, libxml2
 
 %description
 Frogr is a small application for the GNOME desktop that allows users

@@ -30,6 +30,8 @@
   * Added mnemonic to the 'Edit details' and the 'Settings' dialog.
   * Renamed 'Albums' as 'Sets'.
   * Remove pictures from UI as soon as they get uploaded.
+  * Removed dependency from libgnome when GTK+ < 2.14, and raised
+    minimum version required fo GTK+ from 2.12 up to 2.14.
   * Added new translations: British English (en_GB), French (fr),
     Swedish (sv), Galician (gl), German (de) and Slovenian (sl).
     See TRANSLATORS file for more details.

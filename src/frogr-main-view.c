@@ -488,21 +488,13 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   if (frogr_controller_get_state (priv->controller) == FROGR_STATE_BUSY)
     return;
 
-#if GTK_CHECK_VERSION (2,14,0)
   target = gtk_selection_data_get_target (selection_data);
-#else
-  target = selection_data->target;
-#endif
 
   if (!gtk_targets_include_uri (&target, 1))
     return;
 
   /* Get GSList with the list of files */
-#if GTK_CHECK_VERSION (2,14,0)
   files_string = gtk_selection_data_get_data (selection_data);
-#else
-  files_string = selection_data->data;
-#endif
 
   fileuris_array = g_strsplit ((const gchar*)files_string, "\r\n", -1);
   for (i = 0;  fileuris_array[i]; i++)

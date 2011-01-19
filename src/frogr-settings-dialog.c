@@ -788,11 +788,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
-#if GTK_CHECK_VERSION (2,14,0)
   vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
-#else
-  vbox = GTK_DIALOG (self)->vbox;
-#endif
 
   notebook = GTK_NOTEBOOK (gtk_notebook_new ());
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (notebook), TRUE, TRUE, 6);

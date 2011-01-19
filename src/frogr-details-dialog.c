@@ -135,11 +135,7 @@ _create_widgets (FrogrDetailsDialog *self)
 
   priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
 
-#if GTK_CHECK_VERSION (2,14,0)
   main_vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
-#else
-  main_vbox = GTK_DIALOG (self)->vbox;
-#endif
 
   hbox = gtk_hbox_new (FALSE, 0);
   vbox = gtk_vbox_new (FALSE, 6);

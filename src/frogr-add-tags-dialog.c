@@ -333,11 +333,7 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
   /* Add Entry */
-#if GTK_CHECK_VERSION (2,14,0)
   vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
-#else
-  vbox = GTK_DIALOG (self)->vbox;
-#endif
 
   label = gtk_label_new (_("Enter a spaces separated list of tags:"));
   align = gtk_alignment_new (0, 0, 0, 1);

@@ -31,7 +31,7 @@ AC_ARG_WITH([gtk],
 AC_MSG_RESULT([$with_gtk])
 
 case "$with_gtk" in
-     2.0) GTK_MIN_VERSION=2.12
+     2.0) GTK_MIN_VERSION=2.14
           GTK_API_VERSION=2.0
           ;;
      3.0) GTK_MIN_VERSION=2.91
@@ -63,22 +63,6 @@ LIBXML2_MIN_VERSION=2.6.8
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0 >= $LIBXML2_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBXML2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $LIBXML2_LIBS"
-
-echo -n "checking for Gtk+ >= 2.14... "
-if $PKG_CONFIG --atleast-version=2.14 gtk+-2.0; then
-   have_gtk_2_14="yes"
-else
-   have_gtk_2_14="no"
-fi
-echo $have_gtk_2_14
-
-# if Gtk+ is not >= 2.14, then check for libgnome to
-# use gnome_url_show() instead of gtk_show_uri()
-if test "$have_gtk_2_14" = "no"; then
-   PKG_CHECK_MODULES(Libgnome, libgnome-2.0 >= 2.20)
-   FROGR_CFLAGS="$FROGR_CFLAGS $Libgnome_CFLAGS"
-   FROGR_LIBS="$FROGR_LIBS $Libgnome_LIBS"
-fi
 
 AC_SUBST(appdatadir, "\${datadir}/frogr")
 AC_SUBST(iconsdir, "\${datadir}/icons")

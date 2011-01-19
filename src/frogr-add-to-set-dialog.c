@@ -525,11 +525,7 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
-#if GTK_CHECK_VERSION (2,14,0)
   vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
-#else
-  vbox = GTK_DIALOG (self)->vbox;
-#endif
 
   widget = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (widget),
