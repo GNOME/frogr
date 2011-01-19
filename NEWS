@@ -33,8 +33,8 @@
   * Removed dependency from libgnome when GTK+ < 2.14, and raised
     minimum version required fo GTK+ from 2.12 up to 2.14.
   * Added new translations: British English (en_GB), French (fr),
-    Swedish (sv), Galician (gl), German (de) and Slovenian (sl).
-    See TRANSLATORS file for more details.
+    Swedish (sv), Galician (gl), German (de), Slovenian (sl) and
+    Italian (it).  See TRANSLATORS file for more details.
 
 0.3 (22 Dec 2010)
 
