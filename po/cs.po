@@ -1,7 +1,6 @@
 # Czech translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-#
 # Marek Černocký <marek@manet.cz>, 2011.
 #
 msgid ""
@@ -9,8 +8,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&component=general\n"
-"POT-Creation-Date: 2011-01-20 07:13+0000\n"
-"PO-Revision-Date: 2011-01-20 08:15+0100\n"
+"POT-Creation-Date: 2011-01-20 17:06+0000\n"
+"PO-Revision-Date: 2011-01-20 20:30+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -150,9 +149,6 @@ msgstr ""
 "Fotka je již v maximálním možném počtu skupin"
 
 #: ../src/frogr-controller.c:291
-#| msgid ""
-#| "Error:\n"
-#| "Group limit alrady reached"
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -219,39 +215,41 @@ msgstr ""
 msgid "An error happened while uploading a picture: %s."
 msgstr "Vyskytla se chyba při nahrávání obrázku: %s."
 
-#: ../src/frogr-controller.c:852
+#: ../src/frogr-controller.c:867
 msgid "Creating new photoset…"
 msgstr "Vytváří se nová sada fotek…"
 
-#: ../src/frogr-controller.c:877
-msgid "Adding picture to photoset…"
-msgstr "Přidává se fotka do sady fotek…"
+#: ../src/frogr-controller.c:892
+#| msgid "Adding picture to photoset…"
+msgid "Adding picture to photosets…"
+msgstr "Přidává se obrázek do sady fotek…"
 
-#: ../src/frogr-controller.c:900
-msgid "Adding picture to group…"
+#: ../src/frogr-controller.c:915
+#| msgid "Adding picture to group…"
+msgid "Adding picture to groups…"
 msgstr "Přidává se obrázek do skupiny…"
 
-#: ../src/frogr-controller.c:1418 ../src/frogr-controller.c:1451
+#: ../src/frogr-controller.c:1384 ../src/frogr-controller.c:1417
 msgid "Retrieving list of tags…"
 msgstr "Získává se seznam štítků…"
 
-#: ../src/frogr-controller.c:1484 ../src/frogr-controller.c:1516
+#: ../src/frogr-controller.c:1450 ../src/frogr-controller.c:1482
 msgid "Retrieving list of sets…"
 msgstr "Získává se seznam sad…"
 
-#: ../src/frogr-controller.c:1529
+#: ../src/frogr-controller.c:1495
 msgid "No sets found"
 msgstr "Nenalezeny žádné sady"
 
-#: ../src/frogr-controller.c:1551
+#: ../src/frogr-controller.c:1517
 msgid "Retrieving list of groups…"
 msgstr "Získává se seznam skupin…"
 
-#: ../src/frogr-controller.c:1564
+#: ../src/frogr-controller.c:1530
 msgid "No groups found"
 msgstr "Nenalezena žádná skupina"
 
-#: ../src/frogr-controller.c:2154
+#: ../src/frogr-controller.c:2125
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -282,23 +280,23 @@ msgstr "Vytvoření nové sady"
 msgid "Visibility"
 msgstr "Viditelnost"
 
-#: ../src/frogr-details-dialog.c:167 ../src/frogr-settings-dialog.c:143
+#: ../src/frogr-details-dialog.c:167 ../src/frogr-settings-dialog.c:141
 msgid "_Private"
 msgstr "_Soukromé"
 
-#: ../src/frogr-details-dialog.c:171 ../src/frogr-settings-dialog.c:147
+#: ../src/frogr-details-dialog.c:171 ../src/frogr-settings-dialog.c:145
 msgid "P_ublic"
 msgstr "_Veřejné"
 
-#: ../src/frogr-details-dialog.c:179 ../src/frogr-settings-dialog.c:155
+#: ../src/frogr-details-dialog.c:179 ../src/frogr-settings-dialog.c:153
 msgid "Visible to _Family"
 msgstr "Viditelné pro ro_dinu"
 
-#: ../src/frogr-details-dialog.c:183 ../src/frogr-settings-dialog.c:159
+#: ../src/frogr-details-dialog.c:183 ../src/frogr-settings-dialog.c:157
 msgid "Visible to F_riends"
 msgstr "Viditelné pro přáte_le"
 
-#: ../src/frogr-details-dialog.c:196 ../src/frogr-settings-dialog.c:167
+#: ../src/frogr-details-dialog.c:196 ../src/frogr-settings-dialog.c:165
 msgid "_Show up in Global Search Results"
 msgstr "Zobrazovat v _globálních výsledcích hledání"
 
@@ -306,15 +304,15 @@ msgstr "Zobrazovat v _globálních výsledcích hledání"
 msgid "Content type"
 msgstr "Typ obsahu"
 
-#: ../src/frogr-details-dialog.c:218 ../src/frogr-settings-dialog.c:204
+#: ../src/frogr-details-dialog.c:218 ../src/frogr-settings-dialog.c:202
 msgid "P_hoto"
 msgstr "_Fotka"
 
-#: ../src/frogr-details-dialog.c:222 ../src/frogr-settings-dialog.c:208
+#: ../src/frogr-details-dialog.c:222 ../src/frogr-settings-dialog.c:206
 msgid "Scree_nshot"
 msgstr "S_nímek obrazovky"
 
-#: ../src/frogr-details-dialog.c:226 ../src/frogr-settings-dialog.c:212
+#: ../src/frogr-details-dialog.c:226 ../src/frogr-settings-dialog.c:210
 msgid "Oth_er"
 msgstr "_Jiný"
 
@@ -322,15 +320,15 @@ msgstr "_Jiný"
 msgid "Safety level"
 msgstr "Úroveň zabezpečení"
 
-#: ../src/frogr-details-dialog.c:249 ../src/frogr-settings-dialog.c:245
+#: ../src/frogr-details-dialog.c:249 ../src/frogr-settings-dialog.c:243
 msgid "S_afe"
 msgstr "_Bezpečné"
 
-#: ../src/frogr-details-dialog.c:253 ../src/frogr-settings-dialog.c:249
+#: ../src/frogr-details-dialog.c:253 ../src/frogr-settings-dialog.c:247
 msgid "_Moderate"
 msgstr "S_třední"
 
-#: ../src/frogr-details-dialog.c:257 ../src/frogr-settings-dialog.c:253
+#: ../src/frogr-details-dialog.c:257 ../src/frogr-settings-dialog.c:251
 msgid "Restr_icted"
 msgstr "O_mezeno"
 
@@ -463,59 +461,51 @@ msgstr "Načítá se obrázek %d / %d"
 msgid "Uploading '%s'…"
 msgstr "Nahrává se „%s“…"
 
-#: ../src/frogr-settings-dialog.c:132
+#: ../src/frogr-settings-dialog.c:130
 msgid "Default Visibility"
 msgstr "Výchozí viditelnost"
 
-#: ../src/frogr-settings-dialog.c:194
+#: ../src/frogr-settings-dialog.c:192
 msgid "Default Content Type"
 msgstr "Výchozí typ obsahu"
 
-#: ../src/frogr-settings-dialog.c:235
+#: ../src/frogr-settings-dialog.c:233
 msgid "Default Safety Level"
 msgstr "Výchozí úroveň bezpečnosti"
 
-#: ../src/frogr-settings-dialog.c:276
-msgid "Default Actions"
-msgstr "Výchozí akce"
-
-#: ../src/frogr-settings-dialog.c:284
-msgid "Open _Browser after Uploading Pictures"
-msgstr "Po nahrání obrázků otevřít _prohlížeč"
-
-#: ../src/frogr-settings-dialog.c:293
+#: ../src/frogr-settings-dialog.c:270
 msgid "_General"
 msgstr "Obe_cné"
 
 #. Proxy settings
-#: ../src/frogr-settings-dialog.c:312
+#: ../src/frogr-settings-dialog.c:289
 msgid "_Use HTTP Proxy"
 msgstr "Po_užít proxy HTTP"
 
-#: ../src/frogr-settings-dialog.c:323
+#: ../src/frogr-settings-dialog.c:300
 msgid "_Host:"
 msgstr "Počít_ač:"
 
 #. Proxy port
-#: ../src/frogr-settings-dialog.c:341
+#: ../src/frogr-settings-dialog.c:318
 msgid "_Port:"
 msgstr "_Port:"
 
 #. Proxy username
-#: ../src/frogr-settings-dialog.c:359
+#: ../src/frogr-settings-dialog.c:336
 msgid "U_sername:"
 msgstr "Uživatel_ské jméno:"
 
 #. Proxy password
-#: ../src/frogr-settings-dialog.c:377
+#: ../src/frogr-settings-dialog.c:354
 msgid "Pass_word:"
 msgstr "_Heslo:"
 
-#: ../src/frogr-settings-dialog.c:404
+#: ../src/frogr-settings-dialog.c:381
 msgid "Connec_tion"
 msgstr "Připoj_ení"
 
-#: ../src/frogr-settings-dialog.c:828
+#: ../src/frogr-settings-dialog.c:793
 msgid "Preferences"
 msgstr "Předvolby"
 
@@ -534,6 +524,12 @@ msgstr "Nahrát"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "frogr"
 msgstr "frogr"
+
+#~ msgid "Default Actions"
+#~ msgstr "Výchozí akce"
+
+#~ msgid "Open _Browser after Uploading Pictures"
+#~ msgstr "Po nahrání obrázků otevřít _prohlížeč"
 
 #~ msgid "Authorization successfully completed!"
 #~ msgstr "Autorizace úspěšně dokončena!"
