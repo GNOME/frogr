@@ -34,8 +34,8 @@
     minimum version required fo GTK+ from 2.12 up to 2.14.
   * Better reporting progress to the users for time consuming operations.
   * Added new translations: British English (en_GB), French (fr),
-    Swedish (sv), Galician (gl), German (de), Slovenian (sl) and
-    Italian (it).  See TRANSLATORS file for more details.
+    Swedish (sv), Galician (gl), German (de), Slovenian (sl), Italian (it)
+    and Czech (cs). See TRANSLATORS file for more details.
 
 0.3 (22 Dec 2010)
 
