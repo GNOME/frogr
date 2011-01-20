@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&component=general\n"
-"POT-Creation-Date: 2011-01-19 18:34+0000\n"
-"PO-Revision-Date: 2011-01-20 07:02+0100\n"
+"POT-Creation-Date: 2011-01-20 07:13+0000\n"
+"PO-Revision-Date: 2011-01-20 08:15+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -150,7 +150,6 @@ msgstr ""
 "Fotka je již v maximálním možném počtu skupin"
 
 #: ../src/frogr-controller.c:291
-#, fuzzy
 #| msgid ""
 #| "Error:\n"
 #| "Group limit alrady reached"
