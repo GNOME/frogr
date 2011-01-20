@@ -29,6 +29,4 @@ libflicksoup_a_SOURCES =	\
 	fsp-parser.c		\
 	fsp-parser.h		\
 	fsp-session.c		\
-	fsp-session.h		\
-	fsp-util.c		\
-	fsp-util.h
+	fsp-session.h

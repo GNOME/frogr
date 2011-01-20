@@ -4,6 +4,9 @@
  * Copyright (C) 2010, 2011 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
+ * Some parts of this file were based on source code from the libsoup
+ * library libsoup, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 3 of the GNU Lesser General
  * Public License as published by the Free Software Foundation.
@@ -26,9 +29,9 @@
 #include "fsp-error.h"
 #include "fsp-parser.h"
 #include "fsp-session.h"
-#include "fsp-util.h"
 
 #include <libsoup/soup.h>
+#include <stdarg.h>
 #include <string.h>
 
 #define FLICKR_API_BASE_URL   "http://api.flickr.com/services/rest"
@@ -53,12 +56,38 @@ struct _FspSessionPrivate
   SoupSession *soup_session;
 };
 
+/* Signals */
+enum {
+  DATA_FRACTION_SENT,
+  N_SIGNALS
+};
+
+static guint signals[N_SIGNALS] = { 0 };
 
 typedef struct
 {
-  AsyncRequestData *gasync_data;
+  GObject             *object;
+  SoupSession         *soup_session;
+  SoupMessage         *soup_message;
+  GCancellable        *cancellable;
+  gulong               cancellable_id;
+  GAsyncReadyCallback  callback;
+  gpointer             source_tag;
+  gpointer             data;
+  gdouble              progress;
+} AsyncRequestData;
+
+typedef struct
+{
+  AsyncRequestData *ar_data;
   GHashTable *extra_params;
 } UploadPhotoData;
+
+typedef struct
+{
+  GCancellable        *cancellable;
+  gulong               cancellable_id;
+} GCancellableData;
 
 
 /* Properties */
@@ -110,6 +139,74 @@ static void
 _load_file_contents_cb                  (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      data);
+
+static void
+_wrote_body_data_cb                     (SoupMessage *msg,
+                                         SoupBuffer  *buffer,
+                                         gpointer     data);
+
+static GHashTable *
+_get_params_table_from_valist           (const gchar *first_param,
+                                         va_list      args);
+
+/* This function is based in append_form_encoded() from libsoup's
+   SoupForm, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.) */
+static gchar *
+_encode_query_value (const char *value);
+
+static gchar *
+_get_signed_query_with_params           (const gchar      *api_sig,
+                                         GHashTable       *params_table);
+static gboolean
+_disconnect_cancellable_on_idle (GCancellableData *clos);
+
+static gboolean
+_check_errors_on_soup_response           (SoupMessage  *msg,
+                                          GError      **error);
+
+static gboolean
+_check_async_errors_on_finish           (GObject       *object,
+                                         GAsyncResult  *res,
+                                         gpointer       source_tag,
+                                         GError       **error);
+
+gchar *
+_get_api_signature_from_hash_table      (const gchar *shared_secret,
+                                         GHashTable  *params_table);
+gchar *
+_get_signed_query                       (const gchar *shared_secret,
+                                         const gchar *first_param,
+                                         ... );
+
+void
+_perform_async_request                  (SoupSession         *soup_session,
+                                         const gchar         *url,
+                                         SoupSessionCallback  request_cb,
+                                         GObject             *source_object,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             source_tag,
+                                         gpointer             data);
+
+void
+_soup_session_cancelled_cb              (GCancellable *cancellable,
+                                         gpointer      data);
+
+void
+_handle_soup_response                   (SoupMessage   *msg,
+                                         FspParserFunc  parserFunc,
+                                         gpointer       data);
+
+void
+_build_async_result_and_complete        (AsyncRequestData *clos,
+                                         gpointer    result,
+                                         GError     *error);
+
+gpointer
+_finish_async_request                   (GObject       *object,
+                                         GAsyncResult  *res,
+                                         gpointer       source_tag,
+                                         GError       **error);
 
 static void
 _photo_upload_soup_session_cb           (SoupSession *session,
@@ -262,6 +359,15 @@ fsp_session_class_init                  (FspSessionClass *klass)
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_TOKEN, pspec);
 
+  /* Signals */
+  signals[DATA_FRACTION_SENT] =
+    g_signal_new ("data-fraction-sent",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__DOUBLE,
+                  G_TYPE_NONE, 1, G_TYPE_DOUBLE);
+
   /* Add private */
   g_type_class_add_private (obj_class, sizeof (FspSessionPrivate));
 }
@@ -295,9 +401,9 @@ _get_frob_soup_session_cb               (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_get_frob,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_frob,
+                         data);
 }
 
 static void
@@ -309,9 +415,9 @@ _get_auth_token_soup_session_cb         (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_get_auth_token,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_auth_token,
+                         data);
 }
 
 static void
@@ -323,9 +429,9 @@ _get_upload_status_soup_session_cb      (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_get_upload_status,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_upload_status,
+                         data);
 }
 
 static GHashTable *
@@ -451,7 +557,7 @@ _load_file_contents_cb                  (GObject      *object,
   g_return_if_fail (data != NULL);
 
   UploadPhotoData *up_clos = NULL;
-  AsyncRequestData *ga_clos = NULL;
+  AsyncRequestData *ard_clos = NULL;
   GHashTable *extra_params = NULL;
   GFile *file = NULL;
   GError *error = NULL;
@@ -460,7 +566,7 @@ _load_file_contents_cb                  (GObject      *object,
 
   /* Get data from UploadPhotoData closure, and free it */
   up_clos = (UploadPhotoData *) data;
-  ga_clos = up_clos->gasync_data;
+  ard_clos = up_clos->ar_data;
   extra_params = up_clos->extra_params;
   g_slice_free (UploadPhotoData, up_clos);
 
@@ -471,25 +577,30 @@ _load_file_contents_cb                  (GObject      *object,
       SoupSession *soup_session = NULL;
       SoupMessage *msg = NULL;
 
-      self = FSP_SESSION (ga_clos->object);
+      self = FSP_SESSION (ard_clos->object);
       msg = _get_soup_message_for_upload (file, contents, length, extra_params);
-      ga_clos->soup_message = msg;
+      ard_clos->soup_message = msg;
 
       soup_session = _get_soup_session (self);
 
       /* Connect to the "cancelled" signal thread safely */
-      if (ga_clos->cancellable)
+      if (ard_clos->cancellable)
         {
-          ga_clos->cancellable_id =
-            g_cancellable_connect (ga_clos->cancellable,
-                                   G_CALLBACK (soup_session_cancelled_cb),
-                                   ga_clos,
+          ard_clos->cancellable_id =
+            g_cancellable_connect (ard_clos->cancellable,
+                                   G_CALLBACK (_soup_session_cancelled_cb),
+                                   ard_clos,
                                    NULL);
         }
 
+      /* Connect to this to report progress */
+      g_signal_connect (G_OBJECT (msg), "wrote-body-data",
+                        G_CALLBACK (_wrote_body_data_cb),
+                        ard_clos);
+
       /* Perform the async request */
       soup_session_queue_message (soup_session, msg,
-                                  _photo_upload_soup_session_cb, ga_clos);
+                                  _photo_upload_soup_session_cb, ard_clos);
 
       g_debug ("\nRequested URL:\n%s\n", FLICKR_API_UPLOAD_URL);
 
@@ -504,8 +615,502 @@ _load_file_contents_cb                  (GObject      *object,
       if (error)
         g_error_free (error);
       error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file for upload");
-      build_async_result_and_complete (ga_clos, NULL, error);
+      _build_async_result_and_complete (ard_clos, NULL, error);
     }
+}
+
+static void
+_wrote_body_data_cb                     (SoupMessage *msg,
+                                         SoupBuffer  *buffer,
+                                         gpointer     data)
+{
+  FspSession *self = NULL;
+  AsyncRequestData *clos = NULL;
+
+  goffset msg_len = 0;
+  gsize buffer_len = 0;
+  gdouble fraction = 0.0;
+
+  /* Sanity check */
+  if (!buffer || !msg || !msg->request_body)
+    return;
+
+  msg_len = msg->request_body->length;
+  buffer_len = buffer->length;
+
+  clos = (AsyncRequestData *) data;
+  self = FSP_SESSION (clos->object);
+
+  fraction = (msg_len > 0) ? (double)buffer_len / msg_len : 0.0;
+  clos->progress += fraction;
+
+  g_signal_emit (self, signals[DATA_FRACTION_SENT], 0, clos->progress);
+}
+
+static GHashTable *
+_get_params_table_from_valist           (const gchar *first_param,
+                                         va_list      args)
+{
+  g_return_val_if_fail (first_param != NULL, NULL);
+  g_return_val_if_fail (args != NULL, NULL);
+
+  GHashTable *table = NULL;
+  gchar *p, *v;
+
+  table = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                 (GDestroyNotify)g_free,
+                                 (GDestroyNotify)g_free);
+
+  /* Fill the hash table */
+  for (p = (gchar *) first_param; p; p = va_arg (args, gchar*))
+    {
+      v = va_arg (args, gchar*);
+
+      /* Ignore parameter with no value */
+      if (v != NULL)
+        g_hash_table_insert (table, g_strdup (p), g_strdup (v));
+      else
+        g_debug ("Missing value for %s. Ignoring parameter.", p);
+    }
+
+  return table;
+}
+
+/* This function is based in append_form_encoded() from libsoup's
+   SoupForm, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.) */
+static gchar *
+_encode_query_value (const char *value)
+{
+  GString *result = NULL;
+  const unsigned char *str = NULL;
+
+  result = g_string_new ("");
+  str = (const unsigned char *) value;
+
+  while (*str) {
+    if (*str == ' ') {
+      g_string_append_c (result, '+');
+      str++;
+    } else if (!g_ascii_isalnum (*str))
+      g_string_append_printf (result, "%%%02X", (int)*str++);
+    else
+      g_string_append_c (result, *str++);
+  }
+
+  return g_string_free (result, FALSE);
+}
+
+static gchar *
+_get_signed_query_with_params           (const gchar      *api_sig,
+                                         GHashTable       *params_table)
+{
+  g_return_val_if_fail (params_table != NULL, NULL);
+  g_return_val_if_fail (api_sig != NULL, NULL);
+
+  GList *keys = NULL;
+  gchar *retval = NULL;
+
+  /* Get ownership of the table */
+  g_hash_table_ref (params_table);
+
+  /* Get a list of keys */
+  keys = g_hash_table_get_keys (params_table);
+  if (keys != NULL)
+    {
+      gchar **url_params_array = NULL;
+      GList *k = NULL;
+      gint i = 0;
+
+      /* Build gchar** arrays for building the final
+         string to be used as the list of GET params */
+      url_params_array = g_new0 (gchar*, g_list_length (keys) + 2);
+
+      /* Fill arrays */
+      for (k = keys; k; k = g_list_next (k))
+        {
+          gchar *key = (gchar*) k->data;
+          gchar *value = g_hash_table_lookup (params_table, key);
+          gchar *actual_value = NULL;
+
+          /* Do not encode basic pairs key-value */
+          if (g_strcmp0 (key, "api_key") && g_strcmp0 (key, "auth_token")
+              && g_strcmp0 (key, "method") && g_strcmp0 (key, "frob"))
+            actual_value = _encode_query_value (value);
+          else
+            actual_value = g_strdup (value);
+
+          url_params_array[i++] = g_strdup_printf ("%s=%s", key, actual_value);
+          g_free (actual_value);
+        }
+
+      /* Add those to the params array (space previously reserved) */
+      url_params_array[i] = g_strdup_printf ("api_sig=%s", api_sig);
+
+      /* Build the signed query */
+      retval = g_strjoinv ("&", url_params_array);
+
+      /* Free */
+      g_strfreev (url_params_array);
+    }
+  g_list_free (keys);
+  g_hash_table_unref (params_table);
+
+  return retval;
+}
+
+static gboolean
+_disconnect_cancellable_on_idle (GCancellableData *clos)
+{
+  GCancellable *cancellable = NULL;
+  gulong cancellable_id = 0;
+
+  /* Get data from closure, and free it */
+  cancellable = clos->cancellable;
+  cancellable_id = clos->cancellable_id;
+  g_slice_free (GCancellableData, clos);
+
+  /* Disconnect from the "cancelled" signal if needed */
+  if (cancellable)
+    {
+      g_cancellable_disconnect (cancellable, cancellable_id);
+      g_object_unref (cancellable);
+    }
+
+  return FALSE;
+}
+
+static gboolean
+_check_errors_on_soup_response           (SoupMessage  *msg,
+                                          GError      **error)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+
+  GError *err = NULL;
+
+  /* Check non-succesful SoupMessage's only */
+  if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
+    {
+      if (msg->status_code == SOUP_STATUS_CANCELLED)
+        err = g_error_new (FSP_ERROR, FSP_ERROR_CANCELLED,
+                           "Cancelled by user");
+      else if (SOUP_STATUS_IS_CLIENT_ERROR (msg->status_code))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_CLIENT_ERROR,
+                           "Bad request");
+      else if (SOUP_STATUS_IS_SERVER_ERROR (msg->status_code))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_SERVER_ERROR,
+                           "Server error");
+      else
+        err = g_error_new (FSP_ERROR, FSP_ERROR_NETWORK_ERROR,
+                           "Network error");
+    }
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  /* Return result */
+  return (err != NULL);
+}
+
+static gboolean
+_check_async_errors_on_finish           (GObject       *object,
+                                         GAsyncResult  *res,
+                                         gpointer       source_tag,
+                                         GError       **error)
+{
+  g_return_val_if_fail (G_IS_OBJECT (object), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  gboolean errors_found = TRUE;
+
+  if (g_simple_async_result_is_valid (res, object, source_tag))
+    {
+      GSimpleAsyncResult *simple = NULL;
+
+      /* Check error */
+      simple = G_SIMPLE_ASYNC_RESULT (res);
+      if (!g_simple_async_result_propagate_error (simple, error))
+	errors_found = FALSE;
+    }
+  else
+    g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER, "Internal error");
+
+  return errors_found;
+}
+
+gchar *
+_get_api_signature_from_hash_table      (const gchar *shared_secret,
+                                         GHashTable  *params_table)
+{
+  g_return_val_if_fail (shared_secret != NULL, NULL);
+  g_return_val_if_fail (params_table != NULL, NULL);
+
+  GList *keys = NULL;
+  gchar *api_sig = NULL;
+
+  /* Get ownership of the table */
+  g_hash_table_ref (params_table);
+
+  /* Get a list of keys */
+  keys = g_hash_table_get_keys (params_table);
+  if (keys != NULL)
+    {
+      gchar **sign_str_array = NULL;
+      gchar *sign_str = NULL;
+      GList *k = NULL;
+      gint i = 0;
+
+      /* Sort the list */
+      keys = g_list_sort (keys, (GCompareFunc) g_strcmp0);
+
+      /* Build gchar** arrays for building the signature string */
+      sign_str_array = g_new0 (gchar*, (2 * g_list_length (keys)) + 2);
+
+      /* Fill arrays */
+      sign_str_array[i++] = g_strdup (shared_secret);
+      for (k = keys; k; k = g_list_next (k))
+        {
+          const gchar *key = (gchar*) k->data;
+          const gchar *value = g_hash_table_lookup (params_table, key);
+
+          sign_str_array[i++] = g_strdup (key);
+          sign_str_array[i++] = g_strdup (value);
+        }
+      sign_str_array[i] = NULL;
+
+      /* Get the signature string and calculate the api_sig value */
+      sign_str = g_strjoinv (NULL, sign_str_array);
+      api_sig = g_compute_checksum_for_string (G_CHECKSUM_MD5, sign_str, -1);
+
+      /* Free */
+      g_free (sign_str);
+      g_strfreev (sign_str_array);
+    }
+
+  g_list_free (keys);
+  g_hash_table_unref (params_table);
+
+  return api_sig;
+}
+
+gchar *
+_get_signed_query                       (const gchar *shared_secret,
+                                         const gchar *first_param,
+                                         ... )
+{
+  g_return_val_if_fail (shared_secret != NULL, NULL);
+  g_return_val_if_fail (first_param != NULL, NULL);
+
+  va_list args;
+  GHashTable *table = NULL;
+  gchar *api_sig = NULL;
+  gchar *retval = NULL;
+
+  va_start (args, first_param);
+
+  /* Get the hash table for the params and the API signature from it */
+  table = _get_params_table_from_valist (first_param, args);
+  api_sig = _get_api_signature_from_hash_table (shared_secret, table);
+
+  /* Get the signed URL with the needed params */
+  if ((table != NULL) && (api_sig != NULL))
+    retval = _get_signed_query_with_params (api_sig, table);
+
+  g_hash_table_unref (table);
+  g_free (api_sig);
+
+  va_end (args);
+
+  return retval;
+}
+
+void
+_perform_async_request                  (SoupSession         *soup_session,
+                                         const gchar         *url,
+                                         SoupSessionCallback  request_cb,
+                                         GObject             *source_object,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             source_tag,
+                                         gpointer             data)
+{
+  g_return_if_fail (SOUP_IS_SESSION (soup_session));
+  g_return_if_fail (url != NULL);
+  g_return_if_fail (request_cb != NULL);
+  g_return_if_fail (callback != NULL);
+
+  AsyncRequestData *clos = NULL;
+  SoupMessage *msg = NULL;
+
+  /* Build and queue the message */
+  msg = soup_message_new (SOUP_METHOD_GET, url);
+
+  /* Save important data for the callback */
+  clos = g_slice_new0 (AsyncRequestData);
+  clos->object = source_object;
+  clos->soup_session = soup_session;
+  clos->soup_message = msg;
+  clos->cancellable = cancellable;
+  clos->callback = callback;
+  clos->source_tag = source_tag;
+  clos->data = data;
+  clos->progress = 0.0;
+
+  /* Connect to the "cancelled" signal thread safely */
+  if (clos->cancellable)
+    {
+      clos->cancellable_id =
+        g_cancellable_connect (clos->cancellable,
+                               G_CALLBACK (_soup_session_cancelled_cb),
+                               clos,
+                               NULL);
+    }
+
+  /* Connect to this to report progress */
+  g_signal_connect (G_OBJECT (msg), "wrote-body-data",
+                    G_CALLBACK (_wrote_body_data_cb),
+                    clos);
+
+  /* Queue the message */
+  soup_session_queue_message (soup_session, msg, request_cb, clos);
+
+  g_debug ("\nRequested URL:\n%s\n", url);
+}
+
+void
+_soup_session_cancelled_cb              (GCancellable *cancellable,
+                                         gpointer      data)
+{
+  AsyncRequestData *clos = NULL;
+  GObject *object = NULL;
+  SoupSession *session = NULL;
+  SoupMessage *message = NULL;
+
+  clos = (AsyncRequestData *) data;
+
+  /* Get data from closure, and free it */
+  object = clos->object;
+  session = clos->soup_session;
+  message = clos->soup_message;
+
+  soup_session_cancel_message (session, message, SOUP_STATUS_CANCELLED);
+
+  g_debug ("Remote request cancelled!");
+}
+
+void
+_handle_soup_response                   (SoupMessage   *msg,
+                                         FspParserFunc  parserFunc,
+                                         gpointer       data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (parserFunc != NULL);
+  g_assert (data != NULL);
+
+  FspParser *parser = NULL;
+  AsyncRequestData *clos = NULL;
+  gpointer result = NULL;
+  GError *err = NULL;
+  gchar *response_str = NULL;
+  gulong response_len = 0;
+
+  parser = fsp_parser_get_instance ();
+  clos = (AsyncRequestData *) data;
+
+  /* Stop reporting progress */
+  g_signal_handlers_disconnect_by_func (msg, _wrote_body_data_cb, clos);
+
+  response_str = g_strndup (msg->response_body->data, msg->response_body->length);
+  response_len = (ulong) msg->response_body->length;
+  if (response_str)
+    g_debug ("\nResponse got:\n%s\n", response_str);
+
+  /* Get value from response */
+  if (!_check_errors_on_soup_response (msg, &err))
+    result = parserFunc (parser, response_str, response_len, &err);
+
+
+  /* Build response and call async callback */
+  _build_async_result_and_complete (clos, result, err);
+
+  g_free (response_str);
+}
+
+void
+_build_async_result_and_complete        (AsyncRequestData *clos,
+                                         gpointer    result,
+                                         GError     *error)
+{
+  g_assert (clos != NULL);
+
+  GSimpleAsyncResult *res = NULL;
+  GObject *object = NULL;
+  GCancellableData *cancellable_data = NULL;
+  GCancellable *cancellable = NULL;
+  gulong cancellable_id = 0;
+  GAsyncReadyCallback  callback = NULL;
+  gpointer source_tag;
+  gpointer data;
+
+  /* Get data from closure, and free it */
+  object = clos->object;
+  cancellable = clos->cancellable;
+  cancellable_id = clos->cancellable_id;
+  callback = clos->callback;
+  source_tag = clos->source_tag;
+  data = clos->data;
+  g_slice_free (AsyncRequestData, clos);
+
+  /* Make sure the "cancelled" signal gets disconnected in another
+     iteration of the main loop to avoid a dead-lock with itself */
+  cancellable_data = g_slice_new0 (GCancellableData);
+  cancellable_data->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
+  cancellable_data->cancellable_id = cancellable_id;
+
+  g_idle_add ((GSourceFunc) _disconnect_cancellable_on_idle, cancellable_data);
+
+  /* Build response and call async callback */
+  res = g_simple_async_result_new (object, callback,
+                                   data, source_tag);
+
+  /* Return the given value or an error otherwise */
+  if (error != NULL)
+    g_simple_async_result_set_from_error (res, error);
+  else
+    g_simple_async_result_set_op_res_gpointer (res, result, NULL);
+
+  /* Execute the callback */
+  g_simple_async_result_complete_in_idle (res);
+}
+
+gpointer
+_finish_async_request                   (GObject       *object,
+                                         GAsyncResult  *res,
+                                         gpointer       source_tag,
+                                         GError       **error)
+{
+  g_return_val_if_fail (G_IS_OBJECT (object), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+
+  gpointer retval = NULL;
+
+  /* Check for errors */
+  if (!_check_async_errors_on_finish (object, res, source_tag, error))
+    {
+      GSimpleAsyncResult *simple = NULL;
+      gpointer result = NULL;
+
+      /* Get result */
+      simple = G_SIMPLE_ASYNC_RESULT (res);
+      result = g_simple_async_result_get_op_res_gpointer (simple);
+      if (result != NULL)
+        retval = result;
+      else
+        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
+                             "Internal error");
+    }
+
+  return retval;
 }
 
 static void
@@ -516,10 +1121,15 @@ _photo_upload_soup_session_cb           (SoupSession *session,
   g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
+  AsyncRequestData *ard_clos = NULL;
+
+  ard_clos = (AsyncRequestData *) data;
+  g_signal_handlers_disconnect_by_func (msg, _wrote_body_data_cb, ard_clos->object);
+
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_get_upload_result,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_upload_result,
+                         data);
 }
 
 static void
@@ -531,9 +1141,9 @@ _photo_get_info_soup_session_cb         (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_get_photo_info,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_photo_info,
+                         data);
 }
 
 static void
@@ -545,9 +1155,9 @@ _get_photosets_soup_session_cb          (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_get_photosets_list,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_photosets_list,
+                         data);
 }
 
 static void
@@ -559,9 +1169,9 @@ _add_to_photoset_soup_session_cb        (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_added_to_photoset,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_added_to_photoset,
+                         data);
 }
 
 static void
@@ -573,9 +1183,9 @@ _create_photoset_soup_session_cb        (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_photoset_created,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_photoset_created,
+                         data);
 }
 
 static void
@@ -587,9 +1197,9 @@ _get_groups_soup_session_cb             (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_get_groups_list,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_groups_list,
+                         data);
 }
 
 static void
@@ -601,9 +1211,9 @@ _add_to_group_soup_session_cb           (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_added_to_group,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_added_to_group,
+                         data);
 }
 
 static void
@@ -615,9 +1225,9 @@ _get_tags_list_soup_session_cb           (SoupSession *session,
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  handle_soup_response (msg,
-                        (FspParserFunc) fsp_parser_get_tags_list,
-                        data);
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_tags_list,
+                         data);
 }
 
 
@@ -734,17 +1344,17 @@ fsp_session_get_auth_url_async          (FspSession          *self,
   gchar *signed_query = NULL;
 
   /* Build the signed url */
-  signed_query = get_signed_query (priv->secret,
-                                   "method", "flickr.auth.getFrob",
-                                   "api_key", priv->api_key,
-                                   NULL);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.auth.getFrob",
+                                    "api_key", priv->api_key,
+                                    NULL);
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
 
   /* Perform the async request */
-  perform_async_request (priv->soup_session, url,
-                         _get_frob_soup_session_cb, G_OBJECT (self),
-                         c, cb, fsp_session_get_auth_url_async, data);
+  _perform_async_request (priv->soup_session, url,
+                          _get_frob_soup_session_cb, G_OBJECT (self),
+                          c, cb, fsp_session_get_auth_url_async, data);
 
   g_free (url);
 }
@@ -760,8 +1370,8 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
   gchar *frob = NULL;
   gchar *auth_url = NULL;
 
-  frob = (gchar*) finish_async_request (G_OBJECT (self), res,
-                                        fsp_session_get_auth_url_async, error);
+  frob = (gchar*) _finish_async_request (G_OBJECT (self), res,
+                                         fsp_session_get_auth_url_async, error);
 
   /* Build the auth URL from the frob */
   if (frob != NULL)
@@ -773,11 +1383,11 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
       priv->frob = frob;
 
       /* Build the authorization url */
-      signed_query = get_signed_query (priv->secret,
-                                       "api_key", priv->api_key,
-                                       "perms", "write",
-                                       "frob", priv->frob,
-                                       NULL);
+      signed_query = _get_signed_query (priv->secret,
+                                        "api_key", priv->api_key,
+                                        "perms", "write",
+                                        "frob", priv->frob,
+                                        NULL);
       auth_url = g_strdup_printf ("http://flickr.com/services/auth/?%s",
                                   signed_query);
       g_free (signed_query);
@@ -805,18 +1415,18 @@ fsp_session_complete_auth_async         (FspSession          *self,
       gchar *url = NULL;
 
       /* Build the signed url */
-      signed_query = get_signed_query (priv->secret,
-                                       "method", "flickr.auth.getToken",
-                                       "api_key", priv->api_key,
-                                       "frob", priv->frob,
-                                       NULL);
+      signed_query = _get_signed_query (priv->secret,
+                                        "method", "flickr.auth.getToken",
+                                        "api_key", priv->api_key,
+                                        "frob", priv->frob,
+                                        NULL);
       url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
       g_free (signed_query);
 
       /* Perform the async request */
-      perform_async_request (priv->soup_session, url,
-                             _get_auth_token_soup_session_cb, G_OBJECT (self),
-                             c, cb, fsp_session_complete_auth_async, data);
+      _perform_async_request (priv->soup_session, url,
+                              _get_auth_token_soup_session_cb, G_OBJECT (self),
+                              c, cb, fsp_session_complete_auth_async, data);
 
       g_free (url);
     }
@@ -842,9 +1452,9 @@ fsp_session_complete_auth_finish        (FspSession    *self,
   FspDataAuthToken *auth_token = NULL;
 
   auth_token =
-    FSP_DATA_AUTH_TOKEN (finish_async_request (G_OBJECT (self), res,
-                                               fsp_session_complete_auth_async,
-                                               error));
+    FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
+                                                fsp_session_complete_auth_async,
+                                                error));
 
   /* Complete the authorization saving the token if present */
   if (auth_token != NULL && auth_token->token != NULL)
@@ -870,18 +1480,18 @@ fsp_session_check_auth_info_async       (FspSession          *self,
       gchar *url = NULL;
 
       /* Build the signed url */
-      signed_query = get_signed_query (priv->secret,
-                                       "method", "flickr.auth.checkToken",
-                                       "api_key", priv->api_key,
-                                       "auth_token", priv->token,
-                                       NULL);
+      signed_query = _get_signed_query (priv->secret,
+                                        "method", "flickr.auth.checkToken",
+                                        "api_key", priv->api_key,
+                                        "auth_token", priv->token,
+                                        NULL);
       url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
       g_free (signed_query);
 
       /* Perform the async request */
-      perform_async_request (priv->soup_session, url,
-                             _get_auth_token_soup_session_cb, G_OBJECT (self),
-                             c, cb, fsp_session_check_auth_info_async, data);
+      _perform_async_request (priv->soup_session, url,
+                              _get_auth_token_soup_session_cb, G_OBJECT (self),
+                              c, cb, fsp_session_check_auth_info_async, data);
 
       g_free (url);
     }
@@ -907,9 +1517,9 @@ fsp_session_check_auth_info_finish      (FspSession    *self,
   FspDataAuthToken *auth_token = NULL;
 
   auth_token =
-    FSP_DATA_AUTH_TOKEN (finish_async_request (G_OBJECT (self), res,
-                                               fsp_session_check_auth_info_async,
-                                               error));
+    FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
+                                                fsp_session_check_auth_info_async,
+                                                error));
   return auth_token;
 }
 
@@ -930,18 +1540,18 @@ fsp_session_get_upload_status_async     (FspSession          *self,
       gchar *url = NULL;
 
       /* Build the signed url */
-      signed_query = get_signed_query (priv->secret,
-                                       "method", "flickr.people.getUploadStatus",
-                                       "api_key", priv->api_key,
-                                       "auth_token", priv->token,
-                                       NULL);
+      signed_query = _get_signed_query (priv->secret,
+                                        "method", "flickr.people.getUploadStatus",
+                                        "api_key", priv->api_key,
+                                        "auth_token", priv->token,
+                                        NULL);
       url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
       g_free (signed_query);
 
       /* Perform the async request */
-      perform_async_request (priv->soup_session, url,
-                             _get_upload_status_soup_session_cb, G_OBJECT (self),
-                             c, cb, fsp_session_get_upload_status_async, data);
+      _perform_async_request (priv->soup_session, url,
+                              _get_upload_status_soup_session_cb, G_OBJECT (self),
+                              c, cb, fsp_session_get_upload_status_async, data);
 
       g_free (url);
     }
@@ -967,9 +1577,9 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
   FspDataUploadStatus *upload_status = NULL;
 
   upload_status =
-    FSP_DATA_UPLOAD_STATUS (finish_async_request (G_OBJECT (self), res,
-                                                  fsp_session_get_upload_status_async,
-                                                  error));
+    FSP_DATA_UPLOAD_STATUS (_finish_async_request (G_OBJECT (self), res,
+                                                   fsp_session_get_upload_status_async,
+                                                   error));
   return upload_status;
 }
 
@@ -995,7 +1605,7 @@ fsp_session_upload_async                (FspSession          *self,
   FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   GHashTable *extra_params = NULL;
-  AsyncRequestData *ga_clos = NULL;
+  AsyncRequestData *ard_clos = NULL;
   UploadPhotoData *up_clos = NULL;
   GFile *file = NULL;
   gchar *api_sig = NULL;
@@ -1014,22 +1624,22 @@ fsp_session_upload_async                (FspSession          *self,
                        g_strdup (priv->token));
 
   /* Build the api signature and add it to the hash table */
-  api_sig = get_api_signature_from_hash_table (priv->secret, extra_params);
+  api_sig = _get_api_signature_from_hash_table (priv->secret, extra_params);
   g_hash_table_insert (extra_params, g_strdup ("api_sig"), api_sig);
 
   /* Save important data for the callback */
-  ga_clos = g_slice_new0 (AsyncRequestData);
-  ga_clos->object = G_OBJECT (self);
-  ga_clos->soup_session = soup_session;
-  ga_clos->soup_message = NULL;
-  ga_clos->cancellable = cancellable;
-  ga_clos->callback = callback;
-  ga_clos->source_tag = fsp_session_upload_async;
-  ga_clos->data = data;
+  ard_clos = g_slice_new0 (AsyncRequestData);
+  ard_clos->object = G_OBJECT (self);
+  ard_clos->soup_session = soup_session;
+  ard_clos->soup_message = NULL;
+  ard_clos->cancellable = cancellable;
+  ard_clos->callback = callback;
+  ard_clos->source_tag = fsp_session_upload_async;
+  ard_clos->data = data;
 
   /* Save important data for the upload process itself */
   up_clos = g_slice_new0 (UploadPhotoData);
-  up_clos->gasync_data = ga_clos;
+  up_clos->ar_data = ard_clos;
   up_clos->extra_params = extra_params;
 
   /* Asynchronously load the contents of the file */
@@ -1045,9 +1655,9 @@ fsp_session_upload_finish               (FspSession    *self,
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
-  gchar *photo_id = (gchar*) finish_async_request (G_OBJECT (self), res,
-                                                   fsp_session_upload_async,
-                                                   error);
+  gchar *photo_id = (gchar*) _finish_async_request (G_OBJECT (self), res,
+                                                    fsp_session_upload_async,
+                                                    error);
   return photo_id;
 }
 
@@ -1067,21 +1677,21 @@ fsp_session_get_info_async              (FspSession          *self,
   gchar *signed_query = NULL;
 
   /* Build the signed url */
-  signed_query = get_signed_query (priv->secret,
-                                   "method", "flickr.photos.getInfo",
-                                   "api_key", priv->api_key,
-                                   "auth_token", priv->token,
-                                   "photo_id", photo_id,
-                                   NULL);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.photos.getInfo",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    "photo_id", photo_id,
+                                    NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
-  perform_async_request (soup_session, url,
-                         _photo_get_info_soup_session_cb, G_OBJECT (self),
-                         cancellable, callback, fsp_session_get_info_async, data);
+  _perform_async_request (soup_session, url,
+                          _photo_get_info_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_get_info_async, data);
 
   g_free (url);
 }
@@ -1097,9 +1707,9 @@ fsp_session_get_info_finish             (FspSession    *self,
   FspDataPhotoInfo *photo_info = NULL;
 
   photo_info =
-    FSP_DATA_PHOTO_INFO (finish_async_request (G_OBJECT (self), res,
-                                               fsp_session_get_info_async,
-                                               error));
+    FSP_DATA_PHOTO_INFO (_finish_async_request (G_OBJECT (self), res,
+                                                fsp_session_get_info_async,
+                                                error));
   return photo_info;
 }
 
@@ -1117,20 +1727,20 @@ fsp_session_get_photosets_async         (FspSession          *self,
   gchar *signed_query = NULL;
 
   /* Build the signed url */
-  signed_query = get_signed_query (priv->secret,
-                                   "method", "flickr.photosets.getList",
-                                   "api_key", priv->api_key,
-                                   "auth_token", priv->token,
-                                   NULL);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.photosets.getList",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
-  perform_async_request (soup_session, url,
-                         _get_photosets_soup_session_cb, G_OBJECT (self),
-                         cancellable, callback, fsp_session_get_photosets_async, data);
+  _perform_async_request (soup_session, url,
+                          _get_photosets_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_get_photosets_async, data);
 
   g_free (url);
 }
@@ -1145,9 +1755,9 @@ fsp_session_get_photosets_finish        (FspSession    *self,
 
   GSList *photosets_list = NULL;
 
-  photosets_list = (GSList*) finish_async_request (G_OBJECT (self), res,
-                                                   fsp_session_get_photosets_async,
-                                                   error);
+  photosets_list = (GSList*) _finish_async_request (G_OBJECT (self), res,
+                                                    fsp_session_get_photosets_async,
+                                                    error);
   return photosets_list;
 }
 
@@ -1169,22 +1779,22 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
   gchar *signed_query = NULL;
 
   /* Build the signed url */
-  signed_query = get_signed_query (priv->secret,
-                                   "method", "flickr.photosets.addPhoto",
-                                   "api_key", priv->api_key,
-                                   "auth_token", priv->token,
-                                   "photo_id", photo_id,
-                                   "photoset_id", photoset_id,
-                                   NULL);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.photosets.addPhoto",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    "photo_id", photo_id,
+                                    "photoset_id", photoset_id,
+                                    NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
-  perform_async_request (soup_session, url,
-                         _add_to_photoset_soup_session_cb, G_OBJECT (self),
-                         cancellable, callback, fsp_session_add_to_photoset_async, data);
+  _perform_async_request (soup_session, url,
+                          _add_to_photoset_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_add_to_photoset_async, data);
 
   g_free (url);
 }
@@ -1199,8 +1809,8 @@ fsp_session_add_to_photoset_finish      (FspSession    *self,
 
   gpointer result = NULL;
 
-  result = finish_async_request (G_OBJECT (self), res,
-                                 fsp_session_add_to_photoset_async, error);
+  result = _finish_async_request (G_OBJECT (self), res,
+                                  fsp_session_add_to_photoset_async, error);
 
   return result ? TRUE : FALSE;
 }
@@ -1224,23 +1834,23 @@ fsp_session_create_photoset_async       (FspSession          *self,
   gchar *signed_query = NULL;
 
   /* Build the signed url */
-  signed_query = get_signed_query (priv->secret,
-                                   "method", "flickr.photosets.create",
-                                   "api_key", priv->api_key,
-                                   "auth_token", priv->token,
-                                   "title", title,
-                                   "description", description ? description : "",
-                                   "primary_photo_id", primary_photo_id,
-                                   NULL);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.photosets.create",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    "title", title,
+                                    "description", description ? description : "",
+                                    "primary_photo_id", primary_photo_id,
+                                    NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
-  perform_async_request (priv->soup_session, url,
-                         _create_photoset_soup_session_cb, G_OBJECT (self),
-                         cancellable, callback, fsp_session_create_photoset_async, data);
+  _perform_async_request (priv->soup_session, url,
+                          _create_photoset_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_create_photoset_async, data);
 
   g_free (url);
 }
@@ -1256,9 +1866,9 @@ fsp_session_create_photoset_finish      (FspSession    *self,
   gchar *photoset_id = NULL;
 
   photoset_id =
-    (gchar*) finish_async_request (G_OBJECT (self), res,
-                                   fsp_session_create_photoset_async,
-                                   error);
+    (gchar*) _finish_async_request (G_OBJECT (self), res,
+                                    fsp_session_create_photoset_async,
+                                    error);
   return photoset_id;
 }
 
@@ -1276,20 +1886,20 @@ fsp_session_get_groups_async            (FspSession          *self,
   gchar *signed_query = NULL;
 
   /* Build the signed url */
-  signed_query = get_signed_query (priv->secret,
-                                   "method", "flickr.groups.pools.getGroups",
-                                   "api_key", priv->api_key,
-                                   "auth_token", priv->token,
-                                   NULL);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.groups.pools.getGroups",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
-  perform_async_request (soup_session, url,
-                         _get_groups_soup_session_cb, G_OBJECT (self),
-                         cancellable, callback, fsp_session_get_groups_async, data);
+  _perform_async_request (soup_session, url,
+                          _get_groups_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_get_groups_async, data);
 
   g_free (url);
 }
@@ -1304,9 +1914,9 @@ fsp_session_get_groups_finish           (FspSession    *self,
 
   GSList *groups_list = NULL;
 
-  groups_list = (GSList*) finish_async_request (G_OBJECT (self), res,
-                                                fsp_session_get_groups_async,
-                                                error);
+  groups_list = (GSList*) _finish_async_request (G_OBJECT (self), res,
+                                                 fsp_session_get_groups_async,
+                                                 error);
   return groups_list;
 }
 
@@ -1328,22 +1938,22 @@ fsp_session_add_to_group_async          (FspSession          *self,
   gchar *signed_query = NULL;
 
   /* Build the signed url */
-  signed_query = get_signed_query (priv->secret,
-                                   "method", "flickr.groups.pools.add",
-                                   "api_key", priv->api_key,
-                                   "auth_token", priv->token,
-                                   "photo_id", photo_id,
-                                   "group_id", group_id,
-                                   NULL);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.groups.pools.add",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    "photo_id", photo_id,
+                                    "group_id", group_id,
+                                    NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
-  perform_async_request (soup_session, url,
-                         _add_to_group_soup_session_cb, G_OBJECT (self),
-                         cancellable, callback, fsp_session_add_to_group_async, data);
+  _perform_async_request (soup_session, url,
+                          _add_to_group_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_add_to_group_async, data);
 
   g_free (url);
 }
@@ -1358,8 +1968,8 @@ fsp_session_add_to_group_finish         (FspSession    *self,
 
   gpointer result = NULL;
 
-  result = finish_async_request (G_OBJECT (self), res,
-                                 fsp_session_add_to_group_async, error);
+  result = _finish_async_request (G_OBJECT (self), res,
+                                  fsp_session_add_to_group_async, error);
 
   return result ? TRUE : FALSE;
 }
@@ -1378,20 +1988,20 @@ fsp_session_get_tags_list_async         (FspSession          *self,
   gchar *signed_query = NULL;
 
   /* Build the signed url */
-  signed_query = get_signed_query (priv->secret,
-                                   "method", "flickr.tags.getListUser",
-                                   "api_key", priv->api_key,
-                                   "auth_token", priv->token,
-                                   NULL);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.tags.getListUser",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    NULL);
 
   url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
   g_free (signed_query);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
-  perform_async_request (soup_session, url,
-                         _get_tags_list_soup_session_cb, G_OBJECT (self),
-                         cancellable, callback, fsp_session_get_tags_list_async, data);
+  _perform_async_request (soup_session, url,
+                          _get_tags_list_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_get_tags_list_async, data);
 
   g_free (url);
 }
@@ -1406,8 +2016,8 @@ fsp_session_get_tags_list_finish        (FspSession    *self,
 
   GSList *tags_list = NULL;
 
-  tags_list = (GSList*) finish_async_request (G_OBJECT (self), res,
-                                 fsp_session_get_tags_list_async, error);
+  tags_list = (GSList*) _finish_async_request (G_OBJECT (self), res,
+                                               fsp_session_get_tags_list_async, error);
 
   return tags_list;
 }
