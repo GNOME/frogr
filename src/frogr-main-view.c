@@ -1576,6 +1576,8 @@ frogr_main_view_set_progress_status_text (FrogrMainView *self, const gchar *text
   /* Set superimposed text, if specified */
   if (text != NULL)
     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
+
+  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
 void
@@ -1592,6 +1594,8 @@ frogr_main_view_set_progress_status_fraction (FrogrMainView *self, double fracti
     fraction = 1.0;
 
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), fraction);
+
+  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
 void
