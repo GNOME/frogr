@@ -45,7 +45,6 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *private_rb;
   GtkWidget *friend_cb;
   GtkWidget *family_cb;
-  GtkWidget *open_browser_after_upload_cb;
   GtkWidget *show_in_search_cb;
   GtkWidget *photo_content_rb;
   GtkWidget *sshot_content_rb;
@@ -67,7 +66,6 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean public_visibility;
   gboolean family_visibility;
   gboolean friend_visibility;
-  gboolean open_browser_after_upload;
   gboolean show_in_search;
   FspSafetyLevel safety_level;
   FspContentType content_type;
@@ -268,27 +266,6 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     G_CALLBACK (_on_button_toggled),
                     self);
 
-  /* Default Actions */
-
-  label = gtk_label_new (NULL);
-  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
-                                    _("Default Actions"));
-  gtk_label_set_markup (GTK_LABEL (label), markup);
-  g_free (markup);
-
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
-
-  cbutton = gtk_check_button_new_with_mnemonic (_("Open _Browser after Uploading Pictures"));
-  gtk_box_pack_start (GTK_BOX (vbox), cbutton, FALSE, FALSE, 0);
-  priv->open_browser_after_upload_cb = cbutton;
-
-  g_signal_connect (G_OBJECT (priv->open_browser_after_upload_cb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_General")));
 }
@@ -418,7 +395,6 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->show_in_search = frogr_config_get_default_show_in_search (priv->config);
   priv->content_type = frogr_config_get_default_content_type (priv->config);
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
-  priv->open_browser_after_upload = frogr_config_get_open_browser_after_upload (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
   g_free (priv->proxy_host);
@@ -451,8 +427,6 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
                                 priv->family_visibility);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb),
                                 priv->friend_visibility);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->open_browser_after_upload_cb),
-                                priv->open_browser_after_upload);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
                                 priv->show_in_search);
 
@@ -503,7 +477,6 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_content_type (priv->config, priv->content_type);
   frogr_config_set_default_safety_level (priv->config, priv->safety_level);
 
-  frogr_config_set_open_browser_after_upload (priv->config, priv->open_browser_after_upload);
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 
   g_free (priv->proxy_host);
@@ -584,12 +557,6 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
     {
       priv->friend_visibility = active;
       g_debug ("friend visibility set to %s", active ? "TRUE" : "FALSE");
-    }
-
-  if (GTK_WIDGET (button) == priv->open_browser_after_upload_cb)
-    {
-      priv->open_browser_after_upload = active;
-      g_debug ("Open browser after upload set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->show_in_search_cb)
@@ -749,7 +716,6 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->private_rb = NULL;
   priv->friend_cb = NULL;
   priv->family_cb = NULL;
-  priv->open_browser_after_upload_cb = NULL;
   priv->show_in_search_cb = NULL;
   priv->photo_content_rb = NULL;
   priv->sshot_content_rb = NULL;
@@ -769,7 +735,6 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->public_visibility = FALSE;
   priv->family_visibility = FALSE;
   priv->friend_visibility = FALSE;
-  priv->open_browser_after_upload = FALSE;
   priv->show_in_search = FALSE;
   priv->safety_level = FSP_SAFETY_LEVEL_NONE;
   priv->content_type = FSP_CONTENT_TYPE_NONE;

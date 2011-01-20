@@ -101,10 +101,6 @@ void frogr_config_set_default_show_in_search (FrogrConfig *self, gboolean value)
 
 gboolean frogr_config_get_default_show_in_search (FrogrConfig *self);
 
-void frogr_config_set_open_browser_after_upload (FrogrConfig *self, gboolean value);
-
-gboolean frogr_config_get_open_browser_after_upload (FrogrConfig *self);
-
 void frogr_config_set_use_proxy (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_use_proxy (FrogrConfig *self);

@@ -56,8 +56,6 @@ struct _FrogrConfigPrivate
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
-  gboolean open_browser_after_upload;
-
   gboolean use_proxy;
   gchar *proxy_host;
   gchar *proxy_port;
@@ -150,20 +148,6 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
         {
           if (node->type != XML_ELEMENT_NODE)
             continue;
-
-          if (!xmlStrcmp (node->name, (const xmlChar*) "open-browser-after-upload"))
-            {
-              xmlChar *content = NULL;
-
-              content = xmlNodeGetContent (node);
-              if (content)
-                {
-                  priv->open_browser_after_upload =
-                    !xmlStrcmp (content, (const xmlChar*) "1");
-
-                  xmlFree (content);
-                }
-            }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "default-content-type"))
             {
@@ -539,10 +523,6 @@ _save_settings (FrogrConfig *self)
   _xml_add_string_child (root, "default-safety-level", int_string);
   g_free (int_string);
 
-  /* Default actions */
-  _xml_add_string_child (root, "open-browser-after-upload",
-                         priv->open_browser_after_upload ? "1" : "0");
-
   /* Use proxy */
   node = xmlNewNode (NULL, (const xmlChar*) "http-proxy");
   _xml_add_string_child (node, "use-proxy", priv->use_proxy ? "1" : "0");
@@ -765,7 +745,6 @@ frogr_config_init (FrogrConfig *self)
   priv->show_in_search = TRUE;
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
-  priv->open_browser_after_upload = TRUE;
 
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
@@ -1027,24 +1006,6 @@ frogr_config_get_default_show_in_search (FrogrConfig *self)
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->show_in_search;
-}
-
-void
-frogr_config_set_open_browser_after_upload (FrogrConfig *self, gboolean value)
-{
-  g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->open_browser_after_upload = value;
-}
-
-gboolean
-frogr_config_get_open_browser_after_upload (FrogrConfig *self)
-{
-  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->open_browser_after_upload;
 }
 
 void

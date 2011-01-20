@@ -176,8 +176,6 @@ static void _on_picture_uploaded (FrogrController *self, FrogrPicture *picture);
 static void _on_pictures_uploaded (FrogrController *self,
                                    GError *error);
 
-static void _open_browser_to_edit_details (FrogrController *self);
-
 static void _fetch_everything (FrogrController *self);
 
 static void _fetch_sets (FrogrController *self);
@@ -974,9 +972,6 @@ _on_pictures_uploaded (FrogrController *self,
       FrogrControllerPrivate *priv = NULL;
       priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-      if (frogr_config_get_open_browser_after_upload (priv->config))
-        _open_browser_to_edit_details (self);
-
       /* Fetch sets and tags right after finishing */
       _fetch_sets (self);
       _fetch_tags (self);
@@ -993,52 +988,6 @@ _on_pictures_uploaded (FrogrController *self,
   /* Change state and emit signals */
   _set_state (self, FROGR_STATE_IDLE);
   g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
-}
-
-static void
-_open_browser_to_edit_details (FrogrController *self)
-{
-  FrogrControllerPrivate *priv;
-  FrogrMainViewModel *mainview_model = NULL;
-  GSList *pictures;
-  GSList *item;
-  guint index;
-  guint n_pictures;
-  gchar **str_array;
-  gchar *ids_str;
-  gchar *edition_url;
-  const gchar *id;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
-
-  pictures = frogr_main_view_model_get_pictures (mainview_model);
-  n_pictures = frogr_main_view_model_n_pictures (mainview_model);
-
-  /* Build the photo edition url */
-  str_array = g_new (gchar*, n_pictures + 1);
-
-  index = 0;
-  for (item = pictures; item; item = g_slist_next (item))
-    {
-      id = frogr_picture_get_id (FROGR_PICTURE (item->data));
-      if (id != NULL)
-        str_array[index++] = g_strdup (id);
-    }
-  str_array[index] = NULL;
-
-  ids_str = g_strjoinv (",", str_array);
-  edition_url =
-    g_strdup_printf ("http://www.flickr.com/tools/uploader_edit.gne?ids=%s",
-                     ids_str);
-  g_debug ("Opening edition url: %s", edition_url);
-
-  /* Redirect to URL for setting more properties about the pictures */
-  frogr_util_open_url_in_browser (edition_url);
-
-  g_free (edition_url);
-  g_free (ids_str);
-  g_strfreev (str_array);
 }
 
 static void
