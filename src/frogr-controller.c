@@ -871,8 +871,7 @@ _notify_creating_set (FrogrController *self,
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_show_progress (priv->mainview,
-                                 _("Creating new photoset…"));
+  frogr_main_view_set_progress_description (priv->mainview, _("Creating new photoset…"));
 
   picture_title = frogr_picture_get_title (picture);
   set_title = frogr_photoset_get_title (set);
@@ -896,8 +895,7 @@ _notify_adding_to_set (FrogrController *self,
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_show_progress (priv->mainview,
-                                 _("Adding picture to photosets…"));
+  frogr_main_view_set_progress_description(priv->mainview, _("Adding picture to photosets…"));
 
   picture_title = frogr_picture_get_title (picture);
   set_title = frogr_photoset_get_title (set);
@@ -919,8 +917,7 @@ _notify_adding_to_group (FrogrController *self,
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_show_progress (priv->mainview,
-                                 _("Adding picture to groups…"));
+  frogr_main_view_set_progress_description(priv->mainview, _("Adding picture to groups…"));
 
   picture_title = frogr_picture_get_title (picture);
   group_name = frogr_group_get_name (group);
@@ -1389,7 +1386,6 @@ _show_details_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_tags)
     {
-      frogr_main_view_show_progress (mainview, _("Retrieving list of tags…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1422,7 +1418,6 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_tags)
     {
-      frogr_main_view_show_progress (mainview, _("Retrieving list of tags…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1455,7 +1450,6 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_sets)
     {
-      frogr_main_view_show_progress (mainview, _("Retrieving list of sets…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1487,7 +1481,6 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_sets)
     {
-      frogr_main_view_show_progress (mainview, _("Retrieving list of sets…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1522,7 +1515,6 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_groups)
     {
-      frogr_main_view_show_progress (mainview, _("Retrieving list of groups…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1759,7 +1751,7 @@ frogr_controller_run_app (FrogrController *self)
   priv->app_running = TRUE;
 
   /* Try to pre-fetch some data from the server right after launch */
-  _fetch_everything (self);
+  /* _fetch_everything (self); */
 
   /* Start on idle state */
   _set_state (self, FROGR_STATE_IDLE);
@@ -1968,7 +1960,10 @@ frogr_controller_show_details_dialog (FrogrController *self,
 
   /* Fetch the tags list first if needed */
   if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
-    _fetch_tags (self);
+    {
+      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of tags…"));
+      _fetch_tags (self);
+    }
 
   /* Show the dialog when possible */
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_details_dialog_on_idle, pictures);
@@ -1988,7 +1983,10 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
 
   /* Fetch the tags list first if needed */
   if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
-    _fetch_tags (self);
+    {
+      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of tags…"));
+      _fetch_tags (self);
+    }
 
   /* Show the dialog when possible */
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_tags_dialog_on_idle, pictures);
@@ -2008,7 +2006,10 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
 
   /* Fetch the sets first if needed */
   if (frogr_main_view_model_n_sets (mainview_model) == 0 && !priv->sets_fetched)
-    _fetch_sets (self);
+    {
+      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of sets…"));
+      _fetch_sets (self);
+    }
 
   /* Show the dialog when possible */
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_create_new_set_dialog_on_idle, pictures);
@@ -2028,7 +2029,10 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
 
   /* Fetch the sets first if needed */
   if (frogr_main_view_model_n_sets (mainview_model) == 0 && !priv->sets_fetched)
-    _fetch_sets (self);
+    {
+      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of sets…"));
+      _fetch_sets (self);
+    }
 
   /* Show the dialog when possible */
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_set_dialog_on_idle, pictures);
@@ -2048,7 +2052,10 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
 
   /* Fetch the groups first if needed */
   if (frogr_main_view_model_n_groups (mainview_model) == 0 && !priv->groups_fetched)
-    _fetch_groups (self);
+    {
+      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of groups…"));
+      _fetch_groups (self);
+    }
 
   /* Show the dialog when possible */
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_group_dialog_on_idle, pictures);

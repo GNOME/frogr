@@ -73,8 +73,8 @@ _update_status_and_progress (FrogrPictureUploader *self)
   FrogrPictureUploaderPrivate *priv =
     FROGR_PICTURE_UPLOADER_GET_PRIVATE (self);
 
+  gchar *description = NULL;
   gchar *status_text = NULL;
-  gchar *progress_bar_text = NULL;
 
   if (priv->current)
     {
@@ -82,19 +82,18 @@ _update_status_and_progress (FrogrPictureUploader *self)
       gchar *title = g_strdup (frogr_picture_get_title (picture));
 
       /* Update progress */
-      status_text = g_strdup_printf (_("Uploading '%s'…"), title);
-      progress_bar_text = g_strdup_printf ("%d / %d",
+      description = g_strdup_printf (_("Uploading '%s'…"), title);
+      status_text = g_strdup_printf ("%d / %d",
                                            priv->index + 1,
                                            priv->n_pictures);
       g_free (title);
     }
-
-  frogr_main_view_show_progress (priv->mainview, status_text);
-  frogr_main_view_set_progress_status_text (priv->mainview, progress_bar_text);
+  frogr_main_view_set_progress_description(priv->mainview, description);
+  frogr_main_view_set_progress_status_text (priv->mainview, status_text);
 
   /* Free */
+  g_free (description);
   g_free (status_text);
-  g_free (progress_bar_text);
 }
 
 static void
@@ -256,7 +255,8 @@ frogr_picture_uploader_upload (FrogrPictureUploader *self)
   if (priv->pictures == NULL)
     return;
 
-  /* Update status and progress bars */
+  /* Update status and show progress bars */
+  frogr_main_view_show_progress (priv->mainview, NULL);
   _update_status_and_progress (self);
 
   /* Trigger the asynchronous process */

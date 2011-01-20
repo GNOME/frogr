@@ -1559,9 +1559,23 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gtk_label_set_text (GTK_LABEL (priv->progress_label), text);
+
+  /* Reset values */
+  gtk_label_set_text (GTK_LABEL (priv->progress_label), text ? text : "");
+  gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), "");
+  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), 0.0);
 
   gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
+  /* gtk_window_present (GTK_WINDOW (priv->progress_dialog)); */
+}
+
+void
+frogr_main_view_set_progress_description (FrogrMainView *self, const gchar *text)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  gtk_label_set_text (GTK_LABEL (priv->progress_label), text);
 }
 
 void
@@ -1574,8 +1588,6 @@ frogr_main_view_set_progress_status_text (FrogrMainView *self, const gchar *text
   /* Set superimposed text, if specified */
   if (text != NULL)
     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
-
-  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
 void
@@ -1592,8 +1604,6 @@ frogr_main_view_set_progress_status_fraction (FrogrMainView *self, double fracti
     fraction = 1.0;
 
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), fraction);
-
-  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
 void
