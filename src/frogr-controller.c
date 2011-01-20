@@ -498,6 +498,11 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   content_type = frogr_picture_get_content_type (picture);
   search_scope = frogr_picture_show_in_search (picture) ? FSP_SEARCH_SCOPE_PUBLIC : FSP_SEARCH_SCOPE_HIDDEN;
 
+  /* Connect to this signal to report progress to the user */
+  g_signal_connect (G_OBJECT (priv->session), "data-fraction-sent",
+                    G_CALLBACK (_data_fraction_sent_cb),
+                    self);
+
   _enable_cancellable (self, TRUE);
   fsp_session_upload_async (priv->session,
                             frogr_picture_get_filepath (picture),
@@ -538,6 +543,9 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   priv->uploading_picture = FALSE;
+
+  /* Stop reporting to the user */
+  g_signal_handlers_disconnect_by_func (priv->session, _data_fraction_sent_cb, controller);
 
   /* Check whether it's needed or not to add the picture to the set */
   if (!error)
@@ -1706,11 +1714,6 @@ frogr_controller_init (FrogrController *self)
       const gchar *password = frogr_config_get_proxy_password (priv->config);
       frogr_controller_set_proxy (self, host, port, username, password);
     }
-
-  /* Connect to this signal to report progress to the user */
-  g_signal_connect (G_OBJECT (priv->session), "data-fraction-sent",
-                    G_CALLBACK (_data_fraction_sent_cb),
-                    self);
 }
 
 
