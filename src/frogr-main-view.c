@@ -1556,8 +1556,7 @@ frogr_main_view_set_status_text (FrogrMainView *self,
 }
 
 void
-frogr_main_view_set_progress_text (FrogrMainView *self,
-                                   const gchar *text)
+frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
@@ -1568,23 +1567,31 @@ frogr_main_view_set_progress_text (FrogrMainView *self,
 }
 
 void
-frogr_main_view_set_progress_status (FrogrMainView *self,
-                                     double fraction,
-                                     const gchar *text)
+frogr_main_view_set_progress_status_text (FrogrMainView *self, const gchar *text)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  /* Show the widget and set fraction */
-  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar),
-                                 fraction);
-
   /* Set superimposed text, if specified */
   if (text != NULL)
     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
+}
 
-  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
+void
+frogr_main_view_set_progress_status_fraction (FrogrMainView *self, double fraction)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Check limits */
+  if (fraction < 0.0)
+    fraction = 0.0;
+  if (fraction > 1.0)
+    fraction = 1.0;
+
+  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), fraction);
 }
 
 void
@@ -1594,7 +1601,7 @@ frogr_main_view_pulse_progress (FrogrMainView *self)
 
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  /* Show the widget and set fraction */
+  /* Show the widget and pulse */
   gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv->progress_bar));
 
   /* Empty text for this */

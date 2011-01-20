@@ -126,6 +126,8 @@ static void _notify_error_to_user (FrogrController *self,
 
 static void _show_auth_failed_dialog (GtkWindow *parent, const gchar *message);
 
+static void _data_fraction_sent_cb (FspSession *session, gdouble fraction, gpointer data);
+
 static void _auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
@@ -359,6 +361,18 @@ _show_auth_failed_dialog (GtkWindow *parent, const gchar *message)
                     NULL);
 
   gtk_widget_show_all (dialog);
+}
+
+static void
+_data_fraction_sent_cb (FspSession *session, gdouble fraction, gpointer data)
+{
+  FrogrController *self = NULL;
+  FrogrControllerPrivate *priv = NULL;
+
+  self = FROGR_CONTROLLER(data);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  frogr_main_view_set_progress_status_fraction (priv->mainview, fraction);
 }
 
 static void
@@ -811,7 +825,10 @@ _complete_picture_upload_on_idle (gpointer data)
 
   /* Keep the source while busy */
   if (priv->adding_to_set || priv->adding_to_group)
-    return TRUE;
+    {
+      frogr_main_view_pulse_progress (priv->mainview);
+      return TRUE;
+    }
 
   picture = up_st->picture;
   callback = up_st->callback;
@@ -848,8 +865,8 @@ _notify_creating_set (FrogrController *self,
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_text (priv->mainview,
-                                     _("Creating new photoset…"));
+  frogr_main_view_show_progress (priv->mainview,
+                                 _("Creating new photoset…"));
 
   picture_title = frogr_picture_get_title (picture);
   set_title = frogr_photoset_get_title (set);
@@ -873,8 +890,8 @@ _notify_adding_to_set (FrogrController *self,
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_text (priv->mainview,
-                                     _("Adding picture to photoset…"));
+  frogr_main_view_show_progress (priv->mainview,
+                                 _("Adding picture to photoset…"));
 
   picture_title = frogr_picture_get_title (picture);
   set_title = frogr_photoset_get_title (set);
@@ -896,8 +913,8 @@ _notify_adding_to_group (FrogrController *self,
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_text (priv->mainview,
-                                     _("Adding picture to group…"));
+  frogr_main_view_show_progress (priv->mainview,
+                                 _("Adding picture to group…"));
 
   picture_title = frogr_picture_get_title (picture);
   group_name = frogr_group_get_name (group);
@@ -1096,7 +1113,7 @@ _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
             {
               current_data_set = FSP_DATA_PHOTO_SET (item->data);
               current_set = frogr_photoset_new (current_data_set->title,
-                                           current_data_set->description);
+                                                current_data_set->description);
               frogr_photoset_set_id (current_set, current_data_set->id);
               frogr_photoset_set_primary_photo_id (current_set, current_data_set->primary_photo_id);
               frogr_photoset_set_n_photos (current_set, current_data_set->n_photos);
@@ -1415,7 +1432,7 @@ _show_details_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_tags)
     {
-      frogr_main_view_set_progress_text (mainview, _("Retrieving list of tags…"));
+      frogr_main_view_show_progress (mainview, _("Retrieving list of tags…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1448,7 +1465,7 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_tags)
     {
-      frogr_main_view_set_progress_text (mainview, _("Retrieving list of tags…"));
+      frogr_main_view_show_progress (mainview, _("Retrieving list of tags…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1481,7 +1498,7 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_sets)
     {
-      frogr_main_view_set_progress_text (mainview, _("Retrieving list of sets…"));
+      frogr_main_view_show_progress (mainview, _("Retrieving list of sets…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1513,7 +1530,7 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_sets)
     {
-      frogr_main_view_set_progress_text (mainview, _("Retrieving list of sets…"));
+      frogr_main_view_show_progress (mainview, _("Retrieving list of sets…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1548,7 +1565,7 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   /* Keep the source while internally busy */
   if (priv->fetching_groups)
     {
-      frogr_main_view_set_progress_text (mainview, _("Retrieving list of groups…"));
+      frogr_main_view_show_progress (mainview, _("Retrieving list of groups…"));
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
     }
@@ -1740,6 +1757,11 @@ frogr_controller_init (FrogrController *self)
       const gchar *password = frogr_config_get_proxy_password (priv->config);
       frogr_controller_set_proxy (self, host, port, username, password);
     }
+
+  /* Connect to this signal to report progress to the user */
+  g_signal_connect (G_OBJECT (priv->session), "data-fraction-sent",
+                    G_CALLBACK (_data_fraction_sent_cb),
+                    self);
 }
 
 
