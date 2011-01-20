@@ -115,8 +115,8 @@ _upload_next_picture (FrogrPictureUploader *self)
     }
   else
     {
-      /* Update status and progress bars */
-      _update_status_and_progress (self);
+      /* Hide progress bar dialog */
+      frogr_main_view_hide_progress (priv->mainview);
 
       /* Execute final callback */
       if (priv->pictures_uploaded_cb)

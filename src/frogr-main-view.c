@@ -1274,8 +1274,6 @@ _update_ui (FrogrMainView *self)
       /* Update status bar from model's account description */
       account_description = frogr_main_view_model_get_account_description (priv->model);
       frogr_main_view_set_status_text (self, account_description);
-
-      gtk_widget_hide (priv->progress_dialog);
       break;
 
     default:
