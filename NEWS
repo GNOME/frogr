@@ -10,8 +10,7 @@
   * Automatically re-show the authorization dialog if needed.
   * More descriptive strings in picture details dialog.
   * Implemented new settings dialog, allowing to pre-set default
-    values for the visibility of the pictures, and to choose whether
-    to open the browser or not after a successful upload process.
+    values for the visibility of the pictures.
   * Added support for specifying an HTTP proxy.
   * Added basic man page (Alberto Garcia).
   * Fixed memory leaks thanks to valgrind.
