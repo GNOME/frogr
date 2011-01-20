@@ -84,7 +84,7 @@ _update_status_and_progress (FrogrPictureUploader *self)
       /* Update progress */
       status_text = g_strdup_printf (_("Uploading '%s'…"), title);
       progress_bar_text = g_strdup_printf ("%d / %d",
-                                           priv->index,
+                                           priv->index + 1,
                                            priv->n_pictures);
       g_free (title);
     }
