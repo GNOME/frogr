@@ -61,6 +61,22 @@ _get_paths_list_from_array (char **paths_str, int n_paths)
   return filepaths;
 }
 
+static gboolean
+_load_pictures_on_idle (gpointer data)
+{
+  g_return_val_if_fail (data, FALSE);
+
+  FrogrController *fcontroller = NULL;
+  GSList *filepaths = NULL;
+
+  fcontroller = frogr_controller_get_instance ();
+  filepaths = (GSList *)data;
+
+  frogr_controller_load_pictures (fcontroller, filepaths);
+
+  return FALSE;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -85,7 +101,7 @@ main (int argc, char **argv)
   /* Run app (and load pictures if present) */
   fcontroller = frogr_controller_get_instance ();
   if (filepaths)
-    frogr_controller_load_pictures (fcontroller, filepaths);
+    gdk_threads_add_idle (_load_pictures_on_idle, filepaths);
 
   frogr_controller_run_app (fcontroller);
 
