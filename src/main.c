@@ -27,10 +27,51 @@
 #include <gtk/gtk.h>
 #include <libxml/parser.h>
 
+static GSList *
+_get_paths_list_from_array (char **paths_str, int n_paths)
+{
+  GSList *filepaths = NULL;
+  GError *err = NULL;
+  int i = 0;
+
+  for (i = 0; i < n_paths; i++)
+    {
+      gchar *uri = NULL;
+      gchar *filepath = NULL;
+
+      /* Add the 'file://' schema if not present */
+      if (g_str_has_prefix (paths_str[i], "/"))
+        uri = g_strdup_printf ("file://%s", paths_str[i]);
+      else
+        uri = g_strdup (paths_str[i]);
+
+      filepath = g_filename_from_uri (uri, NULL, &err);
+      if (err)
+        {
+          g_print ("Error loading picture %s: %s\n", uri, err->message);
+          g_error_free (err);
+          err = NULL;
+        }
+      else
+        {
+          filepaths = g_slist_append (filepaths, filepath);
+          g_print ("Arg %d added: '%s'\n", i, filepath);
+        }
+      g_free (uri);
+    }
+
+  return filepaths;
+}
+
 int
 main (int argc, char **argv)
 {
   FrogrController *fcontroller = NULL;
+  GSList *filepaths = NULL;
+
+  /* Check optional command line parameters */
+  if (argc > 1)
+    filepaths = _get_paths_list_from_array (&argv[1], argc - 1);
 
   gtk_init (&argc, &argv);
   g_set_application_name(PACKAGE);
@@ -43,9 +84,18 @@ main (int argc, char **argv)
   /* Init libxml2 library */
   xmlInitParser ();
 
-  /* Run app */
+  /* Run app (and load pictures if present) */
   fcontroller = frogr_controller_get_instance ();
+  if (filepaths)
+    frogr_controller_load_pictures (fcontroller, filepaths);
+
   frogr_controller_run_app (fcontroller);
+
+  if (filepaths)
+    {
+      g_slist_foreach (filepaths, (GFunc)g_free, NULL);
+      g_slist_free (filepaths);
+    }
 
   /* cleanup libxml2 library */
   xmlCleanupParser();
