@@ -23,6 +23,7 @@
 #include "frogr-auth-dialog.h"
 
 #include "frogr-controller.h"
+#include "frogr-global-defs.h"
 
 #include <config.h>
 #include <glib/gi18n.h>
@@ -58,10 +59,9 @@ _ask_for_authorization (GtkWindow *parent)
                                    GTK_MESSAGE_INFO,
                                    GTK_BUTTONS_OK,
                                    _(unauth_txt),
-                                   PACKAGE_NAME,
-                                   PACKAGE_NAME);
+                                   APP_SHORTNAME);
 
-  title = g_strdup_printf ("Authorize %s", PACKAGE);
+  title = g_strdup_printf ("Authorize %s", APP_SHORTNAME);
   gtk_window_set_title (GTK_WINDOW (dialog), title);
   g_free (title);
 
@@ -94,8 +94,9 @@ _ask_for_auth_confirmation (GtkWindow *parent)
                                    GTK_MESSAGE_INFO,
                                    GTK_BUTTONS_OK,
                                    _(auth_txt),
-                                   PACKAGE_NAME);
-  title = g_strdup_printf ("Authorize %s", PACKAGE);
+                                   APP_SHORTNAME);
+
+  title = g_strdup_printf ("Authorize %s", APP_SHORTNAME);
   gtk_window_set_title (GTK_WINDOW (dialog), title);
   g_free (title);
 

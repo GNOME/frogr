@@ -24,6 +24,7 @@
 
 #include "frogr-account.h"
 #include "frogr-controller.h"
+#include "frogr-global-defs.h"
 #include "frogr-main-view-model.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
@@ -1387,6 +1388,7 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_builder_add_from_file (builder, GTKBUILDER_FILE, NULL);
 
   window = GTK_WINDOW(gtk_builder_get_object (builder, "main_window"));
+  gtk_window_set_title (GTK_WINDOW (window), APP_NAME);
   priv->window = window;
 
   menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
@@ -1428,6 +1430,7 @@ frogr_main_view_init (FrogrMainView *self)
                                                  GTK_STOCK_CANCEL,
                                                  GTK_RESPONSE_CANCEL,
                                                  NULL);
+  gtk_window_set_title (GTK_WINDOW (progress_dialog), APP_SHORTNAME);
 
   gtk_dialog_set_response_sensitive (GTK_DIALOG (progress_dialog),
                                      GTK_RESPONSE_CANCEL, TRUE);

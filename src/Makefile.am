@@ -62,6 +62,7 @@ frogr_SOURCES = \
 	frogr-create-new-set-dialog.h \
 	frogr-details-dialog.c \
 	frogr-details-dialog.h \
+	frogr-global-defs.h \
 	frogr-group.c \
 	frogr-group.h \
 	frogr-main-view-model.c \

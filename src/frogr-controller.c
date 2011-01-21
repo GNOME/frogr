@@ -20,7 +20,6 @@
  *
  */
 
-
 #include "frogr-controller.h"
 
 #include "frogr-about-dialog.h"
@@ -32,6 +31,7 @@
 #include "frogr-config.h"
 #include "frogr-create-new-set-dialog.h"
 #include "frogr-details-dialog.h"
+#include "frogr-global-defs.h"
 #include "frogr-main-view.h"
 #include "frogr-picture-loader.h"
 #include "frogr-picture-uploader.h"
@@ -315,7 +315,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
     case FSP_ERROR_NOT_AUTHENTICATED:
       frogr_controller_revoke_authorization (self);
       msg = g_strdup_printf (_("Error\n%s is not properly authorized to upload pictures "
-                               "to flickr.\nPlease re-authorize it"), PACKAGE_NAME);
+                               "to flickr.\nPlease re-authorize it"), APP_SHORTNAME);
       error_function = frogr_util_show_error_dialog;
       break;
 
@@ -352,7 +352,7 @@ _show_auth_failed_dialog (GtkWindow *parent, const gchar *message)
                                    GTK_MESSAGE_ERROR,
                                    GTK_BUTTONS_OK,
                                    "%s", message);
-  gtk_window_set_title (GTK_WINDOW (dialog), PACKAGE);
+  gtk_window_set_title (GTK_WINDOW (dialog), APP_SHORTNAME);
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_auth_failed_dialog_response_cb),
@@ -2134,7 +2134,7 @@ frogr_controller_upload_pictures (FrogrController *self)
 
       msg = g_strdup_printf (_("You need to properly authorize %s before"
                                " uploading any pictures to flickr.\n"
-                               "Please re-authorize it."), PACKAGE_NAME);
+                               "Please re-authorize it."), APP_SHORTNAME);
 
       window = frogr_main_view_get_window (priv->mainview);
       frogr_util_show_error_dialog (window, msg);

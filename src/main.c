@@ -22,6 +22,8 @@
 
 #include "frogr-controller.h"
 
+#include "frogr-global-defs.h"
+
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -88,7 +90,7 @@ main (int argc, char **argv)
     filepaths = _get_paths_list_from_array (&argv[1], argc - 1);
 
   gtk_init (&argc, &argv);
-  g_set_application_name(PACKAGE);
+  g_set_application_name(APP_SHORTNAME);
 
   /* Translation domain */
   bindtextdomain (GETTEXT_PACKAGE, FROGR_LOCALE_DIR);
