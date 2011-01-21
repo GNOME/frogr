@@ -32,6 +32,7 @@
   * Removed dependency from libgnome when GTK+ < 2.14, and raised
     minimum version required fo GTK+ from 2.12 up to 2.14.
   * Better reporting progress to the users for time consuming operations.
+  * Allow specifying a list of pictures to be loaded from command line.
   * Added new translations: British English (en_GB), French (fr),
     Swedish (sv), Galician (gl), German (de), Slovenian (sl), Italian (it)
     and Czech (cs). See TRANSLATORS file for more details.
