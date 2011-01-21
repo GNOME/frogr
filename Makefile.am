@@ -25,6 +25,7 @@ MAINTAINERCLEANFILES = \
 	config.sub \
 	configure \
 	data/frogr.desktop \
+	data/frogr.desktop.in \
 	debian/files \
 	debian/stamp-autotools-files \
 	debian/stamp-makefile-build \
@@ -67,14 +68,15 @@ gtkbuilder_DATA = data/gtkbuilder/frogr-main-view.xml
 
 desktopentrydir = $(datadir)/applications
 desktopentry_DATA = $(builddir)/data/frogr.desktop
+@INTLTOOL_DESKTOP_RULE@
 
 man1_MANS = data/manpages/frogr.1
 
 edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
 
-data/frogr.desktop: data/frogr.desktop.in
+data/frogr.desktop.in: data/frogr.desktop.in.in
 	mkdir -p $(builddir)/data
-	$(edit) $(srcdir)/data/frogr.desktop.in > $(builddir)/data/frogr.desktop
+	$(edit) $(srcdir)/data/frogr.desktop.in.in > $(builddir)/data/frogr.desktop.in
 
 DISTCLEANFILES = $(builddir)/data/frogr.desktop
 
@@ -82,7 +84,7 @@ EXTRA_DIST = \
 	MAINTAINERS \
 	TRANSLATORS \
 	TODO \
-	data/frogr.desktop.in \
+	data/frogr.desktop.in.in \
 	$(pixmap_DATA) \
 	$(icon16_DATA) \
 	$(icon24_DATA) \
