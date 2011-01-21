@@ -48,15 +48,13 @@ _get_paths_list_from_array (char **paths_str, int n_paths)
       filepath = g_filename_from_uri (uri, NULL, &err);
       if (err)
         {
-          g_print ("Error loading picture %s: %s\n", uri, err->message);
+          g_debug ("Error loading picture %s: %s\n", uri, err->message);
           g_error_free (err);
           err = NULL;
         }
       else
-        {
-          filepaths = g_slist_append (filepaths, filepath);
-          g_print ("Arg %d added: '%s'\n", i, filepath);
-        }
+        filepaths = g_slist_append (filepaths, filepath);
+
       g_free (uri);
     }
 
