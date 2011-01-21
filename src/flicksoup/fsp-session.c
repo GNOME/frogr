@@ -5,7 +5,7 @@
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
  * Some parts of this file were based on source code from the libsoup
- * library libsoup, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
+ * library, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 3 of the GNU Lesser General
