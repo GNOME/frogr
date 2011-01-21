@@ -995,7 +995,7 @@ _soup_session_cancelled_cb              (GCancellable *cancellable,
 
   soup_session_cancel_message (session, message, SOUP_STATUS_CANCELLED);
 
-  g_debug ("Remote request cancelled!");
+  g_debug ("%s", "Remote request cancelled!");
 }
 
 void
