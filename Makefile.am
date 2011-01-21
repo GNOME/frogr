@@ -78,7 +78,9 @@ data/frogr.desktop.in: data/frogr.desktop.in.in
 	mkdir -p $(builddir)/data
 	$(edit) $(srcdir)/data/frogr.desktop.in.in > $(builddir)/data/frogr.desktop.in
 
-DISTCLEANFILES = $(builddir)/data/frogr.desktop
+DISTCLEANFILES = \
+	$(builddir)/data/frogr.desktop \
+	$(builddir)/data/frogr.desktop.in
 
 EXTRA_DIST = \
 	MAINTAINERS \
