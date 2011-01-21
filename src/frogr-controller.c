@@ -871,7 +871,7 @@ _notify_creating_set (FrogrController *self,
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_description (priv->mainview, _("Creating new photoset…"));
+  frogr_main_view_set_progress_description (priv->mainview, _("Creating new photosets…"));
 
   picture_title = frogr_picture_get_title (picture);
   set_title = frogr_photoset_get_title (set);
@@ -899,7 +899,7 @@ _notify_adding_to_set (FrogrController *self,
 
   picture_title = frogr_picture_get_title (picture);
   set_title = frogr_photoset_get_title (set);
-  progress_text = g_strdup_printf ("Adding picture %s to photosets %s…",
+  progress_text = g_strdup_printf ("Adding picture %s to photoset %s…",
                                    picture_title, set_title);
   g_debug ("%s", progress_text);
 
@@ -921,7 +921,7 @@ _notify_adding_to_group (FrogrController *self,
 
   picture_title = frogr_picture_get_title (picture);
   group_name = frogr_group_get_name (group);
-  progress_text = g_strdup_printf ("Adding picture %s to groups %s…",
+  progress_text = g_strdup_printf ("Adding picture %s to group %s…",
                                    picture_title, group_name);
   g_debug ("%s", progress_text);
 
