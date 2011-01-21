@@ -482,7 +482,7 @@ msgstr "Pošiljanje slik %d / %d"
 #: ../src/frogr-picture-uploader.c:85
 #, c-format
 msgid "Uploading '%s'…"
-msgstr "Pošiljanje '&s'..."
+msgstr "Pošiljanje '%s'..."
 
 #: ../src/frogr-settings-dialog.c:132
 msgid "Default Visibility"
