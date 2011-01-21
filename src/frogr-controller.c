@@ -1751,7 +1751,7 @@ frogr_controller_run_app (FrogrController *self)
   priv->app_running = TRUE;
 
   /* Try to pre-fetch some data from the server right after launch */
-  /* _fetch_everything (self); */
+  _fetch_everything (self);
 
   /* Start on idle state */
   _set_state (self, FROGR_STATE_IDLE);
