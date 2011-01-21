@@ -34,6 +34,11 @@ See the COPYING file for more details.
 
 -------------------------------------------
 
+Some parts of the flicksoup library based on source code from the
+libsoup library, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
+
+-------------------------------------------
+
 Website: http://live.gnome.org/Frogr
 
 Source: git://git.gnome.org/frogr
