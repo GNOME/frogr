@@ -1566,7 +1566,7 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), 0.0);
 
   gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
-  /* gtk_window_present (GTK_WINDOW (priv->progress_dialog)); */
+  gtk_window_present (GTK_WINDOW (priv->progress_dialog));
 }
 
 void
