@@ -1084,7 +1084,8 @@ _controller_active_account_changed (FrogrController *controller,
   description = _craft_account_description (mainview);
   frogr_main_view_model_set_account_description (priv->model, description);
 
-  frogr_main_view_set_status_text (mainview, description);
+  if (frogr_controller_get_state (priv->controller) != FROGR_STATE_BUSY)
+    frogr_main_view_set_status_text (mainview, description);
 
   g_debug ("Account details changed: %s", description);
   g_free (description);
