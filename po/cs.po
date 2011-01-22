@@ -1,7 +1,6 @@
 # Czech translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-#
 # Marek Černocký <marek@manet.cz>, 2011.
 #
 msgid ""
@@ -9,8 +8,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&component=general\n"
-"POT-Creation-Date: 2011-01-22 01:51+0000\n"
-"PO-Revision-Date: 2011-01-22 05:28+0100\n"
+"POT-Creation-Date: 2011-01-22 04:30+0000\n"
+"PO-Revision-Date: 2011-01-22 05:32+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,12 +19,10 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: ../data/frogr.desktop.in.in.h:1
-#| msgid "A Flickr remote organizer for GNOME\n"
 msgid "Flickr Remote Organizer"
 msgstr "Vzdálený organizátor Flickr"
 
 #: ../data/frogr.desktop.in.in.h:2
-#| msgid "A Flickr remote organizer for GNOME\n"
 msgid "Frogr: a Flickr Remote Organizer for GNOME"
 msgstr "Frogr: Vzdálený organizátor Flickr pro GNOME"
 
@@ -231,10 +228,9 @@ msgid "An error happened while uploading a picture: %s."
 msgstr "Vyskytla se chyba při nahrávání obrázku: %s."
 
 #: ../src/frogr-controller.c:874
-#, fuzzy
 #| msgid "Creating new photoset…"
 msgid "Creating new photosets…"
-msgstr "Vytváří se nová sada fotek…"
+msgstr "Vytváří se nové sady fotek…"
 
 #: ../src/frogr-controller.c:898
 msgid "Adding picture to photosets…"
