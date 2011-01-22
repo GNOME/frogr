@@ -30,12 +30,19 @@
 #include "fsp-parser.h"
 #include "fsp-session.h"
 
+#include <config.h>
 #include <libsoup/soup.h>
 #include <stdarg.h>
 #include <string.h>
 
 #define FLICKR_API_BASE_URL   "http://api.flickr.com/services/rest"
 #define FLICKR_API_UPLOAD_URL "http://api.flickr.com/services/upload"
+
+#ifdef DEBUG_ENABLED
+#define DEBUG(...) g_debug (__VA_ARGS__);
+#else
+#define DEBUG(...)
+#endif
 
 #define FSP_SESSION_GET_PRIVATE(object)                 \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
@@ -602,7 +609,7 @@ _load_file_contents_cb                  (GObject      *object,
       soup_session_queue_message (soup_session, msg,
                                   _photo_upload_soup_session_cb, ard_clos);
 
-      g_debug ("\nRequested URL:\n%s\n", FLICKR_API_UPLOAD_URL);
+      DEBUG ("\nRequested URL:\n%s\n", FLICKR_API_UPLOAD_URL);
 
       /* Free */
       g_hash_table_unref (extra_params);
@@ -670,7 +677,7 @@ _get_params_table_from_valist           (const gchar *first_param,
       if (v != NULL)
         g_hash_table_insert (table, g_strdup (p), g_strdup (v));
       else
-        g_debug ("Missing value for %s. Ignoring parameter.", p);
+        DEBUG ("Missing value for %s. Ignoring parameter.", p);
     }
 
   return table;
@@ -974,7 +981,7 @@ _perform_async_request                  (SoupSession         *soup_session,
   /* Queue the message */
   soup_session_queue_message (soup_session, msg, request_cb, clos);
 
-  g_debug ("\nRequested URL:\n%s\n", url);
+  DEBUG ("\nRequested URL:\n%s\n", url);
 }
 
 void
@@ -995,7 +1002,7 @@ _soup_session_cancelled_cb              (GCancellable *cancellable,
 
   soup_session_cancel_message (session, message, SOUP_STATUS_CANCELLED);
 
-  g_debug ("%s", "Remote request cancelled!");
+  DEBUG ("%s", "Remote request cancelled!");
 }
 
 void
@@ -1023,7 +1030,7 @@ _handle_soup_response                   (SoupMessage   *msg,
   response_str = g_strndup (msg->response_body->data, msg->response_body->length);
   response_len = (ulong) msg->response_body->length;
   if (response_str)
-    g_debug ("\nResponse got:\n%s\n", response_str);
+    DEBUG ("\nResponse got:\n%s\n", response_str);
 
   /* Get value from response */
   if (!_check_errors_on_soup_response (msg, &err))

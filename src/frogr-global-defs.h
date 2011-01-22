@@ -29,4 +29,10 @@
 #define APP_SHORTNAME PACKAGE
 #define APP_VERSION VERSION
 
+#ifdef DEBUG_ENABLED
+#define DEBUG(...) g_debug (__VA_ARGS__);
+#else
+#define DEBUG(...)
+#endif
+
 #endif

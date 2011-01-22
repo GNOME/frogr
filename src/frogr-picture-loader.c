@@ -24,6 +24,7 @@
 
 #include "frogr-config.h"
 #include "frogr-controller.h"
+#include "frogr-global-defs.h"
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
 
@@ -160,7 +161,7 @@ _load_next_picture (FrogrPictureLoader *self)
             }
         }
 
-      g_debug ("Adding file %s (%s)", filepath, mime_type);
+      DEBUG ("Adding file %s (%s)", filepath, mime_type);
       g_object_unref (file_info);
 
       /* Asynchronously load the picture if mime is valid */

@@ -338,7 +338,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
       error_function (window, msg);
     }
 
-  g_debug ("%s", msg);
+  DEBUG ("%s", msg);
   g_free (msg);
 }
 
@@ -379,7 +379,7 @@ _auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
   if (response == GTK_RESPONSE_OK)
     {
       frogr_controller_show_auth_dialog (frogr_controller_get_instance ());
-      g_debug ("%s", "Showing the authorization dialog once again...");
+      DEBUG ("%s", "Showing the authorization dialog once again...");
     }
 
   gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -397,12 +397,12 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   if (error != NULL)
     {
       _notify_error_to_user (self, error);
-      g_debug ("Error getting auth URL: %s", error->message);
+      DEBUG ("Error getting auth URL: %s", error->message);
       g_error_free (error);
       return;
     }
 
-  g_debug ("Auth URL: %s", auth_url ? auth_url : "No URL got");
+  DEBUG ("Auth URL: %s", auth_url ? auth_url : "No URL got");
 
   /* Open url in the default application */
   if (auth_url != NULL)
@@ -447,7 +447,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 
           frogr_controller_set_active_account (controller, account);
 
-          g_debug ("%s", "Authorization successfully completed!");
+          DEBUG ("%s", "Authorization successfully completed!");
         }
 
       fsp_data_free (FSP_DATA (auth_token));
@@ -456,7 +456,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
   if (error != NULL)
     {
       _notify_error_to_user (controller, error);
-      g_debug ("Authorization failed: %s", error->message);
+      DEBUG ("Authorization failed: %s", error->message);
       g_error_free (error);
     }
 }
@@ -665,7 +665,7 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       /* We plainly ignore errors in this stage, as we don't want
          them to interrupt the global upload process */
-      g_debug ("Error creating set: %s", error->message);
+      DEBUG ("Error creating set: %s", error->message);
       g_error_free (error);
       up_st->error = NULL;
     }
@@ -707,7 +707,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       /* We plainly ignore errors in this stage, as we don't want
          them to interrupt the global upload process */
-      g_debug ("Error adding picture to set: %s", error->message);
+      DEBUG ("Error adding picture to set: %s", error->message);
       g_error_free (error);
       up_st->error = NULL;
     }
@@ -765,7 +765,7 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       /* We plainly ignore errors in this stage, as we don't want
          them to interrupt the global upload process */
-      g_debug ("Error adding picture to group: %s", error->message);
+      DEBUG ("Error adding picture to group: %s", error->message);
       g_error_free (error);
       up_st->error = NULL;
     }
@@ -879,7 +879,7 @@ _notify_creating_set (FrogrController *self,
   progress_text = g_strdup_printf ("Creating new photoset for picture %s. "
                                    "Title: %s / Description: %s",
                                    picture_title, set_title, set_desc);
-  g_debug ("%s", progress_text);
+  DEBUG ("%s", progress_text);
 
   g_free (progress_text);
 }
@@ -901,7 +901,7 @@ _notify_adding_to_set (FrogrController *self,
   set_title = frogr_photoset_get_title (set);
   progress_text = g_strdup_printf ("Adding picture %s to photoset %s…",
                                    picture_title, set_title);
-  g_debug ("%s", progress_text);
+  DEBUG ("%s", progress_text);
 
   g_free (progress_text);
 }
@@ -923,7 +923,7 @@ _notify_adding_to_group (FrogrController *self,
   group_name = frogr_group_get_name (group);
   progress_text = g_strdup_printf ("Adding picture %s to group %s…",
                                    picture_title, group_name);
-  g_debug ("%s", progress_text);
+  DEBUG ("%s", progress_text);
 
   g_free (progress_text);
 }
@@ -981,12 +981,12 @@ _on_pictures_uploaded (FrogrController *self,
       _fetch_sets (self);
       _fetch_tags (self);
 
-      g_debug ("%s", "Success uploading pictures!");
+      DEBUG ("%s", "Success uploading pictures!");
     }
   else
     {
       _notify_error_to_user (self, error);
-      g_debug ("Error uploading pictures: %s", error->message);
+      DEBUG ("Error uploading pictures: %s", error->message);
       g_error_free (error);
     }
 
@@ -1043,7 +1043,7 @@ _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
   data_sets_list = fsp_session_get_photosets_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Fetching list of sets: %s (%d)", error->message, error->code);
+      DEBUG ("Fetching list of sets: %s (%d)", error->message, error->code);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
@@ -1124,7 +1124,7 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   data_groups_list = fsp_session_get_groups_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Fetching list of groups: %s (%d)", error->message, error->code);
+      DEBUG ("Fetching list of groups: %s (%d)", error->message, error->code);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
@@ -1200,7 +1200,7 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
   auth_token = fsp_session_check_auth_info_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Fetching basic info from the account: %s", error->message);
+      DEBUG ("Fetching basic info from the account: %s", error->message);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
@@ -1270,7 +1270,7 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
   upload_status = fsp_session_get_upload_status_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Fetching extra info from the account: %s", error->message);
+      DEBUG ("Fetching extra info from the account: %s", error->message);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
@@ -1346,7 +1346,7 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   tags_list = fsp_session_get_tags_list_finish (session, res, &error);
   if (error != NULL)
     {
-      g_debug ("Fetching list of tags: %s", error->message);
+      DEBUG ("Fetching list of tags: %s", error->message);
 
       if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
         frogr_controller_revoke_authorization (controller);
@@ -1739,7 +1739,7 @@ frogr_controller_run_app (FrogrController *self)
 
   if (priv->app_running)
     {
-      g_debug ("%s", "Application already running");
+      DEBUG ("%s", "Application already running");
       return FALSE;
     }
 
@@ -1760,7 +1760,7 @@ frogr_controller_run_app (FrogrController *self)
   gtk_main ();
 
   /* Application shutting down from this point on */
-  g_debug ("%s", "Shutting down application...");
+  DEBUG ("%s", "Shutting down application...");
 
   return TRUE;
 }
@@ -1887,7 +1887,7 @@ frogr_controller_set_proxy (FrogrController *self,
   /* The host is mandatory to set up a proxy */
   if (host == NULL || *host == '\0') {
     fsp_session_set_http_proxy (priv->session, NULL, NULL, NULL, NULL);
-    g_debug ("%s", "Not using HTTP proxy");
+    DEBUG ("%s", "Not using HTTP proxy");
   } else {
     gboolean has_port = FALSE;
     gboolean has_username = FALSE;
@@ -1901,7 +1901,7 @@ frogr_controller_set_proxy (FrogrController *self,
     if (has_username && has_password)
       auth_part = g_strdup_printf ("%s:%s@", username, password);
 
-    g_debug ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
+    DEBUG ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
     g_free (auth_part);
 
     fsp_session_set_http_proxy (priv->session, host, port, username, password);

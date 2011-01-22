@@ -50,7 +50,7 @@ _get_paths_list_from_array (char **paths_str, int n_paths)
       filepath = g_filename_from_uri (uri, NULL, &err);
       if (err)
         {
-          g_debug ("Error loading picture %s: %s\n", uri, err->message);
+          DEBUG ("Error loading picture %s: %s\n", uri, err->message);
           g_error_free (err);
           err = NULL;
         }

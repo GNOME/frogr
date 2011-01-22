@@ -660,9 +660,9 @@ _on_account_menu_item_activate (GtkWidget *widget, gpointer self)
   if (account && FROGR_IS_ACCOUNT (account))
     {
       frogr_controller_set_active_account (priv->controller, account);
-      g_debug ("Selected account %s (%s)",
-               frogr_account_get_id (account),
-               frogr_account_get_username (account));
+      DEBUG ("Selected account %s (%s)",
+             frogr_account_get_id (account),
+             frogr_account_get_username (account));
     }
 }
 
@@ -1088,7 +1088,7 @@ _controller_active_account_changed (FrogrController *controller,
   if (frogr_controller_get_state (priv->controller) != FROGR_STATE_BUSY)
     frogr_main_view_set_status_text (mainview, description);
 
-  g_debug ("Account details changed: %s", description);
+  DEBUG ("Account details changed: %s", description);
   g_free (description);
 }
 
@@ -1103,7 +1103,7 @@ _controller_accounts_changed (FrogrController *controller,
   _populate_accounts_submenu (mainview);
   _update_ui (mainview);
 
-  g_debug ("%s", "Accounts list changed");
+  DEBUG ("%s", "Accounts list changed");
 }
 
 static void

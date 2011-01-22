@@ -81,6 +81,19 @@ GETTEXT_PACKAGE=frogr
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 
+# Debug mode
+AC_MSG_CHECKING([Checking whether to enable debug output])
+AC_ARG_ENABLE(debug,
+              AC_HELP_STRING([--enable-debug],
+                             [turn on debugging [default=no]]),
+              [],[enable_debug="no"])
+AC_MSG_RESULT([$enable_debug])
+
+if test "$enable_debug" = "yes"; then
+  AC_DEFINE([DEBUG_ENABLED], [1], [Debug enabled])
+   CFLAGS="$CFLAGS -g3 -O0"
+fi
+
 # Produce output files
 
 AC_CONFIG_FILES([
@@ -98,7 +111,8 @@ echo "*************************************"
 echo "*** frogr is ready to be compiled ***"
 echo "*************************************"
 echo ""
-echo "Using GTK+ version: $with_gtk"
+echo "Using GTK+ version : $with_gtk"
+echo "Enable debug       : $enable_debug"
 echo ""
 echo ""
 echo "Configure successful. Type 'make' to compile"

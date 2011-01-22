@@ -24,6 +24,7 @@
 
 #include "frogr-config.h"
 #include "frogr-controller.h"
+#include "frogr-global-defs.h"
 #include "frogr-util.h"
 
 #include <config.h>
@@ -544,67 +545,67 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
   if (GTK_WIDGET (button) == priv->public_rb)
     {
       priv->public_visibility = active;
-      g_debug ("general visibility set to %s", active ? "Public" : "Private");
+      DEBUG ("general visibility set to %s", active ? "Public" : "Private");
     }
 
   if (GTK_WIDGET (button) == priv->family_cb)
     {
       priv->family_visibility = active;
-      g_debug ("family visibility set to %s", active ? "TRUE" : "FALSE");
+      DEBUG ("family visibility set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->friend_cb)
     {
       priv->friend_visibility = active;
-      g_debug ("friend visibility set to %s", active ? "TRUE" : "FALSE");
+      DEBUG ("friend visibility set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->show_in_search_cb)
     {
       priv->show_in_search = active;
-      g_debug ("Show up in global search results set to %s", active ? "TRUE" : "FALSE");
+      DEBUG ("Show up in global search results set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (active && GTK_WIDGET (button) == priv->photo_content_rb)
     {
       priv->content_type = FSP_CONTENT_TYPE_PHOTO;
-      g_debug ("Content type set to %d", priv->content_type);
+      DEBUG ("Content type set to %d", priv->content_type);
     }
 
   if (active && GTK_WIDGET (button) == priv->sshot_content_rb)
     {
       priv->content_type = FSP_CONTENT_TYPE_SCREENSHOT;
-      g_debug ("Content type set to %d", priv->content_type);
+      DEBUG ("Content type set to %d", priv->content_type);
     }
 
   if (active && GTK_WIDGET (button) == priv->other_content_rb)
     {
       priv->content_type = FSP_CONTENT_TYPE_OTHER;
-      g_debug ("Content type set to %d", priv->content_type);
+      DEBUG ("Content type set to %d", priv->content_type);
     }
 
   if (active && GTK_WIDGET (button) == priv->safe_rb)
     {
       priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
-      g_debug ("Content type set to %d", priv->safety_level);
+      DEBUG ("Content type set to %d", priv->safety_level);
     }
 
   if (active && GTK_WIDGET (button) == priv->moderate_rb)
     {
       priv->safety_level = FSP_SAFETY_LEVEL_MODERATE;
-      g_debug ("Content type set to %d", priv->safety_level);
+      DEBUG ("Content type set to %d", priv->safety_level);
     }
 
   if (active && GTK_WIDGET (button) == priv->restricted_rb)
     {
       priv->safety_level = FSP_SAFETY_LEVEL_RESTRICTED;
-      g_debug ("Content type set to %d", priv->safety_level);
+      DEBUG ("Content type set to %d", priv->safety_level);
     }
 
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
     {
       priv->use_proxy = active;
-      g_debug ("Use HTTP proxy: %s", active ? "YES" : "NO");
+      DEBUG ("Use HTTP proxy: %s", active ? "YES" : "NO");
     }
 
   _update_ui (self);

@@ -22,6 +22,7 @@
 
 #include "frogr-add-tags-dialog.h"
 
+#include "frogr-global-defs.h"
 #include "frogr-picture.h"
 
 #include <config.h>
@@ -201,7 +202,7 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
           GSList *item;
           guint n_pictures;
 
-          g_debug ("Adding tags to picture(s): %s", tags);
+          DEBUG ("Adding tags to picture(s): %s", tags);
 
           /* Iterate over the rest of elements */
           n_pictures = g_slist_length (priv->pictures);

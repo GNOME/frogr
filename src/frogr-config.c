@@ -24,6 +24,7 @@
 #include "frogr-config.h"
 
 #include "frogr-account.h"
+#include "frogr-global-defs.h"
 
 #include <glib/gstdio.h>
 #include <libxml/parser.h>
@@ -139,7 +140,7 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
   if (xml)
     node = xmlDocGetRootElement (xml);
   else
-    g_debug ("Could not load '%s/%s'", config_dir, SETTINGS_FILENAME);
+    DEBUG ("Could not load '%s/%s'", config_dir, SETTINGS_FILENAME);
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "settings"))
     {
@@ -368,7 +369,7 @@ _load_accounts (FrogrConfig *self, const gchar *config_dir)
   if (xml)
     node = xmlDocGetRootElement (xml);
   else
-    g_debug ("Could not load '%s/%s'", config_dir, ACCOUNTS_FILENAME);
+    DEBUG ("Could not load '%s/%s'", config_dir, ACCOUNTS_FILENAME);
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "accounts"))
     {
@@ -811,7 +812,7 @@ frogr_config_add_account (FrogrConfig  *self,
   if (found_account)
     {
       frogr_config_remove_account (self, account_id);
-      g_debug ("Account of ID %s already in the configuration system", account_id);
+      DEBUG ("Account of ID %s already in the configuration system", account_id);
     }
 
   priv->accounts = g_slist_append (priv->accounts, g_object_ref (faccount));
