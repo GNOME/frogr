@@ -95,7 +95,8 @@ _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
 {
   FrogrAddTagsDialog *self = NULL;
   FrogrAddTagsDialogPrivate *priv = NULL;
-  gchar *stripped_key = NULL;
+  const gchar *entry_text = NULL;
+  gchar *stripped_entry_text = NULL;
   gchar *basetext = NULL;
   gchar *tag = NULL;
   gchar *lc_basetext = NULL;
@@ -113,16 +114,18 @@ _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
 
   /* Do nothing if the cursor is not in the last position */
   cursor_pos = gtk_editable_get_position (GTK_EDITABLE (priv->entry));
-  if (cursor_pos < g_utf8_strlen (key, -1))
+  if (cursor_pos < gtk_entry_get_text_length (GTK_ENTRY (priv->entry)))
     return FALSE;
 
   /* Look for the last token in 'key' */
-  stripped_key = g_strstrip (g_strndup (key, cursor_pos));
-  basetext = g_strrstr (stripped_key, " ");
+  entry_text = gtk_entry_get_text (GTK_ENTRY (priv->entry));
+  stripped_entry_text = gtk_editable_get_chars (GTK_EDITABLE (priv->entry), 0, cursor_pos);
+  stripped_entry_text = g_strstrip (stripped_entry_text);
+  basetext = g_strrstr (stripped_entry_text, " ");
   if (basetext)
     basetext++;
   else
-    basetext = stripped_key;
+    basetext = stripped_entry_text;
 
   /* Downcase everything and compare */
   lc_basetext = g_utf8_strdown (basetext, -1);
@@ -130,7 +133,7 @@ _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
   if (g_str_has_prefix (lc_tag, lc_basetext))
     matches = TRUE;
 
-  g_free (stripped_key);
+  g_free (stripped_entry_text);
   g_free (tag);
   g_free (lc_basetext);
   g_free (lc_tag);
@@ -163,10 +166,10 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
   else
     matching_text = entry_text;
 
-  entry_text_len = g_utf8_strlen (entry_text, -1);
+  entry_text_len = gtk_entry_get_text_length (GTK_ENTRY (priv->entry));
   matching_text_len = g_utf8_strlen (matching_text, -1);
 
-  base_text = g_strndup (entry_text, entry_text_len - matching_text_len);
+  base_text = gtk_editable_get_chars (GTK_EDITABLE (priv->entry), 0, entry_text_len - matching_text_len);
   new_text = g_strdup_printf ("%s%s ", base_text, tag);
 
   gtk_entry_set_text (GTK_ENTRY (priv->entry), new_text);
