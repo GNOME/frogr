@@ -90,7 +90,7 @@ AC_ARG_ENABLE(debug,
 AC_MSG_RESULT([$enable_debug])
 
 if test "$enable_debug" = "yes"; then
-  AC_DEFINE([DEBUG_ENABLED], [1], [Debug enabled])
+   AC_DEFINE([DEBUG_ENABLED], [1], [Debug enabled])
    CFLAGS="$CFLAGS -g3 -O0"
 fi
 
