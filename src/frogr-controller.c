@@ -239,7 +239,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
     {
     case FSP_ERROR_CANCELLED:
       msg = g_strdup (_("Process cancelled by the user"));
-      error_function = frogr_util_show_warning_dialog;
+      error_function = NULL; /* Don't notify the user about this */
       break;
 
     case FSP_ERROR_NETWORK_ERROR:
@@ -325,7 +325,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
       break;
 
     default:
-      // General error: just dump the raw error description 
+      /* General error: just dump the raw error description */
       msg = g_strdup_printf (_("An error happened while uploading a picture: %s."),
                              error->message);
       error_function = frogr_util_show_error_dialog;
