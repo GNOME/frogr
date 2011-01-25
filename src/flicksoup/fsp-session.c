@@ -38,7 +38,7 @@
 #define FLICKR_API_BASE_URL   "http://api.flickr.com/services/rest"
 #define FLICKR_API_UPLOAD_URL "http://api.flickr.com/services/upload"
 
-#ifdef DEBUG_ENABLED
+#if DEBUG_ENABLED
 #define DEBUG(...) g_debug (__VA_ARGS__);
 #else
 #define DEBUG(...)
