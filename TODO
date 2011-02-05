@@ -11,6 +11,8 @@ groups depending on the scope of the application, which can be:
 TODO list for the uploader:
 ===========================
 
+ * Allow reordering pictures in icon view before uploading.
+
  * Allow setting license type for the pictures in the details dialog.
 
  * Add video uploading support
