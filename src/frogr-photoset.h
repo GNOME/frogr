@@ -53,29 +53,29 @@ GType frogr_photoset_get_type(void) G_GNUC_CONST;
 
 /* Constructors */
 FrogrPhotoSet *frogr_photoset_new (const gchar *title,
-                         const gchar *description);
+                                   const gchar *description);
 
 /* Data managing methods */
 
 const gchar *frogr_photoset_get_id (FrogrPhotoSet *self);
 void frogr_photoset_set_id (FrogrPhotoSet *self,
-                       const gchar *id);
+                            const gchar *id);
 
 const gchar *frogr_photoset_get_title (FrogrPhotoSet *self);
 void frogr_photoset_set_title (FrogrPhotoSet *self,
-                          const gchar *title);
+                               const gchar *title);
 
 const gchar *frogr_photoset_get_description (FrogrPhotoSet *self);
 void frogr_photoset_set_description (FrogrPhotoSet *self,
-                                const gchar *description);
+                                     const gchar *description);
 
 const gchar *frogr_photoset_get_primary_photo_id (FrogrPhotoSet *self);
 void frogr_photoset_set_primary_photo_id (FrogrPhotoSet *self,
-                                     const gchar *id);
+                                          const gchar *id);
 
 gint frogr_photoset_get_n_photos (FrogrPhotoSet *self);
 void frogr_photoset_set_n_photos (FrogrPhotoSet *self,
-                             gint n);
+                                  gint n);
 G_END_DECLS
 
 #endif
