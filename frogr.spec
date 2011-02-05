@@ -50,6 +50,41 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Feb 05 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.4-1
+- Fixed (more) problems building debian packages.
+- Modified package description for fedora and debian.
+- Converted remaining files in latin1 to utf-8.
+- Fixed capitalization problems in translatable strings (Philip Withnall).
+- Use Unicode ellipsis instead of three dots (Philip Withnall).
+- Added 'Translated by' tab to about dialog.
+- Fixed slow startup (no longer wait for albums to be loaded).
+- Automatically re-show the authorization dialog if needed.
+- More descriptive strings in picture details dialog.
+- Implemented new settings dialog, allowing to pre-set default values for the visibility of the pictures.
+- Added support for specifying an HTTP proxy.
+- Added basic man page (Alberto Garcia).
+- Report in the progress dialog when pictures are being added to sets, and make that operation itself cancellable too.
+- Better and safer implementation for cancelling operations.
+- Allow adding pictures to group pools.
+- Allow changing sorting order in 'add to album/group' dialogs.
+- Be aware of changes in basic account info on startup.
+- Added support for handling multiple accounts.
+- Added support for creating new albums right from frogr.
+- Retrieve list of tags and use it to auto-complete in entries.
+- Do not accept tabs in text views, to allow keyboard navigation.
+- Added support for setting 'content type' and 'safety level'.
+- Added support to declare pictures to 'show up on global search results'.
+- Added mnemonics to the 'Edit details' and the 'Settings' dialog.
+- Renamed 'Albums' as 'Sets'.
+- Remove pictures from UI as soon as they get uploaded.
+- Removed dependency from libgnome when GTK+ < 2.14, and raised minimum version required fo GTK+ from 2.12 up to 2.14.
+- Allow compiling with gtk 3.0 by passing --with-gtk=3.0 to configure.
+- Better reporting progress to the users for time consuming operations.
+- Allow specifying a list of pictures to be loaded from command line.
+- Register frogr as image mime types handler, so it's possible to load pictures on it from other applications (e.g. nautilus or eog)
+- Added new translations: British English (en_GB), French (fr), Swedish (sv), Galician (gl), German (de), Slovenian (sl), Italian (it), Czech (cs), and Brazilian Portuguese (pt_BR). See TRANSLATORS file for more details.
+- As usual, lots of bugfixes and several minor improvements.
+
 * Wed Dec 22 2010 Mario Sanchez Prada <msanchez at, igalia.com> 0.3-1
 - Updated for 0.3
 - New upstream release
