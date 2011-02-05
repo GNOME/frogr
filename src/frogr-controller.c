@@ -766,6 +766,7 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
       if (g_slist_length (groups) > 0)
         {
           group = FROGR_GROUP (groups->data);
+          up_st->groups = groups;
 
           _notify_adding_to_group (controller, picture, group);
           fsp_session_add_to_group_async (session,
@@ -819,18 +820,22 @@ _add_picture_to_groups_on_idle (gpointer data)
   if (priv->adding_to_set)
     return TRUE;
 
-  /* Mark the start of the process */
-  priv->adding_to_group = TRUE;
+  /* Add pictures to groups, if any */
+  if (g_slist_length (groups) > 0)
+    {
+      /* Mark the start of the process */
+      priv->adding_to_group = TRUE;
 
-  group = FROGR_GROUP (groups->data);
-  _notify_adding_to_group (controller, picture, group);
+      group = FROGR_GROUP (groups->data);
+      _notify_adding_to_group (controller, picture, group);
 
-  fsp_session_add_to_group_async (session,
-                                  frogr_picture_get_id (picture),
-                                  frogr_group_get_id (group),
-                                  priv->cancellable,
-                                  _add_to_group_cb,
-                                  up_st);
+      fsp_session_add_to_group_async (session,
+                                      frogr_picture_get_id (picture),
+                                      frogr_group_get_id (group),
+                                      priv->cancellable,
+                                      _add_to_group_cb,
+                                      up_st);
+    }
 
   return FALSE;
 }
