@@ -1,4 +1,4 @@
-frogr (0.4~unreleased) unstable; urgency=low
+frogr (0.4) unstable; urgency=low
 
   * New upstream release
   * Fixed (more) problems building debian packages.
