@@ -141,7 +141,6 @@ static void _upload_picture (FrogrController *self, FrogrPicture *picture,
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static gboolean _create_set_or_add_picture (FrogrController *self,
-                                            GSList *sets,
                                             FrogrPicture *picture,
                                             upload_picture_st *up_st);
 
@@ -558,8 +557,8 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       if (g_slist_length (sets) > 0)
         {
-          priv->adding_to_set = TRUE;
-          _create_set_or_add_picture (controller, sets, picture, up_st);
+          up_st->sets = sets;
+          _create_set_or_add_picture (controller, picture, up_st);
         }
 
       /* Pictures will be added to groups AFTER being added to sets,
@@ -578,12 +577,13 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 
 static gboolean
 _create_set_or_add_picture (FrogrController *self,
-                            GSList *sets,
                             FrogrPicture *picture,
                             upload_picture_st *up_st)
 {
+  GSList *sets = NULL;
   gboolean result = FALSE;
 
+  sets = up_st->sets;
   if (g_slist_length (sets) > 0)
     {
       FrogrControllerPrivate *priv = NULL;
@@ -592,7 +592,9 @@ _create_set_or_add_picture (FrogrController *self,
 
       priv = FROGR_CONTROLLER_GET_PRIVATE (self);
       set = FROGR_PHOTOSET (sets->data);
-      up_st->sets = sets;
+
+      /* Mark the start of the process */
+      priv->adding_to_set = TRUE;
 
       id = frogr_photoset_get_id (set);
       if (id != NULL)
@@ -654,12 +656,12 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   g_free (photoset_id);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  sets = g_slist_next (sets);
+  up_st->sets = g_slist_next (sets);
 
   /* When adding pictures to sets, we only stop if the process was
      not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _create_set_or_add_picture (controller, sets, picture, up_st);
+    keep_going = _create_set_or_add_picture (controller, picture, up_st);
 
   if (error && error->code != FSP_ERROR_CANCELLED)
     {
@@ -668,6 +670,11 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
       DEBUG ("Error creating set: %s", error->message);
       g_error_free (error);
       up_st->error = NULL;
+    }
+  else if (!error)
+    {
+      /* Update the number of items in the album */
+      frogr_photoset_set_n_photos (set, frogr_photoset_get_n_photos (set) + 1);
     }
 
   if (!keep_going)
@@ -682,6 +689,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
+  FrogrPhotoSet *set = NULL;
   GSList *sets = NULL;
   GError *error = NULL;
   gboolean keep_going = FALSE;
@@ -696,12 +704,14 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   up_st->error = error;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  sets = g_slist_next (sets);
+
+  set = FROGR_PHOTOSET (sets->data);
+  up_st->sets = g_slist_next (sets);
 
   /* When adding pictures to sets, we only stop if the process was
      not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _create_set_or_add_picture (controller, sets, picture, up_st);
+    keep_going = _create_set_or_add_picture (controller, picture, up_st);
 
   if (error && error->code != FSP_ERROR_CANCELLED)
     {
@@ -710,6 +720,11 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
       DEBUG ("Error adding picture to set: %s", error->message);
       g_error_free (error);
       up_st->error = NULL;
+    }
+  else if (!error)
+    {
+      /* Update the number of items in the album */
+      frogr_photoset_set_n_photos (set, frogr_photoset_get_n_photos (set) + 1);
     }
 
   if (!keep_going)
@@ -724,6 +739,8 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
+  FrogrGroup *group = NULL;
+  FrogrGroup *last_group = NULL;
   GSList *groups = NULL;
   GError *error = NULL;
   gboolean keep_going = FALSE;
@@ -739,18 +756,18 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
+  last_group = FROGR_GROUP (groups->data);
+  groups = g_slist_next (groups);
+
   /* When adding pictures to groups, we only stop if the process was
      not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
     {
       if (g_slist_length (groups) > 0)
         {
-          FrogrGroup *group = NULL;
-
           group = FROGR_GROUP (groups->data);
-          _notify_adding_to_group (controller, picture, group);
 
-          up_st->groups = g_slist_next (groups);
+          _notify_adding_to_group (controller, picture, group);
           fsp_session_add_to_group_async (session,
                                           frogr_picture_get_id (picture),
                                           frogr_group_get_id (group),
@@ -768,6 +785,11 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
       DEBUG ("Error adding picture to group: %s", error->message);
       g_error_free (error);
       up_st->error = NULL;
+    }
+  else if (!error && last_group)
+    {
+      /* Update the number of items in the group */
+      frogr_group_set_n_photos (last_group, frogr_group_get_n_photos (last_group) + 1);
     }
 
   if (!keep_going)
@@ -803,7 +825,6 @@ _add_picture_to_groups_on_idle (gpointer data)
   group = FROGR_GROUP (groups->data);
   _notify_adding_to_group (controller, picture, group);
 
-  up_st->groups = g_slist_next (groups);
   fsp_session_add_to_group_async (session,
                                   frogr_picture_get_id (picture),
                                   frogr_group_get_id (group),
