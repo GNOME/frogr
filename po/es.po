@@ -43,8 +43,8 @@ msgid "translator-credits"
 msgstr ""
 "Jorge González <jorgegonz@svn.gnome.org>, 2011\n"
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011\n"
-"Alejandro Pinheiro <apinheiro@igalia.com>, 2009\n"
-"Mario Sanchez Prada <msanchez@igalia.com>"
+"Mario Sanchez Prada <msanchez@igalia.com>, 2010\n"
+"Alejandro Pinheiro <apinheiro@igalia.com>, 2009"
 
 #: ../src/frogr-add-tags-dialog.c:339
 msgid "Enter a spaces separated list of tags:"
