@@ -13,31 +13,33 @@
     values for the visibility of the pictures.
   * Added support for specifying an HTTP proxy.
   * Added basic man page (Alberto Garcia).
-  * Fixed memory leaks thanks to valgrind.
   * Report in the progress dialog when pictures are being added to
     sets, and make that operation itself cancellable too.
-  * Allow changing sorting order in 'add to album' dialog.
   * Better and safer implementation for cancelling operations.
   * Allow adding pictures to group pools.
+  * Allow changing sorting order in 'add to album/group' dialogs.
   * Be aware of changes in basic account info on startup.
   * Added support for handling multiple accounts.
   * Added support for creating new albums right from frogr.
-  * Retrieve list of tags and use it in entry completions.
+  * Retrieve list of tags and use it to auto-complete in entries.
   * Do not accept tabs in text views, to allow keyboard navigation.
   * Added support for setting 'content type' and 'safety level'.
   * Added support to declare pictures to 'show up on global search results'.
-  * Added mnemonic to the 'Edit details' and the 'Settings' dialog.
+  * Added mnemonics to the 'Edit details' and the 'Settings' dialog.
   * Renamed 'Albums' as 'Sets'.
   * Remove pictures from UI as soon as they get uploaded.
   * Removed dependency from libgnome when GTK+ < 2.14, and raised
     minimum version required fo GTK+ from 2.12 up to 2.14.
+  * Allow compiling with gtk 3.0 by passing --with-gtk=3.0 to configure.
   * Better reporting progress to the users for time consuming operations.
   * Allow specifying a list of pictures to be loaded from command line.
   * Register frogr as image mime types handler, so it's possible to
     load pictures on it from other applications (e.g. nautilus or eog)
   * Added new translations: British English (en_GB), French (fr),
-    Swedish (sv), Galician (gl), German (de), Slovenian (sl), Italian (it)
-    and Czech (cs). See TRANSLATORS file for more details.
+    Swedish (sv), Galician (gl), German (de), Slovenian (sl), Italian
+    (it), Czech (cs), and Brazilian Portuguese (pt_BR). See
+    TRANSLATORS file for more details.
+  * As usual, lots of bugfixes and several minor improvements.
 
 0.3 (22 Dec 2010)
 
