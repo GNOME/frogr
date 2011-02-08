@@ -1,7 +1,8 @@
 /*
  * frogr-account.c -- User account for Frogr.
  *
- * Copyright (C) 2009, 2010, 2011 Adrian Perez
+ * Copyright (C) 2009-2011 Mario Sanchez Prada
+ *           (C) 2009 Adrian Perez
  * Authors:
  *   Adrian Perez <aperez@igalia.com>
  *   Mario Sanchez Prada <msanchez@igalia.com>

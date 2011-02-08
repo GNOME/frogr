@@ -1,4 +1,4 @@
-# Copyright (C) 2009, 2010, 2011 Mario Sanchez Prada
+# Copyright (C) 2009-2011 Mario Sanchez Prada
 # Authors: Mario Sanchez Prada <msanchez@igalia.com>
 #
 # This program is free software; you can redistribute it and/or
