@@ -6,7 +6,7 @@ Release:	1%{?dist}
 Group:		Applications/Internet
 License:	GPLv3
 URL:		http://live.gnome.org/Frogr
-Source0:	http://frogr.googlecode.com/files/%{name}-%{version}.tar.bz2
+Source0:	http://download.gnome.org/sources/%{name}/%{version}/%{name}-%{version}.tar.bz2
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	gtk2-devel > 2.14, glib2-devel, libsoup-devel, libxml2-devel
