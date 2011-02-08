@@ -1,8 +1,8 @@
 Source: frogr
 Section: graphics
 Priority: optional
-Maintainer: Alberto Garcia <agarcia@igalia.com>
-Build-Depends: cdbs, intltool, debhelper (>= 5), libglib2.0-dev (>= 2.16), libgtk2.0-dev (>= 2.14), libsoup2.4-dev (>= 2.24), libxml2-dev (>= 2.6.8)
+Maintainer: Mario Sanchez Prada <msanchez@igalia.com>
+Build-Depends: cdbs, intltool, debhelper (>= 5), libgtk2.0-dev (>= 2.14), libsoup2.4-dev (>= 2.24), libxml2-dev (>= 2.6.8)
 Standards-Version: 3.7.3
 Homepage: http://live.gnome.org/Frogr
 
