@@ -57,7 +57,7 @@ struct _FrogrPictureClass
 GType frogr_picture_get_type(void) G_GNUC_CONST;
 
 /* Constructor */
-FrogrPicture *frogr_picture_new (const gchar *filepath,
+FrogrPicture *frogr_picture_new (const gchar *fileuri,
                                  const gchar *title,
                                  gboolean public,
                                  gboolean family,
@@ -77,9 +77,9 @@ const gchar *frogr_picture_get_description (FrogrPicture *self);
 void frogr_picture_set_description (FrogrPicture *self,
                                     const gchar *description);
 
-const gchar *frogr_picture_get_filepath (FrogrPicture *self);
-void frogr_picture_set_filepath (FrogrPicture *self,
-                                 const gchar *filepath);
+const gchar *frogr_picture_get_fileuri (FrogrPicture *self);
+void frogr_picture_set_fileuri (FrogrPicture *self,
+                                const gchar *fileuri);
 
 const GSList *frogr_picture_get_tags_list (FrogrPicture *self);
 const gchar *frogr_picture_get_tags (FrogrPicture *self);

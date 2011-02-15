@@ -127,7 +127,7 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
 
 void
 fsp_session_upload_async                (FspSession          *self,
-                                         const gchar         *filepath,
+                                         const gchar         *fileuri,
                                          const gchar         *title,
                                          const gchar         *description,
                                          const gchar         *tags,

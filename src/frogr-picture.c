@@ -36,7 +36,7 @@ typedef struct _FrogrPicturePrivate FrogrPicturePrivate;
 struct _FrogrPicturePrivate
 {
   gchar *id;
-  gchar *filepath;
+  gchar *fileuri;
   gchar *title;
   gchar *description;
   gchar *tags_string;
@@ -60,7 +60,7 @@ struct _FrogrPicturePrivate
 enum  {
   PROP_0,
   PROP_ID,
-  PROP_FILEPATH,
+  PROP_FILEURI,
   PROP_TITLE,
   PROP_DESCRIPTION,
   PROP_TAGS_STRING,
@@ -186,8 +186,8 @@ _frogr_picture_set_property (GObject *object,
     case PROP_ID:
       frogr_picture_set_id (self, g_value_get_string (value));
       break;
-    case PROP_FILEPATH:
-      frogr_picture_set_filepath (self, g_value_get_string (value));
+    case PROP_FILEURI:
+      frogr_picture_set_fileuri (self, g_value_get_string (value));
       break;
     case PROP_TITLE:
       frogr_picture_set_title (self, g_value_get_string (value));
@@ -238,8 +238,8 @@ _frogr_picture_get_property (GObject *object,
     case PROP_ID:
       g_value_set_string (value, priv->id);
       break;
-    case PROP_FILEPATH:
-      g_value_set_string (value, priv->filepath);
+    case PROP_FILEURI:
+      g_value_set_string (value, priv->fileuri);
       break;
     case PROP_TITLE:
       g_value_set_string (value, priv->title);
@@ -314,7 +314,7 @@ _frogr_picture_finalize (GObject* object)
 
   /* free strings */
   g_free (priv->id);
-  g_free (priv->filepath);
+  g_free (priv->fileuri);
   g_free (priv->title);
   g_free (priv->description);
   g_free (priv->tags_string);
@@ -348,10 +348,10 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                         G_PARAM_READWRITE));
 
   g_object_class_install_property (obj_class,
-                                   PROP_FILEPATH,
-                                   g_param_spec_string ("filepath",
-                                                        "filepath",
-                                                        "Full filepath at disk "
+                                   PROP_FILEURI,
+                                   g_param_spec_string ("fileuri",
+                                                        "fileuri",
+                                                        "Full fileuri at disk "
                                                         "for the picture",
                                                         NULL,
                                                         G_PARAM_READWRITE));
@@ -451,7 +451,7 @@ frogr_picture_init (FrogrPicture *self)
 
   /* Default values */
   priv->id = NULL;
-  priv->filepath = NULL;
+  priv->fileuri = NULL;
   priv->title = NULL;
   priv->description = NULL;
   priv->tags_string = NULL;
@@ -475,17 +475,17 @@ frogr_picture_init (FrogrPicture *self)
 /* Public API */
 
 FrogrPicture *
-frogr_picture_new (const gchar *filepath,
+frogr_picture_new (const gchar *fileuri,
                    const gchar *title,
                    gboolean public,
                    gboolean family,
                    gboolean friend)
 {
-  g_return_val_if_fail (filepath, NULL);
+  g_return_val_if_fail (fileuri, NULL);
   g_return_val_if_fail (title, NULL);
 
   GObject *new = g_object_new(FROGR_TYPE_PICTURE,
-                              "filepath", filepath,
+                              "fileuri", fileuri,
                               "title", title,
                               "is-public", public,
                               "is-family", family,
@@ -525,27 +525,27 @@ frogr_picture_set_id (FrogrPicture *self,
 }
 
 const gchar *
-frogr_picture_get_filepath (FrogrPicture *self)
+frogr_picture_get_fileuri (FrogrPicture *self)
 {
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
   FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (self);
 
-  return (const gchar *)priv->filepath;
+  return (const gchar *)priv->fileuri;
 }
 
 void
-frogr_picture_set_filepath (FrogrPicture *self,
-                            const gchar *filepath)
+frogr_picture_set_fileuri (FrogrPicture *self,
+                           const gchar *fileuri)
 {
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
   FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (self);
 
-  g_free (priv->filepath);
-  priv->filepath = g_strdup (filepath);
+  g_free (priv->fileuri);
+  priv->fileuri = g_strdup (fileuri);
 }
 
 const gchar *

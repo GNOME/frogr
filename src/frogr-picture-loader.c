@@ -50,7 +50,7 @@ struct _FrogrPictureLoaderPrivate
   FrogrMainView *mainview;
   FrogrConfig *config;
 
-  GSList *filepaths;
+  GSList *fileuris;
   GSList *current;
   guint index;
   guint n_pictures;
@@ -138,13 +138,13 @@ _load_next_picture (FrogrPictureLoader *self)
     {
       GFile *gfile = NULL;
       GFileInfo *file_info;
-      gchar *filepath = (gchar *)priv->current->data;
+      gchar *fileuri = (gchar *)priv->current->data;
       const gchar *mime_type;
       gboolean valid_mime = FALSE;
       gint i;
 
       /* Get file info */
-      gfile = g_file_new_for_path (filepath);
+      gfile = g_file_new_for_uri (fileuri);
       file_info = g_file_query_info (gfile,
                                      G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
                                      G_FILE_QUERY_INFO_NONE,
@@ -161,7 +161,7 @@ _load_next_picture (FrogrPictureLoader *self)
             }
         }
 
-      DEBUG ("Adding file %s (%s)", filepath, mime_type);
+      DEBUG ("Adding file %s (%s)", fileuri, mime_type);
       g_object_unref (file_info);
 
       /* Asynchronously load the picture if mime is valid */
@@ -220,11 +220,11 @@ _load_next_picture_cb (GObject *object,
         {
           GdkPixbuf *pixbuf;
           GdkPixbuf *s_pixbuf;
-          gchar *filepath;
+          gchar *fileuri;
           gchar *filename;
 
           /* Gather needed information */
-          filepath = g_file_get_path (file);
+          fileuri = g_file_get_uri (file);
           filename = g_file_get_basename (file);
           gdk_pixbuf_loader_close (pixbuf_loader, NULL);
           pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
@@ -233,7 +233,7 @@ _load_next_picture_cb (GObject *object,
           s_pixbuf = _get_scaled_pixbuf (pixbuf);
 
           /* Build the FrogrPicture and set pixbuf */
-          fpicture = frogr_picture_new (filepath,
+          fpicture = frogr_picture_new (fileuri,
                                         filename,
                                         frogr_config_get_default_public (priv->config),
                                         frogr_config_get_default_family (priv->config),
@@ -249,7 +249,7 @@ _load_next_picture_cb (GObject *object,
 
           /* Free */
           g_object_unref (s_pixbuf);
-          g_free (filepath);
+          g_free (fileuri);
           g_free (filename);
         }
       else
@@ -329,8 +329,8 @@ _frogr_picture_loader_finalize (GObject* object)
     FROGR_PICTURE_LOADER_GET_PRIVATE (object);
 
   /* Free */
-  g_slist_foreach (priv->filepaths, (GFunc)g_free, NULL);
-  g_slist_free (priv->filepaths);
+  g_slist_foreach (priv->fileuris, (GFunc)g_free, NULL);
+  g_slist_free (priv->fileuris);
 
   G_OBJECT_CLASS (frogr_picture_loader_parent_class)->finalize(object);
 }
@@ -360,7 +360,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   priv->config = g_object_ref (frogr_config_get_instance ());
 
   /* Init the rest of private data */
-  priv->filepaths = NULL;
+  priv->fileuris = NULL;
   priv->current = NULL;
   priv->index = -1;
   priv->n_pictures = 0;
@@ -369,7 +369,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
 /* Public API */
 
 FrogrPictureLoader *
-frogr_picture_loader_new (GSList *filepaths,
+frogr_picture_loader_new (GSList *fileuris,
                           FrogrPictureLoadedCallback picture_loaded_cb,
                           FrogrPicturesLoadedCallback pictures_loaded_cb,
                           gpointer object)
@@ -381,10 +381,10 @@ frogr_picture_loader_new (GSList *filepaths,
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   /* Internal data */
-  priv->filepaths = g_slist_copy (filepaths);
-  priv->current = priv->filepaths;
+  priv->fileuris = g_slist_copy (fileuris);
+  priv->current = priv->fileuris;
   priv->index = 0;
-  priv->n_pictures = g_slist_length (priv->filepaths);
+  priv->n_pictures = g_slist_length (priv->fileuris);
 
   /* Callback data */
   priv->picture_loaded_cb = picture_loaded_cb;
@@ -403,7 +403,7 @@ frogr_picture_loader_load (FrogrPictureLoader *self)
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   /* Check first whether there's something to load */
-  if (priv->filepaths == NULL)
+  if (priv->fileuris == NULL)
     return;
 
   /* Update status and progress */

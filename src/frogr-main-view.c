@@ -95,7 +95,7 @@ typedef struct _FrogrMainViewPrivate {
 
 
 enum {
-  FILEPATH_COL,
+  FILEURI_COL,
   PIXBUF_COL,
   FPICTURE_COL
 };
@@ -164,7 +164,7 @@ static void _add_pictures_to_existing_set (FrogrMainView *self);
 static void _add_pictures_to_group (FrogrMainView *self);
 static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
-static void _load_pictures (FrogrMainView *self, GSList *filepaths);
+static void _load_pictures (FrogrMainView *self, GSList *fileuris);
 static void _upload_pictures (FrogrMainView *self);
 
 static void _progress_dialog_response (GtkDialog *dialog,
@@ -477,7 +477,7 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   FrogrMainView *self = NULL;
   FrogrMainViewPrivate *priv = NULL;
   GdkAtom target;
-  GSList *filepaths_list = NULL;
+  GSList *fileuris_list = NULL;
   const guchar *files_string = NULL;
   gchar **fileuris_array = NULL;
   gint i;
@@ -500,21 +500,21 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   fileuris_array = g_strsplit ((const gchar*)files_string, "\r\n", -1);
   for (i = 0;  fileuris_array[i]; i++)
     {
-      gchar *filepath = g_filename_from_uri (fileuris_array[i], NULL, NULL);
-      if (filepath && !g_str_equal (g_strstrip (filepath), ""))
-        filepaths_list = g_slist_append (filepaths_list, filepath);
+      gchar *fileuri = g_strdup (fileuris_array[i]);
+      if (fileuri && !g_str_equal (g_strstrip (fileuri), ""))
+        fileuris_list = g_slist_append (fileuris_list, fileuri);
     }
 
   /* Load pictures */
-  if (filepaths_list != NULL)
-    _load_pictures (FROGR_MAIN_VIEW (self), filepaths_list);
+  if (fileuris_list != NULL)
+    _load_pictures (FROGR_MAIN_VIEW (self), fileuris_list);
 
   /* Finish drag and drop */
   gtk_drag_finish (context, TRUE, FALSE, time);
 
   /* Free */
   g_strfreev (fileuris_array);
-  g_slist_free (filepaths_list);
+  g_slist_free (fileuris_list);
 }
 
 void
@@ -807,15 +807,15 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GdkPixbuf *pixbuf;
   GtkTreeIter iter;
-  const gchar *filepath;
+  const gchar *fileuri;
 
   /* Add to GtkIconView */
-  filepath = frogr_picture_get_filepath (picture);
+  fileuri = frogr_picture_get_fileuri (picture);
   pixbuf = frogr_picture_get_pixbuf (picture);
 
   gtk_list_store_append (GTK_LIST_STORE (priv->tree_model), &iter);
   gtk_list_store_set (GTK_LIST_STORE (priv->tree_model), &iter,
-                      FILEPATH_COL, filepath,
+                      FILEURI_COL, fileuri,
                       PIXBUF_COL, pixbuf,
                       FPICTURE_COL, picture,
                       -1);
@@ -865,14 +865,14 @@ _add_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer dat
 
   if (response == GTK_RESPONSE_ACCEPT)
     {
-      GSList *filepaths;
+      GSList *fileuris;
 
       /* Add selected pictures to icon view area */
-      filepaths = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
-      if (filepaths != NULL)
+      fileuris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (dialog));
+      if (fileuris != NULL)
         {
-          _load_pictures (FROGR_MAIN_VIEW (self), filepaths);
-          g_slist_free (filepaths);
+          _load_pictures (FROGR_MAIN_VIEW (self), fileuris);
+          g_slist_free (fileuris);
         }
     }
 
@@ -904,6 +904,7 @@ _add_pictures_dialog (FrogrMainView *self)
   gtk_file_filter_set_name (filter, "images");
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
+  gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), FALSE);
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_add_pictures_dialog_response_cb), self);
@@ -1020,10 +1021,10 @@ _remove_selected_pictures (FrogrMainView *self)
 }
 
 static void
-_load_pictures (FrogrMainView *self, GSList *filepaths)
+_load_pictures (FrogrMainView *self, GSList *fileuris)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_load_pictures (priv->controller, filepaths);
+  frogr_controller_load_pictures (priv->controller, fileuris);
 }
 
 static void

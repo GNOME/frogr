@@ -504,7 +504,7 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
 
   _enable_cancellable (self, TRUE);
   fsp_session_upload_async (priv->session,
-                            frogr_picture_get_filepath (picture),
+                            frogr_picture_get_fileuri (picture),
                             frogr_picture_get_title (picture),
                             frogr_picture_get_description (picture),
                             frogr_picture_get_tags (picture),
@@ -2132,10 +2132,10 @@ frogr_controller_revoke_authorization (FrogrController *self)
 
 void
 frogr_controller_load_pictures (FrogrController *self,
-                                GSList *filepaths)
+                                GSList *fileuris)
 {
   FrogrPictureLoader *fploader;
-  fploader = frogr_picture_loader_new (filepaths,
+  fploader = frogr_picture_loader_new (fileuris,
                                        (FrogrPictureLoadedCallback) _on_picture_loaded,
                                        (FrogrPicturesLoadedCallback) _on_pictures_loaded,
                                        self);

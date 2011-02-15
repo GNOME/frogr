@@ -513,11 +513,10 @@ _get_soup_message_for_upload            (GFile       *file,
   GHashTableIter iter;
   gpointer key, value;
   gchar *mime_type;
-  gchar *filepath;
   gchar *fileuri;
 
   /* Gather needed information */
-  filepath = g_file_get_path (file);
+  fileuri = g_file_get_uri (file);
   file_info = g_file_query_info (file,
                                  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
                                  G_FILE_QUERY_INFO_NONE,
@@ -537,17 +536,15 @@ _get_soup_message_for_upload            (GFile       *file,
 
   /* Append the content of the file */
   buffer = soup_buffer_new (SOUP_MEMORY_TAKE, contents, length);
-  fileuri = g_filename_to_uri (filepath, NULL, NULL);
   soup_multipart_append_form_file (mpart, "photo", fileuri,
                                    mime_type, buffer);
-  g_free (fileuri);
 
   /* Get the associated message */
   msg = soup_form_request_new_from_multipart (FLICKR_API_UPLOAD_URL, mpart);
 
   /* Free */
   soup_multipart_free (mpart);
-  g_free (filepath);
+  g_free (fileuri);
   g_free (mime_type);
 
   /* Return message */
@@ -1592,7 +1589,7 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
 
 void
 fsp_session_upload_async                (FspSession          *self,
-                                         const gchar         *filepath,
+                                         const gchar         *fileuri,
                                          const gchar         *title,
                                          const gchar         *description,
                                          const gchar         *tags,
@@ -1607,7 +1604,7 @@ fsp_session_upload_async                (FspSession          *self,
                                          gpointer             data)
 {
   g_return_if_fail (FSP_IS_SESSION (self));
-  g_return_if_fail (filepath != NULL);
+  g_return_if_fail (fileuri != NULL);
 
   FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
@@ -1650,7 +1647,7 @@ fsp_session_upload_async                (FspSession          *self,
   up_clos->extra_params = extra_params;
 
   /* Asynchronously load the contents of the file */
-  file = g_file_new_for_path (filepath);
+  file = g_file_new_for_uri (fileuri);
   g_file_load_contents_async (file, NULL, _load_file_contents_cb, up_clos);
 }
 

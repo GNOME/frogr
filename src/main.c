@@ -30,37 +30,30 @@
 #include <libxml/parser.h>
 
 static GSList *
-_get_paths_list_from_array (char **paths_str, int n_paths)
+_get_uris_list_from_array (char **uris_str, int n_uris)
 {
-  GSList *filepaths = NULL;
-  GError *err = NULL;
+  GSList *fileuris = NULL;
   int i = 0;
 
-  for (i = 0; i < n_paths; i++)
+  for (i = 0; i < n_uris; i++)
     {
       gchar *uri = NULL;
-      gchar *filepath = NULL;
+      gchar *fileuri = NULL;
 
       /* Add the 'file://' schema if not present */
-      if (g_str_has_prefix (paths_str[i], "/"))
-        uri = g_strdup_printf ("file://%s", paths_str[i]);
+      if (g_str_has_prefix (uris_str[i], "/"))
+        uri = g_strdup_printf ("file://%s", uris_str[i]);
       else
-        uri = g_strdup (paths_str[i]);
+        uri = g_strdup (uris_str[i]);
 
-      filepath = g_filename_from_uri (uri, NULL, &err);
-      if (err)
-        {
-          DEBUG ("Error loading picture %s: %s\n", uri, err->message);
-          g_error_free (err);
-          err = NULL;
-        }
-      else
-        filepaths = g_slist_append (filepaths, filepath);
+      fileuri = g_strdup (uri);
+      if (fileuri)
+        fileuris = g_slist_append (fileuris, fileuri);
 
       g_free (uri);
     }
 
-  return filepaths;
+  return fileuris;
 }
 
 static gboolean
@@ -69,12 +62,12 @@ _load_pictures_on_idle (gpointer data)
   g_return_val_if_fail (data, FALSE);
 
   FrogrController *fcontroller = NULL;
-  GSList *filepaths = NULL;
+  GSList *fileuris = NULL;
 
   fcontroller = frogr_controller_get_instance ();
-  filepaths = (GSList *)data;
+  fileuris = (GSList *)data;
 
-  frogr_controller_load_pictures (fcontroller, filepaths);
+  frogr_controller_load_pictures (fcontroller, fileuris);
 
   return FALSE;
 }
@@ -83,11 +76,11 @@ int
 main (int argc, char **argv)
 {
   FrogrController *fcontroller = NULL;
-  GSList *filepaths = NULL;
+  GSList *fileuris = NULL;
 
   /* Check optional command line parameters */
   if (argc > 1)
-    filepaths = _get_paths_list_from_array (&argv[1], argc - 1);
+    fileuris = _get_uris_list_from_array (&argv[1], argc - 1);
 
   gtk_init (&argc, &argv);
   g_set_application_name(APP_SHORTNAME);
@@ -102,15 +95,15 @@ main (int argc, char **argv)
 
   /* Run app (and load pictures if present) */
   fcontroller = frogr_controller_get_instance ();
-  if (filepaths)
-    gdk_threads_add_idle (_load_pictures_on_idle, filepaths);
+  if (fileuris)
+    gdk_threads_add_idle (_load_pictures_on_idle, fileuris);
 
   frogr_controller_run_app (fcontroller);
 
-  if (filepaths)
+  if (fileuris)
     {
-      g_slist_foreach (filepaths, (GFunc)g_free, NULL);
-      g_slist_free (filepaths);
+      g_slist_foreach (fileuris, (GFunc)g_free, NULL);
+      g_slist_free (fileuris);
     }
 
   /* cleanup libxml2 library */
