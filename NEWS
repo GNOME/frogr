@@ -1,6 +1,6 @@
 0.5 (??)
 
-  * 
+  * Allow loading files from remote servers (use URIs instead of paths).
 
 0.4 (05 Feb 2011)
 
