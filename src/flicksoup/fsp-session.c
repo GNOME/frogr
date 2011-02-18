@@ -656,7 +656,6 @@ _get_params_table_from_valist           (const gchar *first_param,
                                          va_list      args)
 {
   g_return_val_if_fail (first_param != NULL, NULL);
-  g_return_val_if_fail (args != NULL, NULL);
 
   GHashTable *table = NULL;
   gchar *p, *v;
