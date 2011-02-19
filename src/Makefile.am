@@ -37,8 +37,6 @@ frogr_CFLAGS += \
 	-DGTK_API_VERSION_2=1
 endif
 
-frogr_LDFLAGS = -export-dynamic
-
 frogr_SOURCES = \
 	frogr-about-dialog.c \
 	frogr-about-dialog.h \
