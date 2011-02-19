@@ -1024,7 +1024,7 @@ _handle_soup_response                   (SoupMessage   *msg,
   g_signal_handlers_disconnect_by_func (msg, _wrote_body_data_cb, clos);
 
   response_str = g_strndup (msg->response_body->data, msg->response_body->length);
-  response_len = (ulong) msg->response_body->length;
+  response_len = (gulong) msg->response_body->length;
   if (response_str)
     DEBUG ("\nResponse got:\n%s\n", response_str);
 
