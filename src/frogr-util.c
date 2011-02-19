@@ -36,9 +36,12 @@ frogr_util_open_url_in_browser (const gchar *url)
   gchar *command = NULL;
   GError *error = NULL;
 
-  /* FIXME: Replace this lines with gtk_show_uri() when we found the
-     reason behind frogr hanging after calling twice that function */
+#ifdef MAC_INTEGRATION
+  command = g_strdup_printf ("open %s", url);
+#else
   command = g_strdup_printf ("gnome-open %s", url);
+#endif
+
   g_spawn_command_line_async (command, &error);
   g_free (command);
 
