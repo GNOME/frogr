@@ -926,11 +926,23 @@ _add_pictures_dialog (FrogrMainView *self)
 
   /* Set images filter */
   filter = gtk_file_filter_new ();
+
+#ifdef MAC_INTEGRATION
+  /* Workaround for Mac OSX, where GNOME VFS daemon won't be running,
+     so we can't check filter by mime type (will be text/plain) */
+  gtk_file_filter_add_pattern (filter, "*.[jJ][pP][gG]");
+  gtk_file_filter_add_pattern (filter, "*.[jJ][pP][eE][gG]");
+  gtk_file_filter_add_pattern (filter, "*.[pP][nN][gG]");
+  gtk_file_filter_add_pattern (filter, "*.[bB][mM][pP]");
+  gtk_file_filter_add_pattern (filter, "*.[gG][iI][fF]");
+#else
   gtk_file_filter_add_mime_type (filter, "image/jpg");
   gtk_file_filter_add_mime_type (filter, "image/jpeg");
   gtk_file_filter_add_mime_type (filter, "image/png");
   gtk_file_filter_add_mime_type (filter, "image/bmp");
   gtk_file_filter_add_mime_type (filter, "image/gif");
+#endif
+
   gtk_file_filter_set_name (filter, "images");
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);

@@ -60,6 +60,9 @@ struct _FrogrPictureLoaderPrivate
   GObject *object;
 };
 
+#ifndef MAC_INTEGRATION
+/* Don't use this in Mac OSX, where GNOME VFS daemon won't be running,
+   so we couldn't reliably check mime types (will be text/plain) */
 static const gchar *valid_mimetypes[] = {
   "image/jpg",
   "image/jpeg",
@@ -67,6 +70,7 @@ static const gchar *valid_mimetypes[] = {
   "image/bmp",
   "image/gif",
   NULL};
+#endif
 
 /* Prototypes */
 
@@ -136,22 +140,26 @@ _load_next_picture (FrogrPictureLoader *self)
 
   if (priv->current)
     {
-      GFile *gfile = NULL;
-      GFileInfo *file_info;
       gchar *fileuri = (gchar *)priv->current->data;
+      GFile *gfile = g_file_new_for_uri (fileuri);
+      gboolean valid_mime = TRUE;
+
+#ifndef MAC_INTEGRATION
+      GFileInfo *file_info;
       const gchar *mime_type;
-      gboolean valid_mime = FALSE;
       gint i;
 
       /* Get file info */
-      gfile = g_file_new_for_uri (fileuri);
       file_info = g_file_query_info (gfile,
                                      G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
                                      G_FILE_QUERY_INFO_NONE,
                                      NULL,
                                      NULL);
-      /* Check mimetype */
+
+      /* Check mimetype (only when not in Mac OSX) */
       mime_type = g_file_info_get_content_type (file_info);
+
+      valid_mime = FALSE;
       for (i = 0; valid_mimetypes[i]; i++)
         {
           if (g_str_equal (valid_mimetypes[i], mime_type))
@@ -161,8 +169,11 @@ _load_next_picture (FrogrPictureLoader *self)
             }
         }
 
-      DEBUG ("Adding file %s (%s)", fileuri, mime_type);
+      DEBUG ("Mime detected: %s)", mime_type);
       g_object_unref (file_info);
+#endif
+
+      DEBUG ("Adding file %s", fileuri);
 
       /* Asynchronously load the picture if mime is valid */
       if (valid_mime)
