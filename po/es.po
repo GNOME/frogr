@@ -2,17 +2,17 @@
 # Copyright (C) 2009, 2010 THE frogr'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
 # Alejandro Pinheiro <apinheiro@igalia.com>, 2009.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 # Jorge González <jorgegonz@svn.gnome.org>, 2011.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&component=general\n"
-"POT-Creation-Date: 2011-01-22 01:51+0000\n"
-"PO-Revision-Date: 2011-01-22 17:03+0100\n"
-"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"POT-Creation-Date: 2011-02-22 01:47+0000\n"
+"PO-Revision-Date: 2011-02-22 18:07+0100\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,12 +21,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../data/frogr.desktop.in.in.h:1
-#| msgid "A Flickr remote organizer for GNOME\n"
 msgid "Flickr Remote Organizer"
 msgstr "Organizador remoto para Flickr"
 
 #: ../data/frogr.desktop.in.in.h:2
-#| msgid "A Flickr remote organizer for GNOME\n"
 msgid "Frogr: a Flickr Remote Organizer for GNOME"
 msgstr "Frogr: un organizador remoto de Flickr para GNOME"
 
@@ -38,7 +36,7 @@ msgstr "Subir y organizar fotos en cuentas de Flickr"
 msgid "A Flickr remote organizer for GNOME\n"
 msgstr "Un organizador remoto de Flickr para GNOME\n"
 
-#: ../src/frogr-about-dialog.c:107
+#: ../src/frogr-about-dialog.c:106
 msgid "translator-credits"
 msgstr ""
 "Jorge González <jorgegonz@svn.gnome.org>, 2011\n"
@@ -46,11 +44,11 @@ msgstr ""
 "Mario Sanchez Prada <msanchez@igalia.com>, 2010\n"
 "Alejandro Pinheiro <apinheiro@igalia.com>, 2009"
 
-#: ../src/frogr-add-tags-dialog.c:339
+#: ../src/frogr-add-tags-dialog.c:342
 msgid "Enter a spaces separated list of tags:"
 msgstr "Introducir una lista de etiquetas separada por espacios:"
 
-#: ../src/frogr-add-tags-dialog.c:380
+#: ../src/frogr-add-tags-dialog.c:383
 msgid "Add Tags"
 msgstr "Añadir etiquetas"
 
@@ -92,11 +90,11 @@ msgstr ""
 "Pulse el botón para comenzar a usar %s una vez que lo haya registrado en su "
 "cuenta de Flickr."
 
-#: ../src/frogr-controller.c:241
+#: ../src/frogr-controller.c:240
 msgid "Process cancelled by the user"
 msgstr "Proceso cancelado por el usuario"
 
-#: ../src/frogr-controller.c:246
+#: ../src/frogr-controller.c:245
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -104,7 +102,7 @@ msgstr ""
 "Error de conexión:\n"
 "La red no está disponible"
 
-#: ../src/frogr-controller.c:251
+#: ../src/frogr-controller.c:250
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -112,7 +110,7 @@ msgstr ""
 "Error de conexión:\n"
 "Petición inválida"
 
-#: ../src/frogr-controller.c:256
+#: ../src/frogr-controller.c:255
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -120,7 +118,7 @@ msgstr ""
 "Error de conexión:\n"
 "Ocurrió un problema en el servidor"
 
-#: ../src/frogr-controller.c:261
+#: ../src/frogr-controller.c:260
 msgid ""
 "Error uploading picture:\n"
 "File invalid"
@@ -128,7 +126,7 @@ msgstr ""
 "Error al subir la imagen:\n"
 "Archivo no válido"
 
-#: ../src/frogr-controller.c:266
+#: ../src/frogr-controller.c:265
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -136,7 +134,7 @@ msgstr ""
 "Error al subir la imagen:\n"
 "Límite de cuota excedido"
 
-#: ../src/frogr-controller.c:271
+#: ../src/frogr-controller.c:270
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -144,7 +142,7 @@ msgstr ""
 "Error:\n"
 "No se encontró la foto"
 
-#: ../src/frogr-controller.c:276
+#: ../src/frogr-controller.c:275
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -152,7 +150,7 @@ msgstr ""
 "Error:\n"
 "La foto ya está incluida en el álbum de fotos"
 
-#: ../src/frogr-controller.c:281
+#: ../src/frogr-controller.c:280
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -160,7 +158,7 @@ msgstr ""
 "Error:\n"
 "La foto ya está incluida en el grupo"
 
-#: ../src/frogr-controller.c:286
+#: ../src/frogr-controller.c:285
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -168,7 +166,7 @@ msgstr ""
 "Error:\n"
 "La foto ya está en el máximo número posible de grupos"
 
-#: ../src/frogr-controller.c:291
+#: ../src/frogr-controller.c:290
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -176,7 +174,7 @@ msgstr ""
 "Error:\n"
 "Ya se alcanzó el límite de grupos"
 
-#: ../src/frogr-controller.c:296
+#: ../src/frogr-controller.c:295
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -184,7 +182,7 @@ msgstr ""
 "Error:\n"
 "La foto se añadió a la cola del grupo"
 
-#: ../src/frogr-controller.c:301
+#: ../src/frogr-controller.c:300
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -192,7 +190,7 @@ msgstr ""
 "Error:\n"
 "La foto ya estaba añadida en la cola del grupo"
 
-#: ../src/frogr-controller.c:306
+#: ../src/frogr-controller.c:305
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -200,7 +198,7 @@ msgstr ""
 "Error:\n"
 "El grupo no permite este contenido"
 
-#: ../src/frogr-controller.c:311
+#: ../src/frogr-controller.c:310
 #, c-format
 msgid ""
 "Authorization failed.\n"
@@ -209,7 +207,7 @@ msgstr ""
 "Falló la autorización.\n"
 "Inténtelo de nuevo"
 
-#: ../src/frogr-controller.c:317
+#: ../src/frogr-controller.c:316
 #, c-format
 msgid ""
 "Error\n"
@@ -220,7 +218,7 @@ msgstr ""
 "%s no está adecuadamente autorizado para subir imágenes a Flickr.\n"
 "Autorícelo de nuevo."
 
-#: ../src/frogr-controller.c:323
+#: ../src/frogr-controller.c:322
 #, c-format
 msgid ""
 "Error:\n"
@@ -230,47 +228,44 @@ msgstr ""
 "El servicio no está disponible"
 
 #. General error: just dump the raw error description
-#: ../src/frogr-controller.c:329
+#: ../src/frogr-controller.c:328
 #, c-format
 msgid "An error happened while uploading a picture: %s."
 msgstr "Ocurrió un error al subir la imagen: %s."
 
-#: ../src/frogr-controller.c:874
-#| msgid "Creating new photoset…"
+#: ../src/frogr-controller.c:900
 msgid "Creating new photosets…"
 msgstr "Creando álbumes de fotos nuevos…"
 
-#: ../src/frogr-controller.c:898
-#| msgid "Adding picture to photoset…"
+#: ../src/frogr-controller.c:924
 msgid "Adding picture to photosets…"
 msgstr "Añadiendo imagen a los álbumes de fotos…"
 
-#: ../src/frogr-controller.c:920
-#| msgid "Adding picture to group…"
+#: ../src/frogr-controller.c:946
 msgid "Adding picture to groups…"
 msgstr "Añadiendo imagen a los grupos…"
 
-#: ../src/frogr-controller.c:1496
+#: ../src/frogr-controller.c:1522
 msgid "No sets found"
 msgstr "No se encontró ningún álbum"
 
-#: ../src/frogr-controller.c:1530
+#: ../src/frogr-controller.c:1556
 msgid "No groups found"
 msgstr "No se encontró ningún grupo"
 
-#: ../src/frogr-controller.c:1964 ../src/frogr-controller.c:1987
+#: ../src/frogr-controller.c:1990 ../src/frogr-controller.c:2013
 msgid "Retrieving list of tags…"
 msgstr "Obteniendo lista de etiquetas…"
 
-#: ../src/frogr-controller.c:2010 ../src/frogr-controller.c:2033
+#: ../src/frogr-controller.c:2036 ../src/frogr-controller.c:2059
 msgid "Retrieving list of sets…"
 msgstr "Obteniendo lista de álbumes…"
 
-#: ../src/frogr-controller.c:2056
+#: ../src/frogr-controller.c:2082
 msgid "Retrieving list of groups…"
 msgstr "Obteniendo lista de grupos…"
 
-#: ../src/frogr-controller.c:2135
+#: ../src/frogr-controller.c:2161
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -280,7 +275,7 @@ msgstr ""
 "Vuelva a autorizarlo."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:890
+#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:893
 msgid "Missing data required"
 msgstr "Falta información necesaria"
 
@@ -364,7 +359,7 @@ msgstr "_Descripción:"
 msgid "Ta_gs:"
 msgstr "_Etiquetas:"
 
-#: ../src/frogr-details-dialog.c:1071 ../src/frogr-details-dialog.c:1076
+#: ../src/frogr-details-dialog.c:1074 ../src/frogr-details-dialog.c:1079
 msgid "Edit Picture Details"
 msgstr "Editar detalles de la imagen"
 
@@ -443,30 +438,30 @@ msgid "_Help"
 msgstr "Ay_uda"
 
 #: ../src/frogr-main-view.c:345
-msgid "_About"
-msgstr "Acerca _de"
+msgid "_About frogr..."
+msgstr "_Acerca de frogr..."
 
 #: ../src/frogr-main-view.c:890
 msgid "Select a Picture"
 msgstr "Seleccionar una Imagen"
 
-#: ../src/frogr-main-view.c:923
+#: ../src/frogr-main-view.c:924
 msgid "You need to select some pictures first"
 msgstr "Debe seleccionar alguna imagen primero"
 
-#: ../src/frogr-main-view.c:1141
+#: ../src/frogr-main-view.c:1142
 msgid "Not connected to flickr"
 msgstr "No está conectado a Flickr"
 
-#: ../src/frogr-main-view.c:1170
+#: ../src/frogr-main-view.c:1171
 msgid "remaining for the current month"
 msgstr "restantes para el mes actual"
 
-#: ../src/frogr-main-view.c:1178
+#: ../src/frogr-main-view.c:1179
 msgid "Connected as"
 msgstr "Conectado como"
 
-#: ../src/frogr-main-view.c:1179
+#: ../src/frogr-main-view.c:1180
 msgid " (PRO account)"
 msgstr " (cuenta PRO)"
 
@@ -544,6 +539,9 @@ msgstr "Subir"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "frogr"
 msgstr "frogr"
+
+#~ msgid "_About"
+#~ msgstr "Acerca _de"
 
 #~ msgid "Default Actions"
 #~ msgstr "Acciones predeterminadas"
