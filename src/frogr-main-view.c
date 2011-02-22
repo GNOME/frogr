@@ -342,7 +342,7 @@ _populate_menu_bar (FrogrMainView *self)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_About"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_About frogr..."));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_about_menu_item_activate),
