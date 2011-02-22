@@ -95,6 +95,36 @@ else
    FROGR_CFLAGS="$FROGR_CFLAGS -DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS -g0 -O2"
 fi
 
+# Mac OSX support
+
+if $PKG_CONFIG --exists ige-mac-integration; then
+   detected_platform=macosx
+else
+   detected_platform=gnome
+fi
+
+AC_ARG_WITH(platform, [
+Target platform:
+  --with-platform=detect  detect target platform (default)
+  --with-platform=gnome   compile for Gnome
+  --with-platform=macosx  compile for Mac OSX],
+  platform=$withval, platform=detect)
+
+if test "$platform" = "detect"; then
+   platform=$detected_platform
+fi
+
+if test "x$platform" = "xmacosx"; then
+   echo "Compiling for Mac OSX..."
+
+   IGE_MAC_INTEGRATION_MIN_VERSION=0.9.7
+   PKG_CHECK_MODULES(IMI, ige-mac-integration >= $IGE_MAC_INTEGRATION_MIN_VERSION)
+   FROGR_CFLAGS="$FROGR_CFLAGS $IMI_CFLAGS"
+   FROGR_LIBS="$FROGR_LIBS $IMI_LIBS"
+else
+   echo "Compiling for GNOME..."
+fi
+
 # Produce output files
 
 AC_CONFIG_FILES([
@@ -112,6 +142,7 @@ echo "*************************************"
 echo "*** frogr is ready to be compiled ***"
 echo "*************************************"
 echo ""
+echo "Platform           : $platform"
 echo "Using GTK+ version : $with_gtk"
 echo "Enable debug       : $enable_debug"
 echo ""
