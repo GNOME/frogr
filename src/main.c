@@ -29,6 +29,10 @@
 #include <gtk/gtk.h>
 #include <libxml/parser.h>
 
+#ifdef MAC_INTEGRATION
+#include <gtkosxapplication.h>
+#endif
+
 static GSList *
 _get_uris_list_from_array (char **uris_str, int n_uris)
 {
@@ -83,7 +87,13 @@ main (int argc, char **argv)
     fileuris = _get_uris_list_from_array (&argv[1], argc - 1);
 
   gtk_init (&argc, &argv);
+
   g_set_application_name(APP_SHORTNAME);
+
+#ifdef MAC_INTEGRATION
+  /* Initialize the GtkOSXApplication singleton */
+  g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
+#endif
 
   /* Translation domain */
   bindtextdomain (GETTEXT_PACKAGE, FROGR_LOCALE_DIR);
