@@ -22,6 +22,7 @@
 
 #include "frogr-details-dialog.h"
 
+#include "frogr-config.h"
 #include "frogr-controller.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
@@ -114,6 +115,7 @@ static void
 _create_widgets (FrogrDetailsDialog *self)
 {
   FrogrDetailsDialogPrivate *priv = NULL;
+  FrogrConfig *config = NULL;
   GtkWidget *main_vbox = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *hbox = NULL;
@@ -129,7 +131,6 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *widget = NULL;
   GtkWidget *table = NULL;
   GtkWidget *scroller = NULL;
-  GtkEntryCompletion *completion = NULL;
   GtkTreeModel *model = NULL;
   gchar *markup = NULL;
 
@@ -322,19 +323,28 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 6);
 
-
-  /* Prepare auto completion for tags */
-  completion = gtk_entry_completion_new ();
-  gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (completion), TEXT_COL);
-  gtk_entry_completion_set_inline_completion (GTK_ENTRY_COMPLETION (completion), TRUE);
-  gtk_entry_completion_set_match_func (GTK_ENTRY_COMPLETION (completion),
-                                       _tag_list_completion_func,
-                                       self, NULL);
-  gtk_entry_set_completion (GTK_ENTRY (priv->tags_entry), completion);
-
   model = GTK_TREE_MODEL (gtk_list_store_new (1, G_TYPE_STRING));
-  gtk_entry_completion_set_model (GTK_ENTRY_COMPLETION (completion), model);
   priv->treemodel = model;
+
+  config = frogr_config_get_instance ();
+  if (config && frogr_config_get_tags_autocompletion (config))
+    {
+      GtkEntryCompletion *completion = NULL;
+
+      /* Prepare auto completion for tags */
+      completion = gtk_entry_completion_new ();
+      gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (completion), TEXT_COL);
+      gtk_entry_completion_set_inline_completion (GTK_ENTRY_COMPLETION (completion), TRUE);
+      gtk_entry_completion_set_match_func (GTK_ENTRY_COMPLETION (completion),
+                                           _tag_list_completion_func,
+                                           self, NULL);
+      gtk_entry_set_completion (GTK_ENTRY (priv->tags_entry), completion);
+
+      gtk_entry_completion_set_model (GTK_ENTRY_COMPLETION (completion), model);
+
+      g_signal_connect (G_OBJECT (completion), "match-selected",
+                        G_CALLBACK (_completion_match_selected_cb), self);
+    }
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (priv->public_rb), "clicked",
@@ -369,9 +379,6 @@ _create_widgets (FrogrDetailsDialog *self)
 
   g_signal_connect (G_OBJECT (priv->restricted_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
-
-  g_signal_connect (G_OBJECT (completion), "match-selected",
-                    G_CALLBACK (_completion_match_selected_cb), self);
 
   /* Show widgets */
   gtk_widget_show_all (main_vbox);
