@@ -11,10 +11,6 @@ groups depending on the scope of the application, which can be:
 TODO list for the uploader:
 ===========================
 
- * Show username in the list of available accounts.
-
- * Allow disabling tags autocompletion through preferences dialog.
-
  * Allow reordering pictures in icon view before uploading.
 
  * Allow setting license type for the pictures in the details dialog.

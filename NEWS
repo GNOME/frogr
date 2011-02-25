@@ -1,6 +1,8 @@
 0.5 (??)
 
   * Allow loading files from remote servers (use URIs instead of paths).
+  * Show username in the list of available accounts.
+  * Allow disabling tags autocompletion through preferences dialog.
 
 0.4 (05 Feb 2011)
 
