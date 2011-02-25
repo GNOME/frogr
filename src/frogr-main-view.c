@@ -908,7 +908,7 @@ _add_pictures_dialog (FrogrMainView *self)
   gtk_file_filter_add_mime_type (filter, "image/png");
   gtk_file_filter_add_mime_type (filter, "image/bmp");
   gtk_file_filter_add_mime_type (filter, "image/gif");
-  gtk_file_filter_set_name (filter, "images");
+  gtk_file_filter_set_name (filter, _("images"));
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
   gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), FALSE);
