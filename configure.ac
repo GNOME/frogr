@@ -125,6 +125,8 @@ else
    echo "Compiling for GNOME..."
 fi
 
+AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xmacosx"])
+
 # Produce output files
 
 AC_CONFIG_FILES([
