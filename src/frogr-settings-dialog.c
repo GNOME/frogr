@@ -53,6 +53,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *safe_rb;
   GtkWidget *moderate_rb;
   GtkWidget *restricted_rb;
+  GtkWidget *tags_autocompletion_cb;
 
   GtkWidget *use_proxy_cb;
   GtkWidget *proxy_host_label;
@@ -68,6 +69,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean family_visibility;
   gboolean friend_visibility;
   gboolean show_in_search;
+  gboolean tags_autocompletion;
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
@@ -267,6 +269,31 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     G_CALLBACK (_on_button_toggled),
                     self);
 
+  /* Misc */
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("Other options"));
+  gtk_label_set_markup (GTK_LABEL (label), markup);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 1);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+
+  box1 = gtk_vbox_new (FALSE, 6);
+
+  cbutton = gtk_check_button_new_with_mnemonic (_("Ena_ble tags auto-completion"));
+  gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
+  priv->tags_autocompletion_cb = cbutton;
+
+  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+
+  g_signal_connect (G_OBJECT (priv->tags_autocompletion_cb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_General")));
 }
@@ -396,6 +423,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->show_in_search = frogr_config_get_default_show_in_search (priv->config);
   priv->content_type = frogr_config_get_default_content_type (priv->config);
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
+  priv->tags_autocompletion = frogr_config_get_tags_autocompletion (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
   g_free (priv->proxy_host);
@@ -445,6 +473,9 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   else
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->safe_rb), TRUE);
 
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->tags_autocompletion_cb),
+                                priv->tags_autocompletion);
+
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
   if (priv->proxy_host)
@@ -477,6 +508,8 @@ _save_data (FrogrSettingsDialog *self)
 
   frogr_config_set_default_content_type (priv->config, priv->content_type);
   frogr_config_set_default_safety_level (priv->config, priv->safety_level);
+
+  frogr_config_set_tags_autocompletion (priv->config, priv->tags_autocompletion);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 
@@ -602,6 +635,12 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("Content type set to %d", priv->safety_level);
     }
 
+  if (GTK_WIDGET (button) == priv->tags_autocompletion_cb)
+    {
+      priv->tags_autocompletion = active;
+      DEBUG ("Enable tags autocompletion set to %s", active ? "TRUE" : "FALSE");
+    }
+
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
     {
       priv->use_proxy = active;
@@ -724,6 +763,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->safe_rb = NULL;
   priv->moderate_rb = NULL;
   priv->restricted_rb = NULL;
+  priv->tags_autocompletion_cb = NULL;
   priv->use_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
@@ -739,6 +779,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->show_in_search = FALSE;
   priv->safety_level = FSP_SAFETY_LEVEL_NONE;
   priv->content_type = FSP_CONTENT_TYPE_NONE;
+  priv->tags_autocompletion = FALSE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
