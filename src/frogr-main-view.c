@@ -357,7 +357,9 @@ _populate_accounts_submenu (FrogrMainView *self)
   GtkWidget *menu_item = NULL;
   GSList *accounts = NULL;
   GSList *item = NULL;
-  const gchar *login = NULL;
+  gchar *account_str = NULL;
+  const gchar *username = NULL;
+  const gchar *fullname = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   priv->accounts_menu = NULL;
@@ -370,11 +372,16 @@ _populate_accounts_submenu (FrogrMainView *self)
     {
       account = FROGR_ACCOUNT (item->data);
 
-      login = frogr_account_get_fullname (account);
-      if (login == NULL || login[0] == '\0')
-        login = frogr_account_get_username (account);
+      username = frogr_account_get_username (account);
+      fullname = frogr_account_get_fullname (account);
+      if (fullname == NULL || fullname[0] == '\0')
+        account_str = g_strdup (username);
+      else
+        account_str = g_strdup_printf ("%s (%s)", username, fullname);
 
-      menu_item = gtk_menu_item_new_with_label (login);
+      menu_item = gtk_menu_item_new_with_label (account_str);
+      g_free (account_str);
+
       g_object_set_data (G_OBJECT (menu_item), "frogr-account", account);
       g_signal_connect (G_OBJECT (menu_item), "activate",
                         G_CALLBACK (_on_account_menu_item_activate),
