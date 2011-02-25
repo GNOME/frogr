@@ -1075,16 +1075,9 @@ frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures, GSList *tags)
   GObject *new = NULL;
 
   n_pictures = g_slist_length (fpictures);
-  if (n_pictures > 1)
-    {
-      title = g_strdup_printf ("%s (%d Pictures)",
-                               _("Edit Picture Details"),
-                               n_pictures);
-    }
-  else
-    {
-      title = g_strdup (_("Edit Picture Details"));
-    }
+  title = g_strdup_printf (ngettext ("Edit Picture Details",
+                           "Edit Picture Details (%d Pictures)", n_pictures),
+                           n_pictures);
 
   new = g_object_new (FROGR_TYPE_DETAILS_DIALOG,
                       "modal", TRUE,
