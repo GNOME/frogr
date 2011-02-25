@@ -1003,9 +1003,11 @@ _on_pictures_uploaded (FrogrController *self,
       FrogrControllerPrivate *priv = NULL;
       priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-      /* Fetch sets and tags right after finishing */
+      /* Fetch sets and tags (if needed) right after finishing */
       _fetch_sets (self);
-      _fetch_tags (self);
+
+      if (frogr_config_get_tags_autocompletion (priv->config))
+        _fetch_tags (self);
 
       DEBUG ("%s", "Success uploading pictures!");
     }
@@ -1026,11 +1028,17 @@ _fetch_everything (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
+  FrogrControllerPrivate *priv = NULL;
+
   _fetch_account_info (self);
   _fetch_account_extra_info (self);
   _fetch_sets (self);
   _fetch_groups (self);
-  _fetch_tags (self);
+
+  /* No need to retrieve tags if tags autocompletion is disabled */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  if (frogr_config_get_tags_autocompletion (priv->config))
+    _fetch_tags (self);
 }
 
 static void
@@ -1984,11 +1992,14 @@ frogr_controller_show_details_dialog (FrogrController *self,
   mainview_model = frogr_main_view_get_model (priv->mainview);
   tags_list = frogr_main_view_model_get_tags_list (mainview_model);
 
-  /* Fetch the tags list first if needed */
-  if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
+  if (frogr_config_get_tags_autocompletion (priv->config))
     {
-      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of tags…"));
-      _fetch_tags (self);
+      /* Fetch the tags list first if needed */
+      if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
+        {
+          frogr_main_view_show_progress (priv->mainview, _("Retrieving list of tags…"));
+          _fetch_tags (self);
+        }
     }
 
   /* Show the dialog when possible */
@@ -2007,11 +2018,14 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
-  /* Fetch the tags list first if needed */
-  if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
+  if (frogr_config_get_tags_autocompletion (priv->config))
     {
-      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of tags…"));
-      _fetch_tags (self);
+      /* Fetch the tags list first if needed */
+      if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
+        {
+          frogr_main_view_show_progress (priv->mainview, _("Retrieving list of tags…"));
+          _fetch_tags (self);
+        }
     }
 
   /* Show the dialog when possible */
