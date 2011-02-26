@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&component=general\n"
-"POT-Creation-Date: 2011-02-25 01:22+0000\n"
-"PO-Revision-Date: 2011-02-25 10:49+0100\n"
+"POT-Creation-Date: 2011-02-25 19:32+0000\n"
+"PO-Revision-Date: 2011-02-26 12:06+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -359,9 +359,13 @@ msgstr "_Descripción:"
 msgid "Ta_gs:"
 msgstr "_Etiquetas:"
 
-#: ../src/frogr-details-dialog.c:1081 ../src/frogr-details-dialog.c:1086
+#: ../src/frogr-details-dialog.c:1078
+#, c-format
+#| msgid "Edit Picture Details"
 msgid "Edit Picture Details"
-msgstr "Editar detalles de la imagen"
+msgid_plural "Edit Picture Details (%d Pictures)"
+msgstr[0] "Editar detalles de la imagen"
+msgstr[1] "Editar detalles de la imagen (%d imágenes)"
 
 #. File menu
 #: ../src/frogr-main-view.c:229
@@ -444,6 +448,10 @@ msgstr "_Acerca de frogr..."
 #: ../src/frogr-main-view.c:897
 msgid "Select a Picture"
 msgstr "Seleccionar una Imagen"
+
+#: ../src/frogr-main-view.c:911
+msgid "images"
+msgstr "imágenes"
 
 #: ../src/frogr-main-view.c:931
 msgid "You need to select some pictures first"
