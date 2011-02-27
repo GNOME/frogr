@@ -1,6 +1,7 @@
 # Czech translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
+#
 # Marek Černocký <marek@manet.cz>, 2011.
 #
 msgid ""
@@ -8,8 +9,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&component=general\n"
-"POT-Creation-Date: 2011-02-25 01:22+0000\n"
-"PO-Revision-Date: 2011-02-25 08:14+0100\n"
+"POT-Creation-Date: 2011-02-25 15:05+0000\n"
+"PO-Revision-Date: 2011-02-27 11:01+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -354,9 +355,14 @@ msgstr "Popi_s:"
 msgid "Ta_gs:"
 msgstr "Š_títky:"
 
-#: ../src/frogr-details-dialog.c:1081 ../src/frogr-details-dialog.c:1086
+#: ../src/frogr-details-dialog.c:1078
+#, c-format
+#| msgid "Edit Picture Details"
 msgid "Edit Picture Details"
-msgstr "Úprava podrobností obrázku"
+msgid_plural "Edit Picture Details (%d Pictures)"
+msgstr[0] "Úprava podrobností obrázku"
+msgstr[1] "Úprava podrobností obrázku (%d obrázky)"
+msgstr[2] "Úprava podrobností obrázku (%d obrázků)"
 
 #. File menu
 #: ../src/frogr-main-view.c:229
@@ -439,6 +445,10 @@ msgstr "O _aplikaci frogr…"
 #: ../src/frogr-main-view.c:897
 msgid "Select a Picture"
 msgstr "Výběr obrázku"
+
+#: ../src/frogr-main-view.c:911
+msgid "images"
+msgstr "obrázky"
 
 #: ../src/frogr-main-view.c:931
 msgid "You need to select some pictures first"
