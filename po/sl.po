@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=frogr&component=general\n"
-"POT-Creation-Date: 2011-02-25 07:15+0000\n"
-"PO-Revision-Date: 2011-02-25 14:18+0100\n"
+"POT-Creation-Date: 2011-03-08 16:03+0000\n"
+"PO-Revision-Date: 2011-03-10 15:03+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -364,10 +364,14 @@ msgstr "_Opis:"
 msgid "Ta_gs:"
 msgstr "Ozna_ke:"
 
-#: ../src/frogr-details-dialog.c:1081
-#: ../src/frogr-details-dialog.c:1086
+#: ../src/frogr-details-dialog.c:1078
+#, c-format
 msgid "Edit Picture Details"
-msgstr "Uredi podrobnosti slike"
+msgid_plural "Edit Picture Details (%d Pictures)"
+msgstr[0] "Urejanje podrobnosti slik (%d slik)"
+msgstr[1] "Urejanje podrobnosti slik (%d slika)"
+msgstr[2] "Urejanje podrobnosti slik (%d sliki)"
+msgstr[3] "Urejanje podrobnosti slik (%d slike)"
 
 #. File menu
 #: ../src/frogr-main-view.c:229
@@ -457,6 +461,10 @@ msgstr "_O programu ..."
 #: ../src/frogr-main-view.c:897
 msgid "Select a Picture"
 msgstr "Izberi sliko"
+
+#: ../src/frogr-main-view.c:911
+msgid "images"
+msgstr "slike"
 
 #: ../src/frogr-main-view.c:931
 msgid "You need to select some pictures first"
