@@ -326,10 +326,10 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
   label = gtk_label_new_with_mnemonic (_("_Host:"));
-  align = gtk_alignment_new (1, 0, 1, 0);
+  align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 0, 1,
-                    0, 0, 6, 6);
+                    GTK_FILL, 0, 6, 6);
   priv->proxy_host_label = label;
 
   entry = gtk_entry_new ();
@@ -347,7 +347,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 1, 2,
-                    0, 0, 6, 6);
+                    GTK_FILL, 0, 6, 6);
   priv->proxy_port_label = label;
 
   entry = gtk_entry_new ();
@@ -365,7 +365,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 2, 3,
-                    0, 0, 6, 6);
+                    GTK_FILL, 0, 6, 6);
   priv->proxy_username_label = label;
 
   entry = gtk_entry_new ();
@@ -383,7 +383,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 3, 4,
-                    0, 0, 6, 6);
+                    GTK_FILL, 0, 6, 6);
   priv->proxy_password_label = label;
 
   entry = gtk_entry_new ();
