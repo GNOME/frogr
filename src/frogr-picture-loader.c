@@ -231,12 +231,28 @@ _load_next_picture_cb (GObject *object,
         {
           GdkPixbuf *pixbuf;
           GdkPixbuf *s_pixbuf;
+          GFileInfo* fileinfo;
           gchar *fileuri;
           gchar *filename;
 
           /* Gather needed information */
+          fileinfo = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+                                        G_FILE_QUERY_INFO_NONE, NULL, &error);
+          if (!error)
+            filename = g_strdup (g_file_info_get_display_name (fileinfo));
+          else
+            {
+              g_warning ("Not able to write pixbuf: %s", error->message);
+              g_error_free (error);
+
+              /* Fallback if g_file_query_info() failed */
+              filename = g_file_get_basename (file);
+            }
+
+          if (fileinfo)
+            g_object_unref (fileinfo);
+
           fileuri = g_file_get_uri (file);
-          filename = g_file_get_basename (file);
           gdk_pixbuf_loader_close (pixbuf_loader, NULL);
           pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
 
