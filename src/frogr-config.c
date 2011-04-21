@@ -59,6 +59,7 @@ struct _FrogrConfigPrivate
   FspContentType content_type;
 
   gboolean tags_autocompletion;
+  gboolean remove_extensions;
 
   gboolean use_proxy;
   gchar *proxy_host;
@@ -211,6 +212,16 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
 
               content = xmlNodeGetContent (node);
               priv->tags_autocompletion = !xmlStrcmp (content, (const xmlChar*) "1");
+
+              xmlFree (content);
+            }
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "remove-extensions"))
+            {
+              xmlChar *content = NULL;
+
+              content = xmlNodeGetContent (node);
+              priv->remove_extensions = !xmlStrcmp (content, (const xmlChar*) "1");
 
               xmlFree (content);
             }
@@ -536,6 +547,7 @@ _save_settings (FrogrConfig *self)
 
   /* Other stuff */
   _xml_add_string_child (root, "tags-autocompletion", priv->tags_autocompletion ? "1" : "0");
+  _xml_add_string_child (root, "remove-extensions", priv->remove_extensions ? "1" : "0");
 
   /* Use proxy */
   node = xmlNewNode (NULL, (const xmlChar*) "http-proxy");
@@ -760,6 +772,7 @@ frogr_config_init (FrogrConfig *self)
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->tags_autocompletion = TRUE;
+  priv->remove_extensions = TRUE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
@@ -1038,6 +1051,24 @@ frogr_config_get_tags_autocompletion (FrogrConfig *self)
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->tags_autocompletion;
+}
+
+void
+frogr_config_set_remove_extensions (FrogrConfig *self, gboolean value)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->remove_extensions = value;
+}
+
+gboolean
+frogr_config_get_remove_extensions (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->remove_extensions;
 }
 
 void
