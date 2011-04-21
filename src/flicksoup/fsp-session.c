@@ -985,14 +985,12 @@ _soup_session_cancelled_cb              (GCancellable *cancellable,
                                          gpointer      data)
 {
   AsyncRequestData *clos = NULL;
-  GObject *object = NULL;
   SoupSession *session = NULL;
   SoupMessage *message = NULL;
 
   clos = (AsyncRequestData *) data;
 
   /* Get data from closure, and free it */
-  object = clos->object;
   session = clos->soup_session;
   message = clos->soup_message;
 
@@ -1851,7 +1849,7 @@ fsp_session_create_photoset_async       (FspSession          *self,
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
-  _perform_async_request (priv->soup_session, url,
+  _perform_async_request (soup_session, url,
                           _create_photoset_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_create_photoset_async, data);
 

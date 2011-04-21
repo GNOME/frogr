@@ -365,15 +365,12 @@ _load_proxy_data_xml (FrogrConfig *self,
 static void
 _load_accounts (FrogrConfig *self, const gchar *config_dir)
 {
-  FrogrConfigPrivate *priv = NULL;
   gchar *xml_path = NULL;
   xmlNodePtr node = NULL;
   xmlDocPtr xml = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
   g_return_if_fail (config_dir != NULL);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   xml_path = g_build_filename (config_dir, ACCOUNTS_FILENAME, NULL);
   if (g_file_test (xml_path, G_FILE_TEST_IS_REGULAR))

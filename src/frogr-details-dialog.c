@@ -409,7 +409,6 @@ _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
 {
   FrogrDetailsDialog *self = NULL;
   FrogrDetailsDialogPrivate *priv = NULL;
-  const gchar *entry_text = NULL;
   gchar *stripped_entry_text = NULL;
   gchar *basetext = NULL;
   gchar *tag = NULL;
@@ -432,7 +431,6 @@ _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
     return FALSE;
 
   /* Look for the last token in 'key' */
-  entry_text = gtk_entry_get_text (GTK_ENTRY (priv->tags_entry));
   stripped_entry_text = gtk_editable_get_chars (GTK_EDITABLE (priv->tags_entry), 0, cursor_pos);
   stripped_entry_text = g_strstrip (stripped_entry_text);
   basetext = g_strrstr (stripped_entry_text, " ");
@@ -470,7 +468,7 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
   glong matching_text_len = 0;
 
   self = FROGR_DETAILS_DIALOG (data);
-  priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (data);
+  priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
   gtk_tree_model_get (model, iter, TEXT_COL, &tag, -1);
 
   entry_text = gtk_entry_get_text (GTK_ENTRY (priv->tags_entry));

@@ -96,7 +96,6 @@ _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
 {
   FrogrAddTagsDialog *self = NULL;
   FrogrAddTagsDialogPrivate *priv = NULL;
-  const gchar *entry_text = NULL;
   gchar *stripped_entry_text = NULL;
   gchar *basetext = NULL;
   gchar *tag = NULL;
@@ -119,7 +118,6 @@ _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
     return FALSE;
 
   /* Look for the last token in 'key' */
-  entry_text = gtk_entry_get_text (GTK_ENTRY (priv->entry));
   stripped_entry_text = gtk_editable_get_chars (GTK_EDITABLE (priv->entry), 0, cursor_pos);
   stripped_entry_text = g_strstrip (stripped_entry_text);
   basetext = g_strrstr (stripped_entry_text, " ");
@@ -157,7 +155,7 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
   glong matching_text_len = 0;
 
   self = FROGR_ADD_TAGS_DIALOG (data);
-  priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (data);
+  priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
   gtk_tree_model_get (model, iter, TEXT_COL, &tag, -1);
 
   entry_text = gtk_entry_get_text (GTK_ENTRY (priv->entry));
@@ -204,12 +202,10 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
         {
           FrogrPicture *picture;
           GSList *item;
-          guint n_pictures;
 
           DEBUG ("Adding tags to picture(s): %s", tags);
 
           /* Iterate over the rest of elements */
-          n_pictures = g_slist_length (priv->pictures);
           for (item = priv->pictures; item; item = g_slist_next (item))
             {
               picture = FROGR_PICTURE (item->data);

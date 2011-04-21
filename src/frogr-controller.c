@@ -422,13 +422,11 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FspDataAuthToken *auth_token = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   auth_token = fsp_session_complete_auth_finish (session, result, &error);
   if (auth_token)
@@ -1923,12 +1921,10 @@ frogr_controller_set_proxy (FrogrController *self,
     fsp_session_set_http_proxy (priv->session, NULL, NULL, NULL, NULL);
     DEBUG ("%s", "Not using HTTP proxy");
   } else {
-    gboolean has_port = FALSE;
     gboolean has_username = FALSE;
     gboolean has_password = FALSE;
     gchar *auth_part = NULL;
 
-    has_port = (port != NULL && *port != '\0');
     has_username = (username != NULL && *username != '\0');
     has_password = (password != NULL && *password != '\0');
 
@@ -1986,11 +1982,9 @@ frogr_controller_show_details_dialog (FrogrController *self,
 
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  GSList *tags_list = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  tags_list = frogr_main_view_model_get_tags_list (mainview_model);
 
   if (frogr_config_get_tags_autocompletion (priv->config))
     {
