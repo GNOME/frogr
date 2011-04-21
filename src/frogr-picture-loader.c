@@ -50,7 +50,7 @@ struct _FrogrPictureLoaderPrivate
   FrogrMainView *mainview;
   FrogrConfig *config;
 
-  GSList *fileuris;
+  GSList *file_uris;
   GSList *current;
   guint index;
   guint n_pictures;
@@ -140,8 +140,8 @@ _load_next_picture (FrogrPictureLoader *self)
 
   if (priv->current)
     {
-      gchar *fileuri = (gchar *)priv->current->data;
-      GFile *gfile = g_file_new_for_uri (fileuri);
+      gchar *file_uri = (gchar *)priv->current->data;
+      GFile *gfile = g_file_new_for_uri (file_uri);
       gboolean valid_mime = TRUE;
 
 #ifndef MAC_INTEGRATION
@@ -173,7 +173,7 @@ _load_next_picture (FrogrPictureLoader *self)
       g_object_unref (file_info);
 #endif
 
-      DEBUG ("Adding file %s", fileuri);
+      DEBUG ("Adding file %s", file_uri);
 
       /* Asynchronously load the picture if mime is valid */
       if (valid_mime)
@@ -231,34 +231,34 @@ _load_next_picture_cb (GObject *object,
         {
           GdkPixbuf *pixbuf;
           GdkPixbuf *s_pixbuf;
-          GFileInfo* fileinfo;
-          gchar *fileuri;
-          gchar *filename;
+          GFileInfo* file_info;
+          gchar *file_uri;
+          gchar *file_name;
           gchar *extension_dot;
 
           /* Gather needed information */
-          fileinfo = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+          file_info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
                                         G_FILE_QUERY_INFO_NONE, NULL, &error);
           if (!error)
-            filename = g_strdup (g_file_info_get_display_name (fileinfo));
+            file_name = g_strdup (g_file_info_get_display_name (file_info));
           else
             {
               g_warning ("Not able to write pixbuf: %s", error->message);
               g_error_free (error);
 
               /* Fallback if g_file_query_info() failed */
-              filename = g_file_get_basename (file);
+              file_name = g_file_get_basename (file);
             }
 
-          if (fileinfo)
-            g_object_unref (fileinfo);
+          if (file_info)
+            g_object_unref (file_info);
 
           /* Remove extension if present */
-          extension_dot = g_strrstr (filename, ".");
+          extension_dot = g_strrstr (file_name, ".");
           if (extension_dot)
             *extension_dot = '\0';
 
-          fileuri = g_file_get_uri (file);
+          file_uri = g_file_get_uri (file);
           gdk_pixbuf_loader_close (pixbuf_loader, NULL);
           pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
 
@@ -266,8 +266,8 @@ _load_next_picture_cb (GObject *object,
           s_pixbuf = _get_scaled_pixbuf (pixbuf);
 
           /* Build the FrogrPicture and set pixbuf */
-          fpicture = frogr_picture_new (fileuri,
-                                        filename,
+          fpicture = frogr_picture_new (file_uri,
+                                        file_name,
                                         frogr_config_get_default_public (priv->config),
                                         frogr_config_get_default_family (priv->config),
                                         frogr_config_get_default_friend (priv->config));
@@ -282,8 +282,8 @@ _load_next_picture_cb (GObject *object,
 
           /* Free */
           g_object_unref (s_pixbuf);
-          g_free (fileuri);
-          g_free (filename);
+          g_free (file_uri);
+          g_free (file_name);
         }
       else
         {
@@ -298,12 +298,12 @@ _load_next_picture_cb (GObject *object,
   else
     {
       /* Not able to load contents */
-      gchar *filename = g_file_get_basename (file);
+      gchar *file_name = g_file_get_basename (file);
       g_warning ("Not able to read contents from %s: %s",
-                 filename,
+                 file_name,
                  error->message);
       g_error_free (error);
-      g_free (filename);
+      g_free (file_name);
     }
 
   g_object_unref (file);
@@ -362,8 +362,8 @@ _frogr_picture_loader_finalize (GObject* object)
     FROGR_PICTURE_LOADER_GET_PRIVATE (object);
 
   /* Free */
-  g_slist_foreach (priv->fileuris, (GFunc)g_free, NULL);
-  g_slist_free (priv->fileuris);
+  g_slist_foreach (priv->file_uris, (GFunc)g_free, NULL);
+  g_slist_free (priv->file_uris);
 
   G_OBJECT_CLASS (frogr_picture_loader_parent_class)->finalize(object);
 }
@@ -393,7 +393,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   priv->config = g_object_ref (frogr_config_get_instance ());
 
   /* Init the rest of private data */
-  priv->fileuris = NULL;
+  priv->file_uris = NULL;
   priv->current = NULL;
   priv->index = -1;
   priv->n_pictures = 0;
@@ -402,7 +402,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
 /* Public API */
 
 FrogrPictureLoader *
-frogr_picture_loader_new (GSList *fileuris,
+frogr_picture_loader_new (GSList *file_uris,
                           FrogrPictureLoadedCallback picture_loaded_cb,
                           FrogrPicturesLoadedCallback pictures_loaded_cb,
                           gpointer object)
@@ -414,10 +414,10 @@ frogr_picture_loader_new (GSList *fileuris,
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   /* Internal data */
-  priv->fileuris = g_slist_copy (fileuris);
-  priv->current = priv->fileuris;
+  priv->file_uris = g_slist_copy (file_uris);
+  priv->current = priv->file_uris;
   priv->index = 0;
-  priv->n_pictures = g_slist_length (priv->fileuris);
+  priv->n_pictures = g_slist_length (priv->file_uris);
 
   /* Callback data */
   priv->picture_loaded_cb = picture_loaded_cb;
@@ -436,7 +436,7 @@ frogr_picture_loader_load (FrogrPictureLoader *self)
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   /* Check first whether there's something to load */
-  if (priv->fileuris == NULL)
+  if (priv->file_uris == NULL)
     return;
 
   /* Update status and progress */
