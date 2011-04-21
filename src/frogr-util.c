@@ -36,11 +36,26 @@ frogr_util_open_url_in_browser (const gchar *url)
   gchar *command = NULL;
   GError *error = NULL;
 
-  /* FIXME: Replace this lines with gtk_show_uri() when we found the
-     reason behind frogr hanging after calling twice that function */
+
+#ifdef GTK_API_VERSION_3
+  /* For GTK3 we already dare to do it The Right Way (tm) :-) */
+  gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &error);
+#else
+  /* I found some weird behaviours using gtk_show_uri() in GTK2, so
+     that's why we just use the gnome-open command instead. */
   command = g_strdup_printf ("gnome-open %s", url);
-  g_spawn_command_line_async (command, &error);
+  if (!g_spawn_command_line_async (command, &error)) {
+    if (error != NULL)
+      {
+        DEBUG ("Error opening URL %s through gnome-open: %s", url, error->message);
+        g_error_free (error);
+      }
+
+    /* If gnome-open fails, then we fallback to gtk_show_uri(). */
+    gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &error);
+  }
   g_free (command);
+#endif
 
   if (error != NULL)
     {
