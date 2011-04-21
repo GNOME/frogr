@@ -34,6 +34,10 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 
+#ifdef MAC_INTEGRATION
+#include <gtkosxapplication.h>
+#endif
+
 /* Access to old GDK names from GTK+ 2 when compiling with GTK+ 3 */
 #ifndef GTK_API_VERSION_2
 #include <gdk/gdkkeysyms-compat.h>
@@ -225,6 +229,10 @@ _populate_menu_bar (FrogrMainView *self)
   GtkWidget *submenu;
   GtkWidget *menu_item;
 
+#ifdef MAC_INTEGRATION
+  GtkOSXApplication *osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
+#endif
+
   /* File menu */
   menubar_item = gtk_menu_item_new_with_mnemonic (_("_File"));
   gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
@@ -262,14 +270,22 @@ _populate_menu_bar (FrogrMainView *self)
                     self);
   priv->auth_menu_item = menu_item;
 
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Preferences…"));
+
+#ifdef MAC_INTEGRATION
+  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 1);
+  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 2);
+  gtk_widget_show_all (menu_item);
+#else
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+#endif
+
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_settings_menu_item_activate),
                     self);
 
+#ifndef MAC_INTEGRATION
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Quit"));
@@ -277,6 +293,8 @@ _populate_menu_bar (FrogrMainView *self)
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_quit_menu_item_activate),
                     self);
+#endif
+
   /* Actions menu */
   menubar_item = gtk_menu_item_new_with_mnemonic (_("A_ctions"));
   gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
@@ -336,17 +354,29 @@ _populate_menu_bar (FrogrMainView *self)
   priv->upload_menu_item = menu_item;
 
   /* Help menu */
+
+#ifndef MAC_INTEGRATION
   menubar_item = gtk_menu_item_new_with_mnemonic (_("_Help"));
   gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
 
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
+#endif
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_About frogr..."));
+
+#ifdef MAC_INTEGRATION
+  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 0);
+  gtk_widget_show_all (menu_item);
+#else
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+#endif
+
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_about_menu_item_activate),
                     self);
+
+  gtk_widget_show_all (priv->menu_bar);
 }
 
 static void
@@ -903,12 +933,25 @@ _add_pictures_dialog (FrogrMainView *self)
 
   /* Set images filter */
   filter = gtk_file_filter_new ();
+
+#ifdef MAC_INTEGRATION
+  /* Workaround for Mac OSX, where GNOME VFS daemon won't be running,
+     so we can't check filter by mime type (will be text/plain) */
+  gtk_file_filter_add_pattern (filter, "*.[jJ][pP][gG]");
+  gtk_file_filter_add_pattern (filter, "*.[jJ][pP][eE][gG]");
+  gtk_file_filter_add_pattern (filter, "*.[pP][nN][gG]");
+  gtk_file_filter_add_pattern (filter, "*.[bB][mM][pP]");
+  gtk_file_filter_add_pattern (filter, "*.[gG][iI][fF]");
+#else
   gtk_file_filter_add_mime_type (filter, "image/jpg");
   gtk_file_filter_add_mime_type (filter, "image/jpeg");
   gtk_file_filter_add_mime_type (filter, "image/png");
   gtk_file_filter_add_mime_type (filter, "image/bmp");
   gtk_file_filter_add_mime_type (filter, "image/gif");
+#endif
+
   gtk_file_filter_set_name (filter, _("images"));
+
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
   gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), FALSE);
@@ -1359,6 +1402,12 @@ frogr_main_view_init (FrogrMainView *self)
   GList *icons;
   gchar *account_description;
 
+#ifdef MAC_INTEGRATION
+  GtkOSXApplication *osx_app;
+#else
+  GtkWidget *main_vbox;
+#endif
+
   /* Init model and controller */
   priv->model = frogr_main_view_model_new ();
   priv->controller = g_object_ref (frogr_controller_get_instance ());
@@ -1399,8 +1448,17 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_window_set_title (GTK_WINDOW (window), APP_NAME);
   priv->window = window;
 
-  menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
+  menu_bar = gtk_menu_bar_new ();
   priv->menu_bar = menu_bar;
+
+#ifdef MAC_INTEGRATION
+  osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
+  gtk_osxapplication_set_menu_bar (osx_app, GTK_MENU_SHELL(menu_bar));
+#else
+  main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
+  gtk_box_pack_start (GTK_BOX (main_vbox), menu_bar, FALSE, FALSE, 0);
+  gtk_box_reorder_child (GTK_BOX (main_vbox), menu_bar, 0);
+#endif
 
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
   priv->icon_view = icon_view;
@@ -1472,7 +1530,6 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_window_set_default_size (GTK_WINDOW (priv->window),
                                MINIMUM_WINDOW_WIDTH,
                                MINIMUM_WINDOW_HEIGHT);
-
   /* Init status bar */
   priv->sb_context_id =
     gtk_statusbar_get_context_id (GTK_STATUSBAR (priv->status_bar),
@@ -1512,13 +1569,16 @@ frogr_main_view_init (FrogrMainView *self)
                     G_CALLBACK (_model_picture_removed), self);
 
   gtk_builder_connect_signals (builder, self);
-  g_object_unref (G_OBJECT (builder));
 
   /* Show the UI, but hiding some widgets */
   gtk_widget_show_all (GTK_WIDGET(priv->window));
 
   /* Update UI */
   _update_ui (FROGR_MAIN_VIEW (self));
+
+#ifdef MAC_INTEGRATION
+  gtk_osxapplication_ready(osx_app);
+#endif
 
   /* Show the auth dialog, if needed, on idle */
   g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);

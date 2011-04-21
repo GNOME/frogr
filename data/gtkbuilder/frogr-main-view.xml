@@ -8,16 +8,6 @@
       <object class="GtkVBox" id="main_window_vbox">
         <property name="visible">True</property>
         <child>
-          <object class="GtkMenuBar" id="menu_bar">
-            <property name="visible">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkToolbar" id="toolbar">
             <property name="visible">True</property>
             <child>

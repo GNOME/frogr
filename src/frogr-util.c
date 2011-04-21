@@ -27,6 +27,22 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+static gboolean frogr_util_spawn_command (const gchar* cmd)
+{
+  GError *error = NULL;
+
+  if (!g_spawn_command_line_async (cmd, &error)) {
+    if (error != NULL)
+      {
+        DEBUG ("Error spawning command '%s': %s", cmd, error->message);
+        g_error_free (error);
+      }
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
 void
 frogr_util_open_url_in_browser (const gchar *url)
 {
@@ -36,26 +52,26 @@ frogr_util_open_url_in_browser (const gchar *url)
   gchar *command = NULL;
   GError *error = NULL;
 
-
+#ifdef MAC_INTEGRATION
+  /* In MacOSX neither gnome-open nor gtk_show_uri() will work */
+  command = g_strdup_printf ("open %s", url);
+  frogr_util_spawn_command (command);
+#else
 #ifdef GTK_API_VERSION_3
-  /* For GTK3 we already dare to do it The Right Way (tm) :-) */
+  /* For GTK3 we dare to do it The Right Way (tm). */
   gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &error);
 #else
   /* I found some weird behaviours using gtk_show_uri() in GTK2, so
-     that's why we just use the gnome-open command instead. */
+     that's why we just use the gnome-open command instead.  If
+     gnome-open fails, then we fallback to gtk_show_uri(). */
   command = g_strdup_printf ("gnome-open %s", url);
-  if (!g_spawn_command_line_async (command, &error)) {
-    if (error != NULL)
-      {
-        DEBUG ("Error opening URL %s through gnome-open: %s", url, error->message);
-        g_error_free (error);
-      }
-
-    /* If gnome-open fails, then we fallback to gtk_show_uri(). */
+  if (!frogr_util_spawn_command (command))
     gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &error);
-  }
-  g_free (command);
-#endif
+#endif /* ifdef GTK_API_VERSION_3 */
+#endif /* ifdef MAC_INTEGRATION */
+
+  if (command)
+    g_free (command);
 
   if (error != NULL)
     {
