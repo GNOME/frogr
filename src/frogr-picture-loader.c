@@ -234,6 +234,7 @@ _load_next_picture_cb (GObject *object,
           GFileInfo* fileinfo;
           gchar *fileuri;
           gchar *filename;
+          gchar *extension_dot;
 
           /* Gather needed information */
           fileinfo = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
@@ -251,6 +252,11 @@ _load_next_picture_cb (GObject *object,
 
           if (fileinfo)
             g_object_unref (fileinfo);
+
+          /* Remove extension if present */
+          extension_dot = g_strrstr (filename, ".");
+          if (extension_dot)
+            *extension_dot = '\0';
 
           fileuri = g_file_get_uri (file);
           gdk_pixbuf_loader_close (pixbuf_loader, NULL);
