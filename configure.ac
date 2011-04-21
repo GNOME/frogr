@@ -21,12 +21,12 @@ AC_CHECK_LIB(gthread-2.0, g_thread_init)
 
 AC_MSG_CHECKING([Checking GTK+ version to use])
 AC_ARG_WITH([gtk],
-        [AS_HELP_STRING([--with-gtk=2.0|3.0], [GTK+ version to use (default: 2.0)])],
+        [AS_HELP_STRING([--with-gtk=2.0|3.0], [GTK+ version to use (default: 3.0)])],
         [case "$with_gtk" in
         2.0|3.0) ;;
         *) AC_MSG_ERROR([Wrong GTK+ version]) ;;
         esac],
-        [with_gtk=2.0])
+        [with_gtk=3.0])
 AC_MSG_RESULT([$with_gtk])
 
 case "$with_gtk" in
