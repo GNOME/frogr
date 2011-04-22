@@ -3,6 +3,7 @@
   * Allow loading files from remote servers (use URIs instead of paths).
   * Show username in the list of available accounts.
   * Allow disabling tags autocompletion through preferences dialog.
+  * Show tooltips in the icon view with basic info (title, file size).
   * Added experimental support for MacOSX.
   * Make GTK3 the default version (opposite to just being supported).
   * Better handling of files with UTF-8 characters in their names.
