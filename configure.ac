@@ -39,20 +39,9 @@ FROGR_LIBS="$FROGR_LIBS $LIBXML2_LIBS"
 # Select target platform to make platform-dependant decisions
 
 if $PKG_CONFIG --exists ige-mac-integration; then
-   detected_platform=macosx
+   platform=macosx
 else
-   detected_platform=gnome
-fi
-
-AC_ARG_WITH(platform, [
-Target platform:
-  --with-platform=detect  detect target platform (default)
-  --with-platform=gnome   compile for Gnome
-  --with-platform=macosx  compile for Mac OSX],
-  platform=$withval, platform=detect)
-
-if test "$platform" = "detect"; then
-   platform=$detected_platform
+   platform=gnome
 fi
 
 if test "x$platform" = "xmacosx"; then
