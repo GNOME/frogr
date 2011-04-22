@@ -197,6 +197,9 @@ static void _model_picture_removed (FrogrController *controller,
                                     FrogrPicture *picture,
                                     gpointer data);
 
+static void _model_description_updated (FrogrController *controller,
+                                        gpointer data);
+
 static void _update_state_description (FrogrMainView *mainview);
 
 static gchar *_craft_state_description (FrogrMainView *mainview);
@@ -1172,22 +1175,42 @@ _model_picture_removed (FrogrController *controller,
   _remove_picture_from_ui (mainview, picture);
 }
 
-static void _update_state_description (FrogrMainView *mainview)
+static void
+_model_description_updated (FrogrController *controller,
+                            gpointer data)
+{
+  FrogrMainView *mainview = NULL;
+  FrogrMainViewPrivate *priv = NULL;
+
+  mainview = FROGR_MAIN_VIEW (data);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+
+  /* Do not force updating the status bar when loading pictures */
+  if (frogr_controller_get_state (priv->controller) != FROGR_STATE_LOADING_PICTURES)
+    {
+      const gchar *description = NULL;
+
+      description = frogr_main_view_model_get_state_description (priv->model);
+      frogr_main_view_set_status_text (mainview, description);
+    }
+}
+
+static void
+_update_state_description (FrogrMainView *mainview)
 {
   FrogrMainViewPrivate *priv = NULL;
   gchar *description = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-
   description = _craft_state_description (mainview);
   frogr_main_view_model_set_state_description (priv->model, description);
-  frogr_main_view_set_status_text (mainview, description);
+  g_free (description);
 
   DEBUG ("state description changed: %s", description);
-  g_free (description);
 }
 
-static gchar *_craft_state_description (FrogrMainView *mainview)
+static gchar *
+_craft_state_description (FrogrMainView *mainview)
 {
   FrogrMainViewPrivate *priv = NULL;
   FrogrAccount *account = NULL;
@@ -1599,6 +1622,9 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->model), "picture-removed",
                     G_CALLBACK (_model_picture_removed), self);
+
+  g_signal_connect (G_OBJECT (priv->model), "description-updated",
+                    G_CALLBACK (_model_description_updated), self);
 
   gtk_builder_connect_signals (builder, self);
 
