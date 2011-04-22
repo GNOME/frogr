@@ -859,6 +859,9 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
                       FPICTURE_COL, picture,
                       -1);
   g_object_ref (picture);
+
+  /* Update upload size in state description */
+  _update_account_description (self);
 }
 
 static void
@@ -895,6 +898,9 @@ _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture)
         }
       while (gtk_tree_model_iter_next (tree_model, &iter));
     }
+
+  /* Update upload size in state description */
+  _update_account_description (self);
 }
 
 static void
@@ -1185,9 +1191,11 @@ static gchar *_craft_account_description (FrogrMainView *mainview)
 {
   FrogrMainViewPrivate *priv = NULL;
   FrogrAccount *account = NULL;
+  GSList *pictures = NULL;
   const gchar *login = NULL;
   gchar *description = NULL;
   gchar *bandwidth_str = NULL;
+  gchar *upload_size_str = NULL;
   gboolean is_pro = FALSE;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
@@ -1230,11 +1238,32 @@ static gchar *_craft_account_description (FrogrMainView *mainview)
       g_free (max_bw_str);
     }
 
-  description = g_strdup_printf ("%s %s%s%s",
+  /* Check size of the loaded pictures, if any */
+  pictures = frogr_main_view_model_get_pictures (priv->model);
+  if (g_slist_length (pictures) > 0)
+    {
+      GSList *item = NULL;
+      gulong total_size = 0;
+      gchar *total_size_str = NULL;
+
+      for (item = pictures; item; item = g_slist_next (item))
+        total_size += frogr_picture_get_filesize (FROGR_PICTURE (item->data));
+
+      total_size_str = _get_datasize_string (total_size);
+      upload_size_str = g_strdup_printf (" - %s %s",
+                                         total_size_str, _("to be uploaded"));
+
+      g_free (total_size_str);
+    }
+
+  /* Build the final string */
+  description = g_strdup_printf ("%s %s%s%s%s",
                                  _("Connected as"), login,
                                  (is_pro ? _(" (PRO account)") : ""),
-                                 (bandwidth_str ? bandwidth_str : ""));
+                                 (bandwidth_str ? bandwidth_str : ""),
+                                 (upload_size_str ? upload_size_str : ""));
   g_free (bandwidth_str);
+  g_free (upload_size_str);
 
   return description;
 }
