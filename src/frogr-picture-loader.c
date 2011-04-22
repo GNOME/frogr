@@ -82,7 +82,7 @@ static const gchar *valid_mimetypes[] = {
 /* Prototypes */
 
 static void _update_status_and_progress (FrogrPictureLoader *self);
-static GdkPixbuf *_get_scaled_pixbuf (GdkPixbuf *pixbuf);
+static GdkPixbuf *_get_corrected_pixbuf (GdkPixbuf *pixbuf);
 static void _load_next_picture (FrogrPictureLoader *self);
 static void _load_next_picture_cb (GObject *object,
                                    GAsyncResult *res,
@@ -110,9 +110,11 @@ _update_status_and_progress (FrogrPictureLoader *self)
 }
 
 static GdkPixbuf *
-_get_scaled_pixbuf (GdkPixbuf *pixbuf)
+_get_corrected_pixbuf (GdkPixbuf *pixbuf)
 {
-  GdkPixbuf *scaled_pixbuf = NULL;
+  GdkPixbuf *scaled_pixbuf;
+  GdkPixbuf *rotated_pixbuf;
+  const gchar *orientation;
   gint width;
   gint height;
   gint new_width;
@@ -136,6 +138,35 @@ _get_scaled_pixbuf (GdkPixbuf *pixbuf)
   scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
                                            new_width, new_height,
                                            GDK_INTERP_TILES);
+  /* Correct orientation if needed */
+  orientation = gdk_pixbuf_get_option (pixbuf, "orientation");
+
+  /* No orientation defined or 0 degrees rotation: we're done */
+  if (!orientation || !g_strcmp0 (orientation, "1"))
+    return scaled_pixbuf;
+
+  DEBUG ("File orientation for file: %s", orientation);
+  rotated_pixbuf = NULL;
+
+  /* Rotated 90 degrees */
+  if (!g_strcmp0 (orientation, "8"))
+    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
+                                               GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
+  /* Rotated 180 degrees */
+  if (!g_strcmp0 (orientation, "3"))
+    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
+                                               GDK_PIXBUF_ROTATE_UPSIDEDOWN);
+  /* Rotated 270 degrees */
+  if (!g_strcmp0 (orientation, "6"))
+    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
+                                               GDK_PIXBUF_ROTATE_CLOCKWISE);
+  if (rotated_pixbuf)
+    {
+      g_object_unref (scaled_pixbuf);
+      return rotated_pixbuf;
+    }
+
+  /* No rotation was applied, return the scaled pixbuf */
   return scaled_pixbuf;
 }
 
@@ -274,8 +305,8 @@ _load_next_picture_cb (GObject *object,
           gdk_pixbuf_loader_close (pixbuf_loader, NULL);
           pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
 
-          /* Get (scaled) pixbuf */
-          s_pixbuf = _get_scaled_pixbuf (pixbuf);
+          /* Get (scaled, and maybe rotated) pixbuf */
+          s_pixbuf = _get_corrected_pixbuf (pixbuf);
 
           /* Get the file size (in bytes) */
           filesize = g_file_info_get_size (file_info);
