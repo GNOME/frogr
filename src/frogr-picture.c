@@ -42,6 +42,8 @@ struct _FrogrPicturePrivate
   gchar *tags_string;
   GSList *tags_list;
 
+  gulong filesize; /* In KB */
+
   GSList *sets;
   GSList *groups;
 
@@ -456,6 +458,8 @@ frogr_picture_init (FrogrPicture *self)
   priv->description = NULL;
   priv->tags_string = NULL;
 
+  priv->filesize = 0;
+
   priv->tags_list = NULL;
   priv->sets = NULL;
   priv->groups = NULL;
@@ -815,6 +819,26 @@ frogr_picture_set_pixbuf (FrogrPicture *self,
     g_object_unref (priv->pixbuf);
 
   priv->pixbuf = GDK_IS_PIXBUF (pixbuf) ? g_object_ref (pixbuf) : NULL;
+}
+
+gulong frogr_picture_get_filesize (FrogrPicture *self)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), 0);
+
+  FrogrPicturePrivate *priv = NULL;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  return priv->filesize;
+}
+
+void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  FrogrPicturePrivate *priv = NULL;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  priv->filesize = filesize;
 }
 
 GSList *

@@ -113,6 +113,9 @@ GdkPixbuf *frogr_picture_get_pixbuf (FrogrPicture *self);
 void frogr_picture_set_pixbuf (FrogrPicture *self,
                                GdkPixbuf *pixbuf);
 
+gulong frogr_picture_get_filesize (FrogrPicture *self);
+void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize);
+
 GSList *frogr_picture_get_sets (FrogrPicture *self);
 void frogr_picture_set_sets (FrogrPicture *self, GSList *sets);
 void frogr_picture_add_set (FrogrPicture *self, FrogrPhotoSet *set);

@@ -241,10 +241,14 @@ _load_next_picture_cb (GObject *object,
           GFileInfo* file_info;
           gchar *file_uri;
           gchar *file_name;
+          guint64 filesize;
 
           /* Gather needed information */
-          file_info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
-                                        G_FILE_QUERY_INFO_NONE, NULL, &error);
+          file_info = g_file_query_info (file,
+                                         G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME
+                                         "," G_FILE_ATTRIBUTE_STANDARD_SIZE,
+                                         G_FILE_QUERY_INFO_NONE,
+                                         NULL, &error);
           if (!error)
             file_name = g_strdup (g_file_info_get_display_name (file_info));
           else
@@ -255,9 +259,6 @@ _load_next_picture_cb (GObject *object,
               /* Fallback if g_file_query_info() failed */
               file_name = g_file_get_basename (file);
             }
-
-          if (file_info)
-            g_object_unref (file_info);
 
           if (priv->remove_file_extensions)
             {
@@ -276,7 +277,10 @@ _load_next_picture_cb (GObject *object,
           /* Get (scaled) pixbuf */
           s_pixbuf = _get_scaled_pixbuf (pixbuf);
 
-          /* Build the FrogrPicture and set pixbuf */
+          /* Get the file size (in bytes) */
+          filesize = g_file_info_get_size (file_info);
+
+          /* Build the FrogrPicture */
           fpicture = frogr_picture_new (file_uri,
                                         file_name,
                                         priv->public_visibility,
@@ -289,7 +293,13 @@ _load_next_picture_cb (GObject *object,
 
           frogr_picture_set_pixbuf (fpicture, s_pixbuf);
 
+          /* FrogrPicture stores the size in KB */
+          frogr_picture_set_filesize (fpicture, filesize / 1024);
+
           /* Free */
+          if (file_info)
+            g_object_unref (file_info);
+
           g_object_unref (s_pixbuf);
           g_free (file_uri);
           g_free (file_name);
