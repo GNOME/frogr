@@ -3,6 +3,14 @@
   * Allow loading files from remote servers (use URIs instead of paths).
   * Show username in the list of available accounts.
   * Allow disabling tags autocompletion through preferences dialog.
+  * Added experimental support for MacOSX.
+  * Make GTK3 the default version (opposite to just being supported).
+  * Better handling of files with UTF-8 characters in their names.
+  * Fixed bug 644717: Proxy settings tab not compliant with HIG.
+  * Fixed bug 644797: Remove file extension from file title.
+  * Fixed bug 644799: Show how many MB your upload is while adding/upload photos.
+  * Fixed bug 644801: Rotate the photos to the right orientation.
+  * Several minor improvements.
 
 0.4 (05 Feb 2011)
 
