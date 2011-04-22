@@ -60,7 +60,6 @@ AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xmacosx"])
 # Select target version of GTK to use
 
 AC_MSG_CHECKING([Checking GTK+ version to use])
-with_gtk=2.0
 
 if test "x$platform" = "xgnome"; then
    # For the GNOME platform allow using GTK2 and GTK3 (default for GNOME)
@@ -71,6 +70,9 @@ if test "x$platform" = "xgnome"; then
            *) AC_MSG_ERROR([Wrong GTK+ version]) ;;
            esac],
            [with_gtk=3.0])
+else
+   # Other non-GNOME platforms (e.g. MacOSX) to support GTK2 only
+   with_gtk=2.0
 fi
 
 AC_MSG_RESULT([$with_gtk])
