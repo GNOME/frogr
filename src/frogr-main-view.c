@@ -1558,9 +1558,18 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_window_set_default_size (GTK_WINDOW (progress_dialog), 250, -1);
 
   progress_vbox = gtk_dialog_get_content_area (GTK_DIALOG (progress_dialog));
-  progress_bar = gtk_progress_bar_new ();
+
   progress_label = gtk_label_new (NULL);
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_label, FALSE, FALSE, 6);
+
+  progress_bar = gtk_progress_bar_new ();
+
+#ifdef GTK_API_VERSION_3
+  /* In GTK3, we need to make this explicit, otherwise no text will be
+     shown superimposed over the progress bar */
+  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progress_bar), TRUE);
+#endif
+
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
 
   gtk_widget_hide (progress_dialog);
