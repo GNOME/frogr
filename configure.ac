@@ -15,36 +15,9 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 CFLAGS="$CFLAGS -DG_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 CFLAGS="$CFLAGS -DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED"
 
-# Dependencies for frogr
+# (Platform independent) dependencies for frogr
 
 AC_CHECK_LIB(gthread-2.0, g_thread_init)
-
-AC_MSG_CHECKING([Checking GTK+ version to use])
-AC_ARG_WITH([gtk],
-        [AS_HELP_STRING([--with-gtk=2.0|3.0], [GTK+ version to use (default: 3.0)])],
-        [case "$with_gtk" in
-        2.0|3.0) ;;
-        *) AC_MSG_ERROR([Wrong GTK+ version]) ;;
-        esac],
-        [with_gtk=3.0])
-AC_MSG_RESULT([$with_gtk])
-
-case "$with_gtk" in
-     2.0) GTK_MIN_VERSION=2.14
-          GTK_API_VERSION=2.0
-          ;;
-     3.0) GTK_MIN_VERSION=2.91
-          GTK_API_VERSION=3.0
-          ;;
-esac
-
-# Make GTK API version available to the code
-AC_SUBST([GTK_API_VERSION])
-AM_CONDITIONAL([GTK_API_VERSION_2],[test "$GTK_API_VERSION" = "2.0"])
-
-PKG_CHECK_MODULES(GTK2, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION)
-FROGR_CFLAGS="$FROGR_CFLAGS $GTK2_CFLAGS"
-FROGR_LIBS="$FROGR_LIBS $GTK2_LIBS"
 
 GLIB_MIN_VERSION=2.16
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_MIN_VERSION)
@@ -62,6 +35,75 @@ LIBXML2_MIN_VERSION=2.6.8
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0 >= $LIBXML2_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBXML2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $LIBXML2_LIBS"
+
+# Select target platform to make platform-dependant decisions
+
+if $PKG_CONFIG --exists ige-mac-integration; then
+   detected_platform=macosx
+else
+   detected_platform=gnome
+fi
+
+AC_ARG_WITH(platform, [
+Target platform:
+  --with-platform=detect  detect target platform (default)
+  --with-platform=gnome   compile for Gnome
+  --with-platform=macosx  compile for Mac OSX],
+  platform=$withval, platform=detect)
+
+if test "$platform" = "detect"; then
+   platform=$detected_platform
+fi
+
+if test "x$platform" = "xmacosx"; then
+   echo "Compiling for Mac OSX..."
+
+   IGE_MAC_INTEGRATION_MIN_VERSION=0.9.7
+   PKG_CHECK_MODULES(IGE_MAC_INTEGRATION, ige-mac-integration >= $IGE_MAC_INTEGRATION_MIN_VERSION)
+   FROGR_CFLAGS="$FROGR_CFLAGS $IGE_MAC_INTEGRATION_CFLAGS"
+   FROGR_LIBS="$FROGR_LIBS $IGE_MAC_INTEGRATION_LIBS"
+else
+   echo "Compiling for GNOME..."
+fi
+
+AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xmacosx"])
+
+# Select target version of GTK to use
+
+AC_MSG_CHECKING([Checking GTK+ version to use])
+with_gtk=2.0
+
+if test "x$platform" = "xgnome"; then
+   # For the GNOME platform allow using GTK2 and GTK3 (default for GNOME)
+   AC_ARG_WITH([gtk],
+           [AS_HELP_STRING([--with-gtk=2.0|3.0], [GTK+ version to use (default: 3.0)])],
+           [case "$with_gtk" in
+           2.0|3.0) ;;
+           *) AC_MSG_ERROR([Wrong GTK+ version]) ;;
+           esac],
+           [with_gtk=3.0])
+fi
+
+AC_MSG_RESULT([$with_gtk])
+
+case "$with_gtk" in
+     2.0) GTK_MIN_VERSION=2.14
+          GTK_API_VERSION=2.0
+          ;;
+     3.0) GTK_MIN_VERSION=3.0
+          GTK_API_VERSION=3.0
+          ;;
+esac
+
+# Make GTK API version available to the code
+AC_SUBST([GTK_API_VERSION])
+AM_CONDITIONAL([GTK_API_VERSION_2],[test "$GTK_API_VERSION" = "2.0"])
+
+PKG_CHECK_MODULES(GTK, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION)
+FROGR_CFLAGS="$FROGR_CFLAGS $GTK_CFLAGS"
+FROGR_LIBS="$FROGR_LIBS $GTK_LIBS"
+
+# Substitute
 
 AC_SUBST(appdatadir, "\${datadir}/frogr")
 AC_SUBST(iconsdir, "\${datadir}/icons")
@@ -94,38 +136,6 @@ if test "x$enable_debug" = "xyes"; then
 else
    FROGR_CFLAGS="$FROGR_CFLAGS -DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS -g0 -O2"
 fi
-
-# Mac OSX support
-
-if $PKG_CONFIG --exists ige-mac-integration; then
-   detected_platform=macosx
-else
-   detected_platform=gnome
-fi
-
-AC_ARG_WITH(platform, [
-Target platform:
-  --with-platform=detect  detect target platform (default)
-  --with-platform=gnome   compile for Gnome
-  --with-platform=macosx  compile for Mac OSX],
-  platform=$withval, platform=detect)
-
-if test "$platform" = "detect"; then
-   platform=$detected_platform
-fi
-
-if test "x$platform" = "xmacosx"; then
-   echo "Compiling for Mac OSX..."
-
-   IGE_MAC_INTEGRATION_MIN_VERSION=0.9.7
-   PKG_CHECK_MODULES(IGE_MAC_INTEGRATION, ige-mac-integration >= $IGE_MAC_INTEGRATION_MIN_VERSION)
-   FROGR_CFLAGS="$FROGR_CFLAGS $IGE_MAC_INTEGRATION_CFLAGS"
-   FROGR_LIBS="$FROGR_LIBS $IGE_MAC_INTEGRATION_LIBS"
-else
-   echo "Compiling for GNOME..."
-fi
-
-AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xmacosx"])
 
 # Produce output files
 
