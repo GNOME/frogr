@@ -49,7 +49,7 @@ struct _FrogrMainViewModelPrivate
   GSList *tags_list;
   guint n_tags;
 
-  gchar* account_description;
+  gchar* state_description;
 };
 
 /* Signals */
@@ -104,7 +104,7 @@ static void
 _frogr_main_view_model_finalize (GObject* object)
 {
   FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (object);
-  g_free (priv->account_description);
+  g_free (priv->state_description);
   G_OBJECT_CLASS (frogr_main_view_model_parent_class)->finalize (object);
 }
 
@@ -153,7 +153,7 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
   priv->tags_list = NULL;
   priv->n_tags = 0;
 
-  priv->account_description = NULL;
+  priv->state_description = NULL;
 }
 
 /* Public API */
@@ -454,23 +454,23 @@ frogr_main_view_model_n_tags (FrogrMainViewModel *self)
 }
 
 const gchar *
-frogr_main_view_model_get_account_description (FrogrMainViewModel *self)
+frogr_main_view_model_get_state_description (FrogrMainViewModel *self)
 {
   g_return_val_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
   FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->account_description;
+  return priv->state_description;
 }
 
 void
-frogr_main_view_model_set_account_description (FrogrMainViewModel *self,
-                                               const gchar *description)
+frogr_main_view_model_set_state_description (FrogrMainViewModel *self,
+                                             const gchar *description)
 {
   g_return_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self));
 
   FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  if (priv->account_description)
-    g_free (priv->account_description);
+  if (priv->state_description)
+    g_free (priv->state_description);
 
-  priv->account_description = g_strdup (description);
+  priv->state_description = g_strdup (description);
 }

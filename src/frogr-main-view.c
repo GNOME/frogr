@@ -197,9 +197,9 @@ static void _model_picture_removed (FrogrController *controller,
                                     FrogrPicture *picture,
                                     gpointer data);
 
-static void _update_account_description (FrogrMainView *mainview);
+static void _update_state_description (FrogrMainView *mainview);
 
-static gchar *_craft_account_description (FrogrMainView *mainview);
+static gchar *_craft_state_description (FrogrMainView *mainview);
 
 static gchar *_get_datasize_string (gulong bandwidth);
 
@@ -861,7 +861,7 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
   g_object_ref (picture);
 
   /* Update upload size in state description */
-  _update_account_description (self);
+  _update_state_description (self);
 }
 
 static void
@@ -900,7 +900,7 @@ _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture)
     }
 
   /* Update upload size in state description */
-  _update_account_description (self);
+  _update_state_description (self);
 }
 
 static void
@@ -1051,7 +1051,6 @@ _edit_selected_pictures (FrogrMainView *self)
                                         _get_selected_pictures (self));
 }
 
-
 static void
 _remove_selected_pictures (FrogrMainView *self)
 {
@@ -1137,7 +1136,7 @@ _controller_active_account_changed (FrogrController *controller,
   FrogrMainView *mainview = NULL;
 
   mainview = FROGR_MAIN_VIEW (data);
-  _update_account_description (mainview);
+  _update_state_description (mainview);
   _update_ui (mainview);
 }
 
@@ -1173,21 +1172,21 @@ _model_picture_removed (FrogrController *controller,
   _remove_picture_from_ui (mainview, picture);
 }
 
-static void _update_account_description (FrogrMainView *mainview)
+static void _update_state_description (FrogrMainView *mainview)
 {
   FrogrMainViewPrivate *priv = NULL;
   gchar *description = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
 
-  description = _craft_account_description (mainview);
-  frogr_main_view_model_set_account_description (priv->model, description);
+  description = _craft_state_description (mainview);
+  frogr_main_view_model_set_state_description (priv->model, description);
 
-  DEBUG ("Account description changed: %s", description);
+  DEBUG ("state description changed: %s", description);
   g_free (description);
 }
 
-static gchar *_craft_account_description (FrogrMainView *mainview)
+static gchar *_craft_state_description (FrogrMainView *mainview)
 {
   FrogrMainViewPrivate *priv = NULL;
   FrogrAccount *account = NULL;
@@ -1315,7 +1314,7 @@ static void
 _update_ui (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  const gchar *account_description = NULL;
+  const gchar *state_description = NULL;
   gboolean has_accounts = FALSE;
   gboolean has_pics = FALSE;
 
@@ -1358,9 +1357,9 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->add_to_group_menu_item, has_pics);
 
-      /* Update status bar from model's account description */
-      account_description = frogr_main_view_model_get_account_description (priv->model);
-      frogr_main_view_set_status_text (self, account_description);
+      /* Update status bar from model's state description */
+      state_description = frogr_main_view_model_get_state_description (priv->model);
+      frogr_main_view_set_status_text (self, state_description);
       break;
 
     default:
@@ -1445,8 +1444,8 @@ frogr_main_view_init (FrogrMainView *self)
   priv->model = frogr_main_view_model_new ();
   priv->controller = g_object_ref (frogr_controller_get_instance ());
 
-  /* Init main model's account description */
-  _update_account_description (self);
+  /* Init main model's state description */
+  _update_state_description (self);
 
   /* Provide a default icon list in several sizes */
   icons = g_list_prepend (NULL,

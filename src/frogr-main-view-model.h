@@ -101,10 +101,10 @@ void frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self);
 
 guint frogr_main_view_model_n_tags (FrogrMainViewModel *self);
 
-const gchar *frogr_main_view_model_get_account_description (FrogrMainViewModel *self);
+const gchar *frogr_main_view_model_get_state_description (FrogrMainViewModel *self);
 
-void frogr_main_view_model_set_account_description (FrogrMainViewModel *self,
-                                                    const gchar *description);
+void frogr_main_view_model_set_state_description (FrogrMainViewModel *self,
+                                                  const gchar *description);
 
 G_END_DECLS
 
