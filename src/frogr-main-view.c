@@ -197,6 +197,8 @@ static void _model_picture_removed (FrogrController *controller,
                                     FrogrPicture *picture,
                                     gpointer data);
 
+static void _update_account_description (FrogrMainView *mainview);
+
 static gchar *_craft_account_description (FrogrMainView *mainview);
 
 static gchar *_get_datasize_string (gulong bandwidth);
@@ -1127,20 +1129,10 @@ _controller_active_account_changed (FrogrController *controller,
                                     gpointer data)
 {
   FrogrMainView *mainview = NULL;
-  FrogrMainViewPrivate *priv = NULL;
-  gchar *description = NULL;
 
   mainview = FROGR_MAIN_VIEW (data);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-
-  description = _craft_account_description (mainview);
-  frogr_main_view_model_set_account_description (priv->model, description);
-
-  if (frogr_controller_get_state (priv->controller) != FROGR_STATE_BUSY)
-    frogr_main_view_set_status_text (mainview, description);
-
-  DEBUG ("Account details changed: %s", description);
-  g_free (description);
+  _update_account_description (mainview);
+  _update_ui (mainview);
 }
 
 static void
@@ -1175,6 +1167,19 @@ _model_picture_removed (FrogrController *controller,
   _remove_picture_from_ui (mainview, picture);
 }
 
+static void _update_account_description (FrogrMainView *mainview)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  gchar *description = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+
+  description = _craft_account_description (mainview);
+  frogr_main_view_model_set_account_description (priv->model, description);
+
+  DEBUG ("Account description changed: %s", description);
+  g_free (description);
+}
 
 static gchar *_craft_account_description (FrogrMainView *mainview)
 {
@@ -1235,20 +1240,20 @@ static gchar *_craft_account_description (FrogrMainView *mainview)
 }
 
 static gchar *
-_get_datasize_string (gulong bandwidth)
+_get_datasize_string (gulong datasize)
 {
   gchar *result = NULL;
 
-  if (bandwidth != G_MAXULONG)
+  if (datasize != G_MAXULONG)
     {
-      gfloat bandwidth_float = G_MAXFLOAT;
+      gfloat datasize_float = G_MAXFLOAT;
       gchar *unit_str = NULL;
       int n_divisions = 0;
 
-      bandwidth_float = bandwidth;
-      while (bandwidth_float > 1000.0 && n_divisions < 3)
+      datasize_float = datasize;
+      while (datasize_float > 1000.0 && n_divisions < 3)
         {
-          bandwidth_float /= 1024;
+          datasize_float /= 1024;
           n_divisions++;
         }
 
@@ -1269,7 +1274,7 @@ _get_datasize_string (gulong bandwidth)
 
       if (unit_str)
         {
-          result = g_strdup_printf ("%.1f %s", bandwidth_float, unit_str);
+          result = g_strdup_printf ("%.1f %s", datasize_float, unit_str);
           g_free (unit_str);
         }
     }
@@ -1281,7 +1286,7 @@ static void
 _update_ui (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gchar *account_description = NULL;
+  const gchar *account_description = NULL;
   gboolean has_accounts = FALSE;
   gboolean has_pics = FALSE;
 
@@ -1400,7 +1405,6 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
   GList *icons;
-  gchar *account_description;
 
 #ifdef MAC_INTEGRATION
   GtkOSXApplication *osx_app;
@@ -1413,9 +1417,7 @@ frogr_main_view_init (FrogrMainView *self)
   priv->controller = g_object_ref (frogr_controller_get_instance ());
 
   /* Init main model's account description */
-  account_description = _craft_account_description (self);
-  frogr_main_view_model_set_account_description (priv->model, account_description);
-  g_free (account_description);
+  _update_account_description (self);
 
   /* Provide a default icon list in several sizes */
   icons = g_list_prepend (NULL,
