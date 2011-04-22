@@ -62,7 +62,10 @@ typedef struct _FrogrDetailsDialogPrivate {
   GtkWidget *moderate_rb;
   GtkWidget *restricted_rb;
   GtkTextBuffer *text_buffer;
+
   GtkWidget *picture_img;
+  GtkWidget *mpictures_label;
+
   GtkTreeModel *treemodel;
   GSList *pictures;
 } FrogrDetailsDialogPrivate;
@@ -147,6 +150,10 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_widget_set_size_request (widget, PICTURE_WIDTH, -1);
   gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 6);
   priv->picture_img = widget;
+
+  widget = gtk_label_new (NULL);
+  gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 0);
+  priv->mpictures_label = widget;
 
   /* Visibility */
 
@@ -736,11 +743,17 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   if (n_pictures > 1)
     {
       GdkPixbuf *pixbuf;
+      gchar *mpictures_str;
 
       /* Set the image for editing multiple pictures */
       pixbuf = gdk_pixbuf_new_from_file (MPICTURES_IMAGE, NULL);
       gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), pixbuf);
       g_object_unref (pixbuf);
+
+      /* Visually indicate how many pictures are being edited */
+      mpictures_str = g_strdup_printf (_("(%d Pictures)"), n_pictures);
+      gtk_label_set_text (GTK_LABEL (priv->mpictures_label), mpictures_str);
+      g_free (mpictures_str);
     }
   else
     {
@@ -1068,14 +1081,7 @@ void
 frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures, GSList *tags)
 {
   FrogrDetailsDialog *self = NULL;
-  gchar *title = NULL;
-  guint n_pictures = 0;
   GObject *new = NULL;
-
-  n_pictures = g_slist_length (fpictures);
-  title = g_strdup_printf (ngettext ("Edit Picture Details",
-                           "Edit Picture Details (%d Pictures)", n_pictures),
-                           n_pictures);
 
   new = g_object_new (FROGR_TYPE_DETAILS_DIALOG,
                       "modal", TRUE,
@@ -1084,9 +1090,8 @@ frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures, GSList *tags)
                       "width-request", DIALOG_MIN_WIDTH,
                       "height-request", -1,
                       "resizable", TRUE,
-                      "title", title,
+                      "title", _("Edit Picture Details"),
                       NULL);
-  g_free (title);
 
   self = FROGR_DETAILS_DIALOG (new);
 
