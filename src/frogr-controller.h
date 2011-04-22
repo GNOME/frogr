@@ -53,10 +53,13 @@ struct _FrogrController
 };
 
 typedef enum {
-  FROGR_STATE_UKNOWN,
+  FROGR_STATE_UNKNOWN,
   FROGR_STATE_IDLE,
-  FROGR_STATE_BUSY
+  FROGR_STATE_LOADING_PICTURES,
+  FROGR_STATE_UPLOADING_PICTURES
 } FrogrControllerState;
+
+#define FROGR_STATE_IS_BUSY(state) ((state) != FROGR_STATE_UNKNOWN && (state) != FROGR_STATE_IDLE)
 
 GType frogr_controller_get_type (void) G_GNUC_CONST;
 

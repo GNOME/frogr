@@ -524,8 +524,8 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   self = FROGR_MAIN_VIEW (data);
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
 
-  /* Do anything when the application is busy doing something else */
-  if (frogr_controller_get_state (priv->controller) == FROGR_STATE_BUSY)
+  /* Do nothing when the application is busy doing something else */
+  if (FROGR_STATE_IS_BUSY(frogr_controller_get_state (priv->controller)))
     return;
 
   target = gtk_selection_data_get_target (selection_data);
@@ -1322,7 +1322,8 @@ _update_ui (FrogrMainView *self)
   /* Set sensitiveness */
   switch (frogr_controller_get_state (priv->controller))
     {
-    case FROGR_STATE_BUSY:
+    case FROGR_STATE_LOADING_PICTURES:
+    case FROGR_STATE_UPLOADING_PICTURES:
       gtk_widget_set_sensitive (priv->add_button, FALSE);
       gtk_widget_set_sensitive (priv->add_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->remove_button, FALSE);

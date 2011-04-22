@@ -1881,7 +1881,7 @@ frogr_controller_set_active_account (FrogrController *self,
 FrogrAccount *
 frogr_controller_get_active_account (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UKNOWN);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return priv->account;
@@ -1890,7 +1890,7 @@ frogr_controller_get_active_account (FrogrController *self)
 GSList *
 frogr_controller_get_all_accounts (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UKNOWN);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return frogr_config_get_accounts (priv->config);
@@ -1899,7 +1899,7 @@ frogr_controller_get_all_accounts (FrogrController *self)
 FrogrControllerState
 frogr_controller_get_state (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UKNOWN);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
 
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return priv->state;
@@ -2148,7 +2148,7 @@ frogr_controller_load_pictures (FrogrController *self,
                                        (FrogrPicturesLoadedCallback) _on_pictures_loaded,
                                        self);
   /* Load the pictures! */
-  _set_state (self, FROGR_STATE_BUSY);
+  _set_state (self, FROGR_STATE_LOADING_PICTURES);
 
   frogr_picture_loader_load (fploader);
 }
@@ -2189,7 +2189,7 @@ frogr_controller_upload_pictures (FrogrController *self)
                                         (FrogrPicturesUploadedCallback) _on_pictures_uploaded,
                                         self);
           /* Load the pictures! */
-          _set_state (self, FROGR_STATE_BUSY);
+          _set_state (self, FROGR_STATE_UPLOADING_PICTURES);
           frogr_picture_uploader_upload (fpuploader);
         }
     }
