@@ -48,12 +48,19 @@ struct _FrogrPictureLoaderPrivate
 {
   FrogrController *controller;
   FrogrMainView *mainview;
-  FrogrConfig *config;
 
   GSList *file_uris;
   GSList *current;
   guint index;
   guint n_pictures;
+
+  gboolean remove_extensions;
+  gboolean public_visibility;
+  gboolean family_visibility;
+  gboolean friend_visibility;
+  gboolean show_in_search;
+  FspSafetyLevel safety_level;
+  FspContentType content_type;
 
   FrogrPictureLoadedCallback picture_loaded_cb;
   FrogrPicturesLoadedCallback pictures_loaded_cb;
@@ -252,7 +259,7 @@ _load_next_picture_cb (GObject *object,
           if (file_info)
             g_object_unref (file_info);
 
-          if (frogr_config_get_remove_extensions (priv->config))
+          if (priv->remove_extensions)
             {
               gchar *extension_dot;
 
@@ -272,15 +279,13 @@ _load_next_picture_cb (GObject *object,
           /* Build the FrogrPicture and set pixbuf */
           fpicture = frogr_picture_new (file_uri,
                                         file_name,
-                                        frogr_config_get_default_public (priv->config),
-                                        frogr_config_get_default_family (priv->config),
-                                        frogr_config_get_default_friend (priv->config));
-          frogr_picture_set_show_in_search (fpicture,
-                                            frogr_config_get_default_show_in_search (priv->config));
-          frogr_picture_set_content_type (fpicture,
-                                          frogr_config_get_default_content_type (priv->config));
-          frogr_picture_set_safety_level (fpicture,
-                                          frogr_config_get_default_safety_level (priv->config));
+                                        priv->public_visibility,
+                                        priv->family_visibility,
+                                        priv->friend_visibility);
+
+          frogr_picture_set_show_in_search (fpicture, priv->show_in_search);
+          frogr_picture_set_content_type (fpicture, priv->content_type);
+          frogr_picture_set_safety_level (fpicture, priv->safety_level);
 
           frogr_picture_set_pixbuf (fpicture, s_pixbuf);
 
@@ -350,12 +355,6 @@ _frogr_picture_loader_dispose (GObject* object)
       priv->controller = NULL;
     }
 
-  if (priv->config)
-    {
-      g_object_unref (priv->config);
-      priv->config = NULL;
-    }
-
   G_OBJECT_CLASS (frogr_picture_loader_parent_class)->dispose(object);
 }
 
@@ -389,12 +388,22 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   FrogrPictureLoaderPrivate *priv =
     FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
+  FrogrConfig *config = frogr_config_get_instance ();
+
   /* Init private data */
 
   /* We need the controller to get the main window */
   priv->controller = g_object_ref (frogr_controller_get_instance ());
   priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
-  priv->config = g_object_ref (frogr_config_get_instance ());
+
+  /* Initialize values from frogr configuration */
+  priv->remove_extensions = frogr_config_get_remove_extensions (config);
+  priv->public_visibility = frogr_config_get_default_public (config);
+  priv->family_visibility = frogr_config_get_default_family (config);
+  priv->friend_visibility = frogr_config_get_default_friend (config);
+  priv->show_in_search = frogr_config_get_default_show_in_search (config);
+  priv->safety_level = frogr_config_get_default_safety_level (config);
+  priv->content_type = frogr_config_get_default_content_type (config);
 
   /* Init the rest of private data */
   priv->file_uris = NULL;
