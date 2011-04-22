@@ -56,6 +56,7 @@ struct _FrogrMainViewModelPrivate
 enum {
   PICTURE_ADDED,
   PICTURE_REMOVED,
+  DESCRIPTION_UPDATED,
   N_SIGNALS
 };
 
@@ -130,6 +131,14 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__OBJECT,
                   G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
+
+  signals[DESCRIPTION_UPDATED] =
+    g_signal_new ("description-updated",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
 
   g_type_class_add_private (obj_class, sizeof (FrogrMainViewModelPrivate));
 }
@@ -473,4 +482,6 @@ frogr_main_view_model_set_state_description (FrogrMainViewModel *self,
     g_free (priv->state_description);
 
   priv->state_description = g_strdup (description);
+
+  g_signal_emit (self, signals[DESCRIPTION_UPDATED], 0);
 }
