@@ -1181,6 +1181,7 @@ static void _update_state_description (FrogrMainView *mainview)
 
   description = _craft_state_description (mainview);
   frogr_main_view_model_set_state_description (priv->model, description);
+  frogr_main_view_set_status_text (mainview, description);
 
   DEBUG ("state description changed: %s", description);
   g_free (description);
