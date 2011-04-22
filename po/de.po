@@ -1,16 +1,16 @@
 # German translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Mario Blättermann <mariobl@gnome.org>, 2011.
+# Mario Blättermann <mariobl@freenet.de>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&component=general\n"
-"POT-Creation-Date: 2011-02-25 15:05+0000\n"
-"PO-Revision-Date: 2011-02-26 21:13+0100\n"
-"Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
+"product=frogr&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2011-04-22 07:20+0000\n"
+"PO-Revision-Date: 2011-04-22 19:34+0100\n"
+"Last-Translator: Mario Blättermann <mariobl@freenet.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,13 +36,13 @@ msgstr "Eine GNOME-Anwendung zum entfernten Verwalten von Flickr\n"
 
 #: ../src/frogr-about-dialog.c:106
 msgid "translator-credits"
-msgstr "Mario Blättermann <mariobl@gnome.org>"
+msgstr "Mario Blättermann <mariobl@freenet.de>"
 
-#: ../src/frogr-add-tags-dialog.c:343
+#: ../src/frogr-add-tags-dialog.c:339
 msgid "Enter a spaces separated list of tags:"
 msgstr "Geben Sie eine durch Leerzeichen getrennte Liste von Markierungen an:"
 
-#: ../src/frogr-add-tags-dialog.c:390
+#: ../src/frogr-add-tags-dialog.c:386
 msgid "Add Tags"
 msgstr "Markierungen hinzufügen"
 
@@ -227,39 +227,39 @@ msgstr ""
 msgid "An error happened while uploading a picture: %s."
 msgstr "Ein Fehler trat beim Hochladen eines Bildes auf: %s."
 
-#: ../src/frogr-controller.c:900
+#: ../src/frogr-controller.c:898
 msgid "Creating new photosets…"
 msgstr "Neue Alben werden erstellt …"
 
-#: ../src/frogr-controller.c:924
+#: ../src/frogr-controller.c:922
 msgid "Adding picture to photosets…"
 msgstr "Bild wird zu Alben hinzugefügt …"
 
-#: ../src/frogr-controller.c:946
+#: ../src/frogr-controller.c:944
 msgid "Adding picture to groups…"
 msgstr "Bild wird zu Gruppen hinzugefügt …"
 
-#: ../src/frogr-controller.c:1530
+#: ../src/frogr-controller.c:1528
 msgid "No sets found"
 msgstr "Keine Alben gefunden"
 
-#: ../src/frogr-controller.c:1564
+#: ../src/frogr-controller.c:1562
 msgid "No groups found"
 msgstr "Keine Gruppen gefunden"
 
-#: ../src/frogr-controller.c:2000 ../src/frogr-controller.c:2026
+#: ../src/frogr-controller.c:1994 ../src/frogr-controller.c:2020
 msgid "Retrieving list of tags…"
 msgstr "Markierungsliste wird geholt …"
 
-#: ../src/frogr-controller.c:2050 ../src/frogr-controller.c:2073
+#: ../src/frogr-controller.c:2044 ../src/frogr-controller.c:2067
 msgid "Retrieving list of sets…"
 msgstr "Albenliste wird geholt …"
 
-#: ../src/frogr-controller.c:2096
+#: ../src/frogr-controller.c:2090
 msgid "Retrieving list of groups…"
 msgstr "Gruppenliste wird geholt …"
 
-#: ../src/frogr-controller.c:2175
+#: ../src/frogr-controller.c:2169
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -270,7 +270,7 @@ msgstr ""
 "Bitte nehmen Sie die Legitimierung erneut vor."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:900
+#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:911
 msgid "Missing data required"
 msgstr "Benötigte Daten fehlen"
 
@@ -286,189 +286,194 @@ msgstr "Beschreibung des Albums:"
 msgid "Create new Set"
 msgstr "Neues Album anlegen"
 
-#: ../src/frogr-details-dialog.c:157
+#: ../src/frogr-details-dialog.c:164
 msgid "Visibility"
 msgstr "Sichtbarkeit"
 
-#: ../src/frogr-details-dialog.c:168 ../src/frogr-settings-dialog.c:144
+#: ../src/frogr-details-dialog.c:175 ../src/frogr-settings-dialog.c:146
 msgid "_Private"
 msgstr "_Privat"
 
-#: ../src/frogr-details-dialog.c:172 ../src/frogr-settings-dialog.c:148
+#: ../src/frogr-details-dialog.c:179 ../src/frogr-settings-dialog.c:150
 msgid "P_ublic"
 msgstr "_Öffentlich"
 
-#: ../src/frogr-details-dialog.c:180 ../src/frogr-settings-dialog.c:156
+#: ../src/frogr-details-dialog.c:187 ../src/frogr-settings-dialog.c:158
 msgid "Visible to _Family"
 msgstr "Für _Familie sichtbar"
 
-#: ../src/frogr-details-dialog.c:184 ../src/frogr-settings-dialog.c:160
+#: ../src/frogr-details-dialog.c:191 ../src/frogr-settings-dialog.c:162
 msgid "Visible to F_riends"
 msgstr "Für F_reunde sichtbar"
 
-#: ../src/frogr-details-dialog.c:197 ../src/frogr-settings-dialog.c:168
+#: ../src/frogr-details-dialog.c:204 ../src/frogr-settings-dialog.c:170
 msgid "_Show up in Global Search Results"
 msgstr "In globalen _Suchergebnissen anzeigen"
 
-#: ../src/frogr-details-dialog.c:210
+#: ../src/frogr-details-dialog.c:217
 msgid "Content type"
 msgstr "Inhaltstyp"
 
-#: ../src/frogr-details-dialog.c:219 ../src/frogr-settings-dialog.c:205
+#: ../src/frogr-details-dialog.c:226 ../src/frogr-settings-dialog.c:207
 msgid "P_hoto"
 msgstr "_Foto"
 
-#: ../src/frogr-details-dialog.c:223 ../src/frogr-settings-dialog.c:209
+#: ../src/frogr-details-dialog.c:230 ../src/frogr-settings-dialog.c:211
 msgid "Scree_nshot"
 msgstr "_Bildschirmfoto"
 
-#: ../src/frogr-details-dialog.c:227 ../src/frogr-settings-dialog.c:213
+#: ../src/frogr-details-dialog.c:234 ../src/frogr-settings-dialog.c:215
 msgid "Oth_er"
 msgstr "And_ere"
 
-#: ../src/frogr-details-dialog.c:241
+#: ../src/frogr-details-dialog.c:248
 msgid "Safety level"
 msgstr "Sicherheitsstufe"
 
-#: ../src/frogr-details-dialog.c:250 ../src/frogr-settings-dialog.c:246
+#: ../src/frogr-details-dialog.c:257 ../src/frogr-settings-dialog.c:248
 msgid "S_afe"
 msgstr "_Sicher"
 
-#: ../src/frogr-details-dialog.c:254 ../src/frogr-settings-dialog.c:250
+#: ../src/frogr-details-dialog.c:261 ../src/frogr-settings-dialog.c:252
 msgid "_Moderate"
 msgstr "_Mittel"
 
-#: ../src/frogr-details-dialog.c:258 ../src/frogr-settings-dialog.c:254
+#: ../src/frogr-details-dialog.c:265 ../src/frogr-settings-dialog.c:256
 msgid "Restr_icted"
 msgstr "E_ingeschränkt"
 
-#: ../src/frogr-details-dialog.c:272
+#: ../src/frogr-details-dialog.c:279
 msgid "_Title:"
 msgstr "_Titel:"
 
-#: ../src/frogr-details-dialog.c:284
+#: ../src/frogr-details-dialog.c:291
 msgid "_Description:"
 msgstr "_Beschreibung:"
 
-#: ../src/frogr-details-dialog.c:310
+#: ../src/frogr-details-dialog.c:317
 msgid "Ta_gs:"
 msgstr "Ma_rkierungen:"
 
-#: ../src/frogr-details-dialog.c:1078
+#. Visually indicate how many pictures are being edited
+#: ../src/frogr-details-dialog.c:754
 #, c-format
-#| msgid "Edit Picture Details"
+msgid "(%d Pictures)"
+msgstr "(%d Bilder)"
+
+#: ../src/frogr-details-dialog.c:1093
 msgid "Edit Picture Details"
-msgid_plural "Edit Picture Details (%d Pictures)"
-msgstr[0] "Details des Bildes bearbeiten"
-msgstr[1] "Details der Bilder bearbeiten (%d Bilder)"
+msgstr "Bilddetails bearbeiten"
 
 #. File menu
-#: ../src/frogr-main-view.c:229
+#: ../src/frogr-main-view.c:239
 msgid "_File"
 msgstr "_Datei"
 
-#: ../src/frogr-main-view.c:235
+#: ../src/frogr-main-view.c:245
 msgid "_Add Pictures"
 msgstr "Bilder _hinzufügen"
 
 #. Remove
-#: ../src/frogr-main-view.c:242 ../src/frogr-main-view.c:450
+#: ../src/frogr-main-view.c:252 ../src/frogr-main-view.c:482
 msgid "_Remove Pictures"
 msgstr "Bilder entfe_rnen"
 
 #. Accounts menu item and submenu
-#: ../src/frogr-main-view.c:252
+#: ../src/frogr-main-view.c:262
 msgid "Accou_nts"
 msgstr "Ko_nten"
 
 #. Authorize menu item
-#: ../src/frogr-main-view.c:258
+#: ../src/frogr-main-view.c:268
 msgid "Authorize _frogr"
 msgstr "_Frogr legitimieren"
 
-#: ../src/frogr-main-view.c:267
+#: ../src/frogr-main-view.c:275
 msgid "_Preferences…"
 msgstr "_Einstellungen …"
 
-#: ../src/frogr-main-view.c:275
+#: ../src/frogr-main-view.c:293
 msgid "_Quit"
 msgstr "_Beenden"
 
 #. Actions menu
-#: ../src/frogr-main-view.c:281
+#: ../src/frogr-main-view.c:301
 msgid "A_ctions"
 msgstr "A_ktionen"
 
 #. Edit details
-#: ../src/frogr-main-view.c:287 ../src/frogr-main-view.c:408
+#: ../src/frogr-main-view.c:307 ../src/frogr-main-view.c:440
 msgid "Edit _Details…"
 msgstr "_Details bearbeiten …"
 
 #. Add Tags
-#: ../src/frogr-main-view.c:294 ../src/frogr-main-view.c:415
+#: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:447
 msgid "Add _Tags…"
 msgstr "_Markierungen hinzufügen …"
 
 #. Add to group
-#: ../src/frogr-main-view.c:301 ../src/frogr-main-view.c:422
+#: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:454
 msgid "Add to _Group…"
 msgstr "Zu _Gruppe hinzufügen …"
 
 #. Add to set
-#: ../src/frogr-main-view.c:308 ../src/frogr-main-view.c:429
+#: ../src/frogr-main-view.c:328 ../src/frogr-main-view.c:461
 msgid "Add to _Set"
 msgstr "Zu _Album hinzufügen …"
 
-#: ../src/frogr-main-view.c:315 ../src/frogr-main-view.c:435
+#: ../src/frogr-main-view.c:335 ../src/frogr-main-view.c:467
 msgid "_Create New Set…"
 msgstr "Neues Album _erstellen …"
 
-#: ../src/frogr-main-view.c:322 ../src/frogr-main-view.c:441
+#: ../src/frogr-main-view.c:342 ../src/frogr-main-view.c:473
 msgid "Add to _Existing Set…"
 msgstr "Zu _vorhandenem Album hinzufügen …"
 
-#: ../src/frogr-main-view.c:331
+#: ../src/frogr-main-view.c:351
 msgid "_Upload All"
 msgstr "_Alle hochladen"
 
-#. Help menu
-#: ../src/frogr-main-view.c:339
+#: ../src/frogr-main-view.c:361
 msgid "_Help"
 msgstr "_Hilfe"
 
-#: ../src/frogr-main-view.c:345
+#: ../src/frogr-main-view.c:368
 msgid "_About frogr..."
 msgstr "_Info zu Frogr …"
 
-#: ../src/frogr-main-view.c:897
+#: ../src/frogr-main-view.c:935
 msgid "Select a Picture"
 msgstr "Ein Bild auswählen"
 
-#: ../src/frogr-main-view.c:911
+#: ../src/frogr-main-view.c:961
 msgid "images"
 msgstr "Bilder"
 
-#: ../src/frogr-main-view.c:931
+#: ../src/frogr-main-view.c:982
 msgid "You need to select some pictures first"
 msgstr "Sie müssen zunächst einige Bilder auswählen"
 
-#: ../src/frogr-main-view.c:1149
+#: ../src/frogr-main-view.c:1205
 msgid "Not connected to flickr"
 msgstr "Nicht mit Flickr verbunden"
 
-#: ../src/frogr-main-view.c:1178
+#: ../src/frogr-main-view.c:1234
 msgid "remaining for the current month"
 msgstr "verbleibend für den aktuellen Monat"
 
-#: ../src/frogr-main-view.c:1186
+#: ../src/frogr-main-view.c:1254
+msgid "to be uploaded"
+msgstr "hoch zu laden"
+
+#: ../src/frogr-main-view.c:1261
 msgid "Connected as"
 msgstr "Verbunden als"
 
-#: ../src/frogr-main-view.c:1187
+#: ../src/frogr-main-view.c:1262
 msgid " (PRO account)"
 msgstr " (PRO-Konto)"
 
-#: ../src/frogr-picture-loader.c:92
+#: ../src/frogr-picture-loader.c:103
 #, c-format
 msgid "Loading pictures %d / %d"
 msgstr "Bilder werden geladen %d / %d"
@@ -479,59 +484,63 @@ msgstr "Bilder werden geladen %d / %d"
 msgid "Uploading '%s'…"
 msgstr "»%s« wird hochgeladen …"
 
-#: ../src/frogr-settings-dialog.c:133
+#: ../src/frogr-settings-dialog.c:135
 msgid "Default Visibility"
 msgstr "Vorgegebene Sichtbarkeit"
 
-#: ../src/frogr-settings-dialog.c:195
+#: ../src/frogr-settings-dialog.c:197
 msgid "Default Content Type"
 msgstr "Vorgegebener Inhaltstyp"
 
-#: ../src/frogr-settings-dialog.c:236
+#: ../src/frogr-settings-dialog.c:238
 msgid "Default Safety Level"
 msgstr "Vorgegebene Sicherheitsstufe"
 
-#: ../src/frogr-settings-dialog.c:277
+#: ../src/frogr-settings-dialog.c:279
 msgid "Other options"
 msgstr "Weitere Optionen"
 
-#: ../src/frogr-settings-dialog.c:287
+#: ../src/frogr-settings-dialog.c:289
 msgid "Ena_ble tags auto-completion"
 msgstr "Automatische _Vervollständigung der Markierungen aktivieren"
 
-#: ../src/frogr-settings-dialog.c:298
+#: ../src/frogr-settings-dialog.c:297
+msgid "Remo_ve file extensions from names before upload"
+msgstr "Dateinamenerweiterungen vor dem Hochladen ent_fernen"
+
+#: ../src/frogr-settings-dialog.c:308
 msgid "_General"
 msgstr "All_gemein"
 
 #. Proxy settings
-#: ../src/frogr-settings-dialog.c:317
+#: ../src/frogr-settings-dialog.c:327
 msgid "_Use HTTP Proxy"
 msgstr "HTTP-_Proxy verwenden"
 
-#: ../src/frogr-settings-dialog.c:328
+#: ../src/frogr-settings-dialog.c:338
 msgid "_Host:"
 msgstr "_Rechner:"
 
 #. Proxy port
-#: ../src/frogr-settings-dialog.c:346
+#: ../src/frogr-settings-dialog.c:356
 msgid "_Port:"
 msgstr "_Port:"
 
 #. Proxy username
-#: ../src/frogr-settings-dialog.c:364
+#: ../src/frogr-settings-dialog.c:374
 msgid "U_sername:"
 msgstr "_Benutzername:"
 
 #. Proxy password
-#: ../src/frogr-settings-dialog.c:382
+#: ../src/frogr-settings-dialog.c:392
 msgid "Pass_word:"
 msgstr "_Passwort:"
 
-#: ../src/frogr-settings-dialog.c:409
+#: ../src/frogr-settings-dialog.c:419
 msgid "Connec_tion"
 msgstr "_Verbindung"
 
-#: ../src/frogr-settings-dialog.c:835
+#: ../src/frogr-settings-dialog.c:857
 msgid "Preferences"
 msgstr "Einstellungen"
 
