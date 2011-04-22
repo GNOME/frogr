@@ -27,6 +27,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#ifndef GTK_API_VERSION_3
 static gboolean frogr_util_spawn_command (const gchar* cmd)
 {
   GError *error = NULL;
@@ -42,6 +43,7 @@ static gboolean frogr_util_spawn_command (const gchar* cmd)
 
   return TRUE;
 }
+#endif
 
 void
 frogr_util_open_url_in_browser (const gchar *url)
