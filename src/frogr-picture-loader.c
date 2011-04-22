@@ -54,7 +54,7 @@ struct _FrogrPictureLoaderPrivate
   guint index;
   guint n_pictures;
 
-  gboolean remove_extensions;
+  gboolean remove_file_extensions;
   gboolean public_visibility;
   gboolean family_visibility;
   gboolean friend_visibility;
@@ -259,7 +259,7 @@ _load_next_picture_cb (GObject *object,
           if (file_info)
             g_object_unref (file_info);
 
-          if (priv->remove_extensions)
+          if (priv->remove_file_extensions)
             {
               gchar *extension_dot;
 
@@ -397,7 +397,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
 
   /* Initialize values from frogr configuration */
-  priv->remove_extensions = frogr_config_get_remove_extensions (config);
+  priv->remove_file_extensions = frogr_config_get_remove_file_extensions (config);
   priv->public_visibility = frogr_config_get_default_public (config);
   priv->family_visibility = frogr_config_get_default_family (config);
   priv->friend_visibility = frogr_config_get_default_friend (config);

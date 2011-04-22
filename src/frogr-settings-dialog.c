@@ -54,7 +54,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *moderate_rb;
   GtkWidget *restricted_rb;
   GtkWidget *tags_autocompletion_cb;
-  GtkWidget *remove_extensions_cb;
+  GtkWidget *remove_file_extensions_cb;
 
   GtkWidget *use_proxy_cb;
   GtkWidget *proxy_host_label;
@@ -71,7 +71,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean friend_visibility;
   gboolean show_in_search;
   gboolean tags_autocompletion;
-  gboolean remove_extensions;
+  gboolean remove_file_extensions;
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
@@ -294,13 +294,13 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     G_CALLBACK (_on_button_toggled),
                     self);
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("Remo_ve file extensions before upload"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("Remo_ve file extensions from names before upload"));
   gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
-  priv->remove_extensions_cb = cbutton;
+  priv->remove_file_extensions_cb = cbutton;
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
 
-  g_signal_connect (G_OBJECT (priv->remove_extensions_cb), "toggled",
+  g_signal_connect (G_OBJECT (priv->remove_file_extensions_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
 
@@ -425,8 +425,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   FrogrSettingsDialogPrivate *priv =
     FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
-  /* Get data form configuration */
-
+  /* Get data from configuration */
   priv->public_visibility = frogr_config_get_default_public (priv->config);
   priv->family_visibility = frogr_config_get_default_family (priv->config);
   priv->friend_visibility = frogr_config_get_default_friend (priv->config);
@@ -434,7 +433,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->content_type = frogr_config_get_default_content_type (priv->config);
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
   priv->tags_autocompletion = frogr_config_get_tags_autocompletion (priv->config);
-  priv->remove_extensions = frogr_config_get_remove_extensions (priv->config);
+  priv->remove_file_extensions = frogr_config_get_remove_file_extensions (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
   g_free (priv->proxy_host);
@@ -487,8 +486,8 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->tags_autocompletion_cb),
                                 priv->tags_autocompletion);
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->remove_extensions_cb),
-                                priv->remove_extensions);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->remove_file_extensions_cb),
+                                priv->remove_file_extensions);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
@@ -524,7 +523,7 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_safety_level (priv->config, priv->safety_level);
 
   frogr_config_set_tags_autocompletion (priv->config, priv->tags_autocompletion);
-  frogr_config_set_remove_extensions (priv->config, priv->remove_extensions);
+  frogr_config_set_remove_file_extensions (priv->config, priv->remove_file_extensions);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 
@@ -656,10 +655,10 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("Enable tags autocompletion set to %s", active ? "TRUE" : "FALSE");
     }
 
-  if (GTK_WIDGET (button) == priv->remove_extensions_cb)
+  if (GTK_WIDGET (button) == priv->remove_file_extensions_cb)
     {
-      priv->remove_extensions = active;
-      DEBUG ("Enable tags autocompletion set to %s", active ? "TRUE" : "FALSE");
+      priv->remove_file_extensions = active;
+      DEBUG ("Remo_ve file extensions before upload set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
@@ -785,7 +784,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->moderate_rb = NULL;
   priv->restricted_rb = NULL;
   priv->tags_autocompletion_cb = NULL;
-  priv->remove_extensions_cb = NULL;
+  priv->remove_file_extensions_cb = NULL;
   priv->use_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
@@ -802,7 +801,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->safety_level = FSP_SAFETY_LEVEL_NONE;
   priv->content_type = FSP_CONTENT_TYPE_NONE;
   priv->tags_autocompletion = FALSE;
-  priv->remove_extensions = FALSE;
+  priv->remove_file_extensions = FALSE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
