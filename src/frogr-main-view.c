@@ -23,6 +23,7 @@
 #include "frogr-main-view.h"
 
 #include "frogr-account.h"
+#include "frogr-config.h"
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
 #include "frogr-main-view-model.h"
@@ -67,6 +68,7 @@ G_DEFINE_TYPE (FrogrMainView, frogr_main_view, G_TYPE_OBJECT)
 typedef struct _FrogrMainViewPrivate {
   FrogrMainViewModel *model;
   FrogrController *controller;
+  FrogrConfig *config;
   GtkWindow *window;
 
   GtkWidget *menu_bar;
@@ -814,6 +816,10 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
   self = FROGR_MAIN_VIEW (data);
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
+  /* Disabled by configuration */
+  if (!frogr_config_get_enable_tooltips (priv->config))
+    return FALSE;
+
   /* Check whether we're asking for a tooltip over a picture */
   gtk_icon_view_convert_widget_to_bin_window_coords (GTK_ICON_VIEW (icon_view),
                                                      x, y, &bw_x, &bw_y);
@@ -1474,6 +1480,12 @@ _frogr_main_view_dispose (GObject *object)
       priv->controller = NULL;
     }
 
+  if (priv->config)
+    {
+      g_object_unref (priv->config);
+      priv->config = NULL;
+    }
+
   if (priv->tree_model)
     {
       g_object_unref (priv->tree_model);
@@ -1529,9 +1541,10 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *main_vbox;
 #endif
 
-  /* Init model and controller */
+  /* Init model, controller and configuration */
   priv->model = frogr_main_view_model_new ();
   priv->controller = g_object_ref (frogr_controller_get_instance ());
+  priv->config = g_object_ref (frogr_config_get_instance ());
 
   /* Init main model's state description */
   _update_state_description (self);

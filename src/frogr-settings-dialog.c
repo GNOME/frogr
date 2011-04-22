@@ -55,6 +55,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *restricted_rb;
   GtkWidget *tags_autocompletion_cb;
   GtkWidget *remove_file_extensions_cb;
+  GtkWidget *enable_tooltips_cb;
 
   GtkWidget *use_proxy_cb;
   GtkWidget *proxy_host_label;
@@ -72,6 +73,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean show_in_search;
   gboolean tags_autocompletion;
   gboolean remove_file_extensions;
+  gboolean enable_tooltips;
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
@@ -286,7 +288,15 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   box1 = gtk_vbox_new (FALSE, 6);
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("Ena_ble tags auto-completion"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("Enable Tooltips in Main Window"));
+  gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
+  priv->enable_tooltips_cb = cbutton;
+
+  g_signal_connect (G_OBJECT (priv->enable_tooltips_cb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  cbutton = gtk_check_button_new_with_mnemonic (_("Ena_ble Tags Auto-Completion"));
   gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
   priv->tags_autocompletion_cb = cbutton;
 
@@ -294,15 +304,15 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     G_CALLBACK (_on_button_toggled),
                     self);
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("Remo_ve file extensions from names before upload"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("Remo_ve File Extensions from Picture Titles"));
   gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
   priv->remove_file_extensions_cb = cbutton;
-
-  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
 
   g_signal_connect (G_OBJECT (priv->remove_file_extensions_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
+
+  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_General")));
@@ -434,6 +444,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
   priv->tags_autocompletion = frogr_config_get_tags_autocompletion (priv->config);
   priv->remove_file_extensions = frogr_config_get_remove_file_extensions (priv->config);
+  priv->enable_tooltips = frogr_config_get_enable_tooltips (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
   g_free (priv->proxy_host);
@@ -489,6 +500,9 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->remove_file_extensions_cb),
                                 priv->remove_file_extensions);
 
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->enable_tooltips_cb),
+                                priv->enable_tooltips);
+
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
   if (priv->proxy_host)
@@ -524,6 +538,7 @@ _save_data (FrogrSettingsDialog *self)
 
   frogr_config_set_tags_autocompletion (priv->config, priv->tags_autocompletion);
   frogr_config_set_remove_file_extensions (priv->config, priv->remove_file_extensions);
+  frogr_config_set_enable_tooltips (priv->config, priv->enable_tooltips);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 
@@ -658,7 +673,13 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
   if (GTK_WIDGET (button) == priv->remove_file_extensions_cb)
     {
       priv->remove_file_extensions = active;
-      DEBUG ("Remo_ve file extensions before upload set to %s", active ? "TRUE" : "FALSE");
+      DEBUG ("Remove file extensions before upload set to %s", active ? "TRUE" : "FALSE");
+    }
+
+  if (GTK_WIDGET (button) == priv->enable_tooltips_cb)
+    {
+      priv->enable_tooltips = active;
+      DEBUG ("Enable Tooltips in Main Window set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
@@ -785,6 +806,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->restricted_rb = NULL;
   priv->tags_autocompletion_cb = NULL;
   priv->remove_file_extensions_cb = NULL;
+  priv->enable_tooltips_cb = NULL;
   priv->use_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
@@ -802,6 +824,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->content_type = FSP_CONTENT_TYPE_NONE;
   priv->tags_autocompletion = FALSE;
   priv->remove_file_extensions = FALSE;
+  priv->enable_tooltips = FALSE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
