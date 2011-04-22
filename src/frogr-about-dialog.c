@@ -31,7 +31,6 @@
 
 static const gchar *authors[] = {
   "Mario Sanchez Prada <msanchez@igalia.com>",
-  "Adrian Perez de Castro <aperez@igalia.com>",
   "",
   NULL
 };
