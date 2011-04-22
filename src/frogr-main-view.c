@@ -149,6 +149,12 @@ static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
                                             gpointer self);
 
+static gboolean _on_icon_view_query_tooltip (GtkWidget *icon_view,
+                                             gint x, gint y,
+                                             gboolean keyboard_mode,
+                                             GtkTooltip *tooltip,
+                                             gpointer data);
+
 static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_selected_pictures (FrogrMainView *self);
 static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
@@ -786,6 +792,66 @@ _on_main_view_delete_event (GtkWidget *widget,
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   frogr_controller_quit_app (priv->controller);
   return TRUE;
+}
+
+static gboolean
+_on_icon_view_query_tooltip (GtkWidget *icon_view,
+                             gint x, gint y,
+                             gboolean keyboard_mode,
+                             GtkTooltip *tooltip,
+                             gpointer data)
+{
+  FrogrMainView *self = NULL;
+  FrogrMainViewPrivate *priv = NULL;
+  GtkTreePath *path;
+  gint bw_x;
+  gint bw_y;
+
+  /* No tooltips in keyboard mode... yet */
+  if (keyboard_mode)
+    return FALSE;
+
+  self = FROGR_MAIN_VIEW (data);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Check whether we're asking for a tooltip over a picture */
+  gtk_icon_view_convert_widget_to_bin_window_coords (GTK_ICON_VIEW (icon_view),
+                                                     x, y, &bw_x, &bw_y);
+  if (gtk_icon_view_get_item_at_pos (GTK_ICON_VIEW (icon_view), bw_x, bw_y, &path, NULL))
+    {
+      FrogrPicture *picture;
+      GtkTreeIter iter;
+      gchar *tooltip_str = NULL;
+      gchar *filesize_str = NULL;
+
+      /* Get needed information */
+      gtk_tree_model_get_iter (priv->tree_model, &iter, path);
+      gtk_tree_model_get (priv->tree_model,
+                          &iter,
+                          FPICTURE_COL, &picture,
+                          -1);
+
+      /* Bail out here if needed */
+      if (!picture || !FROGR_IS_PICTURE (picture))
+        return FALSE;
+
+      /* Build the tooltip text with basic info: title, size */
+      filesize_str = _get_datasize_string (frogr_picture_get_filesize (picture));
+      tooltip_str = g_strdup_printf ("<b>%s</b>\n<i>%s</i>",
+                                     frogr_picture_get_title (picture),
+                                     filesize_str);
+
+      gtk_tooltip_set_markup (tooltip, tooltip_str);
+
+      /* Free memory */
+      gtk_tree_path_free (path);
+      g_free (tooltip_str);
+      g_free (filesize_str);
+
+      return TRUE;
+    }
+
+  return FALSE;
 }
 
 static GSList *
@@ -1588,6 +1654,7 @@ frogr_main_view_init (FrogrMainView *self)
                                     GTK_SELECTION_MULTIPLE);
   gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
   gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), ITEM_WIDTH);
+  gtk_widget_set_has_tooltip (icon_view, TRUE);
 
   gtk_window_set_default_size (GTK_WINDOW (priv->window),
                                MINIMUM_WINDOW_WIDTH,
@@ -1604,6 +1671,10 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->window), "delete-event",
                     G_CALLBACK (_on_main_view_delete_event),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->icon_view), "query-tooltip",
+                    G_CALLBACK (_on_icon_view_query_tooltip),
                     self);
 
   g_signal_connect (G_OBJECT (priv->progress_dialog), "response",
