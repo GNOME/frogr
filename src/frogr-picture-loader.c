@@ -255,8 +255,8 @@ _load_next_picture_cb (GObject *object,
   FrogrPicture *fpicture = NULL;
   GFile *file = G_FILE (object);
   GError *error = NULL;
-  gchar *contents;
-  gsize length;
+  gchar *contents = NULL;
+  gsize length = 0;
 
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
@@ -267,12 +267,12 @@ _load_next_picture_cb (GObject *object,
                                    length,
                                    &error))
         {
-          GdkPixbuf *pixbuf;
-          GdkPixbuf *s_pixbuf;
-          GFileInfo* file_info;
-          gchar *file_uri;
-          gchar *file_name;
-          guint64 filesize;
+          GdkPixbuf *pixbuf = NULL;
+          GdkPixbuf *s_pixbuf = NULL;
+          GFileInfo* file_info = NULL;
+          gchar *file_uri = NULL;
+          gchar *file_name = NULL;
+          guint64 filesize = 0;
 
           /* Gather needed information */
           file_info = g_file_query_info (file,
@@ -281,7 +281,10 @@ _load_next_picture_cb (GObject *object,
                                          G_FILE_QUERY_INFO_NONE,
                                          NULL, &error);
           if (!error)
-            file_name = g_strdup (g_file_info_get_display_name (file_info));
+            {
+              file_name = g_strdup (g_file_info_get_display_name (file_info));
+              filesize = g_file_info_get_size (file_info);
+            }
           else
             {
               g_warning ("Not able to write pixbuf: %s", error->message);
@@ -293,7 +296,7 @@ _load_next_picture_cb (GObject *object,
 
           if (priv->remove_file_extensions)
             {
-              gchar *extension_dot;
+              gchar *extension_dot = NULL;
 
               /* Remove extension if present */
               extension_dot = g_strrstr (file_name, ".");
