@@ -66,6 +66,9 @@ guint frogr_main_view_model_n_pictures (FrogrMainViewModel *self);
 
 GSList *frogr_main_view_model_get_pictures (FrogrMainViewModel *self);
 
+void frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
+                                             GCompareFunc compare_func);
+
 void frogr_main_view_model_add_set (FrogrMainViewModel *self,
                                     FrogrPhotoSet *fset);
 void frogr_main_view_model_remove_set (FrogrMainViewModel *self,

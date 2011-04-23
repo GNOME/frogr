@@ -56,6 +56,7 @@ struct _FrogrMainViewModelPrivate
 enum {
   PICTURE_ADDED,
   PICTURE_REMOVED,
+  PICTURES_REORDERED,
   DESCRIPTION_UPDATED,
   N_SIGNALS
 };
@@ -131,6 +132,14 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__OBJECT,
                   G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
+
+  signals[PICTURES_REORDERED] =
+    g_signal_new ("pictures-reordered",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__POINTER,
+                  G_TYPE_NONE, 1, G_TYPE_POINTER);
 
   signals[DESCRIPTION_UPDATED] =
     g_signal_new ("description-updated",
@@ -227,6 +236,42 @@ frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   return priv->pictures_list;
+}
+
+void
+frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
+                                        GCompareFunc compare_func)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  FrogrMainViewModelPrivate *priv = NULL;
+  GSList *old_list = NULL;
+  GSList *old_item = NULL;
+  gint *new_order = 0;
+  gint old_pos = 0;
+  gint new_pos = 0;
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  /* Temporarily save the current list, and alloc an array to
+     represent the new order compared to the old positions */
+  old_list = g_slist_copy (priv->pictures_list);
+  new_order = g_new0 (gint, g_slist_length (old_list));
+
+  priv->pictures_list = g_slist_sort (priv->pictures_list, compare_func);
+
+  /* Build the new_order array */
+  old_pos = 0;
+  for (old_item = old_list; old_item; old_item = g_slist_next (old_item))
+    {
+      new_pos = g_slist_index (priv->pictures_list, old_item->data);
+      new_order[new_pos] = old_pos++;
+    }
+
+  g_signal_emit (self, signals[PICTURES_REORDERED], 0, new_order);
+
+  g_slist_free (old_list);
+  g_free (new_order);
 }
 
 void
