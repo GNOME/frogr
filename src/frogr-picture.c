@@ -73,7 +73,9 @@ enum  {
   PROP_SAFETY_LEVEL,
   PROP_CONTENT_TYPE,
   PROP_SHOW_IN_SEARCH,
-  PROP_PIXBUF
+  PROP_PIXBUF,
+  PROP_FILESIZE,
+  PROP_DATETIME
 };
 
 /* Prototypes */
@@ -222,6 +224,12 @@ _frogr_picture_set_property (GObject *object,
     case PROP_PIXBUF:
       frogr_picture_set_pixbuf (self, GDK_PIXBUF (g_value_get_object (value)));
       break;
+    case PROP_FILESIZE:
+      frogr_picture_set_filesize (self, g_value_get_long (value));
+      break;
+    case PROP_DATETIME:
+      frogr_picture_set_datetime (self, g_value_get_long (value));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -273,6 +281,12 @@ _frogr_picture_get_property (GObject *object,
       break;
     case PROP_PIXBUF:
       g_value_set_object (value, priv->pixbuf);
+      break;
+    case PROP_FILESIZE:
+      g_value_set_long (value, priv->filesize);
+      break;
+    case PROP_DATETIME:
+      g_value_set_long (value, priv->datetime);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -443,6 +457,24 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                         "for this picture",
                                                         GDK_TYPE_PIXBUF,
                                                         G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_FILESIZE,
+                                   g_param_spec_long ("filesize",
+                                                      "filesize",
+                                                      "Filesize in KB for the file",
+                                                      G_MINLONG,
+                                                      G_MAXLONG,
+                                                      0,
+                                                      G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_DATETIME,
+                                   g_param_spec_long ("datetime",
+                                                      "datetime",
+                                                      "Date and time in seconds for the file",
+                                                      G_MINLONG,
+                                                      G_MAXLONG,
+                                                      0,
+                                                      G_PARAM_READWRITE));
 
   g_type_class_add_private (obj_class, sizeof (FrogrPicturePrivate));
 }
