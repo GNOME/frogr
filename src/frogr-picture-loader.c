@@ -311,8 +311,33 @@ _load_next_picture_cb (GObject *object,
           /* Get (scaled, and maybe rotated) pixbuf */
           s_pixbuf = _get_corrected_pixbuf (pixbuf);
 
-          /* Get the file size (in bytes) */
-          filesize = g_file_info_get_size (file_info);
+          /* FIXME: Actually retrieve the date and time from the exif
+             metadata. Using the modification time for this file is a
+             temporary workaround to allow me advance on this while
+             working offline in a plane. */
+          glong datetime = 0;
+
+          if (file_info)
+            g_object_unref (file_info);
+
+          file_info = g_file_query_info (file,
+                                         G_FILE_ATTRIBUTE_TIME_MODIFIED,
+                                         G_FILE_QUERY_INFO_NONE,
+                                         NULL, &error);
+          if (!error)
+            {
+              GTimeVal timeval;
+              g_file_info_get_modification_time (file_info, &timeval);
+              datetime = timeval.tv_sec;
+
+              DEBUG ("DateTime for the picture: %ld\n", datetime);
+            }
+          else
+            {
+              g_warning ("Not able to get the modification time: %s", error->message);
+              g_error_free (error);
+            }
+
 
           /* Build the FrogrPicture */
           fpicture = frogr_picture_new (file_uri,
@@ -329,6 +354,7 @@ _load_next_picture_cb (GObject *object,
 
           /* FrogrPicture stores the size in KB */
           frogr_picture_set_filesize (fpicture, filesize / 1024);
+          frogr_picture_set_datetime (fpicture, datetime);
 
           /* Free */
           if (file_info)
