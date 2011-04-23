@@ -197,6 +197,8 @@ static void _fetch_tags (FrogrController *self);
 
 static void _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data);
 
+static gboolean _show_progress_on_idle (const gchar *text);
+
 static gboolean _show_details_dialog_on_idle (GSList *pictures);
 
 static gboolean _show_add_tags_dialog_on_idle (GSList *pictures);
@@ -1402,6 +1404,20 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 }
 
 static gboolean
+_show_progress_on_idle (const gchar *text)
+{
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+
+  controller = frogr_controller_get_instance ();
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  frogr_main_view_show_progress (priv->mainview, text);
+
+  return FALSE;
+}
+
+static gboolean
 _show_details_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
@@ -1991,7 +2007,7 @@ frogr_controller_show_details_dialog (FrogrController *self,
       /* Fetch the tags list first if needed */
       if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
         {
-          frogr_main_view_show_progress (priv->mainview, _("Retrieving list of tags…"));
+          gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of tags…"));
           _fetch_tags (self);
         }
     }
@@ -2017,7 +2033,7 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
       /* Fetch the tags list first if needed */
       if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
         {
-          frogr_main_view_show_progress (priv->mainview, _("Retrieving list of tags…"));
+          gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of tags…"));
           _fetch_tags (self);
         }
     }
@@ -2041,7 +2057,7 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
   /* Fetch the sets first if needed */
   if (frogr_main_view_model_n_sets (mainview_model) == 0 && !priv->sets_fetched)
     {
-      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of sets…"));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of sets…"));
       _fetch_sets (self);
     }
 
@@ -2064,7 +2080,7 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
   /* Fetch the sets first if needed */
   if (frogr_main_view_model_n_sets (mainview_model) == 0 && !priv->sets_fetched)
     {
-      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of sets…"));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of sets…"));
       _fetch_sets (self);
     }
 
@@ -2087,7 +2103,7 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
   /* Fetch the groups first if needed */
   if (frogr_main_view_model_n_groups (mainview_model) == 0 && !priv->groups_fetched)
     {
-      frogr_main_view_show_progress (priv->mainview, _("Retrieving list of groups…"));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of groups…"));
       _fetch_groups (self);
     }
 
