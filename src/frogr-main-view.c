@@ -153,10 +153,6 @@ static void _on_icon_view_drag_data_received (GtkWidget *widget,
                                               guint info, guint time,
                                               gpointer data);
 
-void _on_add_button_clicked (GtkButton *widget, gpointer data);
-void _on_remove_button_clicked (GtkButton *widget, gpointer data);
-void _on_upload_button_clicked (GtkButton *widget, gpointer data);
-
 gboolean _on_icon_view_key_press_event (GtkWidget *widget,
                                         GdkEventKey *event,
                                         gpointer data);
@@ -716,27 +712,18 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
 }
 
 void
-_on_add_button_clicked (GtkButton *widget,
-                        gpointer data)
+_on_button_clicked (GtkButton *widget, gpointer data)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _add_pictures_dialog (mainview);
-}
+  FrogrMainViewPrivate *priv = NULL;
 
-void
-_on_remove_button_clicked (GtkButton *widget,
-                           gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _remove_selected_pictures (mainview);
-}
-
-void
-_on_upload_button_clicked (GtkButton *widget,
-                           gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _upload_pictures (mainview);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  if (GTK_WIDGET (widget) == priv->add_button)
+    _add_pictures_dialog (mainview);
+  else if (GTK_WIDGET (widget) == priv->remove_button)
+    _remove_selected_pictures (mainview);
+  else if (GTK_WIDGET (widget) == priv->upload_button)
+    _upload_pictures (mainview);
 }
 
 gboolean
