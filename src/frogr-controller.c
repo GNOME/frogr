@@ -46,7 +46,7 @@
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
-#define DEFAULT_TIMEOUT 100
+#define DEFAULT_TIMEOUT 50
 
 #define FROGR_CONTROLLER_GET_PRIVATE(object)                    \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
