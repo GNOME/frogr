@@ -43,6 +43,7 @@ struct _FrogrPicturePrivate
   GSList *tags_list;
 
   gulong filesize; /* In KB */
+  gulong datetime; /* In seconds */
 
   GSList *sets;
   GSList *groups;
@@ -459,6 +460,7 @@ frogr_picture_init (FrogrPicture *self)
   priv->tags_string = NULL;
 
   priv->filesize = 0;
+  priv->datetime = 0;
 
   priv->tags_list = NULL;
   priv->sets = NULL;
@@ -840,6 +842,29 @@ void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize)
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->filesize = filesize;
 }
+
+glong
+frogr_picture_get_datetime (FrogrPicture *self)
+{
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), 0);
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  return priv->datetime;
+}
+
+void
+frogr_picture_set_datetime (FrogrPicture *self, glong datetime)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  priv->datetime = datetime;
+}
+
 
 GSList *
 frogr_picture_get_sets (FrogrPicture *self)
