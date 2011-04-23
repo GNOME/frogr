@@ -78,23 +78,38 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *add_menu_item;
   GtkWidget *remove_button;
   GtkWidget *remove_menu_item;
-  GtkWidget *auth_menu_item;
+  GtkWidget *remove_ctxt_menu_item;
   GtkWidget *accounts_menu_item;
   GtkWidget *accounts_menu;
-  GtkWidget *upload_button;
-  GtkWidget *upload_menu_item;
+  GtkWidget *auth_menu_item;
+  GtkWidget *settings_menu_item;
+#ifndef MAC_INTEGRATION
+  GtkWidget *quit_menu_item;
+#endif
   GtkWidget *edit_details_menu_item;
+  GtkWidget *edit_details_ctxt_menu_item;
   GtkWidget *add_tags_menu_item;
+  GtkWidget *add_tags_ctxt_menu_item;
   GtkWidget *add_to_set_menu_item;
   GtkWidget *add_to_new_set_menu_item;
+  GtkWidget *add_to_new_set_ctxt_menu_item;
   GtkWidget *add_to_existing_set_menu_item;
+  GtkWidget *add_to_existing_set_ctxt_menu_item;
   GtkWidget *add_to_group_menu_item;
+  GtkWidget *add_to_group_ctxt_menu_item;
+  GtkWidget *upload_button;
+  GtkWidget *upload_menu_item;
   GtkWidget *sort_by_title_menu_item;
   GtkWidget *sort_by_title_asc_menu_item;
+  GtkWidget *sort_by_title_asc_ctxt_menu_item;
   GtkWidget *sort_by_title_desc_menu_item;
+  GtkWidget *sort_by_title_desc_ctxt_menu_item;
   GtkWidget *sort_by_date_menu_item;
   GtkWidget *sort_by_date_asc_menu_item;
+  GtkWidget *sort_by_date_asc_ctxt_menu_item;
   GtkWidget *sort_by_date_desc_menu_item;
+  GtkWidget *sort_by_date_desc_ctxt_menu_item;
+  GtkWidget *about_menu_item;
 
   GtkWidget *pictures_ctxt_menu;
   GtkWidget *no_pictures_ctxt_menu;
@@ -148,23 +163,8 @@ gboolean _on_icon_view_key_press_event (GtkWidget *widget,
 gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            GdkEventButton *event,
                                            gpointer data);
-void _on_add_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_remove_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_account_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_authorize_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_settings_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_quit_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_edit_details_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_add_tags_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_add_to_new_set_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_add_to_existing_set_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_add_to_group_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_upload_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_sort_by_title_asc_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_sort_by_title_desc_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_sort_by_date_asc_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_sort_by_date_desc_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
+
+void _on_menu_item_activate (GtkWidget *widget, gpointer self);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
@@ -285,14 +285,14 @@ _populate_menu_bar (FrogrMainView *self)
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Add Pictures"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_add_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->add_menu_item = menu_item;
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove Pictures"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_remove_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->remove_menu_item = menu_item;
 
@@ -308,11 +308,12 @@ _populate_menu_bar (FrogrMainView *self)
   menu_item = gtk_menu_item_new_with_mnemonic (_("Authorize _frogr"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_authorize_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->auth_menu_item = menu_item;
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Preferences…"));
+  priv->settings_menu_item = menu_item;
 
 #ifdef MAC_INTEGRATION
   gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 1);
@@ -324,7 +325,7 @@ _populate_menu_bar (FrogrMainView *self)
 #endif
 
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_settings_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
 
 #ifndef MAC_INTEGRATION
@@ -333,8 +334,9 @@ _populate_menu_bar (FrogrMainView *self)
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Quit"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_quit_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->quit_menu_item = menu_item;
 #endif
 
   /* Actions menu */
@@ -347,21 +349,21 @@ _populate_menu_bar (FrogrMainView *self)
   menu_item = gtk_menu_item_new_with_mnemonic (_("Edit _Details…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_edit_details_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->edit_details_menu_item = menu_item;
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("Add _Tags…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_add_tags_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->add_tags_menu_item = menu_item;
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Group…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_add_to_group_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->add_to_group_menu_item = menu_item;
 
@@ -375,14 +377,14 @@ _populate_menu_bar (FrogrMainView *self)
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Create New Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_add_to_new_set_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->add_to_new_set_menu_item = menu_item;
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_add_to_existing_set_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->add_to_existing_set_menu_item = menu_item;
 
@@ -391,7 +393,7 @@ _populate_menu_bar (FrogrMainView *self)
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Upload All"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_upload_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->upload_menu_item = menu_item;
 
@@ -412,14 +414,14 @@ _populate_menu_bar (FrogrMainView *self)
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_sort_by_title_asc_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->sort_by_title_asc_menu_item = menu_item;
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_sort_by_title_desc_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->sort_by_title_desc_menu_item = menu_item;
 
@@ -433,14 +435,14 @@ _populate_menu_bar (FrogrMainView *self)
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_sort_by_date_asc_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->sort_by_date_asc_menu_item = menu_item;
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_sort_by_date_desc_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->sort_by_date_desc_menu_item = menu_item;
 
@@ -455,6 +457,7 @@ _populate_menu_bar (FrogrMainView *self)
 #endif
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_About frogr..."));
+  priv->about_menu_item = menu_item;
 
 #ifdef MAC_INTEGRATION
   gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 0);
@@ -464,7 +467,7 @@ _populate_menu_bar (FrogrMainView *self)
 #endif
 
   g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_about_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
 
   gtk_widget_show_all (priv->menu_bar);
@@ -505,7 +508,7 @@ _populate_accounts_submenu (FrogrMainView *self)
 
       g_object_set_data (G_OBJECT (menu_item), "frogr-account", account);
       g_signal_connect (G_OBJECT (menu_item), "activate",
-                        G_CALLBACK (_on_account_menu_item_activate),
+                        G_CALLBACK (_on_menu_item_activate),
                         self);
       gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
     }
@@ -519,32 +522,37 @@ _populate_accounts_submenu (FrogrMainView *self)
 static GtkWidget *
 _pictures_ctxt_menu_create (FrogrMainView *self)
 {
+  FrogrMainViewPrivate *priv = NULL;
   GtkWidget *ctxt_menu = NULL;
   GtkWidget *ctxt_submenu = NULL;
   GtkWidget *item = NULL;
 
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   ctxt_menu = gtk_menu_new ();
 
   /* Edit details */
   item = gtk_menu_item_new_with_mnemonic (_("Edit _Details…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_edit_details_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->edit_details_ctxt_menu_item = item;
 
   /* Add Tags */
   item = gtk_menu_item_new_with_mnemonic (_("Add _Tags…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_add_tags_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->add_tags_ctxt_menu_item = item;
 
   /* Add to group */
   item = gtk_menu_item_new_with_mnemonic (_("Add to _Group…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_add_to_group_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->add_to_group_ctxt_menu_item = item;
 
   /* Add to set */
   item = gtk_menu_item_new_with_mnemonic (_("Add to _Set"));
@@ -556,14 +564,16 @@ _pictures_ctxt_menu_create (FrogrMainView *self)
   item = gtk_menu_item_new_with_mnemonic (_("_Create New Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_add_to_new_set_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->add_to_new_set_ctxt_menu_item = item;
 
   item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Set…"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_add_to_existing_set_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->add_to_existing_set_ctxt_menu_item = item;
 
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), gtk_separator_menu_item_new ());
 
@@ -571,8 +581,9 @@ _pictures_ctxt_menu_create (FrogrMainView *self)
   item = gtk_menu_item_new_with_mnemonic (_("_Remove Pictures"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_remove_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->remove_ctxt_menu_item = item;
 
   /* Make menu and its widgets visible */
   gtk_widget_show_all (ctxt_menu);
@@ -583,10 +594,12 @@ _pictures_ctxt_menu_create (FrogrMainView *self)
 static GtkWidget *
 _no_pictures_ctxt_menu_create (FrogrMainView *self)
 {
+  FrogrMainViewPrivate *priv = NULL;
   GtkWidget *ctxt_menu = NULL;
   GtkWidget *ctxt_submenu = NULL;
   GtkWidget *item = NULL;
 
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   ctxt_menu = gtk_menu_new ();
 
   /* Sort by title */
@@ -599,14 +612,16 @@ _no_pictures_ctxt_menu_create (FrogrMainView *self)
   item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_sort_by_title_asc_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->sort_by_title_asc_ctxt_menu_item = item;
 
   item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_sort_by_title_desc_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->sort_by_title_desc_ctxt_menu_item = item;
 
   /* Sort by date */
   item = gtk_menu_item_new_with_mnemonic (_("Sort by _Date"));
@@ -618,14 +633,16 @@ _no_pictures_ctxt_menu_create (FrogrMainView *self)
   item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_sort_by_date_asc_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->sort_by_date_asc_ctxt_menu_item = item;
 
   item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
   g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_sort_by_date_desc_menu_item_activate),
+                    G_CALLBACK (_on_menu_item_activate),
                     self);
+  priv->sort_by_date_desc_ctxt_menu_item = item;
 
   /* Make menu and its widgets visible */
   gtk_widget_show_all (ctxt_menu);
@@ -838,137 +855,61 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 }
 
 void
-_on_add_menu_item_activate (GtkWidget *widget, gpointer self)
+_on_menu_item_activate (GtkWidget *widget, gpointer self)
 {
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _add_pictures_dialog (mainview);
-}
-
-void
-_on_remove_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _remove_selected_pictures (mainview);
-}
-
-void
-_on_account_menu_item_activate (GtkWidget *widget, gpointer self)
-{
+  FrogrMainView *mainview = NULL;
   FrogrMainViewPrivate *priv = NULL;
-  FrogrAccount *account = NULL;
 
+  mainview = FROGR_MAIN_VIEW (self);
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  account = g_object_get_data (G_OBJECT (widget), "frogr-account");
 
-  if (account && FROGR_IS_ACCOUNT (account))
+  if (widget == priv->add_menu_item)
+    _add_pictures_dialog (mainview);
+  else if (widget == priv->remove_menu_item || widget == priv->remove_ctxt_menu_item)
+    _remove_selected_pictures (mainview);
+  else if (widget == priv->accounts_menu_item)
     {
-      frogr_controller_set_active_account (priv->controller, account);
-      DEBUG ("Selected account %s (%s)",
-             frogr_account_get_id (account),
-             frogr_account_get_username (account));
+      FrogrAccount *account = NULL;
+
+      account = g_object_get_data (G_OBJECT (widget), "frogr-account");
+      if (account && FROGR_IS_ACCOUNT (account))
+        {
+          frogr_controller_set_active_account (priv->controller, account);
+          DEBUG ("Selected account %s (%s)",
+                 frogr_account_get_id (account),
+                 frogr_account_get_username (account));
+        }
     }
-}
-
-void
-_on_authorize_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_show_auth_dialog (priv->controller);
-}
-
-void
-_on_settings_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_show_settings_dialog (priv->controller);
-}
-
-void
-_on_quit_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_quit_app (priv->controller);
-}
-
-void
-_on_edit_details_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _edit_selected_pictures (mainview);
-}
-
-void
-_on_add_tags_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _add_tags_to_pictures (mainview);
-}
-
-void
-_on_add_to_new_set_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _add_pictures_to_new_set (mainview);
-}
-
-void
-_on_add_to_existing_set_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _add_pictures_to_existing_set (mainview);
-}
-
-void
-_on_add_to_group_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _add_pictures_to_group (mainview);
-}
-
-void
-_on_upload_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _upload_pictures (mainview);
-}
-
-void
-_on_sort_by_title_asc_menu_item_activate (GtkWidget *widget, gpointer self)
-
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _reorder_pictures (mainview, SORT_BY_TITLE_ASC);
-}
-
-void
-_on_sort_by_title_desc_menu_item_activate (GtkWidget *widget, gpointer self)
-
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _reorder_pictures (mainview, SORT_BY_TITLE_DESC);
-}
-
-void
-_on_sort_by_date_asc_menu_item_activate (GtkWidget *widget, gpointer self)
-
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _reorder_pictures (mainview, SORT_BY_DATE_ASC);
-}
-
-void
-_on_sort_by_date_desc_menu_item_activate (GtkWidget *widget, gpointer self)
-
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
-  _reorder_pictures (mainview, SORT_BY_DATE_DESC);
-}
-
-void
-_on_about_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_show_about_dialog (priv->controller);
+  else if (widget == priv->auth_menu_item)
+    frogr_controller_show_auth_dialog (priv->controller);
+  else if (widget == priv->settings_menu_item)
+    frogr_controller_show_settings_dialog (priv->controller);
+#ifndef MAC_INTEGRATION
+  else if (widget == priv->quit_menu_item)
+    frogr_controller_quit_app (priv->controller);
+#endif
+  else if (widget == priv->edit_details_menu_item || widget == priv->edit_details_ctxt_menu_item)
+    _edit_selected_pictures (mainview);
+  else if (widget == priv->add_tags_menu_item || widget == priv->add_tags_ctxt_menu_item)
+    _add_tags_to_pictures (mainview);
+  else if (widget == priv->add_to_new_set_menu_item || widget == priv->add_to_new_set_ctxt_menu_item)
+    _add_pictures_to_new_set (mainview);
+  else if (widget == priv->add_to_existing_set_menu_item || widget == priv->add_to_existing_set_ctxt_menu_item)
+    _add_pictures_to_existing_set (mainview);
+  else if (widget == priv->add_to_group_menu_item || widget == priv->add_to_group_ctxt_menu_item)
+    _add_pictures_to_group (mainview);
+  else if (widget == priv->upload_menu_item)
+    _upload_pictures (mainview);
+  else if (widget == priv->sort_by_title_asc_menu_item || widget == priv->sort_by_title_asc_ctxt_menu_item)
+    _reorder_pictures (mainview, SORT_BY_TITLE_ASC);
+  else if (widget == priv->sort_by_title_desc_menu_item || widget == priv->sort_by_title_desc_ctxt_menu_item)
+    _reorder_pictures (mainview, SORT_BY_TITLE_DESC);
+  else if (widget == priv->sort_by_date_asc_menu_item || widget == priv->sort_by_date_asc_ctxt_menu_item)
+    _reorder_pictures (mainview, SORT_BY_DATE_ASC);
+  else if (widget == priv->sort_by_date_desc_menu_item || widget == priv->sort_by_date_desc_ctxt_menu_item)
+    _reorder_pictures (mainview, SORT_BY_DATE_DESC);
+  else if (widget == priv->about_menu_item)
+    frogr_controller_show_about_dialog (priv->controller);
 }
 
 static gboolean
