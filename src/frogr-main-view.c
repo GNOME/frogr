@@ -89,6 +89,13 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *add_to_new_set_menu_item;
   GtkWidget *add_to_existing_set_menu_item;
   GtkWidget *add_to_group_menu_item;
+  GtkWidget *sort_by_title_menu_item;
+  GtkWidget *sort_by_title_asc_menu_item;
+  GtkWidget *sort_by_title_desc_menu_item;
+  GtkWidget *sort_by_date_menu_item;
+  GtkWidget *sort_by_date_asc_menu_item;
+  GtkWidget *sort_by_date_desc_menu_item;
+
   GtkWidget *pictures_ctxt_menu;
   GtkWidget *no_pictures_ctxt_menu;
 
@@ -99,7 +106,6 @@ typedef struct _FrogrMainViewPrivate {
   GtkTreeModel *tree_model;
   guint sb_context_id;
 } FrogrMainViewPrivate;
-
 
 enum {
   FILEURI_COL,
@@ -388,6 +394,55 @@ _populate_menu_bar (FrogrMainView *self)
                     G_CALLBACK (_on_upload_menu_item_activate),
                     self);
   priv->upload_menu_item = menu_item;
+
+  /* View menu */
+  menubar_item = gtk_menu_item_new_with_mnemonic (_("_View"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
+
+  menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Sort by _Title"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  priv->sort_by_title_menu_item = menu_item;
+
+  submenu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_sort_by_title_asc_menu_item_activate),
+                    self);
+  priv->sort_by_title_asc_menu_item = menu_item;
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_sort_by_title_desc_menu_item_activate),
+                    self);
+  priv->sort_by_title_desc_menu_item = menu_item;
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("Sort by _Date"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  priv->sort_by_date_menu_item = menu_item;
+
+  submenu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_sort_by_date_asc_menu_item_activate),
+                    self);
+  priv->sort_by_date_asc_menu_item = menu_item;
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_sort_by_date_desc_menu_item_activate),
+                    self);
+  priv->sort_by_date_desc_menu_item = menu_item;
 
   /* Help menu */
 
@@ -1638,6 +1693,12 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_to_new_set_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_group_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->sort_by_title_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->sort_by_title_asc_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->sort_by_title_desc_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->sort_by_date_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->sort_by_date_asc_menu_item, FALSE);
+      gtk_widget_set_sensitive (priv->sort_by_date_desc_menu_item, FALSE);
       break;
 
     case FROGR_STATE_IDLE:
@@ -1658,6 +1719,12 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_to_new_set_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->add_to_group_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->sort_by_title_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->sort_by_title_asc_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->sort_by_title_desc_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->sort_by_date_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->sort_by_date_asc_menu_item, has_pics);
+      gtk_widget_set_sensitive (priv->sort_by_date_desc_menu_item, has_pics);
 
       /* Update status bar from model's state description */
       state_description = frogr_main_view_model_get_state_description (priv->model);
