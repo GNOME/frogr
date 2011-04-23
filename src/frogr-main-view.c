@@ -89,7 +89,8 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *add_to_new_set_menu_item;
   GtkWidget *add_to_existing_set_menu_item;
   GtkWidget *add_to_group_menu_item;
-  GtkWidget *ctxt_menu;
+  GtkWidget *pictures_ctxt_menu;
+  GtkWidget *no_pictures_ctxt_menu;
 
   GtkWidget *progress_dialog;
   GtkWidget *progress_bar;
@@ -106,6 +107,12 @@ enum {
   FPICTURE_COL
 };
 
+typedef enum {
+  SORT_BY_TITLE_ASC,
+  SORT_BY_TITLE_DESC,
+  SORT_BY_DATE_ASC,
+  SORT_BY_DATE_DESC,
+} SortingCriteria;
 
 /* Prototypes */
 
@@ -114,7 +121,9 @@ static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 static void _populate_menu_bar (FrogrMainView *self);
 static void _populate_accounts_submenu (FrogrMainView *self);
 
-static GtkWidget *_ctxt_menu_create (FrogrMainView *self);
+static GtkWidget *_pictures_ctxt_menu_create (FrogrMainView *self);
+static GtkWidget *_no_pictures_ctxt_menu_create (FrogrMainView *self);
+
 static void _initialize_drag_n_drop (FrogrMainView *self);
 static void _on_icon_view_drag_data_received (GtkWidget *widget,
                                               GdkDragContext *context,
@@ -145,6 +154,10 @@ void _on_add_to_new_set_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_add_to_existing_set_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_add_to_group_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_upload_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_sort_by_title_asc_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_sort_by_title_desc_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_sort_by_date_asc_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_sort_by_date_desc_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_about_menu_item_activate (GtkWidget *widget, gpointer self);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
@@ -178,6 +191,12 @@ static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
 static void _load_pictures (FrogrMainView *self, GSList *fileuris);
 static void _upload_pictures (FrogrMainView *self);
+static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria);
+
+static gint _compare_pictures_by_title_asc (FrogrPicture *p1, FrogrPicture *p2);
+static gint _compare_pictures_by_title_desc (FrogrPicture *p1, FrogrPicture *p2);
+static gint _compare_pictures_by_date_asc (FrogrPicture *p1, FrogrPicture *p2);
+static gint _compare_pictures_by_date_desc (FrogrPicture *p1, FrogrPicture *p2);
 
 static void _progress_dialog_response (GtkDialog *dialog,
                                        gint response_id,
@@ -204,6 +223,10 @@ static void _model_picture_added (FrogrController *controller,
 static void _model_picture_removed (FrogrController *controller,
                                     FrogrPicture *picture,
                                     gpointer data);
+
+static void _model_pictures_reordered (FrogrController *controller,
+                                       gpointer new_order,
+                                       gpointer data);
 
 static void _model_description_updated (FrogrController *controller,
                                         gpointer data);
@@ -439,7 +462,7 @@ _populate_accounts_submenu (FrogrMainView *self)
 }
 
 static GtkWidget *
-_ctxt_menu_create (FrogrMainView *self)
+_pictures_ctxt_menu_create (FrogrMainView *self)
 {
   GtkWidget *ctxt_menu = NULL;
   GtkWidget *ctxt_submenu = NULL;
@@ -494,6 +517,59 @@ _ctxt_menu_create (FrogrMainView *self)
   gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
   g_signal_connect (G_OBJECT (item), "activate",
                     G_CALLBACK (_on_remove_menu_item_activate),
+                    self);
+
+  /* Make menu and its widgets visible */
+  gtk_widget_show_all (ctxt_menu);
+
+  return ctxt_menu;
+}
+
+static GtkWidget *
+_no_pictures_ctxt_menu_create (FrogrMainView *self)
+{
+  GtkWidget *ctxt_menu = NULL;
+  GtkWidget *ctxt_submenu = NULL;
+  GtkWidget *item = NULL;
+
+  ctxt_menu = gtk_menu_new ();
+
+  /* Sort by title */
+  item = gtk_menu_item_new_with_mnemonic (_("Sort by _Title"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
+
+  ctxt_submenu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), ctxt_submenu);
+
+  item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_sort_by_title_asc_menu_item_activate),
+                    self);
+
+  item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_sort_by_title_desc_menu_item_activate),
+                    self);
+
+  /* Sort by date */
+  item = gtk_menu_item_new_with_mnemonic (_("Sort by _Date"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
+
+  ctxt_submenu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), ctxt_submenu);
+
+  item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_sort_by_date_asc_menu_item_activate),
+                    self);
+
+  item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
+  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
+  g_signal_connect (G_OBJECT (item), "activate",
+                    G_CALLBACK (_on_sort_by_date_desc_menu_item_activate),
                     self);
 
   /* Make menu and its widgets visible */
@@ -603,16 +679,25 @@ _on_icon_view_key_press_event (GtkWidget *widget,
   if (frogr_controller_get_state (priv->controller) != FROGR_STATE_IDLE)
     return TRUE;
 
+  /* Do nothing if there's no picture loaded yet */
+  if (!frogr_main_view_model_n_pictures (priv->model))
+    return TRUE;
+
   /* Remove selected pictures if pressed Supr */
   if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
     _remove_selected_pictures (mainview);
 
   /* Show contextual menu if pressed the 'Menu' key */
-  if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Menu)
-      && (_n_selected_pictures (mainview) > 0))
+  if (event->type == GDK_KEY_PRESS && event->keyval == GDK_Menu)
     {
-      gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
-                      NULL, NULL, NULL, NULL,
+      GtkMenu *menu = NULL;
+
+      if (_n_selected_pictures (mainview) > 0)
+        menu = GTK_MENU (priv->pictures_ctxt_menu);
+      else
+        menu = GTK_MENU (priv->no_pictures_ctxt_menu);
+
+      gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
                       0, gtk_get_current_event_time ());
     }
 
@@ -630,6 +715,10 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 
   /* Actions are only allowed in IDLE state */
   if (frogr_controller_get_state (priv->controller) != FROGR_STATE_IDLE)
+    return TRUE;
+
+  /* Do nothing if there's no picture loaded yet */
+  if (!frogr_main_view_model_n_pictures (priv->model))
     return TRUE;
 
   /* Check if we clicked on top of an item */
@@ -671,7 +760,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
                && (event->type == GDK_BUTTON_PRESS)) /* single click */
         {
           /* Show contextual menu */
-          gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
+          gtk_menu_popup (GTK_MENU (priv->pictures_ctxt_menu),
                           NULL, NULL, NULL, NULL,
                           event->button,
                           gtk_get_current_event_time ());
@@ -679,6 +768,15 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 
       /* Free */
       gtk_tree_path_free (path);
+    }
+  else if ((event->button == 3)                  /* right button */
+           && (event->type == GDK_BUTTON_PRESS)) /* single click */
+    {
+      /* Show contextual menu */
+      gtk_menu_popup (GTK_MENU (priv->no_pictures_ctxt_menu),
+                      NULL, NULL, NULL, NULL,
+                      event->button,
+                      gtk_get_current_event_time ());
     }
 
   return FALSE;
@@ -777,6 +875,38 @@ _on_upload_menu_item_activate (GtkWidget *widget, gpointer self)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
   _upload_pictures (mainview);
+}
+
+void
+_on_sort_by_title_asc_menu_item_activate (GtkWidget *widget, gpointer self)
+
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  _reorder_pictures (mainview, SORT_BY_TITLE_ASC);
+}
+
+void
+_on_sort_by_title_desc_menu_item_activate (GtkWidget *widget, gpointer self)
+
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  _reorder_pictures (mainview, SORT_BY_TITLE_DESC);
+}
+
+void
+_on_sort_by_date_asc_menu_item_activate (GtkWidget *widget, gpointer self)
+
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  _reorder_pictures (mainview, SORT_BY_DATE_ASC);
+}
+
+void
+_on_sort_by_date_desc_menu_item_activate (GtkWidget *widget, gpointer self)
+
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (self);
+  _reorder_pictures (mainview, SORT_BY_DATE_DESC);
 }
 
 void
@@ -1169,6 +1299,69 @@ _upload_pictures (FrogrMainView *self)
 }
 
 static void
+_reorder_pictures (FrogrMainView *self, SortingCriteria criteria)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  GCompareFunc compare_func = NULL;
+
+  switch (criteria)
+    {
+    case SORT_BY_TITLE_ASC:
+      compare_func = (GCompareFunc)_compare_pictures_by_title_asc;
+      break;
+    case SORT_BY_TITLE_DESC:
+      compare_func = (GCompareFunc)_compare_pictures_by_title_desc;
+      break;
+    case SORT_BY_DATE_ASC:
+      compare_func = (GCompareFunc)_compare_pictures_by_date_asc;
+      break;
+    case SORT_BY_DATE_DESC:
+      compare_func = (GCompareFunc)_compare_pictures_by_date_desc;
+      break;
+    default:
+      g_assert_not_reached ();
+    }
+
+frogr_main_view_model_reorder_pictures (priv->model, compare_func);
+}
+
+static gint
+_compare_pictures_by_title_asc (FrogrPicture *p1, FrogrPicture *p2)
+{
+  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
+  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
+
+  const gchar *title_p1 = frogr_picture_get_title (FROGR_PICTURE (p1));
+  const gchar *title_p2 = frogr_picture_get_title (FROGR_PICTURE (p2));
+
+  return g_strcmp0 (title_p1, title_p2);
+}
+
+static gint
+_compare_pictures_by_title_desc (FrogrPicture *p1, FrogrPicture *p2)
+{
+  return _compare_pictures_by_title_asc (p2, p1);
+}
+
+static gint
+_compare_pictures_by_date_asc (FrogrPicture *p1, FrogrPicture *p2)
+{
+  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
+  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
+
+  glong datetime_p1 = frogr_picture_get_datetime (FROGR_PICTURE (p1));
+  glong datetime_p2 = frogr_picture_get_datetime (FROGR_PICTURE (p2));
+
+  return datetime_p1 - datetime_p2;
+}
+
+static gint
+_compare_pictures_by_date_desc (FrogrPicture *p1, FrogrPicture *p2)
+{
+  return _compare_pictures_by_date_asc (p2, p1);
+}
+
+static void
 _progress_dialog_response (GtkDialog *dialog,
                            gint response_id,
                            gpointer data)
@@ -1245,6 +1438,20 @@ _model_picture_removed (FrogrController *controller,
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   _remove_picture_from_ui (mainview, picture);
+}
+
+static void
+_model_pictures_reordered (FrogrController *controller,
+                           gpointer new_order,
+                           gpointer data)
+{
+  FrogrMainView *self = NULL;
+  FrogrMainViewPrivate *priv = NULL;
+
+  self = FROGR_MAIN_VIEW (data);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  gtk_list_store_reorder (GTK_LIST_STORE (priv->tree_model), new_order);
 }
 
 static void
@@ -1500,7 +1707,8 @@ _frogr_main_view_finalize (GObject *object)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
 
-  gtk_widget_destroy (priv->ctxt_menu);
+  gtk_widget_destroy (priv->pictures_ctxt_menu);
+  gtk_widget_destroy (priv->no_pictures_ctxt_menu);
   gtk_widget_destroy (GTK_WIDGET (priv->window));
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
@@ -1616,7 +1824,8 @@ frogr_main_view_init (FrogrMainView *self)
   _populate_accounts_submenu (self);
 
   /* create contextual menus for right-clicks */
-  priv->ctxt_menu = _ctxt_menu_create (self);
+  priv->pictures_ctxt_menu = _pictures_ctxt_menu_create (self);
+  priv->no_pictures_ctxt_menu = _no_pictures_ctxt_menu_create (self);
 
   /* Initialize drag'n'drop support */
   _initialize_drag_n_drop (self);
@@ -1713,6 +1922,9 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->model), "picture-removed",
                     G_CALLBACK (_model_picture_removed), self);
+
+  g_signal_connect (G_OBJECT (priv->model), "pictures-reordered",
+                    G_CALLBACK (_model_pictures_reordered), self);
 
   g_signal_connect (G_OBJECT (priv->model), "description-updated",
                     G_CALLBACK (_model_description_updated), self);
