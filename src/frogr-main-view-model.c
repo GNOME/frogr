@@ -65,6 +65,58 @@ static guint signals[N_SIGNALS] = { 0 };
 
 /* Private API */
 
+static gint
+_compare_pictures_by_property_asc (FrogrPicture *p1, FrogrPicture *p2,
+                                   const gchar *property_name)
+{
+  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
+  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
+
+  GParamSpec *pspec1 = NULL;
+  GParamSpec *pspec2 = NULL;
+  GValue value1 = { 0 };
+  GValue value2 = { 0 };
+  gint result = 0;
+
+  pspec1 = g_object_class_find_property (G_OBJECT_GET_CLASS (p1), property_name);
+  pspec2 = g_object_class_find_property (G_OBJECT_GET_CLASS (p2), property_name);
+
+  /* GObjects not supported */
+  if (pspec1->value_type == G_TYPE_OBJECT)
+    return 0;
+
+  /* They should be the same! */
+  if (pspec1->value_type != pspec2->value_type)
+    return 0;
+
+  g_value_init (&value1, pspec1->value_type);
+  g_value_init (&value2, pspec1->value_type);
+
+  g_object_get_property (G_OBJECT (p1), property_name, &value1);
+  g_object_get_property (G_OBJECT (p2), property_name, &value2);
+
+  if (G_VALUE_HOLDS_BOOLEAN (&value1))
+    result = g_value_get_boolean (&value1) - g_value_get_boolean (&value2);
+  else if (G_VALUE_HOLDS_INT (&value1))
+    result = g_value_get_int (&value1) - g_value_get_int (&value2);
+  else if (G_VALUE_HOLDS_LONG (&value1))
+    result = g_value_get_long (&value1) - g_value_get_long (&value2);
+  else if (G_VALUE_HOLDS_STRING (&value1))
+    result = g_strcmp0 (g_value_get_string (&value1), g_value_get_string (&value2));
+
+  g_value_unset (&value1);
+  g_value_unset (&value2);
+
+  return result;
+}
+
+static gint
+_compare_pictures_by_property_desc (FrogrPicture *p1, FrogrPicture *p2,
+                                   const gchar *property_name)
+{
+  return _compare_pictures_by_property_asc (p2, p1, property_name);
+}
+
 static void
 _frogr_main_view_model_dispose (GObject* object)
 {
@@ -240,11 +292,13 @@ frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
 
 void
 frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
-                                        GCompareFunc compare_func)
+                                        const gchar *property_name,
+                                        gboolean ascending)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   FrogrMainViewModelPrivate *priv = NULL;
+  GCompareDataFunc compare_func = NULL;
   GSList *old_list = NULL;
   GSList *old_item = NULL;
   gint *new_order = 0;
@@ -258,7 +312,14 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
   old_list = g_slist_copy (priv->pictures_list);
   new_order = g_new0 (gint, g_slist_length (old_list));
 
-  priv->pictures_list = g_slist_sort (priv->pictures_list, compare_func);
+  if (ascending)
+    compare_func = (GCompareDataFunc) _compare_pictures_by_property_asc;
+  else
+    compare_func = (GCompareDataFunc) _compare_pictures_by_property_desc;
+
+  priv->pictures_list = g_slist_sort_with_data (priv->pictures_list,
+                                                compare_func,
+                                                (gchar*) property_name);
 
   /* Build the new_order array */
   old_pos = 0;

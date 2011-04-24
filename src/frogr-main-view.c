@@ -195,11 +195,6 @@ static void _load_pictures (FrogrMainView *self, GSList *fileuris);
 static void _upload_pictures (FrogrMainView *self);
 static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria);
 
-static gint _compare_pictures_by_title_asc (FrogrPicture *p1, FrogrPicture *p2);
-static gint _compare_pictures_by_title_desc (FrogrPicture *p1, FrogrPicture *p2);
-static gint _compare_pictures_by_date_asc (FrogrPicture *p1, FrogrPicture *p2);
-static gint _compare_pictures_by_date_desc (FrogrPicture *p1, FrogrPicture *p2);
-
 static void _progress_dialog_response (GtkDialog *dialog,
                                        gint response_id,
                                        gpointer data);
@@ -1285,63 +1280,33 @@ static void
 _reorder_pictures (FrogrMainView *self, SortingCriteria criteria)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GCompareFunc compare_func = NULL;
+  gchar *property_name = NULL;
+  gboolean ascending = FALSE;
 
   switch (criteria)
     {
     case SORT_BY_TITLE_ASC:
-      compare_func = (GCompareFunc)_compare_pictures_by_title_asc;
+      property_name = g_strdup ("title");
+      ascending = TRUE;
       break;
     case SORT_BY_TITLE_DESC:
-      compare_func = (GCompareFunc)_compare_pictures_by_title_desc;
+      property_name = g_strdup ("title");
+      ascending = FALSE;
       break;
     case SORT_BY_DATE_ASC:
-      compare_func = (GCompareFunc)_compare_pictures_by_date_asc;
+      property_name = g_strdup ("datetime");
+      ascending = TRUE;
       break;
     case SORT_BY_DATE_DESC:
-      compare_func = (GCompareFunc)_compare_pictures_by_date_desc;
+      property_name = g_strdup ("datetime");
+      ascending = FALSE;
       break;
     default:
       g_assert_not_reached ();
     }
 
-frogr_main_view_model_reorder_pictures (priv->model, compare_func);
-}
-
-static gint
-_compare_pictures_by_title_asc (FrogrPicture *p1, FrogrPicture *p2)
-{
-  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
-  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
-
-  const gchar *title_p1 = frogr_picture_get_title (FROGR_PICTURE (p1));
-  const gchar *title_p2 = frogr_picture_get_title (FROGR_PICTURE (p2));
-
-  return g_strcmp0 (title_p1, title_p2);
-}
-
-static gint
-_compare_pictures_by_title_desc (FrogrPicture *p1, FrogrPicture *p2)
-{
-  return _compare_pictures_by_title_asc (p2, p1);
-}
-
-static gint
-_compare_pictures_by_date_asc (FrogrPicture *p1, FrogrPicture *p2)
-{
-  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
-  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
-
-  glong datetime_p1 = frogr_picture_get_datetime (FROGR_PICTURE (p1));
-  glong datetime_p2 = frogr_picture_get_datetime (FROGR_PICTURE (p2));
-
-  return datetime_p1 - datetime_p2;
-}
-
-static gint
-_compare_pictures_by_date_desc (FrogrPicture *p1, FrogrPicture *p2)
-{
-  return _compare_pictures_by_date_asc (p2, p1);
+  frogr_main_view_model_reorder_pictures (priv->model, property_name, ascending);
+  g_free (property_name);
 }
 
 static void
