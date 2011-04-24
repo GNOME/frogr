@@ -1745,7 +1745,7 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_builder_add_from_file (builder, GTKBUILDER_FILE, NULL);
 
   window = GTK_WINDOW(gtk_builder_get_object (builder, "main_window"));
-  gtk_window_set_title (GTK_WINDOW (window), APP_NAME);
+  gtk_window_set_title (GTK_WINDOW (window), _(APP_NAME));
   priv->window = window;
 
   menu_bar = gtk_menu_bar_new ();
