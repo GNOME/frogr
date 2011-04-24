@@ -25,7 +25,7 @@
 
 #include <config.h>
 
-#define APP_NAME "Flickr Remote Organizer"
+#define APP_NAME N_("Flickr Remote Organizer")
 #define APP_SHORTNAME PACKAGE
 #define APP_VERSION VERSION
 
