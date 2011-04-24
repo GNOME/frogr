@@ -751,7 +751,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
       g_object_unref (pixbuf);
 
       /* Visually indicate how many pictures are being edited */
-      mpictures_str = g_strdup_printf (_("(%d Pictures)"), n_pictures);
+      mpictures_str = g_strdup_printf (ngettext ("(%d Picture)", "(%d Pictures)", n_pictures), n_pictures);
       gtk_label_set_text (GTK_LABEL (priv->mpictures_label), mpictures_str);
       g_free (mpictures_str);
     }
