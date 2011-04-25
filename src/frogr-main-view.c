@@ -173,6 +173,7 @@ static gboolean _on_icon_view_query_tooltip (GtkWidget *icon_view,
                                              gpointer data);
 
 static GSList *_get_selected_pictures (FrogrMainView *self);
+static gint _n_pictures (FrogrMainView *self);
 static gint _n_selected_pictures (FrogrMainView *self);
 static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture);
@@ -685,7 +686,7 @@ _on_icon_view_key_press_event (GtkWidget *widget,
     return TRUE;
 
   /* Do nothing if there's no picture loaded yet */
-  if (!frogr_main_view_model_n_pictures (priv->model))
+  if (!_n_pictures (mainview))
     return TRUE;
 
   /* Remove selected pictures if pressed Supr */
@@ -718,7 +719,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
     return TRUE;
 
   /* Do nothing if there's no picture loaded yet */
-  if (!frogr_main_view_model_n_pictures (priv->model))
+  if (!_n_pictures (mainview))
     return TRUE;
 
   /* Check if we clicked on top of an item */
@@ -986,6 +987,15 @@ _get_selected_pictures (FrogrMainView *self)
   g_list_free (selected_pictures);
 
   return pictures;
+}
+
+static gint
+_n_pictures (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Just return the number of pictures in the model */
+  return frogr_main_view_model_n_pictures (priv->model);
 }
 
 static gint
@@ -1578,7 +1588,7 @@ _update_ui (FrogrMainView *self)
       break;
 
     case FROGR_STATE_IDLE:
-      has_pics = (frogr_main_view_model_n_pictures (priv->model) > 0);
+      has_pics = (_n_pictures (self) > 0);
       has_accounts = (priv->accounts_menu != NULL);
 
       gtk_widget_set_sensitive (priv->add_button, TRUE);
