@@ -60,7 +60,7 @@ struct _FrogrConfigPrivate
 
   gboolean tags_autocompletion;
   gboolean remove_file_extensions;
-  gboolean enable_tooltips;
+  gboolean mainview_enable_tooltips;
 
   gboolean use_proxy;
   gchar *proxy_host;
@@ -227,12 +227,12 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
               xmlFree (content);
             }
 
-          if (!xmlStrcmp (node->name, (const xmlChar*) "enable-tooltips"))
+          if (!xmlStrcmp (node->name, (const xmlChar*) "mainview-enable-tooltips"))
             {
               xmlChar *content = NULL;
 
               content = xmlNodeGetContent (node);
-              priv->enable_tooltips = !xmlStrcmp (content, (const xmlChar*) "1");
+              priv->mainview_enable_tooltips = !xmlStrcmp (content, (const xmlChar*) "1");
 
               xmlFree (content);
             }
@@ -559,7 +559,7 @@ _save_settings (FrogrConfig *self)
   /* Other stuff */
   _xml_add_string_child (root, "tags-autocompletion", priv->tags_autocompletion ? "1" : "0");
   _xml_add_string_child (root, "remove-file-extensions", priv->remove_file_extensions ? "1" : "0");
-  _xml_add_string_child (root, "enable-tooltips", priv->enable_tooltips ? "1" : "0");
+  _xml_add_string_child (root, "mainview-enable-tooltips", priv->mainview_enable_tooltips ? "1" : "0");
 
   /* Use proxy */
   node = xmlNewNode (NULL, (const xmlChar*) "http-proxy");
@@ -785,7 +785,7 @@ frogr_config_init (FrogrConfig *self)
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->tags_autocompletion = TRUE;
   priv->remove_file_extensions = TRUE;
-  priv->enable_tooltips = TRUE;
+  priv->mainview_enable_tooltips = TRUE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
@@ -1085,21 +1085,21 @@ frogr_config_get_remove_file_extensions (FrogrConfig *self)
 }
 
 void
-frogr_config_set_enable_tooltips (FrogrConfig *self, gboolean value)
+frogr_config_set_mainview_enable_tooltips (FrogrConfig *self, gboolean value)
 {
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->enable_tooltips = value;
+  priv->mainview_enable_tooltips = value;
 }
 
 gboolean
-frogr_config_get_enable_tooltips (FrogrConfig *self)
+frogr_config_get_mainview_enable_tooltips (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->enable_tooltips;
+  return priv->mainview_enable_tooltips;
 }
 
 void

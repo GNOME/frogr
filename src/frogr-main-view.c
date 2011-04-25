@@ -861,7 +861,7 @@ _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self)
   checked = gtk_check_menu_item_get_active (item);
   if (GTK_WIDGET (item) == priv->enable_tooltips_menu_item)
     {
-      frogr_config_set_enable_tooltips (priv->config, checked);
+      frogr_config_set_mainview_enable_tooltips (priv->config, checked);
       priv->tooltips_enabled = checked;
     }
   else if (GTK_WIDGET (item) == priv->sort_reversed_menu_item)
@@ -916,7 +916,7 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Disabled by configuration */
-  if (!frogr_config_get_enable_tooltips (priv->config))
+  if (!frogr_config_get_mainview_enable_tooltips (priv->config))
     return FALSE;
 
   /* Check whether we're asking for a tooltip over a picture */
@@ -1795,7 +1795,7 @@ frogr_main_view_init (FrogrMainView *self)
   priv->sorting_direction = SORT_ASCENDING;
 
   /* Read value for 'tooltips enabled' */
-  priv->tooltips_enabled = frogr_config_get_enable_tooltips (priv->config);
+  priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);
 
   /* initialize extra widgets */
 

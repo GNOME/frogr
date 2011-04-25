@@ -110,9 +110,9 @@ void frogr_config_set_remove_file_extensions (FrogrConfig *self, gboolean value)
 
 gboolean frogr_config_get_remove_file_extensions (FrogrConfig *self);
 
-void frogr_config_set_enable_tooltips (FrogrConfig *self, gboolean value);
+void frogr_config_set_mainview_enable_tooltips (FrogrConfig *self, gboolean value);
 
-gboolean frogr_config_get_enable_tooltips (FrogrConfig *self);
+gboolean frogr_config_get_mainview_enable_tooltips (FrogrConfig *self);
 
 void frogr_config_set_use_proxy (FrogrConfig *self, gboolean value);
 
