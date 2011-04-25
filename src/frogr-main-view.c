@@ -164,6 +164,7 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            GdkEventButton *event,
                                            gpointer data);
 
+void _on_account_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self);
 
@@ -514,7 +515,7 @@ _populate_accounts_submenu (FrogrMainView *self)
 
       g_object_set_data (G_OBJECT (menu_item), "frogr-account", account);
       g_signal_connect (G_OBJECT (menu_item), "activate",
-                        G_CALLBACK (_on_menu_item_activate),
+                        G_CALLBACK (_on_account_menu_item_activate),
                         self);
       gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
     }
@@ -849,6 +850,24 @@ _on_icon_view_button_press_event (GtkWidget *widget,
     }
 
   return FALSE;
+}
+
+void
+_on_account_menu_item_activate (GtkWidget *widget, gpointer self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  FrogrAccount *account = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  account = g_object_get_data (G_OBJECT (widget), "frogr-account");
+
+  if (account && FROGR_IS_ACCOUNT (account))
+    {
+      frogr_controller_set_active_account (priv->controller, account);
+      DEBUG ("Selected account %s (%s)",
+             frogr_account_get_id (account),
+             frogr_account_get_username (account));
+    }
 }
 
 void
