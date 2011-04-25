@@ -116,8 +116,8 @@ void frogr_picture_set_pixbuf (FrogrPicture *self,
 gulong frogr_picture_get_filesize (FrogrPicture *self);
 void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize);
 
-glong frogr_picture_get_datetime (FrogrPicture *self);
-void frogr_picture_set_datetime (FrogrPicture *self, glong datetime);
+void frogr_picture_set_datetime (FrogrPicture *self, const gchar *datetime);
+const gchar *frogr_picture_get_datetime (FrogrPicture *self);
 
 GSList *frogr_picture_get_sets (FrogrPicture *self);
 void frogr_picture_set_sets (FrogrPicture *self, GSList *sets);

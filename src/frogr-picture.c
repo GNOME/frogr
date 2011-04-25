@@ -43,7 +43,7 @@ struct _FrogrPicturePrivate
   GSList *tags_list;
 
   gulong filesize; /* In KB */
-  gulong datetime; /* In seconds */
+  gchar *datetime; /* ASCII, locale dependent, string */
 
   GSList *sets;
   GSList *groups;
@@ -228,7 +228,7 @@ _frogr_picture_set_property (GObject *object,
       frogr_picture_set_filesize (self, g_value_get_long (value));
       break;
     case PROP_DATETIME:
-      frogr_picture_set_datetime (self, g_value_get_long (value));
+      frogr_picture_set_datetime (self, g_value_get_string (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -286,7 +286,7 @@ _frogr_picture_get_property (GObject *object,
       g_value_set_long (value, priv->filesize);
       break;
     case PROP_DATETIME:
-      g_value_set_long (value, priv->datetime);
+      g_value_set_string (value, priv->datetime);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -335,6 +335,7 @@ _frogr_picture_finalize (GObject* object)
   g_free (priv->title);
   g_free (priv->description);
   g_free (priv->tags_string);
+  g_free (priv->datetime);
 
   /* free GSList of tags */
   g_slist_foreach (priv->tags_list, (GFunc) g_free, NULL);
@@ -468,13 +469,11 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                       G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_DATETIME,
-                                   g_param_spec_long ("datetime",
-                                                      "datetime",
-                                                      "Date and time in seconds for the file",
-                                                      G_MINLONG,
-                                                      G_MAXLONG,
-                                                      0,
-                                                      G_PARAM_READWRITE));
+                                   g_param_spec_string ("datetime",
+                                                        "datetime",
+                                                        "Date and time string for the file",
+                                                        NULL,
+                                                        G_PARAM_READWRITE));
 
   g_type_class_add_private (obj_class, sizeof (FrogrPicturePrivate));
 }
@@ -492,7 +491,7 @@ frogr_picture_init (FrogrPicture *self)
   priv->tags_string = NULL;
 
   priv->filesize = 0;
-  priv->datetime = 0;
+  priv->datetime = NULL;
 
   priv->tags_list = NULL;
   priv->sets = NULL;
@@ -875,7 +874,19 @@ void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize)
   priv->filesize = filesize;
 }
 
-glong
+void
+frogr_picture_set_datetime (FrogrPicture *self, const gchar *datetime)
+{
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  FrogrPicturePrivate *priv =
+    FROGR_PICTURE_GET_PRIVATE (self);
+
+  g_free (priv->datetime);
+  priv->datetime = g_strdup (datetime);
+}
+
+const gchar *
 frogr_picture_get_datetime (FrogrPicture *self)
 {
   g_return_val_if_fail(FROGR_IS_PICTURE(self), 0);
@@ -883,20 +894,8 @@ frogr_picture_get_datetime (FrogrPicture *self)
   FrogrPicturePrivate *priv =
     FROGR_PICTURE_GET_PRIVATE (self);
 
-  return priv->datetime;
+  return (const gchar *)priv->datetime;
 }
-
-void
-frogr_picture_set_datetime (FrogrPicture *self, glong datetime)
-{
-  g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
-  priv->datetime = datetime;
-}
-
 
 GSList *
 frogr_picture_get_sets (FrogrPicture *self)
