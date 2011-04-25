@@ -29,6 +29,12 @@
 #include "frogr-picture.h"
 
 #include <config.h>
+#include <libexif/exif-byte-order.h>
+#include <libexif/exif-data.h>
+#include <libexif/exif-entry.h>
+#include <libexif/exif-format.h>
+#include <libexif/exif-loader.h>
+#include <libexif/exif-tag.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 
@@ -270,6 +276,9 @@ _load_next_picture_cb (GObject *object,
           GdkPixbuf *pixbuf = NULL;
           GdkPixbuf *s_pixbuf = NULL;
           GFileInfo* file_info = NULL;
+          ExifLoader *exif_loader = NULL;
+          ExifData *exif_data = NULL;
+          ExifEntry *exif_entry = NULL;
           gchar *file_uri = NULL;
           gchar *file_name = NULL;
           guint64 filesize = 0;
@@ -311,34 +320,6 @@ _load_next_picture_cb (GObject *object,
           /* Get (scaled, and maybe rotated) pixbuf */
           s_pixbuf = _get_corrected_pixbuf (pixbuf);
 
-          /* FIXME: Actually retrieve the date and time from the exif
-             metadata. Using the modification time for this file is a
-             temporary workaround to allow me advance on this while
-             working offline in a plane. */
-          glong datetime = 0;
-
-          if (file_info)
-            g_object_unref (file_info);
-
-          file_info = g_file_query_info (file,
-                                         G_FILE_ATTRIBUTE_TIME_MODIFIED,
-                                         G_FILE_QUERY_INFO_NONE,
-                                         NULL, &error);
-          if (!error)
-            {
-              GTimeVal timeval;
-              g_file_info_get_modification_time (file_info, &timeval);
-              datetime = timeval.tv_sec;
-
-              DEBUG ("DateTime for the picture: %ld\n", datetime);
-            }
-          else
-            {
-              g_warning ("Not able to get the modification time: %s", error->message);
-              g_error_free (error);
-            }
-
-
           /* Build the FrogrPicture */
           fpicture = frogr_picture_new (file_uri,
                                         file_name,
@@ -349,16 +330,39 @@ _load_next_picture_cb (GObject *object,
           frogr_picture_set_show_in_search (fpicture, priv->show_in_search);
           frogr_picture_set_content_type (fpicture, priv->content_type);
           frogr_picture_set_safety_level (fpicture, priv->safety_level);
-
           frogr_picture_set_pixbuf (fpicture, s_pixbuf);
 
           /* FrogrPicture stores the size in KB */
           frogr_picture_set_filesize (fpicture, filesize / 1024);
-          frogr_picture_set_datetime (fpicture, datetime);
 
-          /* Free */
+          /* Set date and time from exif data, if present */
+          exif_loader = exif_loader_new();
+          exif_loader_write (exif_loader, (unsigned char *) contents, length);
+
+          exif_data = exif_loader_get_data (exif_loader);
+          if (exif_data)
+            {
+              exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
+              if (exif_entry)
+                {
+                  if (exif_entry->format == EXIF_FORMAT_ASCII)
+                    {
+                      gchar *value = g_new0 (char, 20);
+                      exif_entry_get_value (exif_entry, value, 20);
+
+                      frogr_picture_set_datetime (fpicture, value);
+                      g_free (value);
+                    }
+                  else
+                    g_warning ("Found DateTime exif tag of invalid type");
+                }
+              exif_data_unref (exif_data);
+            }
+
           if (file_info)
             g_object_unref (file_info);
+
+          exif_loader_unref (exif_loader);
 
           g_object_unref (s_pixbuf);
           g_free (file_uri);
