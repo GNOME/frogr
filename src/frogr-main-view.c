@@ -68,7 +68,10 @@ G_DEFINE_TYPE (FrogrMainView, frogr_main_view, G_TYPE_OBJECT)
 typedef struct _FrogrMainViewPrivate {
   FrogrMainViewModel *model;
   FrogrController *controller;
+
   FrogrConfig *config;
+  gboolean tooltips_enabled;
+
   GtkWindow *window;
 
   GtkWidget *menu_bar;
@@ -109,6 +112,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *sort_by_date_asc_ctxt_menu_item;
   GtkWidget *sort_by_date_desc_menu_item;
   GtkWidget *sort_by_date_desc_ctxt_menu_item;
+  GtkWidget *enable_tooltips_menu_item;
   GtkWidget *about_menu_item;
 
   GtkWidget *pictures_ctxt_menu;
@@ -161,6 +165,7 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            gpointer data);
 
 void _on_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
@@ -436,6 +441,16 @@ _populate_menu_bar (FrogrMainView *self)
                     G_CALLBACK (_on_menu_item_activate),
                     self);
   priv->sort_by_date_desc_menu_item = menu_item;
+
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
+
+  menu_item = gtk_check_menu_item_new_with_mnemonic (_("Enable _Tooltips"));
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), priv->tooltips_enabled);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "toggled",
+                    G_CALLBACK (_on_check_menu_item_toggled),
+                    self);
+  priv->enable_tooltips_menu_item = menu_item;
 
   /* Help menu */
 
@@ -892,6 +907,26 @@ _on_menu_item_activate (GtkWidget *widget, gpointer self)
     _reorder_pictures (mainview, SORT_BY_DATE_DESC);
   else if (widget == priv->about_menu_item)
     frogr_controller_show_about_dialog (priv->controller);
+}
+
+void
+_on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self)
+{
+  FrogrMainView *mainview = NULL;
+  FrogrMainViewPrivate *priv = NULL;
+
+  mainview = FROGR_MAIN_VIEW (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+
+  if (GTK_WIDGET (item) == priv->enable_tooltips_menu_item)
+    {
+      gboolean enable = gtk_check_menu_item_get_active (item);
+      frogr_config_set_enable_tooltips (priv->config, enable);
+      priv->tooltips_enabled = enable;
+    }
+
+  /* State for check menu items should be immediately stored */
+  frogr_config_save_settings (priv->config);
 }
 
 static gboolean
@@ -1774,6 +1809,9 @@ frogr_main_view_init (FrogrMainView *self)
 
   upload_button = GTK_WIDGET (gtk_builder_get_object (builder, "upload_button"));
   priv->upload_button = upload_button;
+
+  /* Read value for 'tooltips enabled' */
+  priv->tooltips_enabled = frogr_config_get_enable_tooltips (priv->config);
 
   /* initialize extra widgets */
 
