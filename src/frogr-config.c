@@ -60,6 +60,8 @@ struct _FrogrConfigPrivate
 
   gboolean tags_autocompletion;
   gboolean remove_file_extensions;
+  SortingCriteria mainview_sorting_criteria;
+  SortingDirection mainview_sorting_direction;
   gboolean mainview_enable_tooltips;
 
   gboolean use_proxy;
@@ -81,6 +83,10 @@ static void _load_visibility_xml (FrogrConfig *self,
                                   xmlDocPtr     xml,
                                   xmlNodePtr    rootnode);
 
+static void _load_mainview_sorting_pictures_xml (FrogrConfig *self,
+                                                 xmlDocPtr     xml,
+                                                 xmlNodePtr    rootnode);
+
 static void _load_proxy_data_xml (FrogrConfig *self,
                                   xmlDocPtr     xml,
                                   xmlNodePtr    rootnode);
@@ -97,6 +103,14 @@ static gboolean _save_settings (FrogrConfig *self);
 static gboolean _save_accounts (FrogrConfig *self);
 
 static void _save_account_xml (FrogrAccount *faccount, xmlNodePtr parent);
+
+static xmlNodePtr _xml_add_int_child (xmlNodePtr   parent,
+                                      const gchar *xml_name,
+                                      gint value);
+
+static xmlNodePtr _xml_add_bool_child (xmlNodePtr   parent,
+                                       const gchar *xml_name,
+                                       gboolean value);
 
 static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
                                          const gchar *xml_name,
@@ -237,6 +251,9 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
               xmlFree (content);
             }
 
+          if (!xmlStrcmp (node->name, (const xmlChar*) "mainview-sorting-pictures"))
+            _load_mainview_sorting_pictures_xml (self, xml, node);
+
           if (!xmlStrcmp (node->name, (const xmlChar*) "default-visibility"))
             _load_visibility_xml (self, xml, node);
 
@@ -306,6 +323,55 @@ _load_visibility_xml (FrogrConfig *self,
         {
           content = xmlNodeGetContent (node);
           priv->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
+        }
+
+      if (content)
+        xmlFree (content);
+    }
+}
+
+static void
+_load_mainview_sorting_pictures_xml (FrogrConfig *self,
+                                     xmlDocPtr     xml,
+                                     xmlNodePtr    rootnode)
+{
+  FrogrConfigPrivate *priv = NULL;
+  xmlNodePtr node;
+  xmlChar *content = NULL;
+
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+  g_return_if_fail (xml      != NULL);
+  g_return_if_fail (rootnode != NULL);
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+
+  /* Traverse child nodes and extract relevant information. */
+  for (node = rootnode->children; node != NULL; node = node->next)
+    {
+      /* We must initialize this always at the beginning of the loop */
+      content = NULL;
+
+      if (node->type != XML_ELEMENT_NODE)
+        continue;
+
+      if (!xmlStrcmp (node->name, (const xmlChar*) "criteria"))
+        {
+          content = xmlNodeGetContent (node);
+          if (!xmlStrcmp (content, (const xmlChar*) "1"))
+            priv->mainview_sorting_criteria = SORT_BY_TITLE;
+          else if (!xmlStrcmp (content, (const xmlChar*) "2"))
+            priv->mainview_sorting_criteria = SORT_BY_DATE;
+          else
+            priv->mainview_sorting_criteria = SORT_AS_LOADED;
+        }
+
+      if (!xmlStrcmp (node->name, (const xmlChar*) "direction"))
+        {
+          content = xmlNodeGetContent (node);
+          if (!xmlStrcmp (content, (const xmlChar*) "1"))
+            priv->mainview_sorting_direction = SORT_DESCENDING;
+          else
+            priv->mainview_sorting_direction = SORT_ASCENDING;
         }
 
       if (content)
@@ -528,7 +594,6 @@ _save_settings (FrogrConfig *self)
   xmlNodePtr root = NULL;
   xmlNodePtr node = NULL;
   gchar *xml_path = NULL;
-  gchar *int_string = NULL;
   gboolean retval = TRUE;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
@@ -541,29 +606,30 @@ _save_settings (FrogrConfig *self)
 
   /* Default visibility */
   node = xmlNewNode (NULL, (const xmlChar*) "default-visibility");
-  _xml_add_string_child (node, "public", priv->public ? "1" : "0");
-  _xml_add_string_child (node, "family", priv->family ? "1" : "0");
-  _xml_add_string_child (node, "friend", priv->friend ? "1" : "0");
-  _xml_add_string_child (node, "show-in-search", priv->show_in_search ? "1" : "0");
+  _xml_add_bool_child (node, "public", priv->public);
+  _xml_add_bool_child (node, "family", priv->family);
+  _xml_add_bool_child (node, "friend", priv->friend);
+  _xml_add_bool_child (node, "show-in-search", priv->show_in_search);
   xmlAddChild (root, node);
 
   /* Default content type and safety level */
-  int_string = g_strdup_printf ("%d", priv->content_type);
-  _xml_add_string_child (root, "default-content-type", int_string);
-  g_free (int_string);
-
-  int_string = g_strdup_printf ("%d", priv->safety_level);
-  _xml_add_string_child (root, "default-safety-level", int_string);
-  g_free (int_string);
+  _xml_add_int_child (root, "default-content-type", priv->content_type);
+  _xml_add_int_child (root, "default-safety-level", priv->safety_level);
 
   /* Other stuff */
-  _xml_add_string_child (root, "tags-autocompletion", priv->tags_autocompletion ? "1" : "0");
-  _xml_add_string_child (root, "remove-file-extensions", priv->remove_file_extensions ? "1" : "0");
-  _xml_add_string_child (root, "mainview-enable-tooltips", priv->mainview_enable_tooltips ? "1" : "0");
+  _xml_add_bool_child (root, "tags-autocompletion", priv->tags_autocompletion);
+  _xml_add_bool_child (root, "remove-file-extensions", priv->remove_file_extensions);
+  _xml_add_bool_child (root, "mainview-enable-tooltips", priv->mainview_enable_tooltips);
+
+  node = xmlNewNode (NULL, (const xmlChar*) "mainview-sorting-pictures");
+  _xml_add_int_child (node, "criteria", priv->mainview_sorting_criteria);
+  _xml_add_int_child (node, "direction", priv->mainview_sorting_direction);
+  xmlAddChild (root, node);
+
 
   /* Use proxy */
   node = xmlNewNode (NULL, (const xmlChar*) "http-proxy");
-  _xml_add_string_child (node, "use-proxy", priv->use_proxy ? "1" : "0");
+  _xml_add_bool_child (node, "use-proxy", priv->use_proxy);
   _xml_add_string_child (node, "proxy-host", priv->proxy_host);
   _xml_add_string_child (node, "proxy-port", priv->proxy_port);
   _xml_add_string_child (node, "proxy-username", priv->proxy_username);
@@ -641,6 +707,33 @@ _save_account_xml (FrogrAccount *faccount, xmlNodePtr parent)
     _xml_add_string_child (node, "active", frogr_account_is_active (faccount) ? "1": "0");
   }
   xmlAddChild (parent, node);
+}
+
+
+static xmlNodePtr
+_xml_add_int_child (xmlNodePtr parent, const gchar *xml_name, gint value)
+{
+  xmlNodePtr result = NULL;
+  gchar *int_str = NULL;
+
+  int_str = g_strdup_printf ("%d", value);
+  result = _xml_add_string_child (parent, xml_name, int_str);
+  g_free (int_str);
+
+  return result;
+}
+
+static xmlNodePtr
+_xml_add_bool_child (xmlNodePtr parent, const gchar *xml_name, gboolean value)
+{
+  xmlNodePtr result = NULL;
+  gchar *bool_str = NULL;
+
+  bool_str = g_strdup_printf ("%d", value ? 1 : 0);
+  result = _xml_add_string_child (parent, xml_name, bool_str);
+  g_free (bool_str);
+
+  return result;
 }
 
 static xmlNodePtr
@@ -785,6 +878,8 @@ frogr_config_init (FrogrConfig *self)
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->tags_autocompletion = TRUE;
   priv->remove_file_extensions = TRUE;
+  priv->mainview_sorting_criteria = SORT_AS_LOADED;
+  priv->mainview_sorting_direction = SORT_ASCENDING;
   priv->mainview_enable_tooltips = TRUE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
@@ -1100,6 +1195,44 @@ frogr_config_get_mainview_enable_tooltips (FrogrConfig *self)
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->mainview_enable_tooltips;
+}
+
+void
+frogr_config_set_mainview_sorting_criteria (FrogrConfig *self,
+                                            SortingCriteria criteria)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->mainview_sorting_criteria = criteria;
+}
+
+SortingCriteria
+frogr_config_get_mainview_sorting_criteria (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), SORT_AS_LOADED);
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->mainview_sorting_criteria;
+}
+
+void
+frogr_config_set_mainview_sorting_direction (FrogrConfig *self,
+                                            SortingDirection direction)
+{
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->mainview_sorting_direction = direction;
+}
+
+SortingDirection
+frogr_config_get_mainview_sorting_direction (FrogrConfig *self)
+{
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), SORT_AS_LOADED);
+
+  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->mainview_sorting_direction;
 }
 
 void

@@ -65,17 +65,6 @@ G_DEFINE_TYPE (FrogrMainView, frogr_main_view, G_TYPE_OBJECT)
 
 /* Private Data */
 
-typedef enum {
-  SORT_AS_LOADED,
-  SORT_BY_TITLE,
-  SORT_BY_DATE
-} SortingCriteria;
-
-typedef enum {
-  SORT_ASCENDING,
-  SORT_DESCENDING,
-} SortingDirection;
-
 typedef struct _FrogrMainViewPrivate {
   FrogrMainViewModel *model;
   FrogrController *controller;
@@ -433,6 +422,13 @@ _populate_menu_bar (FrogrMainView *self)
                     self);
   priv->sort_by_date_menu_item = menu_item;
 
+  if (priv->sorting_criteria == SORT_BY_TITLE)
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_by_title_menu_item), TRUE);
+  else if (priv->sorting_criteria == SORT_BY_DATE)
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_by_date_menu_item), TRUE);
+  else
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_as_loaded_menu_item), TRUE);
+
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), gtk_separator_menu_item_new ());
 
   menu_item = gtk_check_menu_item_new_with_mnemonic (_("Reversed order"));
@@ -442,7 +438,8 @@ _populate_menu_bar (FrogrMainView *self)
                     self);
   priv->sort_reversed_menu_item = menu_item;
 
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_as_loaded_menu_item), TRUE);
+  if (priv->sorting_direction == SORT_DESCENDING)
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), TRUE);
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
@@ -866,19 +863,23 @@ _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self)
     }
   else if (GTK_WIDGET (item) == priv->sort_reversed_menu_item)
     {
-      _reorder_pictures (mainview, priv->sorting_criteria,
-                         checked ? SORT_DESCENDING : SORT_ASCENDING);
+      SortingDirection direction = checked ? SORT_DESCENDING : SORT_ASCENDING;
+      _reorder_pictures (mainview, priv->sorting_criteria, direction);
+      frogr_config_set_mainview_sorting_direction (priv->config, direction);
     }
   else if (checked)
     {
       /* Radio buttons handling here (only care about 'em when checked) */
 
-      if (GTK_WIDGET (item) == priv->sort_as_loaded_menu_item)
-        _reorder_pictures (mainview, SORT_AS_LOADED, priv->sorting_direction);
-      else if (GTK_WIDGET (item) == priv->sort_by_title_menu_item)
-        _reorder_pictures (mainview, SORT_BY_TITLE, priv->sorting_direction);
+      SortingCriteria criteria = SORT_AS_LOADED;
+
+      if (GTK_WIDGET (item) == priv->sort_by_title_menu_item)
+        criteria = SORT_BY_TITLE;
       else if (GTK_WIDGET (item) == priv->sort_by_date_menu_item)
-        _reorder_pictures (mainview, SORT_BY_DATE, priv->sorting_direction);
+        criteria = SORT_BY_DATE;
+
+      _reorder_pictures (mainview, criteria, priv->sorting_direction);
+      frogr_config_set_mainview_sorting_criteria (priv->config, criteria);
     }
 
   /* State for check menu items should be immediately stored */
@@ -1791,8 +1792,8 @@ frogr_main_view_init (FrogrMainView *self)
   priv->upload_button = upload_button;
 
   /* Initialize sorting criteria and direction */
-  priv->sorting_criteria = SORT_AS_LOADED;
-  priv->sorting_direction = SORT_ASCENDING;
+  priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
+  priv->sorting_direction = frogr_config_get_mainview_sorting_direction (priv->config);
 
   /* Read value for 'tooltips enabled' */
   priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);

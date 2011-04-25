@@ -57,6 +57,17 @@ struct _FrogrConfigClass
 
 GType frogr_config_get_type (void) G_GNUC_CONST;
 
+typedef enum {
+  SORT_AS_LOADED,
+  SORT_BY_TITLE,
+  SORT_BY_DATE
+} SortingCriteria;
+
+typedef enum {
+  SORT_ASCENDING,
+  SORT_DESCENDING,
+} SortingDirection;
+
 FrogrConfig* frogr_config_get_instance (void);
 
 gboolean frogr_config_save_all (FrogrConfig *self);
@@ -113,6 +124,17 @@ gboolean frogr_config_get_remove_file_extensions (FrogrConfig *self);
 void frogr_config_set_mainview_enable_tooltips (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_mainview_enable_tooltips (FrogrConfig *self);
+
+void frogr_config_set_mainview_sorting_criteria (FrogrConfig *self,
+                                                 SortingCriteria criteria);
+
+SortingCriteria frogr_config_get_mainview_sorting_criteria (FrogrConfig *self);
+
+
+void frogr_config_set_mainview_sorting_direction (FrogrConfig *self,
+                                                  SortingDirection direction);
+
+SortingDirection frogr_config_get_mainview_sorting_direction (FrogrConfig *self);
 
 void frogr_config_set_use_proxy (FrogrConfig *self, gboolean value);
 
