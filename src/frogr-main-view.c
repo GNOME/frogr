@@ -935,7 +935,7 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
 
       tooltip_str = g_strdup_printf ("<b>%s</b>\n<i>%s: %s</i>%s",
                                      frogr_picture_get_title (picture),
-                                     _("File size: "), filesize_str,
+                                     _("File size"), filesize_str,
                                      datetime_str ? datetime_str : "");
 
       gtk_tooltip_set_markup (tooltip, tooltip_str);
