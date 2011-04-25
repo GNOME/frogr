@@ -81,10 +81,6 @@ _compare_pictures_by_property_asc (FrogrPicture *p1, FrogrPicture *p2,
   pspec1 = g_object_class_find_property (G_OBJECT_GET_CLASS (p1), property_name);
   pspec2 = g_object_class_find_property (G_OBJECT_GET_CLASS (p2), property_name);
 
-  /* GObjects not supported */
-  if (pspec1->value_type == G_TYPE_OBJECT)
-    return 0;
-
   /* They should be the same! */
   if (pspec1->value_type != pspec2->value_type)
     return 0;
@@ -103,6 +99,8 @@ _compare_pictures_by_property_asc (FrogrPicture *p1, FrogrPicture *p2,
     result = g_value_get_long (&value1) - g_value_get_long (&value2);
   else if (G_VALUE_HOLDS_STRING (&value1))
     result = g_strcmp0 (g_value_get_string (&value1), g_value_get_string (&value2));
+  else
+    g_warning ("Unsupported type for property used for sorting");
 
   g_value_unset (&value1);
   g_value_unset (&value2);
