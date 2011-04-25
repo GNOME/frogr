@@ -104,19 +104,14 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *upload_menu_item;
   GtkWidget *sort_by_title_menu_item;
   GtkWidget *sort_by_title_asc_menu_item;
-  GtkWidget *sort_by_title_asc_ctxt_menu_item;
   GtkWidget *sort_by_title_desc_menu_item;
-  GtkWidget *sort_by_title_desc_ctxt_menu_item;
   GtkWidget *sort_by_date_menu_item;
   GtkWidget *sort_by_date_asc_menu_item;
-  GtkWidget *sort_by_date_asc_ctxt_menu_item;
   GtkWidget *sort_by_date_desc_menu_item;
-  GtkWidget *sort_by_date_desc_ctxt_menu_item;
   GtkWidget *enable_tooltips_menu_item;
   GtkWidget *about_menu_item;
 
   GtkWidget *pictures_ctxt_menu;
-  GtkWidget *no_pictures_ctxt_menu;
 
   GtkWidget *progress_dialog;
   GtkWidget *progress_bar;
@@ -147,7 +142,6 @@ static void _populate_menu_bar (FrogrMainView *self);
 static void _populate_accounts_submenu (FrogrMainView *self);
 
 static GtkWidget *_pictures_ctxt_menu_create (FrogrMainView *self);
-static GtkWidget *_no_pictures_ctxt_menu_create (FrogrMainView *self);
 
 static void _initialize_drag_n_drop (FrogrMainView *self);
 static void _on_icon_view_drag_data_received (GtkWidget *widget,
@@ -598,65 +592,6 @@ _pictures_ctxt_menu_create (FrogrMainView *self)
   return ctxt_menu;
 }
 
-static GtkWidget *
-_no_pictures_ctxt_menu_create (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  GtkWidget *ctxt_menu = NULL;
-  GtkWidget *ctxt_submenu = NULL;
-  GtkWidget *item = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  ctxt_menu = gtk_menu_new ();
-
-  /* Sort by title */
-  item = gtk_menu_item_new_with_mnemonic (_("Sort by _Title"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-
-  ctxt_submenu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), ctxt_submenu);
-
-  item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->sort_by_title_asc_ctxt_menu_item = item;
-
-  item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->sort_by_title_desc_ctxt_menu_item = item;
-
-  /* Sort by date */
-  item = gtk_menu_item_new_with_mnemonic (_("Sort by _Date"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-
-  ctxt_submenu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), ctxt_submenu);
-
-  item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->sort_by_date_asc_ctxt_menu_item = item;
-
-  item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->sort_by_date_desc_ctxt_menu_item = item;
-
-  /* Make menu and its widgets visible */
-  gtk_widget_show_all (ctxt_menu);
-
-  return ctxt_menu;
-}
-
 static void
 _initialize_drag_n_drop (FrogrMainView *self)
 {
@@ -758,15 +693,10 @@ _on_icon_view_key_press_event (GtkWidget *widget,
     _remove_selected_pictures (mainview);
 
   /* Show contextual menu if pressed the 'Menu' key */
-  if (event->type == GDK_KEY_PRESS && event->keyval == GDK_Menu)
+  if (event->type == GDK_KEY_PRESS && event->keyval == GDK_Menu
+      && _n_selected_pictures (mainview) > 0)
     {
-      GtkMenu *menu = NULL;
-
-      if (_n_selected_pictures (mainview) > 0)
-        menu = GTK_MENU (priv->pictures_ctxt_menu);
-      else
-        menu = GTK_MENU (priv->no_pictures_ctxt_menu);
-
+      GtkMenu *menu = GTK_MENU (priv->pictures_ctxt_menu);
       gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
                       0, gtk_get_current_event_time ());
     }
@@ -839,15 +769,6 @@ _on_icon_view_button_press_event (GtkWidget *widget,
       /* Free */
       gtk_tree_path_free (path);
     }
-  else if ((event->button == 3)                  /* right button */
-           && (event->type == GDK_BUTTON_PRESS)) /* single click */
-    {
-      /* Show contextual menu */
-      gtk_menu_popup (GTK_MENU (priv->no_pictures_ctxt_menu),
-                      NULL, NULL, NULL, NULL,
-                      event->button,
-                      gtk_get_current_event_time ());
-    }
 
   return FALSE;
 }
@@ -916,13 +837,13 @@ _on_menu_item_activate (GtkWidget *widget, gpointer self)
     _add_pictures_to_group (mainview);
   else if (widget == priv->upload_menu_item)
     _upload_pictures (mainview);
-  else if (widget == priv->sort_by_title_asc_menu_item || widget == priv->sort_by_title_asc_ctxt_menu_item)
+  else if (widget == priv->sort_by_title_asc_menu_item)
     _reorder_pictures (mainview, SORT_BY_TITLE_ASC);
-  else if (widget == priv->sort_by_title_desc_menu_item || widget == priv->sort_by_title_desc_ctxt_menu_item)
+  else if (widget == priv->sort_by_title_desc_menu_item)
     _reorder_pictures (mainview, SORT_BY_TITLE_DESC);
-  else if (widget == priv->sort_by_date_asc_menu_item || widget == priv->sort_by_date_asc_ctxt_menu_item)
+  else if (widget == priv->sort_by_date_asc_menu_item)
     _reorder_pictures (mainview, SORT_BY_DATE_ASC);
-  else if (widget == priv->sort_by_date_desc_menu_item || widget == priv->sort_by_date_desc_ctxt_menu_item)
+  else if (widget == priv->sort_by_date_desc_menu_item)
     _reorder_pictures (mainview, SORT_BY_DATE_DESC);
   else if (widget == priv->about_menu_item)
     frogr_controller_show_about_dialog (priv->controller);
@@ -1722,7 +1643,6 @@ _frogr_main_view_finalize (GObject *object)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
 
   gtk_widget_destroy (priv->pictures_ctxt_menu);
-  gtk_widget_destroy (priv->no_pictures_ctxt_menu);
   gtk_widget_destroy (GTK_WIDGET (priv->window));
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
@@ -1842,7 +1762,6 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* create contextual menus for right-clicks */
   priv->pictures_ctxt_menu = _pictures_ctxt_menu_create (self);
-  priv->no_pictures_ctxt_menu = _no_pictures_ctxt_menu_create (self);
 
   /* Initialize drag'n'drop support */
   _initialize_drag_n_drop (self);
