@@ -912,6 +912,8 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       GtkTreeIter iter;
       gchar *tooltip_str = NULL;
       gchar *filesize_str = NULL;
+      gchar *datetime_str = NULL;
+      const gchar *datetime = NULL;
 
       /* Get needed information */
       gtk_tree_model_get_iter (priv->tree_model, &iter, path);
@@ -926,9 +928,15 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
 
       /* Build the tooltip text with basic info: title, size */
       filesize_str = _get_datasize_string (frogr_picture_get_filesize (picture));
-      tooltip_str = g_strdup_printf ("<b>%s</b>\n<i>%s</i>",
+      datetime = frogr_picture_get_datetime (picture);
+      if (datetime)
+        datetime_str = g_strdup_printf ("\n<i>%s: %s</i>",
+                                        _("Captured"), datetime);
+
+      tooltip_str = g_strdup_printf ("<b>%s</b>\n<i>%s: %s</i>%s",
                                      frogr_picture_get_title (picture),
-                                     filesize_str);
+                                     _("File size: "), filesize_str,
+                                     datetime_str ? datetime_str : "");
 
       gtk_tooltip_set_markup (tooltip, tooltip_str);
 
@@ -936,7 +944,7 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       gtk_tree_path_free (path);
       g_free (tooltip_str);
       g_free (filesize_str);
-
+      g_free (datetime_str);
       return TRUE;
     }
 
