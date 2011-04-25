@@ -65,11 +65,24 @@ G_DEFINE_TYPE (FrogrMainView, frogr_main_view, G_TYPE_OBJECT)
 
 /* Private Data */
 
+typedef enum {
+  SORT_AS_LOADED,
+  SORT_BY_TITLE,
+  SORT_BY_DATE
+} SortingCriteria;
+
+typedef enum {
+  SORT_ASCENDING,
+  SORT_DESCENDING,
+} SortingDirection;
+
 typedef struct _FrogrMainViewPrivate {
   FrogrMainViewModel *model;
   FrogrController *controller;
 
   FrogrConfig *config;
+  SortingCriteria sorting_criteria;
+  SortingDirection sorting_direction;
   gboolean tooltips_enabled;
 
   GtkWindow *window;
@@ -102,12 +115,11 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *add_to_group_ctxt_menu_item;
   GtkWidget *upload_button;
   GtkWidget *upload_menu_item;
+  GtkWidget *sort_by_menu_item;
+  GtkWidget *sort_as_loaded_menu_item;
   GtkWidget *sort_by_title_menu_item;
-  GtkWidget *sort_by_title_asc_menu_item;
-  GtkWidget *sort_by_title_desc_menu_item;
   GtkWidget *sort_by_date_menu_item;
-  GtkWidget *sort_by_date_asc_menu_item;
-  GtkWidget *sort_by_date_desc_menu_item;
+  GtkWidget *sort_reversed_menu_item;
   GtkWidget *enable_tooltips_menu_item;
   GtkWidget *about_menu_item;
 
@@ -126,13 +138,6 @@ enum {
   PIXBUF_COL,
   FPICTURE_COL
 };
-
-typedef enum {
-  SORT_BY_TITLE_ASC,
-  SORT_BY_TITLE_DESC,
-  SORT_BY_DATE_ASC,
-  SORT_BY_DATE_DESC,
-} SortingCriteria;
 
 /* Prototypes */
 
@@ -194,7 +199,7 @@ static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
 static void _load_pictures (FrogrMainView *self, GSList *fileuris);
 static void _upload_pictures (FrogrMainView *self);
-static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria);
+static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, SortingDirection direction);
 
 static void _progress_dialog_response (GtkDialog *dialog,
                                        gint response_id,
@@ -262,6 +267,7 @@ _populate_menu_bar (FrogrMainView *self)
   GtkWidget *menu;
   GtkWidget *submenu;
   GtkWidget *menu_item;
+  GSList *sorting_group = NULL;
 
 #ifdef MAC_INTEGRATION
   GtkOSXApplication *osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
@@ -396,47 +402,47 @@ _populate_menu_bar (FrogrMainView *self)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Sort by _Title"));
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Sort Pictures"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  priv->sort_by_menu_item = menu_item;
+
+  submenu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
+
+  menu_item = gtk_radio_menu_item_new_with_mnemonic (sorting_group, _("As loaded"));
+  sorting_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
+  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "toggled",
+                    G_CALLBACK (_on_check_menu_item_toggled),
+                    self);
+  priv->sort_as_loaded_menu_item = menu_item;
+
+  menu_item = gtk_radio_menu_item_new_with_mnemonic (sorting_group, _("By _Title"));
+  sorting_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
+  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
+  g_signal_connect (G_OBJECT (menu_item), "toggled",
+                    G_CALLBACK (_on_check_menu_item_toggled),
+                    self);
   priv->sort_by_title_menu_item = menu_item;
 
-  submenu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
+  menu_item = gtk_radio_menu_item_new_with_mnemonic (sorting_group, _("By _Date"));
+  sorting_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
+  g_signal_connect (G_OBJECT (menu_item), "toggled",
+                    G_CALLBACK (_on_check_menu_item_toggled),
                     self);
-  priv->sort_by_title_asc_menu_item = menu_item;
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->sort_by_title_desc_menu_item = menu_item;
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Sort by _Date"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   priv->sort_by_date_menu_item = menu_item;
 
-  submenu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
+  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), gtk_separator_menu_item_new ());
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Ascending"));
+  menu_item = gtk_check_menu_item_new_with_mnemonic (_("Reversed order"));
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
+  g_signal_connect (G_OBJECT (menu_item), "toggled",
+                    G_CALLBACK (_on_check_menu_item_toggled),
                     self);
-  priv->sort_by_date_asc_menu_item = menu_item;
+  priv->sort_reversed_menu_item = menu_item;
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Descending"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->sort_by_date_desc_menu_item = menu_item;
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_as_loaded_menu_item), TRUE);
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
@@ -838,14 +844,6 @@ _on_menu_item_activate (GtkWidget *widget, gpointer self)
     _add_pictures_to_group (mainview);
   else if (widget == priv->upload_menu_item)
     _upload_pictures (mainview);
-  else if (widget == priv->sort_by_title_asc_menu_item)
-    _reorder_pictures (mainview, SORT_BY_TITLE_ASC);
-  else if (widget == priv->sort_by_title_desc_menu_item)
-    _reorder_pictures (mainview, SORT_BY_TITLE_DESC);
-  else if (widget == priv->sort_by_date_asc_menu_item)
-    _reorder_pictures (mainview, SORT_BY_DATE_ASC);
-  else if (widget == priv->sort_by_date_desc_menu_item)
-    _reorder_pictures (mainview, SORT_BY_DATE_DESC);
   else if (widget == priv->about_menu_item)
     frogr_controller_show_about_dialog (priv->controller);
 }
@@ -855,15 +853,32 @@ _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self)
 {
   FrogrMainView *mainview = NULL;
   FrogrMainViewPrivate *priv = NULL;
+  gboolean checked = FALSE;
 
   mainview = FROGR_MAIN_VIEW (self);
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
 
+  checked = gtk_check_menu_item_get_active (item);
   if (GTK_WIDGET (item) == priv->enable_tooltips_menu_item)
     {
-      gboolean enable = gtk_check_menu_item_get_active (item);
-      frogr_config_set_enable_tooltips (priv->config, enable);
-      priv->tooltips_enabled = enable;
+      frogr_config_set_enable_tooltips (priv->config, checked);
+      priv->tooltips_enabled = checked;
+    }
+  else if (GTK_WIDGET (item) == priv->sort_reversed_menu_item)
+    {
+      _reorder_pictures (mainview, priv->sorting_criteria,
+                         checked ? SORT_DESCENDING : SORT_ASCENDING);
+    }
+  else if (checked)
+    {
+      /* Radio buttons handling here (only care about 'em when checked) */
+
+      if (GTK_WIDGET (item) == priv->sort_as_loaded_menu_item)
+        _reorder_pictures (mainview, SORT_AS_LOADED, priv->sorting_direction);
+      else if (GTK_WIDGET (item) == priv->sort_by_title_menu_item)
+        _reorder_pictures (mainview, SORT_BY_TITLE, priv->sorting_direction);
+      else if (GTK_WIDGET (item) == priv->sort_by_date_menu_item)
+        _reorder_pictures (mainview, SORT_BY_DATE, priv->sorting_direction);
     }
 
   /* State for check menu items should be immediately stored */
@@ -931,8 +946,7 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       filesize_str = _get_datasize_string (frogr_picture_get_filesize (picture));
       datetime = frogr_picture_get_datetime (picture);
       if (datetime)
-        datetime_str = g_strdup_printf ("\n<i>%s: %s</i>",
-                                        _("Captured"), datetime);
+        datetime_str = g_strdup_printf ("\n<i>%s: %s</i>", _("Captured"), datetime);
 
       tooltip_str = g_strdup_printf ("<b>%s</b>\n<i>%s: %s</i>%s",
                                      frogr_picture_get_title (picture),
@@ -1270,36 +1284,57 @@ _upload_pictures (FrogrMainView *self)
 }
 
 static void
-_reorder_pictures (FrogrMainView *self, SortingCriteria criteria)
+_reorder_pictures (FrogrMainView *self, SortingCriteria criteria, SortingDirection direction)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   gchar *property_name = NULL;
   gboolean ascending = FALSE;
 
+  priv->sorting_criteria = criteria;
+  priv->sorting_direction = direction;
+
+  if (!_n_pictures (self))
+    return;
+
+  /* Reorder pictures immediately, if any */
+
   switch (criteria)
     {
-    case SORT_BY_TITLE_ASC:
+    case SORT_AS_LOADED:
+      property_name = NULL;
+      break;
+
+    case SORT_BY_TITLE:
       property_name = g_strdup ("title");
-      ascending = TRUE;
       break;
-    case SORT_BY_TITLE_DESC:
-      property_name = g_strdup ("title");
-      ascending = FALSE;
-      break;
-    case SORT_BY_DATE_ASC:
+
+    case SORT_BY_DATE:
       property_name = g_strdup ("datetime");
-      ascending = TRUE;
       break;
-    case SORT_BY_DATE_DESC:
-      property_name = g_strdup ("datetime");
-      ascending = FALSE;
-      break;
+
     default:
       g_assert_not_reached ();
     }
 
-  frogr_main_view_model_reorder_pictures (priv->model, property_name, ascending);
-  g_free (property_name);
+  switch (direction)
+    {
+    case SORT_ASCENDING:
+      ascending = TRUE;
+      break;
+
+    case SORT_DESCENDING:
+      ascending = FALSE;
+      break;
+
+    default:
+      g_assert_not_reached ();
+    }
+
+  if (property_name)
+    {
+      frogr_main_view_model_reorder_pictures (priv->model, property_name, ascending);
+      g_free (property_name);
+    }
 }
 
 static void
@@ -1579,12 +1614,6 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_to_new_set_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_group_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->sort_by_title_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->sort_by_title_asc_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->sort_by_title_desc_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->sort_by_date_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->sort_by_date_asc_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->sort_by_date_desc_menu_item, FALSE);
       break;
 
     case FROGR_STATE_IDLE:
@@ -1605,12 +1634,6 @@ _update_ui (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->add_to_new_set_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->add_to_group_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->sort_by_title_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->sort_by_title_asc_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->sort_by_title_desc_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->sort_by_date_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->sort_by_date_asc_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->sort_by_date_desc_menu_item, has_pics);
 
       /* Update status bar from model's state description */
       state_description = frogr_main_view_model_get_state_description (priv->model);
@@ -1766,6 +1789,10 @@ frogr_main_view_init (FrogrMainView *self)
 
   upload_button = GTK_WIDGET (gtk_builder_get_object (builder, "upload_button"));
   priv->upload_button = upload_button;
+
+  /* Initialize sorting criteria and direction */
+  priv->sorting_criteria = SORT_AS_LOADED;
+  priv->sorting_direction = SORT_ASCENDING;
 
   /* Read value for 'tooltips enabled' */
   priv->tooltips_enabled = frogr_config_get_enable_tooltips (priv->config);
