@@ -1333,7 +1333,7 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, SortingDirecti
 
   if (property_name)
     {
-      frogr_main_view_model_reorder_pictures (priv->model, property_name, ascending);
+      frogr_main_view_model_reorder_pictures (priv->model, property_name, !ascending);
       g_free (property_name);
     }
 }

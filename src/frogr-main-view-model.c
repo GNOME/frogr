@@ -39,6 +39,7 @@ struct _FrogrMainViewModelPrivate
 {
   GSList *pictures_list;
   guint n_pictures;
+  gboolean pictures_list_reversed;
 
   GSList *sets_list;
   guint n_sets;
@@ -66,8 +67,8 @@ static guint signals[N_SIGNALS] = { 0 };
 /* Private API */
 
 static gint
-_compare_pictures_by_property_asc (FrogrPicture *p1, FrogrPicture *p2,
-                                   const gchar *property_name)
+_compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
+                               const gchar *property_name)
 {
   g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
   g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
@@ -106,13 +107,6 @@ _compare_pictures_by_property_asc (FrogrPicture *p1, FrogrPicture *p2,
   g_value_unset (&value2);
 
   return result;
-}
-
-static gint
-_compare_pictures_by_property_desc (FrogrPicture *p1, FrogrPicture *p2,
-                                   const gchar *property_name)
-{
-  return _compare_pictures_by_property_asc (p2, p1, property_name);
 }
 
 static void
@@ -211,6 +205,7 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
   /* Init private data */
   priv->pictures_list = NULL;
   priv->n_pictures = 0;
+  priv->pictures_list_reversed = FALSE;
 
   priv->sets_list = NULL;
   priv->n_sets = 0;
@@ -291,12 +286,11 @@ frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
 void
 frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
                                         const gchar *property_name,
-                                        gboolean ascending)
+                                        gboolean reversed)
 {
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   FrogrMainViewModelPrivate *priv = NULL;
-  GCompareDataFunc compare_func = NULL;
   GSList *old_list = NULL;
   GSList *old_item = NULL;
   gint *new_order = 0;
@@ -310,14 +304,18 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
   old_list = g_slist_copy (priv->pictures_list);
   new_order = g_new0 (gint, g_slist_length (old_list));
 
-  if (ascending)
-    compare_func = (GCompareDataFunc) _compare_pictures_by_property_asc;
-  else
-    compare_func = (GCompareDataFunc) _compare_pictures_by_property_desc;
+  /* If list was reversed, re-reverse it before sorting */
+  if (priv->pictures_list_reversed)
+    priv->pictures_list = g_slist_reverse (priv->pictures_list);
 
+  priv->pictures_list_reversed = reversed;
   priv->pictures_list = g_slist_sort_with_data (priv->pictures_list,
-                                                compare_func,
+                                                (GCompareDataFunc) _compare_pictures_by_property,
                                                 (gchar*) property_name);
+
+  /* If we're reordering in reverse order, reverse the result list */
+  if (reversed)
+    priv->pictures_list = g_slist_reverse (priv->pictures_list);
 
   /* Build the new_order array */
   old_pos = 0;
