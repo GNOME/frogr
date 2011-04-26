@@ -53,8 +53,8 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *safe_rb;
   GtkWidget *moderate_rb;
   GtkWidget *restricted_rb;
-  GtkWidget *tags_autocompletion_cb;
-  GtkWidget *remove_file_extensions_cb;
+  GtkWidget *disable_tags_autocompletion_cb;
+  GtkWidget *keep_file_extensions_cb;
 
   GtkWidget *use_proxy_cb;
   GtkWidget *proxy_host_label;
@@ -70,8 +70,8 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean family_visibility;
   gboolean friend_visibility;
   gboolean show_in_search;
-  gboolean tags_autocompletion;
-  gboolean remove_file_extensions;
+  gboolean disable_tags_autocompletion;
+  gboolean keep_file_extensions;
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
@@ -286,19 +286,19 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   box1 = gtk_vbox_new (FALSE, 6);
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("Ena_ble Tags Auto-Completion"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("Disa_ble Tags Auto-Completion"));
   gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
-  priv->tags_autocompletion_cb = cbutton;
+  priv->disable_tags_autocompletion_cb = cbutton;
 
-  g_signal_connect (G_OBJECT (priv->tags_autocompletion_cb), "toggled",
+  g_signal_connect (G_OBJECT (priv->disable_tags_autocompletion_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("Remo_ve File Extensions from Picture Titles"));
+  cbutton = gtk_check_button_new_with_mnemonic (_("_Keep File Extensions in Titles when Loading Pictures"));
   gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
-  priv->remove_file_extensions_cb = cbutton;
+  priv->keep_file_extensions_cb = cbutton;
 
-  g_signal_connect (G_OBJECT (priv->remove_file_extensions_cb), "toggled",
+  g_signal_connect (G_OBJECT (priv->keep_file_extensions_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
 
@@ -432,8 +432,8 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->show_in_search = frogr_config_get_default_show_in_search (priv->config);
   priv->content_type = frogr_config_get_default_content_type (priv->config);
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
-  priv->tags_autocompletion = frogr_config_get_tags_autocompletion (priv->config);
-  priv->remove_file_extensions = frogr_config_get_remove_file_extensions (priv->config);
+  priv->disable_tags_autocompletion = !frogr_config_get_tags_autocompletion (priv->config);
+  priv->keep_file_extensions = frogr_config_get_keep_file_extensions (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
   g_free (priv->proxy_host);
@@ -483,11 +483,11 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   else
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->safe_rb), TRUE);
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->tags_autocompletion_cb),
-                                priv->tags_autocompletion);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->disable_tags_autocompletion_cb),
+                                priv->disable_tags_autocompletion);
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->remove_file_extensions_cb),
-                                priv->remove_file_extensions);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->keep_file_extensions_cb),
+                                priv->keep_file_extensions);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
@@ -522,8 +522,8 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_content_type (priv->config, priv->content_type);
   frogr_config_set_default_safety_level (priv->config, priv->safety_level);
 
-  frogr_config_set_tags_autocompletion (priv->config, priv->tags_autocompletion);
-  frogr_config_set_remove_file_extensions (priv->config, priv->remove_file_extensions);
+  frogr_config_set_tags_autocompletion (priv->config, !priv->disable_tags_autocompletion);
+  frogr_config_set_keep_file_extensions (priv->config, priv->keep_file_extensions);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 
@@ -649,16 +649,16 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("Content type set to %d", priv->safety_level);
     }
 
-  if (GTK_WIDGET (button) == priv->tags_autocompletion_cb)
+  if (GTK_WIDGET (button) == priv->disable_tags_autocompletion_cb)
     {
-      priv->tags_autocompletion = active;
-      DEBUG ("Enable tags autocompletion set to %s", active ? "TRUE" : "FALSE");
+      priv->disable_tags_autocompletion = active;
+      DEBUG ("Disable tags autocompletion set to %s", active ? "TRUE" : "FALSE");
     }
 
-  if (GTK_WIDGET (button) == priv->remove_file_extensions_cb)
+  if (GTK_WIDGET (button) == priv->keep_file_extensions_cb)
     {
-      priv->remove_file_extensions = active;
-      DEBUG ("Remove file extensions before upload set to %s", active ? "TRUE" : "FALSE");
+      priv->keep_file_extensions = active;
+      DEBUG ("Keep file extensions in title set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
@@ -783,8 +783,8 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->safe_rb = NULL;
   priv->moderate_rb = NULL;
   priv->restricted_rb = NULL;
-  priv->tags_autocompletion_cb = NULL;
-  priv->remove_file_extensions_cb = NULL;
+  priv->disable_tags_autocompletion_cb = NULL;
+  priv->keep_file_extensions_cb = NULL;
   priv->use_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
@@ -800,8 +800,8 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->show_in_search = FALSE;
   priv->safety_level = FSP_SAFETY_LEVEL_NONE;
   priv->content_type = FSP_CONTENT_TYPE_NONE;
-  priv->tags_autocompletion = FALSE;
-  priv->remove_file_extensions = FALSE;
+  priv->disable_tags_autocompletion = FALSE;
+  priv->keep_file_extensions = FALSE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;

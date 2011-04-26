@@ -345,7 +345,7 @@ _populate_menu_bar (FrogrMainView *self)
                         _("By _Title"), &(priv->sort_by_title_menu_item));
 
   _add_radio_menu_item (self, GTK_MENU_SHELL (submenu), &sorting_group,
-                        _("By _Date of Capture"), &(priv->sort_by_date_menu_item));
+                        _("By _Date Taken"), &(priv->sort_by_date_menu_item));
 
   if (priv->sorting_criteria == SORT_BY_TITLE)
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_by_title_menu_item), TRUE);
@@ -364,11 +364,11 @@ _populate_menu_bar (FrogrMainView *self)
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
-  _add_check_menu_item (self, GTK_MENU_SHELL (menu), _("Enable _Tooltips"),
+  _add_check_menu_item (self, GTK_MENU_SHELL (menu), _("Disable _Tooltips"),
                         &(priv->enable_tooltips_menu_item));
 
   gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->enable_tooltips_menu_item),
-                                  priv->tooltips_enabled);
+                                  !priv->tooltips_enabled);
 
   /* Help menu */
 
@@ -852,8 +852,8 @@ _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self)
   checked = gtk_check_menu_item_get_active (item);
   if (GTK_WIDGET (item) == priv->enable_tooltips_menu_item)
     {
-      frogr_config_set_mainview_enable_tooltips (priv->config, checked);
-      priv->tooltips_enabled = checked;
+      frogr_config_set_mainview_enable_tooltips (priv->config, !checked);
+      priv->tooltips_enabled = !checked;
     }
   else if (GTK_WIDGET (item) == priv->sort_reversed_menu_item)
     {
@@ -940,7 +940,7 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       filesize_str = _get_datasize_string (frogr_picture_get_filesize (picture));
       datetime = frogr_picture_get_datetime (picture);
       if (datetime)
-        datetime_str = g_strdup_printf ("\n<i>%s: %s</i>", _("Captured"), datetime);
+        datetime_str = g_strdup_printf ("\n<i>%s: %s</i>", _("Taken"), datetime);
 
       tooltip_str = g_strdup_printf ("<b>%s</b>\n<i>%s: %s</i>%s",
                                      frogr_picture_get_title (picture),

@@ -59,7 +59,7 @@ struct _FrogrConfigPrivate
   FspContentType content_type;
 
   gboolean tags_autocompletion;
-  gboolean remove_file_extensions;
+  gboolean keep_file_extensions;
   SortingCriteria mainview_sorting_criteria;
   gboolean mainview_sorting_reversed;
   gboolean mainview_enable_tooltips;
@@ -231,12 +231,12 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
               xmlFree (content);
             }
 
-          if (!xmlStrcmp (node->name, (const xmlChar*) "remove-file-extensions"))
+          if (!xmlStrcmp (node->name, (const xmlChar*) "keep-file-extensions"))
             {
               xmlChar *content = NULL;
 
               content = xmlNodeGetContent (node);
-              priv->remove_file_extensions = !xmlStrcmp (content, (const xmlChar*) "1");
+              priv->keep_file_extensions = !xmlStrcmp (content, (const xmlChar*) "1");
 
               xmlFree (content);
             }
@@ -615,7 +615,7 @@ _save_settings (FrogrConfig *self)
 
   /* Other stuff */
   _xml_add_bool_child (root, "tags-autocompletion", priv->tags_autocompletion);
-  _xml_add_bool_child (root, "remove-file-extensions", priv->remove_file_extensions);
+  _xml_add_bool_child (root, "keep-file-extensions", priv->keep_file_extensions);
   _xml_add_bool_child (root, "mainview-enable-tooltips", priv->mainview_enable_tooltips);
 
   node = xmlNewNode (NULL, (const xmlChar*) "mainview-sorting-pictures");
@@ -874,7 +874,7 @@ frogr_config_init (FrogrConfig *self)
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->tags_autocompletion = TRUE;
-  priv->remove_file_extensions = TRUE;
+  priv->keep_file_extensions = TRUE;
   priv->mainview_sorting_criteria = SORT_AS_LOADED;
   priv->mainview_sorting_reversed = FALSE;
   priv->mainview_enable_tooltips = TRUE;
@@ -1159,21 +1159,21 @@ frogr_config_get_tags_autocompletion (FrogrConfig *self)
 }
 
 void
-frogr_config_set_remove_file_extensions (FrogrConfig *self, gboolean value)
+frogr_config_set_keep_file_extensions (FrogrConfig *self, gboolean value)
 {
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->remove_file_extensions = value;
+  priv->keep_file_extensions = value;
 }
 
 gboolean
-frogr_config_get_remove_file_extensions (FrogrConfig *self)
+frogr_config_get_keep_file_extensions (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->remove_file_extensions;
+  return priv->keep_file_extensions;
 }
 
 void

@@ -112,9 +112,9 @@ void frogr_config_set_tags_autocompletion (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_tags_autocompletion (FrogrConfig *self);
 
-void frogr_config_set_remove_file_extensions (FrogrConfig *self, gboolean value);
+void frogr_config_set_keep_file_extensions (FrogrConfig *self, gboolean value);
 
-gboolean frogr_config_get_remove_file_extensions (FrogrConfig *self);
+gboolean frogr_config_get_keep_file_extensions (FrogrConfig *self);
 
 void frogr_config_set_mainview_enable_tooltips (FrogrConfig *self, gboolean value);
 
