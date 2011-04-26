@@ -2,17 +2,17 @@
 # Copyright (C) 2009, 2010 THE frogr'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
 # Alejandro Pinheiro <apinheiro@igalia.com>, 2009.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 # Jorge González <jorgegonz@svn.gnome.org>, 2011.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-04-25 06:44+0000\n"
-"PO-Revision-Date: 2011-04-25 12:51+0200\n"
-"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"POT-Creation-Date: 2011-04-26 09:20+0000\n"
+"PO-Revision-Date: 2011-04-26 15:26+0200\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -275,19 +275,23 @@ msgstr ""
 "Vuelva a autorizarlo."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:911
+#: ../src/frogr-create-new-set-dialog.c:139 ../src/frogr-details-dialog.c:911
 msgid "Missing data required"
 msgstr "Falta información necesaria"
 
-#: ../src/frogr-create-new-set-dialog.c:300
+#: ../src/frogr-create-new-set-dialog.c:327
 msgid "Set's title:"
 msgstr "Título del álbum:"
 
-#: ../src/frogr-create-new-set-dialog.c:313
+#: ../src/frogr-create-new-set-dialog.c:340
 msgid "Set's description:"
 msgstr "Descripción del álbum:"
 
-#: ../src/frogr-create-new-set-dialog.c:352
+#: ../src/frogr-create-new-set-dialog.c:363
+msgid "Copy contents to pictures details"
+msgstr "Copiar contenido a los detalles de la imagen"
+
+#: ../src/frogr-create-new-set-dialog.c:392
 msgid "Create new Set"
 msgstr "Crear un álbum nuevo"
 
@@ -372,109 +376,108 @@ msgid "Edit Picture Details"
 msgstr "Editar detalles de la imagen"
 
 #. File menu
-#: ../src/frogr-main-view.c:277
+#: ../src/frogr-main-view.c:266
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../src/frogr-main-view.c:283
+#: ../src/frogr-main-view.c:272
 msgid "_Add Pictures"
 msgstr "_Añadir imágenes"
 
 #. Remove
-#: ../src/frogr-main-view.c:290 ../src/frogr-main-view.c:589
+#: ../src/frogr-main-view.c:279 ../src/frogr-main-view.c:586
 msgid "_Remove Pictures"
 msgstr "_Quitar imágenes"
 
 #. Accounts menu item and submenu
-#: ../src/frogr-main-view.c:300
+#: ../src/frogr-main-view.c:289
 msgid "Accou_nts"
 msgstr "_Cuentas"
 
 #. Authorize menu item
-#: ../src/frogr-main-view.c:306
+#: ../src/frogr-main-view.c:295
 msgid "Authorize _frogr"
 msgstr "Autorizar _frogr"
 
-#: ../src/frogr-main-view.c:313
+#: ../src/frogr-main-view.c:302
 msgid "_Preferences…"
 msgstr "Prefere_ncias…"
 
-#: ../src/frogr-main-view.c:332
+#: ../src/frogr-main-view.c:321
 msgid "_Quit"
 msgstr "_Salir"
 
 #. Actions menu
-#: ../src/frogr-main-view.c:341
+#: ../src/frogr-main-view.c:330
 msgid "A_ctions"
 msgstr "A_cciones"
 
 #. Edit details
-#: ../src/frogr-main-view.c:347 ../src/frogr-main-view.c:542
+#: ../src/frogr-main-view.c:336 ../src/frogr-main-view.c:539
 msgid "Edit _Details…"
 msgstr "Editar _detalles…"
 
 #. Add Tags
-#: ../src/frogr-main-view.c:354 ../src/frogr-main-view.c:550
+#: ../src/frogr-main-view.c:343 ../src/frogr-main-view.c:547
 msgid "Add _Tags…"
 msgstr "Añadir _etiquetas…"
 
 #. Add to group
-#: ../src/frogr-main-view.c:361 ../src/frogr-main-view.c:558
+#: ../src/frogr-main-view.c:350 ../src/frogr-main-view.c:555
 msgid "Add to _Group…"
 msgstr "Añadir al grupo…"
 
 #. Add to set
-#: ../src/frogr-main-view.c:368 ../src/frogr-main-view.c:566
+#: ../src/frogr-main-view.c:357 ../src/frogr-main-view.c:563
 msgid "Add to _Set"
 msgstr "_Añadir al álbum"
 
-#: ../src/frogr-main-view.c:375 ../src/frogr-main-view.c:572
+#: ../src/frogr-main-view.c:364 ../src/frogr-main-view.c:569
 msgid "_Create New Set…"
 msgstr "_Crear álbum nuevo…"
 
-#: ../src/frogr-main-view.c:382 ../src/frogr-main-view.c:579
+#: ../src/frogr-main-view.c:371 ../src/frogr-main-view.c:576
 msgid "Add to _Existing Set…"
 msgstr "Añadir a un álbum _existente…"
 
-#: ../src/frogr-main-view.c:391
+#: ../src/frogr-main-view.c:380
 msgid "_Upload All"
 msgstr "_Subir todo"
 
 #. View menu
-#: ../src/frogr-main-view.c:399
+#: ../src/frogr-main-view.c:388
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/frogr-main-view.c:405
+#: ../src/frogr-main-view.c:394
 msgid "_Sort Pictures"
 msgstr "_Ordenar imágenes"
 
-#: ../src/frogr-main-view.c:412
-#| msgid "to be uploaded"
+#: ../src/frogr-main-view.c:401
 msgid "As loaded"
 msgstr "Por carga"
 
-#: ../src/frogr-main-view.c:420
+#: ../src/frogr-main-view.c:409
 msgid "By _Title"
 msgstr "Por _título"
 
-#: ../src/frogr-main-view.c:428
-msgid "By _Date"
-msgstr "Por _fecha"
+#: ../src/frogr-main-view.c:417
+msgid "By _Date of Capture"
+msgstr "Por fecha de captura"
 
-#: ../src/frogr-main-view.c:438
+#: ../src/frogr-main-view.c:434
 msgid "Reversed order"
 msgstr "Orden inverso"
 
-#: ../src/frogr-main-view.c:449
+#: ../src/frogr-main-view.c:446
 msgid "Enable _Tooltips"
 msgstr "Ac_tivar consejos"
 
-#: ../src/frogr-main-view.c:460
+#: ../src/frogr-main-view.c:457
 msgid "_Help"
 msgstr "Ay_uda"
 
-#: ../src/frogr-main-view.c:467
+#: ../src/frogr-main-view.c:464
 msgid "_About frogr..."
 msgstr "Acerca _de frogr…"
 
@@ -486,35 +489,35 @@ msgstr "Capturadas"
 msgid "File size"
 msgstr "Tamaño del archivo"
 
-#: ../src/frogr-main-view.c:1125
+#: ../src/frogr-main-view.c:1129
 msgid "Select a Picture"
 msgstr "Seleccionar una Imagen"
 
-#: ../src/frogr-main-view.c:1151
+#: ../src/frogr-main-view.c:1155
 msgid "images"
 msgstr "imágenes"
 
-#: ../src/frogr-main-view.c:1172
+#: ../src/frogr-main-view.c:1176
 msgid "You need to select some pictures first"
 msgstr "Debe seleccionar alguna imagen primero"
 
-#: ../src/frogr-main-view.c:1481
+#: ../src/frogr-main-view.c:1467
 msgid "Not connected to flickr"
 msgstr "No está conectado a Flickr"
 
-#: ../src/frogr-main-view.c:1510
+#: ../src/frogr-main-view.c:1496
 msgid "remaining for the current month"
 msgstr "restantes para el mes actual"
 
-#: ../src/frogr-main-view.c:1530
+#: ../src/frogr-main-view.c:1516
 msgid "to be uploaded"
 msgstr "para subir"
 
-#: ../src/frogr-main-view.c:1537
+#: ../src/frogr-main-view.c:1523
 msgid "Connected as"
 msgstr "Conectado como"
 
-#: ../src/frogr-main-view.c:1538
+#: ../src/frogr-main-view.c:1524
 msgid " (PRO account)"
 msgstr " (cuenta PRO)"
 
@@ -604,6 +607,9 @@ msgstr "Subir"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "frogr"
 msgstr "frogr"
+
+#~ msgid "By _Date"
+#~ msgstr "Por _fecha"
 
 #~| msgid "Set Title"
 #~ msgid "Sort by _Title"
