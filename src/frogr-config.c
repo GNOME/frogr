@@ -83,9 +83,9 @@ static void _load_visibility_xml (FrogrConfig *self,
                                   xmlDocPtr     xml,
                                   xmlNodePtr    rootnode);
 
-static void _load_mainview_sorting_pictures_xml (FrogrConfig *self,
-                                                 xmlDocPtr     xml,
-                                                 xmlNodePtr    rootnode);
+static void _load_mainview_options_xml (FrogrConfig *self,
+                                        xmlDocPtr     xml,
+                                        xmlNodePtr    rootnode);
 
 static void _load_proxy_data_xml (FrogrConfig *self,
                                   xmlDocPtr     xml,
@@ -241,18 +241,8 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
               xmlFree (content);
             }
 
-          if (!xmlStrcmp (node->name, (const xmlChar*) "mainview-enable-tooltips"))
-            {
-              xmlChar *content = NULL;
-
-              content = xmlNodeGetContent (node);
-              priv->mainview_enable_tooltips = !xmlStrcmp (content, (const xmlChar*) "1");
-
-              xmlFree (content);
-            }
-
-          if (!xmlStrcmp (node->name, (const xmlChar*) "mainview-sorting-pictures"))
-            _load_mainview_sorting_pictures_xml (self, xml, node);
+          if (!xmlStrcmp (node->name, (const xmlChar*) "mainview-options"))
+            _load_mainview_options_xml (self, xml, node);
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "default-visibility"))
             _load_visibility_xml (self, xml, node);
@@ -331,9 +321,9 @@ _load_visibility_xml (FrogrConfig *self,
 }
 
 static void
-_load_mainview_sorting_pictures_xml (FrogrConfig *self,
-                                     xmlDocPtr     xml,
-                                     xmlNodePtr    rootnode)
+_load_mainview_options_xml (FrogrConfig *self,
+                            xmlDocPtr     xml,
+                            xmlNodePtr    rootnode)
 {
   FrogrConfigPrivate *priv = NULL;
   xmlNodePtr node;
@@ -354,7 +344,17 @@ _load_mainview_sorting_pictures_xml (FrogrConfig *self,
       if (node->type != XML_ELEMENT_NODE)
         continue;
 
-      if (!xmlStrcmp (node->name, (const xmlChar*) "criteria"))
+      if (!xmlStrcmp (node->name, (const xmlChar*) "enable-tooltips"))
+        {
+          xmlChar *content = NULL;
+
+          content = xmlNodeGetContent (node);
+          priv->mainview_enable_tooltips = !xmlStrcmp (content, (const xmlChar*) "1");
+
+          xmlFree (content);
+        }
+
+      if (!xmlStrcmp (node->name, (const xmlChar*) "sorting-criteria"))
         {
           content = xmlNodeGetContent (node);
           if (!xmlStrcmp (content, (const xmlChar*) "1"))
@@ -365,7 +365,7 @@ _load_mainview_sorting_pictures_xml (FrogrConfig *self,
             priv->mainview_sorting_criteria = SORT_AS_LOADED;
         }
 
-      if (!xmlStrcmp (node->name, (const xmlChar*) "reversed"))
+      if (!xmlStrcmp (node->name, (const xmlChar*) "sorting-reversed"))
         {
           content = xmlNodeGetContent (node);
           priv->mainview_sorting_reversed = !xmlStrcmp (content, (const xmlChar*) "1");
@@ -616,11 +616,10 @@ _save_settings (FrogrConfig *self)
   /* Other stuff */
   _xml_add_bool_child (root, "tags-autocompletion", priv->tags_autocompletion);
   _xml_add_bool_child (root, "keep-file-extensions", priv->keep_file_extensions);
-  _xml_add_bool_child (root, "mainview-enable-tooltips", priv->mainview_enable_tooltips);
-
-  node = xmlNewNode (NULL, (const xmlChar*) "mainview-sorting-pictures");
-  _xml_add_int_child (node, "criteria", priv->mainview_sorting_criteria);
-  _xml_add_bool_child (node, "reversed", priv->mainview_sorting_reversed);
+  node = xmlNewNode (NULL, (const xmlChar*) "mainview-options");
+  _xml_add_bool_child (node, "enable-tooltips", priv->mainview_enable_tooltips);
+  _xml_add_int_child (node, "sorting-criteria", priv->mainview_sorting_criteria);
+  _xml_add_bool_child (node, "sorting-reversed", priv->mainview_sorting_reversed);
   xmlAddChild (root, node);
 
 
