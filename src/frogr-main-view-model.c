@@ -38,8 +38,8 @@ typedef struct _FrogrMainViewModelPrivate FrogrMainViewModelPrivate;
 struct _FrogrMainViewModelPrivate
 {
   GSList *pictures_list;
+  GSList *pictures_list_as_loaded;
   guint n_pictures;
-  gboolean pictures_list_reversed;
 
   GSList *sets_list;
   guint n_sets;
@@ -120,6 +120,12 @@ _frogr_main_view_model_dispose (GObject* object)
       g_slist_foreach (priv->pictures_list, (GFunc)g_object_unref, NULL);
       g_slist_free (priv->pictures_list);
       priv->pictures_list = NULL;
+    }
+
+  if (priv->pictures_list)
+    {
+      g_slist_free (priv->pictures_list_as_loaded);
+      priv->pictures_list_as_loaded = NULL;
     }
 
   if (priv->sets_list)
@@ -204,8 +210,8 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
 
   /* Init private data */
   priv->pictures_list = NULL;
+  priv->pictures_list_as_loaded = NULL;
   priv->n_pictures = 0;
-  priv->pictures_list_reversed = FALSE;
 
   priv->sets_list = NULL;
   priv->n_sets = 0;
@@ -240,6 +246,7 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
 
   g_object_ref (picture);
   priv->pictures_list = g_slist_append (priv->pictures_list, picture);
+  priv->pictures_list_as_loaded = g_slist_append (priv->pictures_list_as_loaded, picture);
   priv->n_pictures++;
 
   g_signal_emit (self, signals[PICTURE_ADDED], 0, picture);
@@ -255,6 +262,7 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   priv->pictures_list = g_slist_remove (priv->pictures_list, picture);
+  priv->pictures_list_as_loaded = g_slist_remove (priv->pictures_list_as_loaded, picture);
   priv->n_pictures--;
   g_object_unref (picture);
 
@@ -291,48 +299,52 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   FrogrMainViewModelPrivate *priv = NULL;
-  GSList *old_list = NULL;
-  GSList *old_item = NULL;
+  GSList *list_as_loaded = NULL;
+  GSList *current_list = NULL;
+  GSList *current_item = NULL;
   gint *new_order = 0;
-  gint old_pos = 0;
+  gint current_pos = 0;
   gint new_pos = 0;
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   /* Temporarily save the current list, and alloc an array to
      represent the new order compared to the old positions */
-  old_list = g_slist_copy (priv->pictures_list);
-  new_order = g_new0 (gint, g_slist_length (old_list));
+  current_list = g_slist_copy (priv->pictures_list);
+  new_order = g_new0 (gint, g_slist_length (current_list));
 
-  /* If list was reversed, re-reverse it before sorting */
-  if (priv->pictures_list_reversed)
-    priv->pictures_list = g_slist_reverse (priv->pictures_list);
+  /* Use the original list (as loaded) as reference for sorting */
+  list_as_loaded = g_slist_copy (priv->pictures_list_as_loaded);
 
-  priv->pictures_list_reversed = reversed;
-
+  /* Only sort if we have specified a property name */
   if (property_name)
     {
-      /* Only sort if we have specified a property name */
-      priv->pictures_list = g_slist_sort_with_data (priv->pictures_list,
-                                                    (GCompareDataFunc) _compare_pictures_by_property,
-                                                    (gchar*) property_name);
+      list_as_loaded = g_slist_sort_with_data (list_as_loaded,
+                                               (GCompareDataFunc) _compare_pictures_by_property,
+                                               (gchar*) property_name);
     }
+
+  /* Update the list of pictures */
+  if (priv->pictures_list)
+    g_slist_free (priv->pictures_list);
+  priv->pictures_list = g_slist_copy (list_as_loaded);
 
   /* If we're reordering in reverse order, reverse the result list */
   if (reversed)
     priv->pictures_list = g_slist_reverse (priv->pictures_list);
 
   /* Build the new_order array */
-  old_pos = 0;
-  for (old_item = old_list; old_item; old_item = g_slist_next (old_item))
+  current_pos = 0;
+  for (current_item = current_list; current_item; current_item = g_slist_next (current_item))
     {
-      new_pos = g_slist_index (priv->pictures_list, old_item->data);
-      new_order[new_pos] = old_pos++;
+      new_pos = g_slist_index (priv->pictures_list, current_item->data);
+      new_order[new_pos] = current_pos++;
     }
 
   g_signal_emit (self, signals[PICTURES_REORDERED], 0, new_order);
 
-  g_slist_free (old_list);
+  g_slist_free (list_as_loaded);
+  g_slist_free (current_list);
   g_free (new_order);
 }
 
