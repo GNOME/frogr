@@ -61,7 +61,7 @@ struct _FrogrConfigPrivate
   gboolean tags_autocompletion;
   gboolean remove_file_extensions;
   SortingCriteria mainview_sorting_criteria;
-  SortingDirection mainview_sorting_direction;
+  gboolean mainview_sorting_reversed;
   gboolean mainview_enable_tooltips;
 
   gboolean use_proxy;
@@ -365,13 +365,10 @@ _load_mainview_sorting_pictures_xml (FrogrConfig *self,
             priv->mainview_sorting_criteria = SORT_AS_LOADED;
         }
 
-      if (!xmlStrcmp (node->name, (const xmlChar*) "direction"))
+      if (!xmlStrcmp (node->name, (const xmlChar*) "reversed"))
         {
           content = xmlNodeGetContent (node);
-          if (!xmlStrcmp (content, (const xmlChar*) "1"))
-            priv->mainview_sorting_direction = SORT_DESCENDING;
-          else
-            priv->mainview_sorting_direction = SORT_ASCENDING;
+          priv->mainview_sorting_reversed = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (content)
@@ -623,7 +620,7 @@ _save_settings (FrogrConfig *self)
 
   node = xmlNewNode (NULL, (const xmlChar*) "mainview-sorting-pictures");
   _xml_add_int_child (node, "criteria", priv->mainview_sorting_criteria);
-  _xml_add_int_child (node, "direction", priv->mainview_sorting_direction);
+  _xml_add_bool_child (node, "reversed", priv->mainview_sorting_reversed);
   xmlAddChild (root, node);
 
 
@@ -879,7 +876,7 @@ frogr_config_init (FrogrConfig *self)
   priv->tags_autocompletion = TRUE;
   priv->remove_file_extensions = TRUE;
   priv->mainview_sorting_criteria = SORT_AS_LOADED;
-  priv->mainview_sorting_direction = SORT_ASCENDING;
+  priv->mainview_sorting_reversed = FALSE;
   priv->mainview_enable_tooltips = TRUE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
@@ -1217,22 +1214,21 @@ frogr_config_get_mainview_sorting_criteria (FrogrConfig *self)
 }
 
 void
-frogr_config_set_mainview_sorting_direction (FrogrConfig *self,
-                                            SortingDirection direction)
+frogr_config_set_mainview_sorting_reversed (FrogrConfig *self, gboolean reversed)
 {
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->mainview_sorting_direction = direction;
+  priv->mainview_sorting_reversed = reversed;
 }
 
-SortingDirection
-frogr_config_get_mainview_sorting_direction (FrogrConfig *self)
+gboolean
+frogr_config_get_mainview_sorting_reversed (FrogrConfig *self)
 {
   g_return_val_if_fail (FROGR_IS_CONFIG (self), SORT_AS_LOADED);
 
   FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->mainview_sorting_direction;
+  return priv->mainview_sorting_reversed;
 }
 
 void

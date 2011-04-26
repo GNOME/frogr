@@ -71,7 +71,7 @@ typedef struct _FrogrMainViewPrivate {
 
   FrogrConfig *config;
   SortingCriteria sorting_criteria;
-  SortingDirection sorting_direction;
+  gboolean sorting_reversed;
   gboolean tooltips_enabled;
 
   GtkWindow *window;
@@ -188,7 +188,7 @@ static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
 static void _load_pictures (FrogrMainView *self, GSList *fileuris);
 static void _upload_pictures (FrogrMainView *self);
-static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, SortingDirection direction);
+static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed);
 
 static void _progress_dialog_response (GtkDialog *dialog,
                                        gint response_id,
@@ -438,7 +438,7 @@ _populate_menu_bar (FrogrMainView *self)
                     self);
   priv->sort_reversed_menu_item = menu_item;
 
-  if (priv->sorting_direction == SORT_DESCENDING)
+  if (priv->sorting_reversed)
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), TRUE);
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
@@ -863,9 +863,8 @@ _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self)
     }
   else if (GTK_WIDGET (item) == priv->sort_reversed_menu_item)
     {
-      SortingDirection direction = checked ? SORT_DESCENDING : SORT_ASCENDING;
-      _reorder_pictures (mainview, priv->sorting_criteria, direction);
-      frogr_config_set_mainview_sorting_direction (priv->config, direction);
+      _reorder_pictures (mainview, priv->sorting_criteria, checked);
+      frogr_config_set_mainview_sorting_reversed (priv->config, checked);
     }
   else if (checked)
     {
@@ -878,7 +877,7 @@ _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self)
       else if (GTK_WIDGET (item) == priv->sort_by_date_menu_item)
         criteria = SORT_BY_DATE;
 
-      _reorder_pictures (mainview, criteria, priv->sorting_direction);
+      _reorder_pictures (mainview, criteria, priv->sorting_reversed);
       frogr_config_set_mainview_sorting_criteria (priv->config, criteria);
     }
 
@@ -1285,14 +1284,13 @@ _upload_pictures (FrogrMainView *self)
 }
 
 static void
-_reorder_pictures (FrogrMainView *self, SortingCriteria criteria, SortingDirection direction)
+_reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   gchar *property_name = NULL;
-  gboolean ascending = FALSE;
 
   priv->sorting_criteria = criteria;
-  priv->sorting_direction = direction;
+  priv->sorting_reversed = reversed;
 
   if (!_n_pictures (self))
     return;
@@ -1317,23 +1315,9 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, SortingDirecti
       g_assert_not_reached ();
     }
 
-  switch (direction)
-    {
-    case SORT_ASCENDING:
-      ascending = TRUE;
-      break;
-
-    case SORT_DESCENDING:
-      ascending = FALSE;
-      break;
-
-    default:
-      g_assert_not_reached ();
-    }
-
   if (property_name)
     {
-      frogr_main_view_model_reorder_pictures (priv->model, property_name, !ascending);
+      frogr_main_view_model_reorder_pictures (priv->model, property_name, reversed);
       g_free (property_name);
     }
 }
@@ -1791,9 +1775,9 @@ frogr_main_view_init (FrogrMainView *self)
   upload_button = GTK_WIDGET (gtk_builder_get_object (builder, "upload_button"));
   priv->upload_button = upload_button;
 
-  /* Initialize sorting criteria and direction */
+  /* Initialize sorting criteria and reverse */
   priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
-  priv->sorting_direction = frogr_config_get_mainview_sorting_direction (priv->config);
+  priv->sorting_reversed = frogr_config_get_mainview_sorting_reversed (priv->config);
 
   /* Read value for 'tooltips enabled' */
   priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);

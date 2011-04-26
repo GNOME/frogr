@@ -63,11 +63,6 @@ typedef enum {
   SORT_BY_DATE
 } SortingCriteria;
 
-typedef enum {
-  SORT_ASCENDING,
-  SORT_DESCENDING,
-} SortingDirection;
-
 FrogrConfig* frogr_config_get_instance (void);
 
 gboolean frogr_config_save_all (FrogrConfig *self);
@@ -130,11 +125,9 @@ void frogr_config_set_mainview_sorting_criteria (FrogrConfig *self,
 
 SortingCriteria frogr_config_get_mainview_sorting_criteria (FrogrConfig *self);
 
+void frogr_config_set_mainview_sorting_reversed (FrogrConfig *self, gboolean reversed);
 
-void frogr_config_set_mainview_sorting_direction (FrogrConfig *self,
-                                                  SortingDirection direction);
-
-SortingDirection frogr_config_get_mainview_sorting_direction (FrogrConfig *self);
+gboolean frogr_config_get_mainview_sorting_reversed (FrogrConfig *self);
 
 void frogr_config_set_use_proxy (FrogrConfig *self, gboolean value);
 
