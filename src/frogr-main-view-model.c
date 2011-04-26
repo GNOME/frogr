@@ -309,9 +309,14 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
     priv->pictures_list = g_slist_reverse (priv->pictures_list);
 
   priv->pictures_list_reversed = reversed;
-  priv->pictures_list = g_slist_sort_with_data (priv->pictures_list,
-                                                (GCompareDataFunc) _compare_pictures_by_property,
-                                                (gchar*) property_name);
+
+  if (property_name)
+    {
+      /* Only sort if we have specified a property name */
+      priv->pictures_list = g_slist_sort_with_data (priv->pictures_list,
+                                                    (GCompareDataFunc) _compare_pictures_by_property,
+                                                    (gchar*) property_name);
+    }
 
   /* If we're reordering in reverse order, reverse the result list */
   if (reversed)

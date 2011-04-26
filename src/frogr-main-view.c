@@ -1315,11 +1315,8 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
       g_assert_not_reached ();
     }
 
-  if (property_name)
-    {
-      frogr_main_view_model_reorder_pictures (priv->model, property_name, reversed);
-      g_free (property_name);
-    }
+  frogr_main_view_model_reorder_pictures (priv->model, property_name, reversed);
+  g_free (property_name);
 }
 
 static void
