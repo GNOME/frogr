@@ -137,6 +137,17 @@ static void _populate_accounts_submenu (FrogrMainView *self);
 
 static GtkWidget *_pictures_ctxt_menu_create (FrogrMainView *self);
 
+static void _add_menu_item_generic (FrogrMainView *self, GtkMenuShell *menu,
+                                    const gchar *mnemonic, GtkWidget **out_ref,
+                                    gboolean isToggleable, GSList **group);
+static void _add_menu_item (FrogrMainView *self, GtkMenuShell *menu,
+                            const gchar *mnemonic, GtkWidget **out_ref);
+static void _add_check_menu_item (FrogrMainView *self, GtkMenuShell *menu,
+                                  const gchar *mnemonic, GtkWidget **out_ref);
+static void _add_radio_menu_item (FrogrMainView *self, GtkMenuShell *menu,
+                                  GSList **group, const gchar *mnemonic,
+                                  GtkWidget **out_ref);
+
 static void _initialize_drag_n_drop (FrogrMainView *self);
 static void _on_icon_view_drag_data_received (GtkWidget *widget,
                                               GdkDragContext *context,
@@ -269,19 +280,8 @@ _populate_menu_bar (FrogrMainView *self)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Add Pictures"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_menu_item = menu_item;
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove Pictures"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->remove_menu_item = menu_item;
+  _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Add Pictures"), &(priv->add_menu_item));
+  _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Remove Pictures"), &(priv->remove_menu_item));
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
@@ -291,14 +291,9 @@ _populate_menu_bar (FrogrMainView *self)
   priv->accounts_menu_item = menu_item;
   priv->accounts_menu = NULL;
 
-  /* Authorize menu item */
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Authorize _frogr"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->auth_menu_item = menu_item;
+  _add_menu_item (self, GTK_MENU_SHELL (menu), _("Authorize _frogr"), &(priv->auth_menu_item));
 
+  /* Preferences menu item (platform dependent) */
   menu_item = gtk_menu_item_new_with_mnemonic (_("_Preferences…"));
   priv->settings_menu_item = menu_item;
 
@@ -317,13 +312,7 @@ _populate_menu_bar (FrogrMainView *self)
 
 #ifndef MAC_INTEGRATION
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Quit"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->quit_menu_item = menu_item;
+  _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Quit"), &(priv->quit_menu_item));
 #endif
 
   /* Actions menu */
@@ -333,26 +322,9 @@ _populate_menu_bar (FrogrMainView *self)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Edit _Details…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->edit_details_menu_item = menu_item;
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add _Tags…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_tags_menu_item = menu_item;
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Group…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_to_group_menu_item = menu_item;
+  _add_menu_item (self, GTK_MENU_SHELL (menu), _("Edit _Details…"), &(priv->edit_details_menu_item));
+  _add_menu_item (self, GTK_MENU_SHELL (menu), _("Add _Tags…"), &(priv->add_tags_menu_item));
+  _add_menu_item (self, GTK_MENU_SHELL (menu), _("Add to _Group…"), &(priv->add_to_group_menu_item));
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Set"));
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
@@ -361,28 +333,14 @@ _populate_menu_bar (FrogrMainView *self)
   submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Create New Set…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_to_new_set_menu_item = menu_item;
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Set…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_to_existing_set_menu_item = menu_item;
+  _add_menu_item (self, GTK_MENU_SHELL (submenu), _("_Create New Set…"),
+                  &(priv->add_to_new_set_menu_item));
+  _add_menu_item (self, GTK_MENU_SHELL (submenu), _("Add to _Existing Set…"),
+                  &(priv->add_to_existing_set_menu_item));
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Upload All"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->upload_menu_item = menu_item;
+  _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Upload All"), &(priv->upload_menu_item));
 
   /* View menu */
   menubar_item = gtk_menu_item_new_with_mnemonic (_("_View"));
@@ -398,29 +356,15 @@ _populate_menu_bar (FrogrMainView *self)
   submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
 
-  menu_item = gtk_radio_menu_item_new_with_mnemonic (sorting_group, _("As loaded"));
-  sorting_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "toggled",
-                    G_CALLBACK (_on_check_menu_item_toggled),
-                    self);
-  priv->sort_as_loaded_menu_item = menu_item;
+  sorting_group = NULL;
+  _add_radio_menu_item (self, GTK_MENU_SHELL (submenu), &sorting_group,
+                        _("As _Loaded"), &(priv->sort_as_loaded_menu_item));
 
-  menu_item = gtk_radio_menu_item_new_with_mnemonic (sorting_group, _("By _Title"));
-  sorting_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "toggled",
-                    G_CALLBACK (_on_check_menu_item_toggled),
-                    self);
-  priv->sort_by_title_menu_item = menu_item;
+  _add_radio_menu_item (self, GTK_MENU_SHELL (submenu), &sorting_group,
+                        _("By _Title"), &(priv->sort_by_title_menu_item));
 
-  menu_item = gtk_radio_menu_item_new_with_mnemonic (sorting_group, _("By _Date of Capture"));
-  sorting_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "toggled",
-                    G_CALLBACK (_on_check_menu_item_toggled),
-                    self);
-  priv->sort_by_date_menu_item = menu_item;
+  _add_radio_menu_item (self, GTK_MENU_SHELL (submenu), &sorting_group,
+                        _("By _Date of Capture"), &(priv->sort_by_date_menu_item));
 
   if (priv->sorting_criteria == SORT_BY_TITLE)
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_by_title_menu_item), TRUE);
@@ -431,25 +375,19 @@ _populate_menu_bar (FrogrMainView *self)
 
   gtk_menu_shell_append (GTK_MENU_SHELL (submenu), gtk_separator_menu_item_new ());
 
-  menu_item = gtk_check_menu_item_new_with_mnemonic (_("Reversed order"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "toggled",
-                    G_CALLBACK (_on_check_menu_item_toggled),
-                    self);
-  priv->sort_reversed_menu_item = menu_item;
+  _add_check_menu_item (self, GTK_MENU_SHELL (submenu), _("_Reversed Order"),
+                        &(priv->sort_reversed_menu_item));
 
-  if (priv->sorting_reversed)
-    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), TRUE);
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_reversed_menu_item),
+                                  priv->sorting_reversed);
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
-  menu_item = gtk_check_menu_item_new_with_mnemonic (_("Enable _Tooltips"));
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), priv->tooltips_enabled);
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  g_signal_connect (G_OBJECT (menu_item), "toggled",
-                    G_CALLBACK (_on_check_menu_item_toggled),
-                    self);
-  priv->enable_tooltips_menu_item = menu_item;
+  _add_check_menu_item (self, GTK_MENU_SHELL (menu), _("Enable _Tooltips"),
+                        &(priv->enable_tooltips_menu_item));
+
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->enable_tooltips_menu_item),
+                                  priv->tooltips_enabled);
 
   /* Help menu */
 
@@ -594,6 +532,66 @@ _pictures_ctxt_menu_create (FrogrMainView *self)
   gtk_widget_show_all (ctxt_menu);
 
   return ctxt_menu;
+}
+
+static void
+_add_menu_item_generic (FrogrMainView *self, GtkMenuShell *menu,
+                        const gchar *mnemonic, GtkWidget **out_ref,
+                        gboolean isToggleable, GSList **group)
+{
+  g_return_if_fail (FROGR_IS_MAIN_VIEW (self));
+  g_return_if_fail (GTK_IS_MENU_SHELL (menu));
+
+  GtkWidget *menu_item = NULL;
+
+  if (isToggleable)
+    {
+      if (group)
+        {
+          /* If it has a group associated, it's a radio button */
+          menu_item = gtk_radio_menu_item_new_with_mnemonic (*group, mnemonic);
+          *group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
+        }
+      else
+        menu_item = gtk_check_menu_item_new_with_mnemonic (mnemonic);
+
+      g_signal_connect (G_OBJECT (menu_item), "toggled",
+                        G_CALLBACK (_on_check_menu_item_toggled),
+                        self);
+    }
+  else
+    {
+      /* Normal menu item */
+      menu_item = gtk_menu_item_new_with_mnemonic (mnemonic);
+      g_signal_connect (G_OBJECT (menu_item), "activate",
+                        G_CALLBACK (_on_menu_item_activate),
+                        self);
+    }
+
+  gtk_menu_shell_append (menu, menu_item);
+  *out_ref = menu_item;
+}
+
+static void
+_add_menu_item (FrogrMainView *self, GtkMenuShell *menu,
+                const gchar *mnemonic, GtkWidget **out_ref)
+{
+  _add_menu_item_generic (self, menu, mnemonic, out_ref, FALSE, NULL);
+}
+
+static void
+_add_check_menu_item (FrogrMainView *self, GtkMenuShell *menu,
+                      const gchar *mnemonic, GtkWidget **out_ref)
+{
+  _add_menu_item_generic (self, menu, mnemonic, out_ref, TRUE, NULL);
+}
+
+static void
+_add_radio_menu_item (FrogrMainView *self, GtkMenuShell *menu,
+                      GSList **group, const gchar *mnemonic,
+                      GtkWidget **out_ref)
+{
+  _add_menu_item_generic (self, menu, mnemonic, out_ref, TRUE, group);
 }
 
 static void
