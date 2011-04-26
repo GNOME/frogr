@@ -360,7 +360,7 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   priv->description_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
   priv->description_tv = widget;
 
-  widget = gtk_check_button_new_with_mnemonic (_("Copy contents to pictures details"));
+  widget = gtk_check_button_new_with_mnemonic (_("Fill pictures details with title and description"));
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_table_attach (GTK_TABLE (table), align, 1, 2, 2, 3,
