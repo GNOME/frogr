@@ -45,10 +45,12 @@ G_DEFINE_TYPE (FrogrCreateNewSetDialog, frogr_create_new_set_dialog, GTK_TYPE_DI
 typedef struct _FrogrCreateNewSetDialogPrivate {
   GtkWidget *title_entry;
   GtkWidget *description_tv;
+  GtkWidget *copy_to_pictures_cb;
   GtkTextBuffer *description_buffer;
 
   GSList *pictures;
   GSList *sets;
+  gboolean copy_to_pictures;
 } FrogrCreateNewSetDialogPrivate;
 
 /* Properties */
@@ -61,6 +63,8 @@ enum  {
 
 /* Prototypes */
 
+static void _on_button_toggled (GtkToggleButton *button, gpointer data);
+
 static gboolean _validate_dialog_data (FrogrCreateNewSetDialog *self);
 
 static gboolean _save_data (FrogrCreateNewSetDialog *self);
@@ -72,6 +76,21 @@ static gboolean _update_model (FrogrCreateNewSetDialog *self,
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 /* Private API */
+
+static void
+_on_button_toggled (GtkToggleButton *button, gpointer data)
+{
+  FrogrCreateNewSetDialog *self = NULL;
+  FrogrCreateNewSetDialogPrivate *priv = NULL;
+  gboolean active = FALSE;
+
+  self = FROGR_CREATE_NEW_SET_DIALOG (data);
+  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
+  active = gtk_toggle_button_get_active (button);
+
+  if (GTK_WIDGET (button) == priv->copy_to_pictures_cb)
+    priv->copy_to_pictures = active;
+}
 
 static gboolean
 _validate_dialog_data (FrogrCreateNewSetDialog *self)
@@ -155,6 +174,14 @@ _update_model (FrogrCreateNewSetDialog *self,
     {
       picture = FROGR_PICTURE (item->data);
       frogr_picture_add_set (picture, new_set);
+
+      /* Copy album's details over pictures if requested */
+      if (priv->copy_to_pictures)
+        {
+          frogr_picture_set_title (picture, title);
+          frogr_picture_set_description (picture, description);
+        }
+
       result = TRUE;
     }
 
@@ -332,6 +359,19 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
 
   priv->description_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
   priv->description_tv = widget;
+
+  widget = gtk_check_button_new_with_mnemonic (_("Copy contents to pictures details"));
+  align = gtk_alignment_new (1, 0, 1, 0);
+  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 2, 3,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  priv->copy_to_pictures_cb = widget;
+
+  g_signal_connect (G_OBJECT (priv->copy_to_pictures_cb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  priv->copy_to_pictures = FALSE;
 
   /* Set minimum size */
   hints.min_width = MINIMUM_WINDOW_WIDTH;
