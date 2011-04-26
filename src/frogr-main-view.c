@@ -1050,6 +1050,10 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
                       -1);
   g_object_ref (picture);
 
+  /* Reorder if needed */
+  if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
+    _reorder_pictures (self, priv->sorting_criteria, priv->sorting_reversed);
+
   /* Update upload size in state description */
   _update_state_description (self);
 }
