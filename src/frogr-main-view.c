@@ -137,6 +137,8 @@ static void _populate_accounts_submenu (FrogrMainView *self);
 
 static GtkWidget *_pictures_ctxt_menu_create (FrogrMainView *self);
 
+static GtkWidget *_add_submenu (GtkMenuShell *menubar, const gchar *mnemonic,
+                                GtkWidget **out_ref);
 static void _add_menu_item_generic (FrogrMainView *self, GtkMenuShell *menu,
                                     const gchar *mnemonic, GtkWidget **out_ref,
                                     gboolean isToggleable, GSList **group);
@@ -263,7 +265,6 @@ static void
 _populate_menu_bar (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GtkWidget *menubar_item;
   GtkWidget *menu;
   GtkWidget *submenu;
   GtkWidget *menu_item;
@@ -274,11 +275,7 @@ _populate_menu_bar (FrogrMainView *self)
 #endif
 
   /* File menu */
-  menubar_item = gtk_menu_item_new_with_mnemonic (_("_File"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
-
-  menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
+  menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("_File"), NULL);
 
   _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Add Pictures"), &(priv->add_menu_item));
   _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Remove Pictures"), &(priv->remove_menu_item));
@@ -316,22 +313,14 @@ _populate_menu_bar (FrogrMainView *self)
 #endif
 
   /* Actions menu */
-  menubar_item = gtk_menu_item_new_with_mnemonic (_("A_ctions"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
-
-  menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
+  menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("A_ctions"), NULL);
 
   _add_menu_item (self, GTK_MENU_SHELL (menu), _("Edit _Details…"), &(priv->edit_details_menu_item));
   _add_menu_item (self, GTK_MENU_SHELL (menu), _("Add _Tags…"), &(priv->add_tags_menu_item));
   _add_menu_item (self, GTK_MENU_SHELL (menu), _("Add to _Group…"), &(priv->add_to_group_menu_item));
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Add to _Set"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  priv->add_to_set_menu_item = menu_item;
-
-  submenu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
+  submenu = _add_submenu (GTK_MENU_SHELL (menu), _("Add to _Set"),
+                          &(priv->add_to_set_menu_item));
 
   _add_menu_item (self, GTK_MENU_SHELL (submenu), _("_Create New Set…"),
                   &(priv->add_to_new_set_menu_item));
@@ -343,18 +332,10 @@ _populate_menu_bar (FrogrMainView *self)
   _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Upload All"), &(priv->upload_menu_item));
 
   /* View menu */
-  menubar_item = gtk_menu_item_new_with_mnemonic (_("_View"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
+  menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("_View"), NULL);
 
-  menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Sort Pictures"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  priv->sort_by_menu_item = menu_item;
-
-  submenu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
+  submenu = _add_submenu (GTK_MENU_SHELL (menu), _("_Sort Pictures"),
+                          &(priv->sort_by_menu_item));
 
   sorting_group = NULL;
   _add_radio_menu_item (self, GTK_MENU_SHELL (submenu), &sorting_group,
@@ -392,11 +373,7 @@ _populate_menu_bar (FrogrMainView *self)
   /* Help menu */
 
 #ifndef MAC_INTEGRATION
-  menubar_item = gtk_menu_item_new_with_mnemonic (_("_Help"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu_bar), menubar_item);
-
-  menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menubar_item), menu);
+  menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("_Help"), NULL);
 #endif
 
   menu_item = gtk_menu_item_new_with_mnemonic (_("_About frogr..."));
@@ -532,6 +509,25 @@ _pictures_ctxt_menu_create (FrogrMainView *self)
   gtk_widget_show_all (ctxt_menu);
 
   return ctxt_menu;
+}
+
+static GtkWidget *
+_add_submenu (GtkMenuShell *menu, const gchar *mnemonic,
+              GtkWidget **out_ref)
+{
+  GtkWidget *menu_item = NULL;
+  GtkWidget *submenu = NULL;
+
+  menu_item = gtk_menu_item_new_with_mnemonic (mnemonic);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+
+  submenu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
+
+  if (out_ref)
+    *out_ref = menu_item;
+
+  return submenu;
 }
 
 static void
