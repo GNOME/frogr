@@ -921,8 +921,10 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       FrogrPicture *picture;
       GtkTreeIter iter;
       gchar *tooltip_str = NULL;
+      gchar *filesize = NULL;
       gchar *filesize_str = NULL;
-      gchar *datetime_str = NULL;
+      gchar *filesize_markup = NULL;
+      gchar *datetime_markup = NULL;
       const gchar *datetime = NULL;
 
       /* Get needed information */
@@ -937,15 +939,25 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
         return FALSE;
 
       /* Build the tooltip text with basic info: title, size */
-      filesize_str = _get_datasize_string (frogr_picture_get_filesize (picture));
+      filesize = _get_datasize_string (frogr_picture_get_filesize (picture));
       datetime = frogr_picture_get_datetime (picture);
       if (datetime)
-        datetime_str = g_strdup_printf ("\n<i>%s: %s</i>", _("Taken"), datetime);
+        {
+          gchar *datetime_str = NULL;
 
-      tooltip_str = g_strdup_printf ("<b>%s</b>\n<i>%s: %s</i>%s",
+          /* String showind the date and time a picture was taken */
+          datetime_str = g_strdup_printf (_("Taken: %s"), datetime);
+          datetime_markup = g_strdup_printf ("\n<i>%s</i>", datetime_str);
+          g_free (datetime_str);
+        }
+
+      filesize_str = g_strdup_printf (_("File size: %s"), filesize);
+      filesize_markup = g_strdup_printf ("<i>%s</i>", filesize_str);
+
+      tooltip_str = g_strdup_printf ("<b>%s</b>\n%s%s",
                                      frogr_picture_get_title (picture),
-                                     _("File size"), filesize_str,
-                                     datetime_str ? datetime_str : "");
+                                     filesize_markup,
+                                     datetime_markup ? datetime_markup : "");
 
       gtk_tooltip_set_markup (tooltip, tooltip_str);
 
@@ -953,7 +965,8 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       gtk_tree_path_free (path);
       g_free (tooltip_str);
       g_free (filesize_str);
-      g_free (datetime_str);
+      g_free (filesize_markup);
+      g_free (datetime_markup);
       return TRUE;
     }
 
@@ -1450,6 +1463,7 @@ _craft_state_description (FrogrMainView *mainview)
   GSList *pictures = NULL;
   const gchar *login = NULL;
   gchar *description = NULL;
+  gchar *login_str = NULL;
   gchar *bandwidth_str = NULL;
   gchar *upload_size_str = NULL;
   gboolean is_pro = FALSE;
@@ -1466,6 +1480,10 @@ _craft_state_description (FrogrMainView *mainview)
     login = frogr_account_get_username (account);
 
   is_pro = frogr_account_is_pro (account);
+
+  /* Login string, showing the user is PRO (second '%s') if so. */
+  login_str = g_strdup_printf (_("Connected as %s%s"), login,
+                               (is_pro ? _(" (PRO account)") : ""));
 
   /* Pro users do not have any limit of quota, so it makes no sense to
      permanently show that they have 2.0 GB / 2.0 GB remaining */
@@ -1484,10 +1502,14 @@ _craft_state_description (FrogrMainView *mainview)
 
       if (remaining_bw_str && max_bw_str)
         {
-          bandwidth_str = g_strdup_printf (" - %s / %s %s",
+          /* Will show in the status bar the amount of data (in KB, MB
+             or GB) the user is currently allowed to upload to flicker
+             till the end of the month, in a CURRENT / MAX fashion.
+             The '-' at the beginning is just a separator, since more
+             blocks of text will be shown in the status bar too. */
+          bandwidth_str = g_strdup_printf (_(" - %s / %s remaining for the current month"),
                                            remaining_bw_str,
-                                           max_bw_str,
-                                           _("remaining for the current month"));
+                                           max_bw_str);
         }
 
       g_free (remaining_bw_str);
@@ -1506,18 +1528,22 @@ _craft_state_description (FrogrMainView *mainview)
         total_size += frogr_picture_get_filesize (FROGR_PICTURE (item->data));
 
       total_size_str = _get_datasize_string (total_size);
-      upload_size_str = g_strdup_printf (" - %s %s",
-                                         total_size_str, _("to be uploaded"));
+
+      /* Will show in the status bar the amount of data (in KB, MB or
+         GB) that would be uploaded as the sum of the sizes for every
+         picture currently loadad in the application */
+      upload_size_str = g_strdup_printf (_(" - %s to be uploaded"),
+                                         total_size_str);
 
       g_free (total_size_str);
     }
 
   /* Build the final string */
-  description = g_strdup_printf ("%s %s%s%s%s",
-                                 _("Connected as"), login,
-                                 (is_pro ? _(" (PRO account)") : ""),
+  description = g_strdup_printf ("%s%s%s",
+                                 login_str,
                                  (bandwidth_str ? bandwidth_str : ""),
                                  (upload_size_str ? upload_size_str : ""));
+  g_free (login_str);
   g_free (bandwidth_str);
   g_free (upload_size_str);
 
