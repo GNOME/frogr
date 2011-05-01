@@ -87,6 +87,10 @@ static FrogrSettingsDialog *_instance = NULL;
 
 /* Prototypes */
 
+static void _add_togleabble_item (FrogrSettingsDialog *self, GtkBox *box,
+                                  GtkRadioButton *radio_member, gboolean force_radio,
+                                  const gchar *mnemonic, GtkWidget **out_ref);
+
 static void _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook);
 
 static void _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook);
@@ -111,6 +115,27 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 /* Private API */
 
 static void
+_add_togleabble_item (FrogrSettingsDialog *self, GtkBox *box,
+                      GtkRadioButton *radio_member, gboolean force_radio,
+                      const gchar *mnemonic, GtkWidget **out_ref)
+{
+  GtkWidget *item = NULL;
+
+  /* If it has a group associated, it's a radio button */
+  if (radio_member || force_radio)
+    item = gtk_radio_button_new_with_mnemonic_from_widget (radio_member, mnemonic);
+  else
+    item = gtk_check_button_new_with_mnemonic (mnemonic);
+
+  g_signal_connect (G_OBJECT (item), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  gtk_box_pack_start (box, item, FALSE, FALSE, 0);
+  *out_ref = item;
+}
+
+static void
 _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 {
   FrogrSettingsDialogPrivate *priv = NULL;
@@ -120,8 +145,6 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *padding_hbox = NULL;
   GtkWidget *align = NULL;
   GtkWidget *label = NULL;
-  GtkWidget *rbutton = NULL;
-  GtkWidget *cbutton = NULL;
   gchar *markup = NULL;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
@@ -143,51 +166,28 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box1 = gtk_vbox_new (FALSE, 6);
   box2 = gtk_hbox_new (FALSE, 12);
 
-  rbutton = gtk_radio_button_new_with_mnemonic (NULL, _("_Private"));
-  gtk_box_pack_start (GTK_BOX (box2), rbutton, FALSE, FALSE, 0);
-  priv->private_rb = rbutton;
-
-  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->private_rb), _("P_ublic"));
-  gtk_box_pack_start (GTK_BOX (box2), rbutton, FALSE, FALSE, 0);
-  priv->public_rb = rbutton;
+  _add_togleabble_item (self, GTK_BOX (box2), NULL, TRUE, _("_Private"), &priv->private_rb);
+  _add_togleabble_item (self, GTK_BOX (box2), GTK_RADIO_BUTTON (priv->private_rb),
+                        FALSE, _("P_ublic"), &priv->public_rb);
 
   gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 0);
 
   box2 = gtk_vbox_new (FALSE, 6);
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("Visible to _Family"));
-  gtk_box_pack_start (GTK_BOX (box2), cbutton, FALSE, FALSE, 0);
-  priv->family_cb = cbutton;
-
-  cbutton = gtk_check_button_new_with_mnemonic (_("Visible to F_riends"));
-  gtk_box_pack_start (GTK_BOX (box2), cbutton, FALSE, FALSE, 0);
-  priv->friend_cb = cbutton;
+  _add_togleabble_item (self, GTK_BOX (box2), NULL, FALSE,
+                        _("Visible to _Family"), &priv->family_cb);
+  _add_togleabble_item (self, GTK_BOX (box2), NULL, FALSE,
+                        _("Visible to F_riends"), &priv->friend_cb);
 
   padding_hbox = gtk_hbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (padding_hbox), box2, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (box1), padding_hbox, FALSE, FALSE, 0);
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("_Show up in Global Search Results"));
-  gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
-  priv->show_in_search_cb = cbutton;
+  _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
+                        _("_Show up in Global Search Results"),
+                        &priv->show_in_search_cb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
-
-  g_signal_connect (G_OBJECT (priv->public_rb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->family_cb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->friend_cb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->show_in_search_cb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
 
   /* Default Content type */
 
@@ -204,31 +204,14 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   box1 = gtk_hbox_new (FALSE, 12);
 
-  rbutton = gtk_radio_button_new_with_mnemonic (NULL, _("P_hoto"));
-  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
-  priv->photo_content_rb = rbutton;
-
-  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb), _("Scree_nshot"));
-  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
-  priv->sshot_content_rb = rbutton;
-
-  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb), _("Oth_er"));
-  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
-  priv->other_content_rb = rbutton;
+  _add_togleabble_item (self, GTK_BOX (box1), NULL, TRUE,
+                        _("P_hoto"), &priv->photo_content_rb);
+  _add_togleabble_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->photo_content_rb),
+                        FALSE, _("Scree_nshot"), &priv->sshot_content_rb);
+  _add_togleabble_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->photo_content_rb),
+                        FALSE, _("Oth_er"), &priv->other_content_rb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
-
-  g_signal_connect (G_OBJECT (priv->photo_content_rb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->sshot_content_rb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->other_content_rb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
 
   /* Default Safety level */
 
@@ -245,31 +228,14 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   box1 = gtk_hbox_new (FALSE, 12);
 
-  rbutton = gtk_radio_button_new_with_mnemonic (NULL, _("S_afe"));
-  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
-  priv->safe_rb = rbutton;
-
-  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->safe_rb), _("_Moderate"));
-  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
-  priv->moderate_rb = rbutton;
-
-  rbutton = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->safe_rb), _("Restr_icted"));
-  gtk_box_pack_start (GTK_BOX (box1), rbutton, FALSE, FALSE, 0);
-  priv->restricted_rb = rbutton;
+  _add_togleabble_item (self, GTK_BOX (box1), NULL, TRUE,
+                        _("S_afe"), &priv->safe_rb);
+  _add_togleabble_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->safe_rb),
+                        FALSE, _("_Moderate"), &priv->moderate_rb);
+  _add_togleabble_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->safe_rb),
+                        FALSE, _("Restr_icted"), &priv->restricted_rb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
-
-  g_signal_connect (G_OBJECT (priv->safe_rb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->moderate_rb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->restricted_rb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
 
   /* Misc */
 
@@ -286,21 +252,12 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   box1 = gtk_vbox_new (FALSE, 6);
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("Disa_ble Tags Auto-Completion"));
-  gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
-  priv->disable_tags_autocompletion_cb = cbutton;
-
-  g_signal_connect (G_OBJECT (priv->disable_tags_autocompletion_cb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  cbutton = gtk_check_button_new_with_mnemonic (_("_Keep File Extensions in Titles when Loading Pictures"));
-  gtk_box_pack_start (GTK_BOX (box1), cbutton, FALSE, FALSE, 0);
-  priv->keep_file_extensions_cb = cbutton;
-
-  g_signal_connect (G_OBJECT (priv->keep_file_extensions_cb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
+  _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
+                        _("Disa_ble Tags Auto-Completion"),
+                        &priv->disable_tags_autocompletion_cb);
+  _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
+                        _("_Keep File Extensions in Titles when Loading Pictures"),
+                        &priv->keep_file_extensions_cb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
 
