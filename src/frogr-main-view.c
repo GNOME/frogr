@@ -165,7 +165,7 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            GdkEventButton *event,
                                            gpointer data);
 
-void _on_account_menu_item_activate (GtkWidget *widget, gpointer self);
+void _on_account_menu_item_toggled (GtkWidget *widget, gpointer self);
 void _on_menu_item_activate (GtkWidget *widget, gpointer self);
 void _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self);
 
@@ -235,6 +235,8 @@ static void _model_pictures_reordered (FrogrController *controller,
 
 static void _model_description_updated (FrogrController *controller,
                                         gpointer data);
+
+static void _update_account_menu_items (FrogrMainView *mainview);
 
 static void _update_state_description (FrogrMainView *mainview);
 
@@ -423,12 +425,13 @@ _populate_accounts_submenu (FrogrMainView *self)
       else
         account_str = g_strdup_printf ("%s (%s)", username, fullname);
 
-      menu_item = gtk_menu_item_new_with_label (account_str);
+      menu_item = gtk_check_menu_item_new_with_label (account_str);
       g_free (account_str);
 
       g_object_set_data (G_OBJECT (menu_item), "frogr-account", account);
+
       g_signal_connect (G_OBJECT (menu_item), "activate",
-                        G_CALLBACK (_on_account_menu_item_activate),
+                        G_CALLBACK (_on_account_menu_item_toggled),
                         self);
       gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
     }
@@ -772,20 +775,31 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 }
 
 void
-_on_account_menu_item_activate (GtkWidget *widget, gpointer self)
+_on_account_menu_item_toggled (GtkWidget *widget, gpointer self)
 {
   FrogrMainViewPrivate *priv = NULL;
   FrogrAccount *account = NULL;
+  gboolean checked = FALSE;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  checked = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
   account = g_object_get_data (G_OBJECT (widget), "frogr-account");
 
-  if (account && FROGR_IS_ACCOUNT (account))
+  /* Only set the account if checked */
+  if (checked && account)
     {
-      frogr_controller_set_active_account (priv->controller, account);
       DEBUG ("Selected account %s (%s)",
              frogr_account_get_id (account),
              frogr_account_get_username (account));
+
+      frogr_controller_set_active_account (priv->controller, account);
+    }
+  else if (account)
+    {
+      /* If manually unchecked the currently active account, set it again */
+      FrogrAccount *active_account = frogr_controller_get_active_account (priv->controller);
+      if (frogr_account_equal (active_account, account))
+        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
     }
 }
 
@@ -802,19 +816,6 @@ _on_menu_item_activate (GtkWidget *widget, gpointer self)
     _add_pictures_dialog (mainview);
   else if (widget == priv->remove_menu_item || widget == priv->remove_ctxt_menu_item)
     _remove_selected_pictures (mainview);
-  else if (widget == priv->accounts_menu_item)
-    {
-      FrogrAccount *account = NULL;
-
-      account = g_object_get_data (G_OBJECT (widget), "frogr-account");
-      if (account && FROGR_IS_ACCOUNT (account))
-        {
-          frogr_controller_set_active_account (priv->controller, account);
-          DEBUG ("Selected account %s (%s)",
-                 frogr_account_get_id (account),
-                 frogr_account_get_username (account));
-        }
-    }
   else if (widget == priv->auth_menu_item)
     frogr_controller_show_auth_dialog (priv->controller);
   else if (widget == priv->settings_menu_item)
@@ -1374,6 +1375,7 @@ _controller_active_account_changed (FrogrController *controller,
 
   mainview = FROGR_MAIN_VIEW (data);
   _update_state_description (mainview);
+  _update_account_menu_items (mainview);
   _update_ui (mainview);
 }
 
@@ -1440,6 +1442,39 @@ _model_description_updated (FrogrController *controller,
 
       description = frogr_main_view_model_get_state_description (priv->model);
       frogr_main_view_set_status_text (mainview, description);
+    }
+}
+
+static void
+_update_account_menu_items (FrogrMainView *mainview)
+{
+  FrogrMainViewPrivate *priv = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+  if (priv->accounts_menu && GTK_IS_CONTAINER (priv->accounts_menu))
+    {
+      FrogrAccount *active_account = NULL;
+      FrogrAccount *account = NULL;
+      GList *all_items = NULL;
+      GList *item = NULL;
+      GtkWidget *menu_item = NULL;
+
+      active_account = frogr_controller_get_active_account (priv->controller);
+      all_items = gtk_container_get_children (GTK_CONTAINER (priv->accounts_menu));
+      for (item = all_items; item; item = g_list_next (item))
+        {
+          gboolean value;
+
+          menu_item = GTK_WIDGET (item->data);
+          account = g_object_get_data (G_OBJECT (menu_item), "frogr-account"); 
+
+          if (account == active_account)
+            value = TRUE;
+          else
+            value = FALSE;
+
+          gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), value);
+        }
     }
 }
 

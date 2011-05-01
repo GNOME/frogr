@@ -1858,8 +1858,15 @@ frogr_controller_set_active_account (FrogrController *self,
   new_account = FROGR_IS_ACCOUNT (account) ? g_object_ref (account) : NULL;
   if (new_account)
     {
-      frogr_account_set_is_active (new_account, TRUE);
-      accounts_changed = frogr_config_add_account (priv->config, new_account);
+      const gchar *new_account_id = NULL;
+
+      new_account_id = frogr_account_get_id (new_account);
+      if (!frogr_config_set_active_account (priv->config, new_account_id))
+        {
+          /* Fallback to manually creating a new account */
+          frogr_account_set_is_active (new_account, TRUE);
+          accounts_changed = frogr_config_add_account (priv->config, new_account);
+        }
 
       /* Get the token for setting it later on */
       token = frogr_account_get_token (new_account);
@@ -1875,7 +1882,7 @@ frogr_controller_set_active_account (FrogrController *self,
   if (priv->account)
     g_object_unref (priv->account);
 
-  priv->account = new_account;
+  priv->account = g_object_ref (new_account);
   fsp_session_set_token (priv->session, token);
 
   /* Prefetch info for this user */

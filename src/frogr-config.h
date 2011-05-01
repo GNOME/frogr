@@ -76,7 +76,7 @@ gboolean frogr_config_add_account (FrogrConfig  *self,
 
 GSList *frogr_config_get_accounts (FrogrConfig *self);
 
-void frogr_config_set_active_account (FrogrConfig *self, const gchar *id);
+gboolean frogr_config_set_active_account (FrogrConfig *self, const gchar *id);
 
 FrogrAccount *frogr_config_get_active_account (FrogrConfig *self);
 

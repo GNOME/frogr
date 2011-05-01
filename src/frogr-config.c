@@ -964,14 +964,15 @@ frogr_config_get_accounts (FrogrConfig *self)
   return priv->accounts;
 }
 
-void
+gboolean
 frogr_config_set_active_account (FrogrConfig *self, const gchar *id)
 {
-  g_return_if_fail (FROGR_IS_CONFIG (self));
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
   FrogrAccount *current = NULL;
   GSList *item = NULL;
+  gboolean result = FALSE;
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   for (item = priv->accounts; item; item = g_slist_next (item))
@@ -979,12 +980,16 @@ frogr_config_set_active_account (FrogrConfig *self, const gchar *id)
       current = FROGR_ACCOUNT (item->data);
 
       if (!g_strcmp0 (id, frogr_account_get_id (current)))
-        frogr_account_set_is_active (current, TRUE);
+        {
+          frogr_account_set_is_active (current, TRUE);
+          priv->active_account = current;
+          result = TRUE;
+        }
       else
         frogr_account_set_is_active (current, FALSE);
     }
 
-  priv->active_account = current;
+  return result;
 }
 
 FrogrAccount *
