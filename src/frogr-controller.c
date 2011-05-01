@@ -1000,14 +1000,9 @@ _on_pictures_uploaded (FrogrController *self,
 
   if (!error)
     {
-      FrogrControllerPrivate *priv = NULL;
-      priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
       /* Fetch sets and tags (if needed) right after finishing */
       _fetch_sets (self);
-
-      if (frogr_config_get_tags_autocompletion (priv->config))
-        _fetch_tags (self);
+      _fetch_tags (self);
 
       DEBUG ("%s", "Success uploading pictures!");
     }
@@ -1028,17 +1023,11 @@ _fetch_everything (FrogrController *self)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv = NULL;
-
   _fetch_account_info (self);
   _fetch_account_extra_info (self);
   _fetch_sets (self);
   _fetch_groups (self);
-
-  /* No need to retrieve tags if tags autocompletion is disabled */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (frogr_config_get_tags_autocompletion (priv->config))
-    _fetch_tags (self);
+  _fetch_tags (self);
 }
 
 static void
