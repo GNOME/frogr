@@ -60,6 +60,7 @@ struct _FspSessionPrivate
   gchar *token;
   gchar *frob;
 
+  SoupURI *proxy_uri;
   SoupSession *soup_session;
 };
 
@@ -323,6 +324,12 @@ fsp_session_dispose                     (GObject* object)
       self->priv->soup_session = NULL;
     }
 
+  if (self->priv->proxy_uri)
+    {
+      soup_uri_free (self->priv->proxy_uri);
+      self->priv->proxy_uri = NULL;
+    }
+
   /* Call superclass */
   G_OBJECT_CLASS (fsp_session_parent_class)->dispose(object);
 }
@@ -336,6 +343,7 @@ fsp_session_finalize                    (GObject* object)
   g_free (self->priv->api_key);
   g_free (self->priv->secret);
   g_free (self->priv->token);
+  g_free (self->priv->frob);
 
   /* Call superclass */
   G_OBJECT_CLASS (fsp_session_parent_class)->finalize(object);
@@ -388,6 +396,8 @@ fsp_session_init                        (FspSession *self)
   self->priv->secret = NULL;
   self->priv->token = NULL;
   self->priv->frob = NULL;
+
+  self->priv->proxy_uri = NULL;
 
   self->priv->soup_session = soup_session_async_new ();
 }
@@ -1289,11 +1299,22 @@ fsp_session_set_http_proxy              (FspSession *self,
       soup_uri_set_password (proxy_uri, actual_password);
     }
 
-  /* Set/unset the proxy */
-  g_object_set (G_OBJECT (self->priv->soup_session),
-                SOUP_SESSION_PROXY_URI,
-                proxy_uri,
-                NULL);
+  /* Set/unset the proxy if needed */
+  if ((!self->priv->proxy_uri && proxy_uri)
+      || (self->priv->proxy_uri && !proxy_uri)
+      || (self->priv->proxy_uri && proxy_uri && !soup_uri_equal (self->priv->proxy_uri, proxy_uri)))
+    {
+      g_object_set (G_OBJECT (self->priv->soup_session),
+                    SOUP_SESSION_PROXY_URI,
+                    proxy_uri,
+                    NULL);
+
+      /* Save internal reference to the proxy */
+      if (self->priv->proxy_uri)
+        soup_uri_free (self->priv->proxy_uri);
+
+      self->priv->proxy_uri = proxy_uri;
+    }
 }
 
 const gchar *
@@ -1381,6 +1402,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
       gchar *signed_query = NULL;
 
       /* Save the frob */
+      g_free (priv->frob);
       priv->frob = frob;
 
       /* Build the authorization url */
