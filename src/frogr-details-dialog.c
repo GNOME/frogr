@@ -1069,9 +1069,6 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
 
   gtk_dialog_set_default_response (GTK_DIALOG (self),
                                    GTK_RESPONSE_OK);
-
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET (self));
 }
 
 

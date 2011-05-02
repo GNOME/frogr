@@ -556,9 +556,6 @@ frogr_add_to_group_dialog_init (FrogrAddToGroupDialog *self)
   gtk_window_set_default_size (GTK_WINDOW (self),
                                MINIMUM_WINDOW_WIDTH,
                                MINIMUM_WINDOW_HEIGHT);
-
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET (self));
 }
 
 /* Public API */

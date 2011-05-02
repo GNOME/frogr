@@ -369,9 +369,6 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 
   g_signal_connect (G_OBJECT (self), "response",
                     G_CALLBACK (_dialog_response_cb), NULL);
-
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET (self));
 }
 
 /* Public API */

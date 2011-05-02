@@ -378,8 +378,6 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   hints.min_height = MINIMUM_WINDOW_HEIGHT;
   gtk_window_set_geometry_hints (GTK_WINDOW (self), NULL,
                                  &hints, GDK_HINT_MIN_SIZE);
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET (self));
 }
 
 /* Public API */
