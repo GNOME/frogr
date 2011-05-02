@@ -203,7 +203,8 @@ _get_error_from_response                (xmlDoc *doc,
       if (node != NULL)
         {
           /* Parse the actual error found in the response */
-          g_error_free (err);
+          if (err)
+            g_error_free (err);
           err = _parse_error_from_node (node, error_method);
         }
     }
