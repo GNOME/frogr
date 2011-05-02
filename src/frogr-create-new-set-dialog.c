@@ -304,7 +304,6 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   GtkWidget *align = NULL;
   GtkWidget *scroller = NULL;
   GtkWidget *widget = NULL;
-  GdkGeometry hints;
 
   priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   priv->pictures = NULL;
@@ -372,12 +371,6 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
                     self);
 
   priv->copy_to_pictures = FALSE;
-
-  /* Set minimum size */
-  hints.min_width = MINIMUM_WINDOW_WIDTH;
-  hints.min_height = MINIMUM_WINDOW_HEIGHT;
-  gtk_window_set_geometry_hints (GTK_WINDOW (self), NULL,
-                                 &hints, GDK_HINT_MIN_SIZE);
 }
 
 /* Public API */
@@ -392,6 +385,8 @@ frogr_create_new_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *s
                                      "pictures", pictures,
                                      "sets", sets,
                                      "transient-for", parent,
+                                     "width-request", MINIMUM_WINDOW_WIDTH,
+                                     "height-request", MINIMUM_WINDOW_HEIGHT,
                                      "resizable", FALSE,
                                      NULL));
 
