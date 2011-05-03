@@ -1,5 +1,5 @@
 AC_INIT([frogr], [0.5], [msanchez@igalia.com])
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([-Wall foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 AC_CONFIG_HEADERS([config.h])
@@ -100,16 +100,6 @@ PKG_CHECK_MODULES(GTK, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $GTK_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $GTK_LIBS"
 
-# Substitute
-
-AC_SUBST(appdatadir, "\${datadir}/frogr")
-AC_SUBST(iconsdir, "\${datadir}/icons")
-AC_SUBST(FROGR_CFLAGS)
-AC_SUBST(FROGR_LIBS)
-
-EXTRA_CFLAGS="-Wall -Werror"
-AC_SUBST(EXTRA_CFLAGS)
-
 # Translations
 FROGR_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
 AM_GLIB_DEFINE_LOCALEDIR([FROGR_LOCALE_DIR])
@@ -129,10 +119,20 @@ AC_MSG_RESULT([$enable_debug])
 
 if test "x$enable_debug" = "xyes"; then
    AC_DEFINE([DEBUG_ENABLED], [1], [Debug enabled])
-   FROGR_CFLAGS="$FROGR_CFLAGS -DG_ENABLE_DEBUG -DG_ERRORCHECK_MUTEXES -g3 -O0"
+   FROGR_CFLAGS="$FROGR_CFLAGS -DG_ENABLE_DEBUG -DG_ERRORCHECK_MUTEXES"
+   EXTRA_CFLAGS="-Wall -Werror -g3 -O0"
 else
-   FROGR_CFLAGS="$FROGR_CFLAGS -DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS -g0 -O2"
+   FROGR_CFLAGS="$FROGR_CFLAGS -DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS"
+   EXTRA_CFLAGS="-Wall -g0 -O2"
 fi
+
+# Substitute
+
+AC_SUBST(appdatadir, "\${datadir}/frogr")
+AC_SUBST(iconsdir, "\${datadir}/icons")
+AC_SUBST(FROGR_CFLAGS)
+AC_SUBST(FROGR_LIBS)
+AC_SUBST(EXTRA_CFLAGS)
 
 # Produce output files
 
