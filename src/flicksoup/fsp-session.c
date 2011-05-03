@@ -1261,12 +1261,12 @@ fsp_session_new                         (const gchar *api_key,
   return FSP_SESSION (object);
 }
 
-void
+gboolean
 fsp_session_set_http_proxy              (FspSession *self,
                                          const char *host, const char *port,
                                          const char *username, const char *password)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
 
   SoupURI *proxy_uri = NULL;
   if (host != NULL)
@@ -1314,7 +1314,13 @@ fsp_session_set_http_proxy              (FspSession *self,
         soup_uri_free (self->priv->proxy_uri);
 
       self->priv->proxy_uri = proxy_uri;
+
+      /* Proxy configuration actually changed */
+      return TRUE;
     }
+
+  /* Proxy configuration has not changed */
+  return FALSE;
 }
 
 const gchar *

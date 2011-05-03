@@ -1957,6 +1957,7 @@ frogr_controller_set_proxy (FrogrController *self,
   } else {
     gboolean has_username = FALSE;
     gboolean has_password = FALSE;
+    gboolean proxy_changed = FALSE;
     gchar *auth_part = NULL;
 
     has_username = (username != NULL && *username != '\0');
@@ -1968,7 +1969,13 @@ frogr_controller_set_proxy (FrogrController *self,
     DEBUG ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
     g_free (auth_part);
 
-    fsp_session_set_http_proxy (priv->session, host, port, username, password);
+    proxy_changed = fsp_session_set_http_proxy (priv->session,
+                                                host, port,
+                                                username, password);
+
+    /* Re-fetch information if needed after changing proxy configuration */
+    if (priv->app_running && proxy_changed)
+      _fetch_everything (self, TRUE);
   }
 }
 
