@@ -80,8 +80,8 @@ struct _FrogrControllerPrivate
   gboolean adding_to_set;
   gboolean adding_to_group;
 
-  /* We use these to know when an empty list of tags means that the
-     user has no tags at all, as fetching already happened before */
+  gboolean account_info_fetched;
+  gboolean account_extra_info_fetched;
   gboolean sets_fetched;
   gboolean groups_fetched;
   gboolean tags_fetched;
@@ -175,7 +175,7 @@ static void _on_picture_uploaded (FrogrController *self, FrogrPicture *picture);
 static void _on_pictures_uploaded (FrogrController *self,
                                    GError *error);
 
-static void _fetch_everything (FrogrController *self);
+static void _fetch_everything (FrogrController *self, gboolean only_if_needed);
 
 static void _fetch_sets (FrogrController *self);
 
@@ -1019,15 +1019,31 @@ _on_pictures_uploaded (FrogrController *self,
 }
 
 static void
-_fetch_everything (FrogrController *self)
+_fetch_everything (FrogrController *self, gboolean only_if_needed)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  _fetch_account_info (self);
-  _fetch_account_extra_info (self);
-  _fetch_sets (self);
-  _fetch_groups (self);
-  _fetch_tags (self);
+  FrogrControllerPrivate *priv = NULL;
+
+  if (!frogr_controller_is_authorized (self))
+    return;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  if (!only_if_needed || !priv->account_info_fetched)
+    _fetch_account_info (self);
+
+  if (!only_if_needed || !priv->account_extra_info_fetched)
+    _fetch_account_extra_info (self);
+
+  if (!only_if_needed || !priv->sets_fetched)
+    _fetch_sets (self);
+
+  if (!only_if_needed || !priv->groups_fetched)
+    _fetch_groups (self);
+
+  if (!only_if_needed || !priv->tags_fetched)
+    _fetch_tags (self);
 }
 
 static void
@@ -1041,6 +1057,7 @@ _fetch_sets (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->sets_fetched = FALSE;
   priv->fetching_sets = TRUE;
 
   _enable_cancellable (self, TRUE);
@@ -1122,6 +1139,7 @@ _fetch_groups (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->groups_fetched = FALSE;
   priv->fetching_groups = TRUE;
 
   _enable_cancellable (self, TRUE);
@@ -1201,6 +1219,7 @@ static void _fetch_account_info (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->account_info_fetched = FALSE;
   priv->fetching_account_info = TRUE;
 
   _enable_cancellable (self, FALSE);
@@ -1258,6 +1277,7 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  priv->account_info_fetched = TRUE;
   priv->fetching_account_info = FALSE;
 }
 
@@ -1271,6 +1291,7 @@ static void _fetch_account_extra_info (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->account_info_fetched = FALSE;
   priv->fetching_account_extra_info = TRUE;
 
   _enable_cancellable (self, FALSE);
@@ -1332,6 +1353,7 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  priv->account_extra_info_fetched = TRUE;
   priv->fetching_account_extra_info = FALSE;
 }
 
@@ -1346,6 +1368,7 @@ _fetch_tags (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->tags_fetched = FALSE;
   priv->fetching_tags = TRUE;
 
   _enable_cancellable (self, TRUE);
@@ -1718,6 +1741,8 @@ frogr_controller_init (FrogrController *self)
   priv->fetching_tags = FALSE;
   priv->adding_to_set = FALSE;
   priv->adding_to_group = FALSE;
+  priv->account_info_fetched = FALSE;
+  priv->account_extra_info_fetched = FALSE;
   priv->sets_fetched = FALSE;
   priv->groups_fetched = FALSE;
   priv->tags_fetched = FALSE;
@@ -1788,7 +1813,7 @@ frogr_controller_run_app (FrogrController *self)
   priv->app_running = TRUE;
 
   /* Try to pre-fetch some data from the server right after launch */
-  _fetch_everything (self);
+  _fetch_everything (self, FALSE);
 
   /* Start on idle state */
   _set_state (self, FROGR_STATE_IDLE);
@@ -1875,11 +1900,8 @@ frogr_controller_set_active_account (FrogrController *self,
   fsp_session_set_token (priv->session, token);
 
   /* Prefetch info for this user */
-  priv->sets_fetched = FALSE;
-  priv->groups_fetched = FALSE;
-  priv->tags_fetched = FALSE;
   if (new_account)
-    _fetch_everything (self);
+    _fetch_everything (self, FALSE);
 
   /* Emit proper signals */
   g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
