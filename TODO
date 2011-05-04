@@ -11,14 +11,9 @@ groups depending on the scope of the application, which can be:
 TODO list for the uploader:
 ===========================
 
- * Allow reordering pictures in icon view before uploading.
-
  * Allow setting license type for the pictures in the details dialog.
 
  * Add video uploading support
-
- * Sort photos by date taken option (Having a way to automatically
-   arrange them by date (maybe in the preferences?) would be great.
 
 
 TODO list for the manager:
