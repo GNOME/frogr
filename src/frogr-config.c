@@ -873,7 +873,7 @@ frogr_config_init (FrogrConfig *self)
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->tags_autocompletion = TRUE;
-  priv->keep_file_extensions = TRUE;
+  priv->keep_file_extensions = FALSE;
   priv->mainview_sorting_criteria = SORT_AS_LOADED;
   priv->mainview_sorting_reversed = FALSE;
   priv->mainview_enable_tooltips = TRUE;
