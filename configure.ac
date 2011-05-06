@@ -62,7 +62,7 @@ AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xmacosx"])
 
 # Select target version of GTK to use
 
-AC_MSG_CHECKING([Checking GTK+ version to use])
+AC_MSG_CHECKING([GTK+ version to use])
 
 if test "x$platform" = "xgnome"; then
    # For the GNOME platform allow using GTK2 and GTK3 (default for GNOME)
@@ -78,8 +78,6 @@ else
    with_gtk=2.0
 fi
 
-AC_MSG_RESULT([$with_gtk])
-
 case "$with_gtk" in
      2.0) GTK_MIN_VERSION=2.14
           GTK_API_VERSION=2.0
@@ -91,10 +89,33 @@ esac
 
 # Make GTK API version available to the code
 AC_SUBST([GTK_API_VERSION])
+
+if test "x$with_gtk" = "x3.0"; then
+   PKG_CHECK_MODULES(GTK3, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION,
+                     [have_gtk_3="yes"], [have_gtk_3="no"])
+
+   if test "x$have_gtk_3" = "xyes"; then
+      GTK_CFLAGS=$GTK3_CFLAGS
+      GTK_LIBS=$GTK3_LIBS
+   else
+      GTK_MIN_VERSION=2.14
+      GTK_API_VERSION=2.0
+      with_gtk=2.0
+   fi
+fi
+
+if test "x$with_gtk" = "x2.0"; then
+   PKG_CHECK_MODULES(GTK2, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION,
+                     [have_gtk_2="yes"], [have_gtk_2="no"])
+   if test "x$have_gtk_2" = "xyes"; then
+      GTK_CFLAGS=$GTK2_CFLAGS
+      GTK_LIBS=$GTK2_LIBS
+   fi
+fi
+
 AM_CONDITIONAL([GTK_API_VERSION_2],[test "$GTK_API_VERSION" = "2.0"])
 AM_CONDITIONAL([GTK_API_VERSION_3],[test "$GTK_API_VERSION" = "3.0"])
 
-PKG_CHECK_MODULES(GTK, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $GTK_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $GTK_LIBS"
 
