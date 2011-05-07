@@ -1291,7 +1291,7 @@ static void _fetch_account_extra_info (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->account_info_fetched = FALSE;
+  priv->account_extra_info_fetched = FALSE;
   priv->fetching_account_extra_info = TRUE;
 
   _enable_cancellable (self, FALSE);
