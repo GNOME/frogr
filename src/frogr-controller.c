@@ -114,6 +114,14 @@ typedef struct {
   GError *error;
 } upload_picture_st;
 
+typedef enum {
+  FETCHING_NOTHING,
+  FETCHING_ACCOUNT_INFO,
+  FETCHING_ACCOUNT_EXTRA_INFO,
+  FETCHING_SETS,
+  FETCHING_GROUPS,
+  FETCHING_TAGS,
+} FetchingActivity;
 
 /* Prototypes */
 
@@ -197,7 +205,7 @@ static void _fetch_tags (FrogrController *self);
 
 static void _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data);
 
-static gboolean _show_progress_on_idle (const gchar *text);
+static gboolean _show_progress_on_idle (gpointer data);
 
 static gboolean _show_details_dialog_on_idle (GSList *pictures);
 
@@ -1416,15 +1424,42 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 }
 
 static gboolean
-_show_progress_on_idle (const gchar *text)
+_show_progress_on_idle (gpointer data)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
+  FetchingActivity activity = FETCHING_NOTHING;
+  const gchar *text = NULL;
+  gboolean show_dialog = FALSE;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
-  frogr_main_view_show_progress (priv->mainview, text);
+  activity = GPOINTER_TO_INT (data);
+  switch (activity)
+    {
+    case FETCHING_SETS:
+      text = _("Retrieving list of sets…");
+      show_dialog = priv->fetching_tags;
+      break;
+
+    case FETCHING_GROUPS:
+      text = _("Retrieving list of groups…");
+      show_dialog = priv->fetching_groups;
+      break;
+
+    case FETCHING_TAGS:
+      text = _("Retrieving list of tags…");
+      show_dialog = priv->fetching_tags;
+      break;
+
+    default:
+      text = NULL;
+    }
+
+  /* Actually show the dialog, if needed */
+  if (show_dialog)
+    frogr_main_view_show_progress (priv->mainview, text);
 
   return FALSE;
 }
@@ -2028,7 +2063,7 @@ frogr_controller_show_details_dialog (FrogrController *self,
   /* Fetch the tags list first if needed */
   if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
     {
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of tags…"));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TAGS));
       if (!priv->fetching_tags)
         _fetch_tags (self);
     }
@@ -2050,7 +2085,7 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
   /* Fetch the tags list first if needed */
   if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
     {
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of tags…"));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TAGS));
       if (!priv->fetching_tags)
         _fetch_tags (self);
     }
@@ -2072,7 +2107,7 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
   /* Fetch the sets first if needed */
   if (!priv->sets_fetched)
     {
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of sets…"));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_SETS));
       if (!priv->fetching_sets)
         _fetch_sets (self);
     }
@@ -2094,7 +2129,7 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
   /* Fetch the sets first if needed */
   if (!priv->sets_fetched)
     {
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of sets…"));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_SETS));
       if (!priv->fetching_sets)
         _fetch_sets (self);
     }
@@ -2116,7 +2151,7 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
   /* Fetch the groups first if needed */
   if (!priv->groups_fetched)
     {
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of groups…"));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_GROUPS));
       if (!priv->fetching_groups)
         _fetch_groups (self);
     }
