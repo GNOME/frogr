@@ -84,6 +84,8 @@ void frogr_controller_set_proxy (FrogrController *self,
                                  const char *host, const char *port,
                                  const char *username, const char *password);
 
+void frogr_controller_fetch_tags_if_needed (FrogrController *self);
+
 void frogr_controller_show_about_dialog (FrogrController *self);
 
 void frogr_controller_show_auth_dialog (FrogrController *self);

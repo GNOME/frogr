@@ -664,6 +664,10 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
   if (response == GTK_RESPONSE_OK && _save_data (self) == FALSE)
       return;
 
+  /* Fetch tags if needed */
+  if (!priv->disable_tags_autocompletion)
+    frogr_controller_fetch_tags_if_needed (priv->controller);
+
   /* Update proxy status */
   if (priv->use_proxy)
     frogr_controller_set_proxy (priv->controller,
