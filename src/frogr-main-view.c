@@ -2073,8 +2073,6 @@ frogr_main_view_pulse_progress (FrogrMainView *self)
 
   /* Empty text for this */
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), NULL);
-
-  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
 }
 
 void
