@@ -175,7 +175,7 @@ static void _on_picture_uploaded (FrogrController *self, FrogrPicture *picture);
 static void _on_pictures_uploaded (FrogrController *self,
                                    GError *error);
 
-static void _fetch_everything (FrogrController *self, gboolean only_if_needed);
+static void _fetch_everything (FrogrController *self, gboolean force_fetch);
 
 static void _fetch_sets (FrogrController *self);
 
@@ -1019,7 +1019,7 @@ _on_pictures_uploaded (FrogrController *self,
 }
 
 static void
-_fetch_everything (FrogrController *self, gboolean only_if_needed)
+_fetch_everything (FrogrController *self, gboolean force_fetch)
 {
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -1030,19 +1030,19 @@ _fetch_everything (FrogrController *self, gboolean only_if_needed)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  if (!only_if_needed || !priv->account_info_fetched)
+  if (force_fetch || !priv->account_info_fetched)
     _fetch_account_info (self);
 
-  if (!only_if_needed || !priv->account_extra_info_fetched)
+  if (force_fetch || !priv->account_extra_info_fetched)
     _fetch_account_extra_info (self);
 
-  if (!only_if_needed || !priv->sets_fetched)
+  if (force_fetch || !priv->sets_fetched)
     _fetch_sets (self);
 
-  if (!only_if_needed || !priv->groups_fetched)
+  if (force_fetch || !priv->groups_fetched)
     _fetch_groups (self);
 
-  if (!only_if_needed || !priv->tags_fetched)
+  if (force_fetch || !priv->tags_fetched)
     _fetch_tags (self);
 }
 
@@ -1813,7 +1813,7 @@ frogr_controller_run_app (FrogrController *self)
   priv->app_running = TRUE;
 
   /* Try to pre-fetch some data from the server right after launch */
-  _fetch_everything (self, FALSE);
+  _fetch_everything (self, TRUE);
 
   /* Start on idle state */
   _set_state (self, FROGR_STATE_IDLE);
@@ -1901,7 +1901,7 @@ frogr_controller_set_active_account (FrogrController *self,
 
   /* Prefetch info for this user */
   if (new_account)
-    _fetch_everything (self, FALSE);
+    _fetch_everything (self, TRUE);
 
   /* Emit proper signals */
   g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
@@ -1975,7 +1975,7 @@ frogr_controller_set_proxy (FrogrController *self,
 
     /* Re-fetch information if needed after changing proxy configuration */
     if (priv->app_running && proxy_changed)
-      _fetch_everything (self, TRUE);
+      _fetch_everything (self, FALSE);
   }
 }
 
