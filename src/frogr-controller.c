@@ -1896,7 +1896,7 @@ frogr_controller_set_active_account (FrogrController *self,
   if (priv->account)
     g_object_unref (priv->account);
 
-  priv->account = g_object_ref (new_account);
+  priv->account = new_account;
   fsp_session_set_token (priv->session, token);
 
   /* Prefetch info for this user */
