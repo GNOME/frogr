@@ -1444,7 +1444,7 @@ _show_details_dialog_on_idle (GSList *pictures)
   mainview = priv->mainview;
 
   /* Keep the source while internally busy */
-  if (priv->fetching_tags)
+  if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
     {
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
@@ -1476,7 +1476,7 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   mainview = priv->mainview;
 
   /* Keep the source while internally busy */
-  if (priv->fetching_tags)
+  if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
     {
       frogr_main_view_pulse_progress (mainview);
       return TRUE;
