@@ -2022,19 +2022,15 @@ frogr_controller_show_details_dialog (FrogrController *self,
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
 
-  if (frogr_config_get_tags_autocompletion (priv->config))
+  /* Fetch the tags list first if needed */
+  if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
     {
-      /* Fetch the tags list first if needed */
-      if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
-        {
-          gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of tags…"));
-          _fetch_tags (self);
-        }
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of tags…"));
+      if (!priv->fetching_tags)
+        _fetch_tags (self);
     }
 
   /* Show the dialog when possible */
@@ -2048,19 +2044,15 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
 
-  if (frogr_config_get_tags_autocompletion (priv->config))
+  /* Fetch the tags list first if needed */
+  if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
     {
-      /* Fetch the tags list first if needed */
-      if (frogr_main_view_model_n_tags (mainview_model) == 0 && !priv->tags_fetched)
-        {
-          gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of tags…"));
-          _fetch_tags (self);
-        }
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of tags…"));
+      if (!priv->fetching_tags)
+        _fetch_tags (self);
     }
 
   /* Show the dialog when possible */
@@ -2074,16 +2066,15 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
 
   /* Fetch the sets first if needed */
-  if (frogr_main_view_model_n_sets (mainview_model) == 0 && !priv->sets_fetched)
+  if (!priv->sets_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of sets…"));
-      _fetch_sets (self);
+      if (!priv->fetching_sets)
+        _fetch_sets (self);
     }
 
   /* Show the dialog when possible */
@@ -2097,16 +2088,15 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
 
   /* Fetch the sets first if needed */
-  if (frogr_main_view_model_n_sets (mainview_model) == 0 && !priv->sets_fetched)
+  if (!priv->sets_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of sets…"));
-      _fetch_sets (self);
+      if (!priv->fetching_sets)
+        _fetch_sets (self);
     }
 
   /* Show the dialog when possible */
@@ -2120,16 +2110,15 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
 
   /* Fetch the groups first if needed */
-  if (frogr_main_view_model_n_groups (mainview_model) == 0 && !priv->groups_fetched)
+  if (!priv->groups_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, _("Retrieving list of groups…"));
-      _fetch_groups (self);
+      if (!priv->fetching_groups)
+        _fetch_groups (self);
     }
 
   /* Show the dialog when possible */
