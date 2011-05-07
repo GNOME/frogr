@@ -1377,6 +1377,11 @@ _fetch_tags (FrogrController *self)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->tags_fetched = FALSE;
+
+  /* Do not actually fetch tags if the autocompletion is off */
+  if (!frogr_config_get_tags_autocompletion (priv->config))
+    return;
+
   priv->fetching_tags = TRUE;
 
   _enable_cancellable (self, TRUE);
