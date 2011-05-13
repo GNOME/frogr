@@ -40,7 +40,7 @@
                                 FROGR_TYPE_CREATE_NEW_SET_DIALOG,       \
                                 FrogrCreateNewSetDialogPrivate))
 
-G_DEFINE_TYPE (FrogrCreateNewSetDialog, frogr_create_new_set_dialog, GTK_TYPE_DIALOG);
+G_DEFINE_TYPE (FrogrCreateNewSetDialog, frogr_create_new_set_dialog, GTK_TYPE_DIALOG)
 
 typedef struct _FrogrCreateNewSetDialogPrivate {
   GtkWidget *title_entry;

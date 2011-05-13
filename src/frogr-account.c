@@ -29,7 +29,7 @@
                                 FROGR_TYPE_ACCOUNT,     \
                                 FrogrAccountPrivate))
 
-G_DEFINE_TYPE (FrogrAccount, frogr_account, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrAccount, frogr_account, G_TYPE_OBJECT)
 
 
 /* Private structure */
@@ -61,7 +61,7 @@ enum {
   PROP_IS_ACTIVE,
   PROP_REMAINING_BANDWIDTH,
   PROP_MAX_BANDWIDTH,
-  PROP_IS_PRO,
+  PROP_IS_PRO
 };
 
 
@@ -279,8 +279,7 @@ frogr_account_init (FrogrAccount *self)
 FrogrAccount *
 frogr_account_new (void)
 {
-  GObject *new = g_object_new (FROGR_TYPE_ACCOUNT, NULL);
-  return FROGR_ACCOUNT (new);
+  return FROGR_ACCOUNT (g_object_new (FROGR_TYPE_ACCOUNT, NULL));
 }
 
 FrogrAccount *
@@ -288,18 +287,19 @@ frogr_account_new_with_token (const gchar *token)
 {
   g_return_val_if_fail (token, NULL);
 
-  GObject *new = g_object_new (FROGR_TYPE_ACCOUNT,
-                               "token",    token,
-                               NULL);
-  return FROGR_ACCOUNT (new);
+  return FROGR_ACCOUNT (g_object_new (FROGR_TYPE_ACCOUNT,
+                                      "token", token,
+                                      NULL));
 }
 
 const gchar *
 frogr_account_get_token (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->token;
 }
 
@@ -307,10 +307,11 @@ void
 frogr_account_set_token (FrogrAccount *self,
                          const gchar *token)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   g_free (priv->token);
   priv->token = g_strdup (token);
 }
@@ -318,19 +319,22 @@ frogr_account_set_token (FrogrAccount *self,
 const gchar*
 frogr_account_get_permissions (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->permissions;
 }
 
 void
 frogr_account_set_permissions (FrogrAccount *self, const gchar *permissions)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   g_free (priv->permissions);
   priv->permissions = g_strdup (permissions);
 }
@@ -338,19 +342,22 @@ frogr_account_set_permissions (FrogrAccount *self, const gchar *permissions)
 const gchar*
 frogr_account_get_id (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->id;
 }
 
 void
 frogr_account_set_id (FrogrAccount *self, const gchar *id)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   g_free (priv->id);
   priv->id = g_strdup (id);
 }
@@ -358,19 +365,22 @@ frogr_account_set_id (FrogrAccount *self, const gchar *id)
 const gchar*
 frogr_account_get_username (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->username;
 }
 
 void
 frogr_account_set_username (FrogrAccount *self, const gchar *username)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   g_free (priv->username);
   priv->username = g_strdup (username);
 }
@@ -378,19 +388,22 @@ frogr_account_set_username (FrogrAccount *self, const gchar *username)
 const gchar*
 frogr_account_get_fullname (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->fullname;
 }
 
 void
 frogr_account_set_fullname (FrogrAccount *self, const gchar *fullname)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   g_free (priv->fullname);
   priv->fullname = g_strdup (fullname);
 }
@@ -398,81 +411,99 @@ frogr_account_set_fullname (FrogrAccount *self, const gchar *fullname)
 gboolean
 frogr_account_is_active (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->is_active;
 }
 
 void
 frogr_account_set_is_active (FrogrAccount *self, gboolean is_active)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv->is_active = is_active;
 }
 
 gulong
 frogr_account_get_remaining_bandwidth (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXULONG);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->remaining_bandwidth;
 }
 
 void
 frogr_account_set_remaining_bandwidth (FrogrAccount *self, gulong remaining_bandwidth)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv->remaining_bandwidth = remaining_bandwidth;
 }
 
 gulong
 frogr_account_get_max_bandwidth (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXULONG);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->max_bandwidth;
 }
 
 void
 frogr_account_set_max_bandwidth (FrogrAccount *self, gulong max_bandwidth)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv->max_bandwidth = max_bandwidth;
 }
 
 gboolean
 frogr_account_is_pro (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   return priv->is_pro;
 }
 
 void
 frogr_account_set_is_pro (FrogrAccount *self, gboolean is_pro)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv->is_pro = is_pro;
 }
 
 gboolean
 frogr_account_is_valid (FrogrAccount *self)
 {
+  FrogrAccountPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
 
-  FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
 
   if (priv->token == NULL || priv->token[0] == '\0')
     return FALSE;

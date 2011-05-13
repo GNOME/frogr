@@ -46,7 +46,7 @@
                                 FROGR_TYPE_PICTURE_LOADER,      \
                                 FrogrPictureLoaderPrivate))
 
-G_DEFINE_TYPE (FrogrPictureLoader, frogr_picture_loader, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrPictureLoader, frogr_picture_loader, G_TYPE_OBJECT)
 
 /* Private struct */
 typedef struct _FrogrPictureLoaderPrivate FrogrPictureLoaderPrivate;
@@ -254,16 +254,18 @@ _load_next_picture_cb (GObject *object,
                        GAsyncResult *res,
                        gpointer data)
 {
-  FrogrPictureLoader *self = FROGR_PICTURE_LOADER (data);;
-  FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
-
+  FrogrPictureLoader *self = NULL;
+  FrogrPictureLoaderPrivate *priv = NULL;
   FrogrPicture *fpicture = NULL;
-  GFile *file = G_FILE (object);
+  GFile *file = NULL;
   GError *error = NULL;
   gchar *contents = NULL;
   gsize length = 0;
 
+  self = FROGR_PICTURE_LOADER (data);;
+  priv = FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+
+  file = G_FILE (object);
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
       GdkPixbufLoader *pixbuf_loader = gdk_pixbuf_loader_new ();
@@ -517,10 +519,11 @@ frogr_picture_loader_new (GSList *file_uris,
 void
 frogr_picture_loader_load (FrogrPictureLoader *self)
 {
+  FrogrPictureLoaderPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_PICTURE_LOADER (self));
 
-  FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+  priv = FROGR_PICTURE_LOADER_GET_PRIVATE (self);
 
   /* Check first whether there's something to load */
   if (priv->file_uris == NULL)

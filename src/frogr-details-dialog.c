@@ -44,7 +44,7 @@
                                 FROGR_TYPE_DETAILS_DIALOG,      \
                                 FrogrDetailsDialogPrivate))
 
-G_DEFINE_TYPE (FrogrDetailsDialog, frogr_details_dialog, GTK_TYPE_DIALOG);
+G_DEFINE_TYPE (FrogrDetailsDialog, frogr_details_dialog, GTK_TYPE_DIALOG)
 
 typedef struct _FrogrDetailsDialogPrivate {
   GtkWidget *title_entry;
@@ -925,12 +925,12 @@ _save_data (FrogrDetailsDialog *self)
 static void
 _on_radio_button_clicked (GtkButton *tbutton, gpointer data)
 {
-  g_return_if_fail (GTK_IS_RADIO_BUTTON (tbutton));
-
   FrogrDetailsDialog *self = NULL;
   GtkWidget *button = NULL;
   GSList *buttons = NULL;
   GSList *item = NULL;
+
+  g_return_if_fail (GTK_IS_RADIO_BUTTON (tbutton));
 
   buttons = gtk_radio_button_get_group (GTK_RADIO_BUTTON (tbutton));
 

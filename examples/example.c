@@ -142,12 +142,13 @@ get_groups_cb                           (GObject      *object,
     }
   else
     {
-      g_print ("[get_groups_cb]::Success! Number of groups found: %d\n",
-               g_slist_length (groups_list));
-
       gint i = 0;
       GSList *item = NULL;
       FspDataGroup *group = NULL;
+
+      g_print ("[get_groups_cb]::Success! Number of groups found: %d\n",
+               g_slist_length (groups_list));
+
       for (item = groups_list; item; item = g_slist_next (item))
         {
           group = FSP_DATA_GROUP (item->data);
@@ -179,7 +180,8 @@ get_groups_cb                           (GObject      *object,
                                 FSP_SAFETY_LEVEL_NONE,
                                 FSP_CONTENT_TYPE_PHOTO,
                                 FSP_SEARCH_SCOPE_NONE,
-                                NULL, upload_cb, get_groups_cb);
+                                NULL, upload_cb,
+                                (gpointer) get_groups_cb);
 
       g_slist_free (groups_list);
     }
@@ -251,7 +253,8 @@ photoset_created_cb                     (GObject      *object,
                                 FSP_SAFETY_LEVEL_NONE,
                                 FSP_CONTENT_TYPE_PHOTO,
                                 FSP_SEARCH_SCOPE_NONE,
-                                NULL, upload_cb, photoset_created_cb);
+                                NULL, upload_cb,
+                                (gpointer) photoset_created_cb);
     }
 }
 
@@ -272,12 +275,13 @@ get_photosets_cb                        (GObject      *object,
     }
   else
     {
-      g_print ("[get_photosets_cb]::Success! Number of photosets found: %d\n",
-               g_slist_length (photosets_list));
-
       gint i = 0;
       GSList *item = NULL;
       FspDataPhotoSet *photoset = NULL;
+
+      g_print ("[get_photosets_cb]::Success! Number of photosets found: %d\n",
+               g_slist_length (photosets_list));
+
       for (item = photosets_list; item; item = g_slist_next (item))
         {
           photoset = FSP_DATA_PHOTO_SET (item->data);
@@ -372,11 +376,12 @@ get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused)
     }
   else
     {
+      GSList *item = NULL;
+      gchar *tag = NULL;
+
       g_print ("[get_tags_list_cb]::Success! Number of tags found: %d\n",
                g_slist_length (tags_list));
 
-      GSList *item = NULL;
-      gchar *tag = NULL;
       for (item = tags_list; item; item = g_slist_next (item))
         {
           tag = (gchar *) item->data;
@@ -406,7 +411,8 @@ get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused)
                                 FSP_SAFETY_LEVEL_NONE,
                                 FSP_CONTENT_TYPE_PHOTO,
                                 FSP_SEARCH_SCOPE_NONE,
-                                NULL, upload_cb, get_tags_list_cb);
+                                NULL, upload_cb,
+                                (gpointer) get_tags_list_cb);
     }
 }
 
@@ -559,11 +565,15 @@ get_auth_url_cb                         (GObject      *object,
 gboolean
 do_work (gpointer unused)
 {
-  FspSession *session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
+  FspSession *session = NULL;
+  const gchar *api_key = NULL;
+  const gchar *secret = NULL;
+
+  session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
   g_print ("Created FspSession:\n");
 
-  const gchar *api_key = fsp_session_get_api_key (session);
-  const gchar *secret = fsp_session_get_secret (session);
+  api_key = fsp_session_get_api_key (session);
+  secret = fsp_session_get_secret (session);
 
   g_print ("\tAPI key: %s\n\tSecret: %s\n\n", api_key, secret);
 

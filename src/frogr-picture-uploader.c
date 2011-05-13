@@ -36,7 +36,7 @@
                                 FROGR_TYPE_PICTURE_UPLOADER,    \
                                 FrogrPictureUploaderPrivate))
 
-G_DEFINE_TYPE (FrogrPictureUploader, frogr_picture_uploader, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrPictureUploader, frogr_picture_uploader, G_TYPE_OBJECT)
 
 /* Private struct */
 typedef struct _FrogrPictureUploaderPrivate FrogrPictureUploaderPrivate;
@@ -246,10 +246,11 @@ frogr_picture_uploader_new (GSList *pictures,
 void
 frogr_picture_uploader_upload (FrogrPictureUploader *self)
 {
+  FrogrPictureUploaderPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_PICTURE_UPLOADER (self));
 
-  FrogrPictureUploaderPrivate *priv =
-    FROGR_PICTURE_UPLOADER_GET_PRIVATE (self);
+  priv = FROGR_PICTURE_UPLOADER_GET_PRIVATE (self);
 
   /* Check first whether there's something to upload */
   if (priv->pictures == NULL)

@@ -27,7 +27,7 @@
                                 FROGR_TYPE_GROUP,       \
                                 FrogrGroupPrivate))
 
-G_DEFINE_TYPE (FrogrGroup, frogr_group, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrGroup, frogr_group, G_TYPE_OBJECT)
 
 /* Private struct */
 typedef struct _FrogrGroupPrivate FrogrGroupPrivate;
@@ -45,7 +45,7 @@ enum  {
   PROP_ID,
   PROP_NAME,
   PROP_PRIVACY,
-  PROP_N_PHOTOS,
+  PROP_N_PHOTOS
 };
 
 /* Prototypes */
@@ -197,13 +197,12 @@ frogr_group_new (const gchar *id,
   g_return_val_if_fail (id, NULL);
   g_return_val_if_fail (name, NULL);
 
-  GObject *new = g_object_new(FROGR_TYPE_GROUP,
-                              "id", id,
-                              "name", name,
-                              "privacy", privacy,
-                              "n_photos", n_photos,
-                              NULL);
-  return FROGR_GROUP (new);
+  return FROGR_GROUP (g_object_new(FROGR_TYPE_GROUP,
+                                   "id", id,
+                                   "name", name,
+                                   "privacy", privacy,
+                                   "n_photos", n_photos,
+                                   NULL));
 }
 
 
@@ -212,11 +211,11 @@ frogr_group_new (const gchar *id,
 const gchar *
 frogr_group_get_id (FrogrGroup *self)
 {
+  FrogrGroupPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_GROUP(self), NULL);
 
-  FrogrGroupPrivate *priv =
-    FROGR_GROUP_GET_PRIVATE (self);
-
+  priv = FROGR_GROUP_GET_PRIVATE (self);
   return (const gchar *)priv->id;
 }
 
@@ -224,11 +223,11 @@ void
 frogr_group_set_id (FrogrGroup *self,
                     const gchar *id)
 {
+  FrogrGroupPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_GROUP(self));
 
-  FrogrGroupPrivate *priv =
-    FROGR_GROUP_GET_PRIVATE (self);
-
+  priv = FROGR_GROUP_GET_PRIVATE (self);
   g_free (priv->id);
   priv->id = g_strdup (id);
 }
@@ -236,11 +235,11 @@ frogr_group_set_id (FrogrGroup *self,
 const gchar *
 frogr_group_get_name (FrogrGroup *self)
 {
+  FrogrGroupPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_GROUP(self), NULL);
 
-  FrogrGroupPrivate *priv =
-    FROGR_GROUP_GET_PRIVATE (self);
-
+  priv = FROGR_GROUP_GET_PRIVATE (self);
   return (const gchar *)priv->name;
 }
 
@@ -248,12 +247,12 @@ void
 frogr_group_set_name (FrogrGroup *self,
                        const gchar *name)
 {
+  FrogrGroupPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_GROUP(self));
   g_return_if_fail(name != NULL);
 
-  FrogrGroupPrivate *priv =
-    FROGR_GROUP_GET_PRIVATE (self);
-
+  priv = FROGR_GROUP_GET_PRIVATE (self);
   g_free (priv->name);
   priv->name = g_strdup (name);
 }
@@ -262,33 +261,33 @@ frogr_group_set_name (FrogrGroup *self,
 FspGroupPrivacy
 frogr_group_get_privacy (FrogrGroup *self)
 {
+  FrogrGroupPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_GROUP(self), FALSE);
 
-  FrogrGroupPrivate *priv =
-    FROGR_GROUP_GET_PRIVATE (self);
-
+  priv =FROGR_GROUP_GET_PRIVATE (self);
   return priv->privacy;
 }
 
 void
 frogr_group_set_privacy (FrogrGroup *self, FspGroupPrivacy privacy)
 {
+  FrogrGroupPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_GROUP(self));
 
-  FrogrGroupPrivate *priv =
-    FROGR_GROUP_GET_PRIVATE (self);
-
+  priv = FROGR_GROUP_GET_PRIVATE (self);
   priv->privacy = privacy;
 }
 
 gint
 frogr_group_get_n_photos (FrogrGroup *self)
 {
+  FrogrGroupPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_GROUP(self), FALSE);
 
-  FrogrGroupPrivate *priv =
-    FROGR_GROUP_GET_PRIVATE (self);
-
+  priv = FROGR_GROUP_GET_PRIVATE (self);
   return priv->n_photos;
 }
 
@@ -296,11 +295,11 @@ void
 frogr_group_set_n_photos (FrogrGroup *self,
                           gint n)
 {
+  FrogrGroupPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_GROUP(self));
 
-  FrogrGroupPrivate *priv =
-    FROGR_GROUP_GET_PRIVATE (self);
-
+  priv = FROGR_GROUP_GET_PRIVATE (self);
   priv->n_photos = n;
 }
 

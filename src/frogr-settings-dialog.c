@@ -36,7 +36,7 @@
                                 FROGR_TYPE_SETTINGS_DIALOG,      \
                                 FrogrSettingsDialogPrivate))
 
-G_DEFINE_TYPE (FrogrSettingsDialog, frogr_settings_dialog, GTK_TYPE_DIALOG);
+G_DEFINE_TYPE (FrogrSettingsDialog, frogr_settings_dialog, GTK_TYPE_DIALOG)
 
 typedef struct _FrogrSettingsDialogPrivate {
   FrogrController *controller;
@@ -75,7 +75,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
-  gboolean use_proxy;;
+  gboolean use_proxy;
   gchar *proxy_host;
   gchar *proxy_port;
   gchar *proxy_username;

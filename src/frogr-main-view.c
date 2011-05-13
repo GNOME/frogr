@@ -538,10 +538,10 @@ _add_menu_item_generic (FrogrMainView *self, GtkMenuShell *menu,
                         const gchar *mnemonic, GtkWidget **out_ref,
                         gboolean isToggleable, GSList **group)
 {
+  GtkWidget *menu_item = NULL;
+
   g_return_if_fail (FROGR_IS_MAIN_VIEW (self));
   g_return_if_fail (GTK_IS_MENU_SHELL (menu));
-
-  GtkWidget *menu_item = NULL;
 
   if (isToggleable)
     {
@@ -1981,9 +1981,11 @@ frogr_main_view_new (void)
 GtkWindow *
 frogr_main_view_get_window (FrogrMainView *self)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW (self), NULL);
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   return priv->window;
 }
 
@@ -1991,11 +1993,12 @@ void
 frogr_main_view_set_status_text (FrogrMainView *self,
                                  const gchar *text)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Pop old message if present */
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   gtk_statusbar_pop (GTK_STATUSBAR (priv->status_bar),
                      priv->sb_context_id);
 
@@ -2011,9 +2014,11 @@ frogr_main_view_set_status_text (FrogrMainView *self,
 void
 frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Reset values */
   gtk_label_set_text (GTK_LABEL (priv->progress_label), text ? text : "");
@@ -2027,18 +2032,22 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
 void
 frogr_main_view_set_progress_description (FrogrMainView *self, const gchar *text)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   gtk_label_set_text (GTK_LABEL (priv->progress_label), text);
 }
 
 void
 frogr_main_view_set_progress_status_text (FrogrMainView *self, const gchar *text)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Set superimposed text, if specified */
   if (text != NULL)
@@ -2048,9 +2057,11 @@ frogr_main_view_set_progress_status_text (FrogrMainView *self, const gchar *text
 void
 frogr_main_view_set_progress_status_fraction (FrogrMainView *self, double fraction)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Check limits */
   if (fraction < 0.0)
@@ -2064,9 +2075,11 @@ frogr_main_view_set_progress_status_fraction (FrogrMainView *self, double fracti
 void
 frogr_main_view_pulse_progress (FrogrMainView *self)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Show the widget and pulse */
   gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv->progress_bar));
@@ -2078,17 +2091,21 @@ frogr_main_view_pulse_progress (FrogrMainView *self)
 void
 frogr_main_view_hide_progress (FrogrMainView *self)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   gtk_widget_hide (GTK_WIDGET (priv->progress_dialog));
 }
 
 FrogrMainViewModel *
 frogr_main_view_get_model (FrogrMainView *self)
 {
+  FrogrMainViewPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW (self), NULL);
 
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   return priv->model;
 }

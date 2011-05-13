@@ -36,9 +36,9 @@ fsp_data_get_type                       (void)
 FspData*
 fsp_data_new                            (FspDataType type)
 {
-  g_return_val_if_fail ((type > FSP_UNKNOWN) && (type < FSP_DATA_LAST), NULL);
+  FspData *new_data = NULL;
 
-  FspData *new_data;
+  g_return_val_if_fail ((type > FSP_UNKNOWN) && (type < FSP_DATA_LAST), NULL);
 
   new_data = g_slice_new0 (FspData);
 
@@ -111,9 +111,9 @@ fsp_data_new                            (FspDataType type)
 FspData*
 fsp_data_copy                           (const FspData *data)
 {
-  g_return_val_if_fail (data != NULL, NULL);
-
   FspData *new_data = NULL;
+
+  g_return_val_if_fail (data != NULL, NULL);
 
   new_data = fsp_data_new (FSP_UNKNOWN);
   *new_data = *data;

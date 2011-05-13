@@ -27,7 +27,7 @@
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 
-G_DEFINE_TYPE (FspParser, fsp_parser, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FspParser, fsp_parser, G_TYPE_OBJECT)
 
 
 /* Types of responses */
@@ -116,7 +116,7 @@ fsp_parser_constructor           (GType                  type,
                                   guint                  n_construct_properties,
                                   GObjectConstructParam *construct_properties)
 {
-  GObject *object;
+  GObject *object = NULL;
 
   if (!_instance)
     {
@@ -150,12 +150,14 @@ fsp_parser_init                         (FspParser *self)
 static RestResponseType
 _get_response_type                      (xmlDoc *doc)
 {
+  RestResponseType retval = REST_RESPONSE_UNKNOWN;
+  xmlNode *root = NULL;
+  gchar *name = NULL;
+
   g_return_val_if_fail (doc != NULL, REST_RESPONSE_UNKNOWN);
 
-  RestResponseType retval = REST_RESPONSE_UNKNOWN;
-  xmlNode *root = xmlDocGetRootElement (doc);
-
-  gchar *name = (gchar *) root->name;
+  root = xmlDocGetRootElement (doc);
+  name = (gchar *) root->name;
   if (!g_strcmp0 (name, "rsp"))
     {
       xmlChar *value = xmlGetProp (root, (const xmlChar *) "stat");
@@ -216,14 +218,14 @@ static GError *
 _parse_error_from_node                  (xmlNode *error_node,
                                          FspErrorMethod error_method)
 {
-  g_return_val_if_fail (error_node != NULL, NULL);
-
-  FspError error;
-  xmlChar *code_str;
-  xmlChar *msg;
-  gchar *error_msg;
+  FspError error = FSP_ERROR_UNKNOWN;
+  xmlChar *code_str = NULL;
+  xmlChar *msg = NULL;
+  gchar *error_msg = NULL;
   gint code;
-  GError *err;
+  GError *err = NULL;
+
+  g_return_val_if_fail (error_node != NULL, NULL);
 
   /* Get data from XML */
   code_str = xmlGetProp (error_node, (const xmlChar *) "code");
@@ -290,13 +292,13 @@ _process_xml_response                          (FspParser  *self,
                                                  GError **error),
                                                 GError          **error)
 {
-  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
-  g_return_val_if_fail (buffer != NULL, NULL);
-
   /* Get xml data from response */
   xmlDoc *doc = NULL;
   gpointer retval = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
 
   /* Get xml data from response */
   doc = xmlParseMemory (buffer, buf_size);
@@ -332,12 +334,12 @@ static gpointer
 _get_frob_parser                        (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   gchar *frob = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/frob", xpathCtx);
@@ -375,12 +377,12 @@ static gpointer
 _get_auth_token_parser                  (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   FspDataAuthToken *auth_token = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/auth", xpathCtx);
@@ -463,12 +465,12 @@ static gpointer
 _get_upload_status_parser               (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   FspDataUploadStatus *upload_status = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/user", xpathCtx);
@@ -560,12 +562,12 @@ static gpointer
 _photo_get_upload_result_parser         (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   gchar *photoid = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/photoid", xpathCtx);
@@ -603,12 +605,12 @@ static gpointer
 _get_photo_info_parser                  (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   FspDataPhotoInfo *pinfo = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/photo", xpathCtx);
@@ -641,14 +643,14 @@ static gpointer
 _get_photosets_list_parser              (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   int numNodes = 0;
   GSList *photosetsList = NULL;
   FspDataPhotoSet *photoset = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/photosets/photoset", xpathCtx);
@@ -697,12 +699,12 @@ static gpointer
 _photoset_created_parser                (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   gchar *photosetId = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/photoset", xpathCtx);
@@ -737,14 +739,14 @@ static gpointer
 _get_groups_list_parser                 (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   int numNodes = 0;
   GSList *groupsList = NULL;
   FspDataGroup *group = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/groups/group", xpathCtx);
@@ -793,8 +795,6 @@ static gpointer
 _get_tags_list_parser                   (xmlDoc  *doc,
                                          GError **error)
 {
-  g_return_val_if_fail (doc != NULL, NULL);
-
   xmlXPathContext *xpathCtx = NULL;
   xmlXPathObject * xpathObj = NULL;
   int numNodes = 0;
@@ -802,6 +802,8 @@ _get_tags_list_parser                   (xmlDoc  *doc,
   xmlChar *content = NULL;
   gchar *tag = NULL;
   GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
 
   xpathCtx = xmlXPathNewContext (doc);
   xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/who/tags/tag", xpathCtx);
@@ -847,11 +849,11 @@ _get_tags_list_parser                   (xmlDoc  *doc,
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node)
 {
-  g_return_val_if_fail (node != NULL, NULL);
-
   FspDataPhotoInfo *pinfo = NULL;
   xmlAttr *attr = NULL;
   xmlChar *content = NULL;
+
+  g_return_val_if_fail (node != NULL, NULL);
 
   /* Create and fill the FspDataPhotoInfo */
   pinfo = FSP_DATA_PHOTO_INFO (fsp_data_new (FSP_PHOTO_INFO));
@@ -1005,13 +1007,13 @@ _get_photo_info_from_node               (xmlNode *node)
 static FspDataPhotoSet *
 _get_photoset_from_node                 (xmlNode *node)
 {
-  g_return_val_if_fail (node != NULL, NULL);
-
   FspDataPhotoSet *photoSet = NULL;
   xmlChar *content = NULL;
   xmlChar *id = NULL;
   xmlChar *primaryPhotoId = NULL;
   xmlChar *numPhotos = NULL;
+
+  g_return_val_if_fail (node != NULL, NULL);
 
   if (g_strcmp0 ((gchar *) node->name, "photoset"))
     return NULL;
@@ -1060,13 +1062,13 @@ _get_photoset_from_node                 (xmlNode *node)
 static FspDataGroup *
 _get_group_from_node                    (xmlNode *node)
 {
-  g_return_val_if_fail (node != NULL, NULL);
-
   FspDataGroup *group = NULL;
   xmlChar *id = NULL;
   xmlChar *name = NULL;
   xmlChar *privacy = NULL;
   xmlChar *numPhotos = NULL;
+
+  g_return_val_if_fail (node != NULL, NULL);
 
   if (g_strcmp0 ((gchar *) node->name, "group"))
     return NULL;
@@ -1110,10 +1112,10 @@ fsp_parser_get_frob                     (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  gchar *frob = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  gchar *frob = NULL;
 
   /* Process the response */
   frob = (gchar *) _process_xml_response (self, buffer, buf_size,
@@ -1129,10 +1131,10 @@ fsp_parser_get_auth_token               (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  FspDataAuthToken *auth_token = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  FspDataAuthToken *auth_token = NULL;
 
   /* Process the response */
   auth_token =
@@ -1149,10 +1151,10 @@ fsp_parser_get_upload_status            (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  FspDataUploadStatus *upload_status = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  FspDataUploadStatus *upload_status = NULL;
 
   /* Process the response */
   upload_status =
@@ -1170,10 +1172,10 @@ fsp_parser_get_upload_result            (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  gchar *photo_id = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  gchar *photo_id = NULL;
 
   /* Process the response */
   photo_id = (gchar *) (_process_xml_response (self, buffer, buf_size,
@@ -1189,10 +1191,10 @@ fsp_parser_get_photo_info               (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  FspDataPhotoInfo *photo_info = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  FspDataPhotoInfo *photo_info = NULL;
 
   /* Process the response */
   photo_info =
@@ -1210,10 +1212,10 @@ fsp_parser_get_photosets_list           (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  GSList *photoSets_list = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  GSList *photoSets_list = NULL;
 
   /* Process the response */
   photoSets_list = (GSList*) _process_xml_response (self, buffer, buf_size,
@@ -1246,10 +1248,10 @@ fsp_parser_photoset_created             (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  gchar *photoset_id = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  gchar *photoset_id = NULL;
 
   /* Process the response */
   photoset_id = (gchar *) (_process_xml_response (self, buffer, buf_size,
@@ -1265,10 +1267,10 @@ fsp_parser_get_groups_list              (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  GSList *groups_list = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  GSList *groups_list = NULL;
 
   /* Process the response */
   groups_list = (GSList*) _process_xml_response (self, buffer, buf_size,
@@ -1301,10 +1303,10 @@ fsp_parser_get_tags_list                (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error)
 {
+  GSList *tags_list = NULL;
+
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
-
-  GSList *tags_list = NULL;
 
   /* Process the response */
   tags_list = (GSList *) _process_xml_response (self, buffer, buf_size,

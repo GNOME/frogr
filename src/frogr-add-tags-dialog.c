@@ -34,7 +34,7 @@
                                 FROGR_TYPE_ADD_TAGS_DIALOG,     \
                                 FrogrAddTagsDialogPrivate))
 
-G_DEFINE_TYPE (FrogrAddTagsDialog, frogr_add_tags_dialog, GTK_TYPE_DIALOG);
+G_DEFINE_TYPE (FrogrAddTagsDialog, frogr_add_tags_dialog, GTK_TYPE_DIALOG)
 
 typedef struct _FrogrAddTagsDialogPrivate {
   GtkWidget *entry;

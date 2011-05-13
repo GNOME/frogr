@@ -36,7 +36,7 @@
                                 FROGR_TYPE_ADD_TO_SET_DIALOG,   \
                                 FrogrAddToSetDialogPrivate))
 
-G_DEFINE_TYPE (FrogrAddToSetDialog, frogr_add_to_set_dialog, GTK_TYPE_DIALOG);
+G_DEFINE_TYPE (FrogrAddToSetDialog, frogr_add_to_set_dialog, GTK_TYPE_DIALOG)
 
 typedef struct _FrogrAddToSetDialogPrivate {
   GtkWidget *treeview;
@@ -190,12 +190,12 @@ _toggle_column_sort_order (GtkTreeSortable *sortable,
                            GtkTreeViewColumn *col,
                            gint col_id)
 {
+  GtkSortType current;
+  GtkSortType new;
+
   g_return_if_fail (GTK_IS_TREE_SORTABLE (sortable));
   g_return_if_fail (GTK_IS_TREE_VIEW_COLUMN (col));
   g_return_if_fail (col_id >= 0 && col_id < N_COLS);
-
-  GtkSortType current;
-  GtkSortType new;
 
   current = gtk_tree_view_column_get_sort_order (col);
   if (current == GTK_SORT_ASCENDING)
@@ -213,12 +213,12 @@ _tree_iter_compare_n_elements_func (GtkTreeModel *model,
                                     GtkTreeIter *b,
                                     gpointer data)
 {
-  g_return_val_if_fail (GTK_IS_TREE_MODEL (model), 0);
-
   gchar *a_str = NULL;
   gchar *b_str = NULL;
-  gint a_value;
-  gint b_value;
+  gint a_value = 0;
+  gint b_value = 0;
+
+  g_return_val_if_fail (GTK_IS_TREE_MODEL (model), 0);
 
   gtk_tree_model_get (GTK_TREE_MODEL (model), a, N_ELEMENTS_COL, &a_str, -1);
   gtk_tree_model_get (GTK_TREE_MODEL (model), b, N_ELEMENTS_COL, &b_str, -1);

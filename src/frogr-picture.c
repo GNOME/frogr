@@ -29,7 +29,7 @@
                                 FROGR_TYPE_PICTURE,     \
                                 FrogrPicturePrivate))
 
-G_DEFINE_TYPE (FrogrPicture, frogr_picture, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrPicture, frogr_picture, G_TYPE_OBJECT)
 
 /* Private struct */
 typedef struct _FrogrPicturePrivate FrogrPicturePrivate;
@@ -521,17 +521,16 @@ frogr_picture_new (const gchar *fileuri,
   g_return_val_if_fail (fileuri, NULL);
   g_return_val_if_fail (title, NULL);
 
-  GObject *new = g_object_new(FROGR_TYPE_PICTURE,
-                              "fileuri", fileuri,
-                              "title", title,
-                              "is-public", public,
-                              "is-family", family,
-                              "is-friend", friend,
-                              "safety-level", FSP_SAFETY_LEVEL_SAFE,
-                              "content-type", FSP_CONTENT_TYPE_PHOTO,
-                              "show_in_search", TRUE,
-                              NULL);
-  return FROGR_PICTURE (new);
+  return FROGR_PICTURE (g_object_new(FROGR_TYPE_PICTURE,
+                                     "fileuri", fileuri,
+                                     "title", title,
+                                     "is-public", public,
+                                     "is-family", family,
+                                     "is-friend", friend,
+                                     "safety-level", FSP_SAFETY_LEVEL_SAFE,
+                                     "content-type", FSP_CONTENT_TYPE_PHOTO,
+                                     "show_in_search", TRUE,
+                                     NULL));
 }
 
 
@@ -540,11 +539,11 @@ frogr_picture_new (const gchar *fileuri,
 const gchar *
 frogr_picture_get_id (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return (const gchar *)priv->id;
 }
 
@@ -552,11 +551,11 @@ void
 frogr_picture_set_id (FrogrPicture *self,
                       const gchar *id)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   g_free (priv->id);
   priv->id = g_strdup (id);
 }
@@ -564,11 +563,11 @@ frogr_picture_set_id (FrogrPicture *self,
 const gchar *
 frogr_picture_get_fileuri (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return (const gchar *)priv->fileuri;
 }
 
@@ -576,11 +575,11 @@ void
 frogr_picture_set_fileuri (FrogrPicture *self,
                            const gchar *fileuri)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   g_free (priv->fileuri);
   priv->fileuri = g_strdup (fileuri);
 }
@@ -588,11 +587,11 @@ frogr_picture_set_fileuri (FrogrPicture *self,
 const gchar *
 frogr_picture_get_title (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return (const gchar *)priv->title;
 }
 
@@ -600,12 +599,12 @@ void
 frogr_picture_set_title (FrogrPicture *self,
                          const gchar *title)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
   g_return_if_fail(title != NULL);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   g_free (priv->title);
   priv->title = g_strdup (title);
 }
@@ -613,11 +612,11 @@ frogr_picture_set_title (FrogrPicture *self,
 const gchar *
 frogr_picture_get_description (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return (const gchar *)priv->description;
 }
 
@@ -625,11 +624,11 @@ void
 frogr_picture_set_description (FrogrPicture *self,
                                const gchar *description)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   g_free (priv->description);
   priv->description = g_strdup (description);
 }
@@ -637,32 +636,33 @@ frogr_picture_set_description (FrogrPicture *self,
 const GSList *
 frogr_picture_get_tags_list (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->tags_list;
 }
 
 const gchar *
 frogr_picture_get_tags (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->tags_string;
 }
 
 void
 frogr_picture_set_tags (FrogrPicture *self, const gchar *tags_string)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
 
   /* First remove all the previous tags list */
   g_slist_foreach (priv->tags_list, (GFunc) g_free, NULL);
@@ -678,7 +678,6 @@ frogr_picture_add_tags (FrogrPicture *self, const gchar *tags_string)
 {
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  /* Add to internal tags_list */
   _add_tags_to_tags_list (self, tags_string);
 }
 
@@ -693,11 +692,11 @@ frogr_picture_remove_tags (FrogrPicture *self)
 gboolean
 frogr_picture_is_public (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->is_public;
 }
 
@@ -705,22 +704,22 @@ void
 frogr_picture_set_public (FrogrPicture *self,
                           gboolean public)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->is_public = public;
 }
 
 gboolean
 frogr_picture_is_friend (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->is_friend;
 }
 
@@ -728,22 +727,22 @@ void
 frogr_picture_set_friend (FrogrPicture *self,
                           gboolean friend)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->is_friend = friend;
 }
 
 gboolean
 frogr_picture_is_family (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->is_family;
 }
 
@@ -751,22 +750,22 @@ void
 frogr_picture_set_family (FrogrPicture *self,
                           gboolean family)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->is_family = family;
 }
 
 FspSafetyLevel
 frogr_picture_get_safety_level (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->safety_level;
 }
 
@@ -774,22 +773,22 @@ void
 frogr_picture_set_safety_level (FrogrPicture *self,
                                 FspSafetyLevel safety_level)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->safety_level = safety_level;
 }
 
 FspContentType
 frogr_picture_get_content_type (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->content_type;
 }
 
@@ -797,22 +796,22 @@ void
 frogr_picture_set_content_type (FrogrPicture *self,
                                 FspContentType content_type)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->content_type = content_type;
 }
 
 gboolean
 frogr_picture_show_in_search (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->show_in_search;
 }
 
@@ -820,22 +819,22 @@ void
 frogr_picture_set_show_in_search (FrogrPicture *self,
                                   gboolean show_in_search)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->show_in_search = show_in_search;
 }
 
 GdkPixbuf *
 frogr_picture_get_pixbuf (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->pixbuf;
 }
 
@@ -843,11 +842,11 @@ void
 frogr_picture_set_pixbuf (FrogrPicture *self,
                           GdkPixbuf *pixbuf)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   if (priv->pixbuf)
     g_object_unref (priv->pixbuf);
 
@@ -856,9 +855,9 @@ frogr_picture_set_pixbuf (FrogrPicture *self,
 
 gulong frogr_picture_get_filesize (FrogrPicture *self)
 {
-  g_return_val_if_fail(FROGR_IS_PICTURE(self), 0);
-
   FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), 0);
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->filesize;
@@ -866,9 +865,9 @@ gulong frogr_picture_get_filesize (FrogrPicture *self)
 
 void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize)
 {
-  g_return_if_fail(FROGR_IS_PICTURE(self));
-
   FrogrPicturePrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PICTURE(self));
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->filesize = filesize;
@@ -877,11 +876,11 @@ void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize)
 void
 frogr_picture_set_datetime (FrogrPicture *self, const gchar *datetime)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   g_free (priv->datetime);
   priv->datetime = g_strdup (datetime);
 }
@@ -889,20 +888,20 @@ frogr_picture_set_datetime (FrogrPicture *self, const gchar *datetime)
 const gchar *
 frogr_picture_get_datetime (FrogrPicture *self)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_PICTURE(self), 0);
 
-  FrogrPicturePrivate *priv =
-    FROGR_PICTURE_GET_PRIVATE (self);
-
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
   return (const gchar *)priv->datetime;
 }
 
 GSList *
 frogr_picture_get_sets (FrogrPicture *self)
 {
-  g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
   FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->sets;
@@ -911,12 +910,12 @@ frogr_picture_get_sets (FrogrPicture *self)
 void
 frogr_picture_set_sets (FrogrPicture *self, GSList *sets)
 {
-  g_return_if_fail(FROGR_IS_PICTURE(self));
-
   GSList *new_list = NULL;
   GSList *item = NULL;
   FrogrPhotoSet *set = NULL;
   FrogrPicturePrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PICTURE(self));
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
 
@@ -937,10 +936,10 @@ frogr_picture_set_sets (FrogrPicture *self, GSList *sets)
 void
 frogr_picture_add_set (FrogrPicture *self, FrogrPhotoSet *set)
 {
+  FrogrPicturePrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_PICTURE(self));
   g_return_if_fail(FROGR_IS_SET(set));
-
-  FrogrPicturePrivate *priv = NULL;
 
   /* Do not add the same set twice */
   if (frogr_picture_in_set (self, set))
@@ -961,9 +960,9 @@ frogr_picture_remove_sets (FrogrPicture *self)
 gboolean
 frogr_picture_in_set (FrogrPicture *self, FrogrPhotoSet *set)
 {
-  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
   FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   if (g_slist_index (priv->sets, set) != -1)
@@ -975,9 +974,9 @@ frogr_picture_in_set (FrogrPicture *self, FrogrPhotoSet *set)
 GSList *
 frogr_picture_get_groups (FrogrPicture *self)
 {
-  g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
   FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   return priv->groups;
@@ -986,12 +985,12 @@ frogr_picture_get_groups (FrogrPicture *self)
 void
 frogr_picture_set_groups (FrogrPicture *self, GSList *groups)
 {
-  g_return_if_fail(FROGR_IS_PICTURE(self));
-
   GSList *new_list = NULL;
   GSList *item = NULL;
   FrogrGroup *group = NULL;
   FrogrPicturePrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PICTURE(self));
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
 
@@ -1020,9 +1019,9 @@ frogr_picture_remove_groups (FrogrPicture *self)
 gboolean
 frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group)
 {
-  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
   FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   if (g_slist_index (priv->groups, group) != -1)

@@ -48,11 +48,12 @@ static gboolean frogr_util_spawn_command (const gchar* cmd)
 void
 frogr_util_open_url_in_browser (const gchar *url)
 {
-  if (url == NULL)
-    return;
-
   gchar *command = NULL;
   GError *error = NULL;
+
+  /* Early return */
+  if (url == NULL)
+    return;
 
 #ifdef MAC_INTEGRATION
   /* In MacOSX neither gnome-open nor gtk_show_uri() will work */

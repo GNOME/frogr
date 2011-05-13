@@ -73,7 +73,7 @@ typedef enum {
 typedef enum {
   FSP_VISIBILITY_NONE = -1,
   FSP_VISIBILITY_NO   =  0,
-  FSP_VISIBILITY_YES  =  1,
+  FSP_VISIBILITY_YES  =  1
 } FspVisibility;
 
 typedef enum {
@@ -82,7 +82,7 @@ typedef enum {
   FSP_PERMISSION_FRIENDS_FAMILY = 1,
   FSP_PERMISSION_CONTACTS       = 2,
   FSP_PERMISSION_EVERYBODY      = 3,
-  FSP_PERMISSION_LAST           = 3,
+  FSP_PERMISSION_LAST           = 3
 } FspPermission;
 
 typedef enum {
@@ -94,7 +94,7 @@ typedef enum {
   FSP_LICENSE_AT         = 4,
   FSP_LICENSE_AT_SA      = 5,
   FSP_LICENSE_ND         = 6,
-  FSP_LICENSE_LAST       = 7,
+  FSP_LICENSE_LAST       = 7
 } FspLicense;
 
 typedef enum {

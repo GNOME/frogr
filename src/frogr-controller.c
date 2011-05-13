@@ -53,7 +53,7 @@
                                 FROGR_TYPE_CONTROLLER,          \
                                 FrogrControllerPrivate))
 
-G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT)
 
 /* Private data */
 
@@ -120,7 +120,7 @@ typedef enum {
   FETCHING_ACCOUNT_EXTRA_INFO,
   FETCHING_SETS,
   FETCHING_GROUPS,
-  FETCHING_TAGS,
+  FETCHING_TAGS
 } FetchingActivity;
 
 /* Prototypes */
@@ -473,9 +473,6 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
                  FrogrPictureUploadedCallback picture_uploaded_cb,
                  GObject *object)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-  g_return_if_fail(FROGR_IS_PICTURE (picture));
-
   FrogrControllerPrivate *priv = NULL;
   upload_picture_st *up_st = NULL;
   FspVisibility public_visibility = FSP_VISIBILITY_NONE;
@@ -484,6 +481,9 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   FspSafetyLevel safety_level = FSP_SAFETY_LEVEL_NONE;
   FspContentType content_type = FSP_CONTENT_TYPE_NONE;
   FspSearchScope search_scope = FSP_SEARCH_SCOPE_NONE;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+  g_return_if_fail(FROGR_IS_PICTURE (picture));
 
   up_st = g_slice_new0 (upload_picture_st);
   up_st->controller = self;
@@ -965,11 +965,11 @@ _notify_adding_to_group (FrogrController *self,
 static void
 _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
 {
-  g_return_if_fail (FROGR_IS_CONTROLLER (self));
-  g_return_if_fail (FROGR_IS_PICTURE (picture));
-
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
+
+  g_return_if_fail (FROGR_IS_CONTROLLER (self));
+  g_return_if_fail (FROGR_IS_PICTURE (picture));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
@@ -1029,9 +1029,9 @@ _on_pictures_uploaded (FrogrController *self,
 static void
 _fetch_everything (FrogrController *self, gboolean force_fetch)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
     return;
@@ -1057,9 +1057,9 @@ _fetch_everything (FrogrController *self, gboolean force_fetch)
 static void
 _fetch_sets (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
     return;
@@ -1139,9 +1139,9 @@ _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
 static void
 _fetch_groups (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
     return;
@@ -1219,9 +1219,9 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 
 static void _fetch_account_info (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
     return;
@@ -1291,9 +1291,9 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
 
 static void _fetch_account_extra_info (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
     return;
@@ -1368,9 +1368,9 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
 static void
 _fetch_tags (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
     return;
@@ -1825,19 +1825,22 @@ frogr_controller_get_instance (void)
 FrogrMainView *
 frogr_controller_get_main_view (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return priv->mainview;
 }
 
 gboolean
 frogr_controller_run_app (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   if (priv->app_running)
     {
@@ -1870,9 +1873,11 @@ frogr_controller_run_app (FrogrController *self)
 gboolean
 frogr_controller_quit_app (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   if (priv->app_running)
     {
@@ -1896,12 +1901,12 @@ void
 frogr_controller_set_active_account (FrogrController *self,
                                      FrogrAccount *account)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
   FrogrAccount *new_account = NULL;
   gboolean accounts_changed = FALSE;
   const gchar *token = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -1955,27 +1960,33 @@ frogr_controller_set_active_account (FrogrController *self,
 FrogrAccount *
 frogr_controller_get_active_account (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return priv->account;
 }
 
 GSList *
 frogr_controller_get_all_accounts (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return frogr_config_get_accounts (priv->config);
 }
 
 FrogrControllerState
 frogr_controller_get_state (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return priv->state;
 }
 
@@ -1984,9 +1995,9 @@ frogr_controller_set_proxy (FrogrController *self,
                             const char *host, const char *port,
                             const char *username, const char *password)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2022,10 +2033,11 @@ frogr_controller_set_proxy (FrogrController *self,
 void
 frogr_controller_fetch_tags_if_needed (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   if (!priv->fetching_tags && !priv->tags_fetched)
     _fetch_tags (self);
 }
@@ -2033,10 +2045,13 @@ frogr_controller_fetch_tags_if_needed (FrogrController *self)
 void
 frogr_controller_show_about_dialog (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+  GtkWindow *window = NULL;
+
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  window = frogr_main_view_get_window (priv->mainview);
 
   /* Run the about dialog */
   frogr_about_dialog_show (window);
@@ -2045,10 +2060,13 @@ frogr_controller_show_about_dialog (FrogrController *self)
 void
 frogr_controller_show_auth_dialog (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+  GtkWindow *window = NULL;
+
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  window = frogr_main_view_get_window (priv->mainview);
 
   /* Run the auth dialog */
   frogr_auth_dialog_show (window, REQUEST_AUTHORIZATION);
@@ -2057,10 +2075,13 @@ frogr_controller_show_auth_dialog (FrogrController *self)
 void
 frogr_controller_show_settings_dialog (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+  GtkWindow *window = NULL;
+
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  GtkWindow *window = frogr_main_view_get_window (priv->mainview);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  window = frogr_main_view_get_window (priv->mainview);
 
   /* Run the auth dialog */
   frogr_settings_dialog_show (window);
@@ -2070,9 +2091,9 @@ void
 frogr_controller_show_details_dialog (FrogrController *self,
                                       GSList *pictures)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2092,9 +2113,9 @@ void
 frogr_controller_show_add_tags_dialog (FrogrController *self,
                                        GSList *pictures)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2114,9 +2135,9 @@ void
 frogr_controller_show_create_new_set_dialog (FrogrController *self,
                                              GSList *pictures)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2136,9 +2157,9 @@ void
 frogr_controller_show_add_to_set_dialog (FrogrController *self,
                                          GSList *pictures)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2158,9 +2179,9 @@ void
 frogr_controller_show_add_to_group_dialog (FrogrController *self,
                                            GSList *pictures)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2179,9 +2200,9 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
 void
 frogr_controller_open_auth_url (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   _enable_cancellable (self, FALSE);
   fsp_session_get_auth_url_async (priv->session, NULL, _get_auth_url_cb, self);
@@ -2190,9 +2211,9 @@ frogr_controller_open_auth_url (FrogrController *self)
 void
 frogr_controller_complete_auth (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   _enable_cancellable (self, FALSE);
   fsp_session_complete_auth_async (priv->session, NULL, _complete_auth_cb, self);
@@ -2201,18 +2222,22 @@ frogr_controller_complete_auth (FrogrController *self)
 gboolean
 frogr_controller_is_authorized (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   return (priv->account != NULL);
 }
 
 void
 frogr_controller_revoke_authorization (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Ensure there's the token/account is no longer active anywhere */
   fsp_session_set_token (priv->session, NULL);
@@ -2237,9 +2262,11 @@ frogr_controller_load_pictures (FrogrController *self,
 void
 frogr_controller_upload_pictures (FrogrController *self)
 {
+  FrogrControllerPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Upload pictures */
   if (!frogr_controller_is_authorized (self))
@@ -2279,9 +2306,9 @@ frogr_controller_upload_pictures (FrogrController *self)
 void
 frogr_controller_cancel_ongoing_request (FrogrController *self)
 {
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   if (!G_IS_CANCELLABLE (priv->cancellable)

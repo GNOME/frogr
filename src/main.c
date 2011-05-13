@@ -63,10 +63,10 @@ _get_uris_list_from_array (char **uris_str, int n_uris)
 static gboolean
 _load_pictures_on_idle (gpointer data)
 {
-  g_return_val_if_fail (data, FALSE);
-
   FrogrController *fcontroller = NULL;
   GSList *fileuris = NULL;
+
+  g_return_val_if_fail (data, FALSE);
 
   fcontroller = frogr_controller_get_instance ();
   fileuris = (GSList *)data;

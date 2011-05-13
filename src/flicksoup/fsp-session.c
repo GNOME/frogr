@@ -39,7 +39,7 @@
 #define FLICKR_API_UPLOAD_URL "http://api.flickr.com/services/upload"
 
 #if DEBUG_ENABLED
-#define DEBUG(...) g_debug (__VA_ARGS__);
+#define DEBUG(...) g_debug (__VA_ARGS__)
 #else
 #define DEBUG(...)
 #endif
@@ -49,7 +49,7 @@
                                 FSP_TYPE_SESSION,       \
                                 FspSessionPrivate))
 
-G_DEFINE_TYPE (FspSession, fsp_session, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FspSession, fsp_session, G_TYPE_OBJECT)
 
 
 /* Private struct */
@@ -566,10 +566,6 @@ _load_file_contents_cb                  (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      data)
 {
-  g_return_if_fail (G_IS_FILE (object));
-  g_return_if_fail (G_IS_ASYNC_RESULT (res));
-  g_return_if_fail (data != NULL);
-
   UploadPhotoData *up_clos = NULL;
   AsyncRequestData *ard_clos = NULL;
   GHashTable *extra_params = NULL;
@@ -577,6 +573,10 @@ _load_file_contents_cb                  (GObject      *object,
   GError *error = NULL;
   gchar *contents;
   gsize length;
+
+  g_return_if_fail (G_IS_FILE (object));
+  g_return_if_fail (G_IS_ASYNC_RESULT (res));
+  g_return_if_fail (data != NULL);
 
   /* Get data from UploadPhotoData closure, and free it */
   up_clos = (UploadPhotoData *) data;
@@ -665,10 +665,11 @@ static GHashTable *
 _get_params_table_from_valist           (const gchar *first_param,
                                          va_list      args)
 {
-  g_return_val_if_fail (first_param != NULL, NULL);
-
   GHashTable *table = NULL;
-  gchar *p, *v;
+  gchar *p = NULL;
+  gchar *v = NULL;
+
+  g_return_val_if_fail (first_param != NULL, NULL);
 
   table = g_hash_table_new_full (g_str_hash, g_str_equal,
                                  (GDestroyNotify)g_free,
@@ -717,11 +718,11 @@ static gchar *
 _get_signed_query_with_params           (const gchar      *api_sig,
                                          GHashTable       *params_table)
 {
-  g_return_val_if_fail (params_table != NULL, NULL);
-  g_return_val_if_fail (api_sig != NULL, NULL);
-
   GList *keys = NULL;
   gchar *retval = NULL;
+
+  g_return_val_if_fail (params_table != NULL, NULL);
+  g_return_val_if_fail (api_sig != NULL, NULL);
 
   /* Get ownership of the table */
   g_hash_table_ref (params_table);
@@ -796,9 +797,9 @@ static gboolean
 _check_errors_on_soup_response           (SoupMessage  *msg,
                                           GError      **error)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
-
   GError *err = NULL;
+
+  g_assert (SOUP_IS_MESSAGE (msg));
 
   /* Check non-succesful SoupMessage's only */
   if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
@@ -831,10 +832,10 @@ _check_async_errors_on_finish           (GObject       *object,
                                          gpointer       source_tag,
                                          GError       **error)
 {
+  gboolean errors_found = TRUE;
+
   g_return_val_if_fail (G_IS_OBJECT (object), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-
-  gboolean errors_found = TRUE;
 
   if (g_simple_async_result_is_valid (res, object, source_tag))
     {
@@ -855,11 +856,11 @@ gchar *
 _get_api_signature_from_hash_table      (const gchar *shared_secret,
                                          GHashTable  *params_table)
 {
-  g_return_val_if_fail (shared_secret != NULL, NULL);
-  g_return_val_if_fail (params_table != NULL, NULL);
-
   GList *keys = NULL;
   gchar *api_sig = NULL;
+
+  g_return_val_if_fail (shared_secret != NULL, NULL);
+  g_return_val_if_fail (params_table != NULL, NULL);
 
   /* Get ownership of the table */
   g_hash_table_ref (params_table);
@@ -911,13 +912,13 @@ _get_signed_query                       (const gchar *shared_secret,
                                          const gchar *first_param,
                                          ... )
 {
-  g_return_val_if_fail (shared_secret != NULL, NULL);
-  g_return_val_if_fail (first_param != NULL, NULL);
-
   va_list args;
   GHashTable *table = NULL;
   gchar *api_sig = NULL;
   gchar *retval = NULL;
+
+  g_return_val_if_fail (shared_secret != NULL, NULL);
+  g_return_val_if_fail (first_param != NULL, NULL);
 
   va_start (args, first_param);
 
@@ -947,13 +948,13 @@ _perform_async_request                  (SoupSession         *soup_session,
                                          gpointer             source_tag,
                                          gpointer             data)
 {
+  AsyncRequestData *clos = NULL;
+  SoupMessage *msg = NULL;
+
   g_return_if_fail (SOUP_IS_SESSION (soup_session));
   g_return_if_fail (url != NULL);
   g_return_if_fail (request_cb != NULL);
   g_return_if_fail (callback != NULL);
-
-  AsyncRequestData *clos = NULL;
-  SoupMessage *msg = NULL;
 
   /* Build and queue the message */
   msg = soup_message_new (SOUP_METHOD_GET, url);
@@ -1014,16 +1015,16 @@ _handle_soup_response                   (SoupMessage   *msg,
                                          FspParserFunc  parserFunc,
                                          gpointer       data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
-  g_assert (parserFunc != NULL);
-  g_assert (data != NULL);
-
   FspParser *parser = NULL;
   AsyncRequestData *clos = NULL;
   gpointer result = NULL;
   GError *err = NULL;
   gchar *response_str = NULL;
   gulong response_len = 0;
+
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (parserFunc != NULL);
+  g_assert (data != NULL);
 
   parser = fsp_parser_get_instance ();
   clos = (AsyncRequestData *) data;
@@ -1052,8 +1053,6 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
                                          gpointer    result,
                                          GError     *error)
 {
-  g_assert (clos != NULL);
-
   GSimpleAsyncResult *res = NULL;
   GObject *object = NULL;
   GCancellableData *cancellable_data = NULL;
@@ -1062,6 +1061,8 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
   GAsyncReadyCallback  callback = NULL;
   gpointer source_tag;
   gpointer data;
+
+  g_assert (clos != NULL);
 
   /* Get data from closure, and free it */
   object = clos->object;
@@ -1100,10 +1101,10 @@ _finish_async_request                   (GObject       *object,
                                          gpointer       source_tag,
                                          GError       **error)
 {
+  gpointer retval = NULL;
+
   g_return_val_if_fail (G_IS_OBJECT (object), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
-
-  gpointer retval = NULL;
 
   /* Check for errors */
   if (!_check_async_errors_on_finish (object, res, source_tag, error))
@@ -1129,10 +1130,10 @@ _photo_upload_soup_session_cb           (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data)
 {
+  AsyncRequestData *ard_clos = NULL;
+
   g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
-
-  AsyncRequestData *ard_clos = NULL;
 
   ard_clos = (AsyncRequestData *) data;
   g_signal_handlers_disconnect_by_func (msg, _wrote_body_data_cb, ard_clos->object);
@@ -1253,12 +1254,11 @@ fsp_session_new                         (const gchar *api_key,
   g_return_val_if_fail (api_key != NULL, NULL);
   g_return_val_if_fail (secret != NULL, NULL);
 
-  GObject *object = g_object_new(FSP_TYPE_SESSION,
-                                 "api-key", api_key,
-                                 "secret", secret,
-                                 "token", token,
-                                 NULL);
-  return FSP_SESSION (object);
+  return FSP_SESSION (g_object_new(FSP_TYPE_SESSION,
+                                   "api-key", api_key,
+                                   "secret", secret,
+                                   "token", token,
+                                   NULL));
 }
 
 gboolean
@@ -1266,9 +1266,10 @@ fsp_session_set_http_proxy              (FspSession *self,
                                          const char *host, const char *port,
                                          const char *username, const char *password)
 {
+  SoupURI *proxy_uri = NULL;
+
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
 
-  SoupURI *proxy_uri = NULL;
   if (host != NULL)
     {
       const gchar *actual_user = NULL;
@@ -1365,13 +1366,14 @@ fsp_session_get_auth_url_async          (FspSession          *self,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-
-  FspSessionPrivate *priv = self->priv;
+  FspSessionPrivate *priv = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
 
+  g_return_if_fail (FSP_IS_SESSION (self));
+
   /* Build the signed url */
+  priv = self->priv;
   signed_query = _get_signed_query (priv->secret,
                                     "method", "flickr.auth.getFrob",
                                     "api_key", priv->api_key,
@@ -1392,15 +1394,14 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
-  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
-  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
-
   gchar *frob = NULL;
   gchar *auth_url = NULL;
 
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+
   frob = (gchar*) _finish_async_request (G_OBJECT (self), res,
                                          fsp_session_get_auth_url_async, error);
-
   /* Build the auth URL from the frob */
   if (frob != NULL)
     {
@@ -1433,11 +1434,12 @@ fsp_session_complete_auth_async         (FspSession          *self,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
 {
+  FspSessionPrivate *priv = NULL;
+
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (cb != NULL);
 
-  FspSessionPrivate *priv = self->priv;
-
+  priv = self->priv;
   if (priv->frob != NULL)
     {
       gchar *signed_query = NULL;
@@ -1475,10 +1477,10 @@ fsp_session_complete_auth_finish        (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
+  FspDataAuthToken *auth_token = NULL;
+
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-
-  FspDataAuthToken *auth_token = NULL;
 
   auth_token =
     FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
@@ -1498,11 +1500,12 @@ fsp_session_check_auth_info_async       (FspSession          *self,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
 {
+  FspSessionPrivate *priv = NULL;
+
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (cb != NULL);
 
-  FspSessionPrivate *priv = self->priv;
-
+  priv = self->priv;
   if (priv->token != NULL)
     {
       gchar *signed_query = NULL;
@@ -1540,10 +1543,10 @@ fsp_session_check_auth_info_finish      (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
+  FspDataAuthToken *auth_token = NULL;
+
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-
-  FspDataAuthToken *auth_token = NULL;
 
   auth_token =
     FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
@@ -1558,11 +1561,12 @@ fsp_session_get_upload_status_async     (FspSession          *self,
                                          GAsyncReadyCallback cb,
                                          gpointer             data)
 {
+  FspSessionPrivate *priv = NULL;
+
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (cb != NULL);
 
-  FspSessionPrivate *priv = self->priv;
-
+  priv = self->priv;
   if (priv->token != NULL)
     {
       gchar *signed_query = NULL;
@@ -1600,10 +1604,10 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
+  FspDataUploadStatus *upload_status = NULL;
+
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-
-  FspDataUploadStatus *upload_status = NULL;
 
   upload_status =
     FSP_DATA_UPLOAD_STATUS (_finish_async_request (G_OBJECT (self), res,
@@ -1628,9 +1632,6 @@ fsp_session_upload_async                (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-  g_return_if_fail (fileuri != NULL);
-
   FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   GHashTable *extra_params = NULL;
@@ -1638,6 +1639,9 @@ fsp_session_upload_async                (FspSession          *self,
   UploadPhotoData *up_clos = NULL;
   GFile *file = NULL;
   gchar *api_sig = NULL;
+
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (fileuri != NULL);
 
   /* Get flickr proxy and extra params (those actually used) */
   priv = self->priv;
@@ -1684,10 +1688,9 @@ fsp_session_upload_finish               (FspSession    *self,
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
-  gchar *photo_id = (gchar*) _finish_async_request (G_OBJECT (self), res,
-                                                    fsp_session_upload_async,
-                                                    error);
-  return photo_id;
+  return (gchar*) _finish_async_request (G_OBJECT (self), res,
+                                         fsp_session_upload_async,
+                                         error);
 }
 
 void
@@ -1697,15 +1700,16 @@ fsp_session_get_info_async              (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-  g_return_if_fail (photo_id != NULL);
-
-  FspSessionPrivate *priv = self->priv;
+  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
 
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+
   /* Build the signed url */
+  priv = self->priv;
   signed_query = _get_signed_query (priv->secret,
                                     "method", "flickr.photos.getInfo",
                                     "api_key", priv->api_key,
@@ -1730,10 +1734,10 @@ fsp_session_get_info_finish             (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
+  FspDataPhotoInfo *photo_info = NULL;
+
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
-
-  FspDataPhotoInfo *photo_info = NULL;
 
   photo_info =
     FSP_DATA_PHOTO_INFO (_finish_async_request (G_OBJECT (self), res,
@@ -1748,14 +1752,15 @@ fsp_session_get_photosets_async         (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-
-  FspSessionPrivate *priv = self->priv;
+  FspSessionPrivate *priv = NULL;;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
 
+  g_return_if_fail (FSP_IS_SESSION (self));
+
   /* Build the signed url */
+  priv = self->priv;
   signed_query = _get_signed_query (priv->secret,
                                     "method", "flickr.photosets.getList",
                                     "api_key", priv->api_key,
@@ -1782,12 +1787,9 @@ fsp_session_get_photosets_finish        (FspSession    *self,
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
-  GSList *photosets_list = NULL;
-
-  photosets_list = (GSList*) _finish_async_request (G_OBJECT (self), res,
-                                                    fsp_session_get_photosets_async,
-                                                    error);
-  return photosets_list;
+  return (GSList*) _finish_async_request (G_OBJECT (self), res,
+                                          fsp_session_get_photosets_async,
+                                          error);
 }
 
 void
@@ -1798,16 +1800,17 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-  g_return_if_fail (photo_id != NULL);
-  g_return_if_fail (photoset_id != NULL);
-
-  FspSessionPrivate *priv = self->priv;
+  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
 
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+  g_return_if_fail (photoset_id != NULL);
+
   /* Build the signed url */
+  priv = self->priv;
   signed_query = _get_signed_query (priv->secret,
                                     "method", "flickr.photosets.addPhoto",
                                     "api_key", priv->api_key,
@@ -1833,10 +1836,10 @@ fsp_session_add_to_photoset_finish      (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
+  gpointer result = NULL;
+
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-
-  gpointer result = NULL;
 
   result = _finish_async_request (G_OBJECT (self), res,
                                   fsp_session_add_to_photoset_async, error);
@@ -1853,16 +1856,17 @@ fsp_session_create_photoset_async       (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-  g_return_if_fail (title != NULL);
-  g_return_if_fail (primary_photo_id != NULL);
-
-  FspSessionPrivate *priv = self->priv;
+  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
 
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (title != NULL);
+  g_return_if_fail (primary_photo_id != NULL);
+
   /* Build the signed url */
+  priv = self->priv;
   signed_query = _get_signed_query (priv->secret,
                                     "method", "flickr.photosets.create",
                                     "api_key", priv->api_key,
@@ -1889,10 +1893,10 @@ fsp_session_create_photoset_finish      (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
+  gchar *photoset_id = NULL;
+
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
-
-  gchar *photoset_id = NULL;
 
   photoset_id =
     (gchar*) _finish_async_request (G_OBJECT (self), res,
@@ -1907,14 +1911,15 @@ fsp_session_get_groups_async            (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-
-  FspSessionPrivate *priv = self->priv;
+  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
 
+  g_return_if_fail (FSP_IS_SESSION (self));
+
   /* Build the signed url */
+  priv = self->priv;
   signed_query = _get_signed_query (priv->secret,
                                     "method", "flickr.groups.pools.getGroups",
                                     "api_key", priv->api_key,
@@ -1941,12 +1946,9 @@ fsp_session_get_groups_finish           (FspSession    *self,
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
-  GSList *groups_list = NULL;
-
-  groups_list = (GSList*) _finish_async_request (G_OBJECT (self), res,
-                                                 fsp_session_get_groups_async,
-                                                 error);
-  return groups_list;
+  return (GSList*) _finish_async_request (G_OBJECT (self), res,
+                                          fsp_session_get_groups_async,
+                                          error);
 }
 
 void
@@ -1957,16 +1959,17 @@ fsp_session_add_to_group_async          (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-  g_return_if_fail (photo_id != NULL);
-  g_return_if_fail (group_id != NULL);
-
-  FspSessionPrivate *priv = self->priv;
+  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
 
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+  g_return_if_fail (group_id != NULL);
+
   /* Build the signed url */
+  priv = self->priv;
   signed_query = _get_signed_query (priv->secret,
                                     "method", "flickr.groups.pools.add",
                                     "api_key", priv->api_key,
@@ -1992,10 +1995,10 @@ fsp_session_add_to_group_finish         (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
+  gpointer result = NULL;
+
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
-
-  gpointer result = NULL;
 
   result = _finish_async_request (G_OBJECT (self), res,
                                   fsp_session_add_to_group_async, error);
@@ -2009,14 +2012,15 @@ fsp_session_get_tags_list_async         (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  g_return_if_fail (FSP_IS_SESSION (self));
-
-  FspSessionPrivate *priv = self->priv;
+  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
   gchar *signed_query = NULL;
 
+  g_return_if_fail (FSP_IS_SESSION (self));
+
   /* Build the signed url */
+  priv = self->priv;
   signed_query = _get_signed_query (priv->secret,
                                     "method", "flickr.tags.getListUser",
                                     "api_key", priv->api_key,
@@ -2043,10 +2047,6 @@ fsp_session_get_tags_list_finish        (FspSession    *self,
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
-  GSList *tags_list = NULL;
-
-  tags_list = (GSList*) _finish_async_request (G_OBJECT (self), res,
-                                               fsp_session_get_tags_list_async, error);
-
-  return tags_list;
+  return (GSList*) _finish_async_request (G_OBJECT (self), res,
+                                          fsp_session_get_tags_list_async, error);
 }

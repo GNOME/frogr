@@ -41,7 +41,7 @@
                                 FrogrConfigPrivate))
 
 
-G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT)
 
 
 typedef struct _FrogrConfigPrivate FrogrConfigPrivate;
@@ -121,12 +121,12 @@ static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
 static FrogrAccount *
 _find_account_by_id (FrogrConfig *self, const gchar *id)
 {
-  g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
-  g_return_val_if_fail (id != NULL, NULL);
-
   FrogrConfigPrivate *priv = NULL;
   FrogrAccount *current = NULL;
   GSList *item = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
+  g_return_val_if_fail (id != NULL, NULL);
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   for (item = priv->accounts; item; item = g_slist_next (item))
@@ -767,13 +767,12 @@ _xml_add_string_child (xmlNodePtr   parent,
 gboolean
 frogr_config_save_all (FrogrConfig *self)
 {
-  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
   gboolean retval = FALSE;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   retval =_save_accounts (self);
   retval = retval && _save_settings (self);
-
   return retval;
 }
 
@@ -925,12 +924,12 @@ gboolean
 frogr_config_add_account (FrogrConfig  *self,
                           FrogrAccount *faccount)
 {
-  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-
   FrogrConfigPrivate *priv = NULL;
   FrogrAccount *found_account = NULL;
   const gchar *account_id = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
 
@@ -958,21 +957,23 @@ frogr_config_add_account (FrogrConfig  *self,
 GSList *
 frogr_config_get_accounts (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->accounts;
 }
 
 gboolean
 frogr_config_set_active_account (FrogrConfig *self, const gchar *id)
 {
-  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  FrogrConfigPrivate *priv = NULL;
   FrogrAccount *current = NULL;
   GSList *item = NULL;
   gboolean result = FALSE;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   for (item = priv->accounts; item; item = g_slist_next (item))
@@ -995,20 +996,22 @@ frogr_config_set_active_account (FrogrConfig *self, const gchar *id)
 FrogrAccount *
 frogr_config_get_active_account (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->active_account;
 }
 
 gboolean
 frogr_config_remove_account (FrogrConfig *self, const gchar *id)
 {
-  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-  g_return_val_if_fail (id != NULL, FALSE);
-
   FrogrConfigPrivate *priv = NULL;
   FrogrAccount *found_account = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+  g_return_val_if_fail (id != NULL, FALSE);
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   found_account = _find_account_by_id (self, id);
@@ -1027,54 +1030,66 @@ frogr_config_remove_account (FrogrConfig *self, const gchar *id)
 void
 frogr_config_set_default_public (FrogrConfig *self, gboolean value)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->public = value;
 }
 
 gboolean
 frogr_config_get_default_public (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->public;
 }
 
 void
 frogr_config_set_default_family (FrogrConfig *self, gboolean value)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->family = value;
 }
 
 gboolean
 frogr_config_get_default_family (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->family;
 }
 
 void
 frogr_config_set_default_friend (FrogrConfig *self, gboolean value)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->friend = value;
 }
 
 gboolean
 frogr_config_get_default_friend (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->friend;
 }
 
@@ -1082,9 +1097,11 @@ void
 frogr_config_set_default_safety_level (FrogrConfig *self,
                                        FspSafetyLevel safety_level)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Check out of bounds values */
   if (safety_level <= FSP_SAFETY_LEVEL_NONE || safety_level >= FSP_SAFETY_LEVEL_LAST)
@@ -1096,9 +1113,11 @@ frogr_config_set_default_safety_level (FrogrConfig *self,
 FspSafetyLevel
 frogr_config_get_default_safety_level (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->safety_level;
 }
 
@@ -1106,9 +1125,11 @@ void
 frogr_config_set_default_content_type (FrogrConfig *self,
                                        FspContentType content_type)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Check out of bounds values */
   if (content_type <= FSP_CONTENT_TYPE_NONE || content_type >= FSP_CONTENT_TYPE_LAST)
@@ -1120,81 +1141,99 @@ frogr_config_set_default_content_type (FrogrConfig *self,
 FspContentType
 frogr_config_get_default_content_type (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->content_type;
 }
 
 void
 frogr_config_set_default_show_in_search (FrogrConfig *self, gboolean value)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->show_in_search = value;
 }
 
 gboolean
 frogr_config_get_default_show_in_search (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->show_in_search;
 }
 
 void
 frogr_config_set_tags_autocompletion (FrogrConfig *self, gboolean value)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->tags_autocompletion = value;
 }
 
 gboolean
 frogr_config_get_tags_autocompletion (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->tags_autocompletion;
 }
 
 void
 frogr_config_set_keep_file_extensions (FrogrConfig *self, gboolean value)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->keep_file_extensions = value;
 }
 
 gboolean
 frogr_config_get_keep_file_extensions (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->keep_file_extensions;
 }
 
 void
 frogr_config_set_mainview_enable_tooltips (FrogrConfig *self, gboolean value)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->mainview_enable_tooltips = value;
 }
 
 gboolean
 frogr_config_get_mainview_enable_tooltips (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->mainview_enable_tooltips;
 }
 
@@ -1202,63 +1241,77 @@ void
 frogr_config_set_mainview_sorting_criteria (FrogrConfig *self,
                                             SortingCriteria criteria)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->mainview_sorting_criteria = criteria;
 }
 
 SortingCriteria
 frogr_config_get_mainview_sorting_criteria (FrogrConfig *self)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), SORT_AS_LOADED);
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->mainview_sorting_criteria;
 }
 
 void
 frogr_config_set_mainview_sorting_reversed (FrogrConfig *self, gboolean reversed)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->mainview_sorting_reversed = reversed;
 }
 
 gboolean
 frogr_config_get_mainview_sorting_reversed (FrogrConfig *self)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), SORT_AS_LOADED);
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->mainview_sorting_reversed;
 }
 
 void
 frogr_config_set_use_proxy (FrogrConfig *self, gboolean value)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   priv->use_proxy = value;
 }
 
 gboolean
 frogr_config_get_use_proxy (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->use_proxy;
 }
 
 void
 frogr_config_set_proxy_host (FrogrConfig *self, const gchar *host)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   g_free (priv->proxy_host);
   priv->proxy_host = g_strdup (host);
 }
@@ -1266,18 +1319,22 @@ frogr_config_set_proxy_host (FrogrConfig *self, const gchar *host)
 const gchar *
 frogr_config_get_proxy_host (FrogrConfig *self)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->proxy_host;
 }
 
 void
 frogr_config_set_proxy_port (FrogrConfig *self, const gchar *port)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   g_free (priv->proxy_port);
   priv->proxy_port = g_strdup (port);
 }
@@ -1285,18 +1342,22 @@ frogr_config_set_proxy_port (FrogrConfig *self, const gchar *port)
 const gchar *
 frogr_config_get_proxy_port (FrogrConfig *self)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->proxy_port;
 }
 
 void
 frogr_config_set_proxy_username (FrogrConfig *self, const gchar *username)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   g_free (priv->proxy_username);
   priv->proxy_username = g_strdup (username);
 }
@@ -1304,18 +1365,22 @@ frogr_config_set_proxy_username (FrogrConfig *self, const gchar *username)
 const gchar *
 frogr_config_get_proxy_username (FrogrConfig *self)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->proxy_username;
 }
 
 void
 frogr_config_set_proxy_password (FrogrConfig *self, const gchar *password)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   g_free (priv->proxy_password);
   priv->proxy_password = g_strdup (password);
 }
@@ -1323,8 +1388,10 @@ frogr_config_set_proxy_password (FrogrConfig *self, const gchar *password)
 const gchar *
 frogr_config_get_proxy_password (FrogrConfig *self)
 {
+  FrogrConfigPrivate * priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  FrogrConfigPrivate * priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->proxy_password;
 }

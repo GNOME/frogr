@@ -31,7 +31,7 @@
                                 FROGR_TYPE_MAIN_VIEW_MODEL,     \
                                 FrogrMainViewModelPrivate))
 
-G_DEFINE_TYPE (FrogrMainViewModel, frogr_main_view_model, G_TYPE_OBJECT);
+G_DEFINE_TYPE (FrogrMainViewModel, frogr_main_view_model, G_TYPE_OBJECT)
 
 /* Private struct */
 typedef struct _FrogrMainViewModelPrivate FrogrMainViewModelPrivate;
@@ -70,14 +70,14 @@ static gint
 _compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
                                const gchar *property_name)
 {
-  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
-  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
-
   GParamSpec *pspec1 = NULL;
   GParamSpec *pspec2 = NULL;
   GValue value1 = { 0 };
   GValue value2 = { 0 };
   gint result = 0;
+
+  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
+  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
 
   pspec1 = g_object_class_find_property (G_OBJECT_GET_CLASS (p1), property_name);
   pspec2 = g_object_class_find_property (G_OBJECT_GET_CLASS (p2), property_name);
@@ -238,17 +238,17 @@ void
 frogr_main_view_model_add_picture (FrogrMainViewModel *self,
                                    FrogrPicture *picture)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
   g_return_if_fail(FROGR_IS_PICTURE (picture));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
-  g_object_ref (picture);
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->pictures_list = g_slist_append (priv->pictures_list, picture);
   priv->pictures_list_as_loaded = g_slist_append (priv->pictures_list_as_loaded, picture);
   priv->n_pictures++;
 
+  g_object_ref (picture);
   g_signal_emit (self, signals[PICTURE_ADDED], 0, picture);
 }
 
@@ -256,10 +256,11 @@ void
 frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
                                       FrogrPicture *picture)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   priv->pictures_list = g_slist_remove (priv->pictures_list, picture);
   priv->pictures_list_as_loaded = g_slist_remove (priv->pictures_list_as_loaded, picture);
@@ -272,22 +273,22 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
 guint
 frogr_main_view_model_n_pictures (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->n_pictures;
 }
 
 GSList *
 frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->pictures_list;
 }
 
@@ -296,8 +297,6 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
                                         const gchar *property_name,
                                         gboolean reversed)
 {
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
-
   FrogrMainViewModelPrivate *priv = NULL;
   GSList *list_as_loaded = NULL;
   GSList *current_list = NULL;
@@ -305,6 +304,8 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
   gint *new_order = 0;
   gint current_pos = 0;
   gint new_pos = 0;
+
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
@@ -352,28 +353,28 @@ void
 frogr_main_view_model_add_set (FrogrMainViewModel *self,
                                FrogrPhotoSet *set)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
   g_return_if_fail(FROGR_IS_SET (set));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
   /* When adding one by one we prepend always to keep the order */
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->sets_list = g_slist_prepend (priv->sets_list, set);
-  g_object_ref (set);
-
   priv->n_sets++;
+
+  g_object_ref (set);
 }
 
 void
 frogr_main_view_model_remove_set (FrogrMainViewModel *self,
                                   FrogrPhotoSet *set)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->sets_list = g_slist_remove (priv->sets_list, set);
   priv->n_sets--;
   g_object_unref (set);
@@ -382,10 +383,11 @@ frogr_main_view_model_remove_set (FrogrMainViewModel *self,
 void
 frogr_main_view_model_remove_all_sets (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   g_slist_foreach (priv->sets_list, (GFunc)g_object_unref, NULL);
   g_slist_free (priv->sets_list);
@@ -397,22 +399,22 @@ frogr_main_view_model_remove_all_sets (FrogrMainViewModel *self)
 guint
 frogr_main_view_model_n_sets (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->n_sets;
 }
 
 GSList *
 frogr_main_view_model_get_sets (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->sets_list;
 }
 
@@ -420,62 +422,68 @@ void
 frogr_main_view_model_set_sets (FrogrMainViewModel *self,
                                 GSList *sets_list)
 {
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
-
   FrogrMainViewModelPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GSList *item = NULL;
 
-  frogr_main_view_model_remove_all_sets (self);
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->sets_list = sets_list;
-  priv->n_sets = g_slist_length (sets_list);
 
-  /* Remove all the sets attached to every picture */
+  /* Remove all sets attached to every picture */
   for (item = priv->pictures_list; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
       frogr_picture_remove_sets (picture);
     }
+
+  /* Remove all the sets */
+  frogr_main_view_model_remove_all_sets (self);
+
+  /* Set photosets */
+  priv->sets_list = sets_list;
+  priv->n_sets = g_slist_length (sets_list);
 }
 
 void
 frogr_main_view_model_add_group (FrogrMainViewModel *self,
                                  FrogrGroup *group)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
   g_return_if_fail(FROGR_IS_GROUP (group));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
-  g_object_ref (group);
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->groups_list = g_slist_append (priv->groups_list, group);
   priv->n_groups++;
+
+  g_object_ref (group);
 }
 
 void
 frogr_main_view_model_remove_group (FrogrMainViewModel *self,
                                     FrogrGroup *group)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->groups_list = g_slist_remove (priv->groups_list, group);
   priv->n_groups--;
+
   g_object_unref (group);
 }
 
 void
 frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   g_slist_foreach (priv->groups_list, (GFunc)g_object_unref, NULL);
   g_slist_free (priv->groups_list);
@@ -487,22 +495,22 @@ frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self)
 guint
 frogr_main_view_model_n_groups (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->n_groups;
 }
 
 GSList *
 frogr_main_view_model_get_groups (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->groups_list;
 }
 
@@ -510,17 +518,13 @@ void
 frogr_main_view_model_set_groups (FrogrMainViewModel *self,
                                   GSList *groups_list)
 {
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
-
   FrogrMainViewModelPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GSList *item = NULL;
 
-  frogr_main_view_model_remove_all_groups (self);
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->groups_list = groups_list;
-  priv->n_groups = g_slist_length (groups_list);
 
   /* Remove all the groups attached to every picture */
   for (item = priv->pictures_list; item; item = g_slist_next (item))
@@ -528,25 +532,33 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
       picture = FROGR_PICTURE (item->data);
       frogr_picture_remove_groups (picture);
     }
+
+  /* Remove all groups */
+  frogr_main_view_model_remove_all_groups (self);
+
+  /* Set groups now */
+  priv->groups_list = groups_list;
+  priv->n_groups = g_slist_length (groups_list);
+
 }
 
 GSList *
 frogr_main_view_model_get_tags_list (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->tags_list;
 }
 
 void
 frogr_main_view_model_set_tags_list (FrogrMainViewModel *self, GSList *tags_list)
 {
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
-
   FrogrMainViewModelPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   frogr_main_view_model_remove_all_tags (self);
 
@@ -558,10 +570,11 @@ frogr_main_view_model_set_tags_list (FrogrMainViewModel *self, GSList *tags_list
 void
 frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   g_slist_foreach (priv->tags_list, (GFunc)g_free, NULL);
   g_slist_free (priv->tags_list);
@@ -573,20 +586,22 @@ frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self)
 guint
 frogr_main_view_model_n_tags (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->n_tags;
 }
 
 const gchar *
 frogr_main_view_model_get_state_description (FrogrMainViewModel *self)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_val_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
-  FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->state_description;
 }
 
@@ -594,9 +609,11 @@ void
 frogr_main_view_model_set_state_description (FrogrMainViewModel *self,
                                              const gchar *description)
 {
+  FrogrMainViewModelPrivate *priv = NULL;
+
   g_return_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   if (priv->state_description)
     g_free (priv->state_description);
 
