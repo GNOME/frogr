@@ -32,9 +32,6 @@
 #include <config.h>
 #include <glib/gi18n.h>
 
-#define MINIMUM_WINDOW_WIDTH 450
-#define MINIMUM_WINDOW_HEIGHT 280
-
 #define FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE(object)                 \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                               \
                                 FROGR_TYPE_CREATE_NEW_SET_DIALOG,       \
@@ -385,9 +382,9 @@ frogr_create_new_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *s
                                      "pictures", pictures,
                                      "sets", sets,
                                      "transient-for", parent,
-                                     "width-request", MINIMUM_WINDOW_WIDTH,
-                                     "height-request", MINIMUM_WINDOW_HEIGHT,
-                                     "resizable", FALSE,
+                                     "width-request", -1,
+                                     "height-request", 300,
+                                     "resizable", TRUE,
                                      NULL));
 
   g_signal_connect (G_OBJECT (dialog), "response",
