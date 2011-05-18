@@ -89,9 +89,9 @@
        "dest" property. The destination must then start with the macro
        "${bundle}", which refers to the bundle root directory.
   -->
-  <!-- data>
+  <data>
     ${prefix}/share/frogr
-  </data -->
+  </data>
 
   <!-- Copy in the themes data. You may want to trim this to save space
        in your bundle. -->
