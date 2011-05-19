@@ -23,6 +23,7 @@
 #include "frogr-controller.h"
 
 #include "frogr-global-defs.h"
+#include "frogr-util.h"
 
 #include <config.h>
 #include <glib/gi18n.h>
@@ -96,7 +97,7 @@ main (int argc, char **argv)
 #endif
 
   /* Translation domain */
-  bindtextdomain (GETTEXT_PACKAGE, FROGR_LOCALE_DIR);
+  bindtextdomain (GETTEXT_PACKAGE, frogr_util_get_locale_dir ());
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
 

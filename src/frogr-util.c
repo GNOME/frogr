@@ -82,6 +82,26 @@ frogr_util_get_icons_dir (void)
   return (const gchar *) icons_dir;
 }
 
+const gchar *
+frogr_util_get_locale_dir (void)
+{
+  static const gchar *locale_dir = NULL;
+  if (!locale_dir)
+    {
+#ifndef MAC_INTEGRATION
+      /* If not in MacOSX, we trust the defined variable better */
+      locale_dir = g_strdup (FROGR_LOCALE_DIR);
+#endif
+
+      /* Fallback for MacOSX and cases where FROGR_LOCALE_DIR was not
+	 defined yet because of any reason */
+      if (!locale_dir)
+	locale_dir = g_strdup_printf ("%s/locale", _get_data_dir ());
+    }
+
+  return (const gchar *) locale_dir;
+}
+
 void
 frogr_util_open_url_in_browser (const gchar *url)
 {
