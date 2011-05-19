@@ -24,6 +24,7 @@
 
 #include "frogr-config.h"
 #include "frogr-controller.h"
+#include "frogr-global-defs.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
 
@@ -31,7 +32,8 @@
 #include <glib/gi18n.h>
 #include <flicksoup/flicksoup.h>
 
-#define MPICTURES_IMAGE APP_DATA_DIR "/images/mpictures.png"
+/* Path relative to the application data dir */
+#define MPICTURES_IMAGE "/images/mpictures.png"
 
 #define DIALOG_MIN_WIDTH 640
 #define DIALOG_MIN_HEIGHT 420
@@ -742,13 +744,17 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   n_pictures = g_slist_length (priv->pictures);
   if (n_pictures > 1)
     {
-      GdkPixbuf *pixbuf;
-      gchar *mpictures_str;
+      GdkPixbuf *pixbuf = NULL;
+      gchar *mpictures_str = NULL;
+      gchar *mpictures_full_path = NULL;
 
       /* Set the image for editing multiple pictures */
-      pixbuf = gdk_pixbuf_new_from_file (MPICTURES_IMAGE, NULL);
+      mpictures_full_path = g_strdup_printf ("%s/" MPICTURES_IMAGE,
+					     frogr_util_get_app_data_dir ());
+      pixbuf = gdk_pixbuf_new_from_file (mpictures_full_path, NULL);
       gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), pixbuf);
       g_object_unref (pixbuf);
+      g_free (mpictures_full_path);
 
       /* Visually indicate how many pictures are being edited */
       mpictures_str = g_strdup_printf (ngettext ("(%d Picture)", "(%d Pictures)", n_pictures), n_pictures);

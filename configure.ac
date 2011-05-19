@@ -145,8 +145,7 @@ fi
 
 # Substitute
 
-AC_SUBST(appdatadir, "\${datadir}/frogr")
-AC_SUBST(iconsdir, "\${datadir}/icons")
+AC_SUBST(DATA_DIR, "\${datadir}")
 AC_SUBST(FROGR_CFLAGS)
 AC_SUBST(FROGR_LIBS)
 

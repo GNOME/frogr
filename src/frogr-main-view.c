@@ -46,15 +46,16 @@
 
 #include <glib/gi18n.h>
 
-
-#define MAIN_VIEW_ICON(_s) ICONS_DIR "/hicolor/" _s "/apps/frogr.png"
+/* Paths relative to the icons dir */
+#define MAIN_VIEW_ICON(_s) "/hicolor/" _s "/apps/frogr.png"
 
 #define MINIMUM_WINDOW_WIDTH 800
 #define MINIMUM_WINDOW_HEIGHT 600
 
 #define ITEM_WIDTH 120
 
-#define GTKBUILDER_FILE APP_DATA_DIR "/gtkbuilder/frogr-main-view.xml"
+/* Path relative to the application data dir */
+#define GTKBUILDER_FILE "/gtkbuilder/frogr-main-view.xml"
 
 #define FROGR_MAIN_VIEW_GET_PRIVATE(object)             \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
@@ -1757,6 +1758,8 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *progress_vbox;
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
+  const gchar *icons_path;
+  gchar *full_path;
   GList *icons;
 
 #ifdef MAC_INTEGRATION
@@ -1774,31 +1777,41 @@ frogr_main_view_init (FrogrMainView *self)
   _update_state_description (self);
 
   /* Provide a default icon list in several sizes */
-  icons = g_list_prepend (NULL,
-                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("128x128"),
-                                                    NULL));
-  icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("64x64"),
-                                                    NULL));
-  icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("48x48"),
-                                                    NULL));
-  icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("32x32"),
-                                                    NULL));
-  icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("24x24"),
-                                                    NULL));
-  icons = g_list_prepend (icons,
-                          gdk_pixbuf_new_from_file (MAIN_VIEW_ICON("16x16"),
-                                                    NULL));
+  icons_path = frogr_util_get_icons_dir ();
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("128x128"), icons_path);
+  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("64x64"), icons_path);
+  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("48x48"), icons_path);
+  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("32x32"), icons_path);
+  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("24x24"), icons_path);
+  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("16x16"), icons_path);
+  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
   gtk_window_set_default_icon_list (icons);
   g_list_foreach (icons, (GFunc) g_object_unref, NULL);
   g_list_free (icons);
 
   /* Get widgets from GtkBuilder */
   builder = gtk_builder_new ();
-  gtk_builder_add_from_file (builder, GTKBUILDER_FILE, NULL);
+
+  full_path = g_strdup_printf ("%s/" GTKBUILDER_FILE, frogr_util_get_app_data_dir ());
+  gtk_builder_add_from_file (builder, full_path, NULL);
+  g_free (full_path);
 
   window = GTK_WINDOW(gtk_builder_get_object (builder, "main_window"));
   gtk_window_set_title (GTK_WINDOW (window), _(APP_NAME));

@@ -46,6 +46,42 @@ _spawn_command (const gchar* cmd)
 }
 #endif
 
+const gchar *
+_get_data_dir (void)
+{
+#ifdef MAC_INTEGRATION
+  /* For MacOSX, we return the value of the environment value set by
+     the wrapper script running the application */
+  static gchar *xdg_data_dir = NULL;
+  if (!xdg_data_dir)
+    xdg_data_dir = g_strdup (g_getenv("XDG_DATA_DIRS"));
+  return (const gchar *) xdg_data_dir;
+#else
+  /* For GNOME, we just return DATA_DIR */
+  return DATA_DIR;
+#endif
+}
+
+const gchar *
+frogr_util_get_app_data_dir (void)
+{
+  static gchar *app_data_dir = NULL;
+  if (!app_data_dir)
+    app_data_dir = g_strdup_printf ("%s/frogr", _get_data_dir ());
+
+  return (const gchar *) app_data_dir;
+}
+
+const gchar *
+frogr_util_get_icons_dir (void)
+{
+  static gchar *icons_dir = NULL;
+  if (!icons_dir)
+    icons_dir = g_strdup_printf ("%s/icons", _get_data_dir ());
+
+  return (const gchar *) icons_dir;
+}
+
 void
 frogr_util_open_url_in_browser (const gchar *url)
 {

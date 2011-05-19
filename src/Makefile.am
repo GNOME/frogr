@@ -27,9 +27,7 @@ frogr_LDADD = 				\
 	$(FROGR_LIBS)
 
 frogr_CFLAGS = $(FROGR_CFLAGS) \
-	-DAPP_DATA_DIR=\"$(appdatadir)\" \
-	-DICONS_DIR=\"$(iconsdir)\"
-
+	-DDATA_DIR=\"$(DATA_DIR)\"
 
 if GTK_API_VERSION_2
 frogr_CFLAGS += \

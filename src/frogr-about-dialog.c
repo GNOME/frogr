@@ -22,12 +22,14 @@
 
 #include "frogr-about-dialog.h"
 
+#include "frogr-global-defs.h"
 #include "frogr-util.h"
 
 #include <config.h>
 #include <glib/gi18n.h>
 
-#define ABOUT_DIALOG_ICON ICONS_DIR "/hicolor/48x48/apps/frogr.png"
+/* Path relative to the icons dir */
+#define ABOUT_DIALOG_ICON "/hicolor/48x48/apps/frogr.png"
 
 static const gchar *authors[] = {
   "Mario Sanchez Prada <msanchez@igalia.com>",
@@ -78,9 +80,13 @@ void
 frogr_about_dialog_show (GtkWindow *parent)
 {
   GdkPixbuf *logo = NULL;
-  char *version = NULL;
+  gchar *version = NULL;
+  gchar *icon_full_path = NULL;
 
-  logo = gdk_pixbuf_new_from_file (ABOUT_DIALOG_ICON, NULL);
+  icon_full_path = g_strdup_printf ("%s/" ABOUT_DIALOG_ICON,
+				    frogr_util_get_icons_dir ());
+  logo = gdk_pixbuf_new_from_file (icon_full_path, NULL);
+  g_free (icon_full_path);
 
 #if !GTK_CHECK_VERSION (2,23,0)
   /* Install about dialog hooks */

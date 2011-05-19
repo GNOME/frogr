@@ -60,10 +60,10 @@ icon128_DATA = data/icons/hicolor/128x128/apps/frogr.png
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
 iconscalable_DATA = data/icons/hicolor/scalable/apps/frogr.svg
 
-imagesdir = $(appdatadir)/images
+imagesdir = $(datadir)/frogr/images
 images_DATA = data/images/mpictures.png
 
-gtkbuilderdir = $(appdatadir)/gtkbuilder
+gtkbuilderdir = $(datadir)/frogr/gtkbuilder
 gtkbuilder_DATA = data/gtkbuilder/frogr-main-view.xml
 
 desktopentrydir = $(datadir)/applications

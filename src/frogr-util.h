@@ -25,6 +25,10 @@
 
 G_BEGIN_DECLS
 
+const gchar *frogr_util_get_app_data_dir (void);
+
+const gchar *frogr_util_get_icons_dir (void);
+
 void frogr_util_open_url_in_browser (const gchar *url);
 
 void frogr_util_show_info_dialog (GtkWindow *parent, const gchar *message);
