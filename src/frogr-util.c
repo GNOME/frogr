@@ -28,7 +28,8 @@
 #include <gtk/gtk.h>
 
 #ifndef GTK_API_VERSION_3
-static gboolean frogr_util_spawn_command (const gchar* cmd)
+static gboolean
+_spawn_command (const gchar* cmd)
 {
   GError *error = NULL;
 
@@ -58,7 +59,7 @@ frogr_util_open_url_in_browser (const gchar *url)
 #ifdef MAC_INTEGRATION
   /* In MacOSX neither gnome-open nor gtk_show_uri() will work */
   command = g_strdup_printf ("open %s", url);
-  frogr_util_spawn_command (command);
+  _spawn_command (command);
 #else
 #ifdef GTK_API_VERSION_3
   /* For GTK3 we dare to do it The Right Way (tm). */
@@ -68,7 +69,7 @@ frogr_util_open_url_in_browser (const gchar *url)
      that's why we just use the gnome-open command instead.  If
      gnome-open fails, then we fallback to gtk_show_uri(). */
   command = g_strdup_printf ("gnome-open %s", url);
-  if (!frogr_util_spawn_command (command))
+  if (!_spawn_command (command))
     gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &error);
 #endif /* ifdef GTK_API_VERSION_3 */
 #endif /* ifdef MAC_INTEGRATION */
@@ -84,7 +85,7 @@ frogr_util_open_url_in_browser (const gchar *url)
 }
 
 static void
-frogr_util_show_message_dialog (GtkWindow *parent, const gchar *message, GtkMessageType type)
+_show_message_dialog (GtkWindow *parent, const gchar *message, GtkMessageType type)
 {
   /* Show alert */
   GtkWidget *dialog =
@@ -104,17 +105,17 @@ frogr_util_show_message_dialog (GtkWindow *parent, const gchar *message, GtkMess
 void
 frogr_util_show_info_dialog (GtkWindow *parent, const gchar *message)
 {
-  frogr_util_show_message_dialog (parent, message, GTK_MESSAGE_INFO);
+  _show_message_dialog (parent, message, GTK_MESSAGE_INFO);
 }
 
 void
 frogr_util_show_warning_dialog (GtkWindow *parent, const gchar *message)
 {
-  frogr_util_show_message_dialog (parent, message, GTK_MESSAGE_WARNING);
+  _show_message_dialog (parent, message, GTK_MESSAGE_WARNING);
 }
 
 void
 frogr_util_show_error_dialog (GtkWindow *parent, const gchar *message)
 {
-  frogr_util_show_message_dialog (parent, message, GTK_MESSAGE_ERROR);
+  _show_message_dialog (parent, message, GTK_MESSAGE_ERROR);
 }
