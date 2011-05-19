@@ -405,8 +405,6 @@ _populate_accounts_submenu (FrogrMainView *self)
   GSList *accounts = NULL;
   GSList *item = NULL;
   gchar *account_str = NULL;
-  const gchar *username = NULL;
-  const gchar *fullname = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   priv->accounts_menu = NULL;
@@ -419,13 +417,10 @@ _populate_accounts_submenu (FrogrMainView *self)
     {
       account = FROGR_ACCOUNT (item->data);
 
-      username = frogr_account_get_username (account);
-      fullname = frogr_account_get_fullname (account);
-      if (fullname == NULL || fullname[0] == '\0')
-        account_str = g_strdup (username);
-      else
-        account_str = g_strdup_printf ("%s (%s)", username, fullname);
-
+      /* Do not use the full name here since it could be the same for
+         different users, thus wouldn't be useful at all for the
+         matter of selecting one account or another. */
+      account_str = g_strdup (frogr_account_get_username (account));
       menu_item = gtk_check_menu_item_new_with_label (account_str);
       g_free (account_str);
 
@@ -1510,11 +1505,11 @@ _craft_state_description (FrogrMainView *mainview)
   if (!FROGR_IS_ACCOUNT (account))
     return g_strdup (_("Not connected to flickr"));
 
-  /* Try to get the full name, or the username otherwise */
-  login = frogr_account_get_fullname (account);
-  if (login == NULL || login[0] == '\0')
-    login = frogr_account_get_username (account);
-
+  /* Just use the username here ant not the fullname (when available),
+     since it could happen that the full name was the same for two
+     different usernames from the same frogr user, thus making
+     impossible to distinguish which account you are using. */
+  login = frogr_account_get_username (account);
   is_pro = frogr_account_is_pro (account);
 
   /* Login string, showing the user is PRO (second '%s') if so. */
