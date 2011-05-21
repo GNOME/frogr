@@ -39,6 +39,11 @@ See the COPYING file for more details.
 Some parts of the flicksoup library based on source code from the
 libsoup library, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
 
+The specific theme customizations for the MacOSX version of frogr
+through a gtkrc file were taken from the Banshee project
+(http://banshee.fm), written by Aaron Bockover <abockover@novell.com>
+and released under the MIT/X11 license (Copyright 2010 Novell, Inc.)
+
 -------------------------------------------
 
 Website: http://live.gnome.org/Frogr
