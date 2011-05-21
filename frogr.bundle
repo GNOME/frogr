@@ -81,15 +81,6 @@
   <translations name="gtk20">
     ${prefix}/share/locale
   </translations>
-  <translations name="gtk20-properties">
-    ${prefix}/share/locale
-  </translations>
-  <translations name="gdk-pixbuf">
-    ${prefix}/share/locale
-  </translations>
-  <translations name="glib20">
-    ${prefix}/share/locale
-  </translations>
   <translations name="libexif-12">
     ${prefix}/share/locale
   </translations>
