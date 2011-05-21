@@ -1,0 +1,621 @@
+# Greek translation for frogr.
+# Copyright (C) 2011 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# BunnyDee <bunnydee93@gmail.com>, 2011.
+# Mel Argyropoulou <bunnydee93@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-05-22 01:05+0300\n"
+"PO-Revision-Date: 2011-05-18 17:28+0300\n"
+"Last-Translator: Mel Argyropoulou <bunnydee93@gmail.com>\n"
+"Language-Team: Greek <team@gnome.gr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: ../data/frogr.desktop.in.in.h:1
+msgid "Flickr Remote Organizer"
+msgstr "Πρόγραμμα Απομακρυσμένης Οργάνωσης Flickr"
+
+#: ../data/frogr.desktop.in.in.h:2
+msgid "Frogr: a Flickr Remote Organizer for GNOME"
+msgstr "Frogr: Πρόγραμμα απομακρυσμένης οργάνωσης Flickr για GNOME"
+
+#: ../data/frogr.desktop.in.in.h:3
+msgid "Upload and organize photos in Flickr accounts"
+msgstr "Ανέβασμα και οργάνωση φωτογραφιών σε λογαριασμούς Flickr"
+
+#: ../src/frogr-about-dialog.c:45
+msgid "A Flickr remote organizer for GNOME\n"
+msgstr "Πρόγραμμα απομακρυσμένης οργάνωσης Flickr για GNOME\n"
+
+#: ../src/frogr-about-dialog.c:111
+msgid "translator-credits"
+msgstr ""
+"Ελληνική μεταφραστική ομάδα GNOME <http://www.gnome.gr/>, 2011\n"
+"Mel Argyropoulou <bunnydee93@gmail.com>, 2011"
+
+#: ../src/frogr-add-tags-dialog.c:339
+msgid "Enter a spaces separated list of tags:"
+msgstr "Εισάγετε λίστα με καρτέλες διαχωρισμένες με κενό διάστημα:"
+
+#: ../src/frogr-add-tags-dialog.c:383
+msgid "Add Tags"
+msgstr "Προσθήκη Ετικετών"
+
+#: ../src/frogr-add-to-set-dialog.c:133
+msgid "Title"
+msgstr "Τίτλος"
+
+#: ../src/frogr-add-to-set-dialog.c:148 ../src/frogr-add-to-group-dialog.c:148
+msgid "Elements"
+msgstr "Στοιχεία"
+
+#: ../src/frogr-add-to-set-dialog.c:570
+msgid "Add to Sets"
+msgstr "Προσθήκη σε Συλλογές"
+
+#: ../src/frogr-add-to-group-dialog.c:133
+msgid "Name"
+msgstr "Όνομα"
+
+#: ../src/frogr-add-to-group-dialog.c:570
+msgid "Add to Groups"
+msgstr "Προσθήκη σε Ομάδες"
+
+#: ../src/frogr-auth-dialog.c:32
+#, c-format
+msgid ""
+"Please press the button to authorize %s and then come back to this screen to "
+"complete the process."
+msgstr ""
+"Παρακαλώ πατήστε το κουμπί για να εξουσιοδοτήσετε το %s και μετά επιστρέψτε "
+"σε αυτή την οθόνη για να ολοκληρώσετε τη διεργασία."
+
+#: ../src/frogr-auth-dialog.c:36
+#, c-format
+msgid ""
+"Press the button to start using %s once you've authorized it in your flickr "
+"account."
+msgstr ""
+"Πατήστε το κουμπί για να αρχίσετε να χρησιμοποιείτε το %s όταν το έχετε "
+"εξουσιοδοτήσει στο λογαριασμό Flickr σας."
+
+#: ../src/frogr-controller.c:250
+msgid "Process cancelled by the user"
+msgstr "Η διεργασία ακυρώθηκε από το χρήστη"
+
+#: ../src/frogr-controller.c:255
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+"Σφάλμα σύνδεσης:\n"
+"δίκτυο μη διαθέσιμο"
+
+#: ../src/frogr-controller.c:260
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+"Σφάλμα σύνδεσης:\n"
+"Εσφαλμένη αίτηση"
+
+#: ../src/frogr-controller.c:265
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+"Σφάλμα σύνδεσης:\n"
+"Σφάλμα εξυπηρετητή"
+
+#: ../src/frogr-controller.c:270
+msgid ""
+"Error uploading picture:\n"
+"File invalid"
+msgstr ""
+"Σφάλμα κατά το ανέβασμα της εικόνας:\n"
+"Μη έγκυρο αρχείο"
+
+#: ../src/frogr-controller.c:275
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+"Σφάλμα κατά το ανέβασμα της εικόνας:\n"
+"Το όριο έχει ξεπεραστεί"
+
+#: ../src/frogr-controller.c:280
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+"Σφάλμα:\n"
+"Δε βρέθηκε η φωτογραφία"
+
+#: ../src/frogr-controller.c:285
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+"Σφάλμα:\n"
+"Η φωτογραφία βρίσκεται ήδη σε σύνολο φωτογραφιών"
+
+#: ../src/frogr-controller.c:290
+msgid ""
+"Error:\n"
+"Photo already in group"
+msgstr ""
+"Σφάλμα:\n"
+"Η φωτογραφία ανήκει ήδη σε ομάδα"
+
+#: ../src/frogr-controller.c:295
+msgid ""
+"Error:\n"
+"Photo already in the maximum number of groups possible"
+msgstr ""
+"Σφάλμα:\n"
+"Η φωτογραφία βρίσκεται ήδη στο μέγιστο επιτρεπόμενο αριθμό ομάδων"
+
+#: ../src/frogr-controller.c:300
+msgid ""
+"Error:\n"
+"Group limit already reached"
+msgstr ""
+"Σφάλμα:\n"
+"Εξαντλήθηκε το όριο ομάδων"
+
+#: ../src/frogr-controller.c:305
+msgid ""
+"Error:\n"
+"Photo added to group's queue"
+msgstr ""
+"Σφάλμα:\n"
+"Η φωτογραφία προστέθηκε στη γραμμή αναμονής της ομάδας"
+
+#: ../src/frogr-controller.c:310
+msgid ""
+"Error:\n"
+"Photo already added to group's queue"
+msgstr ""
+"Σφάλμα:\n"
+"Η φωτογραφία προστέθηκε ήδη στη γραμμή αναμονής της ομάδας"
+
+#: ../src/frogr-controller.c:315
+msgid ""
+"Error:\n"
+"Content not allowed for this group"
+msgstr ""
+"Σφάλμα:\n"
+"Το περιεχόμενο δεν επιτρέπεται για αυτήν την ομάδα"
+
+#: ../src/frogr-controller.c:320
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"Αποτυχία εξουσιοδότησης.\n"
+"Παρακαλώ προσπαθήστε ξανά"
+
+#: ../src/frogr-controller.c:326
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to flickr.\n"
+"Please re-authorize it"
+msgstr ""
+"Σφάλμα\n"
+"%s δεν έχει την απαραίτητη εξουσιοδότηση για να ανεβάζει φωτογραφίες στο "
+"flickr.\n"
+"Παρακαλώ εξουσιοδοτήστε το ξανά"
+
+#: ../src/frogr-controller.c:332
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"Σφάλμα:\n"
+"Η υπηρεσία δεν είναι διαθέσιμη"
+
+#. General error: just dump the raw error description
+#: ../src/frogr-controller.c:338
+#, c-format
+msgid "An error happened while uploading a picture: %s."
+msgstr "Σφάλμα κατά το ανέβασμα φωτογραφίας: %s."
+
+#: ../src/frogr-controller.c:908
+msgid "Creating new photosets…"
+msgstr "Δημιουργία νέων συνόλων φωτογραφιών…"
+
+#: ../src/frogr-controller.c:932
+msgid "Adding picture to photosets…"
+msgstr "Προσθήκη φωτογραφίας σε σύνολα φωτογραφιών…"
+
+#: ../src/frogr-controller.c:954
+msgid "Adding picture to groups…"
+msgstr "Προσθήκη φωτογραφίας σε ομάδες…"
+
+#: ../src/frogr-controller.c:1447
+msgid "Retrieving list of sets…"
+msgstr "Ανάκτηση λιστών συλλογών…"
+
+#: ../src/frogr-controller.c:1452
+msgid "Retrieving list of groups…"
+msgstr "Ανάκτηση λίστας ομάδων…"
+
+#: ../src/frogr-controller.c:1457
+msgid "Retrieving list of tags…"
+msgstr "Ανάκτηση λίστας ετικετών…"
+
+#: ../src/frogr-controller.c:1596
+msgid "No sets found"
+msgstr "Δε βρέθηκαν συλλογές"
+
+#: ../src/frogr-controller.c:1630
+msgid "No groups found"
+msgstr "Δε βρέθηκαν ομάδες"
+
+#: ../src/frogr-controller.c:2277
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to flickr.\n"
+"Please re-authorize it."
+msgstr ""
+"Πρέπει να εξουσιοδοτήσετε σωστά το %s πριν ανεβάσετε φωτογραφίες στο "
+"Flickr.\n"
+"Παρακαλώ εξουσιοδοτήστε το ξανά."
+
+#. This shows a dialog notifying the problem to the user
+#: ../src/frogr-create-new-set-dialog.c:136 ../src/frogr-details-dialog.c:917
+msgid "Missing data required"
+msgstr "Λείπουν απαραίτητα δεδομένα"
+
+#: ../src/frogr-create-new-set-dialog.c:323
+msgid "Set's title:"
+msgstr "Τίτλος συλλογής:"
+
+#: ../src/frogr-create-new-set-dialog.c:336
+msgid "Set's description:"
+msgstr "Περιγραφή συλλογής:"
+
+#: ../src/frogr-create-new-set-dialog.c:359
+msgid "Fill pictures details with title and description"
+msgstr "Συμπληρώστε τις λεπτομέρειες των εικόνων με τίτλο και περιγραφή"
+
+#: ../src/frogr-create-new-set-dialog.c:380
+msgid "Create new Set"
+msgstr "Δημιουργία νέας Συλλογής"
+
+#: ../src/frogr-details-dialog.c:166
+msgid "Visibility"
+msgstr "Ορατότητα"
+
+#: ../src/frogr-details-dialog.c:177 ../src/frogr-settings-dialog.c:169
+msgid "_Private"
+msgstr "_Ιδιωτικό"
+
+#: ../src/frogr-details-dialog.c:181 ../src/frogr-settings-dialog.c:171
+msgid "P_ublic"
+msgstr "Δ_ημόσιο"
+
+#: ../src/frogr-details-dialog.c:189 ../src/frogr-settings-dialog.c:178
+msgid "Visible to _Family"
+msgstr "Ορατό στην _Οικογένεια"
+
+#: ../src/frogr-details-dialog.c:193 ../src/frogr-settings-dialog.c:180
+msgid "Visible to F_riends"
+msgstr "Ορατό στους Φ_ίλους"
+
+#: ../src/frogr-details-dialog.c:206 ../src/frogr-settings-dialog.c:187
+msgid "_Show up in Global Search Results"
+msgstr "_Εμφάνιση σε Καθολικά Αποτελέσματα Αναζήτησης"
+
+#: ../src/frogr-details-dialog.c:219
+msgid "Content type"
+msgstr "Τύπος περιεχομένου"
+
+#: ../src/frogr-details-dialog.c:228 ../src/frogr-settings-dialog.c:208
+msgid "P_hoto"
+msgstr "Φ_ωτογραφία"
+
+#: ../src/frogr-details-dialog.c:232 ../src/frogr-settings-dialog.c:210
+msgid "Scree_nshot"
+msgstr "Στιγμ_ιότυπο οθόνης"
+
+#: ../src/frogr-details-dialog.c:236 ../src/frogr-settings-dialog.c:212
+msgid "Oth_er"
+msgstr "Άλλ_ο"
+
+#: ../src/frogr-details-dialog.c:250
+msgid "Safety level"
+msgstr "Επίπεδο ασφάλειας"
+
+#: ../src/frogr-details-dialog.c:259 ../src/frogr-settings-dialog.c:232
+msgid "S_afe"
+msgstr "Α_σφαλές"
+
+#: ../src/frogr-details-dialog.c:263 ../src/frogr-settings-dialog.c:234
+msgid "_Moderate"
+msgstr "_Μέτρια"
+
+#: ../src/frogr-details-dialog.c:267 ../src/frogr-settings-dialog.c:236
+msgid "Restr_icted"
+msgstr "Με πε_ριορισμούς"
+
+#: ../src/frogr-details-dialog.c:281
+msgid "_Title:"
+msgstr "_Τίτλος:"
+
+#: ../src/frogr-details-dialog.c:293
+msgid "_Description:"
+msgstr "_Περιγραφή:"
+
+#: ../src/frogr-details-dialog.c:319
+msgid "Ta_gs:"
+msgstr "Ετ_ικέτες:"
+
+#. Visually indicate how many pictures are being edited
+#: ../src/frogr-details-dialog.c:760
+#, c-format
+msgid "(%d Picture)"
+msgid_plural "(%d Pictures)"
+msgstr[0] "(Φωτογραφία %d)"
+msgstr[1] "(Φωτογραφίες %d)"
+
+#: ../src/frogr-details-dialog.c:1096
+msgid "Edit Picture Details"
+msgstr "Επεξεργασία λεπτομερειών φωτογραφίας"
+
+#. File menu
+#: ../src/frogr-main-view.c:281
+msgid "_File"
+msgstr "_Αρχείο"
+
+#: ../src/frogr-main-view.c:283
+msgid "_Add Pictures"
+msgstr "_Προσθήκη φωτογραφιών"
+
+#. Remove
+#: ../src/frogr-main-view.c:284 ../src/frogr-main-view.c:500
+msgid "_Remove Pictures"
+msgstr "_Αφαίρεση φωτογραφιών"
+
+#. Accounts menu item and submenu
+#: ../src/frogr-main-view.c:289
+msgid "Accou_nts"
+msgstr "Λογαρ_ιασμοί"
+
+#: ../src/frogr-main-view.c:294
+msgid "Authorize _frogr"
+msgstr "Εξουσιοδότηση του _Frogr"
+
+#. Preferences menu item (platform dependent)
+#: ../src/frogr-main-view.c:297
+msgid "_Preferences…"
+msgstr "_Προτιμήσεις…"
+
+#: ../src/frogr-main-view.c:315
+msgid "_Quit"
+msgstr "_Τερματισμός"
+
+#. Actions menu
+#: ../src/frogr-main-view.c:319
+msgid "A_ctions"
+msgstr "Ε_νέργειες"
+
+#. Edit details
+#: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:453
+msgid "Edit _Details…"
+msgstr "Επεξεργασία _λεπτομερειών…"
+
+#. Add Tags
+#: ../src/frogr-main-view.c:322 ../src/frogr-main-view.c:461
+msgid "Add _Tags…"
+msgstr "Προσθήκη _Ετικετών…"
+
+#. Add to group
+#: ../src/frogr-main-view.c:323 ../src/frogr-main-view.c:469
+msgid "Add to _Group…"
+msgstr "Προσθήκη σε _Ομάδα…"
+
+#. Add to set
+#: ../src/frogr-main-view.c:325 ../src/frogr-main-view.c:477
+msgid "Add to _Set"
+msgstr "Προσθήκη σε _Συλλογή"
+
+#: ../src/frogr-main-view.c:328 ../src/frogr-main-view.c:483
+msgid "_Create New Set…"
+msgstr "_Δημιουργία νέας Συλλογής…"
+
+#: ../src/frogr-main-view.c:330 ../src/frogr-main-view.c:490
+msgid "Add to _Existing Set…"
+msgstr "Προσθήκη σε _υπάρχουσα Συλλογή…"
+
+#: ../src/frogr-main-view.c:335
+msgid "_Upload All"
+msgstr "_Ανέβασμα όλων"
+
+#. View menu
+#: ../src/frogr-main-view.c:338
+msgid "_View"
+msgstr "_Προβολή"
+
+#: ../src/frogr-main-view.c:340
+msgid "_Sort Pictures"
+msgstr "_Ταξινόμηση εικόνων"
+
+#: ../src/frogr-main-view.c:345
+msgid "As _Loaded"
+msgstr "Κατά _αποθήκευση"
+
+#: ../src/frogr-main-view.c:348
+msgid "By _Title"
+msgstr "Κατά _τίτλο"
+
+#: ../src/frogr-main-view.c:351
+msgid "By _Date Taken"
+msgstr "Κατά _ημερομηνία λήψης"
+
+#: ../src/frogr-main-view.c:362
+msgid "_Reversed Order"
+msgstr "_Αντίστροφη σειρά"
+
+#: ../src/frogr-main-view.c:370
+msgid "Disable _Tooltips"
+msgstr "Απενεργοποίηση _υποδείξεων"
+
+#: ../src/frogr-main-view.c:379
+msgid "_Help"
+msgstr "_Βοήθεια"
+
+#: ../src/frogr-main-view.c:382
+msgid "_About frogr..."
+msgstr "_Περί του Frogr…"
+
+#. String showind the date and time a picture was taken
+#: ../src/frogr-main-view.c:946
+#, c-format
+msgid "Taken: %s"
+msgstr "Λήψη: %s"
+
+#: ../src/frogr-main-view.c:951
+#, c-format
+msgid "File size: %s"
+msgstr "Μέγεθος αρχείου: %s"
+
+#: ../src/frogr-main-view.c:1133
+msgid "Select a Picture"
+msgstr "Επιλογή εικόνας"
+
+#: ../src/frogr-main-view.c:1159
+msgid "images"
+msgstr "εικόνες"
+
+#: ../src/frogr-main-view.c:1180
+msgid "You need to select some pictures first"
+msgstr "Πρέπει να επιλέξετε κάποιες εικόνες πρώτα"
+
+#: ../src/frogr-main-view.c:1506
+msgid "Not connected to flickr"
+msgstr "Δεν έχει γίνει σύνδεση στο Flickr"
+
+#. Login string, showing the user is PRO (second '%s') if so.
+#: ../src/frogr-main-view.c:1516
+#, c-format
+msgid "Connected as %s%s"
+msgstr "Σύνδεση ως %s%s"
+
+#: ../src/frogr-main-view.c:1517
+msgid " (PRO account)"
+msgstr "(λογαριασμός PRO)"
+
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: ../src/frogr-main-view.c:1541
+#, c-format
+msgid " - %s / %s remaining for the current month"
+msgstr " - %s / %s απομένουν για τον τρέχοντα μήνα"
+
+#. Will show in the status bar the amount of data (in KB, MB or
+#. GB) that would be uploaded as the sum of the sizes for every
+#. picture currently loadad in the application
+#: ../src/frogr-main-view.c:1566
+#, c-format
+msgid " - %s to be uploaded"
+msgstr " - %s προς ανέβασμα"
+
+#: ../src/frogr-picture-loader.c:109
+#, c-format
+msgid "Loading pictures %d / %d"
+msgstr "Φόρτωση εικόνων %d / %d"
+
+#. Update progress
+#: ../src/frogr-picture-uploader.c:85
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Ανέβασμα του '%s'…"
+
+#: ../src/frogr-settings-dialog.c:158
+msgid "Default Visibility"
+msgstr "Προεπιλεγμένη ορατότητα"
+
+#: ../src/frogr-settings-dialog.c:197
+msgid "Default Content Type"
+msgstr "Προεπιλεγμένος τύπος περιεχομένου"
+
+#: ../src/frogr-settings-dialog.c:221
+msgid "Default Safety Level"
+msgstr "Προεπιλεγμένο επίπεδο ασφάλειας"
+
+#: ../src/frogr-settings-dialog.c:245
+msgid "Other options"
+msgstr "Λοιπές επιλογές"
+
+#: ../src/frogr-settings-dialog.c:256
+msgid "Disa_ble Tags Auto-Completion"
+msgstr "Απενεργοποίηση αυτόματης συμπλήρωσης ετικετών"
+
+#: ../src/frogr-settings-dialog.c:259
+msgid "_Keep File Extensions in Titles when Loading Pictures"
+msgstr "_Διατήρηση επεκτάσεων αρχείων στους τίτλους κατά τη φόρτωση εικόνων"
+
+#: ../src/frogr-settings-dialog.c:265
+msgid "_General"
+msgstr "_Γενικά"
+
+#. Proxy settings
+#: ../src/frogr-settings-dialog.c:284
+msgid "_Use HTTP Proxy"
+msgstr "_Χρήση διαμεσολαβητή HTTP"
+
+#: ../src/frogr-settings-dialog.c:295
+msgid "_Host:"
+msgstr "_Κόμβος:"
+
+#. Proxy port
+#: ../src/frogr-settings-dialog.c:313
+msgid "_Port:"
+msgstr "_Θύρα:"
+
+#. Proxy username
+#: ../src/frogr-settings-dialog.c:331
+msgid "U_sername:"
+msgstr "Ό_νομα χρήστη:"
+
+#. Proxy password
+#: ../src/frogr-settings-dialog.c:349
+msgid "Pass_word:"
+msgstr "Συνθ_ηματικό:"
+
+#: ../src/frogr-settings-dialog.c:376
+msgid "Connec_tion"
+msgstr "Σύνδεσ_η"
+
+#: ../src/frogr-settings-dialog.c:816
+msgid "Preferences"
+msgstr "Προτιμήσεις"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:1
+msgid "Add"
+msgstr "Προσθήκη"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:2
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:3
+msgid "Upload"
+msgstr "Ανέβασμα"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:4
+msgid "frogr"
+msgstr "frogr"
