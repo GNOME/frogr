@@ -1,4 +1,8 @@
+# Theme to be used (remember to bundle it)
 gtk-theme-name = "Clearlooks"
+
+# No mnemonics for the MacOSX version (will mess with key bindings)
+gtk-enable-mnemonics = 0
 
 # The following lines, containing specific theme customizations for
 # the MacOSX version of frogr through a gtkrc file, were taken from
