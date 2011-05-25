@@ -1056,7 +1056,7 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
 
   /* Reorder if needed */
   if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
-    _reorder_pictures (self, priv->sorting_criteria, priv->sorting_reversed);
+    frogr_main_view_reorder_pictures (self);
 
   /* Update upload size in state description */
   _update_state_description (self);
@@ -2105,6 +2105,17 @@ frogr_main_view_hide_progress (FrogrMainView *self)
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   gtk_widget_hide (GTK_WIDGET (priv->progress_dialog));
+}
+
+void
+frogr_main_view_reorder_pictures (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  _reorder_pictures (self, priv->sorting_criteria, priv->sorting_reversed);
 }
 
 FrogrMainViewModel *

@@ -69,6 +69,8 @@ void frogr_main_view_pulse_progress (FrogrMainView *self);
 
 void frogr_main_view_hide_progress (FrogrMainView *self);
 
+void frogr_main_view_reorder_pictures (FrogrMainView *self);
+
 FrogrMainViewModel *frogr_main_view_get_model (FrogrMainView *self);
 
 G_END_DECLS

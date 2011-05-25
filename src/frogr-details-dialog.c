@@ -966,9 +966,13 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 
   /* Try to save data if response is OK */
   if (response == GTK_RESPONSE_OK && _save_data (self) == FALSE)
-      return;
+    return;
 
   gtk_widget_destroy (GTK_WIDGET (self));
+
+  /* Ensure pictures are reordered on OK */
+  if (response == GTK_RESPONSE_OK)
+    frogr_controller_reorder_pictures (frogr_controller_get_instance ());
 }
 
 static void

@@ -2304,6 +2304,17 @@ frogr_controller_upload_pictures (FrogrController *self)
 }
 
 void
+frogr_controller_reorder_pictures (FrogrController *self)
+{
+  FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  frogr_main_view_reorder_pictures (priv->mainview);
+}
+
+void
 frogr_controller_cancel_ongoing_request (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;

@@ -119,6 +119,8 @@ void frogr_controller_load_pictures (FrogrController *self, GSList *fileuris);
 
 void frogr_controller_upload_pictures (FrogrController *self);
 
+void frogr_controller_reorder_pictures (FrogrController *self);
+
 void frogr_controller_cancel_ongoing_request (FrogrController *self);
 
 G_END_DECLS
