@@ -1,19 +1,57 @@
 0.5 (??)
+========
 
   * Allow loading files from remote servers (use URIs instead of paths).
-  * Show username in the list of available accounts.
+  * Show username instead of full name in the UI, which is more useful.
   * Allow disabling tags autocompletion through preferences dialog.
-  * Show tooltips in the icon view with basic info (title, file size).
-  * Added experimental support for MacOSX.
-  * Make GTK3 the default version (opposite to just being supported).
+  * Show tooltips in the icon view with basic info (title, size, date).
+  * Allow enabling/disabling tooltips in the main window.
+  * Use check menu items for the account items.
   * Better handling of files with UTF-8 characters in their names.
-  * Fixed bug 644717: Proxy settings tab not compliant with HIG.
-  * Fixed bug 644797: Remove file extension from file title.
-  * Fixed bug 644799: Show how many MB your upload is while adding/upload photos.
-  * Fixed bug 644801: Rotate the photos to the right orientation.
-  * Several minor improvements.
+  * Show the total amount of data to be uploaded in the status bar.
+  * Allow sorting pictures by title and date taken (reversed or not).
+  * Allow copying new photoset's details into the selected pictures.
+  * Correct photo orientation when needed.
+  * Added support for generating MacOSX packages.
+  * Updated marital status in THANKS file.
+  * Fix compilation errors in some architectures (Alberto Garcia).
+  * Make GTK3 the default version (opposite to just being supported).
+  * Introduced new dependency: libexif.
+  * Several other minor improvements and cleanups.
+
+Bug fixes:
+
+  * #643288: Correctly handle plural forms in frogr-details-dialog.c
+  * #643296: Mark file group name in selector as translatable
+  * #644717: Proxy settings tab not compliant with HIG.
+  * #644797: Remove file extension from file title.
+  * #644799: Show how many MB your upload is while adding/upload photos.
+  * #644800: Sort photos by date taken option
+  * #644801: Rotate the photos to the right orientation.
+  * #648597: Allow to add/load images from remote volumes
+  * #648706: Wrong assumptions about word order
+
+New and updated translations:
+
+  * cs (Marek Černocký)
+  * da (Joe Hansen)
+  * de (Mario Blättermann)
+  * el (Mel Argyropoulou)
+  * es (Daniel Mustieles, Jorge González)
+  * fr (Claude Paroz)
+  * gl (Fran Diéguez)
+  * pl (Łukasz Jernaś)
+  * pt_BR (Djavan Fagundes, Gabriel F. Vilar)
+  * ru (Yuri Myasoedov)
+  * sl (Matej Urbančič)
+  * sv (Daniel Nylander)
+  * tr (Muhammet Kara)
+  * uk (Daniel Korostil)
+  * zh_CN (Yinghua Wang)
+
 
 0.4 (05 Feb 2011)
+=================
 
   * Fixed (more) problems building debian packages.
   * Modified package description for fedora and debian.
@@ -56,7 +94,9 @@
     TRANSLATORS file for more details.
   * As usual, lots of bugfixes and several minor improvements.
 
+
 0.3 (22 Dec 2010)
+=================
 
   * Fixed problems building debian packages.
   * Committed patches related to GNOME 3.0 integration (Javier Jardón).
@@ -76,7 +116,9 @@
   * Updated translations.
   * Lots of bugfixes, as well as several minor improvements.
 
+
 0.2 (12 Oct 2009)
+=================
 
   * Generate ChangeLog from git log with 'make dist'
   * Added .spec file for fedora 11 packaging system (Adrián Pérez)
@@ -89,11 +131,15 @@
   * Support silent build rules with automake 1.11 (Javier Jardón)
   * Bugfixes and several minor improvements
 
+
 0.1.1 (22 Aug 2009)
+===================
 
   * Fixed problems with 'make dist' (missing files in EXTRA_DIST)
 
+
 0.1 (21 Aug 2009)
+=================
 
   * A better UI. Faster and better user experience
   * Basic configuration management to store account details (Adrián Pérez)
@@ -107,6 +153,8 @@
     to keep compatibility with Gtk+ 2.12 (least version supported).
   * Bugfixes and several (minor and major) improvements
 
+
 0.0.20090603 (03 Jun 2009)
+==========================
 
   * Initial pre-release, right after getting the basic stuff together.
