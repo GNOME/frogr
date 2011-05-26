@@ -67,7 +67,7 @@ rm -rf $RPM_BUILD_ROOT
 - Updated marital status in THANKS file.
 - Fix compilation errors in some architectures (Alberto Garcia).
 - Make GTK3 the default version (opposite to just being supported).
-- Introduced new dependency: libexif.
+- Introduced new dependency: libexif (> 0.6.14).
 - Several other minor improvements and cleanups.
 - Fixed bugs: #643288, #643296, #644717, #644797, #644799, #644800,
   #644801, #648597 and #648706.
