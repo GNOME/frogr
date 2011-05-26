@@ -33,15 +33,16 @@ _spawn_command (const gchar* cmd)
 {
   GError *error = NULL;
 
-  if (!g_spawn_command_line_async (cmd, &error)) {
-    if (error != NULL)
-      {
-        DEBUG ("Error spawning command '%s': %s", cmd, error->message);
-        g_error_free (error);
-      }
-    return FALSE;
-  }
+  if (!g_spawn_command_line_async (cmd, &error))
+    {
+      if (error != NULL)
+        {
+          DEBUG ("Error spawning command '%s': %s", cmd, error->message);
+          g_error_free (error);
+        }
 
+      return FALSE;
+    }
   return TRUE;
 }
 #endif
