@@ -50,6 +50,31 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri May 27 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.5-1
+- New upstream release
+- Allow loading files from remote servers (use URIs instead of paths).
+- Show username instead of full name in the UI, which is more useful.
+- Allow disabling tags autocompletion through preferences dialog.
+- Show tooltips in the icon view with basic info (title, size, date).
+- Allow enabling/disabling tooltips in the main window.
+- Use check menu items for the account items.
+- Better handling of files with UTF-8 characters in their names.
+- Show the total amount of data to be uploaded in the status bar.
+- Allow sorting pictures by title and date taken (reversed or not).
+- Allow copying new photoset's details into the selected pictures.
+- Correct photo orientation when needed.
+- Added support for generating MacOSX packages.
+- Updated marital status in THANKS file.
+- Fix compilation errors in some architectures (Alberto Garcia).
+- Make GTK3 the default version (opposite to just being supported).
+- Introduced new dependency: libexif.
+- Several other minor improvements and cleanups.
+- Fixed bugs: #643288, #643296, #644717, #644797, #644799, #644800,
+  #644801, #648597 and #648706.
+
+- New and updated translations: cs, da, de, el, es, fr, gl, pl, pt_BR,
+   ru, sl, sv, tr, uk and zh_CN.
+
 * Sat Feb 05 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.4-1
 - Fixed (more) problems building debian packages.
 - Modified package description for fedora and debian.
