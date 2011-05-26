@@ -1,4 +1,4 @@
-AC_INIT([frogr], [0.5], [msanchez@igalia.com])
+AC_INIT([frogr], [0.6], [msanchez@igalia.com])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
