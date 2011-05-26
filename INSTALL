@@ -1,13 +1,3 @@
-Building and installing a debian package
-========================================
-
-You can easily build a new debian package by doing:
-
- $ dpkg-buildpackage -rfakeroot
-
-After that, just install the debian package created in '../'.
-
-
 Compiling from source code
 ==========================
 
