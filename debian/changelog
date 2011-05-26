@@ -1,4 +1,4 @@
-frogr (0.5~unreleased) unstable; urgency=low
+frogr (0.5) unstable; urgency=low
 
   * New upstream release
   * Allow loading files from remote servers (use URIs instead of paths).
