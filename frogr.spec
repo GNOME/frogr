@@ -10,7 +10,7 @@ Source0:	http://download.gnome.org/sources/%{name}/%{version}/%{name}-%{version}
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	gtk2-devel > 2.14, glib2-devel, libsoup-devel, libxml2-devel, libexif-devel
-Requires:	gtk2 > 2.14, glib2 > 2.16, libsoup > 2.24, libxml2, libexif
+Requires:	gtk2 > 2.14, glib2 > 2.16, libsoup > 2.24, libxml2, libexif, gvfs, desktop-file-utils
 
 %description
 Frogr is a small application for the GNOME desktop that allows users
