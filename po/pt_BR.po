@@ -38,7 +38,8 @@ msgstr "Um organizador remoto do Flickr para GNOME\n"
 #: ../src/frogr-about-dialog.c:105
 msgid "translator-credits"
 msgstr "Mateus Zenaide <matzenh@gmail.com>\n"
-"Djavan Fagundes <djavan@comum.org>"
+"Djavan Fagundes <djavan@comum.org>\n"
+"Gabriel F. Vilar <cogumm@gmail.com>"
 
 #: ../src/frogr-add-tags-dialog.c:339
 msgid "Enter a spaces separated list of tags:"

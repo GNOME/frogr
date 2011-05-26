@@ -1,34 +1,76 @@
+cs (Czech translation)
+----------------------
+Marek Černocký <marek@manet.cz>
+
+da (Danish)
+-----------
+Joe Hansen <joedalton2@yahoo.dk>
+
+de (German)
+-----------
+Mario Blättermann <mariobl@gnome.org>
+
+el (Greek)
+----------
+Mel Argyropoulou <bunnydee93@gmail.com>
+
+en_GB (British English)
+-----------------------
+Philip Withnall <philip@tecnocode.co.uk>
+
+es (Spanish)
+------------
 Alejandro Piñeiro Iglesias <apinheiro@igalia.com>
 Mario Sanchez Prada <msanchez@igalia.com>
 Daniel Mustieles <daniel.mustieles@gmail.com>
 Jorge González <jorgegonz@svn.gnome.org>
-* Spanish translation (es)
 
-Philip Withnall <philip@tecnocode.co.uk>
-* British English translation (en_GB)
-
+fr (French)
+-----------
 Alexandre Franke <alexandre.franke@gmail.com>
 Claude Paroz <claude@2xlibre.net>
-* French translation (fr)
 
-Daniel Nylander <po@danielnylander.se>
-* Swedish translation (sv)
-
+gl (Galician)
+-------------
 Fran Diéguez <frandieguez@ubuntu.com>
-* Galician translation (gl)
 
-Mario Blättermann <mariobl@gnome.org>
-* German translation (de)
+it (Italian)
+------------
+Cristian Marchi <cri.penta@gmail.com>
 
+pl (Polish)
+-----------
+Aviary.pl <gnomepl@aviary.pl>
+Łukasz Jernaś <deejay1@srem.org>
+
+pt_BR (Brazilian Portuguese)
+----------------------------
+Mateus Zenaide <matzenh@gmail.com>
+Djavan Fagundes <djavan@comum.org>
+Gabriel F. Vilar <cogumm@gmail.com>
+
+ru (Russian)
+------------
+Yuri Myasoedov <omerta13@yandex.ru>
+
+sl (Slovenian)
+--------------
 Matej Urbančič <mateju@svn.gnome.org>
 Saša Batistič <sasa.batistic@gmail.com>
-* Slovenian translation (sl)
 
-Cristian Marchi <cri.penta@gmail.com>
-* Italian translation (it)
+sv (Swedish)
+------------
+Daniel Nylander <po@danielnylander.se>
 
-Marek Černocký <marek@manet.cz>
-* Czech translation (cs)
+tr (Turkish)
+------------
+Muhammet Kara <muhammet.k@gmail.com>
 
-Mateus Zenaide <matzenh@gmail.com>
-* Brazilian Portuguese translation (pt_BR)
+uk (Ukrainian)
+--------------
+Sergiy Gavrylov <sergiovana@bigmir.net>
+Daniel Korostil <ted.korostiled@gmail.com>
+
+zh_CN (Chinese)
+---------------
+Yinghua Wang <wantinghard@gmail.com>

@@ -40,7 +40,8 @@ msgstr "Oddaljeni organizator slik GNOME Flickr\n"
 
 #: ../src/frogr-about-dialog.c:105
 msgid "translator-credits"
-msgstr "Saša Batistič <sasa.batistic@gmail.com>"
+msgstr "Saša Batistič <sasa.batistic@gmail.com>\n"
+"Matej Urbančič <mateju@svn.gnome.org>"
 
 #: ../src/frogr-add-tags-dialog.c:339
 msgid "Enter a spaces separated list of tags:"
