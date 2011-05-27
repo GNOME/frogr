@@ -29,11 +29,6 @@ PKG_CHECK_MODULES(EXIF, libexif >= $EXIF_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $EXIF_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $EXIF_LIBS"
 
-LIBSOUP_MIN_VERSION=2.24
-PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4 >= $LIBSOUP_MIN_VERSION)
-FROGR_CFLAGS="$FROGR_CFLAGS $LIBSOUP_CFLAGS"
-FROGR_LIBS="$FROGR_LIBS $LIBSOUP_LIBS"
-
 LIBXML2_MIN_VERSION=2.6.8
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0 >= $LIBXML2_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBXML2_CFLAGS"
@@ -59,6 +54,47 @@ else
 fi
 
 AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xmacosx"])
+
+# Decide whether to use libsoup or libsoup-gnome (if available)
+
+LIBSOUP_MIN_VERSION=2.24
+
+if test "x$platform" = "xgnome"; then
+   # For the GNOME platform allow using libsoup-gnome, if available
+   AC_ARG_WITH([libsoup],
+           [AS_HELP_STRING([--with-libsoup=plain|gnome], [libsoup variant to use (default: gnome)])],
+           [case "$with_libsoup" in
+           plain|gnome) ;;
+           *) AC_MSG_ERROR([Wrong libsoup variant]) ;;
+           esac],
+           [with_libsoup=gnome])
+else
+   # Other non-GNOME platforms (e.g. MacOSX) to support plain libsoup only
+   with_libsoup=plain
+fi
+
+if test "x$with_libsoup" = "xgnome"; then
+   AC_MSG_CHECKING([libsoup variant to use])
+   PKG_CHECK_MODULES(LIBSOUP_GNOME,
+                     [libsoup-gnome-2.4 >= $LIBSOUP_MIN_VERSION],
+                     [have_libsoup_gnome="yes"], [have_libsoup_gnome="no"])
+
+   if test "x$have_libsoup_gnome" = "xyes"; then
+      LIBSOUP_CFLAGS="$LIBSOUP_GNOME_CFLAGS"
+      LIBSOUP_LIBS="$LIBSOUP_GNOME_LIBS"
+
+      AC_DEFINE(HAVE_LIBSOUP_GNOME, 1, [Have libsoup-gnome])
+      libsoup_variant="libsoup-gnome"
+   fi
+fi
+
+if test "x$libsoup_variant" = "x"; then
+   PKG_CHECK_MODULES(LIBSOUP, [libsoup-2.4 >= $LIBSOUP_MIN_VERSION])
+   libsoup_variant="plain libsoup"
+fi
+
+FROGR_CFLAGS="$FROGR_CFLAGS $LIBSOUP_CFLAGS"
+FROGR_LIBS="$FROGR_LIBS $LIBSOUP_LIBS"
 
 # Select target version of GTK to use
 
@@ -166,9 +202,10 @@ echo "*************************************"
 echo "*** frogr is ready to be compiled ***"
 echo "*************************************"
 echo ""
-echo "Platform           : $platform"
-echo "Using GTK+ version : $with_gtk"
-echo "Enable debug       : $enable_debug"
+echo "Platform              : $platform"
+echo "Using GTK+ version    : $with_gtk"
+echo "Using libsoup variant : $libsoup_variant"
+echo "Enable debug          : $enable_debug"
 echo ""
 echo ""
 echo "Configure successful. Type 'make' to compile"

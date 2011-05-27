@@ -31,7 +31,13 @@
 #include "fsp-session.h"
 
 #include <config.h>
+
+#ifdef HAVE_LIBSOUP_GNOME
+#include <libsoup/soup-gnome.h>
+#else
 #include <libsoup/soup.h>
+#endif
+
 #include <stdarg.h>
 #include <string.h>
 
