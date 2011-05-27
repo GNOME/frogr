@@ -1286,21 +1286,22 @@ fsp_session_set_http_proxy              (FspSession *self,
 #ifdef HAVE_LIBSOUP_GNOME
   /* We're gonna need this to make a good decision later */
   using_gnome_proxy_before = self->priv->using_gnome_proxy;
-  self->priv->using_gnome_proxy = use_gnome_proxy;
 
-  if (use_gnome_proxy)
+  if (using_gnome_proxy_before != use_gnome_proxy)
     {
-      /* If GNOME proxy is gonna be used, set up the feature. */
-      soup_session_add_feature_by_type (self->priv->soup_session,
-                                        SOUP_TYPE_PROXY_RESOLVER_GNOME);
+      void (*soup_feature_func) (SoupSession *, GType) = NULL;
+      if (use_gnome_proxy)
+        soup_feature_func = soup_session_add_feature_by_type;
+      else
+        soup_feature_func = soup_session_remove_feature_by_type;
+
+      /* Add or remove the feature */
+      soup_feature_func (self->priv->soup_session,
+                         SOUP_TYPE_PROXY_RESOLVER_GNOME);
     }
-  else
-    {
-      /* Remove the feature if not using it anymore */
-      soup_session_remove_feature_by_type (self->priv->soup_session,
-                                           SOUP_TYPE_PROXY_RESOLVER_GNOME);
-    }
+  self->priv->using_gnome_proxy = use_gnome_proxy;
 #else
+  /* Just ignore the using_gnome_proxy parameter in this case */
   self->priv->using_gnome_proxy = FALSE;
 #endif
 
