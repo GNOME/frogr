@@ -330,7 +330,7 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, TRUE, TRUE, 6);
 
   model = GTK_TREE_MODEL (gtk_list_store_new (1, G_TYPE_STRING));
   priv->treemodel = model;
