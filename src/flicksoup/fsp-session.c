@@ -1276,12 +1276,17 @@ fsp_session_set_http_proxy              (FspSession *self,
                                          const char *username, const char *password)
 {
   SoupURI *proxy_uri = NULL;
+
+#ifdef HAVE_LIBSOUP_GNOME
   gboolean using_gnome_proxy_before = FALSE;
+#endif
 
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
 
+#ifdef HAVE_LIBSOUP_GNOME
   /* We're gonna need this to make a good decision later */
   using_gnome_proxy_before = self->priv->using_gnome_proxy;
+  self->priv->using_gnome_proxy = use_gnome_proxy;
 
   if (use_gnome_proxy)
     {
@@ -1295,9 +1300,11 @@ fsp_session_set_http_proxy              (FspSession *self,
       soup_session_remove_feature_by_type (self->priv->soup_session,
                                            SOUP_TYPE_PROXY_RESOLVER_GNOME);
     }
-  self->priv->using_gnome_proxy = use_gnome_proxy;
+#else
+  self->priv->using_gnome_proxy = FALSE;
+#endif
 
-  if (!use_gnome_proxy)
+  if (!self->priv->using_gnome_proxy)
     {
       /* If using the GNOME proxy we just forget about the rest. */
       if (host != NULL)
@@ -1351,7 +1358,12 @@ fsp_session_set_http_proxy              (FspSession *self,
         }
     }
 
+#ifdef HAVE_LIBSOUP_GNOME
   return using_gnome_proxy_before != use_gnome_proxy;
+#else
+  /* Proxy configuration has not changed */
+  return FALSE;
+#endif
 }
 
 const gchar *
