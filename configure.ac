@@ -84,13 +84,13 @@ if test "x$with_libsoup" = "xgnome"; then
       LIBSOUP_LIBS="$LIBSOUP_GNOME_LIBS"
 
       AC_DEFINE(HAVE_LIBSOUP_GNOME, 1, [Have libsoup-gnome])
-      libsoup_variant="libsoup-gnome"
+   else
+      with_libsoup=plain
    fi
 fi
 
-if test "x$libsoup_variant" = "x"; then
+if test "x$with_libsoup" = "xplain"; then
    PKG_CHECK_MODULES(LIBSOUP, [libsoup-2.4 >= $LIBSOUP_MIN_VERSION])
-   libsoup_variant="plain libsoup"
 fi
 
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBSOUP_CFLAGS"
@@ -204,7 +204,7 @@ echo "*************************************"
 echo ""
 echo "Platform              : $platform"
 echo "Using GTK+ version    : $with_gtk"
-echo "Using libsoup variant : $libsoup_variant"
+echo "Using libsoup variant : $with_libsoup"
 echo "Enable debug          : $enable_debug"
 echo ""
 echo ""
