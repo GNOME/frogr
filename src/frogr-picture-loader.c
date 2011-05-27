@@ -186,46 +186,54 @@ _load_next_picture (FrogrPictureLoader *self)
     {
       gchar *file_uri = (gchar *)priv->current->data;
       GFile *gfile = g_file_new_for_uri (file_uri);
+      GFileInfo *file_info;
       gboolean valid_mime = TRUE;
 
-#ifndef MAC_INTEGRATION
-      GFileInfo *file_info;
-      const gchar *mime_type;
-      gint i;
-
-      /* Get file info */
+      /* Get file info (from this point on, use (file_info != NULL) as
+         a reliable way to know whether the file exists or not */
       file_info = g_file_query_info (gfile,
                                      G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
                                      G_FILE_QUERY_INFO_NONE,
                                      NULL,
                                      NULL);
+#ifndef MAC_INTEGRATION
+      const gchar *mime_type;
+      gint i;
 
-      /* Check mimetype (only when not in Mac OSX) */
-      mime_type = g_file_info_get_content_type (file_info);
-
-      valid_mime = FALSE;
-      for (i = 0; valid_mimetypes[i]; i++)
+      /* This can be NULL (e.g wrong parameter in the command line) */
+      if (file_info)
         {
-          if (g_str_equal (valid_mimetypes[i], mime_type))
-            {
-              valid_mime = TRUE;
-              break;
-            }
-        }
+          /* Check mimetype (only when not in Mac OSX) */
+          mime_type = g_file_info_get_content_type (file_info);
+          valid_mime = FALSE;
 
-      DEBUG ("Mime detected: %s)", mime_type);
-      g_object_unref (file_info);
+          if (mime_type)
+            {
+              for (i = 0; valid_mimetypes[i]; i++)
+                {
+                  if (g_str_equal (valid_mimetypes[i], mime_type))
+                    {
+                      valid_mime = TRUE;
+                      break;
+                    }
+                }
+
+              DEBUG ("Mime detected: %s)", mime_type);
+            }
+
+          g_object_unref (file_info);
+        }
 #endif
 
-      DEBUG ("Adding file %s", file_uri);
-
       /* Asynchronously load the picture if mime is valid */
-      if (valid_mime)
+      if (file_info && valid_mime)
         {
           g_file_load_contents_async (gfile,
                                       NULL,
                                       _load_next_picture_cb,
                                       self);
+
+          DEBUG ("Adding file %s", file_uri);
         }
       else
         {
