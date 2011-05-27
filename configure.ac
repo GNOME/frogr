@@ -37,12 +37,12 @@ FROGR_LIBS="$FROGR_LIBS $LIBXML2_LIBS"
 # Select target platform to make platform-dependant decisions
 
 if $PKG_CONFIG --exists ige-mac-integration; then
-   platform=macosx
+   platform=MacOSX
 else
-   platform=gnome
+   platform=GNOME
 fi
 
-if test "x$platform" = "xmacosx"; then
+if test "x$platform" = "xMacOSX"; then
    echo "Compiling for Mac OSX..."
 
    IGE_MAC_INTEGRATION_MIN_VERSION=0.9.7
@@ -53,13 +53,13 @@ else
    echo "Compiling for GNOME..."
 fi
 
-AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xmacosx"])
+AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xMacOSX"])
 
 # Decide whether to use libsoup or libsoup-gnome (if available)
 
 LIBSOUP_MIN_VERSION=2.26
 
-if test "x$platform" = "xgnome"; then
+if test "x$platform" = "xGNOME"; then
    # For the GNOME platform allow using libsoup-gnome, if available
    AC_ARG_WITH([libsoup],
            [AS_HELP_STRING([--with-libsoup=plain|gnome], [libsoup variant to use (default: gnome)])],
@@ -100,7 +100,7 @@ FROGR_LIBS="$FROGR_LIBS $LIBSOUP_LIBS"
 
 AC_MSG_CHECKING([GTK+ version to use])
 
-if test "x$platform" = "xgnome"; then
+if test "x$platform" = "xGNOME"; then
    # For the GNOME platform allow using GTK2 and GTK3 (default for GNOME)
    AC_ARG_WITH([gtk],
            [AS_HELP_STRING([--with-gtk=2.0|3.0], [GTK+ version to use (default: 3.0)])],
