@@ -1321,7 +1321,13 @@ frogr_config_set_use_gnome_proxy (FrogrConfig *self, gboolean value)
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
+
+#ifdef HAVE_LIBSOUP_GNOME
   priv->use_gnome_proxy = value;
+#else
+  /* Always set it to false if not using libsoup */
+  priv->use_gnome_proxy = FALSE;
+#endif
 }
 
 gboolean
@@ -1330,6 +1336,11 @@ frogr_config_get_use_gnome_proxy (FrogrConfig *self)
   FrogrConfigPrivate *priv = NULL;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+#ifndef HAVE_LIBSOUP_GNOME
+  /* Always return false if not using libsoup */
+  return FALSE;
+#endif
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->use_gnome_proxy;
