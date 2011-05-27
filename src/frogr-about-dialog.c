@@ -104,7 +104,11 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "artists", artists,
                          "comments", _(appdescr),
                          "copyright", copyright,
+#if !GTK_CHECK_VERSION (3,0,0)
                          "license", license,
+#else
+                         "license-type", GTK_LICENSE_GPL_3_0,
+#endif
                          "version", version,
                          "website", website,
                          "logo", logo,
