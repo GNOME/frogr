@@ -2010,19 +2010,25 @@ frogr_controller_set_proxy (FrogrController *self,
                                 NULL, NULL, NULL, NULL);
     DEBUG ("%s", "Not enabling the HTTP proxy");
   } else {
-    gboolean has_username = FALSE;
-    gboolean has_password = FALSE;
     gboolean proxy_changed = FALSE;
-    gchar *auth_part = NULL;
 
-    has_username = (username != NULL && *username != '\0');
-    has_password = (password != NULL && *password != '\0');
+    if (!use_gnome_proxy)
+      {
+        gchar *auth_part = NULL;
+        gboolean has_username = FALSE;
+        gboolean has_password = FALSE;
 
-    if (has_username && has_password)
-      auth_part = g_strdup_printf ("%s:%s@", username, password);
+        has_username = (username != NULL && *username != '\0');
+        has_password = (password != NULL && *password != '\0');
 
-    DEBUG ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
-    g_free (auth_part);
+        if (has_username && has_password)
+          auth_part = g_strdup_printf ("%s:%s@", username, password);
+
+        DEBUG ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
+        g_free (auth_part);
+      }
+    else
+      DEBUG ("Using GNOME general proxy settings");
 
     proxy_changed = fsp_session_set_http_proxy (priv->session,
                                                 use_gnome_proxy,
