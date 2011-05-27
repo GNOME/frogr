@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=frogr&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2011-05-07 15:31+0000\n"
-"PO-Revision-Date: 2011-05-09 21:37+0300\n"
+"PO-Revision-Date: 2011-05-27 09:46+0300\n"
 "Last-Translator: Yuri Myasoedov <omerta13@yandex.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr "Элементы"
 
 #: ../src/frogr-add-to-set-dialog.c:570
 msgid "Add to Sets"
-msgstr "Добавить в наборы"
+msgstr "Добавить в альбомы"
 
 #: ../src/frogr-add-to-group-dialog.c:133
 msgid "Name"
@@ -133,7 +133,7 @@ msgid ""
 "Photo already in photoset"
 msgstr ""
 "Ошибка:\n"
-"фотоснимок уже есть в наборе снимков"
+"фотоснимок уже есть в альбоме"
 
 #: ../src/frogr-controller.c:290
 msgid ""
@@ -220,11 +220,11 @@ msgstr "При загрузке изображения возникла ошиб
 
 #: ../src/frogr-controller.c:908
 msgid "Creating new photosets…"
-msgstr "Создание новых наборов фотоснимков…"
+msgstr "Создание новых альбомов…"
 
 #: ../src/frogr-controller.c:932
 msgid "Adding picture to photosets…"
-msgstr "Добавление изображения в наборы фотоснимков…"
+msgstr "Добавление изображения в альбомы…"
 
 #: ../src/frogr-controller.c:954
 msgid "Adding picture to groups…"
@@ -232,7 +232,7 @@ msgstr "Добавление изображения в группы…"
 
 #: ../src/frogr-controller.c:1447
 msgid "Retrieving list of sets…"
-msgstr "Получение списка наборов…"
+msgstr "Получение списка альбомов…"
 
 #: ../src/frogr-controller.c:1452
 msgid "Retrieving list of groups…"
@@ -244,7 +244,7 @@ msgstr "Получение списка меток…"
 
 #: ../src/frogr-controller.c:1596
 msgid "No sets found"
-msgstr "Наборы не найдены"
+msgstr "Альбомы не найдены"
 
 #: ../src/frogr-controller.c:1630
 msgid "No groups found"
@@ -267,11 +267,11 @@ msgstr "Отсутствуют необходимые данные"
 
 #: ../src/frogr-create-new-set-dialog.c:326
 msgid "Set's title:"
-msgstr "Название набора:"
+msgstr "Название альбома:"
 
 #: ../src/frogr-create-new-set-dialog.c:339
 msgid "Set's description:"
-msgstr "Описание набора:"
+msgstr "Описание альбома:"
 
 #: ../src/frogr-create-new-set-dialog.c:362
 msgid "Fill pictures details with title and description"
@@ -279,7 +279,7 @@ msgstr "Введите название и описание изображени
 
 #: ../src/frogr-create-new-set-dialog.c:383
 msgid "Create new Set"
-msgstr "Создать новый набор"
+msgstr "Создать новый альбом"
 
 #: ../src/frogr-details-dialog.c:164
 msgid "Visibility"
@@ -433,17 +433,17 @@ msgstr "Добавить в _группу…"
 #: ../src/frogr-main-view.c:324
 #: ../src/frogr-main-view.c:481
 msgid "Add to _Set"
-msgstr "Добавить в _набор"
+msgstr "Добавить в _альбом"
 
 #: ../src/frogr-main-view.c:327
 #: ../src/frogr-main-view.c:487
 msgid "_Create New Set…"
-msgstr "_Создать новый набор…"
+msgstr "_Создать новый альбом…"
 
 #: ../src/frogr-main-view.c:329
 #: ../src/frogr-main-view.c:494
 msgid "Add to _Existing Set…"
-msgstr "Добавить в существующий _набор…"
+msgstr "Добавить в существующий _альбом…"
 
 #: ../src/frogr-main-view.c:334
 msgid "_Upload All"
