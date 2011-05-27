@@ -45,6 +45,8 @@ static const gchar *artists[] = {
 static const gchar *appdescr = N_("A Flickr remote organizer for GNOME\n");
 static const gchar *copyright = "(c) 2009-2011 Mario Sanchez Prada";
 static const gchar *website = "http://live.gnome.org/Frogr";
+
+#ifndef GTK_API_VERSION_3
 static const gchar *license =
   "frogr is free software: you can redistribute\n"
   "it and/or modify it under the terms of the GNU\n"
@@ -63,6 +65,7 @@ static const gchar *license =
   "This program uses flickr API through the flicksoup\n"
   "library (which comes bundled-in with frogr), but\n"
   "it's neither approved nor certified by flickr.";
+#endif
 
 #if !GTK_CHECK_VERSION (2,23,0)
 static void
@@ -104,10 +107,10 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "artists", artists,
                          "comments", _(appdescr),
                          "copyright", copyright,
-#if !GTK_CHECK_VERSION (3,0,0)
-                         "license", license,
-#else
+#ifdef GTK_API_VERSION_3
                          "license-type", GTK_LICENSE_GPL_3_0,
+#else
+                         "license", license,
 #endif
                          "version", version,
                          "website", website,
