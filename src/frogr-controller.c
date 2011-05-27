@@ -1802,11 +1802,13 @@ frogr_controller_init (FrogrController *self)
   /* Set HTTP proxy if needed */
   if (frogr_config_get_use_proxy (priv->config))
     {
+      const gboolean use_gnome_proxy = frogr_config_get_use_gnome_proxy (priv->config);
       const gchar *host = frogr_config_get_proxy_host (priv->config);
       const gchar *port = frogr_config_get_proxy_port (priv->config);
       const gchar *username = frogr_config_get_proxy_username (priv->config);
       const gchar *password = frogr_config_get_proxy_password (priv->config);
-      frogr_controller_set_proxy (self, host, port, username, password);
+      frogr_controller_set_proxy (self, use_gnome_proxy,
+                                  host, port, username, password);
     }
 }
 
@@ -1992,6 +1994,7 @@ frogr_controller_get_state (FrogrController *self)
 
 void
 frogr_controller_set_proxy (FrogrController *self,
+                            gboolean use_gnome_proxy,
                             const char *host, const char *port,
                             const char *username, const char *password)
 {
@@ -2002,9 +2005,10 @@ frogr_controller_set_proxy (FrogrController *self,
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* The host is mandatory to set up a proxy */
-  if (host == NULL || *host == '\0') {
-    fsp_session_set_http_proxy (priv->session, NULL, NULL, NULL, NULL);
-    DEBUG ("%s", "Not using HTTP proxy");
+  if (!use_gnome_proxy && (host == NULL || *host == '\0')) {
+    fsp_session_set_http_proxy (priv->session, FALSE,
+                                NULL, NULL, NULL, NULL);
+    DEBUG ("%s", "Not enabling the HTTP proxy");
   } else {
     gboolean has_username = FALSE;
     gboolean has_password = FALSE;
@@ -2021,6 +2025,7 @@ frogr_controller_set_proxy (FrogrController *self,
     g_free (auth_part);
 
     proxy_changed = fsp_session_set_http_proxy (priv->session,
+                                                use_gnome_proxy,
                                                 host, port,
                                                 username, password);
 

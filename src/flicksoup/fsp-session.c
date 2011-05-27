@@ -66,6 +66,7 @@ struct _FspSessionPrivate
   gchar *token;
   gchar *frob;
 
+  gboolean using_gnome_proxy;
   SoupURI *proxy_uri;
   SoupSession *soup_session;
 };
@@ -403,6 +404,7 @@ fsp_session_init                        (FspSession *self)
   self->priv->token = NULL;
   self->priv->frob = NULL;
 
+  self->priv->using_gnome_proxy = FALSE;
   self->priv->proxy_uri = NULL;
 
   self->priv->soup_session = soup_session_async_new ();
@@ -1269,65 +1271,87 @@ fsp_session_new                         (const gchar *api_key,
 
 gboolean
 fsp_session_set_http_proxy              (FspSession *self,
+                                         gboolean use_gnome_proxy,
                                          const char *host, const char *port,
                                          const char *username, const char *password)
 {
   SoupURI *proxy_uri = NULL;
+  gboolean using_gnome_proxy_before = FALSE;
 
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
 
-  if (host != NULL)
+  /* We're gonna need this to make a good decision later */
+  using_gnome_proxy_before = self->priv->using_gnome_proxy;
+
+  if (use_gnome_proxy)
     {
-      const gchar *actual_user = NULL;
-      const gchar *actual_password = NULL;
-      guint actual_port = 0;
+      /* If GNOME proxy is gonna be used, set up the feature. */
+      soup_session_add_feature_by_type (self->priv->soup_session,
+                                        SOUP_TYPE_PROXY_RESOLVER_GNOME);
+    }
+  else
+    {
+      /* Remove the feature if not using it anymore */
+      soup_session_remove_feature_by_type (self->priv->soup_session,
+                                           SOUP_TYPE_PROXY_RESOLVER_GNOME);
+    }
+  self->priv->using_gnome_proxy = use_gnome_proxy;
 
-      /* Ensure no garbage is used for username */
-      if (username == NULL || *username == '\0')
-        actual_user = NULL;
-      else
-        actual_user = username;
+  if (!use_gnome_proxy)
+    {
+      /* If using the GNOME proxy we just forget about the rest. */
+      if (host != NULL)
+        {
+          const gchar *actual_user = NULL;
+          const gchar *actual_password = NULL;
+          guint actual_port = 0;
 
-      /* Ensure no garbage is used for password */
-      if (password == NULL || *password == '\0')
-        actual_password = NULL;
-      else
-        actual_password = password;
+          /* Ensure no garbage is used for username */
+          if (username == NULL || *username == '\0')
+            actual_user = NULL;
+          else
+            actual_user = username;
 
-      /* We need a numeric port */
-      actual_port = (guint) g_ascii_strtoll ((gchar *) port, NULL, 10);
+          /* Ensure no garbage is used for password */
+          if (password == NULL || *password == '\0')
+            actual_password = NULL;
+          else
+            actual_password = password;
 
-      /* Build the actual SoupURI object */
-      proxy_uri = soup_uri_new (NULL);
-      soup_uri_set_scheme (proxy_uri, SOUP_URI_SCHEME_HTTP);
-      soup_uri_set_host (proxy_uri, host);
-      soup_uri_set_port (proxy_uri, actual_port);
-      soup_uri_set_user (proxy_uri, actual_user);
-      soup_uri_set_password (proxy_uri, actual_password);
+          /* We need a numeric port */
+          actual_port = (guint) g_ascii_strtoll ((gchar *) port, NULL, 10);
+
+          /* Build the actual SoupURI object */
+          proxy_uri = soup_uri_new (NULL);
+          soup_uri_set_scheme (proxy_uri, SOUP_URI_SCHEME_HTTP);
+          soup_uri_set_host (proxy_uri, host);
+          soup_uri_set_port (proxy_uri, actual_port);
+          soup_uri_set_user (proxy_uri, actual_user);
+          soup_uri_set_password (proxy_uri, actual_password);
+        }
+
+      /* Set/unset the proxy if needed */
+      if ((!self->priv->proxy_uri && proxy_uri)
+          || (self->priv->proxy_uri && !proxy_uri)
+          || (self->priv->proxy_uri && proxy_uri && !soup_uri_equal (self->priv->proxy_uri, proxy_uri)))
+        {
+          g_object_set (G_OBJECT (self->priv->soup_session),
+                        SOUP_SESSION_PROXY_URI,
+                        proxy_uri,
+                        NULL);
+
+          /* Save internal reference to the proxy */
+          if (self->priv->proxy_uri)
+            soup_uri_free (self->priv->proxy_uri);
+
+          self->priv->proxy_uri = proxy_uri;
+
+          /* Proxy configuration actually changed */
+          return TRUE;
+        }
     }
 
-  /* Set/unset the proxy if needed */
-  if ((!self->priv->proxy_uri && proxy_uri)
-      || (self->priv->proxy_uri && !proxy_uri)
-      || (self->priv->proxy_uri && proxy_uri && !soup_uri_equal (self->priv->proxy_uri, proxy_uri)))
-    {
-      g_object_set (G_OBJECT (self->priv->soup_session),
-                    SOUP_SESSION_PROXY_URI,
-                    proxy_uri,
-                    NULL);
-
-      /* Save internal reference to the proxy */
-      if (self->priv->proxy_uri)
-        soup_uri_free (self->priv->proxy_uri);
-
-      self->priv->proxy_uri = proxy_uri;
-
-      /* Proxy configuration actually changed */
-      return TRUE;
-    }
-
-  /* Proxy configuration has not changed */
-  return FALSE;
+  return using_gnome_proxy_before != use_gnome_proxy;
 }
 
 const gchar *

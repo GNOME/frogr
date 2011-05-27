@@ -57,6 +57,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *keep_file_extensions_cb;
 
   GtkWidget *use_proxy_cb;
+  GtkWidget *use_gnome_proxy_cb;
   GtkWidget *proxy_host_label;
   GtkWidget *proxy_host_entry;
   GtkWidget *proxy_port_label;
@@ -76,6 +77,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   FspContentType content_type;
 
   gboolean use_proxy;
+  gboolean use_gnome_proxy;
   gchar *proxy_host;
   gchar *proxy_port;
   gchar *proxy_username;
@@ -275,13 +277,27 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *cbutton = NULL;
   GtkWidget *label = NULL;
   GtkWidget *entry = NULL;
+  gchar *markup = NULL;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
   vbox = gtk_vbox_new (FALSE, 6);
 
   /* Proxy settings */
 
-  cbutton = gtk_check_button_new_with_mnemonic (_("_Use HTTP Proxy"));
+  label = gtk_label_new (NULL);
+  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("Proxy Settings"));
+  gtk_label_set_markup (GTK_LABEL (label), markup);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 1);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+
+  /* Enable proxy */
+
+  cbutton = gtk_check_button_new_with_mnemonic (_("_Enable HTTP Proxy"));
   align = gtk_alignment_new (0, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (align), cbutton);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
@@ -290,7 +306,6 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   /* Proxy host */
 
   table = gtk_table_new (2, 4, FALSE);
-  gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
   label = gtk_label_new_with_mnemonic (_("_Host:"));
   align = gtk_alignment_new (0, 0, 0, 0);
@@ -363,8 +378,22 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     GTK_EXPAND | GTK_FILL, 0, 6, 6);
   priv->proxy_password_entry = entry;
 
+  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
+
+  /* Use GNOME General Proxy Settings */
+
+  cbutton = gtk_check_button_new_with_mnemonic (_("_Use GNOME General Proxy Settings"));
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), cbutton);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
+  priv->use_gnome_proxy_cb = cbutton;
+
   /* Connect signals */
   g_signal_connect (G_OBJECT (priv->use_proxy_cb), "toggled",
+                    G_CALLBACK (_on_button_toggled),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->use_gnome_proxy_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
 
@@ -392,6 +421,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->disable_tags_autocompletion = !frogr_config_get_tags_autocompletion (priv->config);
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
+  priv->use_gnome_proxy = frogr_config_get_use_gnome_proxy (priv->config);
 
   g_free (priv->proxy_host);
   priv->proxy_host = g_strdup (frogr_config_get_proxy_host (priv->config));
@@ -448,6 +478,10 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_gnome_proxy_cb),
+                                priv->use_gnome_proxy);
+
   if (priv->proxy_host)
     gtk_entry_set_text (GTK_ENTRY (priv->proxy_host_entry), priv->proxy_host);
 
@@ -483,6 +517,7 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_keep_file_extensions (priv->config, priv->keep_file_extensions);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
+  frogr_config_set_use_gnome_proxy (priv->config, priv->use_gnome_proxy);
 
   g_free (priv->proxy_host);
   priv->proxy_host = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_host_entry)));
@@ -519,20 +554,28 @@ static void
 _update_ui (FrogrSettingsDialog *self)
 {
   FrogrSettingsDialogPrivate *priv = NULL;
+  gboolean using_gnome_proxy = FALSE;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
-  /* Sensitiveness */
+  /* Sensititveness of default visibility related widgets */
+
   gtk_widget_set_sensitive (priv->friend_cb, !priv->public_visibility);
   gtk_widget_set_sensitive (priv->family_cb, !priv->public_visibility);
-  gtk_widget_set_sensitive (priv->proxy_host_label, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_host_entry, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_port_label, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_port_entry, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_username_label, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_username_entry, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_password_label, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_password_entry, priv->use_proxy);
+
+  /* Sensititveness of proxy settings related widgets */
+
+  using_gnome_proxy = priv->use_proxy && !priv->use_gnome_proxy;
+
+  gtk_widget_set_sensitive (priv->use_gnome_proxy_cb, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_host_label, using_gnome_proxy);
+  gtk_widget_set_sensitive (priv->proxy_host_entry, using_gnome_proxy);
+  gtk_widget_set_sensitive (priv->proxy_port_label, using_gnome_proxy);
+  gtk_widget_set_sensitive (priv->proxy_port_entry, using_gnome_proxy);
+  gtk_widget_set_sensitive (priv->proxy_username_label, using_gnome_proxy);
+  gtk_widget_set_sensitive (priv->proxy_username_entry, using_gnome_proxy);
+  gtk_widget_set_sensitive (priv->proxy_password_label, using_gnome_proxy);
+  gtk_widget_set_sensitive (priv->proxy_password_entry, using_gnome_proxy);
 }
 
 static void
@@ -621,7 +664,13 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
     {
       priv->use_proxy = active;
-      DEBUG ("Use HTTP proxy: %s", active ? "YES" : "NO");
+      DEBUG ("Enable HTTP Proxy: %s", active ? "YES" : "NO");
+    }
+
+  if (GTK_WIDGET (button) == priv->use_gnome_proxy_cb)
+    {
+      priv->use_gnome_proxy = active;
+      DEBUG ("Use GNOME General Proxy Settings: %s", active ? "YES" : "NO");
     }
 
   _update_ui (self);
@@ -671,10 +720,11 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
   /* Update proxy status */
   if (priv->use_proxy)
     frogr_controller_set_proxy (priv->controller,
+                                priv->use_gnome_proxy,
                                 priv->proxy_host, priv->proxy_port,
                                 priv->proxy_username, priv->proxy_password);
   else
-    frogr_controller_set_proxy (priv->controller, NULL, NULL, NULL, NULL);
+    frogr_controller_set_proxy (priv->controller, FALSE, NULL, NULL, NULL, NULL);
 
   gtk_widget_hide (GTK_WIDGET (self));
 }
@@ -747,6 +797,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->disable_tags_autocompletion_cb = NULL;
   priv->keep_file_extensions_cb = NULL;
   priv->use_proxy_cb = NULL;
+  priv->use_gnome_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
   priv->proxy_port_label = NULL;
@@ -764,6 +815,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->disable_tags_autocompletion = FALSE;
   priv->keep_file_extensions = FALSE;
   priv->use_proxy = FALSE;
+  priv->use_gnome_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
   priv->proxy_username = NULL;

@@ -133,6 +133,10 @@ void frogr_config_set_use_proxy (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_use_proxy (FrogrConfig *self);
 
+void frogr_config_set_use_gnome_proxy (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_use_gnome_proxy (FrogrConfig *self);
+
 void frogr_config_set_proxy_host (FrogrConfig *self, const gchar *host);
 
 const gchar *frogr_config_get_proxy_host (FrogrConfig *self);
