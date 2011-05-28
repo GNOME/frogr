@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="upload-pictures">
+
+  <info>
+    <link type="guide" xref="pictures"/>
+    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <desc>Upload Pictures</desc>
+  </info>
+
+  <title>Upload Pictures</title>
+  <p>You can upload a picture using the toolbar <gui>arrow</gui> button. Or, you can use the menu <guiseq><gui>Actions</gui><gui>Upload All</gui></guiseq>.</p>
+  
+</page>

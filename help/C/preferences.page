@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/"
+      type="guide"
+      id="preferences">
+
+  <info>
+    <link type="guide" xref="index#customize"/>
+    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <desc>Preferences</desc>
+  </info>
+
+  <title>Preferences</title>
+
+  <p>Go to Preferences using menu <guiseq><gui>File</gui><gui>Preferences</gui></guiseq>.</p>
+  
+  <section id="preferences-general">
+    <title>General Preferences</title>
+    <figure>
+      <title><gui>Frogr </gui> window</title>
+      <desc><app>Frogr</app> main window</desc>
+      <media type="image" src="figures/preferences-general.png" mime="image/png" style="right">
+        <p><app>Frogr</app> main window.</p>
+      </media>
+    </figure>
+  </section>
+
+  <section id="preferences-connection">
+    <title>Connection Preferences</title>
+    <figure>
+      <title><gui>Frogr </gui> window</title>
+      <desc><app>Frogr</app> main window</desc>
+      <media type="image" src="figures/preferences-connection.png" mime="image/png" style="right">
+        <p><app>Frogr</app> main window.</p>
+      </media>
+    </figure>
+  </section>
+
+</page>

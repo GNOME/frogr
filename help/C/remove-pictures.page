@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="remove-pictures">
+
+  <info>
+    <link type="guide" xref="pictures"/>
+    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <desc>Remove Pictures</desc>
+  </info>
+
+  <title>Remove Pictures</title>
+  <p>You can add a picture using the toolbar <gui>Minus</gui> button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove Pictures</gui></guiseq>.</p>
+  
+</page>

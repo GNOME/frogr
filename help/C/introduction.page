@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="introduction">
+<info>
+  <link type="guide" xref="index"/>
+  <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+  <desc>
+    Introduction to the <app>Frogr</app> Remote Organizer.
+  </desc>
+</info>
+<title>Frogr Introduction</title>
+<p><app>Frogr</app> is a <link href="http://www.flickr.com/">Flickr</link> Remote Organizer. <app>Frogr</app>  is a small application for the GNOME desktop that allows users to manage their accounts in the Flickr image hosting website..</p>
+  <figure>
+    <title><gui>Frogr </gui> window</title>
+    <desc><app>Frogr</app> main window</desc>
+    <media type="image" src="figures/frogr-remote-organizer.png" mime="image/png" style="right">
+      <p><app>Frogr</app> main window.</p>
+    </media>
+  </figure>
+  
+  <section><title>Flickr</title>
+    <p><link href="http://www.flickr.com/">Flickr</link> is a website allowing hosting of both images and videos.</p>
+  </section>
+
+  <section><title>Main Features</title>
+    <list>
+      <item><p>Allow to upload pictures to flickr</p></item>
+      <item><p>Allow uploading pictures located in remote machines</p></item>
+      <item><p>Allow adding tags to pictures</p></item>
+      <item><p>Allow specifying sets and group pools for the pictures to be added to after the upload process.</p></item>
+      <item><p>Support for handling multiple Flickr accounts.</p></item>
+    </list>
+
+  </section>
+</page>
