@@ -1,0 +1,49 @@
+# Spanish translation for frogr.
+# Copyright (C) 2011 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"POT-Creation-Date: 2011-05-29 18:16+0000\n"
+"PO-Revision-Date: 2011-05-30 11:25+0200\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
+"Language-Team: Español <gnome-es-list@gnome.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: C/index.page:8(title)
+msgid "Frogr Help"
+msgstr "Ayuda de Frogr"
+
+#: C/index.page:11(title)
+msgid "Managing Your Flickr Account"
+msgstr "Gestionar su cuenta de Flickr"
+
+#: C/index.page:15(title)
+msgid "Managing Your Pictures"
+msgstr "Gestionar sus imágenes"
+
+#: C/index.page:19(title)
+msgid "Organize Your Pictures"
+msgstr "Organizar sus imágenes"
+
+#: C/index.page:23(title)
+msgid "Sort Pictures"
+msgstr "Ordenar imágenes"
+
+#: C/index.page:27(title)
+msgid "Set Up Frogr"
+msgstr "Configurar Frogr"
+
+#: C/index.page:31(title)
+msgid "Frenquently Asked Questions"
+msgstr "Preguntas más frecuentes"
+
+#. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
+#: C/index.page:0(None)
+msgid "translator-credits"
+msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011"
