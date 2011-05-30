@@ -45,6 +45,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/locale/*/LC_MESSAGES/frogr.mo
+%{_datadir}/gnome/help/frogr/*
 %{_mandir}/man1/frogr.1.*
 %doc README NEWS COPYING AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
 
