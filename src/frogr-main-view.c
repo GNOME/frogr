@@ -111,6 +111,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *sort_by_date_menu_item;
   GtkWidget *sort_reversed_menu_item;
   GtkWidget *enable_tooltips_menu_item;
+  GtkWidget *contents_menu_item;
   GtkWidget *about_menu_item;
 
   GtkWidget *pictures_ctxt_menu;
@@ -202,6 +203,7 @@ static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
 static void _load_pictures (FrogrMainView *self, GSList *fileuris);
 static void _upload_pictures (FrogrMainView *self);
+static void _show_help_contents (FrogrMainView *self);
 static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed);
 
 static void _progress_dialog_response (GtkDialog *dialog,
@@ -379,19 +381,29 @@ _populate_menu_bar (FrogrMainView *self)
   menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("_Help"), NULL);
 #endif
 
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_About frogr..."));
-  priv->about_menu_item = menu_item;
-
-#ifdef MAC_INTEGRATION
-  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 0);
-  gtk_widget_show_all (menu_item);
-#else
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-#endif
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_Contents"));
+  priv->contents_menu_item = menu_item;
 
   g_signal_connect (G_OBJECT (menu_item), "activate",
                     G_CALLBACK (_on_menu_item_activate),
                     self);
+
+  menu_item = gtk_menu_item_new_with_mnemonic (_("_About"));
+  priv->about_menu_item = menu_item;
+
+  g_signal_connect (G_OBJECT (menu_item), "activate",
+                    G_CALLBACK (_on_menu_item_activate),
+                    self);
+
+#ifdef MAC_INTEGRATION
+  gtk_osxapplication_insert_app_menu_item (osx_app, priv->contents_menu_item, 0);
+  gtk_osxapplication_insert_app_menu_item (osx_app, priv->about_menu_item, 0);
+  gtk_widget_show_all (priv->contents_menu_item);
+  gtk_widget_show_all (priv->about_menu_item);
+#else
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), priv->contents_menu_item);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), priv->about_menu_item);
+#endif
 
   gtk_widget_show_all (priv->menu_bar);
 }
@@ -832,6 +844,8 @@ _on_menu_item_activate (GtkWidget *widget, gpointer self)
     _add_pictures_to_group (mainview);
   else if (widget == priv->upload_menu_item)
     _upload_pictures (mainview);
+  else if (widget == priv->contents_menu_item)
+    _show_help_contents (mainview);
   else if (widget == priv->about_menu_item)
     frogr_controller_show_about_dialog (priv->controller);
 }
@@ -1289,6 +1303,29 @@ _upload_pictures (FrogrMainView *self)
 
   gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
   frogr_controller_upload_pictures (priv->controller);
+}
+
+static void
+_show_help_contents (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  GError *error = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  gtk_show_uri (NULL, "ghelp:frogr", gtk_get_current_event_time (), &error);
+
+  if (error)
+    {
+      gchar *error_str = NULL;
+
+      error_str = g_strdup_printf (_("Could not display help for Frogr:\n%s"),
+                                   error->message);
+      frogr_util_show_error_dialog (priv->window, error_str);
+
+      g_free (error_str);
+      g_error_free (error);
+    }
 }
 
 static void
