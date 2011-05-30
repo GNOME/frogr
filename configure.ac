@@ -3,7 +3,9 @@ AM_INIT_AUTOMAKE([-Wall foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 IT_PROG_INTLTOOL([0.35.0])
+GNOME_DOC_INIT([0.17.3])
 
 # Support silent build rules, requires at least automake-1.11. Disable
 # by either passing --disable-silent-rules to configure or passing V=1
@@ -193,6 +195,7 @@ AC_CONFIG_FILES([
         src/flicksoup/Makefile
         examples/Makefile
         po/Makefile.in
+        help/Makefile
 ])
 AC_OUTPUT
 

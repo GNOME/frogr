@@ -39,7 +39,7 @@ MAINTAINERCLEANFILES = \
 	missing \
 	mkinstalldirs
 
-SUBDIRS = src po examples
+SUBDIRS = src po examples help
 
 ACLOCAL_AMFLAGS=-I m4
 
@@ -98,6 +98,8 @@ EXTRA_DIST = \
 	$(gtkbuilder_DATA) \
 	$(images_DATA) \
 	$(man1_MANS)
+
+DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
 
 dist-hook:
 	@if test -d "$(srcdir)/.git"; \

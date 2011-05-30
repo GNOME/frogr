@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="common-problems" xml:lang="en_GB">
+  
+  <info>
+    <link type="guide" xref="index#common-problems"/>
+    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <desc>Frequently Asked Questions</desc>
+  </info>
+
+  <title>Frogr Introduction</title>
+    
+  <list>
+
+    <item><title>Authorization browser window is not be launched</title>
+      <p>Check if you are using a proxy. This is a know bug.</p>
+    </item>
+
+  </list>
+
+</page>

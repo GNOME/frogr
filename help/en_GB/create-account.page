@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="create-account" xml:lang="en_GB">
+  <info>
+    <link type="guide" xref="index#account"/>
+    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <desc>How to create your Account</desc>
+  </info>
+
+  <title>How to create your Account</title>
+  <p>First create an Account</p>
+  <p>When you first run <app>Frogr</app>, it displays a window explaining you'll have to create an account.</p>
+  <p>Click Ok, it will run your favorite web browser. On your favourite web browser, either create a Flickr account or log in to an existing account.</p>
+  <p>Then, authorize <app>Frogr</app> to access to this account. You may now go back to <app>Frogr</app> window and use it to upload any picture !</p>
+  
+</page>

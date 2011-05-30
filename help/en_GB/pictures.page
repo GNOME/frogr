@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="guide" id="pictures" xml:lang="en_GB">
+
+  <info>
+    <link type="guide" xref="index#pictures"/>
+    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <desc>Pictures</desc>
+  </info>
+
+  <title>Pictures</title>
+  <p>Add, remove, or upload pictures</p>
+  
+</page>

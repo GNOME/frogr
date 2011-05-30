@@ -1,0 +1,224 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2011-05-28 19:32+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: upload-pictures.page:9(desc) upload-pictures.page:12(title)
+msgid "Upload Pictures"
+msgstr "Upload Pictures"
+
+#: upload-pictures.page:13(gui)
+msgid "arrow"
+msgstr "arrow"
+
+#: upload-pictures.page:13(gui) tag.page:14(gui)
+msgid "Actions"
+msgstr "Actions"
+
+#: upload-pictures.page:13(gui)
+msgid "Upload All"
+msgstr "Upload All"
+
+#: upload-pictures.page:13(p)
+msgid "You can upload a picture using the toolbar <placeholder-1/> button. Or, you can use the menu <guiseq><placeholder-2/><placeholder-3/></guiseq>."
+msgstr "You can upload a picture using the toolbar <placeholder-1/> button. Or, you can use the menu <guiseq><placeholder-2/><placeholder-3/></guiseq>."
+
+#: tag.page:9(desc) tag.page:12(title)
+msgid "Tag Pictures"
+msgstr "Tag Pictures"
+
+#: tag.page:13(p)
+msgid "You can assign several tags to any picture. Flickr allows you to define your own tags. It allows you to easily find any picture you did upload."
+msgstr "You can assign several tags to any picture. Flickr allows you to define your own tags. It allows you to easily find any picture you did upload."
+
+#: tag.page:14(gui) tag.page:14(gui)
+msgid "Add tags"
+msgstr "Add tags"
+
+#: tag.page:14(p)
+msgid "Right-click on a picture, and choose <placeholder-1/>. Or click on the menu <placeholder-2/>, and choose <placeholder-3/>. Or, when you're editing picture's detail, you can see and edit the tags"
+msgstr "Right-click on a picture, and choose <placeholder-1/>. Or click on the menu <placeholder-2/>, and choose <placeholder-3/>. Or, when you're editing picture's detail, you can see and edit the tags"
+
+#: set-pictures.page:9(desc) set-pictures.page:12(title)
+msgid "Set Pictures"
+msgstr "Set Pictures"
+
+#: set-pictures.page:13(p) group-pictures.page:13(p)
+msgid "Todo"
+msgstr "Todo"
+
+#: remove-pictures.page:9(desc) remove-pictures.page:12(title) remove-pictures.page:13(gui)
+msgid "Remove Pictures"
+msgstr "Remove Pictures"
+
+#: remove-pictures.page:13(gui)
+msgid "Minus"
+msgstr "Minus"
+
+#: remove-pictures.page:13(gui) preferences.page:14(gui) add-pictures.page:13(gui)
+msgid "File"
+msgstr "File"
+
+#: remove-pictures.page:13(p) add-pictures.page:13(p)
+msgid "You can add a picture using the toolbar <placeholder-1/> button. Or, you can use the menu <guiseq><placeholder-2/><placeholder-3/></guiseq>."
+msgstr "You can add a picture using the toolbar <placeholder-1/> button. Or, you can use the menu <guiseq><placeholder-2/><placeholder-3/></guiseq>."
+
+#: preferences.page:9(desc) preferences.page:12(title) preferences.page:14(gui)
+msgid "Preferences"
+msgstr "Preferences"
+
+#: preferences.page:14(p)
+msgid "Go to Preferences using menu <guiseq><placeholder-1/><placeholder-2/></guiseq>."
+msgstr "Go to Preferences using menu <guiseq><placeholder-1/><placeholder-2/></guiseq>."
+
+#: preferences.page:17(title)
+msgid "General Preferences"
+msgstr "General Preferences"
+
+#: preferences.page:19(title) preferences.page:30(title) introduction.page:15(title)
+msgid "<gui>Frogr </gui> window"
+msgstr "<gui>Frogr </gui> window"
+
+#: preferences.page:20(app) preferences.page:22(app) preferences.page:31(app) preferences.page:33(app) introduction.page:9(app) introduction.page:13(app) introduction.page:13(app) introduction.page:16(app) introduction.page:18(app) create-account.page:13(app) create-account.page:15(app) create-account.page:15(app)
+msgid "Frogr"
+msgstr "Frogr"
+
+#: preferences.page:20(desc) preferences.page:31(desc) introduction.page:16(desc)
+msgid "<placeholder-1/> main window"
+msgstr "<placeholder-1/> main window"
+
+#: preferences.page:22(p) preferences.page:33(p) introduction.page:18(p)
+msgid "<placeholder-1/> main window."
+msgstr "<placeholder-1/> main window."
+
+#: preferences.page:28(title)
+msgid "Connection Preferences"
+msgstr "Connection Preferences"
+
+#: pictures.page:9(desc) pictures.page:12(title)
+msgid "Pictures"
+msgstr "Pictures"
+
+#: pictures.page:13(p)
+msgid "Add, remove, or upload pictures"
+msgstr "Add, remove, or upload pictures"
+
+#: organize.page:8(desc) organize.page:11(title)
+msgid "Organize"
+msgstr "Organize"
+
+#: introduction.page:8(desc)
+msgid "Introduction to the <placeholder-1/> Remote Organizer."
+msgstr "Introduction to the <placeholder-1/> Remote Organizer."
+
+#: introduction.page:12(title) common-problems.page:12(title)
+msgid "Frogr Introduction"
+msgstr "Frogr Introduction"
+
+#: introduction.page:13(link)
+msgid "Flickr"
+msgstr "Flickr"
+
+#: introduction.page:13(p)
+msgid "<placeholder-1/> is a <placeholder-2/> Remote Organizer. <placeholder-3/> is a small application for the GNOME desktop that allows users to manage their accounts in the Flickr image hosting website.."
+msgstr "<placeholder-1/> is a <placeholder-2/> Remote Organizer. <placeholder-3/> is a small application for the GNOME desktop that allows users to manage their accounts in the Flickr image hosting website.."
+
+#: index.page:8(title)
+msgid "Frogr Help"
+msgstr "Frogr Help"
+
+#: index.page:11(title)
+msgid "Managing Your Flickr Account"
+msgstr "Managing Your Flickr Account"
+
+#: index.page:15(title)
+msgid "Managing Your Pictures"
+msgstr "Managing Your Pictures"
+
+#: index.page:19(title)
+msgid "Organize Your Pictures"
+msgstr "Organize Your Pictures"
+
+#: index.page:23(title)
+msgid "Sort Pictures"
+msgstr "Sort Pictures"
+
+#: index.page:27(title)
+msgid "Set Up Frogr"
+msgstr "Set Up Frogr"
+
+#: index.page:31(title)
+msgid "Frenquently Asked Questions"
+msgstr "Frenquently Asked Questions"
+
+#: group-pictures.page:9(desc) group-pictures.page:12(title)
+msgid "Group Pictures"
+msgstr "Group Pictures"
+
+#: display.page:9(desc)
+msgid "Amending view"
+msgstr "Amending view"
+
+#: display.page:12(title)
+msgid "Display Pictures"
+msgstr "Display Pictures"
+
+#: display.page:13(gui)
+msgid "View"
+msgstr "View"
+
+#: display.page:13(p)
+msgid "You can sort pictures by title, by date, or as loaded. Click on the menuy <placeholder-1/> and select the proper way to sort."
+msgstr ""
+
+#: create-account.page:8(desc) create-account.page:11(title)
+msgid "How to create your Account"
+msgstr "How to create your Account"
+
+#: create-account.page:12(p)
+msgid "First create an Account"
+msgstr "First create an Account"
+
+#: create-account.page:13(p)
+msgid "When you first run <placeholder-1/>, it displays a window explaining you'll have to create an account."
+msgstr "When you first run <placeholder-1/>, it displays a window explaining you'll have to create an account."
+
+#: create-account.page:14(p)
+msgid "Click Ok, it will run your favorite web browser. On your favourite web browser, either create a Flickr account or log in to an existing account."
+msgstr "Click Ok, it will run your favorite web browser. On your favourite web browser, either create a Flickr account or log in to an existing account."
+
+#: create-account.page:15(p)
+msgid "Then, authorize <placeholder-1/> to access to this account. You may now go back to <placeholder-2/> window and use it to upload any picture !"
+msgstr "Then, authorize <placeholder-1/> to access to this account. You may now go back to <placeholder-2/> window and use it to upload any picture !"
+
+#: common-problems.page:9(desc)
+msgid "Frequently Asked Questions"
+msgstr "Frequently Asked Questions"
+
+#: common-problems.page:16(title)
+msgid "Authorization browser window is not be launched"
+msgstr "Authorization browser window is not be launched"
+
+#: common-problems.page:17(p)
+msgid "Check if you are using a proxy. This is a know bug."
+msgstr "Check if you are using a proxy. This is a know bug."
+
+#: add-pictures.page:9(desc) add-pictures.page:12(title) add-pictures.page:13(gui)
+msgid "Add Pictures"
+msgstr "Add Pictures"
+
+#: add-pictures.page:13(gui)
+msgid "Plus"
+msgstr "Plus"
+
+#. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
+#: add-pictures.page:0(None)
+msgid "translator-credits"
+msgstr "translator-credits"
+

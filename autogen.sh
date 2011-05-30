@@ -4,6 +4,7 @@ set -e
 aclocal
 autoconf --force
 autoheader --force
+gnome-doc-prepare
 automake --add-missing --copy --force-missing --foreign
 glib-gettextize --force --copy
 intltoolize --copy --force --automake
