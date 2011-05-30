@@ -80,7 +80,8 @@ data/frogr.desktop.in: data/frogr.desktop.in.in
 
 DISTCLEANFILES = \
 	$(builddir)/data/frogr.desktop \
-	$(builddir)/data/frogr.desktop.in
+	$(builddir)/data/frogr.desktop.in \
+	$(builddir)/gnome-doc-utils.make
 
 EXTRA_DIST = \
 	MAINTAINERS \
@@ -97,7 +98,8 @@ EXTRA_DIST = \
 	$(iconscalable_DATA) \
 	$(gtkbuilder_DATA) \
 	$(images_DATA) \
-	$(man1_MANS)
+	$(man1_MANS) \
+	gnome-doc-utils.make
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
 
