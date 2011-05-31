@@ -8,8 +8,12 @@ License:	GPLv3
 URL:		http://live.gnome.org/Frogr
 Source0:	http://download.gnome.org/sources/%{name}/%{version}/%{name}-%{version}.tar.xz
 
-BuildRequires:	gtk3-devel > 3.0, libsoup-devel > 2.26, libxml2-devel > 2.6.8, libexif-devel > 0.6.14
-Requires:	gtk3 > 3.0, libsoup > 2.26, libxml2 > 2.6.8, libexif > 0.6.14, gvfs, desktop-file-utils
+BuildRequires:	gtk3-devel > 3.0,
+BuildRequires:	libsoup-devel > 2.26
+BuildRequires:	libxml2-devel > 2.6.8
+BuildRequires:	libexif-devel > 0.6.14
+BuildRequires:	desktop-file-utils
+Requires:	gvfs
 
 %description
 Frogr is a small application for the GNOME desktop that allows users
