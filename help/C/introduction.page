@@ -10,9 +10,9 @@
   </desc>
 </info>
 <title>Frogr Introduction</title>
-<p><app>Frogr</app> is a <link href="http://www.flickr.com/">Flickr</link> Remote Organizer. <app>Frogr</app>  is a small application for the GNOME desktop that allows users to manage their accounts in the Flickr image hosting website..</p>
+<p><app>Frogr</app> is a <link href="http://www.flickr.com/">Flickr</link> Remote Organizer. <app>Frogr</app>  is a small application for the GNOME desktop that allows users to manage their accounts in the Flickr image hosting website.</p>
   <figure>
-    <title><gui>Frogr </gui> window</title>
+    <title><gui>Frogr</gui> window</title>
     <desc><app>Frogr</app> main window</desc>
     <media type="image" src="figures/frogr-remote-organizer.png" mime="image/png" style="right">
       <p><app>Frogr</app> main window.</p>
