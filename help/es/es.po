@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2011-05-30 20:59+0000\n"
-"PO-Revision-Date: 2011-05-31 11:10+0200\n"
+"POT-Creation-Date: 2011-05-31 19:06+0000\n"
+"PO-Revision-Date: 2011-05-31 21:08+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: C/upload-pictures.page:9(desc) C/upload-pictures.page:12(title)
-#| msgid "Sort Pictures"
 msgid "Upload Pictures"
 msgstr "Subir imágenes"
 
@@ -30,7 +29,6 @@ msgstr ""
 "todo</gui></guiseq>."
 
 #: C/pictures.page:9(desc) C/pictures.page:12(title)
-#| msgid "Sort Pictures"
 msgid "Pictures"
 msgstr "Imágenes"
 
@@ -39,7 +37,6 @@ msgid "Add, remove, or upload pictures"
 msgstr "Añadir, quitar o subir imágemes"
 
 #: C/tag.page:9(desc) C/tag.page:12(title)
-#| msgid "Sort Pictures"
 msgid "Tag Pictures"
 msgstr "Etiquetar imágenes"
 
@@ -71,20 +68,21 @@ msgid "Amending view"
 msgstr ""
 
 #: C/display.page:12(title)
-#| msgid "Sort Pictures"
 msgid "Display Pictures"
 msgstr "Mostrar imágenes"
 
 #: C/display.page:13(p)
+#| msgid ""
+#| "You can sort pictures by title, by date, or as loaded. Click on the menuy "
+#| "<gui>View</gui> and select the proper way to sort."
 msgid ""
-"You can sort pictures by title, by date, or as loaded. Click on the menuy "
+"You can sort pictures by title, by date, or as loaded. Click on the menu "
 "<gui>View</gui> and select the proper way to sort."
 msgstr ""
 "Puede ordenar las imágenes por título, por fecha o por carga. Pulse en el "
 "menú <gui>Ver</gui> y seleccione la forma de ordenación adecuada."
 
 #: C/set-pictures.page:9(desc) C/set-pictures.page:12(title)
-#| msgid "Sort Pictures"
 msgid "Set Pictures"
 msgstr "Configurar imágenes"
 
@@ -111,11 +109,16 @@ msgid "Frogr Introduction"
 msgstr "Introducción a Frogr"
 
 #: C/introduction.page:13(p)
+#| msgid ""
+#| "<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
+#| "Remote Organizer. <app>Frogr</app> is a small application for the GNOME "
+#| "desktop that allows users to manage their accounts in the Flickr image "
+#| "hosting website.."
 msgid ""
 "<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
 "Remote Organizer. <app>Frogr</app> is a small application for the GNOME "
 "desktop that allows users to manage their accounts in the Flickr image "
-"hosting website.."
+"hosting website."
 msgstr ""
 "<app>Frogr</app> es un organizador remoto para <link href=\"http://www."
 "flickr.com/\">Flickr</link>. <app>Frogr</app> es una pequeña aplicación para "
@@ -123,9 +126,9 @@ msgstr ""
 "página web del almacenamiento de imágenes Flickr."
 
 #: C/introduction.page:15(title) C/preferences.page:19(title)
-#: C/preferences.page:30(title)
-msgid "<gui>Frogr </gui> window"
-msgstr "Ventana <gui>Frogr</gui>"
+#| msgid "<gui>Frogr </gui> window"
+msgid "<gui>Frogr</gui> window"
+msgstr "Ventana de <gui>Frogr</gui>"
 
 #: C/introduction.page:16(desc) C/preferences.page:20(desc)
 #: C/preferences.page:31(desc)
@@ -199,23 +202,29 @@ msgstr ""
 "cree una cuenta en Flickr o inicie sesión con una cuenta ya existente."
 
 #: C/create-account.page:15(p)
+#| msgid ""
+#| "Then, authorize <app>Frogr</app> to access to this account. You may now "
+#| "go back to <app>Frogr</app> window and use it to upload any picture !"
 msgid ""
 "Then, authorize <app>Frogr</app> to access to this account. You may now go "
-"back to <app>Frogr</app> window and use it to upload any picture !"
+"back to <app>Frogr</app> window and use it to upload any picture!"
 msgstr ""
 "Entonces, autorice a <app>Frogr</app> a acceder a esta cuenta. Ahora puede "
 "regresar a la ventana de <app>Frogr</app> y usarlo para subir cualquier "
 "imagen."
 
 #: C/remove-pictures.page:9(desc) C/remove-pictures.page:12(title)
-#| msgid "Sort Pictures"
 msgid "Remove Pictures"
 msgstr "Quitar imágenes"
 
 #: C/remove-pictures.page:13(p)
+#| msgid ""
+#| "You can add a picture using the toolbar <gui>Minus</gui> button. Or, you "
+#| "can use the menu <guiseq><gui>File</gui><gui>Remove Pictures</gui></"
+#| "guiseq>."
 msgid ""
-"You can add a picture using the toolbar <gui>Minus</gui> button. Or, you can "
-"use the menu <guiseq><gui>File</gui><gui>Remove Pictures</gui></guiseq>."
+"You can remove a picture using the toolbar <gui>Minus</gui> button. Or, you "
+"can use the menu <guiseq><gui>File</gui><gui>Remove Pictures</gui></guiseq>."
 msgstr ""
 "Puede quitar una imagen usando el botón <gui>Menos</gui> de la barra de "
 "herramientas. O puede usar el menú <guiseq><gui>Archivo</gui><gui>Quitar "
@@ -250,7 +259,6 @@ msgid "Frenquently Asked Questions"
 msgstr "Preguntas más frecuentes"
 
 #: C/common-problems.page:9(desc)
-#| msgid "Frenquently Asked Questions"
 msgid "Frequently Asked Questions"
 msgstr "Preguntas más frecuentes"
 
@@ -302,13 +310,15 @@ msgstr "Preferencias generales"
 msgid "Connection Preferences"
 msgstr "Preferencias de la conexión"
 
+#: C/preferences.page:30(title)
+msgid "<gui>Frogr </gui> window"
+msgstr "Ventana <gui>Frogr</gui>"
+
 #: C/group-pictures.page:9(desc) C/group-pictures.page:12(title)
-#| msgid "Sort Pictures"
 msgid "Group Pictures"
 msgstr "Agrupar imágenes"
 
 #: C/add-pictures.page:9(desc) C/add-pictures.page:12(title)
-#| msgid "Sort Pictures"
 msgid "Add Pictures"
 msgstr "Añadir imágenes"
 
