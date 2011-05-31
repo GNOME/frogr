@@ -8,6 +8,7 @@ License:	GPLv3
 URL:		http://live.gnome.org/Frogr
 Source0:	http://download.gnome.org/sources/%{name}/%{version}/%{name}-%{version}.tar.xz
 
+BuildRequires:	gettext
 BuildRequires:	gtk3-devel > 3.0,
 BuildRequires:	libsoup-devel > 2.26
 BuildRequires:	libxml2-devel > 2.6.8
@@ -33,10 +34,11 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 desktop-file-validate $RPM_BUILD_ROOT/%{_datadir}/applications/%{name}.desktop
+%find_lang %{name}
 
 
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
 %{_bindir}/%{name}
 %{_datadir}/%{name}/*
@@ -44,7 +46,6 @@ desktop-file-validate $RPM_BUILD_ROOT/%{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/locale/*/LC_MESSAGES/frogr.mo
 %{_datadir}/gnome/help/frogr/*
 %{_mandir}/man1/frogr.1.*
 %doc README NEWS COPYING AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
