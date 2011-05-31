@@ -7,7 +7,6 @@ Group:		Applications/Internet
 License:	GPLv3
 URL:		http://live.gnome.org/Frogr
 Source0:	http://download.gnome.org/sources/%{name}/%{version}/%{name}-%{version}.tar.bz2
-BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	gtk3-devel > 3.0, libsoup-devel > 2.26, libxml2-devel > 2.6.8, libexif-devel > 0.6.14
 Requires:	gtk3 > 3.0, libsoup > 2.26, libxml2 > 2.6.8, libexif > 0.6.14, gvfs, desktop-file-utils
@@ -28,12 +27,9 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 desktop-file-validate $RPM_BUILD_ROOT/%{_datadir}/applications/%{name}.desktop
 
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 
 %files
