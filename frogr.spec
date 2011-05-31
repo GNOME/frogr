@@ -14,6 +14,9 @@ BuildRequires:	libsoup-devel > 2.26
 BuildRequires:	libxml2-devel > 2.6.8
 BuildRequires:	libexif-devel > 0.6.14
 BuildRequires:	desktop-file-utils
+#Explicitly Requires: gvfs since we need gtk_show_uri to be able to open a
+#web browser when associating frogr with a flickr account (this is how
+#application/flickr pairing works, through flickr.com)
 Requires:	gvfs
 
 %description
