@@ -1,5 +1,5 @@
 AC_INIT([frogr], [0.6], [msanchez@igalia.com])
-AM_INIT_AUTOMAKE([-Wall foreign])
+AM_INIT_AUTOMAKE([foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 AC_CONFIG_HEADERS([config.h])
@@ -177,7 +177,7 @@ if test "x$enable_debug" = "xyes"; then
    AC_DEFINE([DEBUG_ENABLED], [1], [Debug enabled])
    CFLAGS="$CFLAGS -DG_ENABLE_DEBUG -DG_ERRORCHECK_MUTEXES -Wall -Werror -g3 -O0"
 else
-   CFLAGS="$CFLAGS -DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS -Wall -g0 -O2"
+   CFLAGS="$CFLAGS -DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS"
 fi
 
 # Substitute
