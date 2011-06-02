@@ -209,7 +209,7 @@ msgid ""
 "Please re-authorize it"
 msgstr ""
 "Chyba:\n"
-"Aplikace %s není správně autorizována k nahrávání fotek na flickr.\n"
+"Aplikace %s není správně autorizována k nahrávání obrázků na flickr.\n"
 "Proveďte prosím autorizaci znovu"
 
 #: ../src/frogr-controller.c:324
@@ -265,7 +265,7 @@ msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
 "Please re-authorize it."
 msgstr ""
-"Než můžete nahrávat fotky na flickr, musíte aplikaci %s správně "
+"Než můžete nahrávat obrázky na flickr, musíte aplikaci %s správně "
 "autorizovat.\n"
 "Autorizujte ji prosím znovu."
 
@@ -378,12 +378,12 @@ msgstr "_Soubor"
 
 #: ../src/frogr-main-view.c:280
 msgid "_Add Pictures"
-msgstr "Přid_at fotky"
+msgstr "Přid_at obrázky"
 
 #. Remove
 #: ../src/frogr-main-view.c:281 ../src/frogr-main-view.c:501
 msgid "_Remove Pictures"
-msgstr "Odeb_rat fotky"
+msgstr "Odeb_rat obrázky"
 
 #. Accounts menu item and submenu
 #: ../src/frogr-main-view.c:286
@@ -625,33 +625,3 @@ msgstr "Nahrát"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
 msgid "frogr"
 msgstr "frogr"
-
-#~ msgid "Sort by _Title"
-#~ msgstr "Řadit podle _názvu"
-
-#~ msgid "_Ascending"
-#~ msgstr "_Vzestupně"
-
-#~ msgid "_Descending"
-#~ msgstr "_Sestupně"
-
-#~ msgid "Sort by _Date"
-#~ msgstr "Řadit podle _data"
-
-#~ msgid "Enable Tooltips in Main Window"
-#~ msgstr "Zapnout místní nápovědy v hlavním okně"
-
-#~ msgid "_About"
-#~ msgstr "O _aplikaci"
-
-#~ msgid "Default Actions"
-#~ msgstr "Výchozí akce"
-
-#~ msgid "Open _Browser after Uploading Pictures"
-#~ msgstr "Po nahrání obrázků otevřít _prohlížeč"
-
-#~ msgid "Authorization successfully completed!"
-#~ msgstr "Autorizace úspěšně dokončena!"
-
-#~ msgid "Operation successfully completed!"
-#~ msgstr "Operace úspěšně dokončena!"
