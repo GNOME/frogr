@@ -535,7 +535,7 @@ msgstr " – %s / %s zbývá pro aktuální měsíc"
 #, c-format
 #| msgid "to be uploaded"
 msgid " - %s to be uploaded"
-msgstr " – %s bude odesláno"
+msgstr " – %s bude nahráno"
 
 #: ../src/frogr-picture-loader.c:109
 #, c-format
