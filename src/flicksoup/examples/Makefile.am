@@ -10,16 +10,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 
-AM_CPPFLAGS = 			\
-	-I$(top_srcdir)/src	\
-	$(GLIB_CFLAGS)		\
-	$(EXTRA_CFLAGS)
-
 noinst_PROGRAMS = \
 	example
 
-example_SOURCES = example.c
-example_LDADD = 					\
-	$(top_builddir)/src/flicksoup/libflicksoup.a	\
-	$(LIBSOUP_LIBS)		  			\
-	$(LIBXML2_LIBS)
+example_CFLAGS = \
+	-I$(top_srcdir)/src \
+	$(FROGR_CFLAGS)
+
+example_LDADD = $(FROGR_LIBS)
+
+example_SOURCES = \
+	../flicksoup.h \
+	../fsp-data.c \
+	../fsp-data.h \
+	../fsp-error.c \
+	../fsp-error.h \
+	../fsp-parser.c \
+	../fsp-parser.h \
+	../fsp-session.c \
+	../fsp-session.h \
+	example.c

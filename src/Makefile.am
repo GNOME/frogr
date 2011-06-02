@@ -20,9 +20,7 @@ SUBDIRS = flicksoup
 
 bin_PROGRAMS = frogr
 
-frogr_LDADD = 				\
-	flicksoup/libflicksoup.a 	\
-	$(FROGR_LIBS)
+frogr_LDADD = $(FROGR_LIBS)
 
 frogr_CFLAGS = $(FROGR_CFLAGS) \
 	-DDATA_DIR=\"$(DATA_DIR)\"
@@ -42,6 +40,15 @@ frogr_LDFLAGS = -export-dynamic
 endif
 
 frogr_SOURCES = \
+	flicksoup/flicksoup.h \
+	flicksoup/fsp-data.c \
+	flicksoup/fsp-data.h \
+	flicksoup/fsp-error.c \
+	flicksoup/fsp-error.h \
+	flicksoup/fsp-parser.c \
+	flicksoup/fsp-parser.h \
+	flicksoup/fsp-session.c \
+	flicksoup/fsp-session.h \
 	frogr-about-dialog.c \
 	frogr-about-dialog.h \
 	frogr-account.c \

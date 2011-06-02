@@ -37,7 +37,7 @@ MAINTAINERCLEANFILES = \
 	missing \
 	mkinstalldirs
 
-SUBDIRS = src po examples help
+SUBDIRS = src po help
 
 ACLOCAL_AMFLAGS=-I m4
 

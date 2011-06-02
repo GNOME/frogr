@@ -1,5 +1,5 @@
 /*
- * example.c -- Random example to test the library
+ * example.c -- Random example to test the flicksoup files
  *
  * Copyright (C) 2010-2011 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
@@ -20,16 +20,18 @@
 
 #include <stdio.h>
 #include <glib.h>
+
 #include <flicksoup/flicksoup.h>
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
 
-#define TEST_PHOTO "./examples/testphoto.png"
+#define TEST_PHOTO "testphoto.png"
 
 static gchar *uploaded_photo_id = NULL;
 static gchar *created_photoset_id = NULL;
 static gchar *first_group_id = NULL;
+static gchar *test_photo_path = NULL;
 
 /* Prototypes */
 
@@ -168,7 +170,7 @@ get_groups_cb                           (GObject      *object,
       /* Continue adding a picture to the group, but first upload a new one */
       g_print ("Uploading a new picture to be added to the group...");
       fsp_session_upload_async (session,
-                                TEST_PHOTO,
+                                test_photo_path,
                                 "Yet another title",
                                 "Yet another description ",
                                 "yet some other tags",
@@ -241,7 +243,7 @@ photoset_created_cb                     (GObject      *object,
       /* Continue adding a picture to the photoset, but first upload a new one */
       g_print ("Uploading a new picture to be added to the photoset...");
       fsp_session_upload_async (session,
-                                TEST_PHOTO,
+                                test_photo_path,
                                 "Yet another title",
                                 "Yet another description ",
                                 "yet some other tags",
@@ -395,7 +397,7 @@ get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused)
       /* Continue uploading a picture */
       g_print ("Uploading a picture...\n");
       fsp_session_upload_async (session,
-                                TEST_PHOTO,
+                                test_photo_path,
                                 "title",
                                 "description",
                                 "áèïôu "
@@ -590,6 +592,11 @@ main                                    (int    argc,
   g_thread_init (NULL);
 
   g_print ("Running flicksoup example...\n\n");
+
+  /* Find full path to the testing photo */
+  test_photo_path = g_strdup_printf ("file://%s/%s",
+                                     g_get_current_dir (),
+                                     TEST_PHOTO);
 
   /* Queue the work in the main context */
   g_idle_add (do_work, NULL);
