@@ -18,6 +18,14 @@ To work properly, frogr needs some libraries to be installed first::
 
 -------------------------------------------
 
+Website: http://live.gnome.org/Frogr
+
+Source: git://git.gnome.org/frogr
+
+Mailing list: http://mail.gnome.org/mailman/listinfo/frogr-list
+
+-------------------------------------------
+
 Frogr is Copyright (c) 2009-2011 Mario Sanchez Prada
 
 http://live.gnome.org/Frogr
@@ -36,6 +44,28 @@ See the COPYING file for more details.
 
 -------------------------------------------
 
+Frogr's Flickr API implementation (we call it "flicksoup", located
+under src/flicksoup) is Copyright (c) 2010-2011 Mario Sanchez Prada
+
+Flicksoup is Free Software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License version 3 as
+published by the Free Software Foundation.
+
+Flicksoup is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the src/flicksoup/COPYING file for more details.
+
+Note: we distribute the flicksoup files under LGPLv3 instead of GPLv3,
+as it happens with the rest of the files in the project, because the
+idea is to release it at some point as a library independent from
+frogr. However, at the point flicksoup is in an early stage of
+development, entirely driven by frogr's needs, so it makes sense to
+keep it as part of the project for the time being.
+
+-------------------------------------------
+
 Some parts of the Frogr's Flickr API implementation (under
 src/flicksoup) based on source code from the libsoup library, licensed
 as LGPLv2 (Copyright 2008 Red Hat, Inc.)
@@ -47,8 +77,4 @@ and released under the MIT/X11 license (Copyright 2010 Novell, Inc.)
 
 -------------------------------------------
 
-Website: http://live.gnome.org/Frogr
 
-Source: git://git.gnome.org/frogr
-
-Mailing list: http://mail.gnome.org/mailman/listinfo/frogr-list

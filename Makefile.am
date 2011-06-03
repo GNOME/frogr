@@ -85,6 +85,7 @@ EXTRA_DIST = \
 	MAINTAINERS \
 	TRANSLATORS \
 	TODO \
+	src/flicksoup/COPYING \
 	data/frogr.desktop.in.in \
 	$(pixmap_DATA) \
 	$(icon16_DATA) \
