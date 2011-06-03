@@ -192,7 +192,7 @@ AC_CONFIG_FILES([
         Makefile
         src/Makefile
         src/flicksoup/Makefile
-        src/flicksoup/examples/Makefile
+        src/examples/Makefile
         po/Makefile.in
         help/Makefile
 ])
