@@ -35,5 +35,5 @@ DOC_PAGES = \
 	pictures.page \
 	upload-pictures.page
 
-DOC_LINGUAS = es de en_GB
+DOC_LINGUAS = cs es de en_GB
 dist-hook: doc-dist-hook
