@@ -617,7 +617,7 @@ msgstr "_Heslo:"
 #. Use GNOME General Proxy Settings
 #: ../src/frogr-settings-dialog.c:386
 msgid "_Use GNOME General Proxy Settings"
-msgstr "Po_užít obecné nastavení proxy GNOME"
+msgstr "Po_užít globální nastavení proxy GNOME"
 
 #: ../src/frogr-settings-dialog.c:409
 msgid "Connec_tion"
