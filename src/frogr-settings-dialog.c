@@ -377,18 +377,19 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     GTK_EXPAND | GTK_FILL, 0, 6, 6);
   priv->proxy_password_entry = entry;
 
-  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
-
 #ifdef HAVE_LIBSOUP_GNOME
 
   /* Use GNOME General Proxy Settings */
 
   cbutton = gtk_check_button_new_with_mnemonic (_("_Use GNOME General Proxy Settings"));
-  align = gtk_alignment_new (0, 0, 0, 0);
+  align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), cbutton);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 4, 5,
+                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
   priv->use_gnome_proxy_cb = cbutton;
 #endif
+
+  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (priv->use_proxy_cb), "toggled",
