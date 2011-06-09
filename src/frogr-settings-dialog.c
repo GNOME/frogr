@@ -149,7 +149,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gchar *markup = NULL;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
-  vbox = gtk_vbox_new (FALSE, 6);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   /* Default Visibility */
 
@@ -164,8 +164,8 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  box1 = gtk_vbox_new (FALSE, 6);
-  box2 = gtk_hbox_new (FALSE, 12);
+  box1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  box2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 
   _add_togleabble_item (self, GTK_BOX (box2), NULL, TRUE, _("_Private"), &priv->private_rb);
   _add_togleabble_item (self, GTK_BOX (box2), GTK_RADIO_BUTTON (priv->private_rb),
@@ -173,14 +173,14 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 0);
 
-  box2 = gtk_vbox_new (FALSE, 6);
+  box2 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   _add_togleabble_item (self, GTK_BOX (box2), NULL, FALSE,
                         _("Visible to _Family"), &priv->family_cb);
   _add_togleabble_item (self, GTK_BOX (box2), NULL, FALSE,
                         _("Visible to F_riends"), &priv->friend_cb);
 
-  padding_hbox = gtk_hbox_new (FALSE, 0);
+  padding_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_box_pack_start (GTK_BOX (padding_hbox), box2, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (box1), padding_hbox, FALSE, FALSE, 0);
 
@@ -203,7 +203,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  box1 = gtk_hbox_new (FALSE, 12);
+  box1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 
   _add_togleabble_item (self, GTK_BOX (box1), NULL, TRUE,
                         _("P_hoto"), &priv->photo_content_rb);
@@ -227,7 +227,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  box1 = gtk_hbox_new (FALSE, 12);
+  box1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 
   _add_togleabble_item (self, GTK_BOX (box1), NULL, TRUE,
                         _("S_afe"), &priv->safe_rb);
@@ -251,7 +251,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  box1 = gtk_vbox_new (FALSE, 6);
+  box1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
                         _("Disa_ble Tags Auto-Completion"),
@@ -279,7 +279,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gchar *markup = NULL;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
-  vbox = gtk_vbox_new (FALSE, 6);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   /* Proxy settings */
 
