@@ -1,14 +1,13 @@
 # Czech translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-#
 # Marek Černocký <marek@manet.cz>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2011-06-03 22:38+0000\n"
-"PO-Revision-Date: 2011-06-03 22:38+0000\n"
+"POT-Creation-Date: 2011-05-31 19:11+0000\n"
+"PO-Revision-Date: 2011-06-02 19:53+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,31 +18,37 @@ msgstr ""
 
 #: C/upload-pictures.page:9(desc) C/upload-pictures.page:12(title)
 msgid "Upload Pictures"
-msgstr ""
+msgstr "Nahrávejte obrázky"
 
 #: C/upload-pictures.page:13(p)
 msgid ""
 "You can upload a picture using the toolbar <gui>arrow</gui> button. Or, you "
 "can use the menu <guiseq><gui>Actions</gui><gui>Upload All</gui></guiseq>."
 msgstr ""
+"Obrázky můžete nahrávat pomocí tlačítka s <gui>šipkou</gui> na liště "
+"nástrojů. Nebo můžete použít nabídku <guiseq><gui>Soubor</gui><gui>Nahrát "
+"vše</gui></guiseq>."
 
 #: C/pictures.page:9(desc) C/pictures.page:12(title)
 msgid "Pictures"
-msgstr ""
+msgstr "Obrázky"
 
 #: C/pictures.page:13(p)
 msgid "Add, remove, or upload pictures"
-msgstr ""
+msgstr "Přidávejte, odebírejte nebo nahrávejte obrázky"
 
 #: C/tag.page:9(desc) C/tag.page:12(title)
 msgid "Tag Pictures"
-msgstr ""
+msgstr "Přidávejte obrázkům štítky"
 
 #: C/tag.page:13(p)
 msgid ""
 "You can assign several tags to any picture. Flickr allows you to define your "
 "own tags. It allows you to easily find any picture you did upload."
 msgstr ""
+"Libovolnému obrázku můžete přiřadit několik štítků. Flickr vám umožňuje "
+"definovat si své vlastní štítky. Tak můžete v obrázcích, které jste nahráli, "
+"snadno hledat."
 
 #: C/tag.page:14(p)
 msgid ""
@@ -51,32 +56,37 @@ msgid ""
 "menu <gui>Actions</gui>, and choose <gui>Add tags</gui>. Or, when you're "
 "editing picture's detail, you can see and edit the tags"
 msgstr ""
+"Klikněte pravým tlačítkem na obrázek a zvolte <gui>Přidat štítky</gui>. Nebo "
+"klikněte na nabídku <gui>Akce</gui> a zvolte <gui>Přidat štítky</gui>. A "
+"nebo štítky můžete vidět a upravovat při upravě podrobností obrázku."
 
 #: C/organize.page:8(desc) C/organize.page:11(title)
 msgid "Organize"
-msgstr ""
+msgstr "Organizujte"
 
 #: C/display.page:9(desc)
 msgid "Amending view"
-msgstr ""
+msgstr "Vylepšete zobrazování"
 
 #: C/display.page:12(title)
 msgid "Display Pictures"
-msgstr ""
+msgstr "Zobrazení obrázků"
 
 #: C/display.page:13(p)
 msgid ""
 "You can sort pictures by title, by date, or as loaded. Click on the menu "
 "<gui>View</gui> and select the proper way to sort."
 msgstr ""
+"Obrázky můžete řadit podle názvu, data nebo jak byly načteny. Klikněte na "
+"nabídku <gui>Zobrazit</gui> a vyberte odpovídající způsob řazení."
 
 #: C/set-pictures.page:9(desc) C/set-pictures.page:12(title)
 msgid "Set Pictures"
-msgstr ""
+msgstr "Vytvářejte sady obrázků"
 
 #: C/set-pictures.page:13(p) C/group-pictures.page:13(p)
 msgid "Todo"
-msgstr ""
+msgstr "Dodělat…"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -90,11 +100,11 @@ msgstr ""
 
 #: C/introduction.page:8(desc)
 msgid "Introduction to the <app>Frogr</app> Remote Organizer."
-msgstr ""
+msgstr "Úvod do vzdáleného organizátoru <app>Frogr</app>"
 
 #: C/introduction.page:12(title) C/common-problems.page:12(title)
 msgid "Frogr Introduction"
-msgstr ""
+msgstr "Úvod do aplikace Frogr"
 
 #: C/introduction.page:13(p)
 msgid ""
@@ -103,131 +113,149 @@ msgid ""
 "desktop that allows users to manage their accounts in the Flickr image "
 "hosting website."
 msgstr ""
+"<app>Frogr</app> je vzdálený organizátor <link href=\"http://www.flickr.com/"
+"\">Flickr</link>. <app>Frogr</app> je malá aplikace pro pracovní prostředí "
+"GNOME, která uživateli umožňuje spravovat svůj účet na webové službě Flickr, "
+"která slouží k hostování obrázků."
 
 #: C/introduction.page:15(title) C/preferences.page:19(title)
 msgid "<gui>Frogr</gui> window"
-msgstr ""
+msgstr "Okno <gui>Frogr</gui>"
 
 #: C/introduction.page:16(desc) C/preferences.page:20(desc)
 #: C/preferences.page:31(desc)
 msgid "<app>Frogr</app> main window"
-msgstr ""
+msgstr "Hlavní okno <app>Frogr</app>"
 
 #: C/introduction.page:18(p) C/preferences.page:22(p) C/preferences.page:33(p)
 msgid "<app>Frogr</app> main window."
-msgstr ""
+msgstr "Hlavní okno aplikace <app>Frogr</app>."
 
 #: C/introduction.page:22(title)
 msgid "Flickr"
-msgstr ""
+msgstr "Flickr"
 
 #: C/introduction.page:23(p)
 msgid ""
 "<link href=\"http://www.flickr.com/\">Flickr</link> is a website allowing "
 "hosting of both images and videos."
 msgstr ""
+"<link href=\"http://www.flickr.com/\">Flickr</link> je webová služba, která "
+"umožňuje hostovat obrázky a videa."
 
 #: C/introduction.page:26(title)
 msgid "Main Features"
-msgstr ""
+msgstr "Hlavní rysy"
 
 #: C/introduction.page:28(p)
 msgid "Allow to upload pictures to flickr"
-msgstr ""
+msgstr "Umožňuje nahrávat obrázky na Flickr"
 
 #: C/introduction.page:29(p)
 msgid "Allow uploading pictures located in remote machines"
-msgstr ""
+msgstr "Umožňuje nahrávání obrázků umístěných na vzdálených strojích"
 
 #: C/introduction.page:30(p)
 msgid "Allow adding tags to pictures"
-msgstr ""
+msgstr "Umožňuje přidávání štítků k obrázkům"
 
 #: C/introduction.page:31(p)
 msgid ""
 "Allow specifying sets and group pools for the pictures to be added to after "
 "the upload process."
 msgstr ""
+"Umožňuje pro obrázky specifikovat sady a skupiny, do kterých mohou být "
+"obrázky po načtení přidány"
 
 #: C/introduction.page:32(p)
 msgid "Support for handling multiple Flickr accounts."
-msgstr ""
+msgstr "Podpora pro práci s více účty Flickr"
 
 #: C/create-account.page:8(desc) C/create-account.page:11(title)
 msgid "How to create your Account"
-msgstr ""
+msgstr "Jak vytvořit svůj účet"
 
 #: C/create-account.page:12(p)
 msgid "First create an Account"
-msgstr ""
+msgstr "Nejprve si vytvořte účet"
 
 #: C/create-account.page:13(p)
 msgid ""
 "When you first run <app>Frogr</app>, it displays a window explaining you'll "
 "have to create an account."
 msgstr ""
+"Když pak poprvé spustíte <app>Frogr</app>, zobrazí okno vysvětlující, že "
+"budete muset vytvořit účet."
 
 #: C/create-account.page:14(p)
 msgid ""
 "Click Ok, it will run your favorite web browser. On your favourite web "
 "browser, either create a Flickr account or log in to an existing account."
 msgstr ""
+"Klikněte na OK, tím se spustí váš oblíbený webový prohlížeč. V něm buď "
+"vytvořte účet Flickr nebo se přihlaste k existujícímu."
 
 #: C/create-account.page:15(p)
 msgid ""
 "Then, authorize <app>Frogr</app> to access to this account. You may now go "
 "back to <app>Frogr</app> window and use it to upload any picture!"
 msgstr ""
+"Potom autorizujte <app>Frogr</app> k přístupu k tomuto účtu. Nyní se můžete "
+"vrátit zpět do okna <app>Frogr</app> a použít jej k nahrávání nějakých "
+"obrázků."
 
 #: C/remove-pictures.page:9(desc) C/remove-pictures.page:12(title)
 msgid "Remove Pictures"
-msgstr ""
+msgstr "Odebírejte obrázky"
 
 #: C/remove-pictures.page:13(p)
 msgid ""
 "You can remove a picture using the toolbar <gui>Minus</gui> button. Or, you "
 "can use the menu <guiseq><gui>File</gui><gui>Remove Pictures</gui></guiseq>."
 msgstr ""
+"Obrázky můžete odebírat pomocí tlačítka se symbolem <gui>mínus</gui> na "
+"liště nástrojů. Nebo můžete použít nabídku <guiseq><gui>Soubor</"
+"gui><gui>Odebrat obrázky</gui></guiseq>."
 
 #: C/index.page:8(title)
 msgid "Frogr Help"
-msgstr ""
+msgstr "Nápověda aplikace Frogr"
 
 #: C/index.page:11(title)
 msgid "Managing Your Flickr Account"
-msgstr ""
+msgstr "Správa vašeho účtu Flickr"
 
 #: C/index.page:15(title)
 msgid "Managing Your Pictures"
-msgstr ""
+msgstr "Správa vašich obrázků"
 
 #: C/index.page:19(title)
 msgid "Organize Your Pictures"
-msgstr ""
+msgstr "Organizování vašich obrázků"
 
 #: C/index.page:23(title)
 msgid "Sort Pictures"
-msgstr ""
+msgstr "Řazení obrázků"
 
 #: C/index.page:27(title)
 msgid "Set Up Frogr"
-msgstr ""
+msgstr "Nastavení aplikace Frogr"
 
 #: C/index.page:31(title)
 msgid "Frenquently Asked Questions"
-msgstr ""
+msgstr "Časté dotazy a odpovědi"
 
 #: C/common-problems.page:9(desc)
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Časté dotazy a odpovědi"
 
 #: C/common-problems.page:16(title)
 msgid "Authorization browser window is not be launched"
-msgstr ""
+msgstr "Nespustí se okno prohlížeče pro autorizaci"
 
 #: C/common-problems.page:17(p)
 msgid "Check if you are using a proxy. This is a know bug."
-msgstr ""
+msgstr "Zkontrolujte, jestli nepoužíváte proxy. To je známá chyba."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -251,41 +279,46 @@ msgstr ""
 
 #: C/preferences.page:9(desc) C/preferences.page:12(title)
 msgid "Preferences"
-msgstr ""
+msgstr "Předvolby"
 
 #: C/preferences.page:14(p)
 msgid ""
 "Go to Preferences using menu <guiseq><gui>File</gui><gui>Preferences</gui></"
 "guiseq>."
 msgstr ""
+"Přejděte do předvoleb pomocí nabídky <guiseq><gui>Soubor</"
+"gui><gui>Předvolby</gui></guiseq>."
 
 #: C/preferences.page:17(title)
 msgid "General Preferences"
-msgstr ""
+msgstr "Obecné předvolby"
 
 #: C/preferences.page:28(title)
 msgid "Connection Preferences"
-msgstr ""
+msgstr "Předvolby připojení"
 
 #: C/preferences.page:30(title)
 msgid "<gui>Frogr </gui> window"
-msgstr ""
+msgstr "Okno <app>Frogr</app>"
 
 #: C/group-pictures.page:9(desc) C/group-pictures.page:12(title)
 msgid "Group Pictures"
-msgstr ""
+msgstr "Seskupujte obrázky"
 
 #: C/add-pictures.page:9(desc) C/add-pictures.page:12(title)
 msgid "Add Pictures"
-msgstr ""
+msgstr "Přidávejte obrázky"
 
 #: C/add-pictures.page:13(p)
 msgid ""
 "You can add a picture using the toolbar <gui>Plus</gui> button. Or, you can "
 "use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>."
 msgstr ""
+"Obrázky můžete přidávat pomocí tlačítka se symbolem <gui>plus</gui> na liště "
+"nástrojů. Nebo můžete použít nabídku <guiseq><gui>Soubor</gui><gui>Přidat "
+"obrázky</gui></guiseq>."
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/index.page:0(None)
 msgid "translator-credits"
-msgstr ""
+msgstr "Marek Černocký <marek@manet.cz>"
