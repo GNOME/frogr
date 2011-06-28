@@ -102,7 +102,7 @@ frogr_util_get_locale_dir (void)
 }
 
 void
-frogr_util_open_url_in_browser (const gchar *url)
+frogr_util_open_uri (const gchar *url)
 {
   gchar *command = NULL;
   GError *error = NULL;
@@ -134,7 +134,7 @@ frogr_util_open_url_in_browser (const gchar *url)
 
   if (error != NULL)
     {
-      DEBUG ("Error opening URL %s: %s", url, error->message);
+      DEBUG ("Error opening URI %s: %s", url, error->message);
       g_error_free (error);
     }
 }

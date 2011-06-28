@@ -71,7 +71,7 @@ _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
                               gpointer data)
 {
   gchar *uri = g_strconcat (data, link, NULL);
-  frogr_util_open_url_in_browser (uri);
+  frogr_util_open_uri (uri);
   g_free (uri);
 }
 #endif

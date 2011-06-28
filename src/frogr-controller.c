@@ -416,7 +416,7 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
     {
       GtkWindow *window = NULL;
 
-      frogr_util_open_url_in_browser (auth_url);
+      frogr_util_open_uri (auth_url);
       g_free (auth_url);
 
       /* Run the auth confirmation dialog */
