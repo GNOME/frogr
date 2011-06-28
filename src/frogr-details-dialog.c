@@ -1004,7 +1004,7 @@ _on_picture_button_clicked (GtkButton *button, gpointer data)
   if (image_file == NULL)
     return;
 
-  gtk_show_uri (NULL, image_file, GDK_CURRENT_TIME, NULL);
+  frogr_util_open_uri (image_file);
 }
 
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
