@@ -64,10 +64,14 @@ typedef struct _FrogrDetailsDialogPrivate {
   GtkTextBuffer *text_buffer;
 
   GtkWidget *picture_img;
+  GtkWidget *picture_button;
+  GtkWidget *picture_container;
   GtkWidget *mpictures_label;
 
   GtkTreeModel *treemodel;
   GSList *pictures;
+
+  gulong picture_button_handler_id;
 } FrogrDetailsDialogPrivate;
 
 /* Properties */
@@ -106,6 +110,8 @@ static gboolean _validate_dialog_data (FrogrDetailsDialog *self);
 static gboolean _save_data (FrogrDetailsDialog *self);
 
 static void _on_radio_button_clicked (GtkButton *tbutton, gpointer data);
+
+static void _on_picture_button_clicked (GtkButton *button, gpointer data);
 
 static void _on_toggle_button_toggled (GtkToggleButton *tbutton, gpointer data);
 
@@ -146,9 +152,17 @@ _create_widgets (FrogrDetailsDialog *self)
 
   /* Left side (image, radio buttons, checkboxes...) */
 
+  widget = gtk_button_new ();
+  gtk_widget_set_tooltip_text (widget, _("Open with image viewer"));
+  gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
+  priv->picture_button = widget;
+
+  align = gtk_alignment_new (0.5, 0, 0, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
+  priv->picture_container = align;
+
   widget = gtk_image_new ();
   gtk_widget_set_size_request (widget, PICTURE_WIDTH, -1);
-  gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 6);
   priv->picture_img = widget;
 
   widget = gtk_label_new (NULL);
@@ -553,6 +567,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
 
   FrogrPicture *picture;
   GSList *item;
+  GtkWidget *picture_widget;
   guint n_pictures;
   gchar *title_val = NULL;
   gchar *desc_val = NULL;
@@ -739,6 +754,19 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   else if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->safe_rb)))
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->safe_rb), TRUE);
 
+  picture_widget = gtk_bin_get_child (GTK_BIN (priv->picture_container));
+  if (picture_widget)
+    {
+      gtk_container_remove (GTK_CONTAINER (priv->picture_container),
+                            picture_widget);
+    }
+
+  if (priv->picture_button_handler_id)
+    {
+      g_signal_handler_disconnect (priv->picture_button,
+                                   priv->picture_button_handler_id);
+    }
+
   n_pictures = g_slist_length (priv->pictures);
   if (n_pictures > 1)
     {
@@ -751,6 +779,8 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
 					     frogr_util_get_app_data_dir ());
       pixbuf = gdk_pixbuf_new_from_file (mpictures_full_path, NULL);
       gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), pixbuf);
+      gtk_container_add (GTK_CONTAINER (priv->picture_container),
+                         priv->picture_img);
       g_object_unref (pixbuf);
       g_free (mpictures_full_path);
 
@@ -765,6 +795,14 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
       GdkPixbuf *pixbuf = frogr_picture_get_pixbuf (picture);
       GdkPixbuf *s_pixbuf = _get_scaled_pixbuf (pixbuf);
       gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), s_pixbuf);
+      gtk_button_set_image (GTK_BUTTON (priv->picture_button),
+                            priv->picture_img);
+      gtk_container_add (GTK_CONTAINER (priv->picture_container),
+                         priv->picture_button);
+      priv->picture_button_handler_id =
+        g_signal_connect (G_OBJECT (priv->picture_button), "clicked",
+                          G_CALLBACK (_on_picture_button_clicked),
+                          (gpointer) frogr_picture_get_fileuri (picture));
       g_object_unref (s_pixbuf);
     }
 
@@ -958,6 +996,17 @@ _on_toggle_button_toggled (GtkToggleButton *tbutton, gpointer data)
   _update_ui (self);
 }
 
+static void
+_on_picture_button_clicked (GtkButton *button, gpointer data)
+{
+  const gchar *image_file = (gchar *) data;
+
+  if (image_file == NULL)
+    return;
+
+  gtk_show_uri (NULL, image_file, GDK_CURRENT_TIME, NULL);
+}
+
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (dialog);
@@ -1063,6 +1112,7 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
 
   priv->treemodel = NULL;
   priv->pictures = NULL;
+  priv->picture_button_handler_id = 0;
 
   _create_widgets (self);
 
