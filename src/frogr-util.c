@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#ifndef GTK_API_VERSION_3
 static gboolean
 _spawn_command (const gchar* cmd)
 {
@@ -43,7 +42,6 @@ _spawn_command (const gchar* cmd)
     }
   return TRUE;
 }
-#endif
 
 const gchar *
 _get_data_dir (void)
@@ -137,6 +135,26 @@ frogr_util_open_uri (const gchar *url)
       DEBUG ("Error opening URI %s: %s", url, error->message);
       g_error_free (error);
     }
+}
+
+void
+frogr_util_open_multiple_uris (const gchar *uris)
+{
+  gchar *command = NULL;
+
+  /* Early return */
+  if (uris == NULL)
+    return;
+
+#ifdef MAC_INTEGRATION
+  /* In MacOSX neither gnome-open nor gtk_show_uri() will work */
+  command = g_strdup_printf ("open %s", uris);
+#else
+  command = g_strdup_printf ("gnome-open %s", uris);
+#endif /* ifdef MAC_INTEGRATION */
+
+  _spawn_command (command);
+  g_free (command);
 }
 
 static void
