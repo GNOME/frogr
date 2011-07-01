@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-06-05 16:12+0000\n"
-"PO-Revision-Date: 2011-06-06 11:22+0200\n"
+"POT-Creation-Date: 2011-06-28 21:34+0000\n"
+"PO-Revision-Date: 2011-07-01 10:43+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -275,7 +275,7 @@ msgstr ""
 "Vuelva a autorizarlo."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:134 ../src/frogr-details-dialog.c:915
+#: ../src/frogr-create-new-set-dialog.c:134 ../src/frogr-details-dialog.c:953
 msgid "Missing data required"
 msgstr "Falta información necesaria"
 
@@ -295,83 +295,87 @@ msgstr "Rellenar los detalles de la imagen con el título y la descripción"
 msgid "Create new Set"
 msgstr "Crear un álbum nuevo"
 
-#: ../src/frogr-details-dialog.c:164
+#: ../src/frogr-details-dialog.c:156
+msgid "Open with image viewer"
+msgstr "Abrir con el visor de imágenes"
+
+#: ../src/frogr-details-dialog.c:178
 msgid "Visibility"
 msgstr "Visibilidad"
 
-#: ../src/frogr-details-dialog.c:175 ../src/frogr-settings-dialog.c:170
+#: ../src/frogr-details-dialog.c:189 ../src/frogr-settings-dialog.c:170
 msgid "_Private"
 msgstr "_Privado"
 
-#: ../src/frogr-details-dialog.c:179 ../src/frogr-settings-dialog.c:172
+#: ../src/frogr-details-dialog.c:193 ../src/frogr-settings-dialog.c:172
 msgid "P_ublic"
 msgstr "Pú_blico"
 
-#: ../src/frogr-details-dialog.c:187 ../src/frogr-settings-dialog.c:179
+#: ../src/frogr-details-dialog.c:201 ../src/frogr-settings-dialog.c:179
 msgid "Visible to _Family"
 msgstr "Visible a _familiares"
 
-#: ../src/frogr-details-dialog.c:191 ../src/frogr-settings-dialog.c:181
+#: ../src/frogr-details-dialog.c:205 ../src/frogr-settings-dialog.c:181
 msgid "Visible to F_riends"
 msgstr "Visible a a_migos"
 
-#: ../src/frogr-details-dialog.c:204 ../src/frogr-settings-dialog.c:188
+#: ../src/frogr-details-dialog.c:218 ../src/frogr-settings-dialog.c:188
 msgid "_Show up in Global Search Results"
 msgstr "M_ostrar en los resultados de búsqueda globales"
 
-#: ../src/frogr-details-dialog.c:217
+#: ../src/frogr-details-dialog.c:231
 msgid "Content type"
 msgstr "Tipo de contenido"
 
-#: ../src/frogr-details-dialog.c:226 ../src/frogr-settings-dialog.c:209
+#: ../src/frogr-details-dialog.c:240 ../src/frogr-settings-dialog.c:209
 msgid "P_hoto"
 msgstr "_Foto"
 
-#: ../src/frogr-details-dialog.c:230 ../src/frogr-settings-dialog.c:211
+#: ../src/frogr-details-dialog.c:244 ../src/frogr-settings-dialog.c:211
 msgid "Scree_nshot"
 msgstr "Captura de pa_ntalla"
 
-#: ../src/frogr-details-dialog.c:234 ../src/frogr-settings-dialog.c:213
+#: ../src/frogr-details-dialog.c:248 ../src/frogr-settings-dialog.c:213
 msgid "Oth_er"
 msgstr "_Otro"
 
-#: ../src/frogr-details-dialog.c:248
+#: ../src/frogr-details-dialog.c:262
 msgid "Safety level"
 msgstr "Nivel de seguridad"
 
-#: ../src/frogr-details-dialog.c:257 ../src/frogr-settings-dialog.c:233
+#: ../src/frogr-details-dialog.c:271 ../src/frogr-settings-dialog.c:233
 msgid "S_afe"
 msgstr "_Seguro"
 
-#: ../src/frogr-details-dialog.c:261 ../src/frogr-settings-dialog.c:235
+#: ../src/frogr-details-dialog.c:275 ../src/frogr-settings-dialog.c:235
 msgid "_Moderate"
 msgstr "_Moderado"
 
-#: ../src/frogr-details-dialog.c:265 ../src/frogr-settings-dialog.c:237
+#: ../src/frogr-details-dialog.c:279 ../src/frogr-settings-dialog.c:237
 msgid "Restr_icted"
 msgstr "_Restringido"
 
-#: ../src/frogr-details-dialog.c:279
+#: ../src/frogr-details-dialog.c:293
 msgid "_Title:"
 msgstr "_Título:"
 
-#: ../src/frogr-details-dialog.c:291
+#: ../src/frogr-details-dialog.c:305
 msgid "_Description:"
 msgstr "_Descripción:"
 
-#: ../src/frogr-details-dialog.c:317
+#: ../src/frogr-details-dialog.c:331
 msgid "Ta_gs:"
 msgstr "_Etiquetas:"
 
 #. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:758
+#: ../src/frogr-details-dialog.c:788
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
 msgstr[0] "(%d imagen)"
 msgstr[1] "(%d imágenes)"
 
-#: ../src/frogr-details-dialog.c:1098
+#: ../src/frogr-details-dialog.c:1148
 msgid "Edit Picture Details"
 msgstr "Editar detalles de la imagen"
 
@@ -478,7 +482,6 @@ msgid "_Help"
 msgstr "Ay_uda"
 
 #: ../src/frogr-main-view.c:382
-#| msgid "Content type"
 msgid "_Contents"
 msgstr "_Contenido"
 
@@ -618,15 +621,15 @@ msgid "Pass_word:"
 msgstr "Contrase_ña:"
 
 #. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:386
+#: ../src/frogr-settings-dialog.c:384
 msgid "_Use GNOME General Proxy Settings"
 msgstr "_Usar la configuración general de proxy de GNOME"
 
-#: ../src/frogr-settings-dialog.c:409
+#: ../src/frogr-settings-dialog.c:410
 msgid "Connec_tion"
 msgstr "Cone_xión"
 
-#: ../src/frogr-settings-dialog.c:881
+#: ../src/frogr-settings-dialog.c:882
 msgid "Preferences"
 msgstr "Preferencias"
 
