@@ -8,8 +8,9 @@ License:	GPLv3
 URL:		http://live.gnome.org/Frogr
 Source0:	http://download.gnome.org/sources/%{name}/%{version}/%{name}-%{version}.tar.xz
 
+BuildRequires:	intltool
 BuildRequires:	gettext
-BuildRequires:	gtk3-devel > 3.0,
+BuildRequires:	gtk3-devel
 BuildRequires:	libsoup-devel > 2.26
 BuildRequires:	libxml2-devel > 2.6.8
 BuildRequires:	libexif-devel > 0.6.14
