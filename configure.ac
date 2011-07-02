@@ -116,7 +116,7 @@ else
 fi
 
 case "$with_gtk" in
-     2.0) GTK_MIN_VERSION=2.14
+     2.0) GTK_MIN_VERSION=2.16
           GTK_API_VERSION=2.0
           ;;
      3.0) GTK_MIN_VERSION=3.0

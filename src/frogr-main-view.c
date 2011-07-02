@@ -75,42 +75,11 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkWindow *window;
 
-  GtkWidget *menu_bar;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
-  GtkWidget *add_button;
-  GtkWidget *add_menu_item;
-  GtkWidget *remove_button;
-  GtkWidget *remove_menu_item;
-  GtkWidget *remove_ctxt_menu_item;
   GtkWidget *accounts_menu_item;
   GtkWidget *accounts_menu;
-  GtkWidget *auth_menu_item;
-  GtkWidget *settings_menu_item;
-#ifndef MAC_INTEGRATION
-  GtkWidget *quit_menu_item;
-#endif
-  GtkWidget *edit_details_menu_item;
-  GtkWidget *edit_details_ctxt_menu_item;
-  GtkWidget *add_tags_menu_item;
-  GtkWidget *add_tags_ctxt_menu_item;
   GtkWidget *add_to_set_menu_item;
-  GtkWidget *add_to_new_set_menu_item;
-  GtkWidget *add_to_new_set_ctxt_menu_item;
-  GtkWidget *add_to_existing_set_menu_item;
-  GtkWidget *add_to_existing_set_ctxt_menu_item;
-  GtkWidget *add_to_group_menu_item;
-  GtkWidget *add_to_group_ctxt_menu_item;
-  GtkWidget *upload_button;
-  GtkWidget *upload_menu_item;
-  GtkWidget *sort_by_menu_item;
-  GtkWidget *sort_as_loaded_menu_item;
-  GtkWidget *sort_by_title_menu_item;
-  GtkWidget *sort_by_date_menu_item;
-  GtkWidget *sort_reversed_menu_item;
-  GtkWidget *enable_tooltips_menu_item;
-  GtkWidget *contents_menu_item;
-  GtkWidget *about_menu_item;
 
   GtkWidget *pictures_ctxt_menu;
 
@@ -120,6 +89,29 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkTreeModel *tree_model;
   guint sb_context_id;
+
+  GtkBuilder *builder;
+
+  GtkAction *add_pictures_action;
+  GtkAction *remove_pictures_action;
+  GtkAction *upload_pictures_action;
+  GtkAction *auth_action;
+  GtkAction *preferences_action;
+  GtkAction *add_tags_action;
+  GtkAction *edit_details_action;
+  GtkAction *add_to_group_action;
+  GtkAction *add_to_new_set_action;
+  GtkAction *add_to_set_action;
+  GtkAction *help_action;
+  GtkAction *about_action;
+  GtkToggleAction *disable_tooltips_action;
+  GtkToggleAction *reverse_order_action;
+  GtkToggleAction *sort_as_loaded_action;
+  GtkToggleAction *sort_by_title_action;
+  GtkToggleAction *sort_by_date_taken_action;
+#ifndef MAC_INTEGRATION
+  GtkAction *quit_action;
+#endif
 } FrogrMainViewPrivate;
 
 enum {
@@ -132,23 +124,10 @@ enum {
 
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
-static void _populate_menu_bar (FrogrMainView *self);
+#ifdef MAC_INTEGRATION
+static void _tweak_menu_bar_for_mac (FrogrMainView *self);
+#endif
 static void _populate_accounts_submenu (FrogrMainView *self);
-
-static GtkWidget *_pictures_ctxt_menu_create (FrogrMainView *self);
-
-static GtkWidget *_add_submenu (GtkMenuShell *menubar, const gchar *mnemonic,
-                                GtkWidget **out_ref);
-static void _add_menu_item_generic (FrogrMainView *self, GtkMenuShell *menu,
-                                    const gchar *mnemonic, GtkWidget **out_ref,
-                                    gboolean isToggleable, GSList **group);
-static void _add_menu_item (FrogrMainView *self, GtkMenuShell *menu,
-                            const gchar *mnemonic, GtkWidget **out_ref);
-static void _add_check_menu_item (FrogrMainView *self, GtkMenuShell *menu,
-                                  const gchar *mnemonic, GtkWidget **out_ref);
-static void _add_radio_menu_item (FrogrMainView *self, GtkMenuShell *menu,
-                                  GSList **group, const gchar *mnemonic,
-                                  GtkWidget **out_ref);
 
 static void _initialize_drag_n_drop (FrogrMainView *self);
 static void _on_icon_view_drag_data_received (GtkWidget *widget,
@@ -166,8 +145,6 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            gpointer data);
 
 void _on_account_menu_item_toggled (GtkWidget *widget, gpointer self);
-void _on_menu_item_activate (GtkWidget *widget, gpointer self);
-void _on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
@@ -264,147 +241,38 @@ _maybe_show_auth_dialog_on_idle (FrogrMainView *self)
   return FALSE;
 }
 
-static void
-_populate_menu_bar (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GtkWidget *menu;
-  GtkWidget *submenu;
-  GtkWidget *menu_item;
-  GSList *sorting_group = NULL;
-
 #ifdef MAC_INTEGRATION
+static void
+_tweak_menu_bar_for_mac (FrogrMainView *self)
+{
+  GtkWidget *menu_item;
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
   GtkOSXApplication *osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
-#endif
-
-  /* File menu */
-  menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("_File"), NULL);
-
-  _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Add Pictures"), &(priv->add_menu_item));
-  _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Remove Pictures"), &(priv->remove_menu_item));
-
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-
-  /* Accounts menu item and submenu */
-  menu_item = gtk_menu_item_new_with_mnemonic (_("Accou_nts"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-  priv->accounts_menu_item = menu_item;
-  priv->accounts_menu = NULL;
-
-  _add_menu_item (self, GTK_MENU_SHELL (menu), _("Authorize _frogr"), &(priv->auth_menu_item));
 
   /* Preferences menu item (platform dependent) */
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Preferences…"));
-  priv->settings_menu_item = menu_item;
-
-#ifdef MAC_INTEGRATION
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder,
+                                                  "preferences_menu_item"));
   gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 1);
   gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 2);
   gtk_widget_show_all (menu_item);
-#else
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-#endif
 
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder,
+                                                  "quit_menu_item"));
+  gtk_menu_item_remove_submenu (GTK_MENU_ITEM (menu_item));
 
-#ifndef MAC_INTEGRATION
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-  _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Quit"), &(priv->quit_menu_item));
-#endif
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder,
+                                                  "contents_menu_item"));
+  gtk_menu_item_remove_submenu (GTK_MENU_ITEM (menu_item));
+  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 0);
 
-  /* Actions menu */
-  menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("A_ctions"), NULL);
-
-  _add_menu_item (self, GTK_MENU_SHELL (menu), _("Edit _Details…"), &(priv->edit_details_menu_item));
-  _add_menu_item (self, GTK_MENU_SHELL (menu), _("Add _Tags…"), &(priv->add_tags_menu_item));
-  _add_menu_item (self, GTK_MENU_SHELL (menu), _("Add to _Group…"), &(priv->add_to_group_menu_item));
-
-  submenu = _add_submenu (GTK_MENU_SHELL (menu), _("Add to _Set"),
-                          &(priv->add_to_set_menu_item));
-
-  _add_menu_item (self, GTK_MENU_SHELL (submenu), _("_Create New Set…"),
-                  &(priv->add_to_new_set_menu_item));
-  _add_menu_item (self, GTK_MENU_SHELL (submenu), _("Add to _Existing Set…"),
-                  &(priv->add_to_existing_set_menu_item));
-
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-
-  _add_menu_item (self, GTK_MENU_SHELL (menu), _("_Upload All"), &(priv->upload_menu_item));
-
-  /* View menu */
-  menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("_View"), NULL);
-
-  submenu = _add_submenu (GTK_MENU_SHELL (menu), _("_Sort Pictures"),
-                          &(priv->sort_by_menu_item));
-
-  sorting_group = NULL;
-  _add_radio_menu_item (self, GTK_MENU_SHELL (submenu), &sorting_group,
-                        _("As _Loaded"), &(priv->sort_as_loaded_menu_item));
-
-  _add_radio_menu_item (self, GTK_MENU_SHELL (submenu), &sorting_group,
-                        _("By _Title"), &(priv->sort_by_title_menu_item));
-
-  _add_radio_menu_item (self, GTK_MENU_SHELL (submenu), &sorting_group,
-                        _("By _Date Taken"), &(priv->sort_by_date_menu_item));
-
-  if (priv->sorting_criteria == SORT_BY_TITLE)
-    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_by_title_menu_item), TRUE);
-  else if (priv->sorting_criteria == SORT_BY_DATE)
-    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_by_date_menu_item), TRUE);
-  else
-    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_as_loaded_menu_item), TRUE);
-
-  gtk_menu_shell_append (GTK_MENU_SHELL (submenu), gtk_separator_menu_item_new ());
-
-  _add_check_menu_item (self, GTK_MENU_SHELL (submenu), _("_Reversed Order"),
-                        &(priv->sort_reversed_menu_item));
-
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->sort_reversed_menu_item),
-                                  priv->sorting_reversed);
-
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-
-  _add_check_menu_item (self, GTK_MENU_SHELL (menu), _("Disable _Tooltips"),
-                        &(priv->enable_tooltips_menu_item));
-
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (priv->enable_tooltips_menu_item),
-                                  !priv->tooltips_enabled);
-
-  /* Help menu */
-
-#ifndef MAC_INTEGRATION
-  menu = _add_submenu (GTK_MENU_SHELL (priv->menu_bar), _("_Help"), NULL);
-#endif
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_Contents"));
-  priv->contents_menu_item = menu_item;
-
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-
-  menu_item = gtk_menu_item_new_with_mnemonic (_("_About"));
-  priv->about_menu_item = menu_item;
-
-  g_signal_connect (G_OBJECT (menu_item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-
-#ifdef MAC_INTEGRATION
-  gtk_osxapplication_insert_app_menu_item (osx_app, priv->contents_menu_item, 0);
-  gtk_osxapplication_insert_app_menu_item (osx_app, priv->about_menu_item, 0);
-  gtk_widget_show_all (priv->contents_menu_item);
-  gtk_widget_show_all (priv->about_menu_item);
-#else
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), priv->contents_menu_item);
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), priv->about_menu_item);
-#endif
-
-  gtk_widget_show_all (priv->menu_bar);
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder,
+                                                  "about_menu_item"));
+  gtk_menu_item_remove_submenu (GTK_MENU_ITEM (menu_item));
+  gtk_osxapplication_insert_app_menu_item (osx_app, priv->about_menu, 0);
+  gtk_widget_show_all (menu_item);
 }
+#endif
 
 static void
 _populate_accounts_submenu (FrogrMainView *self)
@@ -446,157 +314,6 @@ _populate_accounts_submenu (FrogrMainView *self)
 
   if (priv->accounts_menu)
     gtk_widget_show_all (priv->accounts_menu);
-}
-
-static GtkWidget *
-_pictures_ctxt_menu_create (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  GtkWidget *ctxt_menu = NULL;
-  GtkWidget *ctxt_submenu = NULL;
-  GtkWidget *item = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  ctxt_menu = gtk_menu_new ();
-
-  /* Edit details */
-  item = gtk_menu_item_new_with_mnemonic (_("Edit _Details…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->edit_details_ctxt_menu_item = item;
-
-  /* Add Tags */
-  item = gtk_menu_item_new_with_mnemonic (_("Add _Tags…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_tags_ctxt_menu_item = item;
-
-  /* Add to group */
-  item = gtk_menu_item_new_with_mnemonic (_("Add to _Group…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_to_group_ctxt_menu_item = item;
-
-  /* Add to set */
-  item = gtk_menu_item_new_with_mnemonic (_("Add to _Set"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-
-  ctxt_submenu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), ctxt_submenu);
-
-  item = gtk_menu_item_new_with_mnemonic (_("_Create New Set…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_to_new_set_ctxt_menu_item = item;
-
-  item = gtk_menu_item_new_with_mnemonic (_("Add to _Existing Set…"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_submenu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->add_to_existing_set_ctxt_menu_item = item;
-
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), gtk_separator_menu_item_new ());
-
-  /* Remove */
-  item = gtk_menu_item_new_with_mnemonic (_("_Remove Pictures"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (ctxt_menu), item);
-  g_signal_connect (G_OBJECT (item), "activate",
-                    G_CALLBACK (_on_menu_item_activate),
-                    self);
-  priv->remove_ctxt_menu_item = item;
-
-  /* Make menu and its widgets visible */
-  gtk_widget_show_all (ctxt_menu);
-
-  return ctxt_menu;
-}
-
-static GtkWidget *
-_add_submenu (GtkMenuShell *menu, const gchar *mnemonic,
-              GtkWidget **out_ref)
-{
-  GtkWidget *menu_item = NULL;
-  GtkWidget *submenu = NULL;
-
-  menu_item = gtk_menu_item_new_with_mnemonic (mnemonic);
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-
-  submenu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), submenu);
-
-  if (out_ref)
-    *out_ref = menu_item;
-
-  return submenu;
-}
-
-static void
-_add_menu_item_generic (FrogrMainView *self, GtkMenuShell *menu,
-                        const gchar *mnemonic, GtkWidget **out_ref,
-                        gboolean isToggleable, GSList **group)
-{
-  GtkWidget *menu_item = NULL;
-
-  g_return_if_fail (FROGR_IS_MAIN_VIEW (self));
-  g_return_if_fail (GTK_IS_MENU_SHELL (menu));
-
-  if (isToggleable)
-    {
-      if (group)
-        {
-          /* If it has a group associated, it's a radio button */
-          menu_item = gtk_radio_menu_item_new_with_mnemonic (*group, mnemonic);
-          *group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
-        }
-      else
-        menu_item = gtk_check_menu_item_new_with_mnemonic (mnemonic);
-
-      g_signal_connect (G_OBJECT (menu_item), "toggled",
-                        G_CALLBACK (_on_check_menu_item_toggled),
-                        self);
-    }
-  else
-    {
-      /* Normal menu item */
-      menu_item = gtk_menu_item_new_with_mnemonic (mnemonic);
-      g_signal_connect (G_OBJECT (menu_item), "activate",
-                        G_CALLBACK (_on_menu_item_activate),
-                        self);
-    }
-
-  gtk_menu_shell_append (menu, menu_item);
-  *out_ref = menu_item;
-}
-
-static void
-_add_menu_item (FrogrMainView *self, GtkMenuShell *menu,
-                const gchar *mnemonic, GtkWidget **out_ref)
-{
-  _add_menu_item_generic (self, menu, mnemonic, out_ref, FALSE, NULL);
-}
-
-static void
-_add_check_menu_item (FrogrMainView *self, GtkMenuShell *menu,
-                      const gchar *mnemonic, GtkWidget **out_ref)
-{
-  _add_menu_item_generic (self, menu, mnemonic, out_ref, TRUE, NULL);
-}
-
-static void
-_add_radio_menu_item (FrogrMainView *self, GtkMenuShell *menu,
-                      GSList **group, const gchar *mnemonic,
-                      GtkWidget **out_ref)
-{
-  _add_menu_item_generic (self, menu, mnemonic, out_ref, TRUE, group);
 }
 
 static void
@@ -665,18 +382,83 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
 }
 
 void
-_on_button_clicked (GtkButton *widget, gpointer data)
+_on_action_activated (GtkAction *action, gpointer data)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  if (GTK_WIDGET (widget) == priv->add_button)
+  if (action == priv->add_pictures_action)
     _add_pictures_dialog (mainview);
-  else if (GTK_WIDGET (widget) == priv->remove_button)
+  else if (action == priv->remove_pictures_action)
     _remove_selected_pictures (mainview);
-  else if (GTK_WIDGET (widget) == priv->upload_button)
+  else if (action == priv->upload_pictures_action)
     _upload_pictures (mainview);
+  else if (action == priv->auth_action)
+    frogr_controller_show_auth_dialog (priv->controller);
+  else if (action == priv->preferences_action)
+    frogr_controller_show_settings_dialog (priv->controller);
+  else if (action == priv->add_tags_action)
+    _add_tags_to_pictures (mainview);
+  else if (action == priv->edit_details_action)
+    _edit_selected_pictures (mainview);
+  else if (action == priv->add_to_group_action)
+    _add_pictures_to_group (mainview);
+  else if (action == priv->add_to_set_action)
+    _add_pictures_to_existing_set (mainview);
+  else if (action == priv->add_to_new_set_action)
+    _add_pictures_to_new_set (mainview);
+  else if (action == priv->help_action)
+    _show_help_contents (mainview);
+  else if (action == priv->about_action)
+    frogr_controller_show_about_dialog (priv->controller);
+#ifndef MAC_INTEGRATION
+  else if (action == priv->quit_action)
+    frogr_controller_quit_app (priv->controller);
+#endif
+
+}
+
+void
+_on_toggle_action_changed (GtkToggleAction *action,
+                           gpointer data)
+{
+  gboolean checked;
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  FrogrMainViewPrivate *priv = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+
+  checked = gtk_toggle_action_get_active (action);
+  if (action == priv->disable_tooltips_action)
+    {
+      gboolean checked =
+        gtk_toggle_action_get_active (action);
+      frogr_config_set_mainview_enable_tooltips (priv->config, !checked);
+      priv->tooltips_enabled = !checked;
+    }
+  else if (action == priv->reverse_order_action)
+    {
+      _reorder_pictures (mainview, priv->sorting_criteria, checked);
+      frogr_config_set_mainview_sorting_reversed (priv->config, checked);
+    }
+  else if (checked)
+    {
+      /* Radio buttons handling here (only care about 'em when checked) */
+
+      SortingCriteria criteria = SORT_AS_LOADED;
+
+      if (action == priv->sort_by_title_action)
+        criteria = SORT_BY_TITLE;
+      else if (action == priv->sort_by_date_taken_action)
+        criteria = SORT_BY_DATE;
+
+      _reorder_pictures (mainview, criteria, priv->sorting_reversed);
+      frogr_config_set_mainview_sorting_criteria (priv->config, criteria);
+    }
+
+  /* State for check menu items should be immediately stored */
+  frogr_config_save_settings (priv->config);
 }
 
 gboolean
@@ -807,85 +589,6 @@ _on_account_menu_item_toggled (GtkWidget *widget, gpointer self)
       if (frogr_account_equal (active_account, account))
         gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
     }
-}
-
-void
-_on_menu_item_activate (GtkWidget *widget, gpointer self)
-{
-  FrogrMainView *mainview = NULL;
-  FrogrMainViewPrivate *priv = NULL;
-
-  mainview = FROGR_MAIN_VIEW (self);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (widget == priv->add_menu_item)
-    _add_pictures_dialog (mainview);
-  else if (widget == priv->remove_menu_item || widget == priv->remove_ctxt_menu_item)
-    _remove_selected_pictures (mainview);
-  else if (widget == priv->auth_menu_item)
-    frogr_controller_show_auth_dialog (priv->controller);
-  else if (widget == priv->settings_menu_item)
-    frogr_controller_show_settings_dialog (priv->controller);
-#ifndef MAC_INTEGRATION
-  else if (widget == priv->quit_menu_item)
-    frogr_controller_quit_app (priv->controller);
-#endif
-  else if (widget == priv->edit_details_menu_item || widget == priv->edit_details_ctxt_menu_item)
-    _edit_selected_pictures (mainview);
-  else if (widget == priv->add_tags_menu_item || widget == priv->add_tags_ctxt_menu_item)
-    _add_tags_to_pictures (mainview);
-  else if (widget == priv->add_to_new_set_menu_item || widget == priv->add_to_new_set_ctxt_menu_item)
-    _add_pictures_to_new_set (mainview);
-  else if (widget == priv->add_to_existing_set_menu_item || widget == priv->add_to_existing_set_ctxt_menu_item)
-    _add_pictures_to_existing_set (mainview);
-  else if (widget == priv->add_to_group_menu_item || widget == priv->add_to_group_ctxt_menu_item)
-    _add_pictures_to_group (mainview);
-  else if (widget == priv->upload_menu_item)
-    _upload_pictures (mainview);
-  else if (widget == priv->contents_menu_item)
-    _show_help_contents (mainview);
-  else if (widget == priv->about_menu_item)
-    frogr_controller_show_about_dialog (priv->controller);
-}
-
-void
-_on_check_menu_item_toggled (GtkCheckMenuItem *item, gpointer self)
-{
-  FrogrMainView *mainview = NULL;
-  FrogrMainViewPrivate *priv = NULL;
-  gboolean checked = FALSE;
-
-  mainview = FROGR_MAIN_VIEW (self);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-
-  checked = gtk_check_menu_item_get_active (item);
-  if (GTK_WIDGET (item) == priv->enable_tooltips_menu_item)
-    {
-      frogr_config_set_mainview_enable_tooltips (priv->config, !checked);
-      priv->tooltips_enabled = !checked;
-    }
-  else if (GTK_WIDGET (item) == priv->sort_reversed_menu_item)
-    {
-      _reorder_pictures (mainview, priv->sorting_criteria, checked);
-      frogr_config_set_mainview_sorting_reversed (priv->config, checked);
-    }
-  else if (checked)
-    {
-      /* Radio buttons handling here (only care about 'em when checked) */
-
-      SortingCriteria criteria = SORT_AS_LOADED;
-
-      if (GTK_WIDGET (item) == priv->sort_by_title_menu_item)
-        criteria = SORT_BY_TITLE;
-      else if (GTK_WIDGET (item) == priv->sort_by_date_menu_item)
-        criteria = SORT_BY_DATE;
-
-      _reorder_pictures (mainview, criteria, priv->sorting_reversed);
-      frogr_config_set_mainview_sorting_criteria (priv->config, criteria);
-    }
-
-  /* State for check menu items should be immediately stored */
-  frogr_config_save_settings (priv->config);
 }
 
 static gboolean
@@ -1672,40 +1375,34 @@ _update_ui (FrogrMainView *self)
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
-      gtk_widget_set_sensitive (priv->add_button, FALSE);
-      gtk_widget_set_sensitive (priv->add_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->remove_button, FALSE);
-      gtk_widget_set_sensitive (priv->remove_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->auth_menu_item, FALSE);
+      gtk_action_set_sensitive (priv->add_pictures_action, FALSE);
+      gtk_action_set_sensitive (priv->remove_pictures_action, FALSE);
+      gtk_action_set_sensitive (priv->upload_pictures_action, FALSE);
+      gtk_action_set_sensitive (priv->auth_action, FALSE);
+      gtk_action_set_sensitive (priv->add_tags_action, FALSE);
+      gtk_action_set_sensitive (priv->edit_details_action, FALSE);
+      gtk_action_set_sensitive (priv->add_to_group_action, FALSE);
+      gtk_action_set_sensitive (priv->add_to_set_action, FALSE);
+      gtk_action_set_sensitive (priv->add_to_new_set_action, FALSE);
       gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->upload_button, FALSE);
-      gtk_widget_set_sensitive (priv->upload_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->edit_details_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->add_tags_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_set_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->add_to_new_set_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, FALSE);
-      gtk_widget_set_sensitive (priv->add_to_group_menu_item, FALSE);
       break;
 
     case FROGR_STATE_IDLE:
       has_pics = (_n_pictures (self) > 0);
       has_accounts = (priv->accounts_menu != NULL);
 
-      gtk_widget_set_sensitive (priv->add_button, TRUE);
-      gtk_widget_set_sensitive (priv->add_menu_item, TRUE);
-      gtk_widget_set_sensitive (priv->remove_button, has_pics);
-      gtk_widget_set_sensitive (priv->remove_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->auth_menu_item, TRUE);
+      gtk_action_set_sensitive (priv->add_pictures_action, TRUE);
+      gtk_action_set_sensitive (priv->remove_pictures_action, has_pics);
+      gtk_action_set_sensitive (priv->upload_pictures_action, has_pics);
+      gtk_action_set_sensitive (priv->auth_action, TRUE);
+      gtk_action_set_sensitive (priv->add_tags_action, has_pics);
+      gtk_action_set_sensitive (priv->edit_details_action, has_pics);
+      gtk_action_set_sensitive (priv->add_to_group_action, has_pics);
+      gtk_action_set_sensitive (priv->add_to_set_action, has_pics);
+      gtk_action_set_sensitive (priv->add_to_new_set_action, has_pics);
       gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts);
-      gtk_widget_set_sensitive (priv->upload_button, has_pics);
-      gtk_widget_set_sensitive (priv->upload_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->edit_details_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->add_tags_menu_item, has_pics);
       gtk_widget_set_sensitive (priv->add_to_set_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->add_to_new_set_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->add_to_existing_set_menu_item, has_pics);
-      gtk_widget_set_sensitive (priv->add_to_group_menu_item, has_pics);
 
       /* Update status bar from model's state description */
       state_description = frogr_main_view_model_get_state_description (priv->model);
@@ -1779,9 +1476,6 @@ frogr_main_view_init (FrogrMainView *self)
   GtkBuilder *builder;
   GtkWindow *window;
   GtkWidget *menu_bar;
-  GtkWidget *add_button;
-  GtkWidget *remove_button;
-  GtkWidget *upload_button;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
   GtkWidget *progress_dialog;
@@ -1838,6 +1532,7 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* Get widgets from GtkBuilder */
   builder = gtk_builder_new ();
+  priv->builder = builder;
 
   full_path = g_strdup_printf ("%s/" GTKBUILDER_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (builder, full_path, NULL);
@@ -1847,8 +1542,8 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_window_set_title (GTK_WINDOW (window), _(APP_NAME));
   priv->window = window;
 
-  menu_bar = gtk_menu_bar_new ();
-  priv->menu_bar = menu_bar;
+  menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
+  gtk_widget_show_all (menu_bar);
 
 #ifdef MAC_INTEGRATION
   osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
@@ -1865,32 +1560,89 @@ frogr_main_view_init (FrogrMainView *self)
   status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
   priv->status_bar = status_bar;
 
-  add_button = GTK_WIDGET (gtk_builder_get_object (builder, "add_button"));
-  priv->add_button = add_button;
-
-  remove_button = GTK_WIDGET (gtk_builder_get_object (builder, "remove_button"));
-  priv->remove_button = remove_button;
-
-  upload_button = GTK_WIDGET (gtk_builder_get_object (builder, "upload_button"));
-  priv->upload_button = upload_button;
+  /* Get actions from GtkBuilder */
+  priv->add_pictures_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_pictures_action"));
+  priv->remove_pictures_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "remove_pictures_action"));
+  priv->upload_pictures_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "upload_pictures_action"));
+  priv->auth_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "auth_action"));
+  priv->preferences_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "preferences_action"));
+  priv->add_tags_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_tags_action"));
+  priv->edit_details_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "edit_details_action"));
+  priv->add_to_group_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_to_group_action"));
+  priv->add_to_set_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_to_set_action"));
+  priv->add_to_new_set_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_to_new_set_action"));
+  priv->help_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "help_action"));
+  priv->about_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "about_action"));
+  priv->disable_tooltips_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "disable_tooltips_action"));
+  priv->sort_by_title_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "sort_by_title_action"));
+  priv->sort_by_date_taken_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "sort_by_date_taken_action"));
+  priv->sort_as_loaded_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "sort_as_loaded_action"));
+  priv->reverse_order_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "reverse_order_action"));
+  priv->quit_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "quit_action"));
 
   /* Initialize sorting criteria and reverse */
   priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
+  if (priv->sorting_criteria == SORT_BY_TITLE)
+    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_title_action), TRUE);
+  else if (priv->sorting_criteria == SORT_BY_DATE)
+    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_date_taken_action), TRUE);
+  else
+    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_as_loaded_action), TRUE);
+
   priv->sorting_reversed = frogr_config_get_mainview_sorting_reversed (priv->config);
+  gtk_toggle_action_set_active (priv->reverse_order_action,
+                                priv->sorting_reversed);
 
   /* Read value for 'tooltips enabled' */
   priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);
 
+  gtk_toggle_action_set_active (priv->disable_tooltips_action,
+                                !priv->tooltips_enabled);
+
   /* initialize extra widgets */
 
-  /* populate menubar with items and submenus */
-  _populate_menu_bar (self);
+  /* Accounts menu */
+  priv->accounts_menu_item =
+    GTK_WIDGET (gtk_builder_get_object (priv->builder, "accounts_menu_item"));
+
+  /* "Add to set" menu needs to be assigned to a var so we control
+     its visibility directly because it has no action assigned to it */
+  priv->add_to_set_menu_item =
+    GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_set_menu_item"));
+
+#ifdef MAC_INTEGRATION
+  _tweak_menu_bar_for_mac (self);
+#endif
 
   /* populate accounts submenu from model */
   _populate_accounts_submenu (self);
 
   /* create contextual menus for right-clicks */
-  priv->pictures_ctxt_menu = _pictures_ctxt_menu_create (self);
+  priv->pictures_ctxt_menu =
+      GTK_WIDGET (gtk_builder_get_object (builder, "ctxt_menu"));
 
   /* Initialize drag'n'drop support */
   _initialize_drag_n_drop (self);
