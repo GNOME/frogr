@@ -146,7 +146,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkSeparatorMenuItem" id="menuitem3">
+      <object class="GtkSeparatorMenuItem" id="separator1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="use_action_appearance">False</property>
@@ -291,7 +291,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
+              <object class="GtkSeparatorMenuItem" id="separator2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -314,7 +314,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkSeparatorMenuItem" id="menuitem5">
+              <object class="GtkSeparatorMenuItem" id="separator3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -330,7 +330,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkSeparatorMenuItem" id="separatormenuitem2">
+              <object class="GtkSeparatorMenuItem" id="separator4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -416,7 +416,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkSeparatorMenuItem" id="menuitem6">
+              <object class="GtkSeparatorMenuItem" id="separator5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -482,7 +482,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkSeparatorMenuItem" id="separatormenuitem4">
+                      <object class="GtkSeparatorMenuItem" id="separator6">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_action_appearance">False</property>
@@ -500,7 +500,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkSeparatorMenuItem" id="separatormenuitem3">
+              <object class="GtkSeparatorMenuItem" id="separator7">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -518,14 +518,14 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuItem" id="menuitem4">
+      <object class="GtkMenuItem" id="help_menu_item">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="use_action_appearance">False</property>
         <property name="label" translatable="yes">_Help</property>
         <property name="use_underline">True</property>
         <child type="submenu">
-          <object class="GtkMenu" id="menu3">
+          <object class="GtkMenu" id="help_submenu">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>

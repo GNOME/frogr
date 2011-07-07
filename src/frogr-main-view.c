@@ -250,27 +250,29 @@ _tweak_menu_bar_for_mac (FrogrMainView *self)
 
   GtkOSXApplication *osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
 
-  /* Preferences menu item (platform dependent) */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder,
-                                                  "preferences_menu_item"));
-  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 1);
-  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 2);
-  gtk_widget_show_all (menu_item);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder,
-                                                  "quit_menu_item"));
-  gtk_menu_item_remove_submenu (GTK_MENU_ITEM (menu_item));
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder,
-                                                  "contents_menu_item"));
-  gtk_menu_item_remove_submenu (GTK_MENU_ITEM (menu_item));
+  /* Relocate the 'about' menu item in the app menu */
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "about_menu_item"));
   gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 0);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder,
-                                                  "about_menu_item"));
-  gtk_menu_item_remove_submenu (GTK_MENU_ITEM (menu_item));
-  gtk_osxapplication_insert_app_menu_item (osx_app, priv->about_menu, 0);
+  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 1);
   gtk_widget_show_all (menu_item);
+
+  /* Relocate the 'preferences' menu item in the app menu */
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "preferences_menu_item"));
+  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 2);
+  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 3);
+  gtk_widget_show_all (menu_item);
+
+  /* Hide menus, menu items and separators that won't be shown in the Mac */
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_submenu"));
+  gtk_widget_hide (menu_item);
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_menu_item"));
+  gtk_widget_hide (menu_item);
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator3"));
+  gtk_widget_hide (menu_item);
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator4"));
+  gtk_widget_hide (menu_item);
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "quit_menu"));
+  gtk_widget_hide (menu_item);
 }
 #endif
 
@@ -1600,8 +1602,10 @@ frogr_main_view_init (FrogrMainView *self)
   priv->reverse_order_action =
     GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
                                                "reverse_order_action"));
+#ifndef MAC_INTEGRATION
   priv->quit_action =
     GTK_ACTION (gtk_builder_get_object (builder, "quit_action"));
+#endif
 
   /* Initialize sorting criteria and reverse */
   priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
