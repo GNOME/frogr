@@ -70,8 +70,8 @@ typedef struct _FrogrDetailsDialogPrivate {
 
   GtkTreeModel *treemodel;
   GSList *pictures;
-
   gulong picture_button_handler_id;
+  gchar *reference_description;
 } FrogrDetailsDialogPrivate;
 
 /* Properties */
@@ -758,12 +758,21 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
     }
 
   /* Fill in with data */
+
   if (title_val != NULL)
     gtk_entry_set_text (GTK_ENTRY (priv->title_entry), title_val);
 
   if (desc_val != NULL)
-    gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv->text_buffer),
-                              desc_val, -1);
+    {
+      gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv->text_buffer), desc_val, -1);
+      priv->reference_description = g_strstrip (g_strdup (desc_val));
+    }
+  else
+    {
+      /* We store "" in this case for ease further comparisons. */
+      priv->reference_description = g_strdup ("");
+    }
+
   if (tags_val != NULL)
     gtk_entry_set_text (GTK_ENTRY (priv->tags_entry), tags_val);
 
@@ -962,8 +971,10 @@ _save_data (FrogrDetailsDialog *self)
 
           if (!g_str_equal (title, "") || (n_pictures <= 1))
             frogr_picture_set_title (picture, title);
-          if (!g_str_equal (description, "") || (n_pictures <= 1))
+
+          if (!g_str_equal (description, priv->reference_description))
             frogr_picture_set_description (picture, description);
+
           if (!g_str_equal (tags, "") || (n_pictures <= 1))
             frogr_picture_set_tags (picture, tags);
 
@@ -1125,6 +1136,16 @@ _frogr_details_dialog_dispose (GObject *object)
 }
 
 static void
+_frogr_details_dialog_finalize (GObject *object)
+{
+  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (object);
+
+  g_free (priv->reference_description);
+
+  G_OBJECT_CLASS(frogr_details_dialog_parent_class)->finalize (object);
+}
+
+static void
 frogr_details_dialog_class_init (FrogrDetailsDialogClass *klass)
 {
   GObjectClass *obj_class = (GObjectClass *)klass;
@@ -1134,6 +1155,7 @@ frogr_details_dialog_class_init (FrogrDetailsDialogClass *klass)
   obj_class->set_property = _frogr_details_dialog_set_property;
   obj_class->get_property = _frogr_details_dialog_get_property;
   obj_class->dispose = _frogr_details_dialog_dispose;
+  obj_class->finalize = _frogr_details_dialog_finalize;
 
   /* Install properties */
   pspec = g_param_spec_pointer ("pictures",
@@ -1156,6 +1178,7 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
   priv->treemodel = NULL;
   priv->pictures = NULL;
   priv->picture_button_handler_id = 0;
+  priv->reference_description = NULL;
 
   _create_widgets (self);
 
