@@ -271,7 +271,7 @@ _tweak_menu_bar_for_mac (FrogrMainView *self)
   gtk_widget_hide (menu_item);
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator4"));
   gtk_widget_hide (menu_item);
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "quit_menu"));
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "quit_menu_item"));
   gtk_widget_hide (menu_item);
 }
 #endif
