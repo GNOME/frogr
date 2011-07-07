@@ -36,7 +36,7 @@
     <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
   </object>
   <object class="GtkAction" id="edit_details_action">
-    <property name="label" translatable="yes">Edit _Details</property>
+    <property name="label" translatable="yes">Edit _Details…</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="help_action">
@@ -45,7 +45,7 @@
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="preferences_action">
-    <property name="label" translatable="yes">_Preferences</property>
+    <property name="label" translatable="yes">_Preferences…</property>
     <property name="stock_id">gtk-preferences</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
@@ -100,7 +100,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="related_action">add_tags_action</property>
-        <property name="label" translatable="yes">Add _Tags</property>
+        <property name="label" translatable="yes">Add _Tags…</property>
         <property name="use_underline">True</property>
       </object>
     </child>
