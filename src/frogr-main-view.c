@@ -975,7 +975,6 @@ _open_pictures_in_external_viewer (FrogrMainView *self)
 {
   gchar *uris = NULL;
   GSList *pictures, *current_pic;
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   if (!_pictures_selected_required_check (self))
     return;
@@ -985,7 +984,7 @@ _open_pictures_in_external_viewer (FrogrMainView *self)
     {
       FrogrPicture *picture = FROGR_PICTURE (current_pic->data);
       gchar *current_uris = uris;
-      uris = g_strconcat (frogr_picture_get_fileuri (picture), " ", current_uris);
+      uris = g_strconcat (frogr_picture_get_fileuri (picture), " ", current_uris, NULL);
       g_free (current_uris);
       current_pic = g_slist_next (current_pic);
     }
@@ -1664,12 +1663,12 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* Accounts menu */
   priv->accounts_menu_item =
-    GTK_WIDGET (gtk_builder_get_object (priv->builder, "accounts_menu_item"));
+    GTK_WIDGET (gtk_builder_get_object (builder, "accounts_menu_item"));
 
   /* "Add to set" menu needs to be assigned to a var so we control
      its visibility directly because it has no action assigned to it */
   priv->add_to_set_menu_item =
-    GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_set_menu_item"));
+    GTK_WIDGET (gtk_builder_get_object (builder, "add_to_set_menu_item"));
 
 #ifdef MAC_INTEGRATION
   _tweak_menu_bar_for_mac (self);
