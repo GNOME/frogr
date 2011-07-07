@@ -44,6 +44,10 @@
     <property name="stock_id">gtk-help</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
+  <object class="GtkAction" id="open_in_external_viewer_action">
+    <property name="label" translatable="yes">Open in E_xternal Viewer</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
   <object class="GtkAction" id="preferences_action">
     <property name="label" translatable="yes">_Preferences…</property>
     <property name="stock_id">gtk-preferences</property>
@@ -153,7 +157,21 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuItem" id="remove_pictures_ctxt_menu_item">
+      <object class="GtkMenuItem" id="open_in_external_viewer_ctxt_menu_item">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="related_action">open_in_external_viewer_action</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="menuitem7">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="use_action_appearance">False</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="remove_pictures_menu_item">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="related_action">remove_pictures_action</property>
@@ -417,6 +435,20 @@
             </child>
             <child>
               <object class="GtkSeparatorMenuItem" id="separator5">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="open_in_external_viewer_menu_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="related_action">open_in_external_viewer_action</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparatorMenuItem" id="menuitem6">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>

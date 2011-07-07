@@ -95,6 +95,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkAction *add_pictures_action;
   GtkAction *remove_pictures_action;
   GtkAction *upload_pictures_action;
+  GtkAction *open_in_external_viewer_action;
   GtkAction *auth_action;
   GtkAction *preferences_action;
   GtkAction *add_tags_action;
@@ -161,6 +162,7 @@ static gint _n_pictures (FrogrMainView *self);
 static gint _n_selected_pictures (FrogrMainView *self);
 static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture);
+static void _open_pictures_in_external_viewer (FrogrMainView *self);
 
 static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
                                               gint response,
@@ -396,6 +398,8 @@ _on_action_activated (GtkAction *action, gpointer data)
     _remove_selected_pictures (mainview);
   else if (action == priv->upload_pictures_action)
     _upload_pictures (mainview);
+  else if (action == priv->open_in_external_viewer_action)
+    _open_pictures_in_external_viewer (mainview);
   else if (action == priv->auth_action)
     frogr_controller_show_auth_dialog (priv->controller);
   else if (action == priv->preferences_action)
@@ -967,6 +971,31 @@ _edit_selected_pictures (FrogrMainView *self)
 }
 
 static void
+_open_pictures_in_external_viewer (FrogrMainView *self)
+{
+  gchar *uris = NULL;
+  GSList *pictures, *current_pic;
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  if (!_pictures_selected_required_check (self))
+    return;
+
+  pictures = current_pic = _get_selected_pictures (self);
+  while (current_pic)
+    {
+      FrogrPicture *picture = FROGR_PICTURE (current_pic->data);
+      gchar *current_uris = uris;
+      uris = g_strconcat (frogr_picture_get_fileuri (picture), " ", current_uris);
+      g_free (current_uris);
+      current_pic = g_slist_next (current_pic);
+    }
+  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
+  g_slist_free (pictures);
+  frogr_util_open_multiple_uris (uris);
+  g_free (uris);
+}
+
+static void
 _remove_selected_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
@@ -1380,6 +1409,7 @@ _update_ui (FrogrMainView *self)
       gtk_action_set_sensitive (priv->add_pictures_action, FALSE);
       gtk_action_set_sensitive (priv->remove_pictures_action, FALSE);
       gtk_action_set_sensitive (priv->upload_pictures_action, FALSE);
+      gtk_action_set_sensitive (priv->open_in_external_viewer_action, FALSE);
       gtk_action_set_sensitive (priv->auth_action, FALSE);
       gtk_action_set_sensitive (priv->add_tags_action, FALSE);
       gtk_action_set_sensitive (priv->edit_details_action, FALSE);
@@ -1397,6 +1427,7 @@ _update_ui (FrogrMainView *self)
       gtk_action_set_sensitive (priv->add_pictures_action, TRUE);
       gtk_action_set_sensitive (priv->remove_pictures_action, has_pics);
       gtk_action_set_sensitive (priv->upload_pictures_action, has_pics);
+      gtk_action_set_sensitive (priv->open_in_external_viewer_action, has_pics);
       gtk_action_set_sensitive (priv->auth_action, TRUE);
       gtk_action_set_sensitive (priv->add_tags_action, has_pics);
       gtk_action_set_sensitive (priv->edit_details_action, has_pics);
@@ -1569,6 +1600,9 @@ frogr_main_view_init (FrogrMainView *self)
     GTK_ACTION (gtk_builder_get_object (builder, "remove_pictures_action"));
   priv->upload_pictures_action =
     GTK_ACTION (gtk_builder_get_object (builder, "upload_pictures_action"));
+  priv->open_in_external_viewer_action =
+    GTK_ACTION (gtk_builder_get_object (builder,
+                                        "open_in_external_viewer_action"));
   priv->auth_action =
     GTK_ACTION (gtk_builder_get_object (builder, "auth_action"));
   priv->preferences_action =
