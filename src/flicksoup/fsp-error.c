@@ -115,6 +115,19 @@ static const FspError tag_get_list_translations [N_SPECIFIC_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    /* 9 */
 };
 
+static const FspError set_license_translations [N_SPECIFIC_ERRORS] = {
+  FSP_ERROR_UNKNOWN,                    /* 0 */
+  FSP_ERROR_PHOTO_NOT_FOUND,            /* 1 */
+  FSP_ERROR_LICENSE_NOT_FOUND,          /* 2 */
+  FSP_ERROR_UNKNOWN,                    /* 3 */
+  FSP_ERROR_UNKNOWN,                    /* 4 */
+  FSP_ERROR_UNKNOWN,                    /* 5 */
+  FSP_ERROR_UNKNOWN,                    /* 6 */
+  FSP_ERROR_UNKNOWN,                    /* 7 */
+  FSP_ERROR_UNKNOWN,                    /* 8 */
+  FSP_ERROR_UNKNOWN,                    /* 9 */
+};
+
 static const FspError general_translations [N_GENERAL_ERRORS] = {
   FSP_ERROR_UNKNOWN,                    /* 10 */
   FSP_ERROR_UNKNOWN,                    /* 11 */
@@ -273,6 +286,10 @@ fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
 
         case FSP_ERROR_METHOD_TAG_GET_LIST:
           retval = tag_get_list_translations[code];
+          break;
+
+        case FSP_ERROR_METHOD_SET_LICENSE:
+          retval = set_license_translations[code];
           break;
 
         default:

@@ -133,6 +133,12 @@ fsp_parser_get_tags_list                (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error);
 
+gpointer
+fsp_parser_set_license                  (FspParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
 G_END_DECLS
 
 #endif

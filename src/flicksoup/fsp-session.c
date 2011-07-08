@@ -261,6 +261,10 @@ _get_tags_list_soup_session_cb           (SoupSession *session,
                                           SoupMessage *msg,
                                           gpointer     data);
 
+static void
+_set_license_soup_session_cb            (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
 
 /* Private API */
 
@@ -1248,6 +1252,19 @@ _get_tags_list_soup_session_cb           (SoupSession *session,
                          data);
 }
 
+static void
+_set_license_soup_session_cb            (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_set_license,
+                         data);
+}
 
 
 /* Public API */
@@ -2090,4 +2107,60 @@ fsp_session_get_tags_list_finish        (FspSession    *self,
 
   return (GSList*) _finish_async_request (G_OBJECT (self), res,
                                           fsp_session_get_tags_list_async, error);
+}
+
+void
+fsp_session_set_license_async           (FspSession          *self,
+                                         const gchar         *photo_id,
+                                         FspLicense          license,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  FspSessionPrivate *priv = NULL;
+  SoupSession *soup_session = NULL;
+  gchar *license_str = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+
+  /* Build the signed url */
+  priv = self->priv;
+  license_str = g_strdup_printf ("%d", license);
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.photos.licenses.setLicense",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    "photo_id", photo_id,
+                                    "license_id", license_str,
+                                    NULL);
+  g_free (license_str);
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  _perform_async_request (soup_session, url,
+                          _set_license_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_set_license_async, data);
+
+  g_free (url);
+}
+
+gboolean
+fsp_session_set_license_finish          (FspSession    *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  gpointer result = NULL;
+
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  result = _finish_async_request (G_OBJECT (self), res,
+                                  fsp_session_set_license_async, error);
+
+  return result ? TRUE : FALSE;
 }
