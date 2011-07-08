@@ -72,6 +72,7 @@ typedef struct _FrogrMainViewPrivate {
   SortingCriteria sorting_criteria;
   gboolean sorting_reversed;
   gboolean tooltips_enabled;
+  gint n_selected_pictures;
 
   GtkWindow *window;
 
@@ -157,9 +158,11 @@ static gboolean _on_icon_view_query_tooltip (GtkWidget *icon_view,
                                              GtkTooltip *tooltip,
                                              gpointer data);
 
+static void _on_icon_view_selection_changed (GtkWidget *icon_view,
+                                             gpointer data);
+
 static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_pictures (FrogrMainView *self);
-static gint _n_selected_pictures (FrogrMainView *self);
 static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _open_pictures_in_external_viewer (FrogrMainView *self);
@@ -223,6 +226,8 @@ static void _update_state_description (FrogrMainView *mainview);
 static gchar *_craft_state_description (FrogrMainView *mainview);
 
 static gchar *_get_datasize_string (gulong bandwidth);
+
+static void _update_sensitiveness (FrogrMainView *self);
 
 static void _update_ui (FrogrMainView *self);
 
@@ -489,7 +494,7 @@ _on_icon_view_key_press_event (GtkWidget *widget,
 
   /* Show contextual menu if pressed the 'Menu' key */
   if (event->type == GDK_KEY_PRESS && event->keyval == GDK_Menu
-      && _n_selected_pictures (mainview) > 0)
+      && priv->n_selected_pictures > 0)
     {
       GtkMenu *menu = GTK_MENU (priv->pictures_ctxt_menu);
       gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
@@ -691,6 +696,30 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
   return FALSE;
 }
 
+static void
+_on_icon_view_selection_changed (GtkWidget *icon_view, gpointer data)
+{
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  GList *selected_pictures = NULL;
+  gint len = 0;
+
+  /* We save the value here to avoid traversing all the list whenever
+     we need to check the number of selected pictures */
+  selected_pictures =
+    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
+
+  len = g_list_length (selected_pictures);
+
+  g_list_foreach (selected_pictures, (GFunc)gtk_tree_path_free, NULL);
+  g_list_free (selected_pictures);
+
+  priv->n_selected_pictures = len;
+
+  /* Update sensitiveness for actions */
+  _update_sensitiveness (self);
+}
+
 static GSList *
 _get_selected_pictures (FrogrMainView *self)
 {
@@ -735,24 +764,6 @@ _n_pictures (FrogrMainView *self)
 
   /* Just return the number of pictures in the model */
   return frogr_main_view_model_n_pictures (priv->model);
-}
-
-static gint
-_n_selected_pictures (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GList *selected_pictures = NULL;
-  gint len = 0;
-
-  selected_pictures =
-    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
-
-  len = g_list_length (selected_pictures);
-
-  g_list_foreach (selected_pictures, (GFunc)gtk_tree_path_free, NULL);
-  g_list_free (selected_pictures);
-
-  return len;
 }
 
 static void
@@ -895,7 +906,7 @@ _pictures_selected_required_check (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  if (_n_selected_pictures (self) == 0)
+  if (priv->n_selected_pictures == 0)
     {
       frogr_util_show_error_dialog (priv->window,
                                     _("You need to select some pictures first"));
@@ -1393,12 +1404,12 @@ _get_datasize_string (gulong datasize)
 }
 
 static void
-_update_ui (FrogrMainView *self)
+_update_sensitiveness (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  const gchar *state_description = NULL;
   gboolean has_accounts = FALSE;
   gboolean has_pics = FALSE;
+  gint n_selected_pics = 0;
 
   /* Set sensitiveness */
   switch (frogr_controller_get_state (priv->controller))
@@ -1422,27 +1433,42 @@ _update_ui (FrogrMainView *self)
     case FROGR_STATE_IDLE:
       has_pics = (_n_pictures (self) > 0);
       has_accounts = (priv->accounts_menu != NULL);
+      n_selected_pics = priv->n_selected_pictures;
 
       gtk_action_set_sensitive (priv->add_pictures_action, TRUE);
-      gtk_action_set_sensitive (priv->remove_pictures_action, has_pics);
-      gtk_action_set_sensitive (priv->upload_pictures_action, has_pics);
-      gtk_action_set_sensitive (priv->open_in_external_viewer_action, has_pics);
       gtk_action_set_sensitive (priv->auth_action, TRUE);
-      gtk_action_set_sensitive (priv->add_tags_action, has_pics);
-      gtk_action_set_sensitive (priv->edit_details_action, has_pics);
-      gtk_action_set_sensitive (priv->add_to_group_action, has_pics);
-      gtk_action_set_sensitive (priv->add_to_set_action, has_pics);
-      gtk_action_set_sensitive (priv->add_to_new_set_action, has_pics);
       gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts);
-      gtk_widget_set_sensitive (priv->add_to_set_menu_item, has_pics);
-
-      /* Update status bar from model's state description */
-      state_description = frogr_main_view_model_get_state_description (priv->model);
-      frogr_main_view_set_status_text (self, state_description);
+      gtk_action_set_sensitive (priv->upload_pictures_action, has_pics);
+      gtk_action_set_sensitive (priv->remove_pictures_action, n_selected_pics > 0);
+      gtk_action_set_sensitive (priv->open_in_external_viewer_action, n_selected_pics == 1);
+      gtk_action_set_sensitive (priv->add_tags_action, n_selected_pics > 0);
+      gtk_action_set_sensitive (priv->edit_details_action, n_selected_pics > 0);
+      gtk_action_set_sensitive (priv->add_to_group_action, n_selected_pics > 0);
+      gtk_action_set_sensitive (priv->add_to_set_action, n_selected_pics > 0);
+      gtk_action_set_sensitive (priv->add_to_new_set_action, n_selected_pics > 0);
+      gtk_widget_set_sensitive (priv->add_to_set_menu_item, n_selected_pics > 0);
       break;
 
     default:
       g_warning ("Invalid state reached!!");
+    }
+}
+
+static void
+_update_ui (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Set sensitiveness */
+  _update_sensitiveness (self);
+
+  /* Update status bar from model's state description */
+  if (frogr_controller_get_state (priv->controller) == FROGR_STATE_IDLE)
+    {
+      const gchar *state_description = NULL;
+
+      state_description = frogr_main_view_model_get_state_description (priv->model);
+      frogr_main_view_set_status_text (self, state_description);
     }
 }
 
@@ -1659,6 +1685,9 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_toggle_action_set_active (priv->disable_tooltips_action,
                                 !priv->tooltips_enabled);
 
+  /* No selected pictures at the beginning */
+  priv->n_selected_pictures = 0;
+
   /* initialize extra widgets */
 
   /* Accounts menu */
@@ -1751,6 +1780,10 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->icon_view), "query-tooltip",
                     G_CALLBACK (_on_icon_view_query_tooltip),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->icon_view), "selection-changed",
+                    G_CALLBACK (_on_icon_view_selection_changed),
                     self);
 
   g_signal_connect (G_OBJECT (priv->progress_dialog), "response",
