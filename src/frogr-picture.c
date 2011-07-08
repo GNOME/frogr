@@ -52,6 +52,7 @@ struct _FrogrPicturePrivate
 
   FspSafetyLevel safety_level;
   FspContentType content_type;
+  FspLicense license;
   gboolean show_in_search;
 
   GdkPixbuf *pixbuf;
@@ -70,6 +71,7 @@ enum  {
   PROP_IS_FRIEND,
   PROP_SAFETY_LEVEL,
   PROP_CONTENT_TYPE,
+  PROP_LICENSE,
   PROP_SHOW_IN_SEARCH,
   PROP_PIXBUF,
   PROP_FILESIZE,
@@ -216,6 +218,9 @@ _frogr_picture_set_property (GObject *object,
     case PROP_CONTENT_TYPE:
       frogr_picture_set_content_type (self, g_value_get_int (value));
       break;
+    case PROP_LICENSE:
+      frogr_picture_set_license (self, g_value_get_int (value));
+      break;
     case PROP_SHOW_IN_SEARCH:
       frogr_picture_set_show_in_search (self, g_value_get_boolean (value));
       break;
@@ -273,6 +278,9 @@ _frogr_picture_get_property (GObject *object,
       break;
     case PROP_CONTENT_TYPE:
       g_value_set_int (value, priv->content_type);
+      break;
+    case PROP_LICENSE:
+      g_value_set_int (value, priv->license);
       break;
     case PROP_SHOW_IN_SEARCH:
       g_value_set_boolean (value, priv->show_in_search);
@@ -440,6 +448,15 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                      FSP_CONTENT_TYPE_PHOTO,
                                                      G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
+                                   PROP_LICENSE,
+                                   g_param_spec_int ("license",
+                                                     "license",
+                                                     "License for this picture",
+                                                     FSP_LICENSE_UNKNOWN,
+                                                     FSP_LICENSE_ND,
+                                                     FSP_LICENSE_UNKNOWN,
+                                                     G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
                                    PROP_SHOW_IN_SEARCH,
                                    g_param_spec_boolean ("show-in-search",
                                                          "show-in-search",
@@ -501,6 +518,8 @@ frogr_picture_init (FrogrPicture *self)
 
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
+  priv->license = FSP_LICENSE_UNKNOWN;
+
   priv->show_in_search = TRUE;
 
   priv->pixbuf = NULL;
@@ -527,6 +546,7 @@ frogr_picture_new (const gchar *fileuri,
                                      "is-friend", friend,
                                      "safety-level", FSP_SAFETY_LEVEL_SAFE,
                                      "content-type", FSP_CONTENT_TYPE_PHOTO,
+                                     "license", FSP_LICENSE_UNKNOWN,
                                      "show_in_search", TRUE,
                                      NULL));
 }
@@ -800,6 +820,28 @@ frogr_picture_set_content_type (FrogrPicture *self,
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->content_type = content_type;
+}
+
+FspLicense
+frogr_picture_get_license (FrogrPicture *self)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  return priv->license;
+}
+
+void
+frogr_picture_set_license (FrogrPicture *self, FspLicense license)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  priv->license = license;
 }
 
 gboolean

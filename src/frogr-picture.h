@@ -103,6 +103,9 @@ void frogr_picture_set_safety_level (FrogrPicture *self,
 FspContentType frogr_picture_get_content_type (FrogrPicture *self);
 void frogr_picture_set_content_type (FrogrPicture *self,
                                      FspContentType content_type);
+FspLicense frogr_picture_get_license (FrogrPicture *self);
+void frogr_picture_set_license (FrogrPicture *self, FspLicense license);
+
 gboolean frogr_picture_show_in_search (FrogrPicture *self);
 void frogr_picture_set_show_in_search (FrogrPicture *self,
                                        gboolean show_in_search);

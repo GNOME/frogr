@@ -75,6 +75,7 @@ struct _FrogrControllerPrivate
   gboolean fetching_sets;
   gboolean fetching_groups;
   gboolean fetching_tags;
+  gboolean setting_license;
   gboolean adding_to_set;
   gboolean adding_to_group;
 
@@ -146,6 +147,10 @@ static void _upload_picture (FrogrController *self, FrogrPicture *picture,
 
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
 
+static void _set_license_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static gboolean _create_set_or_add_picture_on_idle (gpointer data);
+
 static gboolean _create_set_or_add_picture (FrogrController *self,
                                             FrogrPicture *picture,
                                             upload_picture_st *up_st);
@@ -159,6 +164,9 @@ static void _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
 static gboolean _add_picture_to_groups_on_idle (gpointer data);
 
 static gboolean _complete_picture_upload_on_idle (gpointer data);
+
+static void _notify_setting_license (FrogrController *self,
+                                     FrogrPicture *picture);
 
 static void _notify_creating_set (FrogrController *self,
                                   FrogrPicture *picture,
@@ -552,23 +560,40 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* Stop reporting to the user */
   g_signal_handlers_disconnect_by_func (priv->session, _data_fraction_sent_cb, controller);
 
-  /* Check whether it's needed or not to add the picture to the set */
+  /* Check whether it's needed or not to set a specific license for a
+     picture or to add the picture to sets or groups */
   if (!error)
     {
       GSList *sets = NULL;
       GSList *groups = NULL;
+      FspLicense license = FSP_LICENSE_UNKNOWN;
 
+      license = frogr_picture_get_license (picture);
       sets = frogr_picture_get_sets (picture);
       groups = frogr_picture_get_groups (picture);
 
+      /* Set license if needed */
+      if (license != FSP_LICENSE_UNKNOWN)
+        {
+          priv->setting_license = TRUE;
+
+          _notify_setting_license (controller, picture);
+          fsp_session_set_license_async (session,
+                                         frogr_picture_get_id (picture),
+                                         license,
+                                         priv->cancellable,
+                                         _set_license_cb,
+                                         up_st);
+        }
+
+      /* Add picture to set if needed (and maybe create a new one) */
       if (g_slist_length (sets) > 0)
         {
           up_st->sets = sets;
-          _create_set_or_add_picture (controller, picture, up_st);
+          gdk_threads_add_timeout (DEFAULT_TIMEOUT, _create_set_or_add_picture_on_idle, up_st);
         }
 
-      /* Pictures will be added to groups AFTER being added to sets,
-         so that's why we don't start the process now but on idle */
+      /* Add picture to groups if needed */
       if (g_slist_length (groups) > 0)
         {
           up_st->groups = groups;
@@ -579,6 +604,52 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* Complete the upload process when possible */
   up_st->error = error;
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, _complete_picture_upload_on_idle, up_st);
+}
+
+static void
+_set_license_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspSession *session = NULL;
+  upload_picture_st *up_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  up_st = (upload_picture_st*) data;
+  controller = up_st->controller;
+
+  fsp_session_set_license_finish (session, res, &error);
+  if (error)
+    {
+      /* We do not anything special if something went wrong here */
+      DEBUG ("Error setting license for picture: %s", error->message);
+      g_free (error);
+    }
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  priv->setting_license = FALSE;
+}
+
+static gboolean
+_create_set_or_add_picture_on_idle (gpointer data)
+{
+  upload_picture_st *up_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+
+  up_st = (upload_picture_st*) data;
+  controller = up_st->controller;
+  picture = up_st->picture;
+
+  /* Keep the source while busy */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  if (priv->setting_license)
+    return TRUE;
+
+  _create_set_or_add_picture (controller, picture, up_st);
+  return FALSE;
 }
 
 static gboolean
@@ -862,7 +933,7 @@ _complete_picture_upload_on_idle (gpointer data)
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while busy */
-  if (priv->adding_to_set || priv->adding_to_group)
+  if (priv->setting_license || priv->adding_to_set || priv->adding_to_group)
     {
       frogr_main_view_pulse_progress (priv->mainview);
       return TRUE;
@@ -889,6 +960,27 @@ _complete_picture_upload_on_idle (gpointer data)
   g_object_unref (picture);
 
   return FALSE;
+}
+
+static void
+_notify_setting_license (FrogrController *self,
+                         FrogrPicture *picture)
+{
+  FrogrControllerPrivate *priv = NULL;
+  const gchar *picture_title = NULL;
+  FspLicense license = FSP_LICENSE_UNKNOWN;
+  gchar *progress_text = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  frogr_main_view_set_progress_description(priv->mainview, _("Setting license for picture…"));
+
+  picture_title = frogr_picture_get_title (picture);
+  license = frogr_picture_get_license (picture);
+  progress_text = g_strdup_printf ("Adding license %d for picture %s…",
+                                   license, picture_title);
+  DEBUG ("%s", progress_text);
+
+  g_free (progress_text);
 }
 
 static void
@@ -1777,6 +1869,7 @@ frogr_controller_init (FrogrController *self)
   priv->fetching_groups = FALSE;
   priv->fetching_account_extra_info = FALSE;
   priv->fetching_tags = FALSE;
+  priv->setting_license = FALSE;
   priv->adding_to_set = FALSE;
   priv->adding_to_group = FALSE;
   priv->account_info_fetched = FALSE;
