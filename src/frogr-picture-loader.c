@@ -36,8 +36,8 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 
-#define PICTURE_WIDTH 100
-#define PICTURE_HEIGHT 100
+#define PICTURE_WIDTH 200
+#define PICTURE_HEIGHT 200
 
 #define FROGR_PICTURE_LOADER_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \

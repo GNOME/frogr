@@ -47,10 +47,11 @@
 /* Paths relative to the icons dir */
 #define MAIN_VIEW_ICON(_s) "/hicolor/" _s "/apps/frogr.png"
 
-#define MINIMUM_WINDOW_WIDTH 800
+#define MINIMUM_WINDOW_WIDTH 840
 #define MINIMUM_WINDOW_HEIGHT 600
 
-#define ITEM_WIDTH 120
+#define ITEM_WIDTH 140
+#define ITEM_HEIGHT 140
 
 /* Path relative to the application data dir */
 #define GTKBUILDER_FILE "/gtkbuilder/frogr-main-view.xml"
@@ -770,21 +771,25 @@ static void
 _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GdkPixbuf *pixbuf;
+  GdkPixbuf *pixbuf = NULL;
+  GdkPixbuf *s_pixbuf = NULL;
+  const gchar *fileuri = NULL;
   GtkTreeIter iter;
-  const gchar *fileuri;
 
   /* Add to GtkIconView */
   fileuri = frogr_picture_get_fileuri (picture);
   pixbuf = frogr_picture_get_pixbuf (picture);
+  s_pixbuf = frogr_util_get_scaled_pixbuf (pixbuf, ITEM_WIDTH, ITEM_HEIGHT);
 
   gtk_list_store_append (GTK_LIST_STORE (priv->tree_model), &iter);
   gtk_list_store_set (GTK_LIST_STORE (priv->tree_model), &iter,
                       FILEURI_COL, fileuri,
-                      PIXBUF_COL, pixbuf,
+                      PIXBUF_COL, s_pixbuf,
                       FPICTURE_COL, picture,
                       -1);
+
   g_object_ref (picture);
+  g_object_unref (s_pixbuf);
 
   /* Reorder if needed */
   if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)

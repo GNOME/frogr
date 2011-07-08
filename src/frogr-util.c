@@ -228,3 +228,37 @@ frogr_util_show_error_dialog (GtkWindow *parent, const gchar *message)
 {
   _show_message_dialog (parent, message, GTK_MESSAGE_ERROR);
 }
+
+GdkPixbuf *
+frogr_util_get_scaled_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height)
+{
+  GdkPixbuf *scaled_pixbuf = NULL;
+  gint width;
+  gint height;
+  gint new_width;
+  gint new_height;
+
+  g_return_val_if_fail (max_width > 0, NULL);
+  g_return_val_if_fail (max_height > 0, NULL);
+
+  /* Look for the right side to reduce */
+  width = gdk_pixbuf_get_width (pixbuf);
+  height = gdk_pixbuf_get_height (pixbuf);
+  if (width > height)
+    {
+      new_width = max_width;
+      new_height = (float)new_width * height / width;
+    }
+  else
+    {
+      new_height = max_height;
+      new_width = (float)new_height * width / height;
+    }
+
+  /* Scale the pixbuf to its best size */
+  scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
+                                           new_width, new_height,
+                                           GDK_INTERP_TILES);
+
+  return scaled_pixbuf;
+}

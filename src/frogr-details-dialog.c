@@ -36,8 +36,8 @@
 #define DIALOG_MIN_WIDTH 640
 #define DIALOG_MIN_HEIGHT 420
 
-#define PICTURE_WIDTH 120
-#define PICTURE_HEIGHT 120
+#define PICTURE_WIDTH 200
+#define PICTURE_HEIGHT 200
 
 #define FROGR_DETAILS_DIALOG_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
@@ -100,8 +100,6 @@ static gboolean _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTr
                                                GtkTreeIter *iter, gpointer data);
 
 static void _update_ui (FrogrDetailsDialog *self);
-
-static GdkPixbuf *_get_scaled_pixbuf (GdkPixbuf *pixbuf);
 
 static void _fill_dialog_with_data (FrogrDetailsDialog *self);
 
@@ -571,37 +569,6 @@ _update_ui (FrogrDetailsDialog *self)
   gtk_widget_set_sensitive (priv->family_cb, !active);
 }
 
-static GdkPixbuf *
-_get_scaled_pixbuf (GdkPixbuf *pixbuf)
-{
-  GdkPixbuf *scaled_pixbuf = NULL;
-  gint width;
-  gint height;
-  gint new_width;
-  gint new_height;
-
-  /* Look for the right side to reduce */
-  width = gdk_pixbuf_get_width (pixbuf);
-  height = gdk_pixbuf_get_height (pixbuf);
-  if (width > height)
-    {
-      new_width = PICTURE_WIDTH;
-      new_height = (float)new_width * height / width;
-    }
-  else
-    {
-      new_height = PICTURE_HEIGHT;
-      new_width = (float)new_height * width / height;
-    }
-
-  /* Scale the pixbuf to its best size */
-  scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
-                                           new_width, new_height,
-                                           GDK_INTERP_TILES);
-
-  return scaled_pixbuf;
-}
-
 static void
 _fill_dialog_with_data (FrogrDetailsDialog *self)
 {
@@ -843,7 +810,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
     {
       /* Set pixbuf scaled to the right size */
       GdkPixbuf *pixbuf = frogr_picture_get_pixbuf (picture);
-      GdkPixbuf *s_pixbuf = _get_scaled_pixbuf (pixbuf);
+      GdkPixbuf *s_pixbuf = frogr_util_get_scaled_pixbuf (pixbuf, PICTURE_WIDTH, PICTURE_HEIGHT);
       gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), s_pixbuf);
       g_object_unref (s_pixbuf);
     }
