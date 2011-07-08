@@ -67,6 +67,7 @@ typedef struct _FrogrDetailsDialogPrivate {
   GtkWidget *picture_button;
   GtkWidget *picture_container;
   GtkWidget *mpictures_label;
+  GdkPixbuf *mpictures_pixbuf;
 
   GtkTreeModel *treemodel;
   GSList *pictures;
@@ -100,6 +101,14 @@ static gboolean _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTr
                                                GtkTreeIter *iter, gpointer data);
 
 static void _update_ui (FrogrDetailsDialog *self);
+
+static void _load_picture_from_disk (FrogrDetailsDialog *self);
+
+static void _load_picture_from_disk_cb (GObject *object,
+                                        GAsyncResult *res,
+                                        gpointer data);
+
+static void _place_picture_in_dialog_and_show (FrogrDetailsDialog *self);
 
 static void _fill_dialog_with_data (FrogrDetailsDialog *self);
 
@@ -171,6 +180,7 @@ _create_widgets (FrogrDetailsDialog *self)
   widget = gtk_label_new (NULL);
   gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 0);
   priv->mpictures_label = widget;
+  priv->mpictures_pixbuf = NULL;
 
   /* Visibility */
 
@@ -570,6 +580,133 @@ _update_ui (FrogrDetailsDialog *self)
 }
 
 static void
+_load_picture_from_disk (FrogrDetailsDialog *self)
+{
+  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
+  guint n_pictures;
+
+  n_pictures = g_slist_length (priv->pictures);
+  if (n_pictures > 1)
+    {
+      gchar *mpictures_str = NULL;
+
+      /* Get the 'multiple pictures pixbuf' if not got yet (lazy approach) */
+      if (!priv->mpictures_pixbuf)
+        {
+          gchar *mpictures_full_path = NULL;
+
+          /* Set the image for editing multiple pictures */
+          mpictures_full_path = g_strdup_printf ("%s/" MPICTURES_IMAGE,
+                                                 frogr_util_get_app_data_dir ());
+          priv->mpictures_pixbuf = gdk_pixbuf_new_from_file (mpictures_full_path, NULL);
+          g_free (mpictures_full_path);
+        }
+
+      /* Just set the pixbuf in the image */
+      gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), priv->mpictures_pixbuf);
+
+      /* Visually indicate how many pictures are being edited */
+      mpictures_str = g_strdup_printf (ngettext ("(%d Picture)", "(%d Pictures)", n_pictures), n_pictures);
+      gtk_label_set_text (GTK_LABEL (priv->mpictures_label), mpictures_str);
+      g_free (mpictures_str);
+
+      /* No need to spawn any async operation, show the dialog now */
+      _place_picture_in_dialog_and_show (self);
+    }
+  else
+    {
+      FrogrPicture *picture = NULL;
+      gchar *file_uri = NULL;
+      GFile *gfile = NULL;
+
+      picture = FROGR_PICTURE (priv->pictures->data);
+      file_uri = (gchar *)frogr_picture_get_fileuri (picture);
+      gfile = g_file_new_for_uri (file_uri);
+
+      /* Asynchronously load the picture */
+      g_file_load_contents_async (gfile, NULL, _load_picture_from_disk_cb, self);
+    }
+}
+
+static void
+_load_picture_from_disk_cb (GObject *object,
+                            GAsyncResult *res,
+                            gpointer data)
+{
+  FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (data);
+  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
+  GFile *file = NULL;
+  GError *error = NULL;
+  gchar *contents = NULL;
+  gsize length = 0;
+
+  file = G_FILE (object);
+  if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
+    {
+      GdkPixbufLoader *pixbuf_loader = gdk_pixbuf_loader_new ();
+
+      if (gdk_pixbuf_loader_write (pixbuf_loader,
+                                   (const guchar *)contents,
+                                   length,
+                                   &error))
+        {
+          GdkPixbuf *pixbuf = NULL;
+          GdkPixbuf *s_pixbuf = NULL;
+
+          gdk_pixbuf_loader_close (pixbuf_loader, NULL);
+          pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
+
+          /* Get (scaled, and maybe rotated) pixbuf */
+          s_pixbuf = frogr_util_get_corrected_pixbuf (pixbuf, PICTURE_WIDTH, PICTURE_HEIGHT);
+
+          gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), s_pixbuf);
+          g_object_unref (s_pixbuf);
+
+          /* Everything should be fine by now, show it */
+          _place_picture_in_dialog_and_show (self);
+        }
+    }
+  else
+    {
+      GtkWindow *parent_window = NULL;
+      gchar *error_msg = NULL;
+
+      parent_window = gtk_window_get_transient_for (GTK_WINDOW (self));
+      gtk_widget_destroy (GTK_WIDGET (self));
+
+      if (error)
+        {
+          error_msg = g_strdup (error->message);
+          g_error_free (error);
+        }
+      else
+        error_msg = g_strdup (_("An error happened trying to load the picture"));
+
+      frogr_util_show_error_dialog (parent_window, error_msg);
+      g_free (error_msg);
+    }
+}
+
+static void
+_place_picture_in_dialog_and_show (FrogrDetailsDialog *self)
+{
+  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
+
+  gtk_button_set_image (GTK_BUTTON (priv->picture_button),
+                        priv->picture_img);
+
+  gtk_container_add (GTK_CONTAINER (priv->picture_container),
+                     priv->picture_button);
+
+  priv->picture_button_handler_id =
+    g_signal_connect (G_OBJECT (priv->picture_button), "clicked",
+                      G_CALLBACK (_on_picture_button_clicked),
+                      self);
+
+  gtk_widget_show_all (GTK_WIDGET (self));
+}
+
+static void
 _fill_dialog_with_data (FrogrDetailsDialog *self)
 {
   FrogrDetailsDialogPrivate *priv =
@@ -578,7 +715,6 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   FrogrPicture *picture;
   GSList *item;
   GtkWidget *picture_widget;
-  guint n_pictures;
   gchar *title_val = NULL;
   gchar *desc_val = NULL;
   gchar *tags_val = NULL;
@@ -786,50 +922,15 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
                                    priv->picture_button_handler_id);
     }
 
-  n_pictures = g_slist_length (priv->pictures);
-  if (n_pictures > 1)
-    {
-      GdkPixbuf *pixbuf = NULL;
-      gchar *mpictures_str = NULL;
-      gchar *mpictures_full_path = NULL;
-
-      /* Set the image for editing multiple pictures */
-      mpictures_full_path = g_strdup_printf ("%s/" MPICTURES_IMAGE,
-					     frogr_util_get_app_data_dir ());
-      pixbuf = gdk_pixbuf_new_from_file (mpictures_full_path, NULL);
-      gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), pixbuf);
-      g_object_unref (pixbuf);
-      g_free (mpictures_full_path);
-
-      /* Visually indicate how many pictures are being edited */
-      mpictures_str = g_strdup_printf (ngettext ("(%d Picture)", "(%d Pictures)", n_pictures), n_pictures);
-      gtk_label_set_text (GTK_LABEL (priv->mpictures_label), mpictures_str);
-      g_free (mpictures_str);
-    }
-  else
-    {
-      /* Set pixbuf scaled to the right size */
-      GdkPixbuf *pixbuf = frogr_picture_get_pixbuf (picture);
-      GdkPixbuf *s_pixbuf = frogr_util_get_scaled_pixbuf (pixbuf, PICTURE_WIDTH, PICTURE_HEIGHT);
-      gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), s_pixbuf);
-      g_object_unref (s_pixbuf);
-    }
-
-  gtk_button_set_image (GTK_BUTTON (priv->picture_button),
-                        priv->picture_img);
-
-  gtk_container_add (GTK_CONTAINER (priv->picture_container),
-                     priv->picture_button);
-  priv->picture_button_handler_id =
-    g_signal_connect (G_OBJECT (priv->picture_button), "clicked",
-                      G_CALLBACK (_on_picture_button_clicked),
-                      self);
   /* Update UI */
   _update_ui (self);
 
   /* Initial widget to grab focus */
   gtk_widget_grab_focus (priv->title_entry);
   gtk_editable_set_position (GTK_EDITABLE (priv->title_entry), -1);
+
+  /* Load the picture from disk, asynchronously */
+  _load_picture_from_disk (self);
 }
 
 static gboolean
@@ -1093,6 +1194,12 @@ _frogr_details_dialog_dispose (GObject *object)
 {
   FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (object);
 
+  if (priv->mpictures_pixbuf)
+    {
+      g_object_unref (priv->mpictures_pixbuf);
+      priv->mpictures_pixbuf = NULL;
+    }
+
   if (priv->pictures)
     {
       g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
@@ -1192,6 +1299,4 @@ frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures, GSList *tags)
 
   _fill_dialog_with_data (self);
   _populate_treemodel_with_tags (self, tags);
-
-  gtk_widget_show_all (GTK_WIDGET (self));
 }

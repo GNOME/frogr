@@ -24,6 +24,12 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <libexif/exif-byte-order.h>
+#include <libexif/exif-data.h>
+#include <libexif/exif-entry.h>
+#include <libexif/exif-format.h>
+#include <libexif/exif-loader.h>
+#include <libexif/exif-tag.h>
 
 static gboolean
 _spawn_command (const gchar* cmd)
@@ -230,9 +236,11 @@ frogr_util_show_error_dialog (GtkWindow *parent, const gchar *message)
 }
 
 GdkPixbuf *
-frogr_util_get_scaled_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height)
+frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height)
 {
   GdkPixbuf *scaled_pixbuf = NULL;
+  GdkPixbuf *rotated_pixbuf;
+  const gchar *orientation;
   gint width;
   gint height;
   gint new_width;
@@ -260,5 +268,34 @@ frogr_util_get_scaled_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height
                                            new_width, new_height,
                                            GDK_INTERP_TILES);
 
+  /* Correct orientation if needed */
+  orientation = gdk_pixbuf_get_option (pixbuf, "orientation");
+
+  /* No orientation defined or 0 degrees rotation: we're done */
+  if (!orientation || !g_strcmp0 (orientation, "1"))
+    return scaled_pixbuf;
+
+  DEBUG ("File orientation for file: %s", orientation);
+  rotated_pixbuf = NULL;
+
+  /* Rotated 90 degrees */
+  if (!g_strcmp0 (orientation, "8"))
+    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
+                                               GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
+  /* Rotated 180 degrees */
+  if (!g_strcmp0 (orientation, "3"))
+    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
+                                               GDK_PIXBUF_ROTATE_UPSIDEDOWN);
+  /* Rotated 270 degrees */
+  if (!g_strcmp0 (orientation, "6"))
+    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
+                                               GDK_PIXBUF_ROTATE_CLOCKWISE);
+  if (rotated_pixbuf)
+    {
+      g_object_unref (scaled_pixbuf);
+      return rotated_pixbuf;
+    }
+
+  /* No rotation was applied, return the scaled pixbuf */
   return scaled_pixbuf;
 }

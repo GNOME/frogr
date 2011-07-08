@@ -50,9 +50,6 @@
 #define MINIMUM_WINDOW_WIDTH 840
 #define MINIMUM_WINDOW_HEIGHT 600
 
-#define ITEM_WIDTH 140
-#define ITEM_HEIGHT 140
-
 /* Path relative to the application data dir */
 #define GTKBUILDER_FILE "/gtkbuilder/frogr-main-view.xml"
 
@@ -772,24 +769,21 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GdkPixbuf *pixbuf = NULL;
-  GdkPixbuf *s_pixbuf = NULL;
   const gchar *fileuri = NULL;
   GtkTreeIter iter;
 
   /* Add to GtkIconView */
   fileuri = frogr_picture_get_fileuri (picture);
   pixbuf = frogr_picture_get_pixbuf (picture);
-  s_pixbuf = frogr_util_get_scaled_pixbuf (pixbuf, ITEM_WIDTH, ITEM_HEIGHT);
 
   gtk_list_store_append (GTK_LIST_STORE (priv->tree_model), &iter);
   gtk_list_store_set (GTK_LIST_STORE (priv->tree_model), &iter,
                       FILEURI_COL, fileuri,
-                      PIXBUF_COL, s_pixbuf,
+                      PIXBUF_COL, pixbuf,
                       FPICTURE_COL, picture,
                       -1);
 
   g_object_ref (picture);
-  g_object_unref (s_pixbuf);
 
   /* Reorder if needed */
   if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
@@ -1763,7 +1757,7 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view),
                                     GTK_SELECTION_MULTIPLE);
   gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
-  gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), ITEM_WIDTH);
+  gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), IV_THUMB_WIDTH);
   gtk_widget_set_has_tooltip (icon_view, TRUE);
 
   gtk_window_set_default_size (priv->window, MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);

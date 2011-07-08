@@ -25,6 +25,7 @@
 #include "frogr-global-defs.h"
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
+#include "frogr-util.h"
 
 #include <config.h>
 #include <libexif/exif-byte-order.h>
@@ -35,9 +36,6 @@
 #include <libexif/exif-tag.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
-
-#define PICTURE_WIDTH 200
-#define PICTURE_HEIGHT 200
 
 #define FROGR_PICTURE_LOADER_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
@@ -86,7 +84,6 @@ static const gchar *valid_mimetypes[] = {
 /* Prototypes */
 
 static void _update_status_and_progress (FrogrPictureLoader *self);
-static GdkPixbuf *_get_corrected_pixbuf (GdkPixbuf *pixbuf);
 static void _load_next_picture (FrogrPictureLoader *self);
 static void _load_next_picture_cb (GObject *object,
                                    GAsyncResult *res,
@@ -111,67 +108,6 @@ _update_status_and_progress (FrogrPictureLoader *self)
 
   /* Free */
   g_free (status_text);
-}
-
-static GdkPixbuf *
-_get_corrected_pixbuf (GdkPixbuf *pixbuf)
-{
-  GdkPixbuf *scaled_pixbuf;
-  GdkPixbuf *rotated_pixbuf;
-  const gchar *orientation;
-  gint width;
-  gint height;
-  gint new_width;
-  gint new_height;
-
-  /* Look for the right side to reduce */
-  width = gdk_pixbuf_get_width (pixbuf);
-  height = gdk_pixbuf_get_height (pixbuf);
-  if (width > height)
-    {
-      new_width = PICTURE_WIDTH;
-      new_height = (float)new_width * height / width;
-    }
-  else
-    {
-      new_height = PICTURE_HEIGHT;
-      new_width = (float)new_height * width / height;
-    }
-
-  /* Scale the pixbuf to its best size */
-  scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
-                                           new_width, new_height,
-                                           GDK_INTERP_TILES);
-  /* Correct orientation if needed */
-  orientation = gdk_pixbuf_get_option (pixbuf, "orientation");
-
-  /* No orientation defined or 0 degrees rotation: we're done */
-  if (!orientation || !g_strcmp0 (orientation, "1"))
-    return scaled_pixbuf;
-
-  DEBUG ("File orientation for file: %s", orientation);
-  rotated_pixbuf = NULL;
-
-  /* Rotated 90 degrees */
-  if (!g_strcmp0 (orientation, "8"))
-    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
-                                               GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
-  /* Rotated 180 degrees */
-  if (!g_strcmp0 (orientation, "3"))
-    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
-                                               GDK_PIXBUF_ROTATE_UPSIDEDOWN);
-  /* Rotated 270 degrees */
-  if (!g_strcmp0 (orientation, "6"))
-    rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf,
-                                               GDK_PIXBUF_ROTATE_CLOCKWISE);
-  if (rotated_pixbuf)
-    {
-      g_object_unref (scaled_pixbuf);
-      return rotated_pixbuf;
-    }
-
-  /* No rotation was applied, return the scaled pixbuf */
-  return scaled_pixbuf;
 }
 
 static void
@@ -326,7 +262,7 @@ _load_next_picture_cb (GObject *object,
           pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
 
           /* Get (scaled, and maybe rotated) pixbuf */
-          s_pixbuf = _get_corrected_pixbuf (pixbuf);
+          s_pixbuf = frogr_util_get_corrected_pixbuf (pixbuf, IV_THUMB_WIDTH, IV_THUMB_HEIGHT);
 
           /* Build the FrogrPicture */
           fpicture = frogr_picture_new (file_uri,
