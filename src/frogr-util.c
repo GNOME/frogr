@@ -137,24 +137,60 @@ frogr_util_open_uri (const gchar *url)
     }
 }
 
-void
-frogr_util_open_multiple_uris (const gchar *uris)
+gchar *
+_get_uris_string_from_list (GList *uris_list)
 {
-  gchar *command = NULL;
+  GList *current_uri = NULL;
+  gchar **uris_array = NULL;
+  gchar *uris_str = NULL;
+  gint n_uris = 0;
+  gint i = 0;
+
+  n_uris = g_list_length (uris_list);
+  if (n_uris == 0)
+    return NULL;
+
+  uris_array = g_new0 (gchar*, n_uris + 1);
+  for (current_uri = uris_list; current_uri; current_uri = g_list_next (current_uri))
+    uris_array[i++] = (gchar *) (current_uri->data);
+
+  uris_str = g_strjoinv (" ", uris_array);
+  g_strfreev (uris_array);
+
+  return uris_str;
+}
+
+void
+frogr_util_open_images_in_viewer (GList *uris_list)
+{
+  static GAppInfo *app_info = NULL;
 
   /* Early return */
-  if (uris == NULL)
+  if (uris_list == NULL)
     return;
 
-#ifdef MAC_INTEGRATION
-  /* In MacOSX neither gnome-open nor gtk_show_uri() will work */
-  command = g_strdup_printf ("open %s", uris);
-#else
-  command = g_strdup_printf ("gnome-open %s", uris);
-#endif /* ifdef MAC_INTEGRATION */
+  if (!app_info)
+    app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
 
-  _spawn_command (command);
-  g_free (command);
+  if (!g_app_info_launch_uris (app_info, uris_list, NULL, NULL))
+    {
+      gchar *command = NULL;
+      gchar *uris = NULL;
+
+      /* The default app didn't succeed, so try 'gnome-open' */
+      uris = _get_uris_string_from_list (uris_list);
+
+#ifdef MAC_INTEGRATION
+      /* In MacOSX neither gnome-open nor gtk_show_uri() will work */
+      command = g_strdup_printf ("open %s", uris);
+#else
+      command = g_strdup_printf ("gnome-open %s", uris);
+#endif
+      _spawn_command (command);
+
+      g_free (command);
+      g_free (uris);
+    }
 }
 
 static void

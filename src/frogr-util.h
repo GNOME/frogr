@@ -31,7 +31,7 @@ const gchar *frogr_util_get_locale_dir (void);
 
 void frogr_util_open_uri (const gchar *url);
 
-void frogr_util_open_multiple_uris (const gchar *uris);
+void frogr_util_open_images_in_viewer (GList *uris_list);
 
 void frogr_util_show_info_dialog (GtkWindow *parent, const gchar *message);
 

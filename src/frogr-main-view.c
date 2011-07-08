@@ -984,25 +984,25 @@ _edit_selected_pictures (FrogrMainView *self)
 static void
 _open_pictures_in_external_viewer (FrogrMainView *self)
 {
-  gchar *uris = NULL;
-  GSList *pictures, *current_pic;
+  GSList *pictures = NULL;
+  GSList *current_pic = NULL;
+  GList *uris_list = NULL;
 
   if (!_pictures_selected_required_check (self))
     return;
 
-  pictures = current_pic = _get_selected_pictures (self);
-  while (current_pic)
+  pictures = _get_selected_pictures (self);
+  for (current_pic = pictures; current_pic; current_pic = g_slist_next (current_pic))
     {
       FrogrPicture *picture = FROGR_PICTURE (current_pic->data);
-      gchar *current_uris = uris;
-      uris = g_strconcat (frogr_picture_get_fileuri (picture), " ", current_uris, NULL);
-      g_free (current_uris);
-      current_pic = g_slist_next (current_pic);
+      uris_list = g_list_append (uris_list, (gchar*) frogr_picture_get_fileuri (picture));
     }
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
   g_slist_free (pictures);
-  frogr_util_open_multiple_uris (uris);
-  g_free (uris);
+
+  frogr_util_open_images_in_viewer (uris_list);
+
+  g_list_free (uris_list);
 }
 
 static void
@@ -1440,7 +1440,7 @@ _update_sensitiveness (FrogrMainView *self)
       gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts);
       gtk_action_set_sensitive (priv->upload_pictures_action, has_pics);
       gtk_action_set_sensitive (priv->remove_pictures_action, n_selected_pics > 0);
-      gtk_action_set_sensitive (priv->open_in_external_viewer_action, n_selected_pics == 1);
+      gtk_action_set_sensitive (priv->open_in_external_viewer_action, n_selected_pics > 0);
       gtk_action_set_sensitive (priv->add_tags_action, n_selected_pics > 0);
       gtk_action_set_sensitive (priv->edit_details_action, n_selected_pics > 0);
       gtk_action_set_sensitive (priv->add_to_group_action, n_selected_pics > 0);
