@@ -267,7 +267,6 @@ frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_hei
   scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
                                            new_width, new_height,
                                            GDK_INTERP_TILES);
-
   /* Correct orientation if needed */
   orientation = gdk_pixbuf_get_option (pixbuf, "orientation");
 

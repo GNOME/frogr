@@ -666,7 +666,9 @@ _load_picture_from_disk_cb (GObject *object,
           _place_picture_in_dialog_and_show (self);
         }
     }
-  else
+
+  /* Show error to the user and finalize dialog if needed */
+  if (error)
     {
       GtkWindow *parent_window = NULL;
       gchar *error_msg = NULL;
