@@ -42,6 +42,7 @@ void added_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photo_get_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void set_license_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void check_auth_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
@@ -77,10 +78,11 @@ upload_cb                               (GObject      *object,
 
       if (source_func == get_tags_list_cb)
         {
-          /* Continue getting info about the picture */
-          g_print ("Getting info for photo %s...\n", uploaded_photo_id);
-          fsp_session_get_info_async (session, uploaded_photo_id, NULL,
-                                      photo_get_info_cb, NULL);
+          /* Continue setting a license for the picture */
+          g_print ("Setting license for photo %s...\n", uploaded_photo_id);
+          fsp_session_set_license_async (session, uploaded_photo_id,
+                                         FSP_LICENSE_AT_NC_ND, NULL,
+                                         set_license_cb, NULL);
         }
       else if (source_func == photoset_created_cb)
         {
@@ -358,6 +360,37 @@ photo_get_info_cb                       (GObject      *object,
                                        get_photosets_cb, NULL);
 
       fsp_data_free (FSP_DATA (photo_info));
+    }
+}
+
+void
+set_license_cb                          (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspSession *session = FSP_SESSION (object);
+  GError *error = NULL;
+  gboolean result = FALSE;
+
+  result = fsp_session_set_license_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error setting license: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[set_license_cb]::Success! (%s)\n\n",
+               result ? "OK" : "FAIL");
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue getting info about the picture */
+      g_print ("Getting info for photo %s...\n", uploaded_photo_id);
+      fsp_session_get_info_async (session, uploaded_photo_id, NULL,
+                                  photo_get_info_cb, NULL);
     }
 }
 
