@@ -245,6 +245,8 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="shadow_type">etched-in</property>
+            <property name="hscrollbar-policy">GTK_POLICY_NEVER</property>
+            <property name="vscrollbar-policy">GTK_POLICY_AUTOMATIC</property>
             <child>
               <object class="GtkIconView" id="icon_view">
                 <property name="visible">True</property>
