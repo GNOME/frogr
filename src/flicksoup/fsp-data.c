@@ -66,7 +66,7 @@ fsp_data_new                            (FspDataType type)
       new_data->photo_info.secret = NULL;
       new_data->photo_info.server = NULL;
       new_data->photo_info.is_favorite = FALSE;
-      new_data->photo_info.license = FSP_LICENSE_UNKNOWN;
+      new_data->photo_info.license = FSP_LICENSE_NONE;
       new_data->photo_info.rotation = FSP_ROTATION_NONE;
       new_data->photo_info.orig_secret = NULL;
       new_data->photo_info.orig_format = NULL;

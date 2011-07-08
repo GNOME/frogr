@@ -84,7 +84,7 @@ typedef enum {
 } FspPermission;
 
 typedef enum {
-  FSP_LICENSE_UNKNOWN    = -1,
+  FSP_LICENSE_NONE    = -1,
   FSP_LICENSE_ALL_RIGHTS = 0,
   FSP_LICENSE_AT_NC_SA   = 1,
   FSP_LICENSE_AT_NC      = 2,

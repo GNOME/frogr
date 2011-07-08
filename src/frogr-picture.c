@@ -452,9 +452,9 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                    g_param_spec_int ("license",
                                                      "license",
                                                      "License for this picture",
-                                                     FSP_LICENSE_UNKNOWN,
+                                                     FSP_LICENSE_NONE,
                                                      FSP_LICENSE_ND,
-                                                     FSP_LICENSE_UNKNOWN,
+                                                     FSP_LICENSE_NONE,
                                                      G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_SHOW_IN_SEARCH,
@@ -518,7 +518,7 @@ frogr_picture_init (FrogrPicture *self)
 
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
-  priv->license = FSP_LICENSE_UNKNOWN;
+  priv->license = FSP_LICENSE_NONE;
 
   priv->show_in_search = TRUE;
 
@@ -546,7 +546,7 @@ frogr_picture_new (const gchar *fileuri,
                                      "is-friend", friend,
                                      "safety-level", FSP_SAFETY_LEVEL_SAFE,
                                      "content-type", FSP_CONTENT_TYPE_PHOTO,
-                                     "license", FSP_LICENSE_UNKNOWN,
+                                     "license", FSP_LICENSE_NONE,
                                      "show_in_search", TRUE,
                                      NULL));
 }

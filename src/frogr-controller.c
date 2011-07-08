@@ -566,14 +566,14 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       GSList *sets = NULL;
       GSList *groups = NULL;
-      FspLicense license = FSP_LICENSE_UNKNOWN;
+      FspLicense license = FSP_LICENSE_NONE;
 
       license = frogr_picture_get_license (picture);
       sets = frogr_picture_get_sets (picture);
       groups = frogr_picture_get_groups (picture);
 
       /* Set license if needed */
-      if (license != FSP_LICENSE_UNKNOWN)
+      if (license != FSP_LICENSE_NONE)
         {
           priv->setting_license = TRUE;
 
@@ -968,7 +968,7 @@ _notify_setting_license (FrogrController *self,
 {
   FrogrControllerPrivate *priv = NULL;
   const gchar *picture_title = NULL;
-  FspLicense license = FSP_LICENSE_UNKNOWN;
+  FspLicense license = FSP_LICENSE_NONE;
   gchar *progress_text = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
