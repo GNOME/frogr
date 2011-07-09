@@ -98,18 +98,23 @@ _compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
     result = g_value_get_long (&value1) - g_value_get_long (&value2);
   else if (G_VALUE_HOLDS_STRING (&value1))
     {
-      gchar *str1 = NULL;
-      gchar *str2 = NULL;
+      const gchar *str1 = NULL;
+      const gchar *str2 = NULL;
+      gchar *str1_cf = NULL;
+      gchar *str2_cf = NULL;
 
       /* Comparison of strings require some additional work to take
          into account the different rules for each locale */
-      str1 = g_utf8_casefold (g_value_get_string (&value1), -1);
-      str2 = g_utf8_casefold (g_value_get_string (&value2), -1);
+      str1 = g_value_get_string (&value1);
+      str2 = g_value_get_string (&value2);
 
-      result = g_utf8_collate (str1, str2);
+      str1_cf = str1 ? g_utf8_casefold (str1, -1) : g_strdup ("");
+      str2_cf = str1 ? g_utf8_casefold (str2, -1) : g_strdup ("");
 
-      g_free (str1);
-      g_free (str2);
+      result = g_utf8_collate (str1_cf, str2_cf);
+
+      g_free (str1_cf);
+      g_free (str2_cf);
     }
   else
     g_warning ("Unsupported type for property used for sorting");
