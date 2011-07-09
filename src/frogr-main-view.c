@@ -105,7 +105,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkAction *help_action;
   GtkAction *about_action;
   GtkToggleAction *disable_tooltips_action;
-  GtkToggleAction *reverse_order_action;
+  GtkToggleAction *reversed_order_action;
   GtkToggleAction *sort_as_loaded_action;
   GtkToggleAction *sort_by_title_action;
   GtkToggleAction *sort_by_date_taken_action;
@@ -446,7 +446,7 @@ _on_toggle_action_changed (GtkToggleAction *action,
       frogr_config_set_mainview_enable_tooltips (priv->config, !checked);
       priv->tooltips_enabled = !checked;
     }
-  else if (action == priv->reverse_order_action)
+  else if (action == priv->reversed_order_action)
     {
       _reorder_pictures (mainview, priv->sorting_criteria, checked);
       frogr_config_set_mainview_sorting_reversed (priv->config, checked);
@@ -1657,9 +1657,9 @@ frogr_main_view_init (FrogrMainView *self)
   priv->sort_as_loaded_action =
     GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
                                                "sort_as_loaded_action"));
-  priv->reverse_order_action =
+  priv->reversed_order_action =
     GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
-                                               "reverse_order_action"));
+                                               "reversed_order_action"));
 #ifndef MAC_INTEGRATION
   priv->quit_action =
     GTK_ACTION (gtk_builder_get_object (builder, "quit_action"));
@@ -1675,7 +1675,7 @@ frogr_main_view_init (FrogrMainView *self)
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_as_loaded_action), TRUE);
 
   priv->sorting_reversed = frogr_config_get_mainview_sorting_reversed (priv->config);
-  gtk_toggle_action_set_active (priv->reverse_order_action,
+  gtk_toggle_action_set_active (priv->reversed_order_action,
                                 priv->sorting_reversed);
 
   /* Read value for 'tooltips enabled' */

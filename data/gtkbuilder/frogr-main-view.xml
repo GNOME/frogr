@@ -12,7 +12,7 @@
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="add_tags_action">
-    <property name="label" translatable="yes">Add _Tags</property>
+    <property name="label" translatable="yes">Add _Tags…</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="add_to_group_action">
@@ -59,12 +59,12 @@
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="remove_pictures_action">
-    <property name="label" translatable="yes">Remove Pictures</property>
+    <property name="label" translatable="yes">_Remove Pictures</property>
     <property name="stock_id">gtk-remove</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkToggleAction" id="reverse_order_action">
-    <property name="label" translatable="yes">_Reverse Order</property>
+  <object class="GtkToggleAction" id="reversed_order_action">
+    <property name="label" translatable="yes">_Reversed Order</property>
     <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
   </object>
   <object class="GtkRadioAction" id="sort_as_loaded_action">
@@ -522,10 +522,10 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckMenuItem" id="reverse_order_menu_item">
+                      <object class="GtkCheckMenuItem" id="reversed_order_menu_item">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="related_action">reverse_order_action</property>
+                        <property name="related_action">reversed_order_action</property>
                       </object>
                     </child>
                   </object>
