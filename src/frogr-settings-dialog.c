@@ -98,6 +98,8 @@ static void _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
 static void _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook);
 
+static void _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook);
+
 static void _fill_dialog_with_data (FrogrSettingsDialog *self);
 
 static gboolean _save_data (FrogrSettingsDialog *self);
@@ -299,34 +301,6 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     G_CALLBACK (_on_combo_changed),
                     self);
 
-  /* Misc */
-
-  label = gtk_label_new (NULL);
-  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
-                                    _("Other options"));
-  gtk_label_set_markup (GTK_LABEL (label), markup);
-  g_free (markup);
-
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
-
-#ifdef GTK_API_VERSION_3
-  box1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-#else
-  box1 = gtk_vbox_new (FALSE, 6);
-#endif
-
-  _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("Disa_ble Tags Auto-Completion"),
-                        &priv->disable_tags_autocompletion_cb);
-  _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("_Keep File Extensions in Titles when Loading Pictures"),
-                        &priv->keep_file_extensions_cb);
-
-  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
-
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_General")));
 }
@@ -478,6 +452,56 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("Connec_tion")));
+}
+
+static void
+_add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
+{
+  FrogrSettingsDialogPrivate *priv = NULL;
+  GtkWidget *vbox = NULL;
+  GtkWidget *box = NULL;
+  GtkWidget *align = NULL;
+  GtkWidget *label = NULL;
+  gchar *markup = NULL;
+
+  priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
+
+#ifdef GTK_API_VERSION_3
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
+  vbox = gtk_vbox_new (FALSE, 6);
+#endif
+
+  /* Misc */
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("Other options"));
+  gtk_label_set_markup (GTK_LABEL (label), markup);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 1);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+
+#ifdef GTK_API_VERSION_3
+  box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
+  box = gtk_vbox_new (FALSE, 6);
+#endif
+
+  _add_togleabble_item (self, GTK_BOX (box), NULL, FALSE,
+                        _("Disa_ble Tags Auto-Completion"),
+                        &priv->disable_tags_autocompletion_cb);
+  _add_togleabble_item (self, GTK_BOX (box), NULL, FALSE,
+                        _("_Keep File Extensions in Titles when Loading Pictures"),
+                        &priv->keep_file_extensions_cb);
+
+  gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
+
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_Misc")));
 }
 
 static void
@@ -944,6 +968,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
 
   _add_general_page (self, notebook);
   _add_connection_page (self, notebook);
+  _add_misc_page (self, notebook);
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (self), "response",
