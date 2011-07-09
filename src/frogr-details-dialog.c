@@ -88,6 +88,18 @@ enum {
   N_COLS
 };
 
+static const gchar *license_descriptions[] = {
+  N_("Default (as specified in flickr)"),
+  N_("None (All rights reserved)"),
+  N_("CC Attribution-NonCommercial-ShareAlike"),
+  N_("CC Attribution-NonCommercial"),
+  N_("CC Attribution-NonCommercial-NoDerivs"),
+  N_("CC Attribution"),
+  N_("CC Attribution-ShareAlike"),
+  N_("CC Attribution-NoDerivs"),
+  NULL
+};
+
 
 /* Prototypes */
 
@@ -149,6 +161,7 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *scroller = NULL;
   GtkTreeModel *model = NULL;
   gchar *markup = NULL;
+  gint i;
 
   priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
 
@@ -353,17 +366,15 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION (2,24,0)
   widget = gtk_combo_box_text_new ();
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 0, _("Default (as specified in flickr)"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 1, _("None (All rights reserved)"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 2, _("CC Attribution-NonCommercial-ShareAlike"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 3, _("CC Attribution-NonCommercial"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 4, _("CC Attribution-NonCommercial-NoDerivs"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 5, _("CC Attribution"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 6, _("CC Attribution-ShareAlike"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 7, _("CC Attribution-NoDerivs"));
+  for (i = 0; license_descriptions[i]; i++)
+    gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), i, gettext (license_descriptions[i]));
+#else
+  for (i = 0; license_descriptions[i]; i++)
+    gtk_combo_box_insert_text (GTK_COMBO_BOX (widget), i, gettext (license_descriptions[i]));
+#endif
   priv->license_cb = widget;
-
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
