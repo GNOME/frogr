@@ -34,7 +34,7 @@
 #define MPICTURES_IMAGE "/images/mpictures.png"
 
 #define DIALOG_MIN_WIDTH 740
-#define DIALOG_MIN_HEIGHT 420
+#define DIALOG_MIN_HEIGHT 400
 
 #define PICTURE_WIDTH 200
 #define PICTURE_HEIGHT 200
@@ -136,7 +136,6 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *main_vbox = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *hbox = NULL;
-  GtkWidget *expander = NULL;
   GtkWidget *section_vbox = NULL;
   GtkWidget *internal_hbox = NULL;
   GtkWidget *visibility_vbox = NULL;
@@ -276,12 +275,12 @@ _create_widgets (FrogrDetailsDialog *self)
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Content type"));
-  expander = gtk_expander_new (markup);
-  gtk_expander_set_use_markup (GTK_EXPANDER (expander), TRUE);
+  widget = gtk_label_new (markup);
+  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
 
   align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), expander);
+  gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("P_hoto"));
@@ -296,7 +295,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
   priv->other_content_rb = widget;
 
-  gtk_container_add (GTK_CONTAINER (expander), content_type_hbox);
+  gtk_box_pack_start (GTK_BOX (section_vbox), content_type_hbox, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
@@ -312,12 +311,12 @@ _create_widgets (FrogrDetailsDialog *self)
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Safety level"));
-  expander = gtk_expander_new (markup);
-  gtk_expander_set_use_markup (GTK_EXPANDER (expander), TRUE);
+  widget = gtk_label_new (markup);
+  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
 
   align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), expander);
+  gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("S_afe"));
@@ -332,7 +331,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
   priv->restricted_rb = widget;
 
-  gtk_container_add (GTK_CONTAINER (expander), safety_level_hbox);
+  gtk_box_pack_start (GTK_BOX (section_vbox), safety_level_hbox, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
 
@@ -363,7 +362,6 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 5, _("CC Attribution"));
   gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 6, _("CC Attribution-ShareAlike"));
   gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 7, _("CC Attribution-NoDerivs"));
-  gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
   priv->license_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
