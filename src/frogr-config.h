@@ -93,6 +93,11 @@ void frogr_config_set_default_friend (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_default_friend (FrogrConfig *self);
 
+void frogr_config_set_default_license (FrogrConfig *self,
+                                       FspLicense license);
+
+FspLicense frogr_config_get_default_license (FrogrConfig *self);
+
 void frogr_config_set_default_safety_level (FrogrConfig *self,
                                             FspSafetyLevel safety_level);
 

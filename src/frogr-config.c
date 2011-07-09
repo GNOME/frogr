@@ -54,6 +54,7 @@ struct _FrogrConfigPrivate
   gboolean friend;
   gboolean show_in_search;
 
+  FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
@@ -168,6 +169,26 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
         {
           if (node->type != XML_ELEMENT_NODE)
             continue;
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "default-license"))
+            {
+              xmlChar *content = NULL;
+
+              content = xmlNodeGetContent (node);
+              if (content)
+                {
+                  gint code = 0;
+
+                  code = (gint) g_ascii_strtoll ((gchar *) content, NULL, 10);
+
+                  if (code < FSP_LICENSE_NONE || code >= FSP_LICENSE_LAST)
+                    priv->license = FSP_LICENSE_NONE;
+                  else
+                    priv->license = (FspLicense) code;
+
+                  xmlFree (content);
+                }
+            }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "default-content-type"))
             {
@@ -615,6 +636,9 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (node, "show-in-search", priv->show_in_search);
   xmlAddChild (root, node);
 
+  /* Default license */
+  _xml_add_int_child (root, "default-license", priv->license);
+
   /* Default content type and safety level */
   _xml_add_int_child (root, "default-content-type", priv->content_type);
   _xml_add_int_child (root, "default-safety-level", priv->safety_level);
@@ -876,6 +900,7 @@ frogr_config_init (FrogrConfig *self)
   priv->family = FALSE;
   priv->friend = FALSE;
   priv->show_in_search = TRUE;
+  priv->license = FSP_LICENSE_NONE;
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->tags_autocompletion = TRUE;
@@ -1099,6 +1124,34 @@ frogr_config_get_default_friend (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->friend;
+}
+
+void
+frogr_config_set_default_license (FrogrConfig *self,
+                                  FspLicense license)
+{
+  FrogrConfigPrivate * priv = NULL;
+
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+
+  /* Check out of bounds values */
+  if (license < FSP_LICENSE_NONE || license >= FSP_LICENSE_LAST)
+    priv->license = FSP_LICENSE_NONE;
+  else
+    priv->license = license;
+}
+
+FspLicense
+frogr_config_get_default_license (FrogrConfig *self)
+{
+  FrogrConfigPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->license;
 }
 
 void
