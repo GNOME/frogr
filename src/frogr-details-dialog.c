@@ -33,7 +33,7 @@
 /* Path relative to the application data dir */
 #define MPICTURES_IMAGE "/images/mpictures.png"
 
-#define DIALOG_MIN_WIDTH 640
+#define DIALOG_MIN_WIDTH 740
 #define DIALOG_MIN_HEIGHT 420
 
 #define PICTURE_WIDTH 200
@@ -264,40 +264,6 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
-  /* License type */
-
-#ifdef GTK_API_VERSION_3
-  section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-#else
-  section_vbox = gtk_vbox_new (FALSE, 6);
-#endif
-
-  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
-                                    _("License type"));
-  widget = gtk_label_new (markup);
-  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
-  g_free (markup);
-
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
-  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
-
-  widget = gtk_combo_box_text_new ();
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 0, _("Default (as specified in flickr)"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 1, _("None (All rights reserved)"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 2, _("CC Attribution-NonCommercial-ShareAlike"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 3, _("CC Attribution-NonCommercial"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 4, _("CC Attribution-NonCommercial-NoDerivs"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 5, _("CC Attribution"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 6, _("CC Attribution-ShareAlike"));
-  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 7, _("CC Attribution-NoDerivs"));
-  gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
-  priv->license_cb = widget;
-
-  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
-
   /* Content type */
 
 #ifdef GTK_API_VERSION_3
@@ -369,6 +335,40 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_container_add (GTK_CONTAINER (expander), safety_level_hbox);
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
+
+  /* License type */
+
+#ifdef GTK_API_VERSION_3
+  section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
+  section_vbox = gtk_vbox_new (FALSE, 6);
+#endif
+
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("License type"));
+  widget = gtk_label_new (markup);
+  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
+
+  widget = gtk_combo_box_text_new ();
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 0, _("Default (as specified in flickr)"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 1, _("None (All rights reserved)"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 2, _("CC Attribution-NonCommercial-ShareAlike"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 3, _("CC Attribution-NonCommercial"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 4, _("CC Attribution-NonCommercial-NoDerivs"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 5, _("CC Attribution"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 6, _("CC Attribution-ShareAlike"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 7, _("CC Attribution-NoDerivs"));
+  gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
+  priv->license_cb = widget;
+
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
   gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 6);
 
