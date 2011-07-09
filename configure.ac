@@ -115,7 +115,7 @@ else
    with_gtk=2.0
 fi
 
-GTK2_MIN_VERSION=2.14
+GTK2_MIN_VERSION=2.16
 case "$with_gtk" in
      2.0) GTK_MIN_VERSION=$GTK2_MIN_VERSION
           GTK_API_VERSION=2.0
