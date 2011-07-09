@@ -156,10 +156,10 @@ _create_widgets (FrogrDetailsDialog *self)
 
 #ifdef GTK_API_VERSION_3
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 #else
   hbox = gtk_hbox_new (FALSE, 0);
-  vbox = gtk_vbox_new (FALSE, 6);
+  vbox = gtk_vbox_new (FALSE, 0);
 #endif
 
   /* Left side (image, radio buttons, checkboxes...) */
