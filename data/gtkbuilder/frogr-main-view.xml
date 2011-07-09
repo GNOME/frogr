@@ -306,7 +306,6 @@
                 <property name="can_focus">False</property>
                 <property name="related_action">remove_pictures_action</property>
                 <property name="use_underline">True</property>
-                <property name="image">image1</property>
                 <property name="use_stock">True</property>
               </object>
             </child>
