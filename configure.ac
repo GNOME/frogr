@@ -115,8 +115,9 @@ else
    with_gtk=2.0
 fi
 
+GTK2_MIN_VERSION=2.16
 case "$with_gtk" in
-     2.0) GTK_MIN_VERSION=2.16
+     2.0) GTK_MIN_VERSION=$GTK2_MIN_VERSION
           GTK_API_VERSION=2.0
           ;;
      3.0) GTK_MIN_VERSION=3.0
@@ -135,7 +136,7 @@ if test "x$with_gtk" = "x3.0"; then
       GTK_CFLAGS=$GTK3_CFLAGS
       GTK_LIBS=$GTK3_LIBS
    else
-      GTK_MIN_VERSION=2.14
+      GTK_MIN_VERSION=$GTK2_MIN_VERSION
       GTK_API_VERSION=2.0
       with_gtk=2.0
    fi
