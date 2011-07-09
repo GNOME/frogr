@@ -55,6 +55,7 @@ typedef struct _FrogrDetailsDialogPrivate {
   GtkWidget *friend_cb;
   GtkWidget *family_cb;
   GtkWidget *show_in_search_cb;
+  GtkWidget *license_cb;
   GtkWidget *photo_content_rb;
   GtkWidget *sshot_content_rb;
   GtkWidget *other_content_rb;
@@ -260,6 +261,40 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
   priv->show_in_search_cb = widget;
+
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
+
+  /* License type */
+
+#ifdef GTK_API_VERSION_3
+  section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
+  section_vbox = gtk_vbox_new (FALSE, 6);
+#endif
+
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("License type"));
+  widget = gtk_label_new (markup);
+  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
+
+  widget = gtk_combo_box_text_new ();
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 0, _("Default (as specified in flickr)"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 1, _("None (All rights reserved)"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 2, _("CC Attribution-NonCommercial-ShareAlike"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 3, _("CC Attribution-NonCommercial"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 4, _("CC Attribution-NonCommercial-NoDerivs"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 5, _("CC Attribution"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 6, _("CC Attribution-ShareAlike"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), 7, _("CC Attribution-NoDerivs"));
+  gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
+  priv->license_cb = widget;
+
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
@@ -724,6 +759,8 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   gboolean is_friend_val = FALSE;
   gboolean is_family_val = FALSE;
   gboolean show_in_search_val = FALSE;
+  gboolean license_inconsistent = FALSE;
+  FspLicense license_val = FSP_LICENSE_NONE;
   FspSafetyLevel safety_level_val = FSP_SAFETY_LEVEL_NONE;
   FspContentType content_type_val = FSP_CONTENT_TYPE_NONE;
 
@@ -738,6 +775,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   is_friend_val = frogr_picture_is_friend (picture);
   is_family_val = frogr_picture_is_family (picture);
   show_in_search_val = frogr_picture_show_in_search (picture);
+  license_val = frogr_picture_get_license (picture);
   safety_level_val = frogr_picture_get_safety_level (picture);
   content_type_val = frogr_picture_get_content_type (picture);
 
@@ -751,6 +789,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
       gboolean is_friend = FALSE;
       gboolean is_family = FALSE;
       gboolean show_in_search = FALSE;
+      FspLicense license = FSP_LICENSE_NONE;
       FspSafetyLevel safety_level = FSP_SAFETY_LEVEL_NONE;
       FspContentType content_type = FSP_CONTENT_TYPE_NONE;
 
@@ -770,6 +809,9 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
       is_friend = frogr_picture_is_friend (picture);
       is_family = frogr_picture_is_family (picture);
       show_in_search = frogr_picture_show_in_search (picture);
+
+      /* License */
+      license = frogr_picture_get_license (picture);
 
       /* Content type and safety level */
       safety_level = frogr_picture_get_safety_level (picture);
@@ -817,6 +859,12 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
           gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
                                               show_in_search_val != show_in_search);
         }
+
+      if (!license_inconsistent && license_val != license)
+        {
+          license_inconsistent = TRUE;
+        }
+
       if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb)))
         {
           gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb),
@@ -858,6 +906,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
       is_friend_val = is_friend;
       is_family_val = is_family;
       show_in_search_val = show_in_search;
+      license_val = license;
       content_type_val = content_type;
       safety_level_val = safety_level;
     }
@@ -892,6 +941,11 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
                                 is_family_val);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
                                 show_in_search_val);
+
+  if (license_inconsistent)
+    gtk_combo_box_set_active (GTK_COMBO_BOX (priv->license_cb), FSP_LICENSE_LAST + 1);
+  else
+    gtk_combo_box_set_active (GTK_COMBO_BOX (priv->license_cb), license_val + 1);
 
   if (content_type_val == FSP_CONTENT_TYPE_SCREENSHOT
       && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->sshot_content_rb)))
@@ -974,6 +1028,7 @@ _save_data (FrogrDetailsDialog *self)
   gboolean is_friend;
   gboolean is_family;
   gboolean show_in_search;
+  FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
   gboolean result = FALSE;
@@ -1011,6 +1066,10 @@ _save_data (FrogrDetailsDialog *self)
   show_in_search =
     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb));
 
+  /* License type (values in the combo are shifted +1) */
+  license = gtk_combo_box_get_active (GTK_COMBO_BOX (priv->license_cb)) - 1;
+
+  /* Content type */
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->photo_content_rb)))
     content_type = FSP_CONTENT_TYPE_PHOTO;
   else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->sshot_content_rb)))
@@ -1018,6 +1077,7 @@ _save_data (FrogrDetailsDialog *self)
   else
     content_type = FSP_CONTENT_TYPE_OTHER;
 
+  /* Safety level */
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->safe_rb)))
     safety_level = FSP_SAFETY_LEVEL_SAFE;
   else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->moderate_rb)))
@@ -1055,6 +1115,9 @@ _save_data (FrogrDetailsDialog *self)
             frogr_picture_set_family (picture, is_family);
           if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb)))
             frogr_picture_set_show_in_search (picture, show_in_search);
+
+          if (license >= FSP_LICENSE_NONE && license < FSP_LICENSE_LAST)
+            frogr_picture_set_license (picture, license);
 
           if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb))
               && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->sshot_content_rb))
@@ -1138,7 +1201,8 @@ _on_picture_button_clicked (GtkButton *button, gpointer data)
   g_list_free (uris_list);
 }
 
-static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
+static void
+_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (dialog);
 
