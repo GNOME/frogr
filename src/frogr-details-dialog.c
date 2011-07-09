@@ -90,7 +90,7 @@ enum {
 
 static const gchar *license_descriptions[] = {
   N_("Default (as specified in flickr)"),
-  N_("None (All rights reserved)"),
+  N_("All rights reserved"),
   N_("CC Attribution-NonCommercial-ShareAlike"),
   N_("CC Attribution-NonCommercial"),
   N_("CC Attribution-NonCommercial-NoDerivs"),
