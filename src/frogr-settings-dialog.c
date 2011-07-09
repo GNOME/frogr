@@ -45,6 +45,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *friend_cb;
   GtkWidget *family_cb;
   GtkWidget *show_in_search_cb;
+  GtkWidget *license_cb;
   GtkWidget *photo_content_rb;
   GtkWidget *sshot_content_rb;
   GtkWidget *other_content_rb;
@@ -71,6 +72,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean show_in_search;
   gboolean disable_tags_autocompletion;
   gboolean keep_file_extensions;
+  FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
@@ -103,6 +105,8 @@ static gboolean _save_data (FrogrSettingsDialog *self);
 static void _update_ui (FrogrSettingsDialog *self);
 
 static void _on_button_toggled (GtkToggleButton *button, gpointer data);
+
+static void _on_combo_changed (GtkComboBox *combo_box, gpointer data);
 
 static void _proxy_port_inserted_cb (GtkEditable *editable, gchar *new_text,
                                      gint new_text_length, gint *position,
@@ -146,6 +150,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *padding_hbox = NULL;
   GtkWidget *align = NULL;
   GtkWidget *label = NULL;
+  GtkWidget *combo = NULL;
   gchar *markup = NULL;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
@@ -264,6 +269,35 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                         FALSE, _("Restr_icted"), &priv->restricted_rb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+
+  /* License type */
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("Default License"));
+  gtk_label_set_markup (GTK_LABEL (label), markup);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 1);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+
+  combo = gtk_combo_box_text_new ();
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), 0, _("Default (as specified in flickr)"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), 1, _("None (All rights reserved)"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), 2, _("CC Attribution-NonCommercial-ShareAlike"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), 3, _("CC Attribution-NonCommercial"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), 4, _("CC Attribution-NonCommercial-NoDerivs"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), 5, _("CC Attribution"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), 6, _("CC Attribution-ShareAlike"));
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), 7, _("CC Attribution-NoDerivs"));
+  gtk_box_pack_start (GTK_BOX (vbox), combo, FALSE, FALSE, 0);
+  priv->license_cb = combo;
+
+  g_signal_connect (G_OBJECT (priv->license_cb), "changed",
+                    G_CALLBACK (_on_combo_changed),
+                    self);
 
   /* Misc */
 
@@ -457,6 +491,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->family_visibility = frogr_config_get_default_family (priv->config);
   priv->friend_visibility = frogr_config_get_default_friend (priv->config);
   priv->show_in_search = frogr_config_get_default_show_in_search (priv->config);
+  priv->license = frogr_config_get_default_license (priv->config);
   priv->content_type = frogr_config_get_default_content_type (priv->config);
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
   priv->disable_tags_autocompletion = !frogr_config_get_tags_autocompletion (priv->config);
@@ -498,6 +533,11 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
                                 priv->friend_visibility);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
                                 priv->show_in_search);
+
+  if (priv->license >= FSP_LICENSE_NONE && priv->license < FSP_LICENSE_LAST)
+    gtk_combo_box_set_active (GTK_COMBO_BOX (priv->license_cb), priv->license + 1);
+  else
+    gtk_combo_box_set_active (GTK_COMBO_BOX (priv->license_cb), FSP_LICENSE_NONE + 1);
 
   if (priv->content_type == FSP_CONTENT_TYPE_SCREENSHOT)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->sshot_content_rb), TRUE);
@@ -554,6 +594,7 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_friend (priv->config, priv->friend_visibility);
   frogr_config_set_default_show_in_search (priv->config, priv->show_in_search);
 
+  frogr_config_set_default_license (priv->config, priv->license);
   frogr_config_set_default_content_type (priv->config, priv->content_type);
   frogr_config_set_default_safety_level (priv->config, priv->safety_level);
 
@@ -727,6 +768,20 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
 }
 
 static void
+_on_combo_changed (GtkComboBox *combo_box, gpointer data)
+{
+  FrogrSettingsDialog *self = NULL;
+  FrogrSettingsDialogPrivate *priv = NULL;
+  gint active_id = 0;
+
+  self = FROGR_SETTINGS_DIALOG (data);
+  priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
+
+  active_id = gtk_combo_box_get_active (GTK_COMBO_BOX (priv->license_cb));
+  priv->license = (FspLicense) active_id - 1;
+}
+
+static void
 _proxy_port_inserted_cb (GtkEditable *editable, gchar *new_text,
                          gint new_text_length, gint *position,
                          gpointer data)
@@ -838,6 +893,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->friend_cb = NULL;
   priv->family_cb = NULL;
   priv->show_in_search_cb = NULL;
+  priv->license_cb = NULL;
   priv->photo_content_rb = NULL;
   priv->sshot_content_rb = NULL;
   priv->other_content_rb = NULL;
@@ -860,6 +916,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->family_visibility = FALSE;
   priv->friend_visibility = FALSE;
   priv->show_in_search = FALSE;
+  priv->license = FSP_LICENSE_NONE;
   priv->safety_level = FSP_SAFETY_LEVEL_NONE;
   priv->content_type = FSP_CONTENT_TYPE_NONE;
   priv->disable_tags_autocompletion = FALSE;
