@@ -61,6 +61,7 @@ struct _FrogrPictureLoaderPrivate
   gboolean family_visibility;
   gboolean friend_visibility;
   gboolean show_in_search;
+  FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
@@ -272,6 +273,7 @@ _load_next_picture_cb (GObject *object,
                                         priv->friend_visibility);
 
           frogr_picture_set_show_in_search (fpicture, priv->show_in_search);
+          frogr_picture_set_license (fpicture, priv->license);
           frogr_picture_set_content_type (fpicture, priv->content_type);
           frogr_picture_set_safety_level (fpicture, priv->safety_level);
           frogr_picture_set_pixbuf (fpicture, s_pixbuf);
@@ -420,6 +422,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   priv->family_visibility = frogr_config_get_default_family (config);
   priv->friend_visibility = frogr_config_get_default_friend (config);
   priv->show_in_search = frogr_config_get_default_show_in_search (config);
+  priv->license = frogr_config_get_default_license (config);
   priv->safety_level = frogr_config_get_default_safety_level (config);
   priv->content_type = frogr_config_get_default_content_type (config);
 
