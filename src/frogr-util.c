@@ -105,44 +105,6 @@ frogr_util_get_locale_dir (void)
   return (const gchar *) locale_dir;
 }
 
-void
-frogr_util_open_uri (const gchar *uri)
-{
-  gchar *command = NULL;
-  GError *error = NULL;
-
-  /* Early return */
-  if (!uri)
-    return;
-
-#ifdef MAC_INTEGRATION
-  /* In MacOSX neither gnome-open nor gtk_show_uri() will work */
-  command = g_strdup_printf ("open %s", uri);
-  _spawn_command (command);
-#else
-#ifdef GTK_API_VERSION_3
-  /* For GTK3 we dare to do it The Right Way (tm). */
-  gtk_show_uri (NULL, uri, GDK_CURRENT_TIME, &error);
-#else
-  /* I found some weird behaviours using gtk_show_uri() in GTK2, so
-     that's why we just use the gnome-open command instead.  If
-     gnome-open fails, then we fallback to gtk_show_uri(). */
-  command = g_strdup_printf ("gnome-open %s", uri);
-  if (!_spawn_command (command))
-    gtk_show_uri (NULL, uri, GDK_CURRENT_TIME, &error);
-#endif /* ifdef GTK_API_VERSION_3 */
-#endif /* ifdef MAC_INTEGRATION */
-
-  if (command)
-    g_free (command);
-
-  if (error != NULL)
-    {
-      DEBUG ("Error opening URI %s: %s", uri, error->message);
-      g_error_free (error);
-    }
-}
-
 gchar *
 _get_uris_string_from_list (GList *uris_list)
 {
@@ -166,17 +128,15 @@ _get_uris_string_from_list (GList *uris_list)
   return uris_str;
 }
 
-void
-frogr_util_open_images_in_viewer (GList *uris_list)
+static void
+_open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 {
-  GAppInfo *app_info = NULL;
   GError *error = NULL;
 
   /* Early return */
   if (!uris_list)
     return;
 
-  app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
   if (!app_info || !g_app_info_launch_uris (app_info, uris_list, NULL, &error))
     {
       /* The default app didn't succeed, so try 'gnome-open' / 'open' */
@@ -194,15 +154,50 @@ frogr_util_open_images_in_viewer (GList *uris_list)
 #endif
       _spawn_command (command);
 
+      if (error)
+        {
+          DEBUG ("Error opening URI(s) %s: %s", uris, error->message);
+          g_error_free (error);
+        }
+
       g_free (command);
       g_free (uris);
     }
+}
 
-  if (error)
-    {
-      DEBUG ("Error opening %d images: %s", g_list_length (uris_list), error->message);
-      g_error_free (error);
-    }
+void
+frogr_util_open_uri (const gchar *uri)
+{
+  GAppInfo *app_info = NULL;
+  GList *uris_list = NULL;
+
+  /* Early return */
+  if (!uri)
+    return;
+
+  uris_list = g_list_append (uris_list, (gchar *) uri);
+  app_info = g_app_info_get_default_for_uri_scheme ("http");
+
+  _open_uris_with_app_info (uris_list, app_info);
+
+  if (app_info)
+    g_object_unref (app_info);
+
+  g_list_free (uris_list);
+}
+
+void
+frogr_util_open_images_in_viewer (GList *uris_list)
+{
+  GAppInfo *app_info = NULL;
+
+  /* Early return */
+  if (!uris_list)
+    return;
+
+  app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
+
+  _open_uris_with_app_info (uris_list, app_info);
 
   if (app_info)
     g_object_unref (app_info);
