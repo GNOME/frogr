@@ -169,17 +169,15 @@ _get_uris_string_from_list (GList *uris_list)
 void
 frogr_util_open_images_in_viewer (GList *uris_list)
 {
-  static GAppInfo *app_info = NULL;
+  GAppInfo *app_info = NULL;
   GError *error = NULL;
 
   /* Early return */
   if (!uris_list)
     return;
 
-  if (!app_info)
-    app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
-
-  if (!g_app_info_launch_uris (app_info, uris_list, NULL, &error))
+  app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
+  if (!app_info || !g_app_info_launch_uris (app_info, uris_list, NULL, &error))
     {
       /* The default app didn't succeed, so try 'gnome-open' / 'open' */
 
@@ -205,6 +203,9 @@ frogr_util_open_images_in_viewer (GList *uris_list)
       DEBUG ("Error opening %d images: %s", g_list_length (uris_list), error->message);
       g_error_free (error);
     }
+
+  if (app_info)
+    g_object_unref (app_info);
 }
 
 static void
