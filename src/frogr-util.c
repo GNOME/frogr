@@ -38,7 +38,7 @@ _spawn_command (const gchar* cmd)
 
   if (!g_spawn_command_line_async (cmd, &error))
     {
-      if (error != NULL)
+      if (error)
         {
           DEBUG ("Error spawning command '%s': %s", cmd, error->message);
           g_error_free (error);
@@ -106,30 +106,30 @@ frogr_util_get_locale_dir (void)
 }
 
 void
-frogr_util_open_uri (const gchar *url)
+frogr_util_open_uri (const gchar *uri)
 {
   gchar *command = NULL;
   GError *error = NULL;
 
   /* Early return */
-  if (url == NULL)
+  if (!uri)
     return;
 
 #ifdef MAC_INTEGRATION
   /* In MacOSX neither gnome-open nor gtk_show_uri() will work */
-  command = g_strdup_printf ("open %s", url);
+  command = g_strdup_printf ("open %s", uri);
   _spawn_command (command);
 #else
 #ifdef GTK_API_VERSION_3
   /* For GTK3 we dare to do it The Right Way (tm). */
-  gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &error);
+  gtk_show_uri (NULL, uri, GDK_CURRENT_TIME, &error);
 #else
   /* I found some weird behaviours using gtk_show_uri() in GTK2, so
      that's why we just use the gnome-open command instead.  If
      gnome-open fails, then we fallback to gtk_show_uri(). */
-  command = g_strdup_printf ("gnome-open %s", url);
+  command = g_strdup_printf ("gnome-open %s", uri);
   if (!_spawn_command (command))
-    gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &error);
+    gtk_show_uri (NULL, uri, GDK_CURRENT_TIME, &error);
 #endif /* ifdef GTK_API_VERSION_3 */
 #endif /* ifdef MAC_INTEGRATION */
 
@@ -138,7 +138,7 @@ frogr_util_open_uri (const gchar *url)
 
   if (error != NULL)
     {
-      DEBUG ("Error opening URI %s: %s", url, error->message);
+      DEBUG ("Error opening URI %s: %s", uri, error->message);
       g_error_free (error);
     }
 }
@@ -170,20 +170,22 @@ void
 frogr_util_open_images_in_viewer (GList *uris_list)
 {
   static GAppInfo *app_info = NULL;
+  GError *error = NULL;
 
   /* Early return */
-  if (uris_list == NULL)
+  if (!uris_list)
     return;
 
   if (!app_info)
     app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
 
-  if (!g_app_info_launch_uris (app_info, uris_list, NULL, NULL))
+  if (!g_app_info_launch_uris (app_info, uris_list, NULL, &error))
     {
+      /* The default app didn't succeed, so try 'gnome-open' / 'open' */
+
       gchar *command = NULL;
       gchar *uris = NULL;
 
-      /* The default app didn't succeed, so try 'gnome-open' */
       uris = _get_uris_string_from_list (uris_list);
 
 #ifdef MAC_INTEGRATION
@@ -196,6 +198,12 @@ frogr_util_open_images_in_viewer (GList *uris_list)
 
       g_free (command);
       g_free (uris);
+    }
+
+  if (error)
+    {
+      DEBUG ("Error opening %d images: %s", g_list_length (uris_list), error->message);
+      g_error_free (error);
     }
 }
 

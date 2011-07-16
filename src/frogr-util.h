@@ -29,7 +29,7 @@ const gchar *frogr_util_get_icons_dir (void);
 
 const gchar *frogr_util_get_locale_dir (void);
 
-void frogr_util_open_uri (const gchar *url);
+void frogr_util_open_uri (const gchar *uri);
 
 void frogr_util_open_images_in_viewer (GList *uris_list);
 
