@@ -45,6 +45,7 @@
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
 #define DEFAULT_TIMEOUT 50
+#define MAX_AUTH_TIMEOUT 30000
 
 #define FROGR_CONTROLLER_GET_PRIVATE(object)                    \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
@@ -70,6 +71,8 @@ struct _FrogrControllerPrivate
   /* We use this booleans as flags */
   gboolean app_running;
   gboolean uploading_picture;
+  gboolean fetching_auth_url;
+  gboolean fetching_auth_token;
   gboolean fetching_account_info;
   gboolean fetching_account_extra_info;
   gboolean fetching_sets;
@@ -115,6 +118,8 @@ typedef struct {
 
 typedef enum {
   FETCHING_NOTHING,
+  FETCHING_AUTH_URL,
+  FETCHING_AUTH_TOKEN,
   FETCHING_ACCOUNT_INFO,
   FETCHING_ACCOUNT_EXTRA_INFO,
   FETCHING_SETS,
@@ -140,6 +145,8 @@ static void _auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, g
 static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
 
 static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data);
+
+static gboolean _cancel_authorization_on_timeout (gpointer data);
 
 static void _upload_picture (FrogrController *self, FrogrPicture *picture,
                              FrogrPictureUploadedCallback picture_uploaded_cb,
@@ -409,18 +416,7 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   gchar *auth_url = NULL;
 
   auth_url = fsp_session_get_auth_url_finish (priv->session, res, &error);
-  if (error != NULL)
-    {
-      _notify_error_to_user (self, error);
-      DEBUG ("Error getting auth URL: %s", error->message);
-      g_error_free (error);
-      return;
-    }
-
-  DEBUG ("Auth URL: %s", auth_url ? auth_url : "No URL got");
-
-  /* Open url in the default application */
-  if (auth_url != NULL)
+  if (auth_url != NULL && error == NULL)
     {
       GtkWindow *window = NULL;
 
@@ -430,7 +426,19 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
       /* Run the auth confirmation dialog */
       window = frogr_main_view_get_window (priv->mainview);
       frogr_auth_dialog_show (window, CONFIRM_AUTHORIZATION);
+
+      DEBUG ("Auth URL: %s", auth_url);
     }
+
+  if (error != NULL)
+    {
+      _notify_error_to_user (self, error);
+      DEBUG ("Error getting auth URL: %s", error->message);
+      g_error_free (error);
+    }
+
+  frogr_main_view_hide_progress (priv->mainview);
+  priv->fetching_auth_url = FALSE;
 }
 
 static void
@@ -438,11 +446,13 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
   FspDataAuthToken *auth_token = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   auth_token = fsp_session_complete_auth_finish (session, result, &error);
   if (auth_token)
@@ -472,6 +482,29 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
       DEBUG ("Authorization failed: %s", error->message);
       g_error_free (error);
     }
+
+  frogr_main_view_hide_progress (priv->mainview);
+  priv->fetching_auth_token = FALSE;
+}
+
+static gboolean
+_cancel_authorization_on_timeout (gpointer data)
+{
+  FrogrController *self = FROGR_CONTROLLER (data);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  if (priv->fetching_auth_url || priv->fetching_auth_token)
+    {
+      GtkWindow *window = NULL;
+
+      frogr_controller_cancel_ongoing_request (self);
+      frogr_main_view_hide_progress (priv->mainview);
+
+      window = frogr_main_view_get_window (priv->mainview);
+      _show_auth_failed_dialog (window, _("Authorization failed (timed out)\nPlease try again"));
+    }
+
+  return FALSE;
 }
 
 static void
@@ -1533,6 +1566,16 @@ _show_progress_on_idle (gpointer data)
   activity = GPOINTER_TO_INT (data);
   switch (activity)
     {
+    case FETCHING_AUTH_URL:
+      text = _("Retrieving data for authorization…");
+      show_dialog = priv->fetching_auth_url;
+      break;
+
+    case FETCHING_AUTH_TOKEN:
+      text = _("Finishing authorization…");
+      show_dialog = priv->fetching_auth_token;
+      break;
+
     case FETCHING_SETS:
       text = _("Retrieving list of sets…");
       show_dialog = priv->fetching_tags;
@@ -1552,9 +1595,14 @@ _show_progress_on_idle (gpointer data)
       text = NULL;
     }
 
-  /* Actually show the dialog, if needed */
+  /* Actually show the dialog and keep the source */
   if (show_dialog)
-    frogr_main_view_show_progress (priv->mainview, text);
+    {
+      frogr_main_view_show_progress (priv->mainview, text);
+      frogr_main_view_pulse_progress (priv->mainview);
+
+      return TRUE;
+    }
 
   return FALSE;
 }
@@ -1575,10 +1623,8 @@ _show_details_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
-    {
-      frogr_main_view_pulse_progress (mainview);
-      return TRUE;
-    }
+    return TRUE;
+
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
@@ -1607,10 +1653,8 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
-    {
-      frogr_main_view_pulse_progress (mainview);
       return TRUE;
-    }
+
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
@@ -1639,10 +1683,8 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_sets)
-    {
-      frogr_main_view_pulse_progress (mainview);
       return TRUE;
-    }
+
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
@@ -1670,10 +1712,8 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_sets)
-    {
-      frogr_main_view_pulse_progress (mainview);
       return TRUE;
-    }
+
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
@@ -1704,10 +1744,8 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_groups)
-    {
-      frogr_main_view_pulse_progress (mainview);
       return TRUE;
-    }
+
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
@@ -1865,9 +1903,12 @@ frogr_controller_init (FrogrController *self)
   priv->cancellable = NULL;
   priv->app_running = FALSE;
   priv->uploading_picture = FALSE;
+  priv->fetching_auth_url = FALSE;
+  priv->fetching_auth_token = FALSE;
+  priv->fetching_account_info = FALSE;
+  priv->fetching_account_extra_info = FALSE;
   priv->fetching_sets = FALSE;
   priv->fetching_groups = FALSE;
-  priv->fetching_account_extra_info = FALSE;
   priv->fetching_tags = FALSE;
   priv->setting_license = FALSE;
   priv->adding_to_set = FALSE;
@@ -2306,8 +2347,13 @@ frogr_controller_open_auth_url (FrogrController *self)
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  _enable_cancellable (self, FALSE);
-  fsp_session_get_auth_url_async (priv->session, NULL, _get_auth_url_cb, self);
+  priv->fetching_auth_url = TRUE;
+  _enable_cancellable (self, TRUE);
+
+  fsp_session_get_auth_url_async (priv->session, priv->cancellable, _get_auth_url_cb, self);
+
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_URL));
+  gdk_threads_add_timeout (MAX_AUTH_TIMEOUT, (GSourceFunc) _cancel_authorization_on_timeout, self);
 }
 
 void
@@ -2317,8 +2363,13 @@ frogr_controller_complete_auth (FrogrController *self)
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  _enable_cancellable (self, FALSE);
-  fsp_session_complete_auth_async (priv->session, NULL, _complete_auth_cb, self);
+  priv->fetching_auth_token = TRUE;
+  _enable_cancellable (self, TRUE);
+
+  fsp_session_complete_auth_async (priv->session, priv->cancellable, _complete_auth_cb, self);
+
+  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_TOKEN));
+  gdk_threads_add_timeout (MAX_AUTH_TIMEOUT, (GSourceFunc) _cancel_authorization_on_timeout, self);
 }
 
 gboolean
