@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-07-09 11:36+0000\n"
-"PO-Revision-Date: 2011-07-13 21:08+0100\n"
+"POT-Creation-Date: 2011-07-17 09:19+0000\n"
+"PO-Revision-Date: 2011-07-17 11:20+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@freenet.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -84,11 +84,11 @@ msgstr ""
 "Bitte klicken Sie auf den Knopf, um %s zu verwenden, sobald Sie es für Ihr "
 "Flickr-Konto legitimiert haben."
 
-#: ../src/frogr-controller.c:256
-msgid "Process cancelled by the user"
-msgstr "Vorgang wurde vom Benutzer abgebrochen"
+#: ../src/frogr-controller.c:263
+msgid "Process cancelled"
+msgstr "Vorgang abgebrochen"
 
-#: ../src/frogr-controller.c:261
+#: ../src/frogr-controller.c:268
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -96,7 +96,7 @@ msgstr ""
 "Verbindungsfehler:\n"
 "Netzwerk nicht verfügbar"
 
-#: ../src/frogr-controller.c:266
+#: ../src/frogr-controller.c:273
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -104,7 +104,7 @@ msgstr ""
 "Verbindungsfehler:\n"
 "Falsche Anfrage"
 
-#: ../src/frogr-controller.c:271
+#: ../src/frogr-controller.c:278
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -112,7 +112,7 @@ msgstr ""
 "Verbindungsfehler:\n"
 "Serverfehler"
 
-#: ../src/frogr-controller.c:276
+#: ../src/frogr-controller.c:283
 msgid ""
 "Error uploading picture:\n"
 "File invalid"
@@ -120,7 +120,7 @@ msgstr ""
 "Fehler beim Hochladen des Bildes:\n"
 "Datei ist ungültig"
 
-#: ../src/frogr-controller.c:281
+#: ../src/frogr-controller.c:288
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -128,7 +128,7 @@ msgstr ""
 "Fehler beim Hochladen des Bildes:\n"
 "Kontingent wurde erreicht"
 
-#: ../src/frogr-controller.c:286
+#: ../src/frogr-controller.c:293
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -136,7 +136,7 @@ msgstr ""
 "Fehler:\n"
 "Foto nicht gefunden"
 
-#: ../src/frogr-controller.c:291
+#: ../src/frogr-controller.c:298
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -144,7 +144,7 @@ msgstr ""
 "Fehler:\n"
 "Foto ist bereits im Album vorhanden"
 
-#: ../src/frogr-controller.c:296
+#: ../src/frogr-controller.c:303
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -152,7 +152,7 @@ msgstr ""
 "Fehler:\n"
 "Foto ist bereits in Gruppe vorhanden"
 
-#: ../src/frogr-controller.c:301
+#: ../src/frogr-controller.c:308
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -160,7 +160,7 @@ msgstr ""
 "Fehler:\n"
 "Foto ist bereits in der maximalen Gruppenanzahl enthalten"
 
-#: ../src/frogr-controller.c:306
+#: ../src/frogr-controller.c:313
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -168,7 +168,7 @@ msgstr ""
 "Fehler:\n"
 "Gruppenlimit wurde bereits erreicht"
 
-#: ../src/frogr-controller.c:311
+#: ../src/frogr-controller.c:318
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -176,7 +176,7 @@ msgstr ""
 "Fehler:\n"
 "Foto wurde zur Warteschlange der Gruppe hinzugefügt"
 
-#: ../src/frogr-controller.c:316
+#: ../src/frogr-controller.c:323
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -184,7 +184,7 @@ msgstr ""
 "Fehler:\n"
 "Foto wurde bereits zur Warteschlange der Gruppe hinzugefügt"
 
-#: ../src/frogr-controller.c:321
+#: ../src/frogr-controller.c:328
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -192,7 +192,7 @@ msgstr ""
 "Fehler:\n"
 "Inhalt ist für diese Gruppe nicht erlaubt"
 
-#: ../src/frogr-controller.c:326
+#: ../src/frogr-controller.c:333
 #, c-format
 msgid ""
 "Authorization failed.\n"
@@ -201,7 +201,7 @@ msgstr ""
 "Legitimierung ist fehlgeschlagen.\n"
 "Bitte versuchen Sie es erneut"
 
-#: ../src/frogr-controller.c:332
+#: ../src/frogr-controller.c:339
 #, c-format
 msgid ""
 "Error\n"
@@ -212,7 +212,7 @@ msgstr ""
 "%s wurde nicht ausreichend legitimiert, um Bilder zu Flickr hochzuladen.\n"
 "Bitte legitimieren Sie erneut"
 
-#: ../src/frogr-controller.c:338
+#: ../src/frogr-controller.c:345
 #, c-format
 msgid ""
 "Error:\n"
@@ -222,48 +222,64 @@ msgstr ""
 "Dienst ist nicht verfügbar"
 
 #. General error: just dump the raw error description
-#: ../src/frogr-controller.c:344
+#: ../src/frogr-controller.c:351
 #, c-format
 msgid "An error happened while uploading a picture: %s."
 msgstr "Ein Fehler trat beim Hochladen eines Bildes auf: %s."
 
-#: ../src/frogr-controller.c:975
+#: ../src/frogr-controller.c:504
+msgid ""
+"Authorization failed (timed out)\n"
+"Please try again"
+msgstr ""
+"Legitimierung ist fehlgeschlagen (Zeitüberschreitung).\n"
+"Bitte versuchen Sie es erneut"
+
+#: ../src/frogr-controller.c:1008
 msgid "Setting license for picture…"
 msgstr "Lizenz des Bildes festlegen …"
 
-#: ../src/frogr-controller.c:998
+#: ../src/frogr-controller.c:1031
 msgid "Creating new photosets…"
 msgstr "Neue Alben werden erstellt …"
 
-#: ../src/frogr-controller.c:1022
+#: ../src/frogr-controller.c:1055
 msgid "Adding picture to photosets…"
 msgstr "Bild wird zu Alben hinzugefügt …"
 
-#: ../src/frogr-controller.c:1044
+#: ../src/frogr-controller.c:1077
 msgid "Adding picture to groups…"
 msgstr "Bild wird zu Gruppen hinzugefügt …"
 
-#: ../src/frogr-controller.c:1537
+#: ../src/frogr-controller.c:1570
+msgid "Retrieving data for authorization…"
+msgstr "Legitimierungsdaten werden geholt …"
+
+#: ../src/frogr-controller.c:1575
+msgid "Finishing authorization…"
+msgstr "Legitimierung wird abgeschlossen …"
+
+#: ../src/frogr-controller.c:1580
 msgid "Retrieving list of sets…"
 msgstr "Albenliste wird geholt …"
 
-#: ../src/frogr-controller.c:1542
+#: ../src/frogr-controller.c:1585
 msgid "Retrieving list of groups…"
 msgstr "Gruppenliste wird geholt …"
 
-#: ../src/frogr-controller.c:1547
+#: ../src/frogr-controller.c:1590
 msgid "Retrieving list of tags…"
 msgstr "Markierungsliste wird geholt …"
 
-#: ../src/frogr-controller.c:1686
+#: ../src/frogr-controller.c:1726
 msgid "No sets found"
 msgstr "Keine Alben gefunden"
 
-#: ../src/frogr-controller.c:1720
+#: ../src/frogr-controller.c:1758
 msgid "No groups found"
 msgstr "Keine Gruppen gefunden"
 
-#: ../src/frogr-controller.c:2379
+#: ../src/frogr-controller.c:2430
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -419,29 +435,29 @@ msgid "Edit Picture Details"
 msgstr "Bilddetails bearbeiten"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:670
+#: ../src/frogr-main-view.c:671
 #, c-format
 msgid "Taken: %s"
 msgstr "Aufnahmedatum: %s"
 
-#: ../src/frogr-main-view.c:675
+#: ../src/frogr-main-view.c:676
 #, c-format
 msgid "File size: %s"
 msgstr "Dateigröße: %s"
 
-#: ../src/frogr-main-view.c:864
+#: ../src/frogr-main-view.c:865
 msgid "Select a Picture"
 msgstr "Ein Bild auswählen"
 
-#: ../src/frogr-main-view.c:890
+#: ../src/frogr-main-view.c:891
 msgid "images"
 msgstr "Bilder"
 
-#: ../src/frogr-main-view.c:911
+#: ../src/frogr-main-view.c:912
 msgid "You need to select some pictures first"
 msgstr "Sie müssen zunächst einige Bilder auswählen"
 
-#: ../src/frogr-main-view.c:1063
+#: ../src/frogr-main-view.c:1064
 #, c-format
 msgid ""
 "Could not display help for Frogr:\n"
@@ -450,17 +466,17 @@ msgstr ""
 "Hilfe zu Frogr konnte nicht angezeigt werden:\n"
 "%s"
 
-#: ../src/frogr-main-view.c:1284
+#: ../src/frogr-main-view.c:1285
 msgid "Not connected to flickr"
 msgstr "Nicht mit Flickr verbunden"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:1294
+#: ../src/frogr-main-view.c:1295
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Verbunden als %s%s"
 
-#: ../src/frogr-main-view.c:1295
+#: ../src/frogr-main-view.c:1296
 msgid " (PRO account)"
 msgstr " (PRO-Konto)"
 
@@ -469,7 +485,7 @@ msgstr " (PRO-Konto)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:1319
+#: ../src/frogr-main-view.c:1320
 #, c-format
 msgid " - %s / %s remaining for the current month"
 msgstr " - %s / %s verbleibend für den aktuellen Monat"
@@ -477,7 +493,7 @@ msgstr " - %s / %s verbleibend für den aktuellen Monat"
 #. Will show in the status bar the amount of data (in KB, MB or
 #. GB) that would be uploaded as the sum of the sizes for every
 #. picture currently loadad in the application
-#: ../src/frogr-main-view.c:1344
+#: ../src/frogr-main-view.c:1345
 #, c-format
 msgid " - %s to be uploaded"
 msgstr " - %s hoch zu laden"
