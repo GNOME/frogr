@@ -253,7 +253,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
   switch (error->code)
     {
     case FSP_ERROR_CANCELLED:
-      msg = g_strdup (_("Process cancelled by the user"));
+      msg = g_strdup (_("Process cancelled"));
       error_function = NULL; /* Don't notify the user about this */
       break;
 
@@ -323,7 +323,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
       break;
 
     case FSP_ERROR_AUTHENTICATION_FAILED:
-      msg = g_strdup_printf (_("Authorization failed.\n" "Please try again"));
+      msg = g_strdup_printf (_("Authorization failed.\nPlease try again"));
       error_function = _show_auth_failed_dialog;
       break;
 
