@@ -44,8 +44,8 @@
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
-#define DEFAULT_TIMEOUT 50
-#define MAX_AUTH_TIMEOUT 30000
+#define DEFAULT_TIMEOUT 100
+#define MAX_AUTH_TIMEOUT 60000
 
 #define FROGR_CONTROLLER_GET_PRIVATE(object)                    \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
@@ -2352,8 +2352,9 @@ frogr_controller_open_auth_url (FrogrController *self)
   _enable_cancellable (self, TRUE);
 
   fsp_session_get_auth_url_async (priv->session, priv->cancellable, _get_auth_url_cb, self);
-
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_URL));
+
+  /* Make sure we show proper feedback if connection is too slow */
   gdk_threads_add_timeout (MAX_AUTH_TIMEOUT, (GSourceFunc) _cancel_authorization_on_timeout, self);
 }
 
@@ -2368,8 +2369,9 @@ frogr_controller_complete_auth (FrogrController *self)
   _enable_cancellable (self, TRUE);
 
   fsp_session_complete_auth_async (priv->session, priv->cancellable, _complete_auth_cb, self);
-
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_TOKEN));
+
+  /* Make sure we show proper feedback if connection is too slow */
   gdk_threads_add_timeout (MAX_AUTH_TIMEOUT, (GSourceFunc) _cancel_authorization_on_timeout, self);
 }
 
