@@ -175,7 +175,8 @@ frogr_util_open_uri (const gchar *uri)
   if (!uri)
     return;
 
-  uris_list = g_list_append (uris_list, (gchar *) uri);
+  /* Dupped uris in the GList must NOT be freed here */
+  uris_list = g_list_append (uris_list, g_strdup (uri));
   app_info = g_app_info_get_default_for_uri_scheme ("http");
 
   _open_uris_with_app_info (uris_list, app_info);

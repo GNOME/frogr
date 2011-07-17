@@ -1198,11 +1198,16 @@ _on_picture_button_clicked (GtkButton *button, gpointer data)
   FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
   GSList *current_pic = NULL;
   GList *uris_list = NULL;
+  FrogrPicture *picture = NULL;
+  gchar *fileuri = NULL;
 
   for (current_pic = priv->pictures; current_pic; current_pic = g_slist_next (current_pic))
     {
-      FrogrPicture *picture = FROGR_PICTURE (current_pic->data);
-      uris_list = g_list_append (uris_list, (gchar*) frogr_picture_get_fileuri (picture));
+      picture = FROGR_PICTURE (current_pic->data);
+      fileuri = g_strdup (frogr_picture_get_fileuri (picture));
+
+      /* Dupped uris in the GList must NOT be freed here */
+      uris_list = g_list_append (uris_list, fileuri);
     }
 
   frogr_util_open_images_in_viewer (uris_list);
