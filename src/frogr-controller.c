@@ -969,18 +969,18 @@ _notify_setting_license (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
   const gchar *picture_title = NULL;
   FspLicense license = FSP_LICENSE_NONE;
-  gchar *progress_text = NULL;
+  gchar *debug_msg = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   frogr_main_view_set_progress_description(priv->mainview, _("Setting license for picture…"));
 
   picture_title = frogr_picture_get_title (picture);
   license = frogr_picture_get_license (picture);
-  progress_text = g_strdup_printf ("Adding license %d for picture %s…",
-                                   license, picture_title);
-  DEBUG ("%s", progress_text);
+  debug_msg = g_strdup_printf ("Setting license %d for picture %s…",
+                               license, picture_title);
+  DEBUG ("%s", debug_msg);
 
-  g_free (progress_text);
+  g_free (debug_msg);
 }
 
 static void
@@ -992,7 +992,7 @@ _notify_creating_set (FrogrController *self,
   const gchar *picture_title = NULL;
   const gchar *set_title = NULL;
   const gchar *set_desc = NULL;
-  gchar *progress_text = NULL;
+  gchar *debug_msg = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   frogr_main_view_set_progress_description (priv->mainview, _("Creating new photosets…"));
@@ -1000,12 +1000,12 @@ _notify_creating_set (FrogrController *self,
   picture_title = frogr_picture_get_title (picture);
   set_title = frogr_photoset_get_title (set);
   set_desc = frogr_photoset_get_description (set);
-  progress_text = g_strdup_printf ("Creating new photoset for picture %s. "
-                                   "Title: %s / Description: %s",
-                                   picture_title, set_title, set_desc);
-  DEBUG ("%s", progress_text);
+  debug_msg = g_strdup_printf ("Creating new photoset for picture %s. "
+                               "Title: %s / Description: %s",
+                               picture_title, set_title, set_desc);
+  DEBUG ("%s", debug_msg);
 
-  g_free (progress_text);
+  g_free (debug_msg);
 }
 
 static void
@@ -1016,18 +1016,18 @@ _notify_adding_to_set (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
   const gchar *picture_title = NULL;
   const gchar *set_title = NULL;
-  gchar *progress_text = NULL;
+  gchar *debug_msg = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   frogr_main_view_set_progress_description(priv->mainview, _("Adding picture to photosets…"));
 
   picture_title = frogr_picture_get_title (picture);
   set_title = frogr_photoset_get_title (set);
-  progress_text = g_strdup_printf ("Adding picture %s to photoset %s…",
-                                   picture_title, set_title);
-  DEBUG ("%s", progress_text);
+  debug_msg = g_strdup_printf ("Adding picture %s to photoset %s…",
+                               picture_title, set_title);
+  DEBUG ("%s", debug_msg);
 
-  g_free (progress_text);
+  g_free (debug_msg);
 }
 
 static void
@@ -1038,18 +1038,18 @@ _notify_adding_to_group (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
   const gchar *picture_title = NULL;
   const gchar *group_name = NULL;
-  gchar *progress_text = NULL;
+  gchar *debug_msg = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   frogr_main_view_set_progress_description(priv->mainview, _("Adding picture to groups…"));
 
   picture_title = frogr_picture_get_title (picture);
   group_name = frogr_group_get_name (group);
-  progress_text = g_strdup_printf ("Adding picture %s to group %s…",
-                                   picture_title, group_name);
-  DEBUG ("%s", progress_text);
+  debug_msg = g_strdup_printf ("Adding picture %s to group %s…",
+                               picture_title, group_name);
+  DEBUG ("%s", debug_msg);
 
-  g_free (progress_text);
+  g_free (debug_msg);
 }
 
 static void
