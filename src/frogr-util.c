@@ -168,7 +168,7 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 void
 frogr_util_open_uri (const gchar *uri)
 {
-  GAppInfo *app_info = NULL;
+  static GAppInfo *app_info = NULL;
   GList *uris_list = NULL;
 
   /* Early return */
@@ -177,12 +177,11 @@ frogr_util_open_uri (const gchar *uri)
 
   /* Dupped uris in the GList must NOT be freed here */
   uris_list = g_list_append (uris_list, g_strdup (uri));
-  app_info = g_app_info_get_default_for_uri_scheme ("http");
+
+  if (app_info == NULL)
+    app_info = g_app_info_get_default_for_uri_scheme ("http");
 
   _open_uris_with_app_info (uris_list, app_info);
-
-  if (app_info)
-    g_object_unref (app_info);
 
   g_list_free (uris_list);
 }
@@ -190,18 +189,16 @@ frogr_util_open_uri (const gchar *uri)
 void
 frogr_util_open_images_in_viewer (GList *uris_list)
 {
-  GAppInfo *app_info = NULL;
+  static GAppInfo *app_info = NULL;
 
   /* Early return */
   if (!uris_list)
     return;
 
-  app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
+  if (app_info == NULL)
+    app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
 
   _open_uris_with_app_info (uris_list, app_info);
-
-  if (app_info)
-    g_object_unref (app_info);
 }
 
 static void
