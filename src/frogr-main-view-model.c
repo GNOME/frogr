@@ -108,8 +108,8 @@ _compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
       str1 = g_value_get_string (&value1);
       str2 = g_value_get_string (&value2);
 
-      str1_cf = str1 ? g_utf8_casefold (str1, -1) : g_strdup ("");
-      str2_cf = str1 ? g_utf8_casefold (str2, -1) : g_strdup ("");
+      str1_cf = g_utf8_casefold (str1 ? str1 : "", -1);
+      str2_cf = g_utf8_casefold (str2 ? str2 : "", -1);
 
       result = g_utf8_collate (str1_cf, str2_cf);
 
