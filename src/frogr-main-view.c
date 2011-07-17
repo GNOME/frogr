@@ -85,6 +85,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *progress_dialog;
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
+  gboolean progress_is_showing;
 
   GtkTreeModel *tree_model;
   guint sb_context_id;
@@ -1746,6 +1747,7 @@ frogr_main_view_init (FrogrMainView *self)
   priv->progress_dialog = progress_dialog;
   priv->progress_bar = progress_bar;
   priv->progress_label = progress_label;
+  priv->progress_is_showing = FALSE;
 
   /* Initialize model */
   priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
@@ -1883,8 +1885,14 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  /* Reset values */
+  if (priv->progress_is_showing)
+    return;
+
+  priv->progress_is_showing = TRUE;
+
   gtk_label_set_text (GTK_LABEL (priv->progress_label), text ? text : "");
+
+  /* Reset values */
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), "");
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), 0.0);
 
@@ -1959,6 +1967,8 @@ frogr_main_view_hide_progress (FrogrMainView *self)
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv->progress_is_showing = FALSE;
+
   gtk_widget_hide (GTK_WIDGET (priv->progress_dialog));
 }
 
