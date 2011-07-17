@@ -301,10 +301,10 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 #if GTK_CHECK_VERSION (2,24,0)
   combo = gtk_combo_box_text_new ();
   for (i = 0; license_descriptions[i]; i++)
-    gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), i, gettext (license_descriptions[i]));
+    gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), i, _(license_descriptions[i]));
 #else
   for (i = 0; license_descriptions[i]; i++)
-    gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, gettext (license_descriptions[i]));
+    gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, _(license_descriptions[i]));
 #endif
   gtk_box_pack_start (GTK_BOX (vbox), combo, FALSE, FALSE, 0);
   priv->license_cb = combo;
