@@ -33,8 +33,11 @@
  * will be the size of the pixbuf that will remain in memory during
  * the whole life of every FrogrPicture object.
  */
-#define IV_THUMB_WIDTH 140
-#define IV_THUMB_HEIGHT 140
+#define IV_THUMB_WIDTH 136
+#define IV_THUMB_HEIGHT 136
+
+/* Padding to be used in the icon view */
+#define IV_THUMB_PADDING 4
 
 #if DEBUG_ENABLED
 #define DEBUG(...) g_debug (__VA_ARGS__);

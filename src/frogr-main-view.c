@@ -1764,7 +1764,10 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view),
                                     GTK_SELECTION_MULTIPLE);
   gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
-  gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), IV_THUMB_WIDTH);
+  gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), IV_THUMB_WIDTH + IV_THUMB_PADDING);
+  gtk_icon_view_set_item_padding (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
+  gtk_icon_view_set_column_spacing (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
+  gtk_icon_view_set_row_spacing (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
   gtk_widget_set_has_tooltip (icon_view, TRUE);
 
   gtk_window_set_default_size (priv->window, MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
