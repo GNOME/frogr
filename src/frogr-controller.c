@@ -421,13 +421,14 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
       GtkWindow *window = NULL;
 
       frogr_util_open_uri (auth_url);
-      g_free (auth_url);
 
       /* Run the auth confirmation dialog */
       window = frogr_main_view_get_window (priv->mainview);
       frogr_auth_dialog_show (window, CONFIRM_AUTHORIZATION);
 
       DEBUG ("Auth URL: %s", auth_url);
+
+      g_free (auth_url);
     }
 
   if (error != NULL)
