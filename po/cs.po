@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-07-09 11:36+0000\n"
-"PO-Revision-Date: 2011-07-10 10:00+0200\n"
+"POT-Creation-Date: 2011-07-17 09:19+0000\n"
+"PO-Revision-Date: 2011-07-21 11:48+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -84,11 +84,12 @@ msgstr ""
 "Až budete autorizováni ke svému účtu flicker, zmáčkněte prosím toto tlačítko "
 "a můžete aplikaci %s začít používat."
 
-#: ../src/frogr-controller.c:256
-msgid "Process cancelled by the user"
-msgstr "Proces zrušen uživatelem"
+#: ../src/frogr-controller.c:263
+#| msgid "Process cancelled by the user"
+msgid "Process cancelled"
+msgstr "Proces zrušen"
 
-#: ../src/frogr-controller.c:261
+#: ../src/frogr-controller.c:268
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -96,7 +97,7 @@ msgstr ""
 "Chyba připojení:\n"
 "Síť není dostupná"
 
-#: ../src/frogr-controller.c:266
+#: ../src/frogr-controller.c:273
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -104,7 +105,7 @@ msgstr ""
 "Chyba připojení:\n"
 "Chybný požadavek"
 
-#: ../src/frogr-controller.c:271
+#: ../src/frogr-controller.c:278
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -112,7 +113,7 @@ msgstr ""
 "Chyba připojení:\n"
 "Chyba na straně serveru"
 
-#: ../src/frogr-controller.c:276
+#: ../src/frogr-controller.c:283
 msgid ""
 "Error uploading picture:\n"
 "File invalid"
@@ -120,7 +121,7 @@ msgstr ""
 "Chyba nahrávání obrázku:\n"
 "Neplatný soubor"
 
-#: ../src/frogr-controller.c:281
+#: ../src/frogr-controller.c:288
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -128,7 +129,7 @@ msgstr ""
 "Chyba nahrávání obrázku:\n"
 "Překročena kvóta"
 
-#: ../src/frogr-controller.c:286
+#: ../src/frogr-controller.c:293
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -136,7 +137,7 @@ msgstr ""
 "Chyba:\n"
 "Fotka nenalezena"
 
-#: ../src/frogr-controller.c:291
+#: ../src/frogr-controller.c:298
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -144,7 +145,7 @@ msgstr ""
 "Chyba:\n"
 "Fotka již v sadě fotek je"
 
-#: ../src/frogr-controller.c:296
+#: ../src/frogr-controller.c:303
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -152,7 +153,7 @@ msgstr ""
 "Chyba:\n"
 "Fotka již ve skupině je"
 
-#: ../src/frogr-controller.c:301
+#: ../src/frogr-controller.c:308
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -160,7 +161,7 @@ msgstr ""
 "Chyba:\n"
 "Fotka je již v maximálním možném počtu skupin"
 
-#: ../src/frogr-controller.c:306
+#: ../src/frogr-controller.c:313
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -168,7 +169,7 @@ msgstr ""
 "Chyba:\n"
 "Již bylo dosaženo omezení skupiny"
 
-#: ../src/frogr-controller.c:311
+#: ../src/frogr-controller.c:318
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -176,7 +177,7 @@ msgstr ""
 "Chyba:\n"
 "Fotka přidána do fronty skupiny"
 
-#: ../src/frogr-controller.c:316
+#: ../src/frogr-controller.c:323
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -184,7 +185,7 @@ msgstr ""
 "Chyba:\n"
 "Fotka je již přidána do fronty skupiny"
 
-#: ../src/frogr-controller.c:321
+#: ../src/frogr-controller.c:328
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -192,7 +193,7 @@ msgstr ""
 "Chyba:\n"
 "Obsah není pro tuto skupinu povolen"
 
-#: ../src/frogr-controller.c:326
+#: ../src/frogr-controller.c:333
 #, c-format
 msgid ""
 "Authorization failed.\n"
@@ -201,7 +202,7 @@ msgstr ""
 "Autorizace selhala.\n"
 "Zkuste to prosím znovu"
 
-#: ../src/frogr-controller.c:332
+#: ../src/frogr-controller.c:339
 #, c-format
 msgid ""
 "Error\n"
@@ -212,7 +213,7 @@ msgstr ""
 "Aplikace %s není správně autorizována k nahrávání obrázků na flickr.\n"
 "Proveďte prosím autorizaci znovu"
 
-#: ../src/frogr-controller.c:338
+#: ../src/frogr-controller.c:345
 #, c-format
 msgid ""
 "Error:\n"
@@ -222,48 +223,68 @@ msgstr ""
 "Služba není dostupná"
 
 #. General error: just dump the raw error description
-#: ../src/frogr-controller.c:344
+#: ../src/frogr-controller.c:351
 #, c-format
 msgid "An error happened while uploading a picture: %s."
 msgstr "Vyskytla se chyba při nahrávání obrázku: %s."
 
-#: ../src/frogr-controller.c:975
+#: ../src/frogr-controller.c:504
+#| msgid ""
+#| "Authorization failed.\n"
+#| "Please try again"
+msgid ""
+"Authorization failed (timed out)\n"
+"Please try again"
+msgstr ""
+"Autorizace selhala (vypršel čas)\n"
+"Zkuste to prosím znovu"
+
+#: ../src/frogr-controller.c:1008
 msgid "Setting license for picture…"
 msgstr "Nastavuje se licence pro obrázek…"
 
-#: ../src/frogr-controller.c:998
+#: ../src/frogr-controller.c:1031
 msgid "Creating new photosets…"
 msgstr "Vytváří se nové sady fotek…"
 
-#: ../src/frogr-controller.c:1022
+#: ../src/frogr-controller.c:1055
 msgid "Adding picture to photosets…"
 msgstr "Přidává se obrázek do sady fotek…"
 
-#: ../src/frogr-controller.c:1044
+#: ../src/frogr-controller.c:1077
 msgid "Adding picture to groups…"
 msgstr "Přidává se obrázek do skupiny…"
 
-#: ../src/frogr-controller.c:1537
+#: ../src/frogr-controller.c:1570
+#| msgid "Retrieving list of tags…"
+msgid "Retrieving data for authorization…"
+msgstr "Získávají se údaje pro autorizaci…"
+
+#: ../src/frogr-controller.c:1575
+msgid "Finishing authorization…"
+msgstr "Dokončuje se autorizace…"
+
+#: ../src/frogr-controller.c:1580
 msgid "Retrieving list of sets…"
 msgstr "Získává se seznam sad…"
 
-#: ../src/frogr-controller.c:1542
+#: ../src/frogr-controller.c:1585
 msgid "Retrieving list of groups…"
 msgstr "Získává se seznam skupin…"
 
-#: ../src/frogr-controller.c:1547
+#: ../src/frogr-controller.c:1590
 msgid "Retrieving list of tags…"
 msgstr "Získává se seznam štítků…"
 
-#: ../src/frogr-controller.c:1686
+#: ../src/frogr-controller.c:1726
 msgid "No sets found"
 msgstr "Nenalezeny žádné sady"
 
-#: ../src/frogr-controller.c:1720
+#: ../src/frogr-controller.c:1758
 msgid "No groups found"
 msgstr "Nenalezena žádná skupina"
 
-#: ../src/frogr-controller.c:2379
+#: ../src/frogr-controller.c:2430
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -299,7 +320,6 @@ msgid "Default (as specified in flickr)"
 msgstr "Výchozí (jak je definována na webu flickr)"
 
 #: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:93
-#| msgid "None (All rights reserved)"
 msgid "All rights reserved"
 msgstr "Všechna práva vyhrazena"
 
@@ -421,29 +441,29 @@ msgid "Edit Picture Details"
 msgstr "Úprava podrobností obrázku"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:670
+#: ../src/frogr-main-view.c:671
 #, c-format
 msgid "Taken: %s"
 msgstr "Pořízen: %s"
 
-#: ../src/frogr-main-view.c:675
+#: ../src/frogr-main-view.c:676
 #, c-format
 msgid "File size: %s"
 msgstr "Velikost souboru: %s"
 
-#: ../src/frogr-main-view.c:864
+#: ../src/frogr-main-view.c:865
 msgid "Select a Picture"
 msgstr "Výběr obrázku"
 
-#: ../src/frogr-main-view.c:890
+#: ../src/frogr-main-view.c:891
 msgid "images"
 msgstr "obrázky"
 
-#: ../src/frogr-main-view.c:911
+#: ../src/frogr-main-view.c:912
 msgid "You need to select some pictures first"
 msgstr "Nejdříve musíte vybrat nějaké obrázky"
 
-#: ../src/frogr-main-view.c:1063
+#: ../src/frogr-main-view.c:1064
 #, c-format
 msgid ""
 "Could not display help for Frogr:\n"
@@ -452,17 +472,17 @@ msgstr ""
 "Nelze zobrazit nápovědu pro Frogr:\n"
 "%s"
 
-#: ../src/frogr-main-view.c:1284
+#: ../src/frogr-main-view.c:1285
 msgid "Not connected to flickr"
 msgstr "Nepřipojeno na flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:1294
+#: ../src/frogr-main-view.c:1295
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Připojen jako %s%s"
 
-#: ../src/frogr-main-view.c:1295
+#: ../src/frogr-main-view.c:1296
 msgid " (PRO account)"
 msgstr "(účet PRO)"
 
@@ -471,7 +491,7 @@ msgstr "(účet PRO)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:1319
+#: ../src/frogr-main-view.c:1320
 #, c-format
 msgid " - %s / %s remaining for the current month"
 msgstr " – %s / %s zbývá pro aktuální měsíc"
@@ -479,7 +499,7 @@ msgstr " – %s / %s zbývá pro aktuální měsíc"
 #. Will show in the status bar the amount of data (in KB, MB or
 #. GB) that would be uploaded as the sum of the sizes for every
 #. picture currently loadad in the application
-#: ../src/frogr-main-view.c:1344
+#: ../src/frogr-main-view.c:1345
 #, c-format
 msgid " - %s to be uploaded"
 msgstr " – %s bude nahráno"
