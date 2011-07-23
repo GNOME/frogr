@@ -1,6 +1,9 @@
 #!/bin/sh
 
 set -e
+
+mkdir -p m4
+
 aclocal
 autoconf --force
 autoheader --force
