@@ -116,11 +116,13 @@ else
 fi
 
 GTK2_MIN_VERSION=2.16
+GTK3_MIN_VERSION=3.0
+
 case "$with_gtk" in
      2.0) GTK_MIN_VERSION=$GTK2_MIN_VERSION
           GTK_API_VERSION=2.0
           ;;
-     3.0) GTK_MIN_VERSION=3.0
+     3.0) GTK_MIN_VERSION=$GTK3_MIN_VERSION
           GTK_API_VERSION=3.0
           ;;
 esac
