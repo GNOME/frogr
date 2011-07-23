@@ -14,3 +14,6 @@ Alejandro Piñeiro Iglesias <apinheiro@igalia.com>
 
 Javier Jardon <javierjc1982@gmail.com>
 * Cleanup and improvements for GNOME 3.0
+
+Joaquim Rocha <jrocha@igalia.com>
+* Migration to GtkActions
