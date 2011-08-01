@@ -1,11 +1,56 @@
 0.6 (??)
 ========
 
-  * Added new user manual.
+  * Support for using the GNOME general proxy settings (requires libsoup-gnome).
+  * Allow setting license type from the details dialog.
+  * Open images in default image viewer (Joaquim Rocha).
+  * Allow removing similar descriptions from multiple pictures.
+  * Use better thumbnails for pictures, that is, bigger ones.
+  * Redesigned the "edit details" and "preferences" dialogs.
+  * Use stock images for several menu items in the main view.
+  * Improvements in the authorization process with flaky connections.
+  * Optimized usage of memory handling because of thumbnails.
+  * Fixed segfault when no valid uris are passed via command line.
+  * Updated man page to talk about URIs instead of URLs.
+  * Avoid potential problems by creating m4 dir upfront.
+  * Fixed issues in license headers.
+  * Use license-type instead of license property (Ignacio Casal Quinteiro).
+  * Fixed frogr.spec file (Christophe Fergeau).
+  * Use GtkAction for menus in the main view (Joaquim Rocha).
+  * Added functions to allow setting the license type in flicksoup.
+  * Raised gtk+ minimum version up to 2.16.
+  * Raised libsoup minimum version up to 2.26.
+  * Use libsoup-gnome if available (for using GNOME general proxy settings).
+  * Added new user manual with some translations: cs, de, es, fr, en_GB, ru.
+  * Several other minor improvements, small bug fixes and cleanups.
 
 Bug fixes:
 
-  * #651337: User manual
+  * #644840: Authorization browser window is not be launched if behind a proxy.
+  * #644841: Frogr to honor GNOME general proxy settings.
+  * #651230: Use the license-type instead normal license text.
+  * #651337: User manual.
+  * #651527: Some typos in Frogr-help.
+  * #653592: Open picture in default image viewer.
+  * #653860: Introduce GtkActions.
+  * #653990: Allow setting license type for the pictures in the details dialog.
+  * #653991: Allow massively removing pictures description from multiple selection.
+  * #653993: Open pictures in default image viewer from the main view.
+  * #653994: Use better thumbnails for pictures in the details dialog.
+
+New and updated translations:
+
+  * cs (Marek Černocký)
+  * da (Joe Hansen)
+  * de (Mario Blättermann)
+  * es (Daniel Mustieles)
+  * fr (Claude Paroz, Bruno Brouard)
+  * pt_BR (Djavan Fagundes)
+  * ru (Yuri Myasoedov)
+  * sl (Matej Urbančič, Andrej Žnidaršič, Saša Batistič)
+  * tr (Muhammet Kara)
+  * uk (Daniel Korostil)
+
 
 0.5 (27 May 2011)
 =================
