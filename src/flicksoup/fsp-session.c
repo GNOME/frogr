@@ -1352,26 +1352,27 @@ fsp_session_set_http_proxy              (FspSession *self,
           soup_uri_set_user (proxy_uri, actual_user);
           soup_uri_set_password (proxy_uri, actual_password);
         }
+    }
 
-      /* Set/unset the proxy if needed */
-      if ((!self->priv->proxy_uri && proxy_uri)
-          || (self->priv->proxy_uri && !proxy_uri)
-          || (self->priv->proxy_uri && proxy_uri && !soup_uri_equal (self->priv->proxy_uri, proxy_uri)))
-        {
-          g_object_set (G_OBJECT (self->priv->soup_session),
-                        SOUP_SESSION_PROXY_URI,
-                        proxy_uri,
-                        NULL);
+  /* Set/unset the proxy */
+  g_object_set (G_OBJECT (self->priv->soup_session),
+                SOUP_SESSION_PROXY_URI,
+                proxy_uri,
+                NULL);
 
-          /* Save internal reference to the proxy */
-          if (self->priv->proxy_uri)
-            soup_uri_free (self->priv->proxy_uri);
+  /* Update internal values if needed */
+  if ((!self->priv->proxy_uri && proxy_uri)
+      || (self->priv->proxy_uri && !proxy_uri)
+      || (self->priv->proxy_uri && proxy_uri && !soup_uri_equal (self->priv->proxy_uri, proxy_uri)))
+    {
+      /* Save internal reference to the proxy */
+      if (self->priv->proxy_uri)
+        soup_uri_free (self->priv->proxy_uri);
 
-          self->priv->proxy_uri = proxy_uri;
+      self->priv->proxy_uri = proxy_uri;
 
-          /* Proxy configuration actually changed */
-          return TRUE;
-        }
+      /* Proxy configuration actually changed */
+      return TRUE;
     }
 
 #ifdef HAVE_LIBSOUP_GNOME
