@@ -10,7 +10,8 @@
   </info>
 
   <title>Set Pictures</title>
-  <p>Todo</p>
+  <p>You can add some pictures to a set of pictures. A set is a category. Set do not imply hierarchical view.</p>
+  <p>Right-click on one or more pictures and choose <gui>Add to set</gui>. You may choose to add to an already existing set or create a new one.</p>
 
 </page>
 

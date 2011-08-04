@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <page xmlns="http://projectmallard.org/1.0/"
       type="guide"
-      id="pictures">
+      id="external-viewer">
 
   <info>
     <link type="guide" xref="index#pictures"/>
     <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
-    <desc>Add, remove and upload pictures</desc>
+    <desc>Open some picture in external application</desc>
   </info>
 
-  <title>Transfer Pictures</title>
-  <p> You first have to add pictures before to be able to upload it.</p>
+  <title>External viewer</title>
+  <p> You can display some picture in any application. Right-click on some picture then choose <gui>Open in external viewer</gui>. </p>
   
 </page>

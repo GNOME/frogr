@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/"
+      type="guide"
+      id="edit-pictures">
+
+  <info>
+    <link type="guide" xref="index#pictures"/>
+    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <desc>Amend pictures</desc>
+  </info>
+
+  <title>Edit Pictures</title>
+  <p>To edit the pictures detail, right-click on a picture and choose <gui>Edit Details</gui>.Until you edit the details, these will use the default details.</p>
+  <figure>
+    <title>Edit picture details</title>
+    <desc>Amend the details of the picture.</desc>
+    <media type="image" src="figures/edit-pictures-details.png" mime="image/png" style="right">
+    </media>
+  </figure>
+ 
+  <list>
+    <item><title>Title</title><p>Use this box to amend the title</p></item>
+    <item><title>Description</title><p>Add some description the picture</p></item>
+    <item><title>Visibility</title><p>Choose whether the picture is public or private.</p></item>
+    <item><title>Content Type</title><p>You can amend the type of the picture.</p></item>
+    <item><title>Licence</title><p>You can change the licence.</p></item>
+  </list>
+  
+</page>

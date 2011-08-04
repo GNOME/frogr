@@ -9,14 +9,12 @@
     <desc>Frequently Asked Questions</desc>
   </info>
 
-  <title>Frogr Introduction</title>
+  <title>Frogr Common Problems</title>
     
   <list>
-
     <item><title>Authorization browser window is not be launched</title>
       <p>Check if you are using a proxy. This is a know bug.</p>
     </item>
-
   </list>
 
 </page>

@@ -16,21 +16,33 @@
   <section id="preferences-general">
     <title>General Preferences</title>
     <figure>
-      <title><gui>Frogr</gui> window</title>
-      <desc><app>Frogr</app> main window</desc>
+      <title><gui>Frogr</gui> general preferences</title>
+      <desc><app>Frogr</app> general preferences</desc>
       <media type="image" src="figures/preferences-general.png" mime="image/png" style="right">
-        <p><app>Frogr</app> main window.</p>
+        <p><app>Frogr</app> general preferences.</p>
       </media>
     </figure>
   </section>
 
   <section id="preferences-connection">
     <title>Connection Preferences</title>
+    <p>This tab allows you to set up a proxy.</p>
     <figure>
-      <title><gui>Frogr </gui> window</title>
-      <desc><app>Frogr</app> main window</desc>
+      <title><gui>Frogr </gui> connection preferences</title>
+      <desc><app>Frogr</app> connection preferences</desc>
       <media type="image" src="figures/preferences-connection.png" mime="image/png" style="right">
         <p><app>Frogr</app> main window.</p>
+      </media>
+    </figure>
+  </section>
+
+  <section id="preferences-misc">
+    <title>Miscelleanous Preferences</title>
+    <figure>
+      <title><gui>Frogr </gui> misc preferences window</title>
+      <desc><app>Frogr</app> misc preferences window</desc>
+      <media type="image" src="figures/preferences-misc.png" mime="image/png" style="right">
+        <p><app>Frogr</app> misc preferences window.</p>
       </media>
     </figure>
   </section>

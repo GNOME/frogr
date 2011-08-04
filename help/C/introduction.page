@@ -25,12 +25,16 @@
 
   <section><title>Main Features</title>
     <list>
-      <item><p>Allow to upload pictures to flickr</p></item>
+      <item><p>Allow to upload pictures to Flickr</p></item>
       <item><p>Allow uploading pictures located in remote machines</p></item>
       <item><p>Allow adding tags to pictures</p></item>
       <item><p>Allow specifying sets and group pools for the pictures to be added to after the upload process.</p></item>
       <item><p>Support for handling multiple Flickr accounts.</p></item>
     </list>
-
   </section>
+
+  <section><title>About</title>
+    <p>You can have more information about <app>Frogr</app> using the menu <guiseq><gui>Help</gui><gui>About</gui></guiseq>.</p>
+  </section>
+
 </page>

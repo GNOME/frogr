@@ -4,12 +4,12 @@
       id="display">
 
   <info>
-    <link type="guide" xref="index#view"/>
+    <link type="guide" xref="index#organize"/>
     <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
     <desc>Amending view</desc>
   </info>
 
-  <title>Display Pictures</title>
-  <p>You can sort pictures by title, by date, or as loaded. Click on the menu <gui>View</gui> and select the proper way to sort.</p>
+  <title>Sort Pictures</title>
+  <p>You can sort pictures by title, by date, or as loaded. Click on the menu <gui>View</gui> and select the proper way to sort. You may also use reversed ordering. </p> 
 
 </page>
