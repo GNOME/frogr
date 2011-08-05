@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <page xmlns="http://projectmallard.org/1.0/" xmlns:e="http://projectmallard.org/experimental/" type="guide" id="index" xml:lang="en_GB">
-  
+
   <info>
     <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
   </info>
@@ -21,10 +21,6 @@
 
   <section id="customize">
     <title>Set Up Frogr</title>
-  </section>
-
-  <section id="common-problems">
-    <title>Frequently Asked Questions</title>
   </section>
 
 </page>

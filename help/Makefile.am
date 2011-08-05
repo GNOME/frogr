@@ -24,7 +24,6 @@ DOC_PAGES = \
 	add-pictures.page \
 	group-pictures.page \
 	preferences.page \
-	common-problems.page \
 	edit-pictures.page \
 	external-viewer.page \
 	index.page \
