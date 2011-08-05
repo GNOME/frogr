@@ -23,7 +23,7 @@
     <item><title>Description</title><p>Add some description the picture</p></item>
     <item><title>Visibility</title><p>Choose whether the picture is public or private.</p></item>
     <item><title>Content Type</title><p>You can amend the type of the picture.</p></item>
-    <item><title>Licence</title><p>You can change the licence.</p></item>
+    <item><title>License</title><p>You can change the license.</p></item>
   </list>
 
 </page>
