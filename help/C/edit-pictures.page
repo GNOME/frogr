@@ -14,10 +14,10 @@
   <figure>
     <title>Edit picture details</title>
     <desc>Amend the details of the picture.</desc>
-    <media type="image" src="figures/edit-pictures-details.png" mime="image/png" style="right">
+    <media type="image" src="figures/edit-picture-details.png" mime="image/png" style="right">
     </media>
   </figure>
- 
+
   <list>
     <item><title>Title</title><p>Use this box to amend the title</p></item>
     <item><title>Description</title><p>Add some description the picture</p></item>
@@ -25,5 +25,5 @@
     <item><title>Content Type</title><p>You can amend the type of the picture.</p></item>
     <item><title>Licence</title><p>You can change the licence.</p></item>
   </list>
-  
+
 </page>

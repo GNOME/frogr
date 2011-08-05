@@ -12,7 +12,7 @@
   <title>Preferences</title>
 
   <p>Go to Preferences using menu <guiseq><gui>File</gui><gui>Preferences</gui></guiseq>.</p>
-  
+
   <section id="preferences-general">
     <title>General Preferences</title>
     <figure>
