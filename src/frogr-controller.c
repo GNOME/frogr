@@ -1163,18 +1163,17 @@ _fetch_everything (FrogrController *self, gboolean force_fetch)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  if (force_fetch || !priv->account_info_fetched)
-    _fetch_account_info (self);
+  /* Account information are cheap requests so we always retrieve that
+     info to ensure it's always up to date (regadless 'force_fetch') */
+  _fetch_account_info (self);
+  _fetch_account_extra_info (self);
 
-  if (force_fetch || !priv->account_extra_info_fetched)
-    _fetch_account_extra_info (self);
-
+  /* Sets, groups and tags can take much longer to retrieve, so we
+     only retrieve that if actually needed (or asked to) */
   if (force_fetch || !priv->sets_fetched)
     _fetch_sets (self);
-
   if (force_fetch || !priv->groups_fetched)
     _fetch_groups (self);
-
   if (force_fetch || !priv->tags_fetched)
     _fetch_tags (self);
 }
