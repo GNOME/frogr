@@ -8,7 +8,7 @@ To get the source, please checkout the git repository at gnome.org:
 
     git clone git://git.gnome.org/frogr
 
-To work properly, frogr needs some libraries to be installed first::
+To work properly, frogr needs some libraries to be installed first:
 
  - glib (version 2.16 or higher)
  - gtk+ (version 2.16 or higher)
@@ -67,11 +67,11 @@ keep it as part of the project for the time being.
 -------------------------------------------
 
 Some parts of the Frogr's Flickr API implementation (under
-src/flicksoup) based on source code from the libsoup library, licensed
-as LGPLv2 (Copyright 2008 Red Hat, Inc.)
+src/flicksoup) based on source code from the libsoup library,
+licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
 
-The specific theme customizations for the MacOSX version of frogr
-through a gtkrc file were taken from the Banshee project
+The specific theme customizations for the MacOSX version of
+frogr through a gtkrc file were taken from the Banshee project
 (http://banshee.fm), written by Aaron Bockover <abockover@novell.com>
 and released under the MIT/X11 license (Copyright 2010 Novell, Inc.)
 
