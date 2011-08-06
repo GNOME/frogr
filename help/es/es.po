@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2011-08-05 09:04+0000\n"
-"PO-Revision-Date: 2011-08-05 12:25+0200\n"
+"POT-Creation-Date: 2011-08-06 10:34+0000\n"
+"PO-Revision-Date: 2011-08-06 12:52+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,10 +20,6 @@ msgid "Upload Pictures"
 msgstr "Subir imágenes"
 
 #: C/upload-pictures.page:13(p)
-#| msgid ""
-#| "You can upload a picture using the toolbar <gui>arrow</gui> button. Or, "
-#| "you can use the menu <guiseq><gui>Actions</gui><gui>Upload All</gui></"
-#| "guiseq>."
 msgid ""
 "You can upload a picture using the toolbar <gui>arrow</gui> button. Or, you "
 "can use the menu <guiseq><gui>Actions</gui><gui>Upload All</gui></guiseq>. "
@@ -36,12 +32,10 @@ msgstr ""
 "subir todas para conservar el resto."
 
 #: C/pictures.page:9(desc)
-#| msgid "Add, remove, or upload pictures"
 msgid "Add, remove and upload pictures"
 msgstr "Añadir, quitar y subir imágenes"
 
 #: C/pictures.page:12(title)
-#| msgid "Tag Pictures"
 msgid "Transfer Pictures"
 msgstr "Transferir imágenes"
 
@@ -85,9 +79,6 @@ msgid "Sort Pictures"
 msgstr "Ordenar imágenes"
 
 #: C/display.page:13(p)
-#| msgid ""
-#| "You can sort pictures by title, by date, or as loaded. Click on the menu "
-#| "<gui>View</gui> and select the proper way to sort."
 msgid ""
 "You can sort pictures by title, by date, or as loaded. Click on the menu "
 "<gui>View</gui> and select the proper way to sort. You may also use reversed "
@@ -121,9 +112,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/introduction.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/frogr-remote-organizer.png'; "
-#| "md5=ff88b73cd5cc7b53ee219ee1bcb859bb"
 msgid ""
 "@@image: 'figures/frogr-remote-organizer.png'; "
 "md5=bd66e93467aa7dee791f09206435283d"
@@ -180,7 +168,6 @@ msgid "Main Features"
 msgstr "Características principales"
 
 #: C/introduction.page:28(p)
-#| msgid "Allow to upload pictures to flickr"
 msgid "Allow to upload pictures to Flickr"
 msgstr "Permitir subir imágenes a Flickr"
 
@@ -209,9 +196,6 @@ msgid "About"
 msgstr "Acerca de"
 
 #: C/introduction.page:37(p)
-#| msgid ""
-#| "You can add a picture using the toolbar <gui>Plus</gui> button. Or, you "
-#| "can use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>."
 msgid ""
 "You can have more information about <app>Frogr</app> using the menu "
 "<guiseq><gui>Help</gui><gui>About</gui></guiseq>."
@@ -236,9 +220,6 @@ msgstr ""
 "explica que tendrá que crear una cuenta."
 
 #: C/create-account.page:14(p)
-#| msgid ""
-#| "Click Ok, it will run your favorite web browser. On your favourite web "
-#| "browser, either create a Flickr account or log in to an existing account."
 msgid ""
 "Click Ok, it will run your default web browser. On your default web browser, "
 "either create a Flickr account or log in to an existing account."
@@ -282,7 +263,6 @@ msgid "Managing Your Pictures"
 msgstr "Gestionar sus imágenes"
 
 #: C/index.page:19(title)
-#| msgid "Organize Your Pictures"
 msgid "Organize and Sort Your Pictures"
 msgstr "Organizar y ordenar sus imágenes"
 
@@ -317,12 +297,10 @@ msgstr ""
 "md5=305ef58c4cb4c2c1ed917da9ee37dce0"
 
 #: C/edit-pictures.page:9(desc)
-#| msgid "Add Pictures"
 msgid "Amend pictures"
 msgstr "Corregir imágenes"
 
 #: C/edit-pictures.page:12(title)
-#| msgid "Set Pictures"
 msgid "Edit Pictures"
 msgstr "Editar imágenes"
 
@@ -376,19 +354,18 @@ msgid "You can amend the type of the picture."
 msgstr "Puede corregir el tipo de imagen."
 
 #: C/edit-pictures.page:26(title)
-msgid "Licence"
+#| msgid "Licence"
+msgid "License"
 msgstr "Licencia"
 
 #: C/edit-pictures.page:26(p)
-msgid "You can change the licence."
+#| msgid "You can change the licence."
+msgid "You can change the license."
 msgstr "Puede cambiar la licencia."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/preferences.page:21(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-general.png'; "
-#| "md5=1ec5069f89d46d8a6bdffa28b9a23fc9"
 msgid ""
 "@@image: 'figures/preferences-general.png'; "
 "md5=460f7b3c2898b98b94a2f50287719510"
@@ -399,9 +376,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/preferences.page:33(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-connection.png'; "
-#| "md5=3c2f7eb3ef0252262ffcb0e7d3e9dc85"
 msgid ""
 "@@image: 'figures/preferences-connection.png'; "
 "md5=578627558fa359ee0790ddcdb645676c"
@@ -412,9 +386,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/preferences.page:44(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-general.png'; "
-#| "md5=1ec5069f89d46d8a6bdffa28b9a23fc9"
 msgid ""
 "@@image: 'figures/preferences-misc.png'; md5=f145c5c40cfe7a3765ae4dab44039520"
 msgstr ""
@@ -437,17 +408,14 @@ msgid "General Preferences"
 msgstr "Preferencias generales"
 
 #: C/preferences.page:19(title)
-#| msgid "General Preferences"
 msgid "<gui>Frogr</gui> general preferences"
 msgstr "Preferencias generales de <gui>Frogr</gui>"
 
 #: C/preferences.page:20(desc)
-#| msgid "<app>Frogr</app> main window"
 msgid "<app>Frogr</app> general preferences"
 msgstr "Preferencias generales de <app>Frogr</app>"
 
 #: C/preferences.page:22(p)
-#| msgid "<app>Frogr</app> main window."
 msgid "<app>Frogr</app> general preferences."
 msgstr "Preferencias generales de <app>Frogr</app>."
 
@@ -460,32 +428,26 @@ msgid "This tab allows you to set up a proxy."
 msgstr "Esta pestaña le permite configurar un proxy."
 
 #: C/preferences.page:31(title)
-#| msgid "Connection Preferences"
 msgid "<gui>Frogr </gui> connection preferences"
 msgstr "Preferencias de la conexión de <gui>Frogr </gui>"
 
 #: C/preferences.page:32(desc)
-#| msgid "Connection Preferences"
 msgid "<app>Frogr</app> connection preferences"
 msgstr "Preferencias de conexión de <app>Frogr</app>"
 
 #: C/preferences.page:40(title)
-#| msgid "General Preferences"
 msgid "Miscelleanous Preferences"
 msgstr "Preferencias varias"
 
 #: C/preferences.page:42(title)
-#| msgid "<gui>Frogr </gui> window"
 msgid "<gui>Frogr </gui> misc preferences window"
 msgstr "Ventana de preferencias varias de <gui>Frogr</gui>"
 
 #: C/preferences.page:43(desc)
-#| msgid "<app>Frogr</app> main window"
 msgid "<app>Frogr</app> misc preferences window"
 msgstr "Ventana de preferencias varias de <app>Frogr</app>"
 
 #: C/preferences.page:45(p)
-#| msgid "<app>Frogr</app> main window."
 msgid "<app>Frogr</app> misc preferences window."
 msgstr "Ventana de preferencias varias de <app>Frogr</app>."
 
@@ -502,9 +464,6 @@ msgid "Add Pictures"
 msgstr "Añadir imágenes"
 
 #: C/add-pictures.page:13(p)
-#| msgid ""
-#| "You can add a picture using the toolbar <gui>Plus</gui> button. Or, you "
-#| "can use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>."
 msgid ""
 "You can add a picture using the toolbar <gui>Plus</gui> button. Or, you can "
 "use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>. The "
