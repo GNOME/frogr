@@ -10,6 +10,7 @@ Source0:	http://download.gnome.org/sources/%{name}/%{version}/%{name}-%{version}
 
 BuildRequires:	intltool
 BuildRequires:	gettext
+BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk3-devel
 BuildRequires:	libsoup-devel > 2.26
 BuildRequires:	libxml2-devel > 2.6.8
