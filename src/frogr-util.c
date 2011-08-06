@@ -168,7 +168,9 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 void
 frogr_util_open_uri (const gchar *uri)
 {
-  static GAppInfo *app_info = NULL;
+  static GAppInfo *http_app_info = NULL;
+  static GAppInfo *help_app_info = NULL;
+  GAppInfo *app_info = NULL;
   GList *uris_list = NULL;
 
   /* Early return */
@@ -178,10 +180,26 @@ frogr_util_open_uri (const gchar *uri)
   /* Dupped uris in the GList must NOT be freed here */
   uris_list = g_list_append (uris_list, g_strdup (uri));
 
-  if (app_info == NULL)
-    app_info = g_app_info_get_default_for_uri_scheme ("http");
+  /* Supported network URIs */
+  if (g_str_has_prefix (uri, "http:") || g_str_has_prefix (uri, "https:"))
+    {
+      if (http_app_info == NULL)
+        http_app_info = g_app_info_get_default_for_uri_scheme ("http");
 
-  _open_uris_with_app_info (uris_list, app_info);
+      app_info = http_app_info;
+    }
+
+  /* Supported help URIs */
+  if (g_str_has_prefix (uri, "ghelp:"))
+    {
+      if (help_app_info == NULL)
+        help_app_info = g_app_info_get_default_for_uri_scheme ("ghelp");
+
+      app_info = help_app_info;
+    }
+
+  if (app_info)
+    _open_uris_with_app_info (uris_list, app_info);
 
   g_list_free (uris_list);
 }
