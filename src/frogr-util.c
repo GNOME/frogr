@@ -147,7 +147,7 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
       uris = _get_uris_string_from_list (uris_list);
 
 #ifdef MAC_INTEGRATION
-      /* In MacOSX neither gnome-open nor gtk_show_uri() will work */
+      /* In MacOSX use 'open' instead of 'gnome-open' */
       command = g_strdup_printf ("open %s", uris);
 #else
       command = g_strdup_printf ("gnome-open %s", uris);
