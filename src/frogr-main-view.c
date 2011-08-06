@@ -1055,24 +1055,7 @@ _upload_pictures (FrogrMainView *self)
 static void
 _show_help_contents (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
-  GError *error = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  gtk_show_uri (NULL, "ghelp:frogr", gtk_get_current_event_time (), &error);
-
-  if (error)
-    {
-      gchar *error_str = NULL;
-
-      error_str = g_strdup_printf (_("Could not display help for Frogr:\n%s"),
-                                   error->message);
-      frogr_util_show_error_dialog (priv->window, error_str);
-
-      g_free (error_str);
-      g_error_free (error);
-    }
+  frogr_util_open_uri ("ghelp:frogr");
 }
 
 static void
