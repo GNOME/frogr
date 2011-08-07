@@ -12,6 +12,7 @@ BuildRequires:	intltool
 BuildRequires:	gettext
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk3-devel
+BuildRequires:	glib2-devel > 2.22
 BuildRequires:	libsoup-devel > 2.26
 BuildRequires:	libxml2-devel > 2.6.8
 BuildRequires:	libexif-devel > 0.6.14

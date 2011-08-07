@@ -18,6 +18,7 @@
   * Fixed frogr.spec file (Christophe Fergeau).
   * Use GtkAction for menus in the main view (Joaquim Rocha).
   * Added functions to allow setting the license type in flicksoup.
+  * Raised glib minimum version up to 2.22.
   * Raised gtk+ minimum version up to 2.16.
   * Raised libsoup minimum version up to 2.26.
   * Use libsoup-gnome if available (for using GNOME general proxy settings).
