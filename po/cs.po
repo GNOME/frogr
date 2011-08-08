@@ -317,7 +317,7 @@ msgstr "Vytvoření nové sady"
 
 #: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:92
 msgid "Default (as specified in flickr)"
-msgstr "Výchozí (jak je definována na webu flickr)"
+msgstr "Výchozí (jak je definována na webu Flickr)"
 
 #: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:93
 msgid "All rights reserved"
@@ -582,7 +582,7 @@ msgstr "Vypnout automatické _dokončování štítků"
 
 #: ../src/frogr-settings-dialog.c:510
 msgid "_Keep File Extensions in Titles when Loading Pictures"
-msgstr "Z_achovat přípony souborů v názvech při načítání obrázků"
+msgstr "Z_achovat přípony souborů v názvech načítaných obrázků"
 
 #: ../src/frogr-settings-dialog.c:516
 msgid "_Misc"
