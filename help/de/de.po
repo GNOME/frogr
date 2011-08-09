@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr help master\n"
-"POT-Creation-Date: 2011-05-31 19:05+0000\n"
-"PO-Revision-Date: 2011-06-05 16:16+0100\n"
+"POT-Creation-Date: 2011-08-05 11:46+0000\n"
+"PO-Revision-Date: 2011-08-09 21:18+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@freenet.de>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,19 +21,28 @@ msgstr "Bilder hochladen"
 #: C/upload-pictures.page:13(p)
 msgid ""
 "You can upload a picture using the toolbar <gui>arrow</gui> button. Or, you "
-"can use the menu <guiseq><gui>Actions</gui><gui>Upload All</gui></guiseq>."
+"can use the menu <guiseq><gui>Actions</gui><gui>Upload All</gui></guiseq>. "
+"The uploaded pictures will disappear from the list. You may remove some "
+"pictures before to upload all the remaining ones."
 msgstr ""
-"Sie können ein Bild mit Hilfe der <gui>Pfeiltasten</gui> in der "
+"Sie können ein Bild mit Hilfe des <gui>Pfeil</gui>-Knopfs in der "
 "Werkzeugleiste hochladen. Alternativ können Sie hierzu das Menü "
-"<guiseq><gui>Aktionen</gui><gui>Alle hochladen</gui></guiseq> verwenden."
+"<guiseq><gui>Aktionen</gui><gui>Alle hochladen</gui></guiseq> verwenden. Die "
+"hochgeladenen Bilder werden aus der Liste entfernt. Sie können einige Bilder "
+"entfernen, um nur die dann verbleibenden Bilder hochzuladen."
 
-#: C/pictures.page:9(desc) C/pictures.page:12(title)
-msgid "Pictures"
-msgstr "Bilder"
+#: C/pictures.page:9(desc)
+msgid "Add, remove and upload pictures"
+msgstr "Bilder hinzufügen, entfernen oder hochladen"
+
+#: C/pictures.page:12(title)
+msgid "Transfer Pictures"
+msgstr "Bilder übertragen"
 
 #: C/pictures.page:13(p)
-msgid "Add, remove, or upload pictures"
-msgstr "Bilder hinzufügen, entfernen oder hochladen"
+msgid "You first have to add pictures before to be able to upload it."
+msgstr ""
+"Sie müssen zunächst Bilder hinzufügen, bevor Sie Bilder hochladen können."
 
 #: C/tag.page:9(desc) C/tag.page:12(title)
 msgid "Tag Pictures"
@@ -69,39 +78,53 @@ msgid "Amending view"
 msgstr "Die Ansicht anpassen"
 
 #: C/display.page:12(title)
-msgid "Display Pictures"
-msgstr "Bilder anzeigen"
+msgid "Sort Pictures"
+msgstr "Bilder sortieren"
 
 #: C/display.page:13(p)
 msgid ""
 "You can sort pictures by title, by date, or as loaded. Click on the menu "
-"<gui>View</gui> and select the proper way to sort."
+"<gui>View</gui> and select the proper way to sort. You may also use reversed "
+"ordering."
 msgstr ""
 "Sie können Bilder nach Titel, nach Datum oder auch nach der Reihenfolge des "
 "Hochladens sortieren. Wählen Sie im Menü <gui>Ansicht</gui> den Sortiermodus "
-"aus."
+"aus. Sie können die Sortierreihenfolge umkehren."
 
 #: C/set-pictures.page:9(desc) C/set-pictures.page:12(title)
 msgid "Set Pictures"
 msgstr "Bilder festlegen"
 
-#: C/set-pictures.page:13(p) C/group-pictures.page:13(p)
-msgid "Todo"
-msgstr "Todo"
+#: C/set-pictures.page:13(p)
+msgid ""
+"You can add some pictures to a set of pictures. A set is a category. Set do "
+"not imply hierarchical view."
+msgstr ""
+"Sie können Bilder zu einem Album hinzufügen. Ein Album stellt eine Kategorie "
+"dar, keine hierarchische Ordnung."
+
+#: C/set-pictures.page:14(p)
+msgid ""
+"Right-click on one or more pictures and choose <gui>Add to set</gui>. You may "
+"choose to add to an already existing set or create a new one."
+msgstr ""
+"Klicken Sie mit der rechten Maustaste auf ein oder mehrere Bilder und wählen "
+"Sie <gui>Zu Alben hinzufügen</gui>. Sie können ein bereits vorhandenes Album "
+"wählen oder ein neues anlegen."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/introduction.page:17(None)
 msgid ""
 "@@image: 'figures/frogr-remote-organizer.png'; "
-"md5=ff88b73cd5cc7b53ee219ee1bcb859bb"
-msgstr "translated"
+"md5=bd66e93467aa7dee791f09206435283d"
+msgstr "a"
 
 #: C/introduction.page:8(desc)
 msgid "Introduction to the <app>Frogr</app> Remote Organizer."
 msgstr "Einführung in die Bildverwaltung <app>Frogr</app>."
 
-#: C/introduction.page:12(title) C/common-problems.page:12(title)
+#: C/introduction.page:12(title)
 msgid "Frogr Introduction"
 msgstr "Einführung in Frogr"
 
@@ -117,16 +140,15 @@ msgstr ""
 "die GNOME-Arbeitsumgebung, die Ihnen die Verwaltung Ihrer Konten des Flickr-"
 "Bilderdienstes ermöglicht."
 
-#: C/introduction.page:15(title) C/preferences.page:19(title)
+#: C/introduction.page:15(title)
 msgid "<gui>Frogr</gui> window"
 msgstr "<gui>Frogr</gui>-Fenster"
 
-#: C/introduction.page:16(desc) C/preferences.page:20(desc)
-#: C/preferences.page:31(desc)
+#: C/introduction.page:16(desc)
 msgid "<app>Frogr</app> main window"
 msgstr "<app>Frogr</app>-Hauptfenster"
 
-#: C/introduction.page:18(p) C/preferences.page:22(p) C/preferences.page:33(p)
+#: C/introduction.page:18(p) C/preferences.page:34(p)
 msgid "<app>Frogr</app> main window."
 msgstr "<app>Frogr</app>-Hauptfenster."
 
@@ -147,8 +169,8 @@ msgid "Main Features"
 msgstr "Grundlegende Funktionen"
 
 #: C/introduction.page:28(p)
-msgid "Allow to upload pictures to flickr"
-msgstr "Hochladen von Bildern zu Flickr"
+msgid "Allow to upload pictures to Flickr"
+msgstr "Hochladen von Bildern zu Flickr erlauben"
 
 #: C/introduction.page:29(p)
 msgid "Allow uploading pictures located in remote machines"
@@ -170,6 +192,18 @@ msgstr ""
 msgid "Support for handling multiple Flickr accounts."
 msgstr "Unterstützung für die Verwaltung mehrerer Flickr-Konten."
 
+#: C/introduction.page:36(title)
+msgid "About"
+msgstr "Info"
+
+#: C/introduction.page:37(p)
+msgid ""
+"You can have more information about <app>Frogr</app> using the menu "
+"<guiseq><gui>Help</gui><gui>About</gui></guiseq>."
+msgstr ""
+"Weitere Informationen zu <app>Frogr</app> erhalten Sie über das Menü "
+"<guiseq><gui>Hilfe</gui><gui>Info</gui></guiseq>."
+
 #: C/create-account.page:8(desc) C/create-account.page:11(title)
 msgid "How to create your Account"
 msgstr "Einrichten eines Kontos"
@@ -188,8 +222,8 @@ msgstr ""
 
 #: C/create-account.page:14(p)
 msgid ""
-"Click Ok, it will run your favorite web browser. On your favourite web "
-"browser, either create a Flickr account or log in to an existing account."
+"Click Ok, it will run your default web browser. On your default web browser, "
+"either create a Flickr account or log in to an existing account."
 msgstr ""
 "Sobald Sie auf <gui>OK</gui> geklickt haben, wird der voreingestellte "
 "Webbrowser geöffnet. Legen Sie auf der geöffneten Webseite entweder ein neues "
@@ -230,50 +264,126 @@ msgid "Managing Your Pictures"
 msgstr "Ihre Bilder verwalten"
 
 #: C/index.page:19(title)
-msgid "Organize Your Pictures"
-msgstr "Ihre Bilder organisieren"
+msgid "Organize and Sort Your Pictures"
+msgstr "Ihre Bilder organisieren und sortieren"
 
 #: C/index.page:23(title)
-msgid "Sort Pictures"
-msgstr "Bilder sortieren"
-
-#: C/index.page:27(title)
 msgid "Set Up Frogr"
 msgstr "Frogr einrichten"
 
-#: C/index.page:31(title)
-msgid "Frenquently Asked Questions"
-msgstr "Häufig gestellte Fragen"
+#: C/external-viewer.page:9(desc)
+msgid "Open some picture in external application"
+msgstr "Bilder in externen Anwendungen öffnen"
 
-#: C/common-problems.page:9(desc)
-msgid "Frequently Asked Questions"
-msgstr "Häufig gestellte Fragen"
+#: C/external-viewer.page:12(title)
+msgid "External viewer"
+msgstr "Externer Betrachter"
 
-#: C/common-problems.page:16(title)
-msgid "Authorization browser window is not be launched"
-msgstr "Das Browserfenster zur Legitimierung wird nicht geöffnet"
-
-#: C/common-problems.page:17(p)
-msgid "Check if you are using a proxy. This is a know bug."
+#: C/external-viewer.page:13(p)
+msgid ""
+"You can display some picture in any application. Right-click on some picture "
+"then choose <gui>Open in external viewer</gui>."
 msgstr ""
-"Prüfen Sie, ob Sie einen Proxy-Server verwenden. Hierbei handelt es sich um "
-"einen bekannten Fehler."
+"Sie können Bilder in beliebigen Anwendungen anzeigen lassen. Klicken Sie mit "
+"der rechten Maustaste auf ein Bild und wählen Sie <gui>In externem Betrachter "
+"öffnen</gui>."
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/edit-pictures.page:17(None)
+msgid ""
+"@@image: 'figures/edit-picture-details.png'; "
+"md5=305ef58c4cb4c2c1ed917da9ee37dce0"
+msgstr "a"
+
+#: C/edit-pictures.page:9(desc)
+msgid "Amend pictures"
+msgstr "Bilder hinzufügen"
+
+#: C/edit-pictures.page:12(title)
+msgid "Edit Pictures"
+msgstr "Bilder bearbeiten"
+
+#: C/edit-pictures.page:13(p)
+msgid ""
+"To edit the pictures detail, right-click on a picture and choose <gui>Edit "
+"Details</gui>.Until you edit the details, these will use the default details."
+msgstr ""
+"Um die Details der Bilder zu bearbeiten, klicken Sie mit der rechten "
+"Maustaste auf ein Bild und wählen Sie <gui>Details bearbeiten</gui>. Wenn Sie "
+"die Detailsnoch nicht bearbeitet haben, werden die Standardeinstellungen "
+"verwendet."
+
+#: C/edit-pictures.page:15(title)
+msgid "Edit picture details"
+msgstr "Bilddetails bearbeiten"
+
+#: C/edit-pictures.page:16(desc)
+msgid "Amend the details of the picture."
+msgstr "Details zum Bild hinzufügen."
+
+#: C/edit-pictures.page:22(title)
+msgid "Title"
+msgstr "Titel"
+
+#: C/edit-pictures.page:22(p)
+msgid "Use this box to amend the title"
+msgstr "Verwenden Sie dieses Feld, um einen Titel hinzuzufügen."
+
+#: C/edit-pictures.page:23(title)
+msgid "Description"
+msgstr "Beschreibung"
+
+#: C/edit-pictures.page:23(p)
+msgid "Add some description the picture"
+msgstr "Fügen Sie eine Beschreibung zum Bild hinzu."
+
+#: C/edit-pictures.page:24(title)
+msgid "Visibility"
+msgstr "Sichtbarkeit"
+
+#: C/edit-pictures.page:24(p)
+msgid "Choose whether the picture is public or private."
+msgstr "Wählen Sie, ob das Bild privat ist oder öffentlich sichtbar sein soll."
+
+#: C/edit-pictures.page:25(title)
+msgid "Content Type"
+msgstr "Inhaltstyp"
+
+#: C/edit-pictures.page:25(p)
+msgid "You can amend the type of the picture."
+msgstr "Sie können den Typ des Bildes hinzufügen."
+
+#: C/edit-pictures.page:26(title)
+msgid "License"
+msgstr "Lizenz"
+
+#: C/edit-pictures.page:26(p)
+msgid "You can change the license."
+msgstr "Sie können die Lizenz ändern."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/preferences.page:21(None)
 msgid ""
 "@@image: 'figures/preferences-general.png'; "
-"md5=1ec5069f89d46d8a6bdffa28b9a23fc9"
-msgstr "translated"
+"md5=460f7b3c2898b98b94a2f50287719510"
+msgstr "a"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/preferences.page:32(None)
+#: C/preferences.page:33(None)
 msgid ""
 "@@image: 'figures/preferences-connection.png'; "
-"md5=3c2f7eb3ef0252262ffcb0e7d3e9dc85"
-msgstr "translated"
+"md5=578627558fa359ee0790ddcdb645676c"
+msgstr "a"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/preferences.page:44(None)
+msgid ""
+"@@image: 'figures/preferences-misc.png'; md5=f145c5c40cfe7a3765ae4dab44039520"
+msgstr "a"
 
 #: C/preferences.page:9(desc) C/preferences.page:12(title)
 msgid "Preferences"
@@ -291,17 +401,57 @@ msgstr ""
 msgid "General Preferences"
 msgstr "Allgemeine Einstellungen"
 
+#: C/preferences.page:19(title)
+msgid "<gui>Frogr</gui> general preferences"
+msgstr "Allgemeine Einstellungen für <gui>Frogr</gui>"
+
+#: C/preferences.page:20(desc)
+msgid "<app>Frogr</app> general preferences"
+msgstr "Allgemeine Einstellungen für <app>Frogr</app>"
+
+#: C/preferences.page:22(p)
+msgid "<app>Frogr</app> general preferences."
+msgstr "Allgemeine Einstellungen für <app>Frogr</app>."
+
 #: C/preferences.page:28(title)
 msgid "Connection Preferences"
 msgstr "Verbindungseinstellungen"
 
-#: C/preferences.page:30(title)
-msgid "<gui>Frogr </gui> window"
-msgstr "<gui>Frogr</gui>-Fenster"
+#: C/preferences.page:29(p)
+msgid "This tab allows you to set up a proxy."
+msgstr "Hier können Sie einen Proxy festlegen."
+
+#: C/preferences.page:31(title)
+msgid "<gui>Frogr </gui> connection preferences"
+msgstr "Verbindungseinstellungen für <gui>Frogr </gui>"
+
+#: C/preferences.page:32(desc)
+msgid "<app>Frogr</app> connection preferences"
+msgstr "Verbindungseinstellungen für <app>Frogr</app>"
+
+#: C/preferences.page:40(title)
+msgid "Miscelleanous Preferences"
+msgstr "Weitere Einstellungen"
+
+#: C/preferences.page:42(title)
+msgid "<gui>Frogr </gui> misc preferences window"
+msgstr "<gui>Frogr</gui>-Fenster für weitere Einstellungen"
+
+#: C/preferences.page:43(desc)
+msgid "<app>Frogr</app> misc preferences window"
+msgstr "<app>Frogr</app>-Fenster für weitere Einstellungen"
+
+#: C/preferences.page:45(p)
+msgid "<app>Frogr</app> misc preferences window."
+msgstr "<app>Frogr</app>-Fenster für weitere Einstellungen."
 
 #: C/group-pictures.page:9(desc) C/group-pictures.page:12(title)
 msgid "Group Pictures"
 msgstr "Bilder gruppieren"
+
+#: C/group-pictures.page:13(p)
+msgid "You may add pictures to an already defined group."
+msgstr "Sie können Bilder zu einem bereits angelegten Album hinzufügen."
 
 #: C/add-pictures.page:9(desc) C/add-pictures.page:12(title)
 msgid "Add Pictures"
@@ -310,13 +460,38 @@ msgstr "Bilder hinzufügen"
 #: C/add-pictures.page:13(p)
 msgid ""
 "You can add a picture using the toolbar <gui>Plus</gui> button. Or, you can "
-"use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>."
+"use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>. The "
+"added pictures will be displayed and available for transfer to Flickr."
 msgstr ""
 "Sie können mit dem <gui>Plus</gui>-Knopf in der Werkzeugleiste ein Bild "
 "hinzufügen. Alternativ wählen Sie <guiseq><gui>Datei</gui><gui>Bilder "
-"hinzufügen</gui></guiseq>."
+"hinzufügen</gui></guiseq>. Die hinzugefügten Bilder werden angezeigt und "
+"stehen für die Übertragung zu Flickr bereit."
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/index.page:0(None)
 msgid "translator-credits"
 msgstr "Mario Blättermann <mariobl@freenet.de>, 2011"
+
+#~ msgid "Pictures"
+#~ msgstr "Bilder"
+
+#~ msgid "Display Pictures"
+#~ msgstr "Bilder anzeigen"
+
+#~ msgid "Todo"
+#~ msgstr "Todo"
+
+#~ msgid "Frenquently Asked Questions"
+#~ msgstr "Häufig gestellte Fragen"
+
+#~ msgid "Frequently Asked Questions"
+#~ msgstr "Häufig gestellte Fragen"
+
+#~ msgid "Authorization browser window is not be launched"
+#~ msgstr "Das Browserfenster zur Legitimierung wird nicht geöffnet"
+
+#~ msgid "Check if you are using a proxy. This is a know bug."
+#~ msgstr ""
+#~ "Prüfen Sie, ob Sie einen Proxy-Server verwenden. Hierbei handelt es sich "
+#~ "um einen bekannten Fehler."
