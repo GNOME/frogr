@@ -1,0 +1,268 @@
+# Slovenian translation for frogr.
+# Copyright (C) 2011 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"POT-Creation-Date: 2011-06-11 19:58+0000\n"
+"PO-Revision-Date: 2011-07-20 11:24+0100\n"
+"Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
+"Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 or n%100==4 ? 3 : 0) ;\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: C/upload-pictures.page:9(desc)
+#: C/upload-pictures.page:12(title)
+msgid "Upload Pictures"
+msgstr "Pošiljanje slik"
+
+#: C/upload-pictures.page:13(p)
+msgid "You can upload a picture using the toolbar <gui>arrow</gui> button. Or, you can use the menu <guiseq><gui>Actions</gui><gui>Upload All</gui></guiseq>."
+msgstr "Sliko lahko naložite z uporabo gumba orodne vrstice <gui>puščica</gui> ali uporabite meni <guiseq><gui>Dejanja</gui><gui>Pošlji vse</gui></guiseq>."
+
+#: C/pictures.page:9(desc)
+#: C/pictures.page:12(title)
+msgid "Pictures"
+msgstr "Slike"
+
+#: C/pictures.page:13(p)
+msgid "Add, remove, or upload pictures"
+msgstr "Dodajanje, odstranjevanje ali pošiljanje slik"
+
+#: C/tag.page:9(desc)
+#: C/tag.page:12(title)
+msgid "Tag Pictures"
+msgstr "Oznaka slik"
+
+#: C/tag.page:13(p)
+msgid "You can assign several tags to any picture. Flickr allows you to define your own tags. It allows you to easily find any picture you did upload."
+msgstr "Slikam lahko določite različne oznake. Flickr vam omogoča, da določite lastne oznake. To vam omogoča, da brez težav najdete katerokoli sliko, ki ste jo poslali."
+
+#: C/tag.page:14(p)
+msgid "Right-click on a picture, and choose <gui>Add tags</gui>. Or click on the menu <gui>Actions</gui>, and choose <gui>Add tags</gui>. Or, when you're editing picture's detail, you can see and edit the tags"
+msgstr "Kliknite na sliko z desno miškino tipko in izberite <gui>Dodaj oznake</gui> ali kliknite na meni <gui>Dejanja</gui> in izberite <gui>Dodaj oznake</gui>. Oznake lahko vidite in urejate tudi pri urejanju podrobnosti slike"
+
+#: C/organize.page:8(desc)
+#: C/organize.page:11(title)
+msgid "Organize"
+msgstr "Organizacija"
+
+#: C/display.page:9(desc)
+msgid "Amending view"
+msgstr "Izboljšava pogleda"
+
+#: C/display.page:12(title)
+msgid "Display Pictures"
+msgstr "Prikaz slik"
+
+#: C/display.page:13(p)
+msgid "You can sort pictures by title, by date, or as loaded. Click on the menu <gui>View</gui> and select the proper way to sort."
+msgstr "Slike lahko razvrščate po naslovu, datumu ali kot poslane. Kliknite na meni <gui>Pogled</gui> in izberite primeren način razvrščanja."
+
+#: C/set-pictures.page:9(desc)
+#: C/set-pictures.page:12(title)
+msgid "Set Pictures"
+msgstr "Nastavljene slike"
+
+#: C/set-pictures.page:13(p)
+#: C/group-pictures.page:13(p)
+msgid "Todo"
+msgstr "Seznam nalog"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/introduction.page:17(None)
+msgid "@@image: 'figures/frogr-remote-organizer.png'; md5=ff88b73cd5cc7b53ee219ee1bcb859bb"
+msgstr "@@image: 'figures/frogr-remote-organizer.png'; md5=ff88b73cd5cc7b53ee219ee1bcb859bb"
+
+#: C/introduction.page:8(desc)
+msgid "Introduction to the <app>Frogr</app> Remote Organizer."
+msgstr "Uvod v  <app>Frogr</app> oddaljen organizator."
+
+#: C/introduction.page:12(title)
+#: C/common-problems.page:12(title)
+msgid "Frogr Introduction"
+msgstr "Predstavitev Frogr"
+
+#: C/introduction.page:13(p)
+msgid "<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> Remote Organizer. <app>Frogr</app> is a small application for the GNOME desktop that allows users to manage their accounts in the Flickr image hosting website."
+msgstr "<app>Frogr</app> je oddaljeni organizator <link href=\"http://www.flickr.com/\">Flickr</link>. <app>Frogr</app> je majhen program namizja GNOME, ki omogoča uporabnikom organizacijo svojih računov na gostiteljskem spletišču za slike Flickr."
+
+#: C/introduction.page:15(title)
+#: C/preferences.page:19(title)
+msgid "<gui>Frogr</gui> window"
+msgstr "Okno <gui>Frogr</gui>"
+
+#: C/introduction.page:16(desc)
+#: C/preferences.page:20(desc)
+#: C/preferences.page:31(desc)
+msgid "<app>Frogr</app> main window"
+msgstr "Glavno okno <app>Frogr</app>"
+
+#: C/introduction.page:18(p)
+#: C/preferences.page:22(p)
+#: C/preferences.page:33(p)
+msgid "<app>Frogr</app> main window."
+msgstr "Glavno okno <app>Frogr</app>."
+
+#: C/introduction.page:22(title)
+msgid "Flickr"
+msgstr "Flickr"
+
+#: C/introduction.page:23(p)
+msgid "<link href=\"http://www.flickr.com/\">Flickr</link> is a website allowing hosting of both images and videos."
+msgstr "<link href=\"http://www.flickr.com/\">Flickr</link> je spletišče, ki omogoča gostovanje slik in videov."
+
+#: C/introduction.page:26(title)
+msgid "Main Features"
+msgstr "Glavne zmožnosti"
+
+#: C/introduction.page:28(p)
+msgid "Allow to upload pictures to flickr"
+msgstr "Dovoli pošiljanje slik na flickr"
+
+#: C/introduction.page:29(p)
+msgid "Allow uploading pictures located in remote machines"
+msgstr "Dovoli pošiljanje slik, ki se nahajajo na oddaljenih računalnikih"
+
+#: C/introduction.page:30(p)
+msgid "Allow adding tags to pictures"
+msgstr "Dovoli dodajanje oznak k slikam"
+
+#: C/introduction.page:31(p)
+msgid "Allow specifying sets and group pools for the pictures to be added to after the upload process."
+msgstr "Dovoli določanje zbirk in skupin za slike, ki bodo dodane po opravilu pošiljanja."
+
+#: C/introduction.page:32(p)
+msgid "Support for handling multiple Flickr accounts."
+msgstr "Podpora za upravljanje več računov Flickr."
+
+#: C/create-account.page:8(desc)
+#: C/create-account.page:11(title)
+msgid "How to create your Account"
+msgstr "Kako lahko ustvarite lasten račun"
+
+#: C/create-account.page:12(p)
+msgid "First create an Account"
+msgstr "Najprej ustvarite račun"
+
+#: C/create-account.page:13(p)
+msgid "When you first run <app>Frogr</app>, it displays a window explaining you'll have to create an account."
+msgstr "Ko prvič zaženete <app>Frogr</app>, se prikaže okno, ki vam pojasni, da je potrebno ustvariti račun."
+
+#: C/create-account.page:14(p)
+msgid "Click Ok, it will run your favorite web browser. On your favourite web browser, either create a Flickr account or log in to an existing account."
+msgstr "Klik na V redu bo zagnal vaš priljubljeni spletni brskalnik. Na vašem priljubljenem spletnem brskalniku lahko ustvarite račun Flickr ali se prijavite na že obstoječi račun."
+
+#: C/create-account.page:15(p)
+msgid "Then, authorize <app>Frogr</app> to access to this account. You may now go back to <app>Frogr</app> window and use it to upload any picture!"
+msgstr "Nato odobrite <app>Frogr</app> za dostop do računa. Sedaj se lahko vrnete na okno <app>Frogr</app> in ga uporabite za pošiljanje katerekoli slike!"
+
+#: C/remove-pictures.page:9(desc)
+#: C/remove-pictures.page:12(title)
+msgid "Remove Pictures"
+msgstr "Odstranitev slik"
+
+#: C/remove-pictures.page:13(p)
+msgid "You can remove a picture using the toolbar <gui>Minus</gui> button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove Pictures</gui></guiseq>."
+msgstr "Sliko lahko odstranite z uporabo gumba orodne vrstice <gui>Minus</gui> ali uporabite meni <guiseq><gui>Datoteka</gui><gui>Odstrani slike</gui></guiseq>."
+
+#: C/index.page:8(title)
+msgid "Frogr Help"
+msgstr "Pomoč za Frogr"
+
+#: C/index.page:11(title)
+msgid "Managing Your Flickr Account"
+msgstr "Upravljanje vašega računa Flickr"
+
+#: C/index.page:15(title)
+msgid "Managing Your Pictures"
+msgstr "Upravljanje vaših slik"
+
+#: C/index.page:19(title)
+msgid "Organize Your Pictures"
+msgstr "Organizirajte svoje slike"
+
+#: C/index.page:23(title)
+msgid "Sort Pictures"
+msgstr "Razvrstitev slik"
+
+#: C/index.page:27(title)
+msgid "Set Up Frogr"
+msgstr "Nastavitev Frogr"
+
+#: C/index.page:31(title)
+msgid "Frenquently Asked Questions"
+msgstr "Pogosto zastavljena vprašanja"
+
+#: C/common-problems.page:9(desc)
+msgid "Frequently Asked Questions"
+msgstr "Pogosto zastavljena vprašanja"
+
+#: C/common-problems.page:16(title)
+msgid "Authorization browser window is not be launched"
+msgstr "Okno brskalnika za odobritev ne bo zagnano"
+
+#: C/common-problems.page:17(p)
+msgid "Check if you are using a proxy. This is a know bug."
+msgstr "Preverite, ali uporabljate posredovalni strežnik. To je poznan hrošč."
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/preferences.page:21(None)
+msgid "@@image: 'figures/preferences-general.png'; md5=1ec5069f89d46d8a6bdffa28b9a23fc9"
+msgstr "@@image: 'figures/general-filter.png'; md5=818fcb0f12da6496f3c72699f12beb28"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/preferences.page:32(None)
+msgid "@@image: 'figures/preferences-connection.png'; md5=3c2f7eb3ef0252262ffcb0e7d3e9dc85"
+msgstr "@@image: 'figures/preferences-connection.png'; md5=3c2f7eb3ef0252262ffcb0e7d3e9dc85"
+
+#: C/preferences.page:9(desc)
+#: C/preferences.page:12(title)
+msgid "Preferences"
+msgstr "Možnosti"
+
+#: C/preferences.page:14(p)
+msgid "Go to Preferences using menu <guiseq><gui>File</gui><gui>Preferences</gui></guiseq>."
+msgstr "Pojdite na Možnosti preko menija <guiseq><gui>Datoteka</gui><gui>Možnosti</gui></guiseq>."
+
+#: C/preferences.page:17(title)
+msgid "General Preferences"
+msgstr "Splošne možnosti"
+
+#: C/preferences.page:28(title)
+msgid "Connection Preferences"
+msgstr "Možnosti povezave"
+
+#: C/preferences.page:30(title)
+msgid "<gui>Frogr </gui> window"
+msgstr " Okno <gui> Frogr</gui>"
+
+#: C/group-pictures.page:9(desc)
+#: C/group-pictures.page:12(title)
+msgid "Group Pictures"
+msgstr "Združevanje slik"
+
+#: C/add-pictures.page:9(desc)
+#: C/add-pictures.page:12(title)
+msgid "Add Pictures"
+msgstr "Dodajanje slik"
+
+#: C/add-pictures.page:13(p)
+msgid "You can add a picture using the toolbar <gui>Plus</gui> button. Or, you can use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>."
+msgstr "Sliko lahko dodate z uporabo gumba orodne vrstice <gui>Plus</gui> ali uporabite meni <guiseq><gui>Datoteka</gui><gui>Dodaj slike</gui></guiseq>."
+
+#. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
+#: C/index.page:0(None)
+msgid "translator-credits"
+msgstr "Saša BatističAndrej Žnidaršič"
+
