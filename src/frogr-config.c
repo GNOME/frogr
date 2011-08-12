@@ -663,8 +663,8 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (node, "use-gnome-proxy", priv->use_gnome_proxy);
   xmlAddChild (root, node);
 
-  xml_path = g_build_filename (g_get_user_config_dir (),
-                               g_get_prgname (), SETTINGS_FILENAME, NULL);
+  xml_path = g_build_filename (g_get_user_config_dir (), APP_SHORTNAME,
+			       SETTINGS_FILENAME, NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
     g_critical ("Unable to open '%s' for saving", xml_path);
@@ -704,8 +704,8 @@ _save_accounts (FrogrConfig *self)
       _save_account_xml (account, root);
     }
 
-  xml_path = g_build_filename (g_get_user_config_dir (),
-                               g_get_prgname (), ACCOUNTS_FILENAME, NULL);
+  xml_path = g_build_filename (g_get_user_config_dir (), APP_SHORTNAME,
+			       ACCOUNTS_FILENAME, NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
     g_critical ("Unable to open '%s' for saving", xml_path);
@@ -916,7 +916,7 @@ frogr_config_init (FrogrConfig *self)
   priv->proxy_password = NULL;
 
   /* Ensure that we have the config directory in place. */
-  config_dir = g_build_filename (g_get_user_config_dir (), g_get_prgname (), NULL);
+  config_dir = g_build_filename (g_get_user_config_dir (), APP_SHORTNAME, NULL);
   if (g_mkdir_with_parents (config_dir, 0777) != 0)
     {
       g_warning ("Could not create config directory '%s' (%s)",
