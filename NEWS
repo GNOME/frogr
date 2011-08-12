@@ -21,7 +21,8 @@
   * Raised glib minimum version up to 2.22.
   * Raised gtk+ minimum version up to 2.16.
   * Raised libsoup minimum version up to 2.26.
-  * Use libsoup-gnome if available (for using GNOME general proxy settings).
+  * New build dependency: gnome-doc-utils (needed for gnome-doc-prepare).
+  * New build dependency: libsoup-gnome (for using GNOME general proxy settings).
   * Added new user manual with some translations: cs, de, es, fr, en_GB, ru.
   * Several other minor improvements, small bug fixes and cleanups.
 
