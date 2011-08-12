@@ -146,12 +146,7 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 
       uris = _get_uris_string_from_list (uris_list);
 
-#ifdef MAC_INTEGRATION
-      /* In MacOSX use 'open' instead of 'gnome-open' */
-      command = g_strdup_printf ("open %s", uris);
-#else
       command = g_strdup_printf ("gnome-open %s", uris);
-#endif
       _spawn_command (command);
 
       if (error)
@@ -165,8 +160,30 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
     }
 }
 
-void
-frogr_util_open_uri (const gchar *uri)
+#ifdef MAC_INTEGRATION
+static void
+_open_uri_for_mac (const gchar *uri)
+{
+  GError *error = NULL;
+  gchar *command = NULL;
+
+  /* In MacOSX use 'open' instead of 'gnome-open' */
+  command = g_strdup_printf ("open %s", uri);
+  _spawn_command (command);
+
+  if (error)
+    {
+      DEBUG ("Error opening URI %s: %s", uri, error->message);
+      g_error_free (error);
+    }
+
+  g_free (command);
+}
+#endif
+
+#ifndef MAC_INTEGRATION
+static void
+_open_uri_for_gnome (const gchar *uri)
 {
   static GAppInfo *http_app_info = NULL;
   static GAppInfo *help_app_info = NULL;
@@ -202,6 +219,17 @@ frogr_util_open_uri (const gchar *uri)
     _open_uris_with_app_info (uris_list, app_info);
 
   g_list_free (uris_list);
+}
+#endif
+
+void
+frogr_util_open_uri (const gchar *uri)
+{
+#ifdef MAC_INTEGRATION
+  _open_uri_for_mac (uri);
+#else
+  _open_uri_for_gnome (uri);
+#endif
 }
 
 void
