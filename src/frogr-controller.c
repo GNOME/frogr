@@ -137,7 +137,9 @@ static void _enable_cancellable (FrogrController *self, gboolean enable);
 static void _notify_error_to_user (FrogrController *self,
                                    GError *error);
 
-static void _show_auth_failed_dialog (GtkWindow *parent, const gchar *message);
+static void _show_auth_failed_dialog (GtkWindow *parent, const gchar *message, gboolean auto_retry);
+
+static void _show_auth_failed_dialog_and_retry (GtkWindow *parent, const gchar *message);
 
 static void _data_fraction_sent_cb (FspSession *session, gdouble fraction, gpointer data);
 
@@ -332,7 +334,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
 
     case FSP_ERROR_AUTHENTICATION_FAILED:
       msg = g_strdup_printf (_("Authorization failed.\nPlease try again"));
-      error_function = _show_auth_failed_dialog;
+      error_function = _show_auth_failed_dialog_and_retry;
       break;
 
     case FSP_ERROR_NOT_AUTHENTICATED:
@@ -366,7 +368,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
 }
 
 static void
-_show_auth_failed_dialog (GtkWindow *parent, const gchar *message)
+_show_auth_failed_dialog (GtkWindow *parent, const gchar *message, gboolean auto_retry)
 {
   GtkWidget *dialog = NULL;
 
@@ -379,9 +381,15 @@ _show_auth_failed_dialog (GtkWindow *parent, const gchar *message)
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_auth_failed_dialog_response_cb),
-                    NULL);
+                    GINT_TO_POINTER ((gint)auto_retry));
 
   gtk_widget_show_all (dialog);
+}
+
+static void
+_show_auth_failed_dialog_and_retry (GtkWindow *parent, const gchar *message)
+{
+  _show_auth_failed_dialog (parent, message, TRUE);
 }
 
 static void
@@ -399,7 +407,8 @@ _data_fraction_sent_cb (FspSession *session, gdouble fraction, gpointer data)
 static void
 _auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
-  if (response == GTK_RESPONSE_OK)
+  gboolean auto_retry = (gboolean)GPOINTER_TO_INT (data);
+  if (auto_retry && response == GTK_RESPONSE_OK)
     {
       frogr_controller_show_auth_dialog (frogr_controller_get_instance ());
       DEBUG ("%s", "Showing the authorization dialog once again...");
@@ -503,7 +512,7 @@ _cancel_authorization_on_timeout (gpointer data)
       frogr_main_view_hide_progress (priv->mainview);
 
       window = frogr_main_view_get_window (priv->mainview);
-      _show_auth_failed_dialog (window, _("Authorization failed (timed out)\nPlease try again"));
+      _show_auth_failed_dialog (window, _("Authorization failed (timed out)\nPlease try again"), FALSE);
     }
 
   return FALSE;
