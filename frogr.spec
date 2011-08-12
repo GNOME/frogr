@@ -1,7 +1,7 @@
 Name:		frogr
 Version:	0.6
 Summary:	Flickr Remote Organizer for GNOME
-Release:	1%{?dist}
+Release:	0%{?dist}
 
 Group:		Applications/Internet
 License:	GPLv3
@@ -74,7 +74,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
-* Fri Aug 01 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.6-1
+* Fri Aug 13 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.6-0
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
 
