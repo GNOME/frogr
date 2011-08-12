@@ -1,5 +1,5 @@
-0.6 (??)
-========
+0.6 (13 Aug 2011)
+=================
 
   * Support for using the GNOME general proxy settings (requires libsoup-gnome).
   * Allow setting license type from the details dialog.
