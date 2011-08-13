@@ -105,6 +105,8 @@ void frogr_picture_set_content_type (FrogrPicture *self,
                                      FspContentType content_type);
 FspLicense frogr_picture_get_license (FrogrPicture *self);
 void frogr_picture_set_license (FrogrPicture *self, FspLicense license);
+FspLocation *frogr_picture_get_location (FrogrPicture *self);
+void frogr_picture_set_location (FrogrPicture *self, FspLocation *location);
 
 gboolean frogr_picture_show_in_search (FrogrPicture *self);
 void frogr_picture_set_show_in_search (FrogrPicture *self,
