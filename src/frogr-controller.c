@@ -80,6 +80,7 @@ struct _FrogrControllerPrivate
   gboolean fetching_groups;
   gboolean fetching_tags;
   gboolean setting_license;
+  gboolean setting_location;
   gboolean adding_to_set;
   gboolean adding_to_group;
 
@@ -159,6 +160,10 @@ static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer dat
 
 static void _set_license_cb (GObject *object, GAsyncResult *res, gpointer data);
 
+static void _set_location_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static gboolean _set_location_on_idle (gpointer data);
+
 static gboolean _create_set_or_add_picture_on_idle (gpointer data);
 
 static gboolean _create_set_or_add_picture (FrogrController *self,
@@ -177,6 +182,9 @@ static gboolean _complete_picture_upload_on_idle (gpointer data);
 
 static void _notify_setting_license (FrogrController *self,
                                      FrogrPicture *picture);
+
+static void _notify_setting_location (FrogrController *self,
+                                      FrogrPicture *picture);
 
 static void _notify_creating_set (FrogrController *self,
                                   FrogrPicture *picture,
@@ -629,6 +637,11 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
                                          up_st);
         }
 
+      if (frogr_picture_get_location (picture) != NULL)
+        {
+          gdk_threads_add_timeout (DEFAULT_TIMEOUT, _set_location_on_idle, up_st);
+        }
+
       /* Add picture to set if needed (and maybe create a new one) */
       if (g_slist_length (sets) > 0)
         {
@@ -676,6 +689,61 @@ _set_license_cb (GObject *object, GAsyncResult *res, gpointer data)
   priv->setting_license = FALSE;
 }
 
+static void
+_set_location_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspSession *session = NULL;
+  upload_picture_st *up_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  up_st = (upload_picture_st*) data;
+  controller = up_st->controller;
+
+  fsp_session_set_location_finish (session, res, &error);
+  if (error)
+    {
+      /* We do not anything special if something went wrong here */
+      DEBUG ("Error setting location for picture: %s", error->message);
+      g_free (error);
+    }
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  priv->setting_location = FALSE;
+}
+
+static gboolean
+_set_location_on_idle (gpointer data)
+{
+  upload_picture_st *up_st = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+  FspLocation *location;
+
+  up_st = (upload_picture_st*) data;
+  controller = up_st->controller;
+  picture = up_st->picture;
+  location = frogr_picture_get_location (picture);
+
+  /* Keep the source while busy */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  if (priv->setting_license)
+    return TRUE;
+
+  priv->setting_location = TRUE;
+  _notify_setting_location (controller, picture);
+  fsp_session_set_location_async (priv->session,
+                                  frogr_picture_get_id (picture),
+                                  location,
+                                  priv->last_cancellable,
+                                  _set_location_cb,
+                                  up_st);
+  return FALSE;
+}
+
 static gboolean
 _create_set_or_add_picture_on_idle (gpointer data)
 {
@@ -690,7 +758,7 @@ _create_set_or_add_picture_on_idle (gpointer data)
 
   /* Keep the source while busy */
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if (priv->setting_license)
+  if ((priv->setting_license) || (priv->setting_location))
     return TRUE;
 
   _create_set_or_add_picture (controller, picture, up_st);
@@ -971,7 +1039,7 @@ _complete_picture_upload_on_idle (gpointer data)
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while busy */
-  if (priv->setting_license || priv->adding_to_set || priv->adding_to_group)
+  if (priv->setting_license || priv->setting_location || priv->adding_to_set || priv->adding_to_group)
     {
       frogr_main_view_pulse_progress (priv->mainview);
       return TRUE;
@@ -1016,6 +1084,27 @@ _notify_setting_license (FrogrController *self,
   license = frogr_picture_get_license (picture);
   debug_msg = g_strdup_printf ("Setting license %d for picture %s…",
                                license, picture_title);
+  DEBUG ("%s", debug_msg);
+
+  g_free (debug_msg);
+}
+
+static void
+_notify_setting_location (FrogrController *self,
+                          FrogrPicture *picture)
+{
+  FrogrControllerPrivate *priv = NULL;
+  const gchar *picture_title = NULL;
+  FspLocation *location;
+  gchar *debug_msg = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  frogr_main_view_set_progress_description(priv->mainview, _("Setting geolocation for picture…"));
+
+  picture_title = frogr_picture_get_title (picture);
+  location = frogr_picture_get_location (picture);
+  debug_msg = g_strdup_printf ("Setting geolocation (%f, %f) for picture %s…",
+                               location->latitude, location->longitude, picture_title);
   DEBUG ("%s", debug_msg);
 
   g_free (debug_msg);
@@ -1952,6 +2041,7 @@ frogr_controller_init (FrogrController *self)
   priv->fetching_groups = FALSE;
   priv->fetching_tags = FALSE;
   priv->setting_license = FALSE;
+  priv->setting_location = FALSE;
   priv->adding_to_set = FALSE;
   priv->adding_to_group = FALSE;
   priv->account_info_fetched = FALSE;
