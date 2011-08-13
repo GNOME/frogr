@@ -512,7 +512,7 @@ _cancel_authorization_on_timeout (gpointer data)
       frogr_main_view_hide_progress (priv->mainview);
 
       window = frogr_main_view_get_window (priv->mainview);
-      _show_auth_failed_dialog (window, _("Authorization failed (timed out)\nPlease try again"), FALSE);
+      _show_auth_failed_dialog (window, _("Authorization failed (timed out)"), FALSE);
     }
 
   return FALSE;
