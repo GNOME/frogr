@@ -80,6 +80,7 @@ main (int argc, char **argv)
 {
   FrogrController *fcontroller = NULL;
   GSList *fileuris = NULL;
+  GtkSettings *gtk_settings;
 
   /* Check optional command line parameters */
   if (argc > 1)
@@ -98,6 +99,10 @@ main (int argc, char **argv)
   bindtextdomain (GETTEXT_PACKAGE, frogr_util_get_locale_dir ());
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
+
+  gtk_settings = gtk_settings_get_default ();
+  g_object_set (G_OBJECT (gtk_settings), "gtk-application-prefer-dark-theme",
+                TRUE, NULL);
 
   /* Init libxml2 library */
   xmlInitParser ();
