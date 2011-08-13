@@ -64,6 +64,7 @@ struct _FrogrPictureLoaderPrivate
   FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
+  FspLocation *location;
 
   FrogrPictureLoadedCallback picture_loaded_cb;
   FrogrPicturesLoadedCallback pictures_loaded_cb;
@@ -192,6 +193,87 @@ _load_next_picture (FrogrPictureLoader *self)
     }
 }
 
+/* get_gps_coordinate is from
+ * tracker/src/libtracker-extract//tracker-exif.c,
+ * Copyright (C) 2009, Nokia <ivan.frade@nokia.com>
+ * Licensed under the GNU Lesser General Public License Version 2.1 or later
+ */
+static gboolean
+get_gps_coordinate (ExifData *exif,
+                    ExifTag   tag,
+                    ExifTag   reftag,
+                    gdouble  *coordinate)
+{
+  ExifEntry *entry = exif_data_get_entry (exif, tag);
+  ExifEntry *refentry = exif_data_get_entry (exif, reftag);
+
+  g_return_val_if_fail (coordinate != NULL, FALSE);
+
+  if (entry && refentry)
+    {
+      ExifByteOrder order;
+      ExifRational c1,c2,c3;
+      gfloat f;
+      gchar ref;
+
+      order = exif_data_get_byte_order (exif);
+      c1 = exif_get_rational (entry->data, order);
+      c2 = exif_get_rational (entry->data+8, order);
+      c3 = exif_get_rational (entry->data+16, order);
+      ref = exif_get_short (refentry->data, order);
+
+      /* Avoid ridiculous values */
+      if (c1.denominator == 0 ||
+          c2.denominator == 0 ||
+          c3.denominator == 0)
+        {
+          return FALSE;
+        }
+
+      f = (double)c1.numerator/c1.denominator+
+          (double)c2.numerator/(c2.denominator*60)+
+          (double)c3.numerator/(c3.denominator*60*60);
+
+      if (ref == 'S' || ref == 'W')
+        {
+          f = -1 * f;
+        }
+
+      *coordinate = f;
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+FspLocation *get_location_from_exif (ExifData *exif_data)
+{
+    ExifEntry *exif_entry;
+    FspLocation *location;
+    gdouble coordinate;
+    gboolean found;
+
+    if (!exif_data)
+      return NULL;
+    found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LATITUDE,
+                                EXIF_TAG_GPS_LATITUDE_REF, &coordinate);
+    if (!found)
+      return NULL;
+
+    location = g_new0 (FspLocation, 1);
+    location->latitude = coordinate;
+
+    found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LONGITUDE,
+                                EXIF_TAG_GPS_LONGITUDE_REF, &location->longitude);
+    if (!found)
+      {
+        g_free (location);
+        return NULL;
+      }
+
+    return location;
+}
+
 static void
 _load_next_picture_cb (GObject *object,
                        GAsyncResult *res,
@@ -289,6 +371,8 @@ _load_next_picture_cb (GObject *object,
           exif_data = exif_loader_get_data (exif_loader);
           if (exif_data)
             {
+              FspLocation *location;
+
               exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
               if (exif_entry)
                 {
@@ -302,6 +386,12 @@ _load_next_picture_cb (GObject *object,
                     }
                   else
                     g_warning ("Found DateTime exif tag of invalid type");
+                }
+              location = get_location_from_exif (exif_data);
+              if (location != NULL)
+                {
+                  /* frogr_picture_set_location takes ownership of location */
+                  frogr_picture_set_location (fpicture, location);
                 }
               exif_data_unref (exif_data);
             }
@@ -398,6 +488,7 @@ _frogr_picture_loader_finalize (GObject* object)
   /* Free */
   g_slist_foreach (priv->file_uris, (GFunc)g_free, NULL);
   g_slist_free (priv->file_uris);
+  g_free (priv->location);
 
   G_OBJECT_CLASS (frogr_picture_loader_parent_class)->finalize(object);
 }
