@@ -96,6 +96,19 @@ typedef enum {
 } FspLicense;
 
 typedef enum {
+  FSP_LOCATION_CONTEXT_UNKNOWN    = 0,
+  FSP_LOCATION_CONTEXT_INDOORS    = 1,
+  FSP_LOCATION_CONTEXT_OUTDOORS   = 2
+} FspLocationContext;
+
+typedef struct {
+    gdouble latitude;
+    gdouble longitude;
+    unsigned char accuracy;
+    FspLocationContext context;
+} FspLocation;
+
+typedef enum {
   FSP_ROTATION_NONE = 0,
   FSP_ROTATION_90   = 90,
   FSP_ROTATION_180  = 180,

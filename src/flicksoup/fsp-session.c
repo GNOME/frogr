@@ -266,6 +266,11 @@ _set_license_soup_session_cb            (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
 
+static void
+_set_location_soup_session_cb            (SoupSession *session,
+                                          SoupMessage *msg,
+                                          gpointer     data);
+
 /* Private API */
 
 static void
@@ -1269,6 +1274,19 @@ _set_license_soup_session_cb            (SoupSession *session,
                          data);
 }
 
+static void
+_set_location_soup_session_cb            (SoupSession *session,
+                                          SoupMessage *msg,
+                                          gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_set_location,
+                         data);
+}
 
 /* Public API */
 
@@ -2165,6 +2183,76 @@ fsp_session_set_license_finish          (FspSession    *self,
 
   result = _finish_async_request (G_OBJECT (self), res,
                                   fsp_session_set_license_async, error);
+
+  return result ? TRUE : FALSE;
+}
+
+void
+fsp_session_set_location_async           (FspSession          *self,
+                                          const gchar         *photo_id,
+                                          FspLocation         *location,
+                                          GCancellable        *cancellable,
+                                          GAsyncReadyCallback  callback,
+                                          gpointer             data)
+{
+  FspSessionPrivate *priv = NULL;
+  SoupSession *soup_session = NULL;
+  gchar lat_str[G_ASCII_DTOSTR_BUF_SIZE];
+  gchar lon_str[G_ASCII_DTOSTR_BUF_SIZE];
+  gchar *accuracy_str = NULL;
+  gchar *context_str = NULL;
+  gchar *url = NULL;
+  gchar *signed_query = NULL;
+
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+
+  /* Build the signed url */
+  priv = self->priv;
+  g_ascii_dtostr (lat_str, sizeof (lat_str), location->latitude);
+  g_ascii_dtostr (lon_str, sizeof (lon_str), location->longitude);
+  if ((location->accuracy >= 1) && (location->accuracy <= 16))
+    {
+      /* restricting to [1..16] since these are the values accepted by flickr */
+      accuracy_str = g_strdup_printf ("%d", location->accuracy);
+    }
+  context_str = g_strdup_printf ("%d", location->context);
+  /* FIXME: not sure how to handle the optional 'accuracy' here... */
+  signed_query = _get_signed_query (priv->secret,
+                                    "method", "flickr.photos.geo.setLocation",
+                                    "api_key", priv->api_key,
+                                    "auth_token", priv->token,
+                                    "photo_id", photo_id,
+                                    "lat", lat_str,
+                                    "lon", lon_str,
+                                    "context", context_str,
+                                    NULL);
+  g_free (accuracy_str);
+  g_free (context_str);
+  url = g_strdup_printf ("%s/?%s", FLICKR_API_BASE_URL, signed_query);
+  g_free (signed_query);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  _perform_async_request (soup_session, url,
+                          _set_location_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_set_location_async, data);
+
+  g_free (url);
+}
+
+gboolean
+fsp_session_set_location_finish          (FspSession    *self,
+                                          GAsyncResult  *res,
+                                          GError       **error)
+{
+  gpointer result = NULL;
+
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  result = _finish_async_request (G_OBJECT (self), res,
+                                  fsp_session_set_location_async, error);
 
   return result ? TRUE : FALSE;
 }

@@ -139,6 +139,11 @@ fsp_parser_set_license                  (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error);
 
+gpointer
+fsp_parser_set_location                  (FspParser  *self,
+                                          const gchar      *buffer,
+                                          gulong            buf_size,
+                                          GError          **error);
 G_END_DECLS
 
 #endif

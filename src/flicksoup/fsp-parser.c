@@ -97,6 +97,9 @@ _get_tags_list_parser                   (xmlDoc  *doc,
 static gpointer
 _set_license_parser                     (xmlDoc  *doc,
                                          GError **error);
+static gpointer
+_set_location_parser                     (xmlDoc  *doc,
+                                          GError **error);
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node);
@@ -282,6 +285,8 @@ _get_error_method_from_parser           (gpointer (*body_parser)
     error_method = FSP_ERROR_METHOD_TAG_GET_LIST;
   else if (body_parser == _set_license_parser)
     error_method = FSP_ERROR_METHOD_SET_LICENSE;
+  else if (body_parser == _set_location_parser)
+    error_method = FSP_ERROR_METHOD_SET_LOCATION;
 
   return error_method;
 }
@@ -857,6 +862,14 @@ _set_license_parser                     (xmlDoc  *doc,
   return NULL;
 }
 
+static gpointer
+_set_location_parser                     (xmlDoc  *doc,
+                                         GError **error)
+{
+  /* Dummy parser, as there is no response for this method */
+  return NULL;
+}
+
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node)
 {
@@ -1339,6 +1352,23 @@ fsp_parser_set_license                  (FspParser  *self,
   /* Process the response */
   _process_xml_response (self, buffer, buf_size,
                          _set_license_parser, error);
+
+  /* No return value for this method */
+  return GINT_TO_POINTER ((gint)(*error == NULL));
+}
+
+gpointer
+fsp_parser_set_location                  (FspParser  *self,
+                                          const gchar      *buffer,
+                                          gulong            buf_size,
+                                          GError          **error)
+{
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  /* Process the response */
+  _process_xml_response (self, buffer, buf_size,
+                         _set_location_parser, error);
 
   /* No return value for this method */
   return GINT_TO_POINTER ((gint)(*error == NULL));
