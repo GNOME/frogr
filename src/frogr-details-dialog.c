@@ -371,6 +371,7 @@ _create_widgets (FrogrDetailsDialog *self)
   for (i = 0; license_descriptions[i]; i++)
     gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (widget), i, _(license_descriptions[i]));
 #else
+  widget = gtk_combo_box_new_text ();
   for (i = 0; license_descriptions[i]; i++)
     gtk_combo_box_insert_text (GTK_COMBO_BOX (widget), i, _(license_descriptions[i]));
 #endif
