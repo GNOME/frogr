@@ -303,7 +303,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   for (i = 0; license_descriptions[i]; i++)
     gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), i, _(license_descriptions[i]));
 #else
-  widget = gtk_combo_box_new_text ();
+  combo = gtk_combo_box_new_text ();
   for (i = 0; license_descriptions[i]; i++)
     gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, _(license_descriptions[i]));
 #endif
