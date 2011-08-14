@@ -204,6 +204,7 @@ _load_next_picture_cb (GObject *object,
   GError *error = NULL;
   gchar *contents = NULL;
   gsize length = 0;
+  gboolean keep_going = TRUE;
 
   self = FROGR_PICTURE_LOADER (data);;
   priv = FROGR_PICTURE_LOADER_GET_PRIVATE (self);
@@ -346,15 +347,24 @@ _load_next_picture_cb (GObject *object,
 
   /* Execute 'picture-loaded' callback */
   if (priv->picture_loaded_cb && fpicture)
-    priv->picture_loaded_cb (priv->object, fpicture);
+    keep_going = priv->picture_loaded_cb (priv->object, fpicture);
 
   /* Free memory */
   g_free (contents);
   if (fpicture != NULL)
     g_object_unref (fpicture);
 
-  /* Go for the next picture */
-  _load_next_picture (self);
+  /* Go for the next picture, if needed */
+  if (keep_going)
+    _load_next_picture (self);
+  else {
+    /* Execute final callback */
+    if (priv->pictures_loaded_cb)
+      priv->pictures_loaded_cb (priv->object);
+
+    /* Process finished, self-destruct */
+    g_object_unref (self);
+  }
 }
 
 static void

@@ -39,8 +39,8 @@ typedef struct _FrogrPictureLoader FrogrPictureLoader;
 typedef struct _FrogrPictureLoaderClass FrogrPictureLoaderClass;
 
 /* Callback to be executed after every single load */
-typedef void (*FrogrPictureLoadedCallback) (GObject *source,
-                                            FrogrPicture *picture);
+typedef gboolean (*FrogrPictureLoadedCallback) (GObject *source,
+                                                FrogrPicture *picture);
 
 /* Callback to be executed after all the pictures are loaded */
 typedef void (*FrogrPicturesLoadedCallback) (GObject *source);

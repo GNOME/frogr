@@ -190,7 +190,7 @@ static void _notify_adding_to_group (FrogrController *self,
                                      FrogrPicture *picture,
                                      FrogrGroup *group);
 
-static void _on_picture_loaded (FrogrController *self, FrogrPicture *picture);
+static gboolean _on_picture_loaded (FrogrController *self, FrogrPicture *picture);
 
 static void _on_pictures_loaded (FrogrController *self);
 
@@ -1096,20 +1096,49 @@ _notify_adding_to_group (FrogrController *self,
   g_free (debug_msg);
 }
 
-static void
+static gboolean
 _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
+  gulong picture_filesize = 0;
+  gulong max_filesize = G_MAXULONG;
 
-  g_return_if_fail (FROGR_IS_CONTROLLER (self));
-  g_return_if_fail (FROGR_IS_PICTURE (picture));
+  g_return_val_if_fail (FROGR_IS_CONTROLLER (self), FALSE);
+  g_return_val_if_fail (FROGR_IS_PICTURE (picture), FALSE);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
+  /* We need this info if account info was already fetched. */
+  if (priv->account && priv->account_extra_info_fetched) {
+    max_filesize = frogr_account_get_max_filesize (priv->account);
+    picture_filesize = frogr_picture_get_filesize (picture);
+  }
+
+  /* Check max filesize limit, and stop the process if needed. */
+  if (picture_filesize > max_filesize) {
+    GtkWindow *window = NULL;
+    gchar *msg = NULL;
+
+    /* First %s is the title of the picture (filename of the file by
+       default). Second %s is the max allowed size for a picture to be
+       uploaded to flickr (different for free and PRO accounts). */
+    msg = g_strdup_printf (_("Can't load picture %s: size of file is bigger "
+                             "than the maximum allowed for this account (%s)"),
+                           frogr_picture_get_title (picture),
+                           frogr_util_get_datasize_string (max_filesize));
+
+    window = frogr_main_view_get_window (priv->mainview);
+    frogr_util_show_error_dialog (window, msg);
+    g_free (msg);
+
+    return FALSE;
+  }
+
   frogr_main_view_model_add_picture (mainview_model, picture);
   g_signal_emit (self, signals[PICTURE_LOADED], 0, picture);
+  return TRUE;
 }
 
 static void
