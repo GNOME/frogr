@@ -1480,6 +1480,7 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
       frogr_account_set_remaining_bandwidth (priv->account,
                                              upload_status->bw_remaining_kb);
       frogr_account_set_max_bandwidth (priv->account, upload_status->bw_max_kb);
+      frogr_account_set_max_filesize (priv->account, upload_status->fs_max_kb);
       frogr_account_set_is_pro (priv->account, upload_status->pro_user);
 
       if (old_remaining_bw != upload_status->bw_remaining_kb

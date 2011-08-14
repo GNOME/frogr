@@ -96,6 +96,11 @@ gulong frogr_account_get_max_bandwidth (FrogrAccount *self);
 void frogr_account_set_max_bandwidth (FrogrAccount *self,
                                       gulong max_bandwidth);
 
+gulong frogr_account_get_max_filesize (FrogrAccount *self);
+
+void frogr_account_set_max_filesize (FrogrAccount *self,
+                                     gulong max_filesize);
+
 gboolean frogr_account_is_pro (FrogrAccount *self);
 
 void frogr_account_set_is_pro (FrogrAccount *self, gboolean is_pro);

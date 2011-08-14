@@ -44,6 +44,7 @@ struct _FrogrAccountPrivate
   /* Following properties won't be persistent */
   gulong remaining_bandwidth;
   gulong max_bandwidth;
+  gulong max_filesize;
   gboolean is_pro;
 };
 
@@ -59,6 +60,7 @@ enum {
   PROP_IS_ACTIVE,
   PROP_REMAINING_BANDWIDTH,
   PROP_MAX_BANDWIDTH,
+  PROP_MAX_FILESIZE,
   PROP_IS_PRO
 };
 
@@ -105,6 +107,10 @@ _frogr_account_set_property (GObject      *object,
 
     case PROP_MAX_BANDWIDTH:
       frogr_account_set_max_bandwidth (self, g_value_get_ulong (value));
+      break;
+
+    case PROP_MAX_FILESIZE:
+      frogr_account_set_max_filesize (self, g_value_get_ulong (value));
       break;
 
     case PROP_IS_PRO:
@@ -156,6 +162,10 @@ _frogr_account_get_property (GObject    *object,
 
     case PROP_MAX_BANDWIDTH:
       g_value_set_ulong (value, priv->max_bandwidth);
+      break;
+
+    case PROP_MAX_FILESIZE:
+      g_value_set_ulong (value, priv->max_filesize);
       break;
 
     case PROP_IS_PRO:
@@ -249,6 +259,13 @@ frogr_account_class_init (FrogrAccountClass *klass)
                               G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_MAX_BANDWIDTH, pspec);
 
+  pspec = g_param_spec_ulong ("max-filesize",
+                              "max-filesize",
+                              "Max allowed filesize in KB",
+                              0, G_MAXULONG, G_MAXULONG,
+                              G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_MAX_FILESIZE, pspec);
+
   pspec = g_param_spec_boolean ("is-pro",
                                 "is-pro",
                                 "Whether the user has a Pro account or not",
@@ -271,6 +288,7 @@ frogr_account_init (FrogrAccount *self)
   priv->is_active = FALSE;
   priv->remaining_bandwidth = G_MAXULONG;
   priv->max_bandwidth = G_MAXULONG;
+  priv->max_filesize = G_MAXULONG;
   priv->is_pro = FALSE;
 }
 
@@ -471,6 +489,28 @@ frogr_account_set_max_bandwidth (FrogrAccount *self, gulong max_bandwidth)
   priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv->max_bandwidth = max_bandwidth;
 }
+
+gulong frogr_account_get_max_filesize (FrogrAccount *self)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXULONG);
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->max_filesize;
+}
+
+void frogr_account_set_max_filesize (FrogrAccount *self,
+                                     gulong max_filesize)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->max_filesize = max_filesize;
+}
+
 
 gboolean
 frogr_account_is_pro (FrogrAccount *self)
