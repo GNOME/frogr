@@ -52,6 +52,7 @@ struct _FrogrConfigPrivate
   gboolean public;
   gboolean family;
   gboolean friend;
+  gboolean send_geolocation_data;
   gboolean show_in_search;
 
   FspLicense license;
@@ -328,6 +329,12 @@ _load_visibility_xml (FrogrConfig *self,
         {
           content = xmlNodeGetContent (node);
           priv->friend = !xmlStrcmp (content, (const xmlChar*) "1");
+        }
+
+      if (!xmlStrcmp (node->name, (const xmlChar*) "send-geolocation-data"))
+        {
+          content = xmlNodeGetContent (node);
+          priv->send_geolocation_data = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "show-in-search"))
@@ -633,6 +640,7 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (node, "public", priv->public);
   _xml_add_bool_child (node, "family", priv->family);
   _xml_add_bool_child (node, "friend", priv->friend);
+  _xml_add_bool_child (node, "send-geolocation-data", priv->send_geolocation_data);
   _xml_add_bool_child (node, "show-in-search", priv->show_in_search);
   xmlAddChild (root, node);
 
@@ -899,6 +907,7 @@ frogr_config_init (FrogrConfig *self)
   priv->public = FALSE;
   priv->family = FALSE;
   priv->friend = FALSE;
+  priv->send_geolocation_data = FALSE;
   priv->show_in_search = TRUE;
   priv->license = FSP_LICENSE_NONE;
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
@@ -1208,6 +1217,28 @@ frogr_config_get_default_content_type (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->content_type;
+}
+
+void
+frogr_config_set_default_send_geolocation_data (FrogrConfig *self, gboolean value)
+{
+  FrogrConfigPrivate * priv = NULL;
+
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->send_geolocation_data = value;
+}
+
+gboolean
+frogr_config_get_default_send_geolocation_data (FrogrConfig *self)
+{
+  FrogrConfigPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->send_geolocation_data;
 }
 
 void

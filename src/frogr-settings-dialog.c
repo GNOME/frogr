@@ -45,6 +45,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *friend_cb;
   GtkWidget *family_cb;
   GtkWidget *show_in_search_cb;
+  GtkWidget *send_geolocation_data_cb;
   GtkWidget *license_cb;
   GtkWidget *photo_content_rb;
   GtkWidget *sshot_content_rb;
@@ -52,8 +53,6 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *safe_rb;
   GtkWidget *moderate_rb;
   GtkWidget *restricted_rb;
-  GtkWidget *disable_tags_autocompletion_cb;
-  GtkWidget *keep_file_extensions_cb;
 
   GtkWidget *use_proxy_cb;
   GtkWidget *proxy_host_label;
@@ -66,10 +65,14 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *proxy_password_entry;
   GtkWidget *use_gnome_proxy_cb;
 
+  GtkWidget *disable_tags_autocompletion_cb;
+  GtkWidget *keep_file_extensions_cb;
+
   gboolean public_visibility;
   gboolean family_visibility;
   gboolean friend_visibility;
   gboolean show_in_search;
+  gboolean send_geolocation_data;
   gboolean disable_tags_autocompletion;
   gboolean keep_file_extensions;
   FspLicense license;
@@ -223,6 +226,9 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_pack_start (GTK_BOX (padding_hbox), box2, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (box1), padding_hbox, FALSE, FALSE, 0);
 
+  _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
+                        _("Send _location aware information if present"),
+                        &priv->send_geolocation_data_cb);
   _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
                         _("_Show up in Global Search Results"),
                         &priv->show_in_search_cb);
@@ -485,7 +491,7 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   vbox = gtk_vbox_new (FALSE, 6);
 #endif
 
-  /* Misc */
+  /* Other Stuff */
 
   label = gtk_label_new (NULL);
   gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -527,6 +533,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->public_visibility = frogr_config_get_default_public (priv->config);
   priv->family_visibility = frogr_config_get_default_family (priv->config);
   priv->friend_visibility = frogr_config_get_default_friend (priv->config);
+  priv->send_geolocation_data = frogr_config_get_default_send_geolocation_data (priv->config);
   priv->show_in_search = frogr_config_get_default_show_in_search (priv->config);
   priv->license = frogr_config_get_default_license (priv->config);
   priv->content_type = frogr_config_get_default_content_type (priv->config);
@@ -568,6 +575,8 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
                                 priv->family_visibility);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb),
                                 priv->friend_visibility);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->send_geolocation_data_cb),
+                                priv->send_geolocation_data);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
                                 priv->show_in_search);
 
@@ -629,6 +638,7 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_public (priv->config, priv->public_visibility);
   frogr_config_set_default_family (priv->config, priv->family_visibility);
   frogr_config_set_default_friend (priv->config, priv->friend_visibility);
+  frogr_config_set_default_send_geolocation_data (priv->config, priv->send_geolocation_data);
   frogr_config_set_default_show_in_search (priv->config, priv->show_in_search);
 
   frogr_config_set_default_license (priv->config, priv->license);
@@ -731,6 +741,12 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
     {
       priv->friend_visibility = active;
       DEBUG ("friend visibility set to %s", active ? "TRUE" : "FALSE");
+    }
+
+  if (GTK_WIDGET (button) == priv->send_geolocation_data_cb)
+    {
+      priv->send_geolocation_data = active;
+      DEBUG ("Send geolocation data set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->show_in_search_cb)
@@ -929,6 +945,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->private_rb = NULL;
   priv->friend_cb = NULL;
   priv->family_cb = NULL;
+  priv->send_geolocation_data_cb = NULL;
   priv->show_in_search_cb = NULL;
   priv->license_cb = NULL;
   priv->photo_content_rb = NULL;
@@ -952,6 +969,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->public_visibility = FALSE;
   priv->family_visibility = FALSE;
   priv->friend_visibility = FALSE;
+  priv->send_geolocation_data = FALSE;
   priv->show_in_search = FALSE;
   priv->license = FSP_LICENSE_NONE;
   priv->safety_level = FSP_SAFETY_LEVEL_NONE;

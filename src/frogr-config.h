@@ -112,6 +112,10 @@ void frogr_config_set_default_show_in_search (FrogrConfig *self, gboolean value)
 
 gboolean frogr_config_get_default_show_in_search (FrogrConfig *self);
 
+void frogr_config_set_default_send_geolocation_data (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_default_send_geolocation_data (FrogrConfig *self);
+
 void frogr_config_set_tags_autocompletion (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_tags_autocompletion (FrogrConfig *self);
