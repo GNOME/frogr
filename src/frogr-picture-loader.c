@@ -357,14 +357,15 @@ _load_next_picture_cb (GObject *object,
   /* Go for the next picture, if needed */
   if (keep_going)
     _load_next_picture (self);
-  else {
-    /* Execute final callback */
-    if (priv->pictures_loaded_cb)
-      priv->pictures_loaded_cb (priv->object);
+  else
+    {
+      /* Execute final callback */
+      if (priv->pictures_loaded_cb)
+        priv->pictures_loaded_cb (priv->object);
 
-    /* Process finished, self-destruct */
-    g_object_unref (self);
-  }
+      /* Process finished, self-destruct */
+      g_object_unref (self);
+    }
 }
 
 static void
