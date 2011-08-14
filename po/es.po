@@ -2,23 +2,23 @@
 # Copyright (C) 2009, 2010 THE frogr'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
 # Alejandro Pinheiro <apinheiro@igalia.com>, 2009.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 # Jorge González <jorgegonz@svn.gnome.org>, 2011.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-08-13 12:03+0000\n"
-"PO-Revision-Date: 2011-08-13 14:37+0200\n"
-"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"POT-Creation-Date: 2011-08-14 15:52+0000\n"
+"PO-Revision-Date: 2011-08-14 17:59+0200\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../data/frogr.desktop.in.in.h:1
 msgid "Flickr Remote Organizer"
@@ -253,35 +253,47 @@ msgstr "Añadiendo imagen a los álbumes de fotos…"
 msgid "Adding picture to groups…"
 msgstr "Añadiendo imagen a los grupos…"
 
-#: ../src/frogr-controller.c:1580
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: ../src/frogr-controller.c:1127
+#, c-format
+msgid ""
+"Can't load picture %s: size of file is bigger than the maximum allowed for "
+"this account (%s)"
+msgstr ""
+"No se puede cargar la imagen %s: el tamaño del archivo es superior al tamaño "
+"máximo permitido para esta cuenta (%s)"
+
+#: ../src/frogr-controller.c:1610
 msgid "Retrieving data for authorization…"
 msgstr "Obteniendo datos para la autorización…"
 
-#: ../src/frogr-controller.c:1585
+#: ../src/frogr-controller.c:1615
 msgid "Finishing authorization…"
 msgstr "Terminando autorización…"
 
-#: ../src/frogr-controller.c:1590
+#: ../src/frogr-controller.c:1620
 msgid "Retrieving list of sets…"
 msgstr "Obteniendo lista de álbumes…"
 
-#: ../src/frogr-controller.c:1595
+#: ../src/frogr-controller.c:1625
 msgid "Retrieving list of groups…"
 msgstr "Obteniendo lista de grupos…"
 
-#: ../src/frogr-controller.c:1600
+#: ../src/frogr-controller.c:1630
 msgid "Retrieving list of tags…"
 msgstr "Obteniendo lista de etiquetas…"
 
-#: ../src/frogr-controller.c:1736
+#: ../src/frogr-controller.c:1766
 msgid "No sets found"
 msgstr "No se encontró ningún álbum"
 
-#: ../src/frogr-controller.c:1768
+#: ../src/frogr-controller.c:1798
 msgid "No groups found"
 msgstr "No se encontró ningún grupo"
 
-#: ../src/frogr-controller.c:2442
+#: ../src/frogr-controller.c:2472
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to flickr.\n"
@@ -436,39 +448,39 @@ msgid "Edit Picture Details"
 msgstr "Editar detalles de la imagen"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:671
+#: ../src/frogr-main-view.c:669
 #, c-format
 msgid "Taken: %s"
 msgstr "Capturada: %s"
 
-#: ../src/frogr-main-view.c:676
+#: ../src/frogr-main-view.c:674
 #, c-format
 msgid "File size: %s"
 msgstr "Tamaño del archivo: %s"
 
-#: ../src/frogr-main-view.c:865
+#: ../src/frogr-main-view.c:863
 msgid "Select a Picture"
 msgstr "Seleccionar una Imagen"
 
-#: ../src/frogr-main-view.c:891
+#: ../src/frogr-main-view.c:889
 msgid "images"
 msgstr "imágenes"
 
-#: ../src/frogr-main-view.c:912
+#: ../src/frogr-main-view.c:910
 msgid "You need to select some pictures first"
 msgstr "Debe seleccionar alguna imagen primero"
 
-#: ../src/frogr-main-view.c:1273
+#: ../src/frogr-main-view.c:1271
 msgid "Not connected to flickr"
 msgstr "No está conectado a Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:1283
+#: ../src/frogr-main-view.c:1281
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Conectado como %s%s"
 
-#: ../src/frogr-main-view.c:1284
+#: ../src/frogr-main-view.c:1282
 msgid " (PRO account)"
 msgstr " (cuenta PRO)"
 
@@ -477,7 +489,7 @@ msgstr " (cuenta PRO)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:1308
+#: ../src/frogr-main-view.c:1306
 #, c-format
 msgid " - %s / %s remaining for the current month"
 msgstr " - %s / %s restantes para el mes actual"
@@ -485,7 +497,7 @@ msgstr " - %s / %s restantes para el mes actual"
 #. Will show in the status bar the amount of data (in KB, MB or
 #. GB) that would be uploaded as the sum of the sizes for every
 #. picture currently loadad in the application
-#: ../src/frogr-main-view.c:1333
+#: ../src/frogr-main-view.c:1331
 #, c-format
 msgid " - %s to be uploaded"
 msgstr " - %s para subir"
