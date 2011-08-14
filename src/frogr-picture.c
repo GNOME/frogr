@@ -55,6 +55,7 @@ struct _FrogrPicturePrivate
   FspLicense license;
   FspDataLocation *location;
   gboolean show_in_search;
+  gboolean send_location;
 
   GdkPixbuf *pixbuf;
 };
@@ -74,6 +75,7 @@ enum  {
   PROP_CONTENT_TYPE,
   PROP_LICENSE,
   PROP_SHOW_IN_SEARCH,
+  PROP_SEND_LOCATION,
   PROP_PIXBUF,
   PROP_FILESIZE,
   PROP_DATETIME
@@ -225,6 +227,9 @@ _frogr_picture_set_property (GObject *object,
     case PROP_SHOW_IN_SEARCH:
       frogr_picture_set_show_in_search (self, g_value_get_boolean (value));
       break;
+    case PROP_SEND_LOCATION:
+      frogr_picture_set_send_location (self, g_value_get_boolean (value));
+      break;
     case PROP_PIXBUF:
       frogr_picture_set_pixbuf (self, GDK_PIXBUF (g_value_get_object (value)));
       break;
@@ -285,6 +290,9 @@ _frogr_picture_get_property (GObject *object,
       break;
     case PROP_SHOW_IN_SEARCH:
       g_value_set_boolean (value, priv->show_in_search);
+      break;
+    case PROP_SEND_LOCATION:
+      g_value_set_boolean (value, priv->send_location);
       break;
     case PROP_PIXBUF:
       g_value_set_object (value, priv->pixbuf);
@@ -464,9 +472,17 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                    PROP_SHOW_IN_SEARCH,
                                    g_param_spec_boolean ("show-in-search",
                                                          "show-in-search",
-                                                         "Whether the show the "
+                                                         "Whether to show the "
                                                          "picture in global "
                                                          "search results",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_SEND_LOCATION,
+                                   g_param_spec_boolean ("send-location",
+                                                         "send-location",
+                                                         "Whether to send the location "
+                                                         "to flickr, if available",
                                                          FALSE,
                                                          G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
@@ -525,6 +541,7 @@ frogr_picture_init (FrogrPicture *self)
   priv->license = FSP_LICENSE_NONE;
 
   priv->show_in_search = TRUE;
+  priv->send_location = FALSE;
 
   priv->pixbuf = NULL;
 }
@@ -551,7 +568,8 @@ frogr_picture_new (const gchar *fileuri,
                                      "safety-level", FSP_SAFETY_LEVEL_SAFE,
                                      "content-type", FSP_CONTENT_TYPE_PHOTO,
                                      "license", FSP_LICENSE_NONE,
-                                     "show_in_search", TRUE,
+                                     "show-in-search", TRUE,
+                                     "send-location", FALSE,
                                      NULL));
 }
 
@@ -846,6 +864,28 @@ frogr_picture_set_license (FrogrPicture *self, FspLicense license)
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->license = license;
+}
+
+gboolean
+frogr_picture_send_location (FrogrPicture *self)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  return priv->send_location;
+}
+
+void
+frogr_picture_set_send_location (FrogrPicture *self, gboolean send_location)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  priv->send_location = send_location;
 }
 
 FspDataLocation *
