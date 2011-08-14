@@ -427,6 +427,7 @@ _load_next_picture_cb (GObject *object,
       g_free (file_name);
     }
 
+  g_free (contents);
   g_object_unref (file);
 
   /* Update internal status */
@@ -440,14 +441,14 @@ _load_next_picture_cb (GObject *object,
   if (priv->picture_loaded_cb && fpicture)
     keep_going = priv->picture_loaded_cb (priv->object, fpicture);
 
-  /* Free memory */
-  g_free (contents);
-  if (fpicture != NULL)
-    g_object_unref (fpicture);
-
   /* Go for the next picture, if needed */
   if (keep_going)
+    {
+      if (fpicture != NULL)
+        g_object_unref (fpicture);
+
     _load_next_picture (self);
+    }
   else
     {
       /* Execute final callback */
