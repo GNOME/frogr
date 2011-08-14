@@ -375,6 +375,8 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
       gchar *fileuri = g_strdup (fileuris_array[i]);
       if (fileuri && !g_str_equal (g_strstrip (fileuri), ""))
         fileuris_list = g_slist_append (fileuris_list, fileuri);
+      else
+        g_free (fileuri);
     }
 
   /* Load pictures */
@@ -686,6 +688,7 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       /* Free memory */
       gtk_tree_path_free (path);
       g_free (tooltip_str);
+      g_free (filesize);
       g_free (filesize_str);
       g_free (filesize_markup);
       g_free (datetime_markup);
@@ -785,6 +788,7 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
                       -1);
 
   g_object_ref (picture);
+  g_object_unref (pixbuf);
 
   /* Reorder if needed */
   if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
@@ -1238,6 +1242,7 @@ _update_account_menu_items (FrogrMainView *mainview)
 
           gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), value);
         }
+      g_list_free (all_items);
     }
 }
 
@@ -1500,6 +1505,7 @@ _frogr_main_view_finalize (GObject *object)
 
   gtk_widget_destroy (priv->pictures_ctxt_menu);
   gtk_widget_destroy (GTK_WIDGET (priv->window));
+  g_object_unref (G_OBJECT (priv->builder));
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
 }
