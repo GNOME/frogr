@@ -1491,7 +1491,7 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *progress_label;
   const gchar *icons_path;
   gchar *full_path;
-  GList *icons;
+  GList *icons = NULL;
 
 #ifdef MAC_INTEGRATION
   GtkOSXApplication *osx_app;
@@ -1510,27 +1510,27 @@ frogr_main_view_init (FrogrMainView *self)
   /* Provide a default icon list in several sizes */
   icons_path = frogr_util_get_icons_dir ();
   full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("128x128"), icons_path);
-  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
   g_free (full_path);
 
   full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("64x64"), icons_path);
-  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
   g_free (full_path);
 
   full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("48x48"), icons_path);
-  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
   g_free (full_path);
 
   full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("32x32"), icons_path);
-  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
   g_free (full_path);
 
   full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("24x24"), icons_path);
-  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
   g_free (full_path);
 
   full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("16x16"), icons_path);
-  icons = g_list_prepend (NULL, gdk_pixbuf_new_from_file (full_path, NULL));
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
   g_free (full_path);
 
   gtk_window_set_default_icon_list (icons);
