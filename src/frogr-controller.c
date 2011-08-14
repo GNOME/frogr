@@ -721,7 +721,7 @@ _set_location_on_idle (gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
-  FspLocation *location;
+  FspDataLocation *location;
 
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
@@ -1095,7 +1095,7 @@ _notify_setting_location (FrogrController *self,
 {
   FrogrControllerPrivate *priv = NULL;
   const gchar *picture_title = NULL;
-  FspLocation *location;
+  FspDataLocation *location;
   gchar *debug_msg = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);

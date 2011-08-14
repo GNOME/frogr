@@ -99,6 +99,13 @@ fsp_data_new                            (FspDataType type)
       new_data->group.n_photos = -1;
       break;
 
+    case FSP_LOCATION:
+      new_data->location.latitude = 0.0;
+      new_data->location.longitude = 0.0;
+      new_data->location.accuracy = 16;
+      new_data->location.context = FSP_LOCATION_CONTEXT_UNKNOWN;
+      break;
+
     default:
       break;
     }
@@ -174,6 +181,13 @@ fsp_data_copy                           (const FspData *data)
       new_data->group.n_photos = data->group.n_photos;
       break;
 
+    case FSP_LOCATION:
+      new_data->location.latitude = data->location.latitude;
+      new_data->location.longitude = data->location.longitude;
+      new_data->location.accuracy = data->location.accuracy;
+      new_data->location.context = data->location.context;
+      break;
+
     default:
       break;
     }
@@ -184,7 +198,9 @@ fsp_data_copy                           (const FspData *data)
 void
 fsp_data_free                           (FspData *data)
 {
-  g_return_if_fail (data != NULL);
+  /* Do nothing if passed NULL */
+  if (data == NULL)
+    return;
 
   switch (data->type)
     {
@@ -222,6 +238,10 @@ fsp_data_free                           (FspData *data)
     case FSP_GROUP:
       g_free (data->group.id);
       g_free (data->group.name);
+      break;
+
+    case FSP_LOCATION:
+      /* Nothing to do here (no memory allocated) */
       break;
 
     default:

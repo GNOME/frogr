@@ -64,7 +64,7 @@ struct _FrogrPictureLoaderPrivate
   FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
-  FspLocation *location;
+  FspDataLocation *location;
 
   FrogrPictureLoadedCallback picture_loaded_cb;
   FrogrPicturesLoadedCallback pictures_loaded_cb;
@@ -246,10 +246,9 @@ get_gps_coordinate (ExifData *exif,
   return FALSE;
 }
 
-FspLocation *get_location_from_exif (ExifData *exif_data)
+FspDataLocation *get_location_from_exif (ExifData *exif_data)
 {
-    ExifEntry *exif_entry;
-    FspLocation *location;
+    FspDataLocation *location;
     gdouble coordinate;
     gboolean found;
 
@@ -260,14 +259,14 @@ FspLocation *get_location_from_exif (ExifData *exif_data)
     if (!found)
       return NULL;
 
-    location = g_new0 (FspLocation, 1);
+    location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
     location->latitude = coordinate;
 
     found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LONGITUDE,
                                 EXIF_TAG_GPS_LONGITUDE_REF, &location->longitude);
     if (!found)
       {
-        g_free (location);
+        fsp_data_free (FSP_DATA (location));
         return NULL;
       }
 
@@ -371,7 +370,7 @@ _load_next_picture_cb (GObject *object,
           exif_data = exif_loader_get_data (exif_loader);
           if (exif_data)
             {
-              FspLocation *location;
+              FspDataLocation *location;
 
               exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
               if (exif_entry)
@@ -488,7 +487,7 @@ _frogr_picture_loader_finalize (GObject* object)
   /* Free */
   g_slist_foreach (priv->file_uris, (GFunc)g_free, NULL);
   g_slist_free (priv->file_uris);
-  g_free (priv->location);
+  fsp_data_free (FSP_DATA (priv->location));
 
   G_OBJECT_CLASS (frogr_picture_loader_parent_class)->finalize(object);
 }

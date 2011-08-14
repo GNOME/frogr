@@ -32,12 +32,14 @@ G_BEGIN_DECLS
 #define FSP_DATA_PHOTO_INFO(data)    ((FspDataPhotoInfo*) data)
 #define FSP_DATA_PHOTO_SET(data)     ((FspDataPhotoSet*) data)
 #define FSP_DATA_GROUP(data)         ((FspDataGroup*) data)
+#define FSP_DATA_LOCATION(data)      ((FspDataLocation*) data)
 
 typedef struct _FspDataAuthToken    FspDataAuthToken;
 typedef struct _FspDataUploadStatus FspDataUploadStatus;
 typedef struct _FspDataPhotoInfo    FspDataPhotoInfo;
 typedef struct _FspDataPhotoSet     FspDataPhotoSet;
 typedef struct _FspDataGroup        FspDataGroup;
+typedef struct _FspDataLocation     FspDataLocation;
 
 typedef union  _FspData	    FspData;
 
@@ -49,6 +51,7 @@ typedef enum
   FSP_PHOTO_INFO    = 2,
   FSP_PHOTO_SET     = 3,
   FSP_GROUP         = 4,
+  FSP_LOCATION      = 5,
   FSP_DATA_LAST
 } FspDataType;
 
@@ -100,13 +103,6 @@ typedef enum {
   FSP_LOCATION_CONTEXT_INDOORS    = 1,
   FSP_LOCATION_CONTEXT_OUTDOORS   = 2
 } FspLocationContext;
-
-typedef struct {
-    gdouble latitude;
-    gdouble longitude;
-    unsigned char accuracy;
-    FspLocationContext context;
-} FspLocation;
 
 typedef enum {
   FSP_ROTATION_NONE = 0,
@@ -197,6 +193,15 @@ struct _FspDataGroup
   gint             n_photos;
 };
 
+struct _FspDataLocation {
+  FspDataType        type;
+  gdouble            latitude;
+  gdouble            longitude;
+  gushort            accuracy;
+  FspLocationContext context;
+};
+
+
 union _FspData
 {
   FspDataType         type;
@@ -205,6 +210,7 @@ union _FspData
   FspDataPhotoInfo    photo_info;
   FspDataPhotoSet     photo_set;
   FspDataGroup        group;
+  FspDataLocation     location;
 };
 
 GType

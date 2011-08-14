@@ -53,7 +53,7 @@ struct _FrogrPicturePrivate
   FspSafetyLevel safety_level;
   FspContentType content_type;
   FspLicense license;
-  FspLocation *location;
+  FspDataLocation *location;
   gboolean show_in_search;
 
   GdkPixbuf *pixbuf;
@@ -349,7 +349,7 @@ _frogr_picture_finalize (GObject* object)
   g_slist_free (priv->tags_list);
 
   /* free structs */
-  g_free (priv->location);
+  fsp_data_free (FSP_DATA (priv->location));
 
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class)->finalize(object);
@@ -848,7 +848,7 @@ frogr_picture_set_license (FrogrPicture *self, FspLicense license)
   priv->license = license;
 }
 
-FspLocation *
+FspDataLocation *
 frogr_picture_get_location (FrogrPicture *self)
 {
   FrogrPicturePrivate *priv = NULL;
@@ -860,13 +860,14 @@ frogr_picture_get_location (FrogrPicture *self)
 }
 
 void
-frogr_picture_set_location (FrogrPicture *self, FspLocation *location)
+frogr_picture_set_location (FrogrPicture *self, FspDataLocation *location)
 {
   FrogrPicturePrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
+  fsp_data_free (FSP_DATA (location));
   priv->location = location;
 }
 

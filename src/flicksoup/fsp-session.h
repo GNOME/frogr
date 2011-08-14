@@ -244,7 +244,7 @@ fsp_session_set_license_finish          (FspSession    *self,
 void
 fsp_session_set_location_async           (FspSession          *self,
                                           const gchar         *photo_id,
-                                          FspLocation         *location,
+                                          FspDataLocation     *location,
                                           GCancellable        *cancellable,
                                           GAsyncReadyCallback  callback,
                                           gpointer             data);
