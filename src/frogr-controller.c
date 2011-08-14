@@ -1396,18 +1396,23 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
       FrogrControllerPrivate *priv = NULL;
       const gchar *old_username = NULL;
       const gchar *old_fullname = NULL;
+      gboolean username_changed = FALSE;
 
       priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
       /* Check for changes (only for fields that it makes sense) */
       old_username = frogr_account_get_username (priv->account);
       old_fullname = frogr_account_get_fullname (priv->account);
+      if (g_strcmp0 (old_username, auth_token->username)
+          || g_strcmp0 (old_fullname, auth_token->fullname))
+        {
+          username_changed = TRUE;
+        }
 
       frogr_account_set_username (priv->account, auth_token->username);
       frogr_account_set_fullname (priv->account, auth_token->fullname);
 
-      if (g_strcmp0 (old_username, auth_token->username)
-          || g_strcmp0 (old_fullname, auth_token->fullname))
+      if (username_changed)
         {
           /* Save to disk and emit signal if basic info changed */
           frogr_config_save_accounts (priv->config);
