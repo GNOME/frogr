@@ -54,6 +54,7 @@ typedef struct _FrogrDetailsDialogPrivate {
   GtkWidget *private_rb;
   GtkWidget *friend_cb;
   GtkWidget *family_cb;
+  GtkWidget *send_location_cb;
   GtkWidget *show_in_search_cb;
   GtkWidget *license_cb;
   GtkWidget *photo_content_rb;
@@ -263,15 +264,12 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (internal_hbox), visibility_vbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
 
-#ifdef GTK_API_VERSION_3
-  internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-#else
-  internal_hbox = gtk_hbox_new (FALSE, 0);
-#endif
+  widget = gtk_check_button_new_with_mnemonic (_("Send _location aware information if present"));
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  priv->send_location_cb = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("_Show up in Global Search Results"));
-  gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
   priv->show_in_search_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
@@ -474,6 +472,9 @@ _create_widgets (FrogrDetailsDialog *self)
                     G_CALLBACK (_on_toggle_button_toggled), self);
 
   g_signal_connect (G_OBJECT (priv->friend_cb), "toggled",
+                    G_CALLBACK (_on_toggle_button_toggled), self);
+
+  g_signal_connect (G_OBJECT (priv->send_location_cb), "toggled",
                     G_CALLBACK (_on_toggle_button_toggled), self);
 
   g_signal_connect (G_OBJECT (priv->show_in_search_cb), "toggled",
@@ -768,6 +769,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   gboolean is_public_val = FALSE;
   gboolean is_friend_val = FALSE;
   gboolean is_family_val = FALSE;
+  gboolean send_location_val = FALSE;
   gboolean show_in_search_val = FALSE;
   gboolean license_inconsistent = FALSE;
   FspLicense license_val = FSP_LICENSE_NONE;
@@ -784,6 +786,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   is_public_val = frogr_picture_is_public (picture);
   is_friend_val = frogr_picture_is_friend (picture);
   is_family_val = frogr_picture_is_family (picture);
+  send_location_val = frogr_picture_send_location (picture);
   show_in_search_val = frogr_picture_show_in_search (picture);
   license_val = frogr_picture_get_license (picture);
   safety_level_val = frogr_picture_get_safety_level (picture);
@@ -798,6 +801,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
       gboolean is_public = FALSE;
       gboolean is_friend = FALSE;
       gboolean is_family = FALSE;
+      gboolean send_location = FALSE;
       gboolean show_in_search = FALSE;
       FspLicense license = FSP_LICENSE_NONE;
       FspSafetyLevel safety_level = FSP_SAFETY_LEVEL_NONE;
@@ -818,6 +822,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
       is_public = frogr_picture_is_public (picture);
       is_friend = frogr_picture_is_friend (picture);
       is_family = frogr_picture_is_family (picture);
+      send_location = frogr_picture_send_location (picture);
       show_in_search = frogr_picture_show_in_search (picture);
 
       /* License */
@@ -863,6 +868,11 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
         {
           gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->friend_cb),
                                               is_friend_val != is_friend);
+        }
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->send_location_cb)))
+        {
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->send_location_cb),
+                                              send_location_val != send_location);
         }
       if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb)))
         {
@@ -915,6 +925,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
       is_public_val = is_public;
       is_friend_val = is_friend;
       is_family_val = is_family;
+      send_location_val = send_location;
       show_in_search_val = show_in_search;
       license_val = license;
       content_type_val = content_type;
@@ -949,6 +960,8 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
                                 is_friend_val);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb),
                                 is_family_val);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->send_location_cb),
+                                send_location_val);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
                                 show_in_search_val);
 
@@ -1037,6 +1050,7 @@ _save_data (FrogrDetailsDialog *self)
   gboolean is_public;
   gboolean is_friend;
   gboolean is_family;
+  gboolean send_location;
   gboolean show_in_search;
   FspLicense license;
   FspSafetyLevel safety_level;
@@ -1073,6 +1087,8 @@ _save_data (FrogrDetailsDialog *self)
       is_family = FALSE;
     }
 
+  send_location =
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->send_location_cb));
   show_in_search =
     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb));
 
@@ -1123,6 +1139,8 @@ _save_data (FrogrDetailsDialog *self)
             frogr_picture_set_friend (picture, is_friend);
           if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb)))
             frogr_picture_set_family (picture, is_family);
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->send_location_cb)))
+            frogr_picture_set_send_location (picture, send_location);
           if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb)))
             frogr_picture_set_show_in_search (picture, show_in_search);
 
