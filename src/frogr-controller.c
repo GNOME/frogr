@@ -938,7 +938,7 @@ _add_picture_to_groups_on_idle (gpointer data)
   session = priv->session;
 
   /* Keep the source while busy */
-  if (priv->adding_to_set)
+  if (priv->setting_license || priv->setting_location || priv->adding_to_set)
     return TRUE;
 
   /* Add pictures to groups, if any */
