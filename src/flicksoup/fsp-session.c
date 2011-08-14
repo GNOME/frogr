@@ -544,6 +544,7 @@ _get_soup_message_for_upload            (GFile       *file,
                                  NULL);
   /* Check mimetype */
   mime_type = g_strdup (g_file_info_get_content_type (file_info));
+  g_object_unref (G_OBJECT (file_info));
 
   /* Init multipart container */
   mpart = soup_multipart_new (SOUP_FORM_MIME_TYPE_MULTIPART);
@@ -1103,6 +1104,8 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
 
   /* Execute the callback */
   g_simple_async_result_complete_in_idle (res);
+
+  g_object_unref (G_OBJECT (res));
 }
 
 gpointer
