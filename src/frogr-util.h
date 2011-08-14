@@ -41,6 +41,8 @@ void frogr_util_show_error_dialog (GtkWindow *parent, const gchar *message);
 
 GdkPixbuf *frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height);
 
+gchar *frogr_util_get_datasize_string (gulong datasize);
+
 G_END_DECLS
 
 #endif /* FROGR_UTIL_H */

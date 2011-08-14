@@ -346,3 +346,46 @@ frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_hei
   /* No rotation was applied, return the scaled pixbuf */
   return scaled_pixbuf;
 }
+
+gchar *
+frogr_util_get_datasize_string (gulong datasize)
+{
+  gchar *result = NULL;
+
+  if (datasize != G_MAXULONG)
+    {
+      gfloat datasize_float = G_MAXFLOAT;
+      gchar *unit_str = NULL;
+      int n_divisions = 0;
+
+      datasize_float = datasize;
+      while (datasize_float > 1000.0 && n_divisions < 3)
+        {
+          datasize_float /= 1024;
+          n_divisions++;
+        }
+
+      switch (n_divisions)
+        {
+        case 0:
+          unit_str = g_strdup ("KB");
+          break;
+        case 1:
+          unit_str = g_strdup ("MB");
+          break;
+        case 2:
+          unit_str = g_strdup ("GB");
+          break;
+        default:
+          unit_str = NULL;;
+        }
+
+      if (unit_str)
+        {
+          result = g_strdup_printf ("%.1f %s", datasize_float, unit_str);
+          g_free (unit_str);
+        }
+    }
+
+  return result;
+}

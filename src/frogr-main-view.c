@@ -224,8 +224,6 @@ static void _update_state_description (FrogrMainView *mainview);
 
 static gchar *_craft_state_description (FrogrMainView *mainview);
 
-static gchar *_get_datasize_string (gulong bandwidth);
-
 static void _update_sensitiveness (FrogrMainView *self);
 
 static void _update_ui (FrogrMainView *self);
@@ -661,7 +659,7 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
         return FALSE;
 
       /* Build the tooltip text with basic info: title, size */
-      filesize = _get_datasize_string (frogr_picture_get_filesize (picture));
+      filesize = frogr_util_get_datasize_string (frogr_picture_get_filesize (picture));
       datetime = frogr_picture_get_datetime (picture);
       if (datetime)
         {
@@ -1295,8 +1293,8 @@ _craft_state_description (FrogrMainView *mainview)
       remaining_bw = frogr_account_get_remaining_bandwidth (account);
       max_bw = frogr_account_get_max_bandwidth (account);
 
-      remaining_bw_str = _get_datasize_string (remaining_bw);
-      max_bw_str = _get_datasize_string (max_bw);
+      remaining_bw_str = frogr_util_get_datasize_string (remaining_bw);
+      max_bw_str = frogr_util_get_datasize_string (max_bw);
 
       if (remaining_bw_str && max_bw_str)
         {
@@ -1325,7 +1323,7 @@ _craft_state_description (FrogrMainView *mainview)
       for (item = pictures; item; item = g_slist_next (item))
         total_size += frogr_picture_get_filesize (FROGR_PICTURE (item->data));
 
-      total_size_str = _get_datasize_string (total_size);
+      total_size_str = frogr_util_get_datasize_string (total_size);
 
       /* Will show in the status bar the amount of data (in KB, MB or
          GB) that would be uploaded as the sum of the sizes for every
@@ -1346,49 +1344,6 @@ _craft_state_description (FrogrMainView *mainview)
   g_free (upload_size_str);
 
   return description;
-}
-
-static gchar *
-_get_datasize_string (gulong datasize)
-{
-  gchar *result = NULL;
-
-  if (datasize != G_MAXULONG)
-    {
-      gfloat datasize_float = G_MAXFLOAT;
-      gchar *unit_str = NULL;
-      int n_divisions = 0;
-
-      datasize_float = datasize;
-      while (datasize_float > 1000.0 && n_divisions < 3)
-        {
-          datasize_float /= 1024;
-          n_divisions++;
-        }
-
-      switch (n_divisions)
-        {
-        case 0:
-          unit_str = g_strdup ("KB");
-          break;
-        case 1:
-          unit_str = g_strdup ("MB");
-          break;
-        case 2:
-          unit_str = g_strdup ("GB");
-          break;
-        default:
-          unit_str = NULL;;
-        }
-
-      if (unit_str)
-        {
-          result = g_strdup_printf ("%.1f %s", datasize_float, unit_str);
-          g_free (unit_str);
-        }
-    }
-
-  return result;
 }
 
 static void
