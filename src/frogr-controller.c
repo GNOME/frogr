@@ -620,7 +620,6 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       if (license != FSP_LICENSE_NONE)
         {
           priv->setting_license = TRUE;
-
           _notify_setting_license (controller, picture);
           fsp_session_set_license_async (session,
                                          frogr_picture_get_id (picture),
@@ -633,6 +632,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       /* Add picture to set if needed (and maybe create a new one) */
       if (g_slist_length (sets) > 0)
         {
+          priv->adding_to_set = TRUE;
           up_st->sets = sets;
           gdk_threads_add_timeout (DEFAULT_TIMEOUT, _create_set_or_add_picture_on_idle, up_st);
         }
@@ -640,6 +640,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       /* Add picture to groups if needed */
       if (g_slist_length (groups) > 0)
         {
+          priv->adding_to_group = TRUE;
           up_st->groups = groups;
           gdk_threads_add_timeout (DEFAULT_TIMEOUT, _add_picture_to_groups_on_idle, up_st);
         }
@@ -701,51 +702,46 @@ _create_set_or_add_picture (FrogrController *self,
                             FrogrPicture *picture,
                             upload_picture_st *up_st)
 {
+  FrogrControllerPrivate *priv = NULL;
+  FrogrPhotoSet *set = NULL;
+  const gchar *id = NULL;
   GSList *sets = NULL;
-  gboolean result = FALSE;
 
   sets = up_st->sets;
-  if (g_slist_length (sets) > 0)
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  if (g_slist_length (sets) == 0)
     {
-      FrogrControllerPrivate *priv = NULL;
-      FrogrPhotoSet *set = NULL;
-      const gchar *id = NULL;
-
-      priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-      set = FROGR_PHOTOSET (sets->data);
-
-      /* Mark the start of the process */
-      priv->adding_to_set = TRUE;
-
-      id = frogr_photoset_get_id (set);
-      if (id != NULL)
-        {
-          /* Set with ID: Add picture to it */
-          _notify_adding_to_set (self, picture, set);
-          fsp_session_add_to_photoset_async (priv->session,
-                                             frogr_picture_get_id (picture),
-                                             frogr_photoset_get_id (set),
-                                             priv->last_cancellable,
-                                             _add_to_photoset_cb,
-                                             up_st);
-        }
-      else
-        {
-          /* Set with ID: Create set aliong with this picture */
-          _notify_creating_set (self, picture, set);
-          fsp_session_create_photoset_async (priv->session,
-                                             frogr_photoset_get_title (set),
-                                             frogr_photoset_get_description (set),
-                                             frogr_picture_get_id (picture),
-                                             priv->last_cancellable,
-                                             _create_photoset_cb,
-                                             up_st);
-        }
-
-      result = TRUE;
+      priv->adding_to_set = FALSE;
+      return FALSE;
     }
 
-  return result;
+  set = FROGR_PHOTOSET (sets->data);
+  id = frogr_photoset_get_id (set);
+  if (id != NULL)
+    {
+      /* Set with ID: Add picture to it */
+      _notify_adding_to_set (self, picture, set);
+      fsp_session_add_to_photoset_async (priv->session,
+                                         frogr_picture_get_id (picture),
+                                         frogr_photoset_get_id (set),
+                                         priv->last_cancellable,
+                                         _add_to_photoset_cb,
+                                         up_st);
+    }
+  else
+    {
+      /* Set with ID: Create set aliong with this picture */
+      _notify_creating_set (self, picture, set);
+      fsp_session_create_photoset_async (priv->session,
+                                         frogr_photoset_get_title (set),
+                                         frogr_photoset_get_description (set),
+                                         frogr_picture_get_id (picture),
+                                         priv->last_cancellable,
+                                         _create_photoset_cb,
+                                         up_st);
+    }
+
+  return TRUE;
 }
 
 static void
@@ -942,22 +938,20 @@ _add_picture_to_groups_on_idle (gpointer data)
     return TRUE;
 
   /* Add pictures to groups, if any */
-  if (g_slist_length (groups) > 0)
+  if (g_slist_length (groups) == 0)
     {
-      /* Mark the start of the process */
-      priv->adding_to_group = TRUE;
-
-      group = FROGR_GROUP (groups->data);
-      _notify_adding_to_group (controller, picture, group);
-
-      fsp_session_add_to_group_async (session,
-                                      frogr_picture_get_id (picture),
-                                      frogr_group_get_id (group),
-                                      priv->last_cancellable,
-                                      _add_to_group_cb,
-                                      up_st);
+      priv->adding_to_group = FALSE;
+      return FALSE;
     }
 
+  group = FROGR_GROUP (groups->data);
+  _notify_adding_to_group (controller, picture, group);
+  fsp_session_add_to_group_async (session,
+                                  frogr_picture_get_id (picture),
+                                  frogr_group_get_id (group),
+                                  priv->last_cancellable,
+                                  _add_to_group_cb,
+                                  up_st);
   return FALSE;
 }
 
