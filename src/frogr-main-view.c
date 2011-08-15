@@ -1499,6 +1499,10 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *main_vbox;
 #endif
 
+#ifdef GTK_API_VERSION_3
+  GtkWidget *toolbar;
+#endif
+
   /* Init model, controller and configuration */
   priv->model = frogr_main_view_model_new ();
   priv->controller = g_object_ref (frogr_controller_get_instance ());
@@ -1559,6 +1563,12 @@ frogr_main_view_init (FrogrMainView *self)
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
   gtk_box_pack_start (GTK_BOX (main_vbox), menu_bar, FALSE, FALSE, 0);
   gtk_box_reorder_child (GTK_BOX (main_vbox), menu_bar, 0);
+#endif
+
+#ifdef GTK_API_VERSION_3
+  toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "toolbar"));
+  gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
+                               GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 #endif
 
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
