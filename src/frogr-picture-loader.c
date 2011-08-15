@@ -220,7 +220,7 @@ get_gps_coordinate (ExifData *exif,
       c1 = exif_get_rational (entry->data, order);
       c2 = exif_get_rational (entry->data+8, order);
       c3 = exif_get_rational (entry->data+16, order);
-      ref = exif_get_short (refentry->data, order);
+      ref = refentry->data[0];
 
       /* Avoid ridiculous values */
       if (c1.denominator == 0 ||
