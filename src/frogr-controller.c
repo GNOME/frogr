@@ -1192,7 +1192,6 @@ _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
   g_return_val_if_fail (FROGR_IS_PICTURE (picture), FALSE);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  mainview_model = frogr_main_view_get_model (priv->mainview);
 
   /* We need this info if account info was already fetched. */
   if (priv->account && priv->account_extra_info_fetched)
@@ -1222,6 +1221,7 @@ _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
       return FALSE;
     }
 
+  mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_add_picture (mainview_model, picture);
   g_signal_emit (self, signals[PICTURE_LOADED], 0, picture);
   return TRUE;
