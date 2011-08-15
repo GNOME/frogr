@@ -637,8 +637,10 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
                                          up_st);
         }
 
-      if (frogr_picture_get_location (picture) != NULL)
+      if (frogr_picture_send_location (picture)
+          && frogr_picture_get_location (picture) != NULL)
         {
+          priv->setting_location = TRUE;
           gdk_threads_add_timeout (DEFAULT_TIMEOUT, _set_location_on_idle, up_st);
         }
 
@@ -733,7 +735,6 @@ _set_location_on_idle (gpointer data)
   if (priv->setting_license)
     return TRUE;
 
-  priv->setting_location = TRUE;
   _notify_setting_location (controller, picture);
   fsp_session_set_location_async (priv->session,
                                   frogr_picture_get_id (picture),
