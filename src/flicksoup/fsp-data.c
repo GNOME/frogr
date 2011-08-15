@@ -120,8 +120,7 @@ fsp_data_copy                           (const FspData *data)
 
   g_return_val_if_fail (data != NULL, NULL);
 
-  new_data = fsp_data_new (FSP_UNKNOWN);
-  *new_data = *data;
+  new_data = fsp_data_new (data->type);
 
   switch (data->type)
     {
