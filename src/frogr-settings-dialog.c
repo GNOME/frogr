@@ -105,7 +105,7 @@ static const gchar *license_descriptions[] = {
 
 /* Prototypes */
 
-static void _add_togleabble_item (FrogrSettingsDialog *self, GtkBox *box,
+static void _add_toggleable_item (FrogrSettingsDialog *self, GtkBox *box,
                                   GtkRadioButton *radio_member, gboolean force_radio,
                                   const gchar *mnemonic, GtkWidget **out_ref);
 
@@ -137,7 +137,7 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 /* Private API */
 
 static void
-_add_togleabble_item (FrogrSettingsDialog *self, GtkBox *box,
+_add_toggleable_item (FrogrSettingsDialog *self, GtkBox *box,
                       GtkRadioButton *radio_member, gboolean force_radio,
                       const gchar *mnemonic, GtkWidget **out_ref)
 {
@@ -200,8 +200,8 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box2 = gtk_hbox_new (FALSE, 12);
 #endif
 
-  _add_togleabble_item (self, GTK_BOX (box2), NULL, TRUE, _("_Private"), &priv->private_rb);
-  _add_togleabble_item (self, GTK_BOX (box2), GTK_RADIO_BUTTON (priv->private_rb),
+  _add_toggleable_item (self, GTK_BOX (box2), NULL, TRUE, _("_Private"), &priv->private_rb);
+  _add_toggleable_item (self, GTK_BOX (box2), GTK_RADIO_BUTTON (priv->private_rb),
                         FALSE, _("P_ublic"), &priv->public_rb);
 
   gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 0);
@@ -212,9 +212,9 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box2 = gtk_vbox_new (FALSE, 6);
 #endif
 
-  _add_togleabble_item (self, GTK_BOX (box2), NULL, FALSE,
+  _add_toggleable_item (self, GTK_BOX (box2), NULL, FALSE,
                         _("Visible to _Family"), &priv->family_cb);
-  _add_togleabble_item (self, GTK_BOX (box2), NULL, FALSE,
+  _add_toggleable_item (self, GTK_BOX (box2), NULL, FALSE,
                         _("Visible to F_riends"), &priv->friend_cb);
 
 #ifdef GTK_API_VERSION_3
@@ -226,10 +226,10 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_pack_start (GTK_BOX (padding_hbox), box2, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (box1), padding_hbox, FALSE, FALSE, 0);
 
-  _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
+  _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
                         _("Send _location aware information if present"),
                         &priv->send_geolocation_data_cb);
-  _add_togleabble_item (self, GTK_BOX (box1), NULL, FALSE,
+  _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
                         _("_Show up in Global Search Results"),
                         &priv->show_in_search_cb);
 
@@ -254,11 +254,11 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box1 = gtk_hbox_new (FALSE, 12);
 #endif
 
-  _add_togleabble_item (self, GTK_BOX (box1), NULL, TRUE,
+  _add_toggleable_item (self, GTK_BOX (box1), NULL, TRUE,
                         _("P_hoto"), &priv->photo_content_rb);
-  _add_togleabble_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->photo_content_rb),
+  _add_toggleable_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->photo_content_rb),
                         FALSE, _("Scree_nshot"), &priv->sshot_content_rb);
-  _add_togleabble_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->photo_content_rb),
+  _add_toggleable_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->photo_content_rb),
                         FALSE, _("Oth_er"), &priv->other_content_rb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
@@ -282,11 +282,11 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box1 = gtk_hbox_new (FALSE, 12);
 #endif
 
-  _add_togleabble_item (self, GTK_BOX (box1), NULL, TRUE,
+  _add_toggleable_item (self, GTK_BOX (box1), NULL, TRUE,
                         _("S_afe"), &priv->safe_rb);
-  _add_togleabble_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->safe_rb),
+  _add_toggleable_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->safe_rb),
                         FALSE, _("_Moderate"), &priv->moderate_rb);
-  _add_togleabble_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->safe_rb),
+  _add_toggleable_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->safe_rb),
                         FALSE, _("Restr_icted"), &priv->restricted_rb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
@@ -510,10 +510,10 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box = gtk_vbox_new (FALSE, 6);
 #endif
 
-  _add_togleabble_item (self, GTK_BOX (box), NULL, FALSE,
+  _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
                         _("Disa_ble Tags Auto-Completion"),
                         &priv->disable_tags_autocompletion_cb);
-  _add_togleabble_item (self, GTK_BOX (box), NULL, FALSE,
+  _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
                         _("_Keep File Extensions in Titles when Loading Pictures"),
                         &priv->keep_file_extensions_cb);
 
