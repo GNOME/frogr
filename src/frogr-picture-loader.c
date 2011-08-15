@@ -65,7 +65,6 @@ struct _FrogrPictureLoaderPrivate
   FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
-  FspDataLocation *location;
 
   FrogrPictureLoadedCallback picture_loaded_cb;
   FrogrPicturesLoadedCallback pictures_loaded_cb;
@@ -372,6 +371,8 @@ _load_next_picture_cb (GObject *object,
           exif_data = exif_loader_get_data (exif_loader);
           if (exif_data)
             {
+              FspDataLocation *location;
+
               exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
               if (exif_entry)
                 {
@@ -386,11 +387,12 @@ _load_next_picture_cb (GObject *object,
                   else
                     g_warning ("Found DateTime exif tag of invalid type");
                 }
-              priv->location = get_location_from_exif (exif_data);
-              if (priv->location != NULL)
+              location = get_location_from_exif (exif_data);
+              if (location != NULL)
                 {
                   /* frogr_picture_set_location takes ownership of location */
-                  frogr_picture_set_location (fpicture, priv->location);
+                  frogr_picture_set_location (fpicture, location);
+                  fsp_data_free (FSP_DATA (location));
                 }
               exif_data_unref (exif_data);
             }
@@ -486,7 +488,6 @@ _frogr_picture_loader_finalize (GObject* object)
   /* Free */
   g_slist_foreach (priv->file_uris, (GFunc)g_free, NULL);
   g_slist_free (priv->file_uris);
-  fsp_data_free (FSP_DATA (priv->location));
 
   G_OBJECT_CLASS (frogr_picture_loader_parent_class)->finalize(object);
 }
