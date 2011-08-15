@@ -372,8 +372,6 @@ _load_next_picture_cb (GObject *object,
           exif_data = exif_loader_get_data (exif_loader);
           if (exif_data)
             {
-              FspDataLocation *location;
-
               exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
               if (exif_entry)
                 {
@@ -388,11 +386,11 @@ _load_next_picture_cb (GObject *object,
                   else
                     g_warning ("Found DateTime exif tag of invalid type");
                 }
-              location = get_location_from_exif (exif_data);
-              if (location != NULL)
+              priv->location = get_location_from_exif (exif_data);
+              if (priv->location != NULL)
                 {
                   /* frogr_picture_set_location takes ownership of location */
-                  frogr_picture_set_location (fpicture, location);
+                  frogr_picture_set_location (fpicture, priv->location);
                 }
               exif_data_unref (exif_data);
             }
@@ -441,14 +439,12 @@ _load_next_picture_cb (GObject *object,
   if (priv->picture_loaded_cb && fpicture)
     keep_going = priv->picture_loaded_cb (priv->object, fpicture);
 
+  if (fpicture != NULL)
+    g_object_unref (fpicture);
+
   /* Go for the next picture, if needed */
   if (keep_going)
-    {
-      if (fpicture != NULL)
-        g_object_unref (fpicture);
-
     _load_next_picture (self);
-    }
   else
     {
       /* Execute final callback */

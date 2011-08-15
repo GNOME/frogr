@@ -907,8 +907,13 @@ frogr_picture_set_location (FrogrPicture *self, FspDataLocation *location)
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
-  fsp_data_free (FSP_DATA (location));
-  priv->location = location;
+  if (priv->location)
+    fsp_data_free (FSP_DATA (priv->location));
+
+  if (location)
+    priv->location = FSP_DATA_LOCATION (fsp_data_copy (FSP_DATA (location)));
+  else
+    priv->location = NULL;
 }
 
 gboolean
