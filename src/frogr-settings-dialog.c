@@ -227,7 +227,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_pack_start (GTK_BOX (box1), padding_hbox, FALSE, FALSE, 0);
 
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("Send _location aware information if present"),
+                        _("Send picture _location if available"),
                         &priv->send_geolocation_data_cb);
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
                         _("_Show up in Global Search Results"),

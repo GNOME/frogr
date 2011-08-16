@@ -264,7 +264,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (internal_hbox), visibility_vbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
 
-  widget = gtk_check_button_new_with_mnemonic (_("Send _location aware information if present"));
+  widget = gtk_check_button_new_with_mnemonic (_("Send picture _location if available"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
   priv->send_location_cb = widget;
 
