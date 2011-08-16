@@ -67,6 +67,7 @@ typedef struct _FrogrSettingsDialogPrivate {
 
   GtkWidget *disable_tags_autocompletion_cb;
   GtkWidget *keep_file_extensions_cb;
+  GtkWidget *import_tags_cb;
 
   gboolean public_visibility;
   gboolean family_visibility;
@@ -75,6 +76,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean send_geolocation_data;
   gboolean disable_tags_autocompletion;
   gboolean keep_file_extensions;
+  gboolean import_tags;
   FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
@@ -516,6 +518,9 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
                         _("_Keep File Extensions in Titles when Loading Pictures"),
                         &priv->keep_file_extensions_cb);
+  _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
+                        _("Don't _Import Tags from Pictures Metadata"),
+                        &priv->import_tags_cb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
 
@@ -540,6 +545,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
   priv->disable_tags_autocompletion = !frogr_config_get_tags_autocompletion (priv->config);
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (priv->config);
+  priv->import_tags = frogr_config_get_import_tags_from_metadata (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 #ifdef HAVE_LIBSOUP_GNOME
   priv->use_gnome_proxy = frogr_config_get_use_gnome_proxy (priv->config);
@@ -601,9 +607,10 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->disable_tags_autocompletion_cb),
                                 priv->disable_tags_autocompletion);
-
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->keep_file_extensions_cb),
                                 priv->keep_file_extensions);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->import_tags_cb),
+                                !priv->import_tags);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
@@ -647,6 +654,7 @@ _save_data (FrogrSettingsDialog *self)
 
   frogr_config_set_tags_autocompletion (priv->config, !priv->disable_tags_autocompletion);
   frogr_config_set_keep_file_extensions (priv->config, priv->keep_file_extensions);
+  frogr_config_set_import_tags_from_metadata (priv->config, priv->import_tags);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 #ifdef HAVE_LIBSOUP_GNOME
@@ -803,6 +811,12 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("Keep file extensions in title set to %s", active ? "TRUE" : "FALSE");
     }
 
+  if (GTK_WIDGET (button) == priv->import_tags_cb)
+    {
+      priv->import_tags = !active;
+      DEBUG ("Don't import tags from pictures metadata set to %s", active ? "TRUE" : "FALSE");
+    }
+
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
     {
       priv->use_proxy = active;
@@ -956,6 +970,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->restricted_rb = NULL;
   priv->disable_tags_autocompletion_cb = NULL;
   priv->keep_file_extensions_cb = NULL;
+  priv->import_tags_cb = NULL;
   priv->use_proxy_cb = NULL;
   priv->use_gnome_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
@@ -976,6 +991,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->content_type = FSP_CONTENT_TYPE_NONE;
   priv->disable_tags_autocompletion = FALSE;
   priv->keep_file_extensions = FALSE;
+  priv->import_tags = FALSE;
   priv->use_proxy = FALSE;
   priv->use_gnome_proxy = FALSE;
   priv->proxy_host = NULL;

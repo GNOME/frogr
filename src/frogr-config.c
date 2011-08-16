@@ -61,6 +61,8 @@ struct _FrogrConfigPrivate
 
   gboolean tags_autocompletion;
   gboolean keep_file_extensions;
+  gboolean import_tags_from_metadata;
+
   SortingCriteria mainview_sorting_criteria;
   gboolean mainview_sorting_reversed;
   gboolean mainview_enable_tooltips;
@@ -259,6 +261,16 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
 
               content = xmlNodeGetContent (node);
               priv->keep_file_extensions = !xmlStrcmp (content, (const xmlChar*) "1");
+
+              xmlFree (content);
+            }
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "import-tags-from-metadata"))
+            {
+              xmlChar *content = NULL;
+
+              content = xmlNodeGetContent (node);
+              priv->import_tags_from_metadata = !xmlStrcmp (content, (const xmlChar*) "1");
 
               xmlFree (content);
             }
@@ -654,6 +666,7 @@ _save_settings (FrogrConfig *self)
   /* Other stuff */
   _xml_add_bool_child (root, "tags-autocompletion", priv->tags_autocompletion);
   _xml_add_bool_child (root, "keep-file-extensions", priv->keep_file_extensions);
+  _xml_add_bool_child (root, "import-tags-from-metadata", priv->import_tags_from_metadata);
   node = xmlNewNode (NULL, (const xmlChar*) "mainview-options");
   _xml_add_bool_child (node, "enable-tooltips", priv->mainview_enable_tooltips);
   _xml_add_int_child (node, "sorting-criteria", priv->mainview_sorting_criteria);
@@ -914,6 +927,7 @@ frogr_config_init (FrogrConfig *self)
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->tags_autocompletion = TRUE;
   priv->keep_file_extensions = FALSE;
+  priv->import_tags_from_metadata = TRUE;
   priv->mainview_sorting_criteria = SORT_AS_LOADED;
   priv->mainview_sorting_reversed = FALSE;
   priv->mainview_enable_tooltips = TRUE;
@@ -1305,6 +1319,28 @@ frogr_config_get_keep_file_extensions (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->keep_file_extensions;
+}
+
+void
+frogr_config_set_import_tags_from_metadata (FrogrConfig *self, gboolean value)
+{
+  FrogrConfigPrivate * priv = NULL;
+
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->import_tags_from_metadata = value;
+}
+
+gboolean
+frogr_config_get_import_tags_from_metadata (FrogrConfig *self)
+{
+  FrogrConfigPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->import_tags_from_metadata;
 }
 
 void

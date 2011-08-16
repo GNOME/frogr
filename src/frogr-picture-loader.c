@@ -61,6 +61,7 @@ struct _FrogrPictureLoaderPrivate
   guint n_pictures;
 
   gboolean keep_file_extensions;
+  gboolean import_tags;
   gboolean public_visibility;
   gboolean family_visibility;
   gboolean friend_visibility;
@@ -94,6 +95,15 @@ static void _load_next_picture (FrogrPictureLoader *self);
 static void _load_next_picture_cb (GObject *object,
                                    GAsyncResult *res,
                                    gpointer data);
+
+static gboolean get_gps_coordinate (ExifData *exif,
+                                    ExifTag   tag,
+                                    ExifTag   reftag,
+                                    gdouble  *coordinate);
+static FspDataLocation *get_location_from_exif (ExifData *exif_data);
+
+static gchar *remove_spaces_from_keyword (const gchar *keyword);
+static gchar *import_tags_from_xmp_keywords (const char *buffer, size_t len);
 
 /* Private API */
 
@@ -197,86 +207,6 @@ _load_next_picture (FrogrPictureLoader *self)
     }
 }
 
-/* get_gps_coordinate is from
- * tracker/src/libtracker-extract//tracker-exif.c,
- * Copyright (C) 2009, Nokia <ivan.frade@nokia.com>
- * Licensed under the GNU Lesser General Public License Version 2.1 or later
- */
-static gboolean
-get_gps_coordinate (ExifData *exif,
-                    ExifTag   tag,
-                    ExifTag   reftag,
-                    gdouble  *coordinate)
-{
-  ExifEntry *entry = exif_data_get_entry (exif, tag);
-  ExifEntry *refentry = exif_data_get_entry (exif, reftag);
-
-  g_return_val_if_fail (coordinate != NULL, FALSE);
-
-  if (entry && refentry)
-    {
-      ExifByteOrder order;
-      ExifRational c1,c2,c3;
-      gfloat f;
-      gchar ref;
-
-      order = exif_data_get_byte_order (exif);
-      c1 = exif_get_rational (entry->data, order);
-      c2 = exif_get_rational (entry->data+8, order);
-      c3 = exif_get_rational (entry->data+16, order);
-      ref = refentry->data[0];
-
-      /* Avoid ridiculous values */
-      if (c1.denominator == 0 ||
-          c2.denominator == 0 ||
-          c3.denominator == 0)
-        {
-          return FALSE;
-        }
-
-      f = (double)c1.numerator/c1.denominator+
-          (double)c2.numerator/(c2.denominator*60)+
-          (double)c3.numerator/(c3.denominator*60*60);
-
-      if (ref == 'S' || ref == 'W')
-        {
-          f = -1 * f;
-        }
-
-      *coordinate = f;
-      return TRUE;
-    }
-
-  return FALSE;
-}
-
-FspDataLocation *get_location_from_exif (ExifData *exif_data)
-{
-    FspDataLocation *location;
-    gdouble coordinate;
-    gboolean found;
-
-    if (!exif_data)
-      return NULL;
-    found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LATITUDE,
-                                EXIF_TAG_GPS_LATITUDE_REF, &coordinate);
-    if (!found)
-      return NULL;
-
-    location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
-    location->latitude = coordinate;
-
-    found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LONGITUDE,
-                                EXIF_TAG_GPS_LONGITUDE_REF, &location->longitude);
-    if (!found)
-      {
-        fsp_data_free (FSP_DATA (location));
-        return NULL;
-      }
-
-    return location;
-}
-
 static void
 _load_next_picture_cb (GObject *object,
                        GAsyncResult *res,
@@ -377,6 +307,7 @@ _load_next_picture_cb (GObject *object,
             {
               FspDataLocation *location;
 
+              /* Date and time for picture taken */
               exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
               if (exif_entry)
                 {
@@ -391,6 +322,21 @@ _load_next_picture_cb (GObject *object,
                   else
                     g_warning ("Found DateTime exif tag of invalid type");
                 }
+
+              /* Import tags from XMP metadata, if required */
+              if (priv->import_tags)
+                {
+                  gchar *imported_tags = NULL;
+
+                  imported_tags = import_tags_from_xmp_keywords (contents, length);
+                  if (imported_tags)
+                    {
+                      frogr_picture_set_tags (fpicture, imported_tags);
+                      g_free (imported_tags);
+                    }
+                }
+
+              /* GPS coordinates */
               location = get_location_from_exif (exif_data);
               if (location != NULL)
                 {
@@ -462,6 +408,174 @@ _load_next_picture_cb (GObject *object,
     }
 }
 
+
+/* This function was taken from tracker, licensed under the GNU Lesser
+ * General Public License Version 2.1 (Copyright 2009, Nokia Corp.) */
+static gboolean
+get_gps_coordinate (ExifData *exif,
+                    ExifTag   tag,
+                    ExifTag   reftag,
+                    gdouble  *coordinate)
+{
+  ExifEntry *entry = exif_data_get_entry (exif, tag);
+  ExifEntry *refentry = exif_data_get_entry (exif, reftag);
+
+  g_return_val_if_fail (coordinate != NULL, FALSE);
+
+  if (entry && refentry)
+    {
+      ExifByteOrder order;
+      ExifRational c1,c2,c3;
+      gfloat f;
+      gchar ref;
+
+      order = exif_data_get_byte_order (exif);
+      c1 = exif_get_rational (entry->data, order);
+      c2 = exif_get_rational (entry->data+8, order);
+      c3 = exif_get_rational (entry->data+16, order);
+      ref = refentry->data[0];
+
+      /* Avoid ridiculous values */
+      if (c1.denominator == 0 ||
+          c2.denominator == 0 ||
+          c3.denominator == 0)
+        {
+          return FALSE;
+        }
+
+      f = (double)c1.numerator/c1.denominator+
+          (double)c2.numerator/(c2.denominator*60)+
+          (double)c3.numerator/(c3.denominator*60*60);
+
+      if (ref == 'S' || ref == 'W')
+        {
+          f = -1 * f;
+        }
+
+      *coordinate = f;
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+static FspDataLocation *
+get_location_from_exif (ExifData *exif_data)
+{
+    FspDataLocation *location;
+    gdouble coordinate;
+    gboolean found;
+
+    if (!exif_data)
+      return NULL;
+    found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LATITUDE,
+                                EXIF_TAG_GPS_LATITUDE_REF, &coordinate);
+    if (!found)
+      return NULL;
+
+    location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
+    location->latitude = coordinate;
+
+    found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LONGITUDE,
+                                EXIF_TAG_GPS_LONGITUDE_REF, &location->longitude);
+    if (!found)
+      {
+        fsp_data_free (FSP_DATA (location));
+        return NULL;
+      }
+
+    return location;
+}
+
+static gchar *
+remove_spaces_from_keyword (const gchar *keyword)
+{
+  gchar *new_keyword = NULL;
+
+  if (keyword)
+    {
+      int i = 0;
+      int j = 0;
+
+      new_keyword = g_new0 (gchar, strlen(keyword) + 1);
+      for (i = 0; keyword[i] != '\0'; i++)
+        {
+          if (keyword[i] != ' ')
+            new_keyword[j++] = keyword[i];
+        }
+      new_keyword[j] = '\0';
+    }
+
+  return new_keyword;
+}
+
+static gchar *
+import_tags_from_xmp_keywords (const char *buffer, size_t len)
+{
+  gchar *keywords_start = NULL;
+  gchar *keywords_end = NULL;
+  gchar *result = NULL;
+  int i;
+
+  /* Look for the beginning of the XMP data interesting for as if
+     present, that is, the keywords (aka the 'tags') */
+  for (i = 0; i < len && !keywords_start; i++)
+    {
+      if (g_str_has_prefix (&buffer[i], "<dc:subject>"))
+        keywords_start = g_strdup(&buffer[i+12]);
+    }
+
+  /* Find the end of the interesting XMP data, if found */
+  if (keywords_start)
+    keywords_end = g_strrstr (keywords_start, "</dc:subject>");
+
+  if (keywords_end)
+    {
+      gchar *start = NULL;
+      gchar *end = NULL;
+
+      keywords_end[0] = '\0';
+
+      /* Remove extra not-needed stuff in the string */
+      start = g_strstr_len (keywords_start, -1, "<rdf:li>");
+      end = g_strrstr (keywords_start, "</rdf:li>");
+      if (start && end)
+        {
+          gchar **keywords = NULL;
+          gchar *keyword = NULL;
+          gchar *kw_end = NULL;
+
+          start = &start[8];
+          end[0] = '\0';
+
+          /* Get an array of strings with all the keywords */
+          keywords = g_regex_split_simple ("<rdf:li>", start, G_REGEX_DOTALL, 0);
+
+          /* Remove spaces and trailing '</rdf:li>' elements */
+          for (i = 0; keywords[i]; i++)
+            {
+              keyword = keywords[i];
+
+              /* Remove trailing '</rdf:li>' elements */
+              kw_end = g_strrstr (keyword, "</rdf:li>");
+              if (kw_end)
+                kw_end[0] = '\0';
+
+              /* Remove spaces to normalize to flickr tags */
+              keywords[i] = remove_spaces_from_keyword (keyword);
+              g_free (keyword);
+            }
+
+          result = g_strjoinv (" ", keywords);
+          g_strfreev (keywords);
+        }
+    }
+
+  g_free (keywords_start);
+
+  return result;
+}
+
 static void
 _frogr_picture_loader_dispose (GObject* object)
 {
@@ -523,6 +637,7 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
 
   /* Initialize values from frogr configuration */
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (config);
+  priv->import_tags = frogr_config_get_import_tags_from_metadata (config);
   priv->public_visibility = frogr_config_get_default_public (config);
   priv->family_visibility = frogr_config_get_default_family (config);
   priv->friend_visibility = frogr_config_get_default_friend (config);

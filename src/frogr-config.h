@@ -26,6 +26,7 @@
 
 #include "frogr-account.h"
 
+#include <config.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <flicksoup/flicksoup.h>
@@ -123,6 +124,10 @@ gboolean frogr_config_get_tags_autocompletion (FrogrConfig *self);
 void frogr_config_set_keep_file_extensions (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_keep_file_extensions (FrogrConfig *self);
+
+void frogr_config_set_import_tags_from_metadata (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_import_tags_from_metadata (FrogrConfig *self);
 
 void frogr_config_set_mainview_enable_tooltips (FrogrConfig *self, gboolean value);
 
