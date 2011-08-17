@@ -25,4 +25,54 @@
     </GitRepository>
   </repository>
 
+  <bug-database rdf:resource="https://bugzilla.gnome.org/browse.cgi?product=frogr" />
+
+  <release>
+    <Version>
+      <revision>0.6</revision>
+      <created>2011-08-13</created>
+      <file-release rdf:resource="http://ftp.gnome.org/pub/GNOME/sources/frogr/0.6/frogr-0.6.tar.bz2"/>
+    </Version>
+  </release>
+
+  <release>
+    <Version>
+      <revision>0.5</revision>
+      <created>2011-05-27</created>
+      <file-release rdf:resource="http://ftp.gnome.org/pub/GNOME/sources/frogr/0.5/frogr-0.5.tar.bz2"/>
+    </Version>
+  </release>
+
+  <release>
+    <Version>
+      <revision>0.4</revision>
+      <created>2011-02-05</created>
+      <file-release rdf:resource="http://ftp.gnome.org/pub/GNOME/sources/frogr/0.4/frogr-0.4.tar.bz2"/>
+    </Version>
+  </release>
+
+  <release>
+    <Version>
+      <revision>0.3</revision>
+      <created>2010-11-24</created>
+      <file-release rdf:resource="http://ftp.gnome.org/pub/GNOME/sources/frogr/0.3/frogr-0.3.tar.bz2"/>
+    </Version>
+  </release>
+
+  <release>
+    <Version>
+      <revision>0.2</revision>
+      <created>2009-10-13</created>
+      <file-release rdf:resource="http://ftp.gnome.org/pub/GNOME/sources/frogr/0.2/frogr-0.2.tar.bz2"/>
+    </Version>
+  </release>
+
+  <release>
+    <Version>
+      <revision>0.1.1</revision>
+      <created>2009-08-22</created>
+      <file-release rdf:resource="http://ftp.gnome.org/pub/GNOME/sources/frogr/0.1.1/frogr-0.1.1.tar.bz2"/>
+    </Version>
+  </release>
+
 </Project>
