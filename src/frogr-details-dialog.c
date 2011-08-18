@@ -710,6 +710,8 @@ _load_picture_from_disk_cb (GObject *object,
           /* Everything should be fine by now, show it */
           _place_picture_in_dialog_and_show (self);
         }
+
+      g_object_unref (pixbuf_loader);
     }
 
   /* Show error to the user and finalize dialog if needed */
