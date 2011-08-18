@@ -167,7 +167,6 @@ _load_next_picture (FrogrPictureLoader *self)
                       break;
                     }
                 }
-
               DEBUG ("Mime detected: %s", mime_type);
             }
 
@@ -182,7 +181,6 @@ _load_next_picture (FrogrPictureLoader *self)
                                       NULL,
                                       _load_next_picture_cb,
                                       self);
-
           DEBUG ("Adding file %s", file_uri);
         }
       else
