@@ -168,7 +168,7 @@ _load_next_picture (FrogrPictureLoader *self)
                     }
                 }
 
-              DEBUG ("Mime detected: %s)", mime_type);
+              DEBUG ("Mime detected: %s", mime_type);
             }
 
           g_object_unref (file_info);
