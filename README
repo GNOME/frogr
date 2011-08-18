@@ -70,6 +70,10 @@ Some parts of the Frogr's Flickr API implementation (under
 src/flicksoup) based on source code from the libsoup library,
 licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
 
+Implementation of the get_gps_coordinate () function inside of the
+FrogrPictureLoader taken from tracker, licensed under the GNU Lesser
+General Public License Version 2.1 (Copyright 2009, Nokia Corp.)
+
 The specific theme customizations for the MacOSX version of
 frogr through a gtkrc file were taken from the Banshee project
 (http://banshee.fm), written by Aaron Bockover <abockover@novell.com>

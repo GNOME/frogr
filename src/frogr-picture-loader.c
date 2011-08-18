@@ -4,6 +4,10 @@
  * Copyright (C) 2009-2011 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
+ * Some parts of this file were based on source code from tracker,
+ * licensed under the GNU Lesser General Public License Version 2.1
+ * (Copyright 2009, Nokia Corp.)
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 3 of the GNU General Public
  * License as published by the Free Software Foundation.
