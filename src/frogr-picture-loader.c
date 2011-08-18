@@ -543,25 +543,18 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
         {
           gchar **keywords = NULL;
           gchar *keyword = NULL;
-          gchar *kw_end = NULL;
 
           start = &start[8];
           end[0] = '\0';
 
           /* Get an array of strings with all the keywords */
-          keywords = g_regex_split_simple ("<rdf:li>", start, G_REGEX_DOTALL, 0);
+          keywords = g_regex_split_simple ("<.?rdf:li>", start,
+                                           G_REGEX_DOTALL | G_REGEX_RAW, 0);
 
-          /* Remove spaces and trailing '</rdf:li>' elements */
+          /* Remove spaces to normalize to flickr tags */
           for (i = 0; keywords[i]; i++)
             {
               keyword = keywords[i];
-
-              /* Remove trailing '</rdf:li>' elements */
-              kw_end = g_strrstr (keyword, "</rdf:li>");
-              if (kw_end)
-                kw_end[0] = '\0';
-
-              /* Remove spaces to normalize to flickr tags */
               keywords[i] = remove_spaces_from_keyword (keyword);
               g_free (keyword);
             }
