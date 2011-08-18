@@ -522,9 +522,9 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
      present, that is, the keywords (aka the 'tags') */
   for (i = 0; i < len && !keywords_start; i++)
     {
-      comparison_substr = g_strndup (&buffer[i], 12);
-      if (g_str_has_prefix (comparison_substr, "<dc:subject>"))
-        keywords_start = g_strdup(&buffer[i+12]);
+      comparison_substr = g_strndup (&buffer[i], 11);
+      if (g_str_has_prefix (comparison_substr, "<dc:subject"))
+        keywords_start = g_strdup(&buffer[i]);
       g_free (comparison_substr);
     }
 
