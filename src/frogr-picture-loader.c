@@ -104,6 +104,7 @@ static FspDataLocation *get_location_from_exif (ExifData *exif_data);
 
 static gchar *remove_spaces_from_keyword (const gchar *keyword);
 static gchar *import_tags_from_xmp_keywords (const char *buffer, size_t len);
+static void _finish_task_and_self_destruct (FrogrPictureLoader *self);
 
 /* Private API */
 
@@ -193,15 +194,9 @@ _load_next_picture (FrogrPictureLoader *self)
     }
   else
     {
-      /* Update status and progress */
+      /* Update status and progress and finish */
       _update_status_and_progress (self);
-
-      /* Execute final callback */
-      if (priv->pictures_loaded_cb)
-        priv->pictures_loaded_cb (priv->object);
-
-      /* Process finished, self-destruct */
-      g_object_unref (self);
+      _finish_task_and_self_destruct (self);
     }
 }
 
@@ -396,16 +391,8 @@ _load_next_picture_cb (GObject *object,
   if (keep_going)
     _load_next_picture (self);
   else
-    {
-      /* Execute final callback */
-      if (priv->pictures_loaded_cb)
-        priv->pictures_loaded_cb (priv->object);
-
-      /* Process finished, self-destruct */
-      g_object_unref (self);
-    }
+    _finish_task_and_self_destruct (self);
 }
-
 
 /* This function was taken from tracker, licensed under the GNU Lesser
  * General Public License Version 2.1 (Copyright 2009, Nokia Corp.) */
@@ -566,6 +553,20 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
   g_free (keywords_start);
 
   return result;
+}
+
+static void
+_finish_task_and_self_destruct (FrogrPictureLoader *self)
+{
+  FrogrPictureLoaderPrivate *priv =
+    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+
+  /* Execute final callback */
+  if (priv->pictures_loaded_cb)
+    priv->pictures_loaded_cb (priv->object);
+
+  /* Process finished, self-destruct */
+  g_object_unref (self);
 }
 
 static void

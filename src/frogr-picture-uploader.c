@@ -62,6 +62,7 @@ static void _upload_next_picture (FrogrPictureUploader *self);
 static void _upload_next_picture_cb (FrogrPictureUploader *self,
                                      FrogrPicture *picture,
                                      GError *error);
+static void _finish_task_and_self_destruct (FrogrPictureUploader *self);
 
 /* Private API */
 
@@ -112,15 +113,9 @@ _upload_next_picture (FrogrPictureUploader *self)
     }
   else
     {
-      /* Hide progress bar dialog */
+      /* Hide progress bar dialog and finish */
       frogr_main_view_hide_progress (priv->mainview);
-
-      /* Execute final callback */
-      if (priv->pictures_uploaded_cb)
-        priv->pictures_uploaded_cb (priv->object, priv->error);
-
-      /* Process finished, self-destruct */
-      g_object_unref (self);
+      _finish_task_and_self_destruct (self);
     }
 }
 
@@ -152,6 +147,20 @@ _upload_next_picture_cb (FrogrPictureUploader *self,
 
   /* Go for the next picture */
   _upload_next_picture (self);
+}
+
+static void
+_finish_task_and_self_destruct (FrogrPictureUploader *self)
+{
+  FrogrPictureUploaderPrivate *priv =
+    FROGR_PICTURE_UPLOADER_GET_PRIVATE (self);
+
+  /* Execute final callback */
+  if (priv->pictures_uploaded_cb)
+    priv->pictures_uploaded_cb (priv->object, priv->error);
+
+  /* Process finished, self-destruct */
+  g_object_unref (self);
 }
 
 static void
