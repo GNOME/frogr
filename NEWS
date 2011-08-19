@@ -1,3 +1,16 @@
+0.6.1 (19 Aug 2011)
+===================
+
+  * Fix a big memory leak loading pixbufs in details window.
+  * Fixed several mem leaks as reported by valgrind. (Christophe Fergeau).
+  * Fixed segfault if using GTK < 2.24 when using combo boxes (Alberto Garcia)
+  * Fixed problems authorizing in the Mac version.
+
+Bug fixes:
+
+  * #656519: memleak fixes
+
+
 0.6 (13 Aug 2011)
 =================
 
