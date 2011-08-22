@@ -49,10 +49,10 @@ enum {
 
 /* Prototypes */
 
-static void _populate_treemodel_with_data (GtkTreeModel *treemodel, GSList *tags);
+static void _populate_treemodel_with_data (GtkTreeModel *treemodel, GSList *entries);
 
-static gboolean _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
-                                           GtkTreeIter *iter, gpointer data);
+static gboolean _entry_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
+                                             GtkTreeIter *iter, gpointer data);
 
 static gboolean _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
                                                GtkTreeIter *iter, gpointer data);
@@ -60,21 +60,21 @@ static gboolean _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTr
 /* Private API */
 
 static void
-_populate_treemodel_with_data (GtkTreeModel *treemodel, GSList *tags)
+_populate_treemodel_with_data (GtkTreeModel *treemodel, GSList *entries)
 {
-  if (treemodel && tags)
+  if (treemodel && entries)
     {
       GSList *item = NULL;
-      gchar *tag = NULL;
+      gchar *entry = NULL;
       GtkTreeIter iter;
 
       /* Initialize the list store */
-      for (item = tags; item; item = g_slist_next (item))
+      for (item = entries; item; item = g_slist_next (item))
         {
-          tag = (gchar *) item->data;
+          entry = (gchar *) item->data;
           gtk_list_store_append (GTK_LIST_STORE (treemodel), &iter);
           gtk_list_store_set (GTK_LIST_STORE (treemodel), &iter,
-                              0, tag, -1);
+                              0, entry, -1);
         }
     }
   else if (treemodel)
@@ -85,25 +85,25 @@ _populate_treemodel_with_data (GtkTreeModel *treemodel, GSList *tags)
 }
 
 static gboolean
-_tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
-                           GtkTreeIter *iter, gpointer data)
+_entry_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
+                             GtkTreeIter *iter, gpointer data)
 {
   FrogrLiveEntry *self = NULL;
   FrogrLiveEntryPrivate *priv = NULL;
   gchar *stripped_entry_text = NULL;
   gchar *basetext = NULL;
-  gchar *tag = NULL;
+  gchar *entry = NULL;
   gchar *lc_basetext = NULL;
-  gchar *lc_tag = NULL;
+  gchar *lc_entry = NULL;
   gint cursor_pos = 0;
   gboolean matches = FALSE;
 
   self = FROGR_LIVE_ENTRY (data);
   priv = FROGR_LIVE_ENTRY_GET_PRIVATE (self);
-  gtk_tree_model_get (priv->treemodel, iter, TEXT_COL, &tag, -1);
+  gtk_tree_model_get (priv->treemodel, iter, TEXT_COL, &entry, -1);
 
-  /* Do nothing if not a valid tag */
-  if (!tag)
+  /* Do nothing if not a valid entry */
+  if (!entry)
     return FALSE;
 
   /* Do nothing if the cursor is not in the last position */
@@ -122,14 +122,14 @@ _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
 
   /* Downcase everything and compare */
   lc_basetext = g_utf8_strdown (basetext, -1);
-  lc_tag = g_utf8_strdown (tag, -1);
-  if (g_str_has_prefix (lc_tag, lc_basetext))
+  lc_entry = g_utf8_strdown (entry, -1);
+  if (g_str_has_prefix (lc_entry, lc_basetext))
     matches = TRUE;
 
   g_free (stripped_entry_text);
-  g_free (tag);
+  g_free (entry);
   g_free (lc_basetext);
-  g_free (lc_tag);
+  g_free (lc_entry);
 
   return matches;
 }
@@ -139,7 +139,7 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
                                GtkTreeIter *iter, gpointer data)
 {
   FrogrLiveEntry *self = NULL;
-  gchar *tag = NULL;
+  gchar *entry = NULL;
   const gchar *entry_text = NULL;
   const gchar *matching_text = NULL;
   gchar *base_text = NULL;
@@ -148,7 +148,7 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
   glong matching_text_len = 0;
 
   self = FROGR_LIVE_ENTRY (data);
-  gtk_tree_model_get (model, iter, TEXT_COL, &tag, -1);
+  gtk_tree_model_get (model, iter, TEXT_COL, &entry, -1);
 
   entry_text = gtk_entry_get_text (GTK_ENTRY (self));
   matching_text = g_strrstr (entry_text, " ");
@@ -161,12 +161,12 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
   matching_text_len = g_utf8_strlen (matching_text, -1);
 
   base_text = gtk_editable_get_chars (GTK_EDITABLE (self), 0, entry_text_len - matching_text_len);
-  new_text = g_strdup_printf ("%s%s ", base_text, tag);
+  new_text = g_strdup_printf ("%s%s ", base_text, entry);
 
   gtk_entry_set_text (GTK_ENTRY (self), new_text);
   gtk_editable_set_position (GTK_EDITABLE (self), -1);
 
-  g_free (tag);
+  g_free (entry);
   g_free (base_text);
   g_free (new_text);
 
@@ -242,16 +242,17 @@ frogr_live_entry_set_auto_completion (FrogrLiveEntry *self, GSList *data)
       gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (priv->entry_completion), TEXT_COL);
       gtk_entry_completion_set_inline_completion (GTK_ENTRY_COMPLETION (priv->entry_completion), TRUE);
       gtk_entry_completion_set_match_func (GTK_ENTRY_COMPLETION (priv->entry_completion),
-                                           _tag_list_completion_func,
+                                           _entry_list_completion_func,
                                            self, NULL);
 
       gtk_entry_completion_set_model (GTK_ENTRY_COMPLETION (priv->entry_completion), model);
 
-      gtk_entry_set_completion (GTK_ENTRY (self), priv->entry_completion);
-
       g_signal_connect (G_OBJECT (priv->entry_completion), "match-selected",
                         G_CALLBACK (_completion_match_selected_cb), self);
     }
+
+  /* Enable or disable auto-completion as needed */
+  gtk_entry_set_completion (GTK_ENTRY (self), data ? priv->entry_completion: NULL);
 
   /* Populate the tree model with the data (or 'no data) passed */
   if (priv->treemodel)
