@@ -48,6 +48,8 @@ frogr_SOURCES = \
 	frogr-account.h \
 	frogr-add-tags-dialog.c \
 	frogr-add-tags-dialog.h \
+	frogr-live-entry.c \
+	frogr-live-entry.h \
 	frogr-add-to-set-dialog.c \
 	frogr-add-to-set-dialog.h \
 	frogr-add-to-group-dialog.c \
