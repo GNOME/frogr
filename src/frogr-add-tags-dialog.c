@@ -22,6 +22,7 @@
 
 #include "frogr-config.h"
 #include "frogr-global-defs.h"
+#include "frogr-live-entry.h"
 #include "frogr-picture.h"
 
 #include <config.h>
@@ -36,10 +37,7 @@ G_DEFINE_TYPE (FrogrAddTagsDialog, frogr_add_tags_dialog, GTK_TYPE_DIALOG)
 
 typedef struct _FrogrAddTagsDialogPrivate {
   GtkWidget *entry;
-  GtkTreeModel *treemodel;
-
   GSList *pictures;
-  gchar *tags;
 } FrogrAddTagsDialogPrivate;
 
 /* Properties */
@@ -48,136 +46,12 @@ enum  {
   PROP_PICTURES
 };
 
-/* Tree view columns */
-enum {
-  TEXT_COL,
-  N_COLS
-};
-
 
 /* Prototypes */
-
-static void _populate_treemodel_with_tags (FrogrAddTagsDialog *self, GSList *tags);
-
-static gboolean _tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
-                                           GtkTreeIter *iter, gpointer data);
-
-static gboolean _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
-                                               GtkTreeIter *iter, gpointer data);
 
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 /* Private API */
-
-static void
-_populate_treemodel_with_tags (FrogrAddTagsDialog *self, GSList *tags)
-{
-  FrogrAddTagsDialogPrivate *priv = NULL;
-  GSList *item = NULL;
-  gchar *tag = NULL;
-  GtkTreeIter iter;
-
-  priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
-
-  for (item = tags; item; item = g_slist_next (item))
-    {
-      tag = (gchar *) item->data;
-      gtk_list_store_append (GTK_LIST_STORE (priv->treemodel), &iter);
-      gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
-                          0, tag, -1);
-    }
-}
-
-static gboolean
-_tag_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
-                           GtkTreeIter *iter, gpointer data)
-{
-  FrogrAddTagsDialog *self = NULL;
-  FrogrAddTagsDialogPrivate *priv = NULL;
-  gchar *stripped_entry_text = NULL;
-  gchar *basetext = NULL;
-  gchar *tag = NULL;
-  gchar *lc_basetext = NULL;
-  gchar *lc_tag = NULL;
-  gint cursor_pos = 0;
-  gboolean matches = FALSE;
-
-  self = FROGR_ADD_TAGS_DIALOG (data);
-  priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
-  gtk_tree_model_get (priv->treemodel, iter, TEXT_COL, &tag, -1);
-
-  /* Do nothing if not a valid tag */
-  if (!tag)
-    return FALSE;
-
-  /* Do nothing if the cursor is not in the last position */
-  cursor_pos = gtk_editable_get_position (GTK_EDITABLE (priv->entry));
-  if (cursor_pos < gtk_entry_get_text_length (GTK_ENTRY (priv->entry)))
-    return FALSE;
-
-  /* Look for the last token in 'key' */
-  stripped_entry_text = gtk_editable_get_chars (GTK_EDITABLE (priv->entry), 0, cursor_pos);
-  stripped_entry_text = g_strstrip (stripped_entry_text);
-  basetext = g_strrstr (stripped_entry_text, " ");
-  if (basetext)
-    basetext++;
-  else
-    basetext = stripped_entry_text;
-
-  /* Downcase everything and compare */
-  lc_basetext = g_utf8_strdown (basetext, -1);
-  lc_tag = g_utf8_strdown (tag, -1);
-  if (g_str_has_prefix (lc_tag, lc_basetext))
-    matches = TRUE;
-
-  g_free (stripped_entry_text);
-  g_free (tag);
-  g_free (lc_basetext);
-  g_free (lc_tag);
-
-  return matches;
-}
-
-static gboolean
-_completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
-                               GtkTreeIter *iter, gpointer data)
-{
-  FrogrAddTagsDialog *self = NULL;
-  FrogrAddTagsDialogPrivate *priv = NULL;
-  gchar *tag = NULL;
-  const gchar *entry_text = NULL;
-  const gchar *matching_text = NULL;
-  gchar *base_text = NULL;
-  gchar *new_text = NULL;
-  glong entry_text_len = 0;
-  glong matching_text_len = 0;
-
-  self = FROGR_ADD_TAGS_DIALOG (data);
-  priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
-  gtk_tree_model_get (model, iter, TEXT_COL, &tag, -1);
-
-  entry_text = gtk_entry_get_text (GTK_ENTRY (priv->entry));
-  matching_text = g_strrstr (entry_text, " ");
-  if (matching_text)
-    matching_text++;
-  else
-    matching_text = entry_text;
-
-  entry_text_len = gtk_entry_get_text_length (GTK_ENTRY (priv->entry));
-  matching_text_len = g_utf8_strlen (matching_text, -1);
-
-  base_text = gtk_editable_get_chars (GTK_EDITABLE (priv->entry), 0, entry_text_len - matching_text_len);
-  new_text = g_strdup_printf ("%s%s ", base_text, tag);
-
-  gtk_entry_set_text (GTK_ENTRY (priv->entry), new_text);
-  gtk_editable_set_position (GTK_EDITABLE (priv->entry), -1);
-
-  g_free (tag);
-  g_free (base_text);
-  g_free (new_text);
-
-  return TRUE;
-}
 
 static void
 _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
@@ -262,12 +136,6 @@ _frogr_add_tags_dialog_dispose (GObject *object)
 {
   FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (object);
 
-  if (priv->treemodel)
-    {
-      g_object_unref (priv->treemodel);
-      priv->treemodel = NULL;
-    }
-
   if (priv->pictures)
     {
       g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
@@ -276,16 +144,6 @@ _frogr_add_tags_dialog_dispose (GObject *object)
     }
 
   G_OBJECT_CLASS(frogr_add_tags_dialog_parent_class)->dispose (object);
-}
-
-static void
-_frogr_add_tags_dialog_finalize (GObject *object)
-{
-  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (object);
-
-  g_free (priv->tags);
-
-  G_OBJECT_CLASS(frogr_add_tags_dialog_parent_class)->finalize (object);
 }
 
 static void
@@ -298,7 +156,6 @@ frogr_add_tags_dialog_class_init (FrogrAddTagsDialogClass *klass)
   obj_class->set_property = _frogr_add_tags_dialog_set_property;
   obj_class->get_property = _frogr_add_tags_dialog_get_property;
   obj_class->dispose = _frogr_add_tags_dialog_dispose;
-  obj_class->finalize = _frogr_add_tags_dialog_finalize;
 
   /* Install properties */
   pspec = g_param_spec_pointer ("pictures",
@@ -316,11 +173,9 @@ static void
 frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 {
   FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
-  FrogrConfig *config = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *align = NULL;
   GtkWidget *label = NULL;
-  GtkTreeModel *model = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -331,7 +186,6 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
-  /* Add Entry */
   vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
 
   label = gtk_label_new (_("Enter a spaces separated list of tags:"));
@@ -339,30 +193,9 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
   gtk_container_add (GTK_CONTAINER (align), label);
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
 
-  model = GTK_TREE_MODEL (gtk_list_store_new (1, G_TYPE_STRING));
-  priv->treemodel = model;
-  priv->entry = gtk_entry_new ();
-
-  config = frogr_config_get_instance ();
-  if (config && frogr_config_get_tags_autocompletion (config))
-    {
-      GtkEntryCompletion *completion = NULL;
-      completion = gtk_entry_completion_new ();
-      gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (completion), TEXT_COL);
-      gtk_entry_completion_set_inline_completion (GTK_ENTRY_COMPLETION (completion), TRUE);
-      gtk_entry_completion_set_match_func (GTK_ENTRY_COMPLETION (completion),
-                                           _tag_list_completion_func,
-                                           self, NULL);
-
-      gtk_entry_completion_set_model (GTK_ENTRY_COMPLETION (completion), model);
-
-      gtk_entry_set_completion (GTK_ENTRY (priv->entry), completion);
-
-      g_signal_connect (G_OBJECT (completion), "match-selected",
-                        G_CALLBACK (_completion_match_selected_cb), self);
-    }
-
+  priv->entry = frogr_live_entry_new ();
   gtk_box_pack_start (GTK_BOX (vbox), priv->entry, TRUE, FALSE, 6);
+
   gtk_widget_set_size_request (GTK_WIDGET (self), 300, -1);
 
   g_signal_connect (G_OBJECT (self), "response",
@@ -374,7 +207,7 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 void
 frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures, GSList *tags)
 {
-  FrogrAddTagsDialog *self = NULL;
+  FrogrConfig *config = NULL;
   GObject *new = NULL;
 
   new = g_object_new (FROGR_TYPE_ADD_TAGS_DIALOG,
@@ -385,8 +218,14 @@ frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures, GSList *tags)
                       "resizable", FALSE,
                       NULL);
 
-  self = FROGR_ADD_TAGS_DIALOG (new);
-  _populate_treemodel_with_tags (self, tags);
+  /* Enable autocompletion if needed */
+  config = frogr_config_get_instance ();
+  if (config && frogr_config_get_tags_autocompletion (config))
+    {
+      FrogrAddTagsDialogPrivate *priv = NULL;
+      priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (new);
+      frogr_live_entry_set_auto_completion (FROGR_LIVE_ENTRY (priv->entry), tags);
+    }
 
-  gtk_widget_show_all (GTK_WIDGET (self));
+  gtk_widget_show_all (GTK_WIDGET (new));
 }
