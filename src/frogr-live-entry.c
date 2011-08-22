@@ -178,12 +178,6 @@ _frogr_live_entry_dispose (GObject *object)
 {
   FrogrLiveEntryPrivate *priv = FROGR_LIVE_ENTRY_GET_PRIVATE (object);
 
-  if (priv->entry_completion)
-    {
-      g_object_unref (priv->entry_completion);
-      priv->entry_completion = NULL;
-    }
-
   if (priv->treemodel)
     {
       g_object_unref (priv->treemodel);
