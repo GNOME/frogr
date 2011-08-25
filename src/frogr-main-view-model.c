@@ -54,7 +54,6 @@ enum {
   PICTURE_ADDED,
   PICTURE_REMOVED,
   PICTURES_REORDERED,
-  DESCRIPTION_UPDATED,
   N_SIGNALS
 };
 
@@ -195,14 +194,6 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__POINTER,
                   G_TYPE_NONE, 1, G_TYPE_POINTER);
-
-  signals[DESCRIPTION_UPDATED] =
-    g_signal_new ("description-updated",
-                  G_OBJECT_CLASS_TYPE (klass),
-                  G_SIGNAL_RUN_FIRST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__VOID,
-                  G_TYPE_NONE, 0);
 
   g_type_class_add_private (obj_class, sizeof (FrogrMainViewModelPrivate));
 }
