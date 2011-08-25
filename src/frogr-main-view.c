@@ -1450,6 +1450,12 @@ _frogr_main_view_dispose (GObject *object)
       priv->tree_model = NULL;
     }
 
+  if (priv->builder)
+    {
+      g_object_unref (priv->builder);
+      priv->builder = NULL;
+    }
+
   G_OBJECT_CLASS(frogr_main_view_parent_class)->dispose (object);
 }
 
@@ -1458,9 +1464,7 @@ _frogr_main_view_finalize (GObject *object)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
 
-  gtk_widget_destroy (priv->pictures_ctxt_menu);
   gtk_widget_destroy (GTK_WIDGET (priv->window));
-  g_object_unref (G_OBJECT (priv->builder));
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
 }
