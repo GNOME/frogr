@@ -469,6 +469,15 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                      FSP_CONTENT_TYPE_PHOTO,
                                                      G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
+                                   PROP_LICENSE,
+                                   g_param_spec_int ("license",
+                                                     "license",
+                                                     "License for this picture",
+                                                     FSP_LICENSE_NONE,
+                                                     FSP_LICENSE_ND,
+                                                     FSP_LICENSE_NONE,
+                                                     G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
                                    PROP_LOCATION,
                                    g_param_spec_pointer ("location",
                                                          "location",
