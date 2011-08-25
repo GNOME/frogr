@@ -1489,9 +1489,6 @@ frogr_main_view_init (FrogrMainView *self)
   priv->controller = g_object_ref (frogr_controller_get_instance ());
   priv->config = g_object_ref (frogr_config_get_instance ());
 
-  /* Init main model's state description */
-  _update_state_description (self);
-
   /* Provide a default icon list in several sizes */
   icons_path = frogr_util_get_icons_dir ();
   full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("128x128"), icons_path);
@@ -1605,6 +1602,9 @@ frogr_main_view_init (FrogrMainView *self)
   priv->quit_action =
     GTK_ACTION (gtk_builder_get_object (builder, "quit_action"));
 #endif
+
+  /* Init main model's state description */
+  _update_state_description (self);
 
   /* Initialize sorting criteria and reverse */
   priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
