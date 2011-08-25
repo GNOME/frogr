@@ -40,12 +40,6 @@ struct _FrogrPicturePrivate
   gchar *tags_string;
   GSList *tags_list;
 
-  gulong filesize; /* In KB */
-  gchar *datetime; /* ASCII, locale dependent, string */
-
-  GSList *sets;
-  GSList *groups;
-
   gboolean is_public;
   gboolean is_friend;
   gboolean is_family;
@@ -56,6 +50,12 @@ struct _FrogrPicturePrivate
   FrogrLocation *location;
   gboolean show_in_search;
   gboolean send_location;
+
+  gulong filesize; /* In KB */
+  gchar *datetime; /* ASCII, locale dependent, string */
+
+  GSList *sets;
+  GSList *groups;
 
   GdkPixbuf *pixbuf;
 };
@@ -77,9 +77,9 @@ enum  {
   PROP_LOCATION,
   PROP_SHOW_IN_SEARCH,
   PROP_SEND_LOCATION,
-  PROP_PIXBUF,
   PROP_FILESIZE,
-  PROP_DATETIME
+  PROP_DATETIME,
+  PROP_PIXBUF
 };
 
 /* Prototypes */
@@ -234,14 +234,14 @@ _frogr_picture_set_property (GObject *object,
     case PROP_SEND_LOCATION:
       frogr_picture_set_send_location (self, g_value_get_boolean (value));
       break;
-    case PROP_PIXBUF:
-      frogr_picture_set_pixbuf (self, GDK_PIXBUF (g_value_get_object (value)));
-      break;
     case PROP_FILESIZE:
       frogr_picture_set_filesize (self, g_value_get_long (value));
       break;
     case PROP_DATETIME:
       frogr_picture_set_datetime (self, g_value_get_string (value));
+      break;
+    case PROP_PIXBUF:
+      frogr_picture_set_pixbuf (self, GDK_PIXBUF (g_value_get_object (value)));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -301,14 +301,14 @@ _frogr_picture_get_property (GObject *object,
     case PROP_SEND_LOCATION:
       g_value_set_boolean (value, priv->send_location);
       break;
-    case PROP_PIXBUF:
-      g_value_set_object (value, priv->pixbuf);
-      break;
     case PROP_FILESIZE:
       g_value_set_long (value, priv->filesize);
       break;
     case PROP_DATETIME:
       g_value_set_string (value, priv->datetime);
+      break;
+    case PROP_PIXBUF:
+      g_value_set_object (value, priv->pixbuf);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -503,14 +503,6 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                          FALSE,
                                                          G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
-                                   PROP_PIXBUF,
-                                   g_param_spec_object ("pixbuf",
-                                                        "pixbuf",
-                                                        "Pre-loaded GdkPixbuf "
-                                                        "for this picture",
-                                                        GDK_TYPE_PIXBUF,
-                                                        G_PARAM_READWRITE));
-  g_object_class_install_property (obj_class,
                                    PROP_FILESIZE,
                                    g_param_spec_long ("filesize",
                                                       "filesize",
@@ -525,6 +517,14 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                         "datetime",
                                                         "Date and time string for the file",
                                                         NULL,
+                                                        G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_PIXBUF,
+                                   g_param_spec_object ("pixbuf",
+                                                        "pixbuf",
+                                                        "Pre-loaded GdkPixbuf "
+                                                        "for this picture",
+                                                        GDK_TYPE_PIXBUF,
                                                         G_PARAM_READWRITE));
 
   g_type_class_add_private (obj_class, sizeof (FrogrPicturePrivate));
@@ -541,13 +541,7 @@ frogr_picture_init (FrogrPicture *self)
   priv->title = NULL;
   priv->description = NULL;
   priv->tags_string = NULL;
-
-  priv->filesize = 0;
-  priv->datetime = NULL;
-
   priv->tags_list = NULL;
-  priv->sets = NULL;
-  priv->groups = NULL;
 
   priv->is_public = FALSE;
   priv->is_friend = FALSE;
@@ -560,6 +554,12 @@ frogr_picture_init (FrogrPicture *self)
 
   priv->show_in_search = TRUE;
   priv->send_location = FALSE;
+
+  priv->filesize = 0;
+  priv->datetime = NULL;
+
+  priv->sets = NULL;
+  priv->groups = NULL;
 
   priv->pixbuf = NULL;
 }
@@ -583,11 +583,6 @@ frogr_picture_new (const gchar *fileuri,
                                      "is-public", public,
                                      "is-family", family,
                                      "is-friend", friend,
-                                     "safety-level", FSP_SAFETY_LEVEL_SAFE,
-                                     "content-type", FSP_CONTENT_TYPE_PHOTO,
-                                     "license", FSP_LICENSE_NONE,
-                                     "show-in-search", TRUE,
-                                     "send-location", FALSE,
                                      NULL));
 }
 
