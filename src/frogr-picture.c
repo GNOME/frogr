@@ -79,6 +79,8 @@ enum  {
   PROP_SEND_LOCATION,
   PROP_FILESIZE,
   PROP_DATETIME,
+  PROP_PHOTOSETS,
+  PROP_GROUPS,
   PROP_PIXBUF
 };
 
@@ -240,6 +242,12 @@ _frogr_picture_set_property (GObject *object,
     case PROP_DATETIME:
       frogr_picture_set_datetime (self, g_value_get_string (value));
       break;
+    case PROP_PHOTOSETS:
+      frogr_picture_set_photosets (self, (GSList *) g_value_get_pointer (value));
+      break;
+    case PROP_GROUPS:
+      frogr_picture_set_groups (self, (GSList *) g_value_get_pointer (value));
+      break;
     case PROP_PIXBUF:
       frogr_picture_set_pixbuf (self, GDK_PIXBUF (g_value_get_object (value)));
       break;
@@ -306,6 +314,12 @@ _frogr_picture_get_property (GObject *object,
       break;
     case PROP_DATETIME:
       g_value_set_string (value, priv->datetime);
+      break;
+    case PROP_PHOTOSETS:
+      g_value_set_pointer (value, priv->photosets);
+      break;
+    case PROP_GROUPS:
+      g_value_set_pointer (value, priv->groups);
       break;
     case PROP_PIXBUF:
       g_value_set_object (value, priv->pixbuf);
@@ -518,6 +532,18 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                         "Date and time string for the file",
                                                         NULL,
                                                         G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_PHOTOSETS,
+                                   g_param_spec_pointer ("photosets",
+                                                         "photosets",
+                                                         "List of sets the picture is in",
+                                                         G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
+                                   PROP_GROUPS,
+                                   g_param_spec_pointer ("groups",
+                                                         "groups",
+                                                         "List of groups the picture is in",
+                                                         G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_PIXBUF,
                                    g_param_spec_object ("pixbuf",
