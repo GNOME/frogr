@@ -380,7 +380,7 @@ frogr_picture_class_init(FrogrPictureClass *klass)
   /* GtkObject signals */
   obj_class->set_property = _frogr_picture_set_property;
   obj_class->get_property = _frogr_picture_get_property;
-  obj_class->finalize = _frogr_picture_dispose;
+  obj_class->dispose = _frogr_picture_dispose;
   obj_class->finalize = _frogr_picture_finalize;
 
   /* Install properties */
