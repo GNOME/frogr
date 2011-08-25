@@ -86,6 +86,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
   gboolean progress_is_showing;
+  gchar* state_description;
 
   GtkTreeModel *tree_model;
   guint sb_context_id;
@@ -214,9 +215,6 @@ static void _model_picture_removed (FrogrController *controller,
 static void _model_pictures_reordered (FrogrController *controller,
                                        gpointer new_order,
                                        gpointer data);
-
-static void _model_description_updated (FrogrController *controller,
-                                        gpointer data);
 
 static void _update_account_menu_items (FrogrMainView *mainview);
 
@@ -1191,26 +1189,6 @@ _model_pictures_reordered (FrogrController *controller,
 }
 
 static void
-_model_description_updated (FrogrController *controller,
-                            gpointer data)
-{
-  FrogrMainView *mainview = NULL;
-  FrogrMainViewPrivate *priv = NULL;
-
-  mainview = FROGR_MAIN_VIEW (data);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-
-  /* Do not force updating the status bar when loading pictures */
-  if (frogr_controller_get_state (priv->controller) != FROGR_STATE_LOADING_PICTURES)
-    {
-      const gchar *description = NULL;
-
-      description = frogr_main_view_model_get_state_description (priv->model);
-      frogr_main_view_set_status_text (mainview, description);
-    }
-}
-
-static void
 _update_account_menu_items (FrogrMainView *mainview)
 {
   FrogrMainViewPrivate *priv = NULL;
@@ -1248,12 +1226,15 @@ static void
 _update_state_description (FrogrMainView *mainview)
 {
   FrogrMainViewPrivate *priv = NULL;
-  gchar *description = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-  description = _craft_state_description (mainview);
-  frogr_main_view_model_set_state_description (priv->model, description);
-  g_free (description);
+
+  g_free (priv->state_description);
+  priv->state_description = _craft_state_description (mainview);
+
+  /* Do not force updating the status bar when loading pictures */
+  if (frogr_controller_get_state (priv->controller) != FROGR_STATE_LOADING_PICTURES)
+    frogr_main_view_set_status_text (mainview, priv->state_description);
 }
 
 static gchar *
@@ -1412,12 +1393,7 @@ _update_ui (FrogrMainView *self)
 
   /* Update status bar from model's state description */
   if (frogr_controller_get_state (priv->controller) == FROGR_STATE_IDLE)
-    {
-      const gchar *state_description = NULL;
-
-      state_description = frogr_main_view_model_get_state_description (priv->model);
-      frogr_main_view_set_status_text (self, state_description);
-    }
+    frogr_main_view_set_status_text (self, priv->state_description);
 }
 
 static void
@@ -1465,6 +1441,7 @@ _frogr_main_view_finalize (GObject *object)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
 
   gtk_widget_destroy (GTK_WIDGET (priv->window));
+  g_free (priv->state_description);
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
 }
@@ -1711,6 +1688,7 @@ frogr_main_view_init (FrogrMainView *self)
   priv->progress_bar = progress_bar;
   priv->progress_label = progress_label;
   priv->progress_is_showing = FALSE;
+  priv->state_description = NULL;
 
   /* Initialize model */
   priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
@@ -1778,9 +1756,6 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->model), "pictures-reordered",
                     G_CALLBACK (_model_pictures_reordered), self);
-
-  g_signal_connect (G_OBJECT (priv->model), "description-updated",
-                    G_CALLBACK (_model_description_updated), self);
 
   gtk_builder_connect_signals (builder, self);
 

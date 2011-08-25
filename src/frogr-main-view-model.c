@@ -47,8 +47,6 @@ struct _FrogrMainViewModelPrivate
 
   GSList *tags_list;
   guint n_tags;
-
-  gchar* state_description;
 };
 
 /* Signals */
@@ -169,19 +167,10 @@ _frogr_main_view_model_dispose (GObject* object)
 }
 
 static void
-_frogr_main_view_model_finalize (GObject* object)
-{
-  FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (object);
-  g_free (priv->state_description);
-  G_OBJECT_CLASS (frogr_main_view_model_parent_class)->finalize (object);
-}
-
-static void
 frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
   obj_class->dispose = _frogr_main_view_model_dispose;
-  obj_class->finalize = _frogr_main_view_model_finalize;
 
   signals[PICTURE_ADDED] =
     g_signal_new ("picture-added",
@@ -237,8 +226,6 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
 
   priv->tags_list = NULL;
   priv->n_tags = 0;
-
-  priv->state_description = NULL;
 }
 
 /* Public API */
@@ -608,32 +595,4 @@ frogr_main_view_model_n_tags (FrogrMainViewModel *self)
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->n_tags;
-}
-
-const gchar *
-frogr_main_view_model_get_state_description (FrogrMainViewModel *self)
-{
-  FrogrMainViewModelPrivate *priv = NULL;
-
-  g_return_val_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
-
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->state_description;
-}
-
-void
-frogr_main_view_model_set_state_description (FrogrMainViewModel *self,
-                                             const gchar *description)
-{
-  FrogrMainViewModelPrivate *priv = NULL;
-
-  g_return_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self));
-
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  if (priv->state_description)
-    g_free (priv->state_description);
-
-  priv->state_description = g_strdup (description);
-
-  g_signal_emit (self, signals[DESCRIPTION_UPDATED], 0);
 }
