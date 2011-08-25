@@ -2263,6 +2263,7 @@ frogr_controller_set_proxy (FrogrController *self,
                             const char *username, const char *password)
 {
   FrogrControllerPrivate *priv = NULL;
+  gboolean proxy_changed = FALSE;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -2270,12 +2271,10 @@ frogr_controller_set_proxy (FrogrController *self,
 
   /* The host is mandatory to set up a proxy */
   if (!use_gnome_proxy && (host == NULL || *host == '\0')) {
-    fsp_session_set_http_proxy (priv->session, FALSE,
-                                NULL, NULL, NULL, NULL);
+    proxy_changed = fsp_session_set_http_proxy (priv->session, FALSE,
+                                                NULL, NULL, NULL, NULL);
     DEBUG ("%s", "Not enabling the HTTP proxy");
   } else {
-    gboolean proxy_changed = FALSE;
-
     if (!use_gnome_proxy)
       {
         gchar *auth_part = NULL;
@@ -2298,11 +2297,11 @@ frogr_controller_set_proxy (FrogrController *self,
                                                 use_gnome_proxy,
                                                 host, port,
                                                 username, password);
-
-    /* Re-fetch information if needed after changing proxy configuration */
-    if (priv->app_running && proxy_changed)
-      _fetch_everything (self, FALSE);
   }
+
+  /* Re-fetch information if needed after changing proxy configuration */
+  if (priv->app_running && proxy_changed)
+    _fetch_everything (self, FALSE);
 }
 
 void
