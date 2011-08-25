@@ -27,6 +27,7 @@
 #include "frogr-config.h"
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
+#include "frogr-location.h"
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
@@ -100,7 +101,7 @@ static gboolean get_gps_coordinate (ExifData *exif,
                                     ExifTag   tag,
                                     ExifTag   reftag,
                                     gdouble  *coordinate);
-static FspDataLocation *get_location_from_exif (ExifData *exif_data);
+static FrogrLocation *get_location_from_exif (ExifData *exif_data);
 
 static gchar *remove_spaces_from_keyword (const gchar *keyword);
 static gchar *import_tags_from_xmp_keywords (const char *buffer, size_t len);
@@ -298,7 +299,7 @@ _load_next_picture_cb (GObject *object,
           exif_data = exif_loader_get_data (exif_loader);
           if (exif_data)
             {
-              FspDataLocation *location;
+              FrogrLocation *location = NULL;
 
               /* Date and time for picture taken */
               exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
@@ -335,7 +336,7 @@ _load_next_picture_cb (GObject *object,
                 {
                   /* frogr_picture_set_location takes ownership of location */
                   frogr_picture_set_location (fpicture, location);
-                  fsp_data_free (FSP_DATA (location));
+                  g_object_unref (location);
                 }
               exif_data_unref (exif_data);
             }
@@ -444,32 +445,28 @@ get_gps_coordinate (ExifData *exif,
   return FALSE;
 }
 
-static FspDataLocation *
+static FrogrLocation *
 get_location_from_exif (ExifData *exif_data)
 {
-    FspDataLocation *location;
-    gdouble coordinate;
-    gboolean found;
+  FrogrLocation *location = NULL;
+  gdouble latitude;
+  gdouble longitude;
+  gboolean has_latitude;
 
-    if (!exif_data)
-      return NULL;
-    found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LATITUDE,
-                                EXIF_TAG_GPS_LATITUDE_REF, &coordinate);
-    if (!found)
-      return NULL;
+  if (exif_data)
+    {
+      has_latitude = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LATITUDE,
+                                         EXIF_TAG_GPS_LATITUDE_REF, &latitude);
 
-    location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
-    location->latitude = coordinate;
+      /* We need both latitude and longitude */
+      if (has_latitude && get_gps_coordinate (exif_data, EXIF_TAG_GPS_LONGITUDE,
+                                              EXIF_TAG_GPS_LONGITUDE_REF, &longitude))
+        {
+          location = frogr_location_new (latitude, longitude);
+        }
+    }
 
-    found = get_gps_coordinate (exif_data, EXIF_TAG_GPS_LONGITUDE,
-                                EXIF_TAG_GPS_LONGITUDE_REF, &location->longitude);
-    if (!found)
-      {
-        fsp_data_free (FSP_DATA (location));
-        return NULL;
-      }
-
-    return location;
+  return location;
 }
 
 static gchar *

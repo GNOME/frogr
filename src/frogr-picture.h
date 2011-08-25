@@ -21,8 +21,9 @@
 #ifndef _FROGR_PICTURE_H
 #define _FROGR_PICTURE_H
 
-#include "frogr-photoset.h"
 #include "frogr-group.h"
+#include "frogr-location.h"
+#include "frogr-photoset.h"
 
 #include <glib.h>
 #include <glib-object.h>
@@ -106,11 +107,11 @@ void frogr_picture_set_content_type (FrogrPicture *self,
 FspLicense frogr_picture_get_license (FrogrPicture *self);
 void frogr_picture_set_license (FrogrPicture *self, FspLicense license);
 
+FrogrLocation *frogr_picture_get_location (FrogrPicture *self);
+void frogr_picture_set_location (FrogrPicture *self, FrogrLocation *location);
+
 gboolean frogr_picture_send_location (FrogrPicture *self);
 void frogr_picture_set_send_location (FrogrPicture *self, gboolean send_location);
-
-FspDataLocation *frogr_picture_get_location (FrogrPicture *self);
-void frogr_picture_set_location (FrogrPicture *self, FspDataLocation *location);
 
 gboolean frogr_picture_show_in_search (FrogrPicture *self);
 void frogr_picture_set_show_in_search (FrogrPicture *self,

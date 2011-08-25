@@ -723,25 +723,33 @@ _set_location_on_idle (gpointer data)
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
-  FspDataLocation *location;
+  FrogrLocation *location = NULL;
+  FspDataLocation *data_location = NULL;
 
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
-  picture = up_st->picture;
-  location = frogr_picture_get_location (picture);
 
   /* Keep the source while busy */
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   if (priv->setting_license)
     return TRUE;
 
+  picture = up_st->picture;
+  location = frogr_picture_get_location (picture);
+  data_location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
+  data_location->latitude = frogr_location_get_latitude (location);
+  data_location->longitude = frogr_location_get_longitude (location);
+ 
   _notify_setting_location (controller, picture);
   fsp_session_set_location_async (priv->session,
                                   frogr_picture_get_id (picture),
-                                  location,
+                                  data_location,
                                   priv->last_cancellable,
                                   _set_location_cb,
                                   up_st);
+
+  fsp_data_free (FSP_DATA (data_location));
+
   return FALSE;
 }
 
@@ -1096,7 +1104,7 @@ _notify_setting_location (FrogrController *self,
 {
   FrogrControllerPrivate *priv = NULL;
   const gchar *picture_title = NULL;
-  FspDataLocation *location;
+  FrogrLocation *location;
   gchar *debug_msg = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -1104,8 +1112,11 @@ _notify_setting_location (FrogrController *self,
 
   picture_title = frogr_picture_get_title (picture);
   location = frogr_picture_get_location (picture);
+
   debug_msg = g_strdup_printf ("Setting geolocation (%f, %f) for picture %s…",
-                               location->latitude, location->longitude, picture_title);
+                               frogr_location_get_latitude (location),
+                               frogr_location_get_longitude (location),
+                               picture_title);
   DEBUG ("%s", debug_msg);
 
   g_free (debug_msg);

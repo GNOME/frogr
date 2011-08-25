@@ -53,7 +53,7 @@ struct _FrogrPicturePrivate
   FspSafetyLevel safety_level;
   FspContentType content_type;
   FspLicense license;
-  FspDataLocation *location;
+  FrogrLocation *location;
   gboolean show_in_search;
   gboolean send_location;
 
@@ -74,6 +74,7 @@ enum  {
   PROP_SAFETY_LEVEL,
   PROP_CONTENT_TYPE,
   PROP_LICENSE,
+  PROP_LOCATION,
   PROP_SHOW_IN_SEARCH,
   PROP_SEND_LOCATION,
   PROP_PIXBUF,
@@ -224,6 +225,9 @@ _frogr_picture_set_property (GObject *object,
     case PROP_LICENSE:
       frogr_picture_set_license (self, g_value_get_int (value));
       break;
+    case PROP_LOCATION:
+      frogr_picture_set_location (self, g_value_get_pointer (value));
+      break;
     case PROP_SHOW_IN_SEARCH:
       frogr_picture_set_show_in_search (self, g_value_get_boolean (value));
       break;
@@ -288,6 +292,9 @@ _frogr_picture_get_property (GObject *object,
     case PROP_LICENSE:
       g_value_set_int (value, priv->license);
       break;
+    case PROP_LOCATION:
+      g_value_set_pointer (value, priv->location);
+      break;
     case PROP_SHOW_IN_SEARCH:
       g_value_set_boolean (value, priv->show_in_search);
       break;
@@ -314,11 +321,16 @@ _frogr_picture_dispose (GObject* object)
 {
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
 
-  /* Free pixbuf, if present */
   if (priv->pixbuf)
     {
       g_object_unref (priv->pixbuf);
       priv->pixbuf = NULL;
+    }
+
+  if (priv->location)
+    {
+      g_object_unref (priv->location);
+      priv->location = NULL;
     }
 
   if (priv->sets)
@@ -355,9 +367,6 @@ _frogr_picture_finalize (GObject* object)
   /* free GSList of tags */
   g_slist_foreach (priv->tags_list, (GFunc) g_free, NULL);
   g_slist_free (priv->tags_list);
-
-  /* free structs */
-  fsp_data_free (FSP_DATA (priv->location));
 
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class)->finalize(object);
@@ -460,14 +469,12 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                      FSP_CONTENT_TYPE_PHOTO,
                                                      G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
-                                   PROP_LICENSE,
-                                   g_param_spec_int ("license",
-                                                     "license",
-                                                     "License for this picture",
-                                                     FSP_LICENSE_NONE,
-                                                     FSP_LICENSE_ND,
-                                                     FSP_LICENSE_NONE,
-                                                     G_PARAM_READWRITE));
+                                   PROP_LOCATION,
+                                   g_param_spec_pointer ("location",
+                                                         "location",
+                                                         "Location for this picture",
+                                                         G_PARAM_READWRITE));
+
   g_object_class_install_property (obj_class,
                                    PROP_SHOW_IN_SEARCH,
                                    g_param_spec_boolean ("show-in-search",
@@ -539,6 +546,7 @@ frogr_picture_init (FrogrPicture *self)
   priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
   priv->content_type = FSP_CONTENT_TYPE_PHOTO;
   priv->license = FSP_LICENSE_NONE;
+  priv->location = NULL;
 
   priv->show_in_search = TRUE;
   priv->send_location = FALSE;
@@ -866,6 +874,31 @@ frogr_picture_set_license (FrogrPicture *self, FspLicense license)
   priv->license = license;
 }
 
+FrogrLocation *
+frogr_picture_get_location (FrogrPicture *self)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  return priv->location;
+}
+
+void
+frogr_picture_set_location (FrogrPicture *self, FrogrLocation *location)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  if (priv->location)
+    g_object_unref (priv->location);
+
+  priv->location = FROGR_IS_LOCATION (location) ? g_object_ref (location) : NULL;
+}
+
 gboolean
 frogr_picture_send_location (FrogrPicture *self)
 {
@@ -886,34 +919,6 @@ frogr_picture_set_send_location (FrogrPicture *self, gboolean send_location)
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   priv->send_location = send_location;
-}
-
-FspDataLocation *
-frogr_picture_get_location (FrogrPicture *self)
-{
-  FrogrPicturePrivate *priv = NULL;
-
-  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->location;
-}
-
-void
-frogr_picture_set_location (FrogrPicture *self, FspDataLocation *location)
-{
-  FrogrPicturePrivate *priv = NULL;
-
-  g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  if (priv->location)
-    fsp_data_free (FSP_DATA (priv->location));
-
-  if (location)
-    priv->location = FSP_DATA_LOCATION (fsp_data_copy (FSP_DATA (location)));
-  else
-    priv->location = NULL;
 }
 
 gboolean
