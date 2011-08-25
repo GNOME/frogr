@@ -763,13 +763,13 @@ _create_set_or_add_picture_on_idle (gpointer data)
 
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
-  picture = up_st->picture;
 
   /* Keep the source while busy */
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   if ((priv->setting_license) || (priv->setting_location))
     return TRUE;
 
+  picture = up_st->picture;
   _create_set_or_add_picture (controller, picture, up_st);
   return FALSE;
 }
@@ -1004,17 +1004,14 @@ _add_picture_to_groups_on_idle (gpointer data)
 
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
-  picture = up_st->picture;
-  groups = up_st->groups;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  session = priv->session;
 
   /* Keep the source while busy */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   if (priv->setting_license || priv->setting_location || priv->adding_to_set)
     return TRUE;
 
   /* Add pictures to groups, if any */
+  groups = up_st->groups;
   if (g_slist_length (groups) == 0)
     {
       priv->adding_to_group = FALSE;
@@ -1022,7 +1019,11 @@ _add_picture_to_groups_on_idle (gpointer data)
     }
 
   group = FROGR_GROUP (groups->data);
+
+  picture = up_st->picture;
   _notify_adding_to_group (controller, picture, group);
+
+  session = priv->session;
   fsp_session_add_to_group_async (session,
                                   frogr_picture_get_id (picture),
                                   frogr_group_get_id (group),
@@ -1045,9 +1046,9 @@ _complete_picture_upload_on_idle (gpointer data)
 
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while busy */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   if (priv->setting_license || priv->setting_location || priv->adding_to_set || priv->adding_to_group)
     {
       frogr_main_view_pulse_progress (priv->mainview);
