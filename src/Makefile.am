@@ -73,6 +73,8 @@ frogr_SOURCES = \
 	frogr-main-view-model.h \
 	frogr-main-view.c \
 	frogr-main-view.h \
+	frogr-location.c \
+	frogr-location.h \
 	frogr-picture-loader.c \
 	frogr-picture-loader.h \
 	frogr-picture-uploader.c \
