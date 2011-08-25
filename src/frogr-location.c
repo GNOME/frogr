@@ -109,7 +109,7 @@ frogr_location_class_init(FrogrLocationClass *klass)
                                                         G_PARAM_READWRITE));
 
   g_object_class_install_property (obj_class,
-                                   PROP_LATITUDE,
+                                   PROP_LONGITUDE,
                                    g_param_spec_double ("longitude",
                                                         "longitude",
                                                         "Longitude for the location",
