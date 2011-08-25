@@ -226,7 +226,7 @@ _frogr_picture_set_property (GObject *object,
       frogr_picture_set_license (self, g_value_get_int (value));
       break;
     case PROP_LOCATION:
-      frogr_picture_set_location (self, g_value_get_pointer (value));
+      frogr_picture_set_location (self, FROGR_LOCATION (g_value_get_object (value)));
       break;
     case PROP_SHOW_IN_SEARCH:
       frogr_picture_set_show_in_search (self, g_value_get_boolean (value));
@@ -293,7 +293,7 @@ _frogr_picture_get_property (GObject *object,
       g_value_set_int (value, priv->license);
       break;
     case PROP_LOCATION:
-      g_value_set_pointer (value, priv->location);
+      g_value_set_object (value, priv->location);
       break;
     case PROP_SHOW_IN_SEARCH:
       g_value_set_boolean (value, priv->show_in_search);
@@ -479,10 +479,11 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                      G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_LOCATION,
-                                   g_param_spec_pointer ("location",
-                                                         "location",
-                                                         "Location for this picture",
-                                                         G_PARAM_READWRITE));
+                                   g_param_spec_object ("location",
+                                                        "location",
+                                                        "Location for this picture",
+                                                        FROGR_TYPE_LOCATION,
+                                                        G_PARAM_READWRITE));
 
   g_object_class_install_property (obj_class,
                                    PROP_SHOW_IN_SEARCH,
