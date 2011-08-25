@@ -68,18 +68,18 @@ void frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
                                              const gchar *property_name,
                                              gboolean reversed);
 
-void frogr_main_view_model_add_set (FrogrMainViewModel *self,
-                                    FrogrPhotoSet *fset);
-void frogr_main_view_model_remove_set (FrogrMainViewModel *self,
-                                       FrogrPhotoSet *fset);
-void frogr_main_view_model_remove_all_sets (FrogrMainViewModel *self);
+void frogr_main_view_model_add_photoset (FrogrMainViewModel *self,
+                                         FrogrPhotoSet *fset);
+void frogr_main_view_model_remove_photoset (FrogrMainViewModel *self,
+                                            FrogrPhotoSet *fset);
+void frogr_main_view_model_remove_all_photosets (FrogrMainViewModel *self);
 
-guint frogr_main_view_model_n_sets (FrogrMainViewModel *self);
+guint frogr_main_view_model_n_photosets (FrogrMainViewModel *self);
 
-GSList *frogr_main_view_model_get_sets (FrogrMainViewModel *self);
+GSList *frogr_main_view_model_get_photosets (FrogrMainViewModel *self);
 
-void frogr_main_view_model_set_sets (FrogrMainViewModel *self,
-                                     GSList *sets_list);
+void frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
+                                          GSList *photosets_list);
 
 void frogr_main_view_model_add_group (FrogrMainViewModel *self,
                                       FrogrGroup *fgroup);

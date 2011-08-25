@@ -127,11 +127,11 @@ void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize);
 void frogr_picture_set_datetime (FrogrPicture *self, const gchar *datetime);
 const gchar *frogr_picture_get_datetime (FrogrPicture *self);
 
-GSList *frogr_picture_get_sets (FrogrPicture *self);
-void frogr_picture_set_sets (FrogrPicture *self, GSList *sets);
-void frogr_picture_add_set (FrogrPicture *self, FrogrPhotoSet *set);
-void frogr_picture_remove_sets (FrogrPicture *self);
-gboolean frogr_picture_in_set (FrogrPicture *self, FrogrPhotoSet *set);
+GSList *frogr_picture_get_photosets (FrogrPicture *self);
+void frogr_picture_set_photosets (FrogrPicture *self, GSList *photosets);
+void frogr_picture_add_photoset (FrogrPicture *self, FrogrPhotoSet *set);
+void frogr_picture_remove_photosets (FrogrPicture *self);
+gboolean frogr_picture_in_photoset (FrogrPicture *self, FrogrPhotoSet *set);
 
 GSList *frogr_picture_get_groups (FrogrPicture *self);
 void frogr_picture_set_groups (FrogrPicture *self, GSList *groups);

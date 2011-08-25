@@ -44,7 +44,7 @@ typedef struct _FrogrCreateNewSetDialogPrivate {
   GtkTextBuffer *description_buffer;
 
   GSList *pictures;
-  GSList *sets;
+  GSList *photosets;
   gboolean copy_to_pictures;
 } FrogrCreateNewSetDialogPrivate;
 
@@ -52,7 +52,7 @@ typedef struct _FrogrCreateNewSetDialogPrivate {
 enum  {
   PROP_0,
   PROP_PICTURES,
-  PROP_SETS
+  PROP_PHOTOSETS
 };
 
 
@@ -162,13 +162,13 @@ _update_model (FrogrCreateNewSetDialog *self,
 
   /* Add the set to the model */
   new_set = frogr_photoset_new (title, description);
-  frogr_main_view_model_add_set (mainview_model, new_set);
+  frogr_main_view_model_add_photoset (mainview_model, new_set);
 
   /* Add the set to the list of sets for each picture */
   for (item = priv->pictures; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
-      frogr_picture_add_set (picture, new_set);
+      frogr_picture_add_photoset (picture, new_set);
 
       /* Copy album's details over pictures if requested */
       if (priv->copy_to_pictures)
@@ -210,8 +210,8 @@ _frogr_create_new_set_dialog_set_property (GObject *object,
     case PROP_PICTURES:
       priv->pictures = (GSList *) g_value_get_pointer (value);
       break;
-    case PROP_SETS:
-      priv->sets = (GSList *) g_value_get_pointer (value);
+    case PROP_PHOTOSETS:
+      priv->photosets = (GSList *) g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -232,8 +232,8 @@ _frogr_create_new_set_dialog_get_property (GObject *object,
     case PROP_PICTURES:
       g_value_set_pointer (value, priv->pictures);
       break;
-    case PROP_SETS:
-      g_value_set_pointer (value, priv->sets);
+    case PROP_PHOTOSETS:
+      g_value_set_pointer (value, priv->photosets);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -253,8 +253,8 @@ _frogr_create_new_set_dialog_dispose (GObject *object)
       priv->pictures = NULL;
     }
 
-  if (priv->sets)
-    priv->sets = NULL;
+  if (priv->photosets)
+    priv->photosets = NULL;
 
   G_OBJECT_CLASS(frogr_create_new_set_dialog_parent_class)->dispose (object);
 }
@@ -279,13 +279,13 @@ frogr_create_new_set_dialog_class_init (FrogrCreateNewSetDialogClass *klass)
                                 | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (obj_class, PROP_PICTURES, pspec);
 
-  pspec = g_param_spec_pointer ("sets",
-                                "sets",
+  pspec = g_param_spec_pointer ("photosets",
+                                "photosets",
                                 "List of sets currently available "
                                 "for the 'add to set' dialog",
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
-  g_object_class_install_property (obj_class, PROP_SETS, pspec);
+  g_object_class_install_property (obj_class, PROP_PHOTOSETS, pspec);
 
   g_type_class_add_private (obj_class, sizeof (FrogrCreateNewSetDialogPrivate));
 }
@@ -302,7 +302,7 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
 
   priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   priv->pictures = NULL;
-  priv->sets = NULL;
+  priv->photosets = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -371,14 +371,14 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
 /* Public API */
 
 void
-frogr_create_new_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *sets)
+frogr_create_new_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *photosets)
 {
   GtkWidget *dialog = NULL;
   dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_CREATE_NEW_SET_DIALOG,
                                      "title", _("Create new Set"),
                                      "modal", TRUE,
                                      "pictures", pictures,
-                                     "sets", sets,
+                                     "photosets", photosets,
                                      "transient-for", parent,
                                      "width-request", -1,
                                      "height-request", 300,

@@ -45,14 +45,14 @@ typedef struct _FrogrAddToSetDialogPrivate {
   GtkTreeViewColumn *n_elements_col;
 
   GSList *pictures;
-  GSList *sets;
+  GSList *photosets;
 } FrogrAddToSetDialogPrivate;
 
 /* Properties */
 enum  {
   PROP_0,
   PROP_PICTURES,
-  PROP_SETS
+  PROP_PHOTOSETS
 };
 
 
@@ -81,7 +81,7 @@ static gint _tree_iter_compare_n_elements_func (GtkTreeModel *model,
                                                 GtkTreeIter *b,
                                                 gpointer data);
 
-static void _populate_treemodel_with_sets (FrogrAddToSetDialog *self);
+static void _populate_treemodel_with_photosets (FrogrAddToSetDialog *self);
 
 static void _fill_dialog_with_data (FrogrAddToSetDialog *self);
 
@@ -89,7 +89,7 @@ static void _set_toggled_cb (GtkCellRendererToggle *celltoggle,
                              gchar *path_string,
                              GtkTreeView *treeview);
 
-static GSList *_get_selected_sets (FrogrAddToSetDialog *self);
+static GSList *_get_selected_photosets (FrogrAddToSetDialog *self);
 
 static void _update_pictures (FrogrAddToSetDialog *self);
 
@@ -231,7 +231,7 @@ _tree_iter_compare_n_elements_func (GtkTreeModel *model,
 }
 
 static void
-_populate_treemodel_with_sets (FrogrAddToSetDialog *self)
+_populate_treemodel_with_photosets (FrogrAddToSetDialog *self)
 {
   FrogrAddToSetDialogPrivate *priv = NULL;
   FrogrPhotoSet *set = NULL;
@@ -241,9 +241,9 @@ _populate_treemodel_with_sets (FrogrAddToSetDialog *self)
 
   priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
-  for (current = priv->sets; current; current = g_slist_next (current))
+  for (current = priv->photosets; current; current = g_slist_next (current))
     {
-      if (!FROGR_IS_SET (current->data))
+      if (!FROGR_IS_PHOTOSET (current->data))
         continue;
 
       set = FROGR_PHOTOSET (current->data);
@@ -269,7 +269,7 @@ _fill_dialog_with_data (FrogrAddToSetDialog *self)
   gint n_pictures;
 
   priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
-  n_sets = g_slist_length (priv->sets);
+  n_sets = g_slist_length (priv->photosets);
   n_pictures = g_slist_length (priv->pictures);
 
   /* No sets, nothing to do */
@@ -292,7 +292,7 @@ _fill_dialog_with_data (FrogrAddToSetDialog *self)
           FrogrPicture *picture = NULL;
 
           picture = FROGR_PICTURE (p_item->data);
-          if (!frogr_picture_in_set (picture, set))
+          if (!frogr_picture_in_photoset (picture, set))
             {
               do_check = FALSE;
               break;
@@ -331,7 +331,7 @@ _set_toggled_cb (GtkCellRendererToggle *celltoggle,
 }
 
 static GSList *
-_get_selected_sets (FrogrAddToSetDialog *self)
+_get_selected_photosets (FrogrAddToSetDialog *self)
 {
   FrogrAddToSetDialogPrivate *priv = NULL;
   GtkTreeIter iter;
@@ -342,7 +342,7 @@ _get_selected_sets (FrogrAddToSetDialog *self)
   priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
   /* No sets, nothing to do */
-  if (g_slist_length (priv->sets) == 0)
+  if (g_slist_length (priv->photosets) == 0)
     return NULL;
 
   /* Iterate over all the items */
@@ -357,7 +357,7 @@ _get_selected_sets (FrogrAddToSetDialog *self)
       gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
                           SET_COL, &set, -1);
 
-      if (FROGR_IS_SET (set))
+      if (FROGR_IS_PHOTOSET (set))
         {
           selected_sets = g_slist_append (selected_sets, set);
           g_object_ref (set);
@@ -378,11 +378,11 @@ _update_pictures (FrogrAddToSetDialog *self)
 
   priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
-  selected_sets = _get_selected_sets (self);
+  selected_sets = _get_selected_photosets (self);
   for (item = priv->pictures; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
-      frogr_picture_set_sets (picture, selected_sets);
+      frogr_picture_set_photosets (picture, selected_sets);
     }
 
   g_slist_foreach (selected_sets, (GFunc)g_object_unref, NULL);
@@ -417,8 +417,8 @@ _frogr_add_to_set_dialog_set_property (GObject *object,
     case PROP_PICTURES:
       priv->pictures = (GSList *) g_value_get_pointer (value);
       break;
-    case PROP_SETS:
-      priv->sets = (GSList *) g_value_get_pointer (value);
+    case PROP_PHOTOSETS:
+      priv->photosets = (GSList *) g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -439,8 +439,8 @@ _frogr_add_to_set_dialog_get_property (GObject *object,
     case PROP_PICTURES:
       g_value_set_pointer (value, priv->pictures);
       break;
-    case PROP_SETS:
-      g_value_set_pointer (value, priv->sets);
+    case PROP_PHOTOSETS:
+      g_value_set_pointer (value, priv->photosets);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -460,8 +460,8 @@ _frogr_add_to_set_dialog_dispose (GObject *object)
       priv->pictures = NULL;
     }
 
-  if (priv->sets)
-    priv->sets = NULL;
+  if (priv->photosets)
+    priv->photosets = NULL;
 
   if (priv->treemodel)
     {
@@ -492,13 +492,13 @@ frogr_add_to_set_dialog_class_init (FrogrAddToSetDialogClass *klass)
                                 | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (obj_class, PROP_PICTURES, pspec);
 
-  pspec = g_param_spec_pointer ("sets",
-                                "sets",
+  pspec = g_param_spec_pointer ("photosets",
+                                "photosets",
                                 "List of sets currently available "
                                 "for the 'add to set' dialog",
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
-  g_object_class_install_property (obj_class, PROP_SETS, pspec);
+  g_object_class_install_property (obj_class, PROP_PHOTOSETS, pspec);
 
   g_type_class_add_private (obj_class, sizeof (FrogrAddToSetDialogPrivate));
 }
@@ -512,7 +512,7 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
 
   priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
   priv->pictures = NULL;
-  priv->sets = NULL;
+  priv->photosets = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -559,7 +559,7 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
 /* Public API */
 
 void
-frogr_add_to_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *sets)
+frogr_add_to_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *photosets)
 {
   FrogrAddToSetDialog *self = NULL;
   GObject *new = NULL;
@@ -568,14 +568,14 @@ frogr_add_to_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *sets)
                       "title", _("Add to Sets"),
                       "modal", TRUE,
                       "pictures", pictures,
-                      "sets", sets,
+                      "photosets", photosets,
                       "transient-for", parent,
                       "resizable", TRUE,
                       NULL);
 
   self = FROGR_ADD_TO_SET_DIALOG (new);
 
-  _populate_treemodel_with_sets (self);
+  _populate_treemodel_with_photosets (self);
   _fill_dialog_with_data (self);
 
   gtk_widget_show_all (GTK_WIDGET (self));

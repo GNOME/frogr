@@ -39,8 +39,8 @@ struct _FrogrMainViewModelPrivate
   GSList *pictures_list_as_loaded;
   guint n_pictures;
 
-  GSList *sets_list;
-  guint n_sets;
+  GSList *photosets_list;
+  guint n_photosets;
 
   GSList *groups_list;
   guint n_groups;
@@ -141,11 +141,11 @@ _frogr_main_view_model_dispose (GObject* object)
       priv->pictures_list_as_loaded = NULL;
     }
 
-  if (priv->sets_list)
+  if (priv->photosets_list)
     {
-      g_slist_foreach (priv->sets_list, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->sets_list);
-      priv->sets_list = NULL;
+      g_slist_foreach (priv->photosets_list, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->photosets_list);
+      priv->photosets_list = NULL;
     }
 
   if (priv->groups_list)
@@ -209,8 +209,8 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
   priv->pictures_list_as_loaded = NULL;
   priv->n_pictures = 0;
 
-  priv->sets_list = NULL;
-  priv->n_sets = 0;
+  priv->photosets_list = NULL;
+  priv->n_photosets = 0;
 
   priv->groups_list = NULL;
   priv->n_groups = 0;
@@ -344,38 +344,38 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
 }
 
 void
-frogr_main_view_model_add_set (FrogrMainViewModel *self,
-                               FrogrPhotoSet *set)
+frogr_main_view_model_add_photoset (FrogrMainViewModel *self,
+                                    FrogrPhotoSet *set)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
-  g_return_if_fail(FROGR_IS_SET (set));
+  g_return_if_fail(FROGR_IS_PHOTOSET (set));
 
   /* When adding one by one we prepend always to keep the order */
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->sets_list = g_slist_prepend (priv->sets_list, set);
-  priv->n_sets++;
+  priv->photosets_list = g_slist_prepend (priv->photosets_list, set);
+  priv->n_photosets++;
 
   g_object_ref (set);
 }
 
 void
-frogr_main_view_model_remove_set (FrogrMainViewModel *self,
-                                  FrogrPhotoSet *set)
+frogr_main_view_model_remove_photoset (FrogrMainViewModel *self,
+                                       FrogrPhotoSet *set)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->sets_list = g_slist_remove (priv->sets_list, set);
-  priv->n_sets--;
+  priv->photosets_list = g_slist_remove (priv->photosets_list, set);
+  priv->n_photosets--;
   g_object_unref (set);
 }
 
 void
-frogr_main_view_model_remove_all_sets (FrogrMainViewModel *self)
+frogr_main_view_model_remove_all_photosets (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
@@ -383,38 +383,38 @@ frogr_main_view_model_remove_all_sets (FrogrMainViewModel *self)
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
-  g_slist_foreach (priv->sets_list, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv->sets_list);
+  g_slist_foreach (priv->photosets_list, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv->photosets_list);
 
-  priv->sets_list = NULL;
-  priv->n_sets = 0;
+  priv->photosets_list = NULL;
+  priv->n_photosets = 0;
 }
 
 guint
-frogr_main_view_model_n_sets (FrogrMainViewModel *self)
+frogr_main_view_model_n_photosets (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->n_sets;
+  return priv->n_photosets;
 }
 
 GSList *
-frogr_main_view_model_get_sets (FrogrMainViewModel *self)
+frogr_main_view_model_get_photosets (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->sets_list;
+  return priv->photosets_list;
 }
 
 void
-frogr_main_view_model_set_sets (FrogrMainViewModel *self,
-                                GSList *sets_list)
+frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
+                                     GSList *photosets_list)
 {
   FrogrMainViewModelPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
@@ -424,19 +424,19 @@ frogr_main_view_model_set_sets (FrogrMainViewModel *self,
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
-  /* Remove all sets attached to every picture */
+  /* Remove all photosets attached to every picture */
   for (item = priv->pictures_list; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
-      frogr_picture_remove_sets (picture);
+      frogr_picture_remove_photosets (picture);
     }
 
-  /* Remove all the sets */
-  frogr_main_view_model_remove_all_sets (self);
+  /* Remove all the photosets */
+  frogr_main_view_model_remove_all_photosets (self);
 
-  /* Set photosets */
-  priv->sets_list = sets_list;
-  priv->n_sets = g_slist_length (sets_list);
+  /* Set photophotosets */
+  priv->photosets_list = photosets_list;
+  priv->n_photosets = g_slist_length (photosets_list);
 }
 
 void

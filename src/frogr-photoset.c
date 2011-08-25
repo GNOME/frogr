@@ -22,7 +22,7 @@
 
 #define FROGR_PHOTOSET_GET_PRIVATE(object)              \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FROGR_TYPE_SET,         \
+                                FROGR_TYPE_PHOTOSET,    \
                                 FrogrPhotoSetPrivate))
 
 G_DEFINE_TYPE (FrogrPhotoSet, frogr_photoset, G_TYPE_OBJECT)
@@ -208,7 +208,7 @@ frogr_photoset_new (const gchar *title,
   g_return_val_if_fail (title, NULL);
   g_return_val_if_fail (description, NULL);
 
-  return FROGR_PHOTOSET (g_object_new(FROGR_TYPE_SET,
+  return FROGR_PHOTOSET (g_object_new(FROGR_TYPE_PHOTOSET,
                                       "title", title,
                                       "description", description,
                                       NULL));
@@ -222,7 +222,7 @@ frogr_photoset_get_title (FrogrPhotoSet *self)
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_SET(self), NULL);
+  g_return_val_if_fail(FROGR_IS_PHOTOSET(self), NULL);
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   return (const gchar *)priv->title;
@@ -234,7 +234,7 @@ frogr_photoset_set_title (FrogrPhotoSet *self,
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_SET(self));
+  g_return_if_fail(FROGR_IS_PHOTOSET(self));
   g_return_if_fail(title != NULL);
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
@@ -247,7 +247,7 @@ frogr_photoset_get_description (FrogrPhotoSet *self)
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_SET(self), NULL);
+  g_return_val_if_fail(FROGR_IS_PHOTOSET(self), NULL);
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   return (const gchar *)priv->description;
@@ -259,7 +259,7 @@ frogr_photoset_set_description (FrogrPhotoSet *self,
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_SET(self));
+  g_return_if_fail(FROGR_IS_PHOTOSET(self));
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   g_free (priv->description);
@@ -271,7 +271,7 @@ frogr_photoset_get_id (FrogrPhotoSet *self)
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_SET(self), NULL);
+  g_return_val_if_fail(FROGR_IS_PHOTOSET(self), NULL);
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   return (const gchar *)priv->id;
@@ -283,7 +283,7 @@ frogr_photoset_set_id (FrogrPhotoSet *self,
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_SET(self));
+  g_return_if_fail(FROGR_IS_PHOTOSET(self));
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   g_free (priv->id);
@@ -295,7 +295,7 @@ frogr_photoset_get_primary_photo_id (FrogrPhotoSet *self)
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_SET(self), NULL);
+  g_return_val_if_fail(FROGR_IS_PHOTOSET(self), NULL);
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   return (const gchar *)priv->primary_photo_id;
@@ -307,7 +307,7 @@ frogr_photoset_set_primary_photo_id (FrogrPhotoSet *self,
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_SET(self));
+  g_return_if_fail(FROGR_IS_PHOTOSET(self));
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   g_free (priv->primary_photo_id);
@@ -319,7 +319,7 @@ frogr_photoset_get_n_photos (FrogrPhotoSet *self)
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_SET(self), FALSE);
+  g_return_val_if_fail(FROGR_IS_PHOTOSET(self), FALSE);
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   return priv->n_photos;
@@ -331,7 +331,7 @@ frogr_photoset_set_n_photos (FrogrPhotoSet *self,
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_SET(self));
+  g_return_if_fail(FROGR_IS_PHOTOSET(self));
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
   priv->n_photos = n;

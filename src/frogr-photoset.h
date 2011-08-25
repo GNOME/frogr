@@ -26,12 +26,12 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_SET           (frogr_photoset_get_type())
-#define FROGR_PHOTOSET(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_SET, FrogrPhotoSet))
-#define FROGR_PHOTOSET_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_SET, FrogrPhotoSetClass))
-#define FROGR_IS_SET(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_SET))
-#define FROGR_IS_SET_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_SET))
-#define FROGR_PHOTOSET_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_SET, FrogrPhotoSetClass))
+#define FROGR_TYPE_PHOTOSET           (frogr_photoset_get_type())
+#define FROGR_PHOTOSET(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_PHOTOSET, FrogrPhotoSet))
+#define FROGR_PHOTOSET_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_PHOTOSET, FrogrPhotoSetClass))
+#define FROGR_IS_PHOTOSET(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_PHOTOSET))
+#define FROGR_IS_PHOTOSET_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_PHOTOSET))
+#define FROGR_PHOTOSET_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_PHOTOSET, FrogrPhotoSetClass))
 
 typedef struct _FrogrPhotoSet FrogrPhotoSet;
 typedef struct _FrogrPhotoSetClass FrogrPhotoSetClass;

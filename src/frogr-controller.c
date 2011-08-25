@@ -76,7 +76,7 @@ struct _FrogrControllerPrivate
   gboolean fetching_auth_token;
   gboolean fetching_account_info;
   gboolean fetching_account_extra_info;
-  gboolean fetching_sets;
+  gboolean fetching_photosets;
   gboolean fetching_groups;
   gboolean fetching_tags;
   gboolean setting_license;
@@ -86,7 +86,7 @@ struct _FrogrControllerPrivate
 
   gboolean account_info_fetched;
   gboolean account_extra_info_fetched;
-  gboolean sets_fetched;
+  gboolean photosets_fetched;
   gboolean groups_fetched;
   gboolean tags_fetched;
 };
@@ -111,7 +111,7 @@ static FrogrController *_instance = NULL;
 typedef struct {
   FrogrController *controller;
   FrogrPicture *picture;
-  GSList *sets;
+  GSList *photosets;
   GSList *groups;
   FrogrPictureUploadedCallback callback;
   GObject *object;
@@ -124,7 +124,7 @@ typedef enum {
   FETCHING_AUTH_TOKEN,
   FETCHING_ACCOUNT_INFO,
   FETCHING_ACCOUNT_EXTRA_INFO,
-  FETCHING_SETS,
+  FETCHING_PHOTOSETS,
   FETCHING_GROUPS,
   FETCHING_TAGS
 } FetchingActivity;
@@ -209,9 +209,9 @@ static void _on_pictures_uploaded (FrogrController *self,
 
 static void _fetch_everything (FrogrController *self, gboolean force_fetch);
 
-static void _fetch_sets (FrogrController *self);
+static void _fetch_photosets (FrogrController *self);
 
-static void _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data);
+static void _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static void _fetch_groups (FrogrController *self);
 
@@ -546,7 +546,7 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
   up_st = g_slice_new0 (upload_picture_st);
   up_st->controller = self;
   up_st->picture = picture;
-  up_st->sets = NULL;
+  up_st->photosets = NULL;
   up_st->groups = NULL;
   up_st->callback = picture_uploaded_cb;
   up_st->object = object;
@@ -616,12 +616,12 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
      picture or to add the picture to sets or groups */
   if (!error)
     {
-      GSList *sets = NULL;
+      GSList *photosets = NULL;
       GSList *groups = NULL;
       FspLicense license = FSP_LICENSE_NONE;
 
       license = frogr_picture_get_license (picture);
-      sets = frogr_picture_get_sets (picture);
+      photosets = frogr_picture_get_photosets (picture);
       groups = frogr_picture_get_groups (picture);
 
       /* Set license if needed */
@@ -645,10 +645,10 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
         }
 
       /* Add picture to set if needed (and maybe create a new one) */
-      if (g_slist_length (sets) > 0)
+      if (g_slist_length (photosets) > 0)
         {
           priv->adding_to_set = TRUE;
-          up_st->sets = sets;
+          up_st->photosets = photosets;
           gdk_threads_add_timeout (DEFAULT_TIMEOUT, _create_set_or_add_picture_on_idle, up_st);
         }
 
@@ -782,17 +782,17 @@ _create_set_or_add_picture (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
   FrogrPhotoSet *set = NULL;
   const gchar *id = NULL;
-  GSList *sets = NULL;
+  GSList *photosets = NULL;
 
-  sets = up_st->sets;
+  photosets = up_st->photosets;
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (g_slist_length (sets) == 0)
+  if (g_slist_length (photosets) == 0)
     {
       priv->adding_to_set = FALSE;
       return FALSE;
     }
 
-  set = FROGR_PHOTOSET (sets->data);
+  set = FROGR_PHOTOSET (photosets->data);
   id = frogr_photoset_get_id (set);
   if (id != NULL)
     {
@@ -830,7 +830,7 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
-  GSList *sets = NULL;
+  GSList *photosets = NULL;
   gchar *photoset_id = NULL;
   GError *error = NULL;
   gboolean keep_going = FALSE;
@@ -839,21 +839,21 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
   picture = up_st->picture;
-  sets = up_st->sets;
+  photosets = up_st->photosets;
 
   photoset_id = fsp_session_create_photoset_finish (session, res, &error);
   up_st->error = error;
 
   /* Update set with the new ID */
-  set = FROGR_PHOTOSET (sets->data);
+  set = FROGR_PHOTOSET (photosets->data);
   frogr_photoset_set_id (set, photoset_id);
   g_free (photoset_id);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  up_st->sets = g_slist_next (sets);
+  up_st->photosets = g_slist_next (photosets);
 
-  /* When adding pictures to sets, we only stop if the process was
-     not explicitly cancelled by the user */
+  /* When adding pictures to photosets, we only stop if the process
+     was not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
     keep_going = _create_set_or_add_picture (controller, picture, up_st);
 
@@ -884,7 +884,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
-  GSList *sets = NULL;
+  GSList *photosets = NULL;
   GError *error = NULL;
   gboolean keep_going = FALSE;
 
@@ -892,18 +892,18 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   up_st = (upload_picture_st*) data;
   controller = up_st->controller;
   picture = up_st->picture;
-  sets = up_st->sets;
+  photosets = up_st->photosets;
 
   fsp_session_add_to_photoset_finish (session, res, &error);
   up_st->error = error;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
-  set = FROGR_PHOTOSET (sets->data);
-  up_st->sets = g_slist_next (sets);
+  set = FROGR_PHOTOSET (photosets->data);
+  up_st->photosets = g_slist_next (photosets);
 
-  /* When adding pictures to sets, we only stop if the process was
-     not explicitly cancelled by the user */
+  /* When adding pictures to photosets, we only stop if the process
+     was not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
     keep_going = _create_set_or_add_picture (controller, picture, up_st);
 
@@ -1270,7 +1270,7 @@ _on_pictures_uploaded (FrogrController *self,
   if (!error)
     {
       /* Fetch sets and tags (if needed) right after finishing */
-      _fetch_sets (self);
+      _fetch_photosets (self);
       _fetch_tags (self);
 
       DEBUG ("%s", "Success uploading pictures!");
@@ -1306,8 +1306,8 @@ _fetch_everything (FrogrController *self, gboolean force_fetch)
 
   /* Sets, groups and tags can take much longer to retrieve, so we
      only retrieve that if actually needed (or asked to) */
-  if (force_fetch || !priv->sets_fetched)
-    _fetch_sets (self);
+  if (force_fetch || !priv->photosets_fetched)
+    _fetch_photosets (self);
   if (force_fetch || !priv->groups_fetched)
     _fetch_groups (self);
   if (force_fetch || !priv->tags_fetched)
@@ -1315,7 +1315,7 @@ _fetch_everything (FrogrController *self, gboolean force_fetch)
 }
 
 static void
-_fetch_sets (FrogrController *self)
+_fetch_photosets (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
 
@@ -1325,16 +1325,16 @@ _fetch_sets (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->sets_fetched = FALSE;
-  priv->fetching_sets = TRUE;
+  priv->photosets_fetched = FALSE;
+  priv->fetching_photosets = TRUE;
 
   _enable_cancellable (self, TRUE);
   fsp_session_get_photosets_async (priv->session, priv->last_cancellable,
-                                   _fetch_sets_cb, self);
+                                   _fetch_photosets_cb, self);
 }
 
 static void
-_fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
+_fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
@@ -1358,13 +1358,13 @@ _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       /* If no photosets are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
-        priv->sets_fetched = TRUE;
+        priv->photosets_fetched = TRUE;
 
       g_error_free (error);
     }
   else
     {
-      priv->sets_fetched = TRUE;
+      priv->photosets_fetched = TRUE;
 
       if (data_sets_list)
         {
@@ -1391,9 +1391,9 @@ _fetch_sets_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   /* Update main view's model */
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  frogr_main_view_model_set_sets (mainview_model, sets_list);
+  frogr_main_view_model_set_photosets (mainview_model, sets_list);
 
-  priv->fetching_sets = FALSE;
+  priv->fetching_photosets = FALSE;
 }
 
 static void
@@ -1719,7 +1719,7 @@ _show_progress_on_idle (gpointer data)
       show_dialog = priv->fetching_auth_token;
       break;
 
-    case FETCHING_SETS:
+    case FETCHING_PHOTOSETS:
       text = _("Retrieving list of sets…");
       show_dialog = priv->fetching_tags;
       break;
@@ -1818,23 +1818,23 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
   FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GtkWindow *window = NULL;
-  GSList *sets = NULL;
+  GSList *photosets = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview = priv->mainview;
 
   /* Keep the source while internally busy */
-  if (priv->fetching_sets)
+  if (priv->fetching_photosets)
       return TRUE;
 
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  sets = frogr_main_view_model_get_sets (mainview_model);
+  photosets = frogr_main_view_model_get_photosets (mainview_model);
 
   window = frogr_main_view_get_window (priv->mainview);
-  frogr_create_new_set_dialog_show (window, pictures, sets);
+  frogr_create_new_set_dialog_show (window, pictures, photosets);
 
   return FALSE;
 }
@@ -1847,25 +1847,25 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
   FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GtkWindow *window = NULL;
-  GSList *sets = NULL;
+  GSList *photosets = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   mainview = priv->mainview;
 
   /* Keep the source while internally busy */
-  if (priv->fetching_sets)
+  if (priv->fetching_photosets)
       return TRUE;
 
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  sets = frogr_main_view_model_get_sets (mainview_model);
+  photosets = frogr_main_view_model_get_photosets (mainview_model);
 
   window = frogr_main_view_get_window (priv->mainview);
-  if (frogr_main_view_model_n_sets (mainview_model) > 0)
-    frogr_add_to_set_dialog_show (window, pictures, sets);
-  else if (priv->sets_fetched)
+  if (frogr_main_view_model_n_photosets (mainview_model) > 0)
+    frogr_add_to_set_dialog_show (window, pictures, photosets);
+  else if (priv->photosets_fetched)
     frogr_util_show_info_dialog (window, _("No sets found"));
 
   return FALSE;
@@ -2050,7 +2050,7 @@ frogr_controller_init (FrogrController *self)
   priv->fetching_auth_token = FALSE;
   priv->fetching_account_info = FALSE;
   priv->fetching_account_extra_info = FALSE;
-  priv->fetching_sets = FALSE;
+  priv->fetching_photosets = FALSE;
   priv->fetching_groups = FALSE;
   priv->fetching_tags = FALSE;
   priv->setting_license = FALSE;
@@ -2059,7 +2059,7 @@ frogr_controller_init (FrogrController *self)
   priv->adding_to_group = FALSE;
   priv->account_info_fetched = FALSE;
   priv->account_extra_info_fetched = FALSE;
-  priv->sets_fetched = FALSE;
+  priv->photosets_fetched = FALSE;
   priv->groups_fetched = FALSE;
   priv->tags_fetched = FALSE;
 
@@ -2428,11 +2428,11 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Fetch the sets first if needed */
-  if (!priv->sets_fetched)
+  if (!priv->photosets_fetched)
     {
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_SETS));
-      if (!priv->fetching_sets)
-        _fetch_sets (self);
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_PHOTOSETS));
+      if (!priv->fetching_photosets)
+        _fetch_photosets (self);
     }
 
   /* Show the dialog when possible */
@@ -2450,11 +2450,11 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Fetch the sets first if needed */
-  if (!priv->sets_fetched)
+  if (!priv->photosets_fetched)
     {
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_SETS));
-      if (!priv->fetching_sets)
-        _fetch_sets (self);
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_PHOTOSETS));
+      if (!priv->fetching_photosets)
+        _fetch_photosets (self);
     }
 
   /* Show the dialog when possible */
