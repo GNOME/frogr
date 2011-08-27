@@ -1,6 +1,7 @@
 # Czech translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
+#
 # Marek Černocký <marek@manet.cz>, 2011.
 #
 msgid ""
@@ -8,8 +9,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-08-16 09:05+0000\n"
-"PO-Revision-Date: 2011-08-16 14:45+0200\n"
+"POT-Creation-Date: 2011-08-18 02:02+0000\n"
+"PO-Revision-Date: 2011-08-27 08:48+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -322,35 +323,35 @@ msgstr "V názvu a popisu vyplňte informace o obrázku"
 msgid "Create new Set"
 msgstr "Vytvoření nové sady"
 
-#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:95
+#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:97
 msgid "Default (as specified in flickr)"
 msgstr "Výchozí (jak je definována na webu Flickr)"
 
-#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:96
+#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:98
 msgid "All rights reserved"
 msgstr "Všechna práva vyhrazena"
 
-#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:97
+#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:99
 msgid "CC Attribution-NonCommercial-ShareAlike"
 msgstr "CC Attribution-NonCommercial-ShareAlike"
 
-#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:98
+#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:100
 msgid "CC Attribution-NonCommercial"
 msgstr "CC Attribution-NonCommercial"
 
-#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:99
+#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:101
 msgid "CC Attribution-NonCommercial-NoDerivs"
 msgstr "CC Attribution-NonCommercial-NoDerivs"
 
-#: ../src/frogr-details-dialog.c:98 ../src/frogr-settings-dialog.c:100
+#: ../src/frogr-details-dialog.c:98 ../src/frogr-settings-dialog.c:102
 msgid "CC Attribution"
 msgstr "CC Attribution"
 
-#: ../src/frogr-details-dialog.c:99 ../src/frogr-settings-dialog.c:101
+#: ../src/frogr-details-dialog.c:99 ../src/frogr-settings-dialog.c:103
 msgid "CC Attribution-ShareAlike"
 msgstr "CC Attribution-ShareAlike"
 
-#: ../src/frogr-details-dialog.c:100 ../src/frogr-settings-dialog.c:102
+#: ../src/frogr-details-dialog.c:100 ../src/frogr-settings-dialog.c:104
 msgid "CC Attribution-NoDerivs"
 msgstr "CC Attribution-NoDerivs"
 
@@ -362,27 +363,27 @@ msgstr "Otevřít v prohlížeči obrázků"
 msgid "Visibility"
 msgstr "Viditelnost"
 
-#: ../src/frogr-details-dialog.c:225 ../src/frogr-settings-dialog.c:203
+#: ../src/frogr-details-dialog.c:225 ../src/frogr-settings-dialog.c:205
 msgid "_Private"
 msgstr "_Soukromé"
 
-#: ../src/frogr-details-dialog.c:229 ../src/frogr-settings-dialog.c:205
+#: ../src/frogr-details-dialog.c:229 ../src/frogr-settings-dialog.c:207
 msgid "P_ublic"
 msgstr "_Veřejné"
 
-#: ../src/frogr-details-dialog.c:241 ../src/frogr-settings-dialog.c:216
+#: ../src/frogr-details-dialog.c:241 ../src/frogr-settings-dialog.c:218
 msgid "Visible to _Family"
 msgstr "Viditelné pro ro_dinu"
 
-#: ../src/frogr-details-dialog.c:245 ../src/frogr-settings-dialog.c:218
+#: ../src/frogr-details-dialog.c:245 ../src/frogr-settings-dialog.c:220
 msgid "Visible to F_riends"
 msgstr "Viditelné pro přáte_le"
 
-#: ../src/frogr-details-dialog.c:267 ../src/frogr-settings-dialog.c:230
+#: ../src/frogr-details-dialog.c:267 ../src/frogr-settings-dialog.c:232
 msgid "Send picture _location if available"
 msgstr "Poslat zeměpisné údaje, pokud existují"
 
-#: ../src/frogr-details-dialog.c:271 ../src/frogr-settings-dialog.c:233
+#: ../src/frogr-details-dialog.c:271 ../src/frogr-settings-dialog.c:235
 msgid "_Show up in Global Search Results"
 msgstr "Zobrazovat v _globálních výsledcích hledání"
 
@@ -390,15 +391,15 @@ msgstr "Zobrazovat v _globálních výsledcích hledání"
 msgid "Content type"
 msgstr "Typ obsahu"
 
-#: ../src/frogr-details-dialog.c:297 ../src/frogr-settings-dialog.c:258
+#: ../src/frogr-details-dialog.c:297 ../src/frogr-settings-dialog.c:260
 msgid "P_hoto"
 msgstr "_Fotka"
 
-#: ../src/frogr-details-dialog.c:301 ../src/frogr-settings-dialog.c:260
+#: ../src/frogr-details-dialog.c:301 ../src/frogr-settings-dialog.c:262
 msgid "Scree_nshot"
 msgstr "S_nímek obrazovky"
 
-#: ../src/frogr-details-dialog.c:305 ../src/frogr-settings-dialog.c:262
+#: ../src/frogr-details-dialog.c:305 ../src/frogr-settings-dialog.c:264
 msgid "Oth_er"
 msgstr "_Jiný"
 
@@ -406,15 +407,15 @@ msgstr "_Jiný"
 msgid "Safety level"
 msgstr "Úroveň zabezpečení"
 
-#: ../src/frogr-details-dialog.c:333 ../src/frogr-settings-dialog.c:286
+#: ../src/frogr-details-dialog.c:333 ../src/frogr-settings-dialog.c:288
 msgid "S_afe"
 msgstr "_Bezpečné"
 
-#: ../src/frogr-details-dialog.c:337 ../src/frogr-settings-dialog.c:288
+#: ../src/frogr-details-dialog.c:337 ../src/frogr-settings-dialog.c:290
 msgid "_Moderate"
 msgstr "S_třední"
 
-#: ../src/frogr-details-dialog.c:341 ../src/frogr-settings-dialog.c:290
+#: ../src/frogr-details-dialog.c:341 ../src/frogr-settings-dialog.c:292
 msgid "Restr_icted"
 msgstr "O_mezeno"
 
@@ -506,7 +507,7 @@ msgstr " – %s / %s zbývá pro aktuální měsíc"
 msgid " - %s to be uploaded"
 msgstr " – %s bude nahráno"
 
-#: ../src/frogr-picture-loader.c:106
+#: ../src/frogr-picture-loader.c:120
 #, c-format
 msgid "Loading pictures %d / %d"
 msgstr "Načítá se obrázek %d / %d"
@@ -517,80 +518,84 @@ msgstr "Načítá se obrázek %d / %d"
 msgid "Uploading '%s'…"
 msgstr "Nahrává se „%s“…"
 
-#: ../src/frogr-settings-dialog.c:187
+#: ../src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
 msgstr "Výchozí viditelnost"
 
-#: ../src/frogr-settings-dialog.c:243
+#: ../src/frogr-settings-dialog.c:245
 msgid "Default Content Type"
 msgstr "Výchozí typ obsahu"
 
-#: ../src/frogr-settings-dialog.c:271
+#: ../src/frogr-settings-dialog.c:273
 msgid "Default Safety Level"
 msgstr "Výchozí úroveň bezpečnosti"
 
-#: ../src/frogr-settings-dialog.c:299
+#: ../src/frogr-settings-dialog.c:301
 msgid "Default License"
 msgstr "Výchozí licence"
 
-#: ../src/frogr-settings-dialog.c:324
+#: ../src/frogr-settings-dialog.c:326
 msgid "_General"
 msgstr "Obe_cné"
 
-#: ../src/frogr-settings-dialog.c:352
+#: ../src/frogr-settings-dialog.c:354
 msgid "Proxy Settings"
 msgstr "Nastavení proxy"
 
 #. Enable proxy
-#: ../src/frogr-settings-dialog.c:362
+#: ../src/frogr-settings-dialog.c:364
 msgid "_Enable HTTP Proxy"
 msgstr "Zapnout pro_xy HTTP"
 
-#: ../src/frogr-settings-dialog.c:372
+#: ../src/frogr-settings-dialog.c:374
 msgid "_Host:"
 msgstr "Počít_ač:"
 
 #. Proxy port
-#: ../src/frogr-settings-dialog.c:390
+#: ../src/frogr-settings-dialog.c:392
 msgid "_Port:"
 msgstr "_Port:"
 
 #. Proxy username
-#: ../src/frogr-settings-dialog.c:408
+#: ../src/frogr-settings-dialog.c:410
 msgid "U_sername:"
 msgstr "Uživatel_ské jméno:"
 
 #. Proxy password
-#: ../src/frogr-settings-dialog.c:426
+#: ../src/frogr-settings-dialog.c:428
 msgid "Pass_word:"
 msgstr "_Heslo:"
 
 #. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:447
+#: ../src/frogr-settings-dialog.c:449
 msgid "_Use GNOME General Proxy Settings"
 msgstr "Po_užít globální nastavení proxy GNOME"
 
-#: ../src/frogr-settings-dialog.c:473
+#: ../src/frogr-settings-dialog.c:475
 msgid "Connec_tion"
 msgstr "Připoj_ení"
 
-#: ../src/frogr-settings-dialog.c:499
+#: ../src/frogr-settings-dialog.c:501
 msgid "Other options"
 msgstr "Ostatní volby"
 
-#: ../src/frogr-settings-dialog.c:514
+#: ../src/frogr-settings-dialog.c:516
 msgid "Disa_ble Tags Auto-Completion"
 msgstr "Vypnout automatické _dokončování štítků"
 
-#: ../src/frogr-settings-dialog.c:517
+#: ../src/frogr-settings-dialog.c:519
 msgid "_Keep File Extensions in Titles when Loading Pictures"
 msgstr "Z_achovat přípony souborů v názvech načítaných obrázků"
 
-#: ../src/frogr-settings-dialog.c:523
+#: ../src/frogr-settings-dialog.c:522
+msgid "Don't _Import Tags from Pictures Metadata"
+msgstr "Ne_importovat štítky z metadat obrázků"
+
+#: ../src/frogr-settings-dialog.c:528
 msgid "_Misc"
 msgstr "Růz_né"
 
-#: ../src/frogr-settings-dialog.c:1031
+#: ../src/frogr-settings-dialog.c:1047
 msgid "Preferences"
 msgstr "Předvolby"
 
