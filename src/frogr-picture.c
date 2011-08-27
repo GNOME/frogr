@@ -1058,9 +1058,6 @@ frogr_picture_get_photosets (FrogrPicture *self)
 void
 frogr_picture_set_photosets (FrogrPicture *self, GSList *photosets)
 {
-  GSList *new_list = NULL;
-  GSList *item = NULL;
-  FrogrPhotoSet *photoset = NULL;
   FrogrPicturePrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_PICTURE(self));
@@ -1070,15 +1067,13 @@ frogr_picture_set_photosets (FrogrPicture *self, GSList *photosets)
   /* First remove all the previous sets list */
   g_slist_foreach (priv->photosets, (GFunc) g_object_unref, NULL);
   g_slist_free (priv->photosets);
+
   priv->photosets = NULL;
-
-  for (item = photosets; item; item = g_slist_next (item))
+  if (photosets)
     {
-      photoset = FROGR_PHOTOSET (item->data);
-      new_list = g_slist_append (new_list, g_object_ref (photoset));
+      priv->photosets = g_slist_copy (photosets);
+      g_slist_foreach (priv->photosets, (GFunc) g_object_ref, NULL);
     }
-
-  priv->photosets = new_list;
 }
 
 void
@@ -1133,9 +1128,6 @@ frogr_picture_get_groups (FrogrPicture *self)
 void
 frogr_picture_set_groups (FrogrPicture *self, GSList *groups)
 {
-  GSList *new_list = NULL;
-  GSList *item = NULL;
-  FrogrGroup *group = NULL;
   FrogrPicturePrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_PICTURE(self));
@@ -1145,15 +1137,13 @@ frogr_picture_set_groups (FrogrPicture *self, GSList *groups)
   /* First remove all the previous groups list */
   g_slist_foreach (priv->groups, (GFunc) g_object_unref, NULL);
   g_slist_free (priv->groups);
+
   priv->groups = NULL;
-
-  for (item = groups; item; item = g_slist_next (item))
+  if (groups)
     {
-      group = FROGR_GROUP (item->data);
-      new_list = g_slist_append (new_list, g_object_ref (group));
+      priv->groups = g_slist_copy (groups);
+      g_slist_foreach (priv->groups, (GFunc) g_object_ref, NULL);
     }
-
-  priv->groups = new_list;
 }
 
 void
