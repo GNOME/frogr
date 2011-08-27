@@ -46,6 +46,8 @@ G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT)
 typedef struct _FrogrConfigPrivate FrogrConfigPrivate;
 struct _FrogrConfigPrivate
 {
+  gchar *config_dir;
+
   GSList *accounts;
   FrogrAccount *active_account;
 
@@ -81,7 +83,7 @@ static FrogrConfig *_instance = NULL;
 
 static FrogrAccount *_find_account_by_id (FrogrConfig *self, const gchar *id);
 
-static void _load_settings (FrogrConfig *self, const gchar *config_dir);
+static void _load_settings (FrogrConfig *self);
 
 static void _load_visibility_xml (FrogrConfig *self,
                                   xmlDocPtr     xml,
@@ -95,8 +97,7 @@ static void _load_proxy_data_xml (FrogrConfig *self,
                                   xmlDocPtr     xml,
                                   xmlNodePtr    rootnode);
 
-static void _load_accounts (FrogrConfig *self,
-                            const gchar *config_dir);
+static void _load_accounts (FrogrConfig *self);
 
 static gboolean _load_account_xml (FrogrAccount *faccount,
                                    xmlDocPtr     xml,
@@ -144,7 +145,7 @@ _find_account_by_id (FrogrConfig *self, const gchar *id)
 }
 
 static void
-_load_settings (FrogrConfig *self, const gchar *config_dir)
+_load_settings (FrogrConfig *self)
 {
   FrogrConfigPrivate *priv = NULL;
   gchar *xml_path = NULL;
@@ -152,18 +153,17 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
   xmlDocPtr xml = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
-  g_return_if_fail (config_dir != NULL);
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
 
-  xml_path = g_build_filename (config_dir, SETTINGS_FILENAME, NULL);
+  xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
   if (g_file_test (xml_path, G_FILE_TEST_IS_REGULAR))
     xml = xmlParseFile (xml_path);
 
   if (xml)
     node = xmlDocGetRootElement (xml);
   else
-    DEBUG ("Could not load '%s/%s'", config_dir, SETTINGS_FILENAME);
+    DEBUG ("Could not load '%s/%s'", priv->config_dir, SETTINGS_FILENAME);
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "settings"))
     {
@@ -288,11 +288,11 @@ _load_settings (FrogrConfig *self, const gchar *config_dir)
   else if (node && node->name)
     {
       g_warning ("File '%s/%s' does not start with "
-                 "a <settings> tag", config_dir, SETTINGS_FILENAME);
+                 "a <settings> tag", priv->config_dir, SETTINGS_FILENAME);
     }
   else if (!node && xml)
     {
-      g_warning ("File '%s/%s' is empty", config_dir, SETTINGS_FILENAME);
+      g_warning ("File '%s/%s' is empty", priv->config_dir, SETTINGS_FILENAME);
     }
 
   if (xml)
@@ -494,23 +494,24 @@ _load_proxy_data_xml (FrogrConfig *self,
 }
 
 static void
-_load_accounts (FrogrConfig *self, const gchar *config_dir)
+_load_accounts (FrogrConfig *self)
 {
+  FrogrConfigPrivate *priv = NULL;
   gchar *xml_path = NULL;
   xmlNodePtr node = NULL;
   xmlDocPtr xml = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
-  g_return_if_fail (config_dir != NULL);
 
-  xml_path = g_build_filename (config_dir, ACCOUNTS_FILENAME, NULL);
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  xml_path = g_build_filename (priv->config_dir, ACCOUNTS_FILENAME, NULL);
   if (g_file_test (xml_path, G_FILE_TEST_IS_REGULAR))
     xml = xmlParseFile (xml_path);
 
   if (xml)
     node = xmlDocGetRootElement (xml);
   else
-    DEBUG ("Could not load '%s/%s'", config_dir, ACCOUNTS_FILENAME);
+    DEBUG ("Could not load '%s/%s'", priv->config_dir, ACCOUNTS_FILENAME);
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "accounts"))
     {
@@ -527,7 +528,7 @@ _load_accounts (FrogrConfig *self, const gchar *config_dir)
               else
                 {
                   g_warning ("Malformed account in '%s/%s', "
-                             "skipping it", config_dir, ACCOUNTS_FILENAME);
+                             "skipping it", priv->config_dir, ACCOUNTS_FILENAME);
 
                   xmlUnlinkNode (node);
                   xmlFreeNode (node);
@@ -542,11 +543,11 @@ _load_accounts (FrogrConfig *self, const gchar *config_dir)
   else if (node && node->name)
     {
       g_warning ("File '%s/%s' does not start with "
-                 "an <accounts> tag", config_dir, ACCOUNTS_FILENAME);
+                 "an <accounts> tag", priv->config_dir, ACCOUNTS_FILENAME);
     }
   else if (!node && xml)
     {
-      g_warning ("File '%s/%s' is empty", config_dir, ACCOUNTS_FILENAME);
+      g_warning ("File '%s/%s' is empty", priv->config_dir, ACCOUNTS_FILENAME);
     }
 
   if (xml)
@@ -684,8 +685,7 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (node, "use-gnome-proxy", priv->use_gnome_proxy);
   xmlAddChild (root, node);
 
-  xml_path = g_build_filename (g_get_user_config_dir (), APP_SHORTNAME,
-			       SETTINGS_FILENAME, NULL);
+  xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
     g_critical ("Unable to open '%s' for saving", xml_path);
@@ -725,8 +725,7 @@ _save_accounts (FrogrConfig *self)
       _save_account_xml (account, root);
     }
 
-  xml_path = g_build_filename (g_get_user_config_dir (), APP_SHORTNAME,
-			       ACCOUNTS_FILENAME, NULL);
+  xml_path = g_build_filename (priv->config_dir, ACCOUNTS_FILENAME, NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
     g_critical ("Unable to open '%s' for saving", xml_path);
@@ -863,6 +862,7 @@ _finalize (GObject *object)
 {
   FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
 
+  g_free (priv->config_dir);
   g_free (priv->proxy_host);
   g_free (priv->proxy_port);
   g_free (priv->proxy_username);
@@ -913,6 +913,7 @@ frogr_config_init (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
 
+  priv->config_dir = NULL;
   priv->active_account = NULL;
   priv->accounts = NULL;
 
@@ -940,27 +941,31 @@ frogr_config_init (FrogrConfig *self)
 
   /* Ensure that we have the config directory in place. */
   config_dir = g_build_filename (g_get_user_config_dir (), APP_SHORTNAME, NULL);
-  if (g_mkdir_with_parents (config_dir, 0777) != 0)
+  if (g_mkdir_with_parents (config_dir, 0777) == 0)
+    {
+      priv->config_dir = g_strdup (config_dir);
+
+      /* Load data */
+      _load_settings (self);
+      _load_accounts (self);
+
+      /* Make sure at least one account is active, despite of not having
+         the <active> node present, for backwards compatibility */
+      if (g_slist_length (priv->accounts) > 0 && !priv->active_account)
+        {
+          FrogrAccount *account = NULL;
+          account = FROGR_ACCOUNT (priv->accounts->data);
+
+          frogr_account_set_is_active (account, TRUE);
+          priv->active_account = account;
+
+          _save_accounts (self);
+        }
+    }
+  else
     {
       g_warning ("Could not create config directory '%s' (%s)",
                  config_dir, strerror (errno));
-    }
-
-  /* Load data */
-  _load_settings (self, config_dir);
-  _load_accounts (self, config_dir);
-
-  /* Make sure at least one account is active, despite of not having
-     the <active> node present, for backwards compatibility */
-  if (g_slist_length (priv->accounts) > 0 && !priv->active_account)
-    {
-      FrogrAccount *account = NULL;
-      account = FROGR_ACCOUNT (priv->accounts->data);
-
-      frogr_account_set_is_active (account, TRUE);
-      priv->active_account = account;
-
-      _save_accounts (self);
     }
 
   g_free (config_dir);
