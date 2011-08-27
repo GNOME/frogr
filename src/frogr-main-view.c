@@ -783,8 +783,6 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
                       FPICTURE_COL, picture,
                       -1);
 
-  g_object_ref (picture);
-
   /* Reorder if needed */
   if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
     frogr_main_view_reorder_pictures (self);
@@ -821,7 +819,6 @@ _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture)
             {
               /* Remove from the GtkIconView and break loop */
               gtk_list_store_remove (GTK_LIST_STORE (priv->tree_model), &iter);
-              g_object_unref (picture);
               break;
             }
         }

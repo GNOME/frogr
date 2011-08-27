@@ -358,10 +358,7 @@ _get_selected_photosets (FrogrAddToSetDialog *self)
                           SET_COL, &set, -1);
 
       if (FROGR_IS_PHOTOSET (set))
-        {
-          selected_sets = g_slist_append (selected_sets, set);
-          g_object_ref (set);
-        }
+        selected_sets = g_slist_append (selected_sets, set);
     }
   while (gtk_tree_model_iter_next (priv->treemodel, &iter));
 
@@ -384,8 +381,6 @@ _update_pictures (FrogrAddToSetDialog *self)
       picture = FROGR_PICTURE (item->data);
       frogr_picture_set_photosets (picture, selected_sets);
     }
-
-  g_slist_foreach (selected_sets, (GFunc)g_object_unref, NULL);
   g_slist_free (selected_sets);
 }
 

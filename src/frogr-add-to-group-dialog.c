@@ -358,10 +358,7 @@ _get_selected_groups (FrogrAddToGroupDialog *self)
                           GROUP_COL, &group, -1);
 
       if (FROGR_IS_GROUP (group))
-        {
-          selected_groups = g_slist_append (selected_groups, group);
-          g_object_ref (group);
-        }
+        selected_groups = g_slist_append (selected_groups, group);
     }
   while (gtk_tree_model_iter_next (priv->treemodel, &iter));
 
@@ -384,8 +381,6 @@ _update_pictures (FrogrAddToGroupDialog *self)
       picture = FROGR_PICTURE (item->data);
       frogr_picture_set_groups (picture, selected_groups);
     }
-
-  g_slist_foreach (selected_groups, (GFunc)g_object_unref, NULL);
   g_slist_free (selected_groups);
 }
 
