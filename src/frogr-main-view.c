@@ -784,7 +784,6 @@ _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
                       -1);
 
   g_object_ref (picture);
-  g_object_unref (pixbuf);
 
   /* Reorder if needed */
   if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
