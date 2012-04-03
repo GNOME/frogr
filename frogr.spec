@@ -16,6 +16,7 @@ BuildRequires:	glib2-devel > 2.22
 BuildRequires:	libsoup-devel > 2.26
 BuildRequires:	libxml2-devel > 2.6.8
 BuildRequires:	libexif-devel > 0.6.14
+BuildRequires:	libgcrypt-devel
 BuildRequires:	desktop-file-utils
 #Explicitly Requires: gvfs since we need to be able to open a web
 #browser when associating frogr with a flickr account (this is how

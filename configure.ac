@@ -35,6 +35,15 @@ PKG_CHECK_MODULES(LIBXML2, libxml-2.0 >= $LIBXML2_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBXML2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $LIBXML2_LIBS"
 
+# libgcrypt does not provide a .pc file
+AM_PATH_LIBGCRYPT(,HAVE_GCRYPT=yes, HAVE_GCRYPT=no)
+if test "x$HAVE_GCRYPT" = "xno"; then
+   AC_MSG_ERROR([libgcrypt not found, please install it])
+else
+   FROGR_CFLAGS="$FROGR_CFLAGS $LIBGCRYPT_CFLAGS"
+   FROGR_LIBS="$FROGR_LIBS $LIBGCRYPT_LIBS"
+fi
+
 # Select target platform to make platform-dependant decisions
 
 if $PKG_CONFIG --exists ige-mac-integration; then

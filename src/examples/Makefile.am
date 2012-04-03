@@ -20,7 +20,8 @@ example_CFLAGS = \
 example_LDADD = \
 	$(top_builddir)/src/flicksoup/libflicksoup.a \
 	$(LIBSOUP_LIBS) \
-	$(LIBXML2_LIBS)
+	$(LIBXML2_LIBS) \
+	$(LIBGCRYPT_LIBS)
 
 example_SOURCES = \
 	example.c
