@@ -192,8 +192,6 @@ _load_next_picture (FrogrPictureLoader *self)
           priv->index++;
           _load_next_picture (self);
         }
-
-      g_object_unref (gfile);
     }
   else
     {
