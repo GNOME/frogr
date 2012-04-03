@@ -63,6 +63,7 @@ struct _FspSessionPrivate
   gchar *api_key;
   gchar *secret;
   gchar *token;
+  gchar *token_secret;
   gchar *frob;
 
   gboolean using_gnome_proxy;
@@ -110,7 +111,8 @@ enum  {
   PROP_0,
   PROP_API_KEY,
   PROP_SECRET,
-  PROP_TOKEN
+  PROP_TOKEN,
+  PROP_TOKEN_SECRET
 };
 
 
@@ -297,6 +299,9 @@ fsp_session_set_property                (GObject      *object,
     case PROP_TOKEN:
       fsp_session_set_token (self, g_value_get_string (value));
       break;
+    case PROP_TOKEN_SECRET:
+      fsp_session_set_token_secret (self, g_value_get_string (value));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -321,6 +326,9 @@ fsp_session_get_property                (GObject    *object,
       break;
     case PROP_TOKEN:
       g_value_set_string (value, self->priv->token);
+      break;
+    case PROP_TOKEN_SECRET:
+      g_value_set_string (value, self->priv->token_secret);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -359,6 +367,7 @@ fsp_session_finalize                    (GObject* object)
   g_free (self->priv->api_key);
   g_free (self->priv->secret);
   g_free (self->priv->token);
+  g_free (self->priv->token_secret);
   g_free (self->priv->frob);
 
   /* Call superclass */
@@ -390,6 +399,10 @@ fsp_session_class_init                  (FspSessionClass *klass)
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_TOKEN, pspec);
 
+  pspec = g_param_spec_string ("token-secret", "token-secret", "Authorized token secret", NULL,
+                               G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_TOKEN_SECRET, pspec);
+
   /* Signals */
   signals[DATA_FRACTION_SENT] =
     g_signal_new ("data-fraction-sent",
@@ -411,6 +424,7 @@ fsp_session_init                        (FspSession *self)
   self->priv->api_key = NULL;
   self->priv->secret = NULL;
   self->priv->token = NULL;
+  self->priv->token_secret = NULL;
   self->priv->frob = NULL;
 
   self->priv->using_gnome_proxy = FALSE;
@@ -1443,6 +1457,24 @@ fsp_session_set_token                   (FspSession  *self,
 
   g_free (self->priv->token);
   self->priv->token = g_strdup (token);
+}
+
+const gchar *
+fsp_session_get_token_secret            (FspSession *self)
+{
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+
+  return self->priv->token_secret;
+}
+
+void
+fsp_session_set_token_secret            (FspSession  *self,
+                                         const gchar *token_secret)
+{
+  g_return_if_fail (FSP_IS_SESSION (self));
+
+  g_free (self->priv->token_secret);
+  self->priv->token_secret = g_strdup (token_secret);
 }
 
 /* Get authorization URL */

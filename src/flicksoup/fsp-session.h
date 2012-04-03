@@ -83,7 +83,12 @@ fsp_session_get_token                   (FspSession *self);
 void
 fsp_session_set_token                   (FspSession  *self,
                                          const gchar *token);
+const gchar *
+fsp_session_get_token_secret            (FspSession *self);
 
+void
+fsp_session_set_token_secret            (FspSession  *self,
+                                         const gchar *token_secret);
 void
 fsp_session_get_auth_url_async          (FspSession          *self,
                                          GCancellable        *c,
