@@ -29,6 +29,7 @@
 #include "fsp-session.h"
 
 #include <config.h>
+#include <gcrypt.h>
 
 #ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>
@@ -42,6 +43,12 @@
 #define FLICKR_API_AUTH_URL   "http://flickr.com/services/auth"
 #define FLICKR_API_BASE_URL   "http://api.flickr.com/services/rest"
 #define FLICKR_API_UPLOAD_URL "http://api.flickr.com/services/upload"
+#define FLICKR_REQUEST_TOKEN_OAUTH_URL "http://www.flickr.com/services/oauth/request_token"
+#define FLICKR_ACCESS_TOKEN_OAUTH_URL "http://www.flickr.com/services/oauth/access_token"
+
+#define OAUTH_CALLBACK_URL "oob"
+#define OAUTH_SIGNATURE_METHOD "HMAC-SHA1"
+#define OAUTH_VERSION "1.0"
 
 #if DEBUG_ENABLED
 #define DEBUG(...) g_debug (__VA_ARGS__)
@@ -161,6 +168,13 @@ _wrote_body_data_cb                     (SoupMessage *msg,
                                          SoupBuffer  *buffer,
                                          gpointer     data);
 
+static gchar *
+_encode_uri                             (const gchar *uri);
+
+static gchar *
+_hmac_sha1_signature                    (const gchar *message,
+                                         const gchar *signing_key);
+
 static GHashTable *
 _get_params_table_from_valist           (const gchar *first_param,
                                          va_list      args);
@@ -170,9 +184,15 @@ _get_params_table_from_valist           (const gchar *first_param,
 static gchar *
 _encode_query_value (const char *value);
 
+static gboolean
+_should_encode_key                      (const gchar *key,
+                                         gboolean     old_auth_api);
+
 static gchar *
 _get_signed_query_with_params           (const gchar      *api_sig,
-                                         GHashTable       *params_table);
+                                         GHashTable       *params_table,
+                                         gboolean          old_auth_api);
+
 static gboolean
 _disconnect_cancellable_on_idle (GCancellableData *clos);
 
@@ -186,16 +206,31 @@ _check_async_errors_on_finish           (GObject       *object,
                                          gpointer       source_tag,
                                          GError       **error);
 
-gchar *
-_get_api_signature_from_hash_table      (FspSession *self,
-                                         GHashTable  *params_table);
-gchar *
-_get_signed_url                         (FspSession *self,
-                                         const gchar *base_url,
-                                         const gchar *first_param,
-                                         ... );
+static gchar *
+_get_params_str_for_signature           (GHashTable  *params_table,
+                                         const gchar *signing_key,
+                                         gboolean old_auth_api);
 
-void
+static gchar *
+_calculate_api_signature                (const gchar *url,
+                                         const gchar *params_str,
+                                         const gchar *signing_key,
+                                         gboolean old_auth_api);
+
+static gchar *
+_get_api_signature_from_hash_table      (const gchar *url,
+                                         GHashTable  *params_table,
+                                         const gchar *signing_key,
+                                         gboolean old_auth_api);
+
+static gchar *
+_get_signed_url                       (FspSession *self,
+                                       const gchar *url,
+                                       gboolean old_auth_api,
+                                       const gchar *first_param,
+                                       ... );
+
+static void
 _perform_async_request                  (SoupSession         *soup_session,
                                          const gchar         *url,
                                          SoupSessionCallback  request_cb,
@@ -205,21 +240,21 @@ _perform_async_request                  (SoupSession         *soup_session,
                                          gpointer             source_tag,
                                          gpointer             data);
 
-void
+static void
 _soup_session_cancelled_cb              (GCancellable *cancellable,
                                          gpointer      data);
 
-void
+static void
 _handle_soup_response                   (SoupMessage   *msg,
                                          FspParserFunc  parserFunc,
                                          gpointer       data);
 
-void
+static void
 _build_async_result_and_complete        (AsyncRequestData *clos,
                                          gpointer    result,
                                          GError     *error);
 
-gpointer
+static gpointer
 _finish_async_request                   (GObject       *object,
                                          GAsyncResult  *res,
                                          gpointer       source_tag,
@@ -693,6 +728,41 @@ _wrote_body_data_cb                     (SoupMessage *msg,
   g_signal_emit (self, signals[DATA_FRACTION_SENT], 0, clos->progress);
 }
 
+static gchar *
+_encode_uri                             (const gchar *uri)
+{
+  return soup_uri_encode (uri, "%!*'();:@&=+$,/?#[] ");
+}
+
+static gchar *
+_hmac_sha1_signature                    (const gchar *message,
+                                         const gchar *signing_key)
+{
+  gchar *signature = NULL;
+  gchar *encoded_signature = NULL;
+  gcry_md_hd_t digest_obj;
+  unsigned char *hmac_digest;
+  guint digest_len;
+
+  gcry_md_open(&digest_obj,
+	       GCRY_MD_SHA1,
+	       GCRY_MD_FLAG_SECURE | GCRY_MD_FLAG_HMAC);
+  gcry_md_setkey(digest_obj, signing_key, strlen (signing_key));
+  gcry_md_write (digest_obj, message, strlen (message));
+  gcry_md_final (digest_obj);
+  hmac_digest = gcry_md_read (digest_obj, 0);
+
+  digest_len = gcry_md_get_algo_dlen (GCRY_MD_SHA1);
+  signature = g_base64_encode (hmac_digest, digest_len);
+
+  gcry_md_close (digest_obj);
+
+  encoded_signature = _encode_uri (signature);
+  g_free(signature);
+
+  return encoded_signature;
+}
+
 static GHashTable *
 _get_params_table_from_valist           (const gchar *first_param,
                                          va_list      args)
@@ -746,9 +816,25 @@ _encode_query_value (const char *value)
   return g_string_free (result, FALSE);
 }
 
+static gboolean
+_should_encode_key                      (const gchar *key,
+                                         gboolean     old_auth_api)
+{
+  if (old_auth_api)
+    return g_strcmp0 (key, "api_key") && g_strcmp0 (key, "auth_token")
+      && g_strcmp0 (key, "method") && g_strcmp0 (key, "frob");
+
+  /* Using the new OAuth-based authentication API */
+  return g_strcmp0 (key, "oauth_token") && g_strcmp0 (key, "oauth_verifier")
+    && g_strcmp0 (key, "oauth_consumer_key") && g_strcmp0 (key, "oauth_signature_method")
+    && g_strcmp0 (key, "oauth_version") && g_strcmp0 (key, "oauth_signature")
+    && g_strcmp0 (key, "oauth_callback") && g_strcmp0 (key, "method");
+}
+
 static gchar *
 _get_signed_query_with_params           (const gchar      *api_sig,
-                                         GHashTable       *params_table)
+                                         GHashTable       *params_table,
+                                         gboolean          old_auth_api)
 {
   GList *keys = NULL;
   gchar *retval = NULL;
@@ -779,8 +865,7 @@ _get_signed_query_with_params           (const gchar      *api_sig,
           gchar *actual_value = NULL;
 
           /* Do not encode basic pairs key-value */
-          if (g_strcmp0 (key, "api_key") && g_strcmp0 (key, "auth_token")
-              && g_strcmp0 (key, "method") && g_strcmp0 (key, "frob"))
+          if (_should_encode_key (key, old_auth_api))
             actual_value = _encode_query_value (value);
           else
             actual_value = g_strdup (value);
@@ -790,8 +875,10 @@ _get_signed_query_with_params           (const gchar      *api_sig,
         }
 
       /* Add those to the params array (space previously reserved) */
-      url_params_array[i] = g_strdup_printf ("api_sig=%s", api_sig);
-
+      url_params_array[i] = g_strdup_printf (old_auth_api
+                                             ? "api_sig=%s"
+                                             : "oauth_signature=%s",
+                                             api_sig);
       /* Build the signed query */
       retval = g_strjoinv ("&", url_params_array);
 
@@ -884,98 +971,178 @@ _check_async_errors_on_finish           (GObject       *object,
   return errors_found;
 }
 
-gchar *
-_get_api_signature_from_hash_table      (FspSession *self,
-                                         GHashTable  *params_table)
+
+static gchar *
+_get_params_str_for_signature           (GHashTable  *params_table,
+                                         const gchar *signing_key,
+                                         gboolean old_auth_api)
 {
   GList *keys = NULL;
-  gchar *api_sig = NULL;
-
-  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
-  g_return_val_if_fail (params_table != NULL, NULL);
-
-  /* Get ownership of the table */
-  g_hash_table_ref (params_table);
+  gchar **params_str_array = NULL;
+  gchar *params_str = NULL;
+  GList *k = NULL;
+  gint i = 0;
 
   /* Get a list of keys */
   keys = g_hash_table_get_keys (params_table);
-  if (keys != NULL)
+  if (!keys)
+    return NULL;
+
+  /* Sort the list */
+  keys = g_list_sort (keys, (GCompareFunc) g_strcmp0);
+
+  /* Build gchar** arrays for building the signature string */
+  if (old_auth_api)
     {
-      gchar **sign_str_array = NULL;
-      gchar *sign_str = NULL;
-      GList *k = NULL;
-      gint i = 0;
-
-      /* Sort the list */
-      keys = g_list_sort (keys, (GCompareFunc) g_strcmp0);
-
-      /* Build gchar** arrays for building the signature string */
-      sign_str_array = g_new0 (gchar*, (2 * g_list_length (keys)) + 2);
-
-      /* Fill arrays */
-      sign_str_array[i++] = g_strdup (self->priv->secret);
-      for (k = keys; k; k = g_list_next (k))
-        {
-          const gchar *key = (gchar*) k->data;
-          const gchar *value = g_hash_table_lookup (params_table, key);
-
-          sign_str_array[i++] = g_strdup (key);
-          sign_str_array[i++] = g_strdup (value);
-        }
-      sign_str_array[i] = NULL;
-
-      /* Get the signature string and calculate the api_sig value */
-      sign_str = g_strjoinv (NULL, sign_str_array);
-      api_sig = g_compute_checksum_for_string (G_CHECKSUM_MD5, sign_str, -1);
-
-      /* Free */
-      g_free (sign_str);
-      g_strfreev (sign_str_array);
+      params_str_array = g_new0 (gchar*, (2 * g_list_length (keys)) + 2);
+      params_str_array[i++] = g_strdup (signing_key);
     }
+  else
+    params_str_array = g_new0 (gchar*, g_list_length (keys) + 1);
+
+  /* Fill arrays */
+  for (k = keys; k; k = g_list_next (k))
+    {
+      const gchar *key = (gchar*) k->data;
+      const gchar *value = g_hash_table_lookup (params_table, key);
+
+      if (old_auth_api)
+        {
+          params_str_array[i++] = g_strdup (key);
+          params_str_array[i++] = g_strdup (value);
+        }
+      else
+        params_str_array[i++] = g_strdup_printf ("%s=%s", key, value);
+    }
+  params_str_array[i] = NULL;
+
+  params_str = g_strjoinv (old_auth_api ? NULL : "&", params_str_array);
+  g_strfreev (params_str_array);
 
   g_list_free (keys);
-  g_hash_table_unref (params_table);
+
+  return params_str;
+}
+
+static gchar *
+_calculate_api_signature                (const gchar *url,
+                                         const gchar *params_str,
+                                         const gchar *signing_key,
+                                         gboolean old_auth_api)
+{
+  gchar *base_string = NULL;
+  gchar *encoded_params = NULL;
+  gchar *encoded_url = NULL;
+  gchar *api_sig = NULL;
+
+  if (!params_str)
+    return NULL;
+
+  if (old_auth_api)
+    return g_compute_checksum_for_string (G_CHECKSUM_MD5, params_str, -1);
+
+  /* Using the new OAuth-based authentication API */
+  encoded_url = _encode_uri (url);
+  encoded_params = _encode_uri (params_str);
+
+  base_string = g_strdup_printf ("GET&%s&%s", encoded_url, encoded_params);
+  g_free (encoded_url);
+  g_free (encoded_params);
+
+  api_sig = _hmac_sha1_signature (base_string, signing_key);
+  g_free (base_string);
 
   return api_sig;
 }
 
-gchar *
-_get_signed_url                         (FspSession *self,
-                                         const gchar *base_url,
-                                         const gchar *first_param,
-                                         ... )
+static gchar *
+_get_api_signature_from_hash_table      (const gchar *url,
+                                         GHashTable  *params_table,
+                                         const gchar *signing_key,
+                                         gboolean old_auth_api)
 {
+  gchar *api_sig = NULL;
+  gchar *params_str = NULL;
+
+  g_return_val_if_fail (params_table != NULL, NULL);
+
+  /* Get the signature string and calculate the api_sig value */
+  params_str = _get_params_str_for_signature (params_table, signing_key, old_auth_api);
+  api_sig = _calculate_api_signature (url, params_str, signing_key, old_auth_api);
+  g_free (params_str);
+
+  return api_sig;
+}
+
+static gchar *
+_get_signed_url                       (FspSession *self,
+                                       const gchar *url,
+                                       gboolean old_auth_api,
+                                       const gchar *first_param,
+                                       ... )
+{
+  FspSessionPrivate *priv = NULL;
   va_list args;
   GHashTable *table = NULL;
-  gchar *api_sig = NULL;
+  gchar *signing_key = NULL;
   gchar *signed_query = NULL;
+  gchar *api_sig = NULL;
   gchar *retval = NULL;
 
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (url != NULL, NULL);
   g_return_val_if_fail (first_param != NULL, NULL);
 
+  priv = self->priv;
   va_start (args, first_param);
 
-  /* Get the hash table for the params and the API signature from it */
+  /* Get the hash table for the params */
   table = _get_params_table_from_valist (first_param, args);
-  api_sig = _get_api_signature_from_hash_table (self, table);
+
+  if (!old_auth_api)
+    {
+      gchar *timestamp = NULL;
+      gchar *random_str = NULL;
+      gchar *nonce = NULL;
+
+      /* Add mandatory parameters to the hash table */
+      timestamp = g_strdup_printf ("%d", (gint) time(NULL));
+      random_str = g_strdup_printf ("%d_%s", g_random_int (), timestamp);
+      nonce = g_compute_checksum_for_string (G_CHECKSUM_MD5, random_str, -1);
+      g_free (random_str);
+
+      g_hash_table_insert (table, g_strdup ("oauth_timestamp"), timestamp);
+      g_hash_table_insert (table, g_strdup ("oauth_nonce"), nonce);
+      g_hash_table_insert (table, g_strdup ("oauth_consumer_key"), g_strdup (priv->api_key));
+      g_hash_table_insert (table, g_strdup ("oauth_signature_method"), g_strdup (OAUTH_SIGNATURE_METHOD));
+      g_hash_table_insert (table, g_strdup ("oauth_version"), g_strdup (OAUTH_VERSION));
+    }
+
+  /* Get the API signature from it */
+  if (old_auth_api)
+    signing_key = g_strdup (priv->secret);
+  else
+    signing_key = g_strdup_printf ("%s&%s", priv->secret, priv->token_secret ? priv->token_secret : "");
+
+  api_sig = _get_api_signature_from_hash_table (url, table, signing_key, old_auth_api);
+  g_free (signing_key);
 
   /* Get the signed URL with the needed params */
   if ((table != NULL) && (api_sig != NULL))
-    signed_query = _get_signed_query_with_params (api_sig, table);
+    signed_query = _get_signed_query_with_params (api_sig, table, old_auth_api);
 
   g_hash_table_unref (table);
   g_free (api_sig);
 
   va_end (args);
 
-  retval = g_strdup_printf ("%s/?%s", base_url, signed_query);
+  retval = g_strdup_printf ("%s?%s", url, signed_query);
   g_free (signed_query);
 
   return retval;
 }
 
-void
+static void
 _perform_async_request                  (SoupSession         *soup_session,
                                          const gchar         *url,
                                          SoupSessionCallback  request_cb,
@@ -1028,7 +1195,7 @@ _perform_async_request                  (SoupSession         *soup_session,
   DEBUG ("\nRequested URL:\n%s\n", url);
 }
 
-void
+static void
 _soup_session_cancelled_cb              (GCancellable *cancellable,
                                          gpointer      data)
 {
@@ -1047,7 +1214,7 @@ _soup_session_cancelled_cb              (GCancellable *cancellable,
   DEBUG ("%s", "Remote request cancelled!");
 }
 
-void
+static void
 _handle_soup_response                   (SoupMessage   *msg,
                                          FspParserFunc  parserFunc,
                                          gpointer       data)
@@ -1085,7 +1252,7 @@ _handle_soup_response                   (SoupMessage   *msg,
   g_free (response_str);
 }
 
-void
+static void
 _build_async_result_and_complete        (AsyncRequestData *clos,
                                          gpointer    result,
                                          GError     *error)
@@ -1134,7 +1301,7 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
   g_object_unref (G_OBJECT (res));
 }
 
-gpointer
+static gpointer
 _finish_async_request                   (GObject       *object,
                                          GAsyncResult  *res,
                                          gpointer       source_tag,
@@ -1494,6 +1661,7 @@ fsp_session_get_auth_url_async          (FspSession          *self,
   priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.auth.getFrob",
                          "api_key", priv->api_key,
                          NULL);
@@ -1531,6 +1699,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
       /* Build the authorization url */
       auth_url = _get_signed_url (self,
                                   FLICKR_API_AUTH_URL,
+                                  TRUE,
                                   "api_key", priv->api_key,
                                   "perms", "write",
                                   "frob", priv->frob,
@@ -1561,6 +1730,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
       /* Build the signed url */
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
+                             TRUE,
                              "method", "flickr.auth.getToken",
                              "api_key", priv->api_key,
                              "frob", priv->frob,
@@ -1625,6 +1795,7 @@ fsp_session_check_auth_info_async       (FspSession          *self,
       /* Build the signed url */
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
+                             TRUE,
                              "method", "flickr.auth.checkToken",
                              "api_key", priv->api_key,
                              "auth_token", priv->token,
@@ -1684,6 +1855,7 @@ fsp_session_get_upload_status_async     (FspSession          *self,
       /* Build the signed url */
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
+                             TRUE,
                              "method", "flickr.people.getUploadStatus",
                              "api_key", priv->api_key,
                              "auth_token", priv->token,
@@ -1765,7 +1937,7 @@ fsp_session_upload_async                (FspSession          *self,
                        g_strdup (priv->token));
 
   /* Build the api signature and add it to the hash table */
-  api_sig = _get_api_signature_from_hash_table (self, extra_params);
+  api_sig = _get_api_signature_from_hash_table (FLICKR_API_UPLOAD_URL, extra_params, priv->secret, TRUE);
   g_hash_table_insert (extra_params, g_strdup ("api_sig"), api_sig);
 
   /* Save important data for the callback */
@@ -1819,6 +1991,7 @@ fsp_session_get_info_async              (FspSession          *self,
   priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.photos.getInfo",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
@@ -1867,6 +2040,7 @@ fsp_session_get_photosets_async         (FspSession          *self,
   priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.photosets.getList",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
@@ -1914,6 +2088,7 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
   priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.photosets.addPhoto",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
@@ -1967,6 +2142,7 @@ fsp_session_create_photoset_async       (FspSession          *self,
   priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.photosets.create",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
@@ -2017,6 +2193,7 @@ fsp_session_get_groups_async            (FspSession          *self,
   priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.groups.pools.getGroups",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
@@ -2064,6 +2241,7 @@ fsp_session_add_to_group_async          (FspSession          *self,
   priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.groups.pools.add",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
@@ -2112,6 +2290,7 @@ fsp_session_get_tags_list_async         (FspSession          *self,
   priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.tags.getListUser",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
@@ -2159,6 +2338,7 @@ fsp_session_set_license_async           (FspSession          *self,
   license_str = g_strdup_printf ("%d", license);
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.photos.licenses.setLicense",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
@@ -2224,6 +2404,7 @@ fsp_session_set_location_async           (FspSession          *self,
   /* FIXME: not sure how to handle the optional 'accuracy' here... */
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
+                         TRUE,
                          "method", "flickr.photos.geo.setLocation",
                          "api_key", priv->api_key,
                          "auth_token", priv->token,
