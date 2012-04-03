@@ -184,10 +184,10 @@ _check_async_errors_on_finish           (GObject       *object,
                                          GError       **error);
 
 gchar *
-_get_api_signature_from_hash_table      (const gchar *shared_secret,
+_get_api_signature_from_hash_table      (FspSession *self,
                                          GHashTable  *params_table);
 gchar *
-_get_signed_query                       (const gchar *shared_secret,
+_get_signed_query                       (FspSession *self,
                                          const gchar *first_param,
                                          ... );
 
@@ -869,13 +869,13 @@ _check_async_errors_on_finish           (GObject       *object,
 }
 
 gchar *
-_get_api_signature_from_hash_table      (const gchar *shared_secret,
+_get_api_signature_from_hash_table      (FspSession *self,
                                          GHashTable  *params_table)
 {
   GList *keys = NULL;
   gchar *api_sig = NULL;
 
-  g_return_val_if_fail (shared_secret != NULL, NULL);
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (params_table != NULL, NULL);
 
   /* Get ownership of the table */
@@ -897,7 +897,7 @@ _get_api_signature_from_hash_table      (const gchar *shared_secret,
       sign_str_array = g_new0 (gchar*, (2 * g_list_length (keys)) + 2);
 
       /* Fill arrays */
-      sign_str_array[i++] = g_strdup (shared_secret);
+      sign_str_array[i++] = g_strdup (self->priv->secret);
       for (k = keys; k; k = g_list_next (k))
         {
           const gchar *key = (gchar*) k->data;
@@ -924,7 +924,7 @@ _get_api_signature_from_hash_table      (const gchar *shared_secret,
 }
 
 gchar *
-_get_signed_query                       (const gchar *shared_secret,
+_get_signed_query                       (FspSession *self,
                                          const gchar *first_param,
                                          ... )
 {
@@ -933,14 +933,14 @@ _get_signed_query                       (const gchar *shared_secret,
   gchar *api_sig = NULL;
   gchar *retval = NULL;
 
-  g_return_val_if_fail (shared_secret != NULL, NULL);
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (first_param != NULL, NULL);
 
   va_start (args, first_param);
 
   /* Get the hash table for the params and the API signature from it */
   table = _get_params_table_from_valist (first_param, args);
-  api_sig = _get_api_signature_from_hash_table (shared_secret, table);
+  api_sig = _get_api_signature_from_hash_table (self, table);
 
   /* Get the signed URL with the needed params */
   if ((table != NULL) && (api_sig != NULL))
@@ -1454,7 +1454,7 @@ fsp_session_get_auth_url_async          (FspSession          *self,
 
   /* Build the signed url */
   priv = self->priv;
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.auth.getFrob",
                                     "api_key", priv->api_key,
                                     NULL);
@@ -1493,7 +1493,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
       priv->frob = frob;
 
       /* Build the authorization url */
-      signed_query = _get_signed_query (priv->secret,
+      signed_query = _get_signed_query (self,
                                         "api_key", priv->api_key,
                                         "perms", "write",
                                         "frob", priv->frob,
@@ -1526,7 +1526,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
       gchar *url = NULL;
 
       /* Build the signed url */
-      signed_query = _get_signed_query (priv->secret,
+      signed_query = _get_signed_query (self,
                                         "method", "flickr.auth.getToken",
                                         "api_key", priv->api_key,
                                         "frob", priv->frob,
@@ -1592,7 +1592,7 @@ fsp_session_check_auth_info_async       (FspSession          *self,
       gchar *url = NULL;
 
       /* Build the signed url */
-      signed_query = _get_signed_query (priv->secret,
+      signed_query = _get_signed_query (self,
                                         "method", "flickr.auth.checkToken",
                                         "api_key", priv->api_key,
                                         "auth_token", priv->token,
@@ -1653,7 +1653,7 @@ fsp_session_get_upload_status_async     (FspSession          *self,
       gchar *url = NULL;
 
       /* Build the signed url */
-      signed_query = _get_signed_query (priv->secret,
+      signed_query = _get_signed_query (self,
                                         "method", "flickr.people.getUploadStatus",
                                         "api_key", priv->api_key,
                                         "auth_token", priv->token,
@@ -1737,7 +1737,7 @@ fsp_session_upload_async                (FspSession          *self,
                        g_strdup (priv->token));
 
   /* Build the api signature and add it to the hash table */
-  api_sig = _get_api_signature_from_hash_table (priv->secret, extra_params);
+  api_sig = _get_api_signature_from_hash_table (self, extra_params);
   g_hash_table_insert (extra_params, g_strdup ("api_sig"), api_sig);
 
   /* Save important data for the callback */
@@ -1790,7 +1790,7 @@ fsp_session_get_info_async              (FspSession          *self,
 
   /* Build the signed url */
   priv = self->priv;
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.photos.getInfo",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
@@ -1841,7 +1841,7 @@ fsp_session_get_photosets_async         (FspSession          *self,
 
   /* Build the signed url */
   priv = self->priv;
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.photosets.getList",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
@@ -1891,7 +1891,7 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
 
   /* Build the signed url */
   priv = self->priv;
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.photosets.addPhoto",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
@@ -1947,7 +1947,7 @@ fsp_session_create_photoset_async       (FspSession          *self,
 
   /* Build the signed url */
   priv = self->priv;
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.photosets.create",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
@@ -2000,7 +2000,7 @@ fsp_session_get_groups_async            (FspSession          *self,
 
   /* Build the signed url */
   priv = self->priv;
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.groups.pools.getGroups",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
@@ -2050,7 +2050,7 @@ fsp_session_add_to_group_async          (FspSession          *self,
 
   /* Build the signed url */
   priv = self->priv;
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.groups.pools.add",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
@@ -2101,7 +2101,7 @@ fsp_session_get_tags_list_async         (FspSession          *self,
 
   /* Build the signed url */
   priv = self->priv;
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.tags.getListUser",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
@@ -2151,7 +2151,7 @@ fsp_session_set_license_async           (FspSession          *self,
   /* Build the signed url */
   priv = self->priv;
   license_str = g_strdup_printf ("%d", license);
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.photos.licenses.setLicense",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
@@ -2218,7 +2218,7 @@ fsp_session_set_location_async           (FspSession          *self,
     }
   context_str = g_strdup_printf ("%d", location->context);
   /* FIXME: not sure how to handle the optional 'accuracy' here... */
-  signed_query = _get_signed_query (priv->secret,
+  signed_query = _get_signed_query (self,
                                     "method", "flickr.photos.geo.setLocation",
                                     "api_key", priv->api_key,
                                     "auth_token", priv->token,
