@@ -359,7 +359,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
 
     default:
       /* General error: just dump the raw error description */
-      msg = g_strdup_printf (_("An error happened while uploading a picture: %s."),
+      msg = g_strdup_printf (_("An error happened: %s."),
                              error->message);
       error_function = frogr_util_show_error_dialog;
     }
