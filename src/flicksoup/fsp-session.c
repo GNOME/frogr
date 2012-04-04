@@ -230,7 +230,8 @@ _get_api_signature_from_hash_table      (const gchar         *url,
 
 static void
 _fill_hash_table_with_oauth_params      (GHashTable  *table,
-                                         const gchar *api_key);
+                                         const gchar *api_key,
+                                         const gchar *token);
 
 static gchar *
 _get_signed_url                       (FspSession          *self,
@@ -1109,7 +1110,8 @@ _get_api_signature_from_hash_table      (const gchar         *url,
 
 static void
 _fill_hash_table_with_oauth_params      (GHashTable  *table,
-                                         const gchar *api_key)
+                                         const gchar *api_key,
+                                         const gchar *token)
 {
   gchar *timestamp = NULL;
   gchar *random_str = NULL;
@@ -1126,6 +1128,10 @@ _fill_hash_table_with_oauth_params      (GHashTable  *table,
   g_hash_table_insert (table, g_strdup ("oauth_consumer_key"), g_strdup (api_key));
   g_hash_table_insert (table, g_strdup ("oauth_signature_method"), g_strdup (OAUTH_SIGNATURE_METHOD));
   g_hash_table_insert (table, g_strdup ("oauth_version"), g_strdup (OAUTH_VERSION));
+
+  /* The token is option (would not be available when authorizing) */
+  if (token)
+    g_hash_table_insert (table, g_strdup ("oauth_token"), g_strdup (token));
 }
 
 static gchar *
@@ -1156,7 +1162,7 @@ _get_signed_url                       (FspSession          *self,
 
   if (auth_method == AUTHORIZATION_METHOD_OAUTH_1)
     {
-      _fill_hash_table_with_oauth_params (table, priv->api_key);
+      _fill_hash_table_with_oauth_params (table, priv->api_key, priv->token);
       signing_key = g_strdup_printf ("%s&%s", priv->secret, priv->token_secret ? priv->token_secret : "");
     }
   else
@@ -1795,7 +1801,6 @@ fsp_session_complete_auth_async         (FspSession          *self,
                              FLICKR_ACCESS_TOKEN_OAUTH_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
                              "GET",
-                             "oauth_token", priv->token,
                              "oauth_verifier", code,
                              NULL);
 
@@ -1863,7 +1868,6 @@ fsp_session_check_auth_info_async       (FspSession          *self,
                              AUTHORIZATION_METHOD_OAUTH_1,
                              "GET",
                              "method", "flickr.auth.checkToken",
-                             "oauth_token", priv->token,
                              NULL);
 
       /* Perform the async request */
@@ -1923,7 +1927,6 @@ fsp_session_get_upload_status_async     (FspSession          *self,
                              AUTHORIZATION_METHOD_OAUTH_1,
                              "GET",
                              "method", "flickr.people.getUploadStatus",
-                             "oauth_token", priv->token,
                              NULL);
 
       /* Perform the async request */
@@ -1998,11 +2001,7 @@ fsp_session_upload_async                (FspSession          *self,
                                            safety_level, content_type, hidden);
 
   /* Add mandatory parameters according to OAuth specification */
-  _fill_hash_table_with_oauth_params (extra_params, priv->api_key);
-
-  /* Add remaining parameters to the hash table */
-  g_hash_table_insert (extra_params, g_strdup ("oauth_token"),
-                       g_strdup (priv->token));
+  _fill_hash_table_with_oauth_params (extra_params, priv->api_key, priv->token);
 
   /* Build the api signature and add it to the hash table */
   api_sig = _get_api_signature_from_hash_table (FLICKR_API_UPLOAD_URL, extra_params, priv->secret,
@@ -2049,7 +2048,6 @@ fsp_session_get_info_async              (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
 
@@ -2057,13 +2055,11 @@ fsp_session_get_info_async              (FspSession          *self,
   g_return_if_fail (photo_id != NULL);
 
   /* Build the signed url */
-  priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.photos.getInfo",
-                         "oauth_token", priv->token,
                          "photo_id", photo_id,
                          NULL);
 
@@ -2099,20 +2095,17 @@ fsp_session_get_photosets_async         (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
   /* Build the signed url */
-  priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.photosets.getList",
-                         "oauth_token", priv->token,
                          NULL);
 
   /* Perform the async request */
@@ -2145,7 +2138,6 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
 
@@ -2154,13 +2146,11 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
   g_return_if_fail (photoset_id != NULL);
 
   /* Build the signed url */
-  priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.photosets.addPhoto",
-                         "oauth_token", priv->token,
                          "photo_id", photo_id,
                          "photoset_id", photoset_id,
                          NULL);
@@ -2199,7 +2189,6 @@ fsp_session_create_photoset_async       (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
 
@@ -2208,13 +2197,11 @@ fsp_session_create_photoset_async       (FspSession          *self,
   g_return_if_fail (primary_photo_id != NULL);
 
   /* Build the signed url */
-  priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.photosets.create",
-                         "oauth_token", priv->token,
                          "title", title,
                          "description", description ? description : "",
                          "primary_photo_id", primary_photo_id,
@@ -2252,20 +2239,17 @@ fsp_session_get_groups_async            (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
   /* Build the signed url */
-  priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.groups.pools.getGroups",
-                         "oauth_token", priv->token,
                          NULL);
 
   /* Perform the async request */
@@ -2298,7 +2282,6 @@ fsp_session_add_to_group_async          (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
 
@@ -2307,13 +2290,11 @@ fsp_session_add_to_group_async          (FspSession          *self,
   g_return_if_fail (group_id != NULL);
 
   /* Build the signed url */
-  priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.groups.pools.add",
-                         "oauth_token", priv->token,
                          "photo_id", photo_id,
                          "group_id", group_id,
                          NULL);
@@ -2349,20 +2330,17 @@ fsp_session_get_tags_list_async         (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
   /* Build the signed url */
-  priv = self->priv;
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.tags.getListUser",
-                         "oauth_token", priv->token,
                          NULL);
 
   /* Perform the async request */
@@ -2394,7 +2372,6 @@ fsp_session_set_license_async           (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar *license_str = NULL;
   gchar *url = NULL;
@@ -2403,14 +2380,12 @@ fsp_session_set_license_async           (FspSession          *self,
   g_return_if_fail (photo_id != NULL);
 
   /* Build the signed url */
-  priv = self->priv;
   license_str = g_strdup_printf ("%d", license);
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.photos.licenses.setLicense",
-                         "oauth_token", priv->token,
                          "photo_id", photo_id,
                          "license_id", license_str,
                          NULL);
@@ -2449,7 +2424,6 @@ fsp_session_set_location_async           (FspSession          *self,
                                           GAsyncReadyCallback  callback,
                                           gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   gchar lat_str[G_ASCII_DTOSTR_BUF_SIZE];
   gchar lon_str[G_ASCII_DTOSTR_BUF_SIZE];
@@ -2461,7 +2435,6 @@ fsp_session_set_location_async           (FspSession          *self,
   g_return_if_fail (photo_id != NULL);
 
   /* Build the signed url */
-  priv = self->priv;
   g_ascii_dtostr (lat_str, sizeof (lat_str), location->latitude);
   g_ascii_dtostr (lon_str, sizeof (lon_str), location->longitude);
   if ((location->accuracy >= 1) && (location->accuracy <= 16))
@@ -2476,7 +2449,6 @@ fsp_session_set_location_async           (FspSession          *self,
                          AUTHORIZATION_METHOD_OAUTH_1,
                          "GET",
                          "method", "flickr.photos.geo.setLocation",
-                         "oauth_token", priv->token,
                          "photo_id", photo_id,
                          "lat", lat_str,
                          "lon", lon_str,
