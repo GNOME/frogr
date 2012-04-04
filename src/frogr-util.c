@@ -18,10 +18,10 @@
  *
  */
 
+#include "frogr-util.h"
 #include "frogr-global-defs.h"
 
 #include <config.h>
-
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <libexif/exif-byte-order.h>

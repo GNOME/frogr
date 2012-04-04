@@ -21,6 +21,8 @@
 #ifndef FROGR_UTIL_H
 #define FROGR_UTIL_H
 
+#include <gtk/gtk.h>
+
 G_BEGIN_DECLS
 
 const gchar *frogr_util_get_app_data_dir (void);
