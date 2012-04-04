@@ -114,6 +114,11 @@ void frogr_account_set_is_pro (FrogrAccount *self, gboolean is_pro);
 
 gboolean frogr_account_is_valid (FrogrAccount *self);
 
+const gchar* frogr_account_get_version (FrogrAccount *self);
+
+void frogr_account_set_version (FrogrAccount *self,
+                                const gchar *version);
+
 gboolean frogr_account_equal (FrogrAccount *self, FrogrAccount *other);
 
 G_END_DECLS

@@ -636,6 +636,13 @@ _load_account_xml (FrogrAccount *faccount,
           frogr_account_set_is_active (faccount, is_active);
         }
 
+      if (xmlStrcmp (node->name, (const xmlChar*) "version") == 0)
+        {
+          content = xmlNodeGetContent (node);
+          if (content != NULL && content[0] != '\0')
+            frogr_account_set_version (faccount, (gchar *)content);
+        }
+
       if (content != NULL)
         xmlFree (content);
     }

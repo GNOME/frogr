@@ -40,6 +40,7 @@ struct _FrogrAccountPrivate
   gchar *id;
   gchar *username;
   gchar *fullname;
+  gchar *version;
   gboolean is_active;
 
   /* Following properties won't be persistent */
@@ -59,6 +60,7 @@ enum {
   PROP_ID,
   PROP_USERNAME,
   PROP_FULLNAME,
+  PROP_VERSION,
   PROP_IS_ACTIVE,
   PROP_REMAINING_BANDWIDTH,
   PROP_MAX_BANDWIDTH,
@@ -101,6 +103,10 @@ _frogr_account_set_property (GObject      *object,
 
     case PROP_FULLNAME:
       frogr_account_set_fullname (self, g_value_get_string (value));
+      break;
+
+    case PROP_VERSION:
+      frogr_account_set_version (self, g_value_get_string (value));
       break;
 
     case PROP_IS_ACTIVE:
@@ -162,6 +168,10 @@ _frogr_account_get_property (GObject    *object,
       g_value_set_string (value, priv->fullname);
       break;
 
+    case PROP_VERSION:
+      g_value_set_string (value, priv->version);
+      break;
+
     case PROP_IS_ACTIVE:
       g_value_set_boolean (value, priv->is_active);
       break;
@@ -198,6 +208,7 @@ _frogr_account_finalize (GObject *object)
   g_free (priv->id);
   g_free (priv->username);
   g_free (priv->fullname);
+  g_free (priv->version);
 
   /* Call superclass */
   G_OBJECT_CLASS (frogr_account_parent_class)->finalize (object);
@@ -255,6 +266,13 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_FULLNAME, pspec);
 
+  pspec = g_param_spec_string ("version",
+                               "version",
+                               "Version of the format used to store"
+                               "the details for an account",
+                               "",
+                               G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_VERSION, pspec);
 
   pspec = g_param_spec_boolean ("is-active",
                                 "is-active",
@@ -304,6 +322,7 @@ frogr_account_init (FrogrAccount *self)
   priv->id = NULL;
   priv->username = NULL;
   priv->fullname = NULL;
+  priv->version = NULL;
   priv->is_active = FALSE;
   priv->remaining_bandwidth = G_MAXULONG;
   priv->max_bandwidth = G_MAXULONG;
@@ -610,6 +629,29 @@ frogr_account_is_valid (FrogrAccount *self)
   return TRUE;
 }
 
+const gchar*
+frogr_account_get_version (FrogrAccount *self)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->version;
+}
+
+void
+frogr_account_set_version (FrogrAccount *self, const gchar *version)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  g_free (priv->version);
+  priv->version = g_strdup (version);
+}
+
 gboolean
 frogr_account_equal (FrogrAccount *self, FrogrAccount *other)
 {
@@ -645,6 +687,9 @@ frogr_account_equal (FrogrAccount *self, FrogrAccount *other)
     return FALSE;
 
   if (g_strcmp0 (priv_a->fullname, priv_b->fullname))
+    return FALSE;
+
+  if (g_strcmp0 (priv_a->version, priv_b->version))
     return FALSE;
 
   if (priv_a->remaining_bandwidth != priv_b->remaining_bandwidth)
