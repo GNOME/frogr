@@ -2054,7 +2054,6 @@ static void
 frogr_controller_init (FrogrController *self)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  const gchar *token;
 
   /* Default variables */
   priv->state = FROGR_STATE_IDLE;
@@ -2088,12 +2087,19 @@ frogr_controller_init (FrogrController *self)
   priv->account = frogr_config_get_active_account (priv->config);
   if (priv->account)
     {
+      const gchar *token = NULL;
+      const gchar *token_secret = NULL;
+
       g_object_ref (priv->account);
 
       /* If available, set token */
-      token = frogr_account_get_token (priv->account);
+      token = frogr_account_get_oauth_token (priv->account);
       if (token != NULL)
         fsp_session_set_token (priv->session, token);
+
+      token_secret = frogr_account_get_oauth_token_secret (priv->account);
+      if (token_secret != NULL)
+        fsp_session_set_token_secret (priv->session, token_secret);
     }
 
   /* Set HTTP proxy if needed */
@@ -2204,6 +2210,7 @@ frogr_controller_set_active_account (FrogrController *self,
   FrogrAccount *new_account = NULL;
   gboolean accounts_changed = FALSE;
   const gchar *token = NULL;
+  const gchar *token_secret = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -2227,7 +2234,8 @@ frogr_controller_set_active_account (FrogrController *self,
         }
 
       /* Get the token for setting it later on */
-      token = frogr_account_get_token (new_account);
+      token = frogr_account_get_oauth_token (new_account);
+      token_secret = frogr_account_get_oauth_token_secret (new_account);
     }
   else
     {
@@ -2242,6 +2250,7 @@ frogr_controller_set_active_account (FrogrController *self,
 
   priv->account = new_account;
   fsp_session_set_token (priv->session, token);
+  fsp_session_set_token_secret (priv->session, token_secret);
 
   /* Prefetch info for this user */
   if (new_account)
@@ -2560,6 +2569,7 @@ frogr_controller_revoke_authorization (FrogrController *self)
 
   /* Ensure there's the token/account is no longer active anywhere */
   fsp_session_set_token (priv->session, NULL);
+  fsp_session_set_token_secret (priv->session, NULL);
   frogr_controller_set_active_account (self, NULL);
 }
 
