@@ -133,7 +133,7 @@ static SoupSession *
 _get_soup_session                       (FspSession *self);
 
 static void
-_get_frob_soup_session_cb               (SoupSession *session,
+_get_request_token_session_cb           (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
 static void
@@ -480,7 +480,7 @@ _get_soup_session                       (FspSession *self)
 }
 
 static void
-_get_frob_soup_session_cb               (SoupSession *session,
+_get_request_token_session_cb           (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer data)
 {
@@ -489,7 +489,7 @@ _get_frob_soup_session_cb               (SoupSession *session,
 
   /* Handle message with the right parser */
   _handle_soup_response (msg,
-                         (FspParserFunc) fsp_parser_get_frob,
+                         (FspParserFunc) fsp_parser_get_request_token,
                          data);
 }
 
@@ -1250,7 +1250,6 @@ _handle_soup_response                   (SoupMessage   *msg,
   if (!_check_errors_on_soup_response (msg, &err))
     result = parserFunc (parser, response_str, response_len, &err);
 
-
   /* Build response and call async callback */
   _build_async_result_and_complete (clos, result, err);
 
@@ -1662,18 +1661,26 @@ fsp_session_get_auth_url_async          (FspSession          *self,
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
-  /* Build the signed url */
   priv = self->priv;
+
+  /* We need to make sure that any token is removed at this point to
+     avoid calculating the signature wrongly, and also because they
+     will get replaced anyway by the new token. */
+  g_free (priv->token);
+  priv->token = NULL;
+  g_free (priv->token_secret);
+  priv->token_secret = NULL;
+
+  /* Build the signed url */
   url = _get_signed_url (self,
-                         FLICKR_API_BASE_URL,
-                         AUTHORIZATION_METHOD_ORIGINAL,
-                         "method", "flickr.auth.getFrob",
-                         "api_key", priv->api_key,
+                         FLICKR_REQUEST_TOKEN_OAUTH_URL,
+                         AUTHORIZATION_METHOD_OAUTH_1,
+                         "oauth_callback", OAUTH_CALLBACK_URL,
                          NULL);
 
   /* Perform the async request */
   _perform_async_request (priv->soup_session, url,
-                          _get_frob_soup_session_cb, G_OBJECT (self),
+                          _get_request_token_session_cb, G_OBJECT (self),
                           c, cb, fsp_session_get_auth_url_async, data);
 
   g_free (url);
@@ -1684,31 +1691,35 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
-  gchar *frob = NULL;
+  FspDataAuthToken *auth_token = NULL;
   gchar *auth_url = NULL;
 
-  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
-  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
-  frob = (gchar*) _finish_async_request (G_OBJECT (self), res,
-                                         fsp_session_get_auth_url_async, error);
+  auth_token =
+    FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
+                                                fsp_session_get_auth_url_async,
+                                                error));
   /* Build the auth URL from the frob */
-  if (frob != NULL)
+  if (auth_token != NULL)
     {
       FspSessionPrivate *priv = self->priv;
 
-      /* Save the frob */
-      g_free (priv->frob);
-      priv->frob = frob;
+      /* Save the data */
+      g_free (priv->token);
+      priv->token = g_strdup (auth_token->token);
+
+      g_free (priv->token_secret);
+      priv->token_secret = g_strdup (auth_token->token_secret);
 
       /* Build the authorization url */
-      auth_url = _get_signed_url (self,
-                                  FLICKR_API_AUTH_URL,
-                                  AUTHORIZATION_METHOD_ORIGINAL,
-                                  "api_key", priv->api_key,
-                                  "perms", "write",
-                                  "frob", priv->frob,
-                                  NULL);
+      auth_url = g_strdup_printf ("http://www.flickr.com/services/oauth/authorize"
+                                  "?perms=write"
+                                  "&oauth_token=%s",
+                                  priv->token);
+
+      fsp_data_free (FSP_DATA (auth_token));
     }
 
   return auth_url;

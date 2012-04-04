@@ -67,8 +67,8 @@ fsp_parser_get_type              (void) G_GNUC_CONST;
 FspParser *
 fsp_parser_get_instance          (void);
 
-gchar *
-fsp_parser_get_frob                     (FspParser  *self,
+FspDataAuthToken *
+fsp_parser_get_request_token            (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error);

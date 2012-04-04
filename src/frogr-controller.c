@@ -357,6 +357,11 @@ _notify_error_to_user (FrogrController *self, GError *error)
       error_function = frogr_util_show_error_dialog;
       break;
 
+    case FSP_ERROR_REQUEST_TOKEN:
+      msg = g_strdup_printf (_("Unable to authenticate in flickr"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
     default:
       /* General error: just dump the raw error description */
       msg = g_strdup_printf (_("An error happened: %s."),

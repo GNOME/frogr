@@ -79,7 +79,7 @@ typedef enum {
   FSP_ERROR_SERVICE_UNAVAILABLE,
 
   /* Errors from flicksoup only */
-  FSP_ERROR_NOFROB,
+  FSP_ERROR_REQUEST_TOKEN,
 
   /* Default fallback for other kind of errors */
   FSP_ERROR_OTHER
@@ -87,7 +87,6 @@ typedef enum {
 
 typedef enum {
   FSP_ERROR_METHOD_UNDEFINED,
-  FSP_ERROR_METHOD_GET_FROB,
   FSP_ERROR_METHOD_GET_AUTH_TOKEN,
   FSP_ERROR_METHOD_GET_UPLOAD_STATUS,
   FSP_ERROR_METHOD_PHOTO_UPLOAD,

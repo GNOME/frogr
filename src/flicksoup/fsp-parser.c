@@ -62,9 +62,6 @@ _get_error_method_from_parser           (gpointer (*body_parser)
                                          (xmlDoc  *doc,
                                           GError **error));
 static gpointer
-_get_frob_parser                        (xmlDoc  *doc,
-                                         GError **error);
-static gpointer
 _get_auth_token_parser                  (xmlDoc  *doc,
                                          GError **error);
 static gpointer
@@ -261,9 +258,7 @@ _get_error_method_from_parser           (gpointer (*body_parser)
 {
   FspErrorMethod error_method = FSP_ERROR_METHOD_UNDEFINED;
 
-  if (body_parser ==  _get_frob_parser)
-    error_method = FSP_ERROR_METHOD_GET_FROB;
-  else if (body_parser == _get_auth_token_parser)
+  if (body_parser == _get_auth_token_parser)
     error_method = FSP_ERROR_METHOD_GET_AUTH_TOKEN;
   else if (body_parser == _get_upload_status_parser)
     error_method = FSP_ERROR_METHOD_GET_UPLOAD_STATUS;
@@ -336,49 +331,6 @@ _process_xml_response                          (FspParser  *self,
     g_propagate_error (error, err);
 
   return retval;
-}
-
-static gpointer
-_get_frob_parser                        (xmlDoc  *doc,
-                                         GError **error)
-{
-  xmlXPathContext *xpathCtx = NULL;
-  xmlXPathObject * xpathObj = NULL;
-  gchar *frob = NULL;
-  GError *err = NULL;
-
-  g_return_val_if_fail (doc != NULL, NULL);
-
-  xpathCtx = xmlXPathNewContext (doc);
-  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/frob", xpathCtx);
-
-  if ((xpathObj != NULL) && (xpathObj->nodesetval->nodeNr > 0))
-    {
-      /* Matching nodes found */
-      xmlNode *node = NULL;
-      xmlChar *content = NULL;
-
-      /* Get the frob */
-      node = xpathObj->nodesetval->nodeTab[0];
-      content = xmlNodeGetContent (node);
-      if (content != NULL)
-        {
-          frob = g_strdup ((gchar *) content);
-          xmlFree (content);
-        }
-    }
-  else
-    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
-                       "No frob found in the response");
-  /* Free */
-  xmlXPathFreeObject (xpathObj);
-  xmlXPathFreeContext (xpathCtx);
-
-  /* Propagate error */
-  if (err != NULL)
-    g_propagate_error (error, err);
-
-  return frob;
 }
 
 static gpointer
@@ -1130,23 +1082,50 @@ fsp_parser_get_instance          (void)
   return FSP_PARSER (g_object_new (FSP_TYPE_PARSER, NULL));
 }
 
-gchar *
-fsp_parser_get_frob                     (FspParser  *self,
-                                         const gchar      *buffer,
-                                         gulong            buf_size,
-                                         GError          **error)
+FspDataAuthToken *
+fsp_parser_get_request_token            (FspParser   *self,
+                                         const gchar *buffer,
+                                         gulong       buf_size,
+                                         GError     **error)
 {
-  gchar *frob = NULL;
+  FspDataAuthToken *auth_token = NULL;
+  gchar *response_str = NULL;
+  gchar **response_array = NULL;
+  gint i = 0;
 
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   /* Process the response */
-  frob = (gchar *) _process_xml_response (self, buffer, buf_size,
-                                          _get_frob_parser, error);
+  auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
+  response_str = g_strndup (buffer, buf_size);
+  response_array = g_strsplit (response_str, "&", -1);
+  g_free (response_str);
+
+  for (i = 0; response_array[i]; i++)
+    {
+      if (g_str_has_prefix (response_array[i], "oauth_token="))
+        auth_token->token = g_strdup (&response_array[i][12]);
+
+      if (g_str_has_prefix (response_array[i], "oauth_token_secret="))
+        auth_token->token_secret = g_strdup (&response_array[i][19]);
+    }
+  g_strfreev (response_array);
+
+  /* Create the GError if needed*/
+  if (!auth_token->token || !auth_token->token_secret)
+    {
+      GError *err = NULL;
+      err = g_error_new (FSP_ERROR, FSP_ERROR_REQUEST_TOKEN,
+                         "An error happened requesting a new token");
+
+      /* Propagate error */
+      if (err != NULL)
+        g_propagate_error (error, err);
+    }
 
   /* Return value */
-  return frob;
+  return auth_token;
 }
 
 FspDataAuthToken *
