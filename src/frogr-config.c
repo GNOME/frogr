@@ -34,6 +34,12 @@
 #define ACCOUNTS_FILENAME "accounts.xml"
 #define SETTINGS_FILENAME "settings.xml"
 
+/* Increase this when changing the xml schema for storing accounts */
+#define ACCOUNTS_FORMAT_VERSION "2"
+
+/* Increase this when changing the xml schema for storing settings */
+#define SETTINGS_FORMAT_VERSION "1"
+
 #define FROGR_CONFIG_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
                                 FROGR_TYPE_CONFIG,      \
@@ -692,6 +698,8 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (node, "use-gnome-proxy", priv->use_gnome_proxy);
   xmlAddChild (root, node);
 
+  _xml_add_string_child (root, "version", SETTINGS_FORMAT_VERSION);
+
   xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
@@ -766,6 +774,7 @@ _save_account_xml (FrogrAccount *faccount, xmlNodePtr parent)
     _xml_add_string_child (node, "username", frogr_account_get_username (faccount));
     _xml_add_string_child (node, "fullname", frogr_account_get_fullname (faccount));
     _xml_add_string_child (node, "active", frogr_account_is_active (faccount) ? "1": "0");
+    _xml_add_string_child (node, "version", ACCOUNTS_FORMAT_VERSION);
   }
   xmlAddChild (parent, node);
 }
