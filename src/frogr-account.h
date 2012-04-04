@@ -57,10 +57,22 @@ FrogrAccount* frogr_account_new (void);
 
 FrogrAccount* frogr_account_new_with_token (const gchar *token);
 
+FrogrAccount* frogr_account_new_with_oauth_tokens (const gchar *token, const gchar *token_secret);
+
 const gchar* frogr_account_get_token (FrogrAccount *self);
 
 void frogr_account_set_token (FrogrAccount *self,
                               const gchar *token);
+
+const gchar* frogr_account_get_oauth_token (FrogrAccount *self);
+
+void frogr_account_set_oauth_token (FrogrAccount *self,
+                                    const gchar *token);
+
+const gchar* frogr_account_get_oauth_token_secret (FrogrAccount *self);
+
+void frogr_account_set_oauth_token_secret (FrogrAccount *self,
+                                           const gchar *token_secret);
 
 const gchar* frogr_account_get_permissions (FrogrAccount *self);
 

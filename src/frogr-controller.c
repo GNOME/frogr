@@ -500,7 +500,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           FrogrAccount *account = NULL;
 
           /* Set and save the auth token and the settings to disk */
-          account = frogr_account_new_with_token (auth_token->token);
+          account = frogr_account_new_with_oauth_tokens (auth_token->token, auth_token->token_secret);
           frogr_account_set_id (account, auth_token->nsid);
           frogr_account_set_username (account, auth_token->username);
           frogr_account_set_fullname (account, auth_token->fullname);
