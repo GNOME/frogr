@@ -35,8 +35,7 @@ typedef struct _FrogrAccountPrivate FrogrAccountPrivate;
 struct _FrogrAccountPrivate
 {
   gchar *token;
-  gchar *oauth_token;
-  gchar *oauth_token_secret;
+  gchar *token_secret;
   gchar *permissions;
   gchar *id;
   gchar *username;
@@ -55,8 +54,7 @@ struct _FrogrAccountPrivate
 enum {
   PROP_0,
   PROP_TOKEN,
-  PROP_OAUTH_TOKEN,
-  PROP_OAUTH_TOKEN_SECRET,
+  PROP_TOKEN_SECRET,
   PROP_PERMISSIONS,
   PROP_ID,
   PROP_USERNAME,
@@ -85,12 +83,8 @@ _frogr_account_set_property (GObject      *object,
       frogr_account_set_token (self, g_value_get_string (value));
       break;
 
-    case PROP_OAUTH_TOKEN:
-      frogr_account_set_oauth_token (self, g_value_get_string (value));
-      break;
-
-    case PROP_OAUTH_TOKEN_SECRET:
-      frogr_account_set_oauth_token_secret (self, g_value_get_string (value));
+    case PROP_TOKEN_SECRET:
+      frogr_account_set_token_secret (self, g_value_get_string (value));
       break;
 
     case PROP_PERMISSIONS:
@@ -148,12 +142,8 @@ _frogr_account_get_property (GObject    *object,
       g_value_set_string (value, priv->token);
       break;
 
-    case PROP_OAUTH_TOKEN:
-      g_value_set_string (value, priv->oauth_token);
-      break;
-
-    case PROP_OAUTH_TOKEN_SECRET:
-      g_value_set_string (value, priv->oauth_token_secret);
+    case PROP_TOKEN_SECRET:
+      g_value_set_string (value, priv->token_secret);
       break;
 
     case PROP_PERMISSIONS:
@@ -203,8 +193,7 @@ _frogr_account_finalize (GObject *object)
   FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (object);
 
   g_free (priv->token);
-  g_free (priv->oauth_token);
-  g_free (priv->oauth_token_secret);
+  g_free (priv->token_secret);
   g_free (priv->permissions);
   g_free (priv->id);
   g_free (priv->username);
@@ -231,19 +220,12 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_TOKEN, pspec);
 
-  pspec = g_param_spec_string ("oauth-token",
-                               "oauth-token",
-                               "OAuth API authentication token",
+  pspec = g_param_spec_string ("token-secret",
+                               "token-secret",
+                               "Flickr API authentication token secret",
                                "",
                                G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_OAUTH_TOKEN, pspec);
-
-  pspec = g_param_spec_string ("oauth-token-secret",
-                               "oauth-token-secret",
-                               "OAuth API authentication token secret",
-                               "",
-                               G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_OAUTH_TOKEN_SECRET, pspec);
+  g_object_class_install_property (obj_class, PROP_TOKEN_SECRET, pspec);
 
   pspec = g_param_spec_string ("permissions",
                                "permissions",
@@ -317,8 +299,7 @@ frogr_account_init (FrogrAccount *self)
 {
   FrogrAccountPrivate *priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv->token = NULL;
-  priv->oauth_token = NULL;
-  priv->oauth_token_secret = NULL;
+  priv->token_secret = NULL;
   priv->permissions = NULL;
   priv->id = NULL;
   priv->username = NULL;
@@ -347,11 +328,11 @@ frogr_account_new_with_token (const gchar *token)
 }
 
 FrogrAccount*
-frogr_account_new_with_oauth_tokens (const gchar *token, const gchar *token_secret)
+frogr_account_new_full (const gchar *token, const gchar *token_secret)
 {
   return FROGR_ACCOUNT (g_object_new (FROGR_TYPE_ACCOUNT,
-                                      "oauth-token", token,
-                                      "oauth-token-secret", token_secret,
+                                      "token", token,
+                                      "token-secret", token_secret,
                                       NULL));
 }
 
@@ -380,44 +361,18 @@ frogr_account_set_token (FrogrAccount *self,
 }
 
 const gchar*
-frogr_account_get_oauth_token (FrogrAccount *self)
+frogr_account_get_token_secret (FrogrAccount *self)
 {
   FrogrAccountPrivate *priv = NULL;
 
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
 
   priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  return priv->oauth_token;
-}
-
-
-void
-frogr_account_set_oauth_token (FrogrAccount *self,
-                               const gchar *token)
-{
-  FrogrAccountPrivate *priv = NULL;
-
-  g_return_if_fail (FROGR_IS_ACCOUNT (self));
-
-  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  g_free (priv->oauth_token);
-  priv->oauth_token = g_strdup (token);
-}
-
-
-const gchar*
-frogr_account_get_oauth_token_secret (FrogrAccount *self)
-{
-  FrogrAccountPrivate *priv = NULL;
-
-  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), NULL);
-
-  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  return priv->oauth_token_secret;
+  return priv->token_secret;
 }
 
 void
-frogr_account_set_oauth_token_secret (FrogrAccount *self,
+frogr_account_set_token_secret (FrogrAccount *self,
                                       const gchar *token_secret)
 {
   FrogrAccountPrivate *priv = NULL;
@@ -425,8 +380,8 @@ frogr_account_set_oauth_token_secret (FrogrAccount *self,
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
   priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  g_free (priv->oauth_token_secret);
-  priv->oauth_token_secret = g_strdup (token_secret);
+  g_free (priv->token_secret);
+  priv->token_secret = g_strdup (token_secret);
 }
 
 const gchar*
@@ -675,6 +630,9 @@ frogr_account_equal (FrogrAccount *self, FrogrAccount *other)
   priv_b = FROGR_ACCOUNT_GET_PRIVATE (other);
 
   if (g_strcmp0 (priv_a->token, priv_b->token))
+    return FALSE;
+
+  if (g_strcmp0 (priv_a->token_secret, priv_b->token_secret))
     return FALSE;
 
   if (g_strcmp0 (priv_a->permissions, priv_b->permissions))

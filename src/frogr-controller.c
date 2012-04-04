@@ -500,7 +500,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           FrogrAccount *account = NULL;
 
           /* Set and save the auth token and the settings to disk */
-          account = frogr_account_new_with_oauth_tokens (auth_token->token, auth_token->token_secret);
+          account = frogr_account_new_full (auth_token->token, auth_token->token_secret);
           frogr_account_set_id (account, auth_token->nsid);
           frogr_account_set_username (account, auth_token->username);
           frogr_account_set_fullname (account, auth_token->fullname);
@@ -2093,11 +2093,11 @@ frogr_controller_init (FrogrController *self)
       g_object_ref (priv->account);
 
       /* If available, set token */
-      token = frogr_account_get_oauth_token (priv->account);
+      token = frogr_account_get_token (priv->account);
       if (token != NULL)
         fsp_session_set_token (priv->session, token);
 
-      token_secret = frogr_account_get_oauth_token_secret (priv->account);
+      token_secret = frogr_account_get_token_secret (priv->account);
       if (token_secret != NULL)
         fsp_session_set_token_secret (priv->session, token_secret);
     }
@@ -2234,8 +2234,8 @@ frogr_controller_set_active_account (FrogrController *self,
         }
 
       /* Get the token for setting it later on */
-      token = frogr_account_get_oauth_token (new_account);
-      token_secret = frogr_account_get_oauth_token_secret (new_account);
+      token = frogr_account_get_token (new_account);
+      token_secret = frogr_account_get_token_secret (new_account);
     }
   else
     {

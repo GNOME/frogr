@@ -584,18 +584,11 @@ _load_account_xml (FrogrAccount *faccount,
             frogr_account_set_token (faccount, (gchar *)content);
         }
 
-      if (xmlStrcmp (node->name, (const xmlChar*) "oauth-token") == 0)
+      if (xmlStrcmp (node->name, (const xmlChar*) "token-secret") == 0)
         {
           content = xmlNodeGetContent (node);
           if (content != NULL && content[0] != '\0')
-            frogr_account_set_oauth_token (faccount, (gchar *)content);
-        }
-
-      if (xmlStrcmp (node->name, (const xmlChar*) "oauth-token-secret") == 0)
-        {
-          content = xmlNodeGetContent (node);
-          if (content != NULL && content[0] != '\0')
-            frogr_account_set_oauth_token_secret (faccount, (gchar *)content);
+            frogr_account_set_token_secret (faccount, (gchar *)content);
         }
 
       if (xmlStrcmp (node->name, (const xmlChar*) "permissions") == 0)
@@ -765,11 +758,8 @@ _save_account_xml (FrogrAccount *faccount, xmlNodePtr parent)
     if ((token = frogr_account_get_token (faccount)))
       _xml_add_string_child (node, "token", token);
 
-    if ((token = frogr_account_get_oauth_token (faccount)))
-      _xml_add_string_child (node, "oauth-token", token);
-
-    if ((token = frogr_account_get_oauth_token_secret (faccount)))
-      _xml_add_string_child (node, "oauth-token-secret", token);
+    if ((token = frogr_account_get_token_secret (faccount)))
+      _xml_add_string_child (node, "token-secret", token);
 
     _xml_add_string_child (node, "permissions", frogr_account_get_permissions (faccount));
     _xml_add_string_child (node, "id", frogr_account_get_id (faccount));
