@@ -23,6 +23,7 @@
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
 #include "frogr-gtk-compat.h"
+#include "frogr-util.h"
 
 #include <config.h>
 #include <glib/gi18n.h>
@@ -188,6 +189,8 @@ _get_entry_code_for_dialog (GtkDialog *dialog, const gchar *entry_key)
 static void
 _ask_for_auth_confirmation_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
+  gboolean valid = FALSE;
+
   if (response == GTK_RESPONSE_OK)
     {
       const gchar *vercode_part1 = NULL;
@@ -201,11 +204,20 @@ _ask_for_auth_confirmation_response_cb (GtkDialog *dialog, gint response, gpoint
 
       vercode_full = g_strdup_printf ("%s-%s-%s", vercode_part1, vercode_part2, vercode_part3);
 
-      frogr_controller_complete_auth (frogr_controller_get_instance(), vercode_full);
+      /* Ensure the user enters a valid verification code */
+      if (g_regex_match_simple ("[0-9]{3}(-[0-9]{3}){2}", vercode_full, 0, 0))
+        {
+          frogr_controller_complete_auth (frogr_controller_get_instance(), vercode_full);
+          valid = TRUE;
+        }
+      else
+        frogr_util_show_error_dialog (GTK_WINDOW (dialog), _("Invalid verification code"));
+
       g_free (vercode_full);
     }
 
-  gtk_widget_destroy (GTK_WIDGET (dialog));
+  if (valid)
+    gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 /* Public API */
