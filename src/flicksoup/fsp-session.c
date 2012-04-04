@@ -71,7 +71,6 @@ struct _FspSessionPrivate
   gchar *secret;
   gchar *token;
   gchar *token_secret;
-  gchar *frob;
 
   gboolean using_gnome_proxy;
   SoupURI *proxy_uri;
@@ -407,7 +406,6 @@ fsp_session_finalize                    (GObject* object)
   g_free (self->priv->secret);
   g_free (self->priv->token);
   g_free (self->priv->token_secret);
-  g_free (self->priv->frob);
 
   /* Call superclass */
   G_OBJECT_CLASS (fsp_session_parent_class)->finalize(object);
@@ -464,7 +462,6 @@ fsp_session_init                        (FspSession *self)
   self->priv->secret = NULL;
   self->priv->token = NULL;
   self->priv->token_secret = NULL;
-  self->priv->frob = NULL;
 
   self->priv->using_gnome_proxy = FALSE;
   self->priv->proxy_uri = NULL;
@@ -826,7 +823,7 @@ _should_encode_key                      (const gchar         *key,
 {
   if (auth_method == AUTHORIZATION_METHOD_ORIGINAL)
     return g_strcmp0 (key, "api_key") && g_strcmp0 (key, "auth_token")
-      && g_strcmp0 (key, "method") && g_strcmp0 (key, "frob");
+      && g_strcmp0 (key, "method");
 
   /* Using the new OAuth-based authorization API */
   return g_strcmp0 (key, "oauth_token") && g_strcmp0 (key, "oauth_verifier")
@@ -1701,7 +1698,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
     FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
                                                 fsp_session_get_auth_url_async,
                                                 error));
-  /* Build the auth URL from the frob */
+  /* Build the auth URL from the request token */
   if (auth_token != NULL)
     {
       FspSessionPrivate *priv = self->priv;
@@ -1739,7 +1736,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
   g_return_if_fail (cb != NULL);
 
   priv = self->priv;
-  if (priv->frob != NULL)
+  if (priv->token != NULL && priv->token_secret != NULL)
     {
       gchar *url = NULL;
 
@@ -1749,7 +1746,6 @@ fsp_session_complete_auth_async         (FspSession          *self,
                              AUTHORIZATION_METHOD_ORIGINAL,
                              "method", "flickr.auth.getToken",
                              "api_key", priv->api_key,
-                             "frob", priv->frob,
                              NULL);
 
       /* Perform the async request */
@@ -1764,7 +1760,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
       GError *err = NULL;
 
       /* Build and report error */
-      err = g_error_new (FSP_ERROR, FSP_ERROR_NOFROB, "No frob defined");
+      err = g_error_new (FSP_ERROR, FSP_ERROR_ACCESS_TOKEN, "No access token got");
       g_simple_async_report_gerror_in_idle (G_OBJECT (self),
                                             cb, data, err);
     }

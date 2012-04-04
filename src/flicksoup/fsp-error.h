@@ -80,6 +80,7 @@ typedef enum {
 
   /* Errors from flicksoup only */
   FSP_ERROR_REQUEST_TOKEN,
+  FSP_ERROR_ACCESS_TOKEN,
 
   /* Default fallback for other kind of errors */
   FSP_ERROR_OTHER
