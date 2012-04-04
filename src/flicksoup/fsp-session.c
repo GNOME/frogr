@@ -218,18 +218,25 @@ static gchar *
 _calculate_api_signature                (const gchar          *url,
                                          const gchar          *params_str,
                                          const gchar          *signing_key,
+                                         const gchar          *http_method,
                                          AuthorizationMethod   auth_method);
 
 static gchar *
 _get_api_signature_from_hash_table      (const gchar         *url,
                                          GHashTable          *params_table,
                                          const gchar         *signing_key,
+                                         const gchar         *http_method,
                                          AuthorizationMethod  auth_method);
+
+static void
+_fill_hash_table_with_oauth_params      (GHashTable  *table,
+                                         const gchar *api_key);
 
 static gchar *
 _get_signed_url                       (FspSession          *self,
                                        const gchar         *url,
                                        AuthorizationMethod  auth_method,
+                                       const gchar         *http_method,
                                        const gchar         *first_param,
                                        ... );
 
@@ -1052,6 +1059,7 @@ static gchar *
 _calculate_api_signature                (const gchar          *url,
                                          const gchar          *params_str,
                                          const gchar          *signing_key,
+                                         const gchar          *http_method,
                                          AuthorizationMethod   auth_method)
 {
   gchar *base_string = NULL;
@@ -1069,7 +1077,7 @@ _calculate_api_signature                (const gchar          *url,
   encoded_url = _encode_uri (url);
   encoded_params = _encode_uri (params_str);
 
-  base_string = g_strdup_printf ("GET&%s&%s", encoded_url, encoded_params);
+  base_string = g_strdup_printf ("%s&%s&%s", http_method, encoded_url, encoded_params);
   g_free (encoded_url);
   g_free (encoded_params);
 
@@ -1083,6 +1091,7 @@ static gchar *
 _get_api_signature_from_hash_table      (const gchar         *url,
                                          GHashTable          *params_table,
                                          const gchar         *signing_key,
+                                         const gchar         *http_method,
                                          AuthorizationMethod  auth_method)
 {
   gchar *api_sig = NULL;
@@ -1092,16 +1101,38 @@ _get_api_signature_from_hash_table      (const gchar         *url,
 
   /* Get the signature string and calculate the api_sig value */
   params_str = _get_params_str_for_signature (params_table, signing_key, auth_method);
-  api_sig = _calculate_api_signature (url, params_str, signing_key, auth_method);
+  api_sig = _calculate_api_signature (url, params_str, signing_key, http_method, auth_method);
   g_free (params_str);
 
   return api_sig;
+}
+
+static void
+_fill_hash_table_with_oauth_params      (GHashTable  *table,
+                                         const gchar *api_key)
+{
+  gchar *timestamp = NULL;
+  gchar *random_str = NULL;
+  gchar *nonce = NULL;
+
+  /* Add mandatory parameters to the hash table */
+  timestamp = g_strdup_printf ("%d", (gint) time(NULL));
+  random_str = g_strdup_printf ("%d_%s", g_random_int (), timestamp);
+  nonce = g_compute_checksum_for_string (G_CHECKSUM_MD5, random_str, -1);
+  g_free (random_str);
+
+  g_hash_table_insert (table, g_strdup ("oauth_timestamp"), timestamp);
+  g_hash_table_insert (table, g_strdup ("oauth_nonce"), nonce);
+  g_hash_table_insert (table, g_strdup ("oauth_consumer_key"), g_strdup (api_key));
+  g_hash_table_insert (table, g_strdup ("oauth_signature_method"), g_strdup (OAUTH_SIGNATURE_METHOD));
+  g_hash_table_insert (table, g_strdup ("oauth_version"), g_strdup (OAUTH_VERSION));
 }
 
 static gchar *
 _get_signed_url                       (FspSession          *self,
                                        const gchar         *url,
                                        AuthorizationMethod  auth_method,
+                                       const gchar         *http_method,
                                        const gchar         *first_param,
                                        ... )
 {
@@ -1125,28 +1156,13 @@ _get_signed_url                       (FspSession          *self,
 
   if (auth_method == AUTHORIZATION_METHOD_OAUTH_1)
     {
-      gchar *timestamp = NULL;
-      gchar *random_str = NULL;
-      gchar *nonce = NULL;
-
-      /* Add mandatory parameters to the hash table */
-      timestamp = g_strdup_printf ("%d", (gint) time(NULL));
-      random_str = g_strdup_printf ("%d_%s", g_random_int (), timestamp);
-      nonce = g_compute_checksum_for_string (G_CHECKSUM_MD5, random_str, -1);
-      g_free (random_str);
-
-      g_hash_table_insert (table, g_strdup ("oauth_timestamp"), timestamp);
-      g_hash_table_insert (table, g_strdup ("oauth_nonce"), nonce);
-      g_hash_table_insert (table, g_strdup ("oauth_consumer_key"), g_strdup (priv->api_key));
-      g_hash_table_insert (table, g_strdup ("oauth_signature_method"), g_strdup (OAUTH_SIGNATURE_METHOD));
-      g_hash_table_insert (table, g_strdup ("oauth_version"), g_strdup (OAUTH_VERSION));
-
+      _fill_hash_table_with_oauth_params (table, priv->api_key);
       signing_key = g_strdup_printf ("%s&%s", priv->secret, priv->token_secret ? priv->token_secret : "");
     }
   else
     signing_key = g_strdup (priv->secret);
 
-  api_sig = _get_api_signature_from_hash_table (url, table, signing_key, auth_method);
+  api_sig = _get_api_signature_from_hash_table (url, table, signing_key, http_method, auth_method);
   g_free (signing_key);
 
   /* Get the signed URL with the needed params */
@@ -1705,6 +1721,7 @@ fsp_session_get_auth_url_async          (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_REQUEST_TOKEN_OAUTH_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "oauth_callback", OAUTH_CALLBACK_URL,
                          NULL);
 
@@ -1777,6 +1794,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_ACCESS_TOKEN_OAUTH_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
+                             "GET",
                              "oauth_token", priv->token,
                              "oauth_verifier", code,
                              NULL);
@@ -1843,6 +1861,7 @@ fsp_session_check_auth_info_async       (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
+                             "GET",
                              "method", "flickr.auth.checkToken",
                              "oauth_token", priv->token,
                              NULL);
@@ -1902,6 +1921,7 @@ fsp_session_get_upload_status_async     (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
+                             "GET",
                              "method", "flickr.people.getUploadStatus",
                              "oauth_token", priv->token,
                              NULL);
@@ -1968,22 +1988,26 @@ fsp_session_upload_async                (FspSession          *self,
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (fileuri != NULL);
 
-  /* Get flickr proxy and extra params (those actually used) */
+  /* Get flickr proxy */
   priv = self->priv;
   soup_session = _get_soup_session (self);
+
+  /* Get extra params (those actually used for the picture) */
   extra_params = _get_upload_extra_params (title, description, tags,
                                            is_public, is_family, is_friend,
                                            safety_level, content_type, hidden);
 
+  /* Add mandatory parameters according to OAuth specification */
+  _fill_hash_table_with_oauth_params (extra_params, priv->api_key);
+
   /* Add remaining parameters to the hash table */
-  g_hash_table_insert (extra_params, g_strdup ("api_key"),
-                       g_strdup (priv->api_key));
-  g_hash_table_insert (extra_params, g_strdup ("auth_token"),
+  g_hash_table_insert (extra_params, g_strdup ("oauth_token"),
                        g_strdup (priv->token));
 
   /* Build the api signature and add it to the hash table */
-  api_sig = _get_api_signature_from_hash_table (FLICKR_API_UPLOAD_URL, extra_params, priv->secret, TRUE);
-  g_hash_table_insert (extra_params, g_strdup ("api_sig"), api_sig);
+  api_sig = _get_api_signature_from_hash_table (FLICKR_API_UPLOAD_URL, extra_params, priv->secret,
+                                                "POST", AUTHORIZATION_METHOD_OAUTH_1);
+  g_hash_table_insert (extra_params, g_strdup ("oauth_signature"), api_sig);
 
   /* Save important data for the callback */
   ard_clos = g_slice_new0 (AsyncRequestData);
@@ -2037,6 +2061,7 @@ fsp_session_get_info_async              (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.photos.getInfo",
                          "oauth_token", priv->token,
                          "photo_id", photo_id,
@@ -2085,6 +2110,7 @@ fsp_session_get_photosets_async         (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.photosets.getList",
                          "oauth_token", priv->token,
                          NULL);
@@ -2132,6 +2158,7 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.photosets.addPhoto",
                          "oauth_token", priv->token,
                          "photo_id", photo_id,
@@ -2185,6 +2212,7 @@ fsp_session_create_photoset_async       (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.photosets.create",
                          "oauth_token", priv->token,
                          "title", title,
@@ -2235,6 +2263,7 @@ fsp_session_get_groups_async            (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.groups.pools.getGroups",
                          "oauth_token", priv->token,
                          NULL);
@@ -2282,6 +2311,7 @@ fsp_session_add_to_group_async          (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.groups.pools.add",
                          "oauth_token", priv->token,
                          "photo_id", photo_id,
@@ -2330,6 +2360,7 @@ fsp_session_get_tags_list_async         (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.tags.getListUser",
                          "oauth_token", priv->token,
                          NULL);
@@ -2377,6 +2408,7 @@ fsp_session_set_license_async           (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.photos.licenses.setLicense",
                          "oauth_token", priv->token,
                          "photo_id", photo_id,
@@ -2442,6 +2474,7 @@ fsp_session_set_location_async           (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         "GET",
                          "method", "flickr.photos.geo.setLocation",
                          "oauth_token", priv->token,
                          "photo_id", photo_id,
