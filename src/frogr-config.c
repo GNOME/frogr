@@ -175,6 +175,16 @@ _load_settings (FrogrConfig *self)
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "settings"))
     {
+      xmlChar *version = NULL;
+
+      /* Check version of the settings file first */
+      version = xmlGetProp (node, (const xmlChar *) "version");
+      g_free (priv->settings_version);
+      priv->settings_version = g_strdup (version ? (gchar *) version : "1");
+
+      if (version)
+        xmlFree (version);
+
       /* Iterate over children nodes and extract accounts. */
       for (node = node->children; node != NULL; node = node->next)
         {
@@ -291,17 +301,6 @@ _load_settings (FrogrConfig *self)
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "http-proxy"))
             _load_proxy_data_xml (self, xml, node);
-
-          if (!xmlStrcmp (node->name, (const xmlChar*) "version"))
-            {
-              xmlChar *content = NULL;
-
-              content = xmlNodeGetContent (node);
-              g_free (priv->settings_version);
-              priv->settings_version = g_strdup ((gchar *) content);
-
-              xmlFree (content);
-            }
         }
     }
   else if (node && node->name)
@@ -582,10 +581,18 @@ _load_account_xml (FrogrAccount *faccount,
 {
   xmlNodePtr node = NULL;
   xmlChar *content = NULL;
+  xmlChar *version = NULL;
 
   g_return_val_if_fail (faccount != NULL, FALSE);
   g_return_val_if_fail (xml      != NULL, FALSE);
   g_return_val_if_fail (rootnode != NULL, FALSE);
+
+  /* Check version of the account first */
+  version = xmlGetProp (rootnode, (const xmlChar *) "version");
+  frogr_account_set_version (faccount, version ? (gchar *) version : "1");
+
+  if (version)
+    xmlFree (version);
 
   /* Traverse child nodes and extract relevant information. */
   for (node = rootnode->children; node != NULL; node = node->next)
@@ -649,13 +656,6 @@ _load_account_xml (FrogrAccount *faccount,
           frogr_account_set_is_active (faccount, is_active);
         }
 
-      if (xmlStrcmp (node->name, (const xmlChar*) "version") == 0)
-        {
-          content = xmlNodeGetContent (node);
-          if (content != NULL && content[0] != '\0')
-            frogr_account_set_version (faccount, (gchar *)content);
-        }
-
       if (content != NULL)
         xmlFree (content);
     }
@@ -680,6 +680,9 @@ _save_settings (FrogrConfig *self)
   xml = xmlNewDoc ((const xmlChar*) "1.0");
   root = xmlNewNode (NULL, (const xmlChar*) "settings");
   xmlDocSetRootElement (xml, root);
+
+  /* Settings versioning */
+  xmlSetProp (root, (const xmlChar*) "version", (const xmlChar*) SETTINGS_FORMAT_VERSION);
 
   /* Default visibility */
   node = xmlNewNode (NULL, (const xmlChar*) "default-visibility");
@@ -717,9 +720,6 @@ _save_settings (FrogrConfig *self)
   _xml_add_string_child (node, "proxy-password", priv->proxy_password);
   _xml_add_bool_child (node, "use-gnome-proxy", priv->use_gnome_proxy);
   xmlAddChild (root, node);
-
-  /* Settings versioning */
-  _xml_add_string_child (root, "version", SETTINGS_FORMAT_VERSION);
 
   xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
 
@@ -784,6 +784,9 @@ _save_account_xml (FrogrAccount *faccount, xmlNodePtr parent)
   if (faccount) {
     const gchar *token = NULL;
 
+    /* Accounts versioning */
+    xmlSetProp (node, (const xmlChar*) "version", (const xmlChar*) ACCOUNTS_FORMAT_VERSION);
+
     if ((token = frogr_account_get_token (faccount)))
       _xml_add_string_child (node, "token", token);
 
@@ -795,7 +798,6 @@ _save_account_xml (FrogrAccount *faccount, xmlNodePtr parent)
     _xml_add_string_child (node, "username", frogr_account_get_username (faccount));
     _xml_add_string_child (node, "fullname", frogr_account_get_fullname (faccount));
     _xml_add_string_child (node, "active", frogr_account_is_active (faccount) ? "1": "0");
-    _xml_add_string_child (node, "version", ACCOUNTS_FORMAT_VERSION);
   }
   xmlAddChild (parent, node);
 }
