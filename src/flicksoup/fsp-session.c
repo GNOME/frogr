@@ -40,7 +40,6 @@
 #include <stdarg.h>
 #include <string.h>
 
-#define FLICKR_API_AUTH_URL   "http://flickr.com/services/auth"
 #define FLICKR_API_BASE_URL   "http://api.flickr.com/services/rest"
 #define FLICKR_API_UPLOAD_URL "http://api.flickr.com/services/upload"
 #define FLICKR_REQUEST_TOKEN_OAUTH_URL "http://www.flickr.com/services/oauth/request_token"
