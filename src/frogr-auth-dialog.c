@@ -59,7 +59,7 @@ _ask_for_authorization (GtkWindow *parent)
                                    _(unauth_txt),
                                    APP_SHORTNAME);
 
-  title = g_strdup_printf ("Authorize %s", APP_SHORTNAME);
+  title = g_strdup_printf (_("Authorize %s"), APP_SHORTNAME);
   gtk_window_set_title (GTK_WINDOW (dialog), title);
   g_free (title);
 
