@@ -264,7 +264,6 @@ fsp_error_get_from_response_code        (FspErrorMethod method, gint code)
     {
       switch (method)
         {
-        case FSP_ERROR_METHOD_GET_AUTH_TOKEN:
         case FSP_ERROR_METHOD_GET_UPLOAD_STATUS:
         case FSP_ERROR_METHOD_GROUP_GET_LIST:
           /* We shouldn't get errors in this range for these methods,

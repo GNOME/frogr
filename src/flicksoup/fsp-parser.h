@@ -74,7 +74,7 @@ fsp_parser_get_request_token            (FspParser  *self,
                                          GError          **error);
 
 FspDataAuthToken *
-fsp_parser_get_auth_token               (FspParser  *self,
+fsp_parser_get_access_token             (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
                                          GError          **error);

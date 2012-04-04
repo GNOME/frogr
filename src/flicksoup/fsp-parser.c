@@ -22,6 +22,12 @@
 
 #include "fsp-error.h"
 
+#ifdef HAVE_LIBSOUP_GNOME
+#include <libsoup/soup-gnome.h>
+#else
+#include <libsoup/soup.h>
+#endif
+
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 
@@ -61,9 +67,6 @@ static FspErrorMethod
 _get_error_method_from_parser           (gpointer (*body_parser)
                                          (xmlDoc  *doc,
                                           GError **error));
-static gpointer
-_get_auth_token_parser                  (xmlDoc  *doc,
-                                         GError **error);
 static gpointer
 _get_upload_status_parser               (xmlDoc  *doc,
                                          GError **error);
@@ -258,9 +261,7 @@ _get_error_method_from_parser           (gpointer (*body_parser)
 {
   FspErrorMethod error_method = FSP_ERROR_METHOD_UNDEFINED;
 
-  if (body_parser == _get_auth_token_parser)
-    error_method = FSP_ERROR_METHOD_GET_AUTH_TOKEN;
-  else if (body_parser == _get_upload_status_parser)
+  if (body_parser == _get_upload_status_parser)
     error_method = FSP_ERROR_METHOD_GET_UPLOAD_STATUS;
   else if (body_parser == _photo_get_upload_result_parser)
     error_method = FSP_ERROR_METHOD_PHOTO_UPLOAD;
@@ -331,94 +332,6 @@ _process_xml_response                          (FspParser  *self,
     g_propagate_error (error, err);
 
   return retval;
-}
-
-static gpointer
-_get_auth_token_parser                  (xmlDoc  *doc,
-                                         GError **error)
-{
-  xmlXPathContext *xpathCtx = NULL;
-  xmlXPathObject * xpathObj = NULL;
-  FspDataAuthToken *auth_token = NULL;
-  GError *err = NULL;
-
-  g_return_val_if_fail (doc != NULL, NULL);
-
-  xpathCtx = xmlXPathNewContext (doc);
-  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/auth", xpathCtx);
-
-  if ((xpathObj != NULL) && (xpathObj->nodesetval->nodeNr > 0))
-    {
-      /* Matching nodes found */
-      xmlNode *node = NULL;
-      xmlChar *content = NULL;
-
-      auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
-
-      /* Traverse children of the 'auth' node */
-      node = xpathObj->nodesetval->nodeTab[0];
-      for (node = node->children; node != NULL; node = node->next)
-        {
-          if (node->type != XML_ELEMENT_NODE)
-            continue;
-
-          /* Token string */
-          if (!g_strcmp0 ((gchar *) node->name, "token"))
-            {
-              content = xmlNodeGetContent (node);
-              auth_token->token = g_strdup ((gchar *) content);
-              xmlFree (content);
-            }
-
-          /* Permissions */
-          if (!g_strcmp0 ((gchar *) node->name, "perms"))
-            {
-              content = xmlNodeGetContent (node);
-              auth_token->permissions = g_strdup ((gchar *) content);
-              xmlFree (content);
-            }
-
-          /* User profile */
-          if (!g_strcmp0 ((gchar *) node->name, "user"))
-            {
-              xmlChar *value = NULL;
-
-              value = xmlGetProp (node, (const xmlChar *) "nsid");
-              auth_token->nsid = g_strdup ((gchar *) value);
-              xmlFree (value);
-
-              value = xmlGetProp (node, (const xmlChar *) "username");
-              auth_token->username = g_strdup ((gchar *) value);
-              xmlFree (value);
-
-              value = xmlGetProp (node, (const xmlChar *) "fullname");
-              auth_token->fullname = g_strdup ((gchar *) value);
-              xmlFree (value);
-            }
-        }
-
-      if (!auth_token->token)
-        {
-          /* If we don't get enough information, return NULL */
-          g_object_unref (auth_token);
-          auth_token = NULL;
-
-          err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
-                             "No token found in the response");
-        }
-    }
-  else
-    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
-                       "No 'auth' node found in the response");
-  /* Free */
-  xmlXPathFreeObject (xpathObj);
-  xmlXPathFreeContext (xpathCtx);
-
-  /* Propagate error */
-  if (err != NULL)
-    g_propagate_error (error, err);
-
-  return auth_token;
 }
 
 static gpointer
@@ -1116,9 +1029,8 @@ fsp_parser_get_request_token            (FspParser   *self,
   if (!auth_token->token || !auth_token->token_secret)
     {
       GError *err = NULL;
-      err = g_error_new (FSP_ERROR, FSP_ERROR_REQUEST_TOKEN,
-                         "An error happened requesting a new token");
-
+      err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_UNKNOWN_ERROR,
+                         "An unknown error happened requesting a new token");
       /* Propagate error */
       if (err != NULL)
         g_propagate_error (error, err);
@@ -1129,20 +1041,55 @@ fsp_parser_get_request_token            (FspParser   *self,
 }
 
 FspDataAuthToken *
-fsp_parser_get_auth_token               (FspParser  *self,
-                                         const gchar      *buffer,
-                                         gulong            buf_size,
-                                         GError          **error)
+fsp_parser_get_access_token             (FspParser   *self,
+                                         const gchar *buffer,
+                                         gulong       buf_size,
+                                         GError     **error)
 {
   FspDataAuthToken *auth_token = NULL;
+  gchar *response_str = NULL;
+  gchar **response_array = NULL;
+  gint i = 0;
 
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
   g_return_val_if_fail (buffer != NULL, NULL);
 
   /* Process the response */
-  auth_token =
-    FSP_DATA_AUTH_TOKEN (_process_xml_response (self, buffer, buf_size,
-                                                _get_auth_token_parser, error));
+  auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
+  response_str = g_strndup (buffer, buf_size);
+  response_array = g_strsplit (response_str, "&", -1);
+  g_free (response_str);
+
+  for (i = 0; response_array[i]; i++)
+    {
+      if (g_str_has_prefix (response_array[i], "fullname="))
+        auth_token->fullname = soup_uri_decode (&response_array[i][9]);
+
+      if (g_str_has_prefix (response_array[i], "username="))
+        auth_token->username = soup_uri_decode (&response_array[i][9]);
+
+      if (g_str_has_prefix (response_array[i], "user_nsid="))
+        auth_token->nsid = soup_uri_decode (&response_array[i][10]);
+
+      if (g_str_has_prefix (response_array[i], "oauth_token="))
+        auth_token->token = g_strdup (&response_array[i][12]);
+
+      if (g_str_has_prefix (response_array[i], "oauth_token_secret="))
+        auth_token->token_secret = g_strdup (&response_array[i][19]);
+    }
+  g_strfreev (response_array);
+
+  /* Create the GError if needed*/
+  if (!auth_token->token || !auth_token->token_secret)
+    {
+      GError *err = NULL;
+      err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_UNKNOWN_ERROR,
+                         "An unknown error happened getting a permanent token");
+
+      /* Propagate error */
+      if (err != NULL)
+        g_propagate_error (error, err);
+    }
 
   /* Return value */
   return auth_token;

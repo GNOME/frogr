@@ -136,7 +136,7 @@ _get_request_token_session_cb           (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
 static void
-_get_auth_token_soup_session_cb         (SoupSession *session,
+_get_access_token_soup_session_cb       (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
 static void
@@ -232,6 +232,9 @@ _get_signed_url                       (FspSession          *self,
                                        AuthorizationMethod  auth_method,
                                        const gchar         *first_param,
                                        ... );
+
+static void
+_clear_token_information              (FspSession *self);
 
 static void
 _perform_async_request                  (SoupSession         *soup_session,
@@ -491,7 +494,7 @@ _get_request_token_session_cb           (SoupSession *session,
 }
 
 static void
-_get_auth_token_soup_session_cb         (SoupSession *session,
+_get_access_token_soup_session_cb       (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer data)
 {
@@ -500,7 +503,7 @@ _get_auth_token_soup_session_cb         (SoupSession *session,
 
   /* Handle message with the right parser */
   _handle_soup_response (msg,
-                         (FspParserFunc) fsp_parser_get_auth_token,
+                         (FspParserFunc) fsp_parser_get_access_token,
                          data);
 }
 
@@ -919,12 +922,27 @@ _check_errors_on_soup_response           (SoupMessage  *msg,
                                           GError      **error)
 {
   GError *err = NULL;
+  gchar *response_str = NULL;
 
   g_assert (SOUP_IS_MESSAGE (msg));
 
-  /* Check non-succesful SoupMessage's only */
-  if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
+  /* First check it's not an OAuth problem */
+  response_str = g_strndup (msg->response_body->data, msg->response_body->length);
+  if (g_str_has_prefix (response_str, "oauth_problem="))
     {
+      if (!g_strcmp0 (&response_str[14], "token_rejected"))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET,
+                           "[OAuth]: The access token has been rejected");
+      else if (!g_strcmp0 (&response_str[14], "verifier_invalid"))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_VERIFIER_INVALID,
+                           "[OAuth] The verification code is invalid");
+      else
+        err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_UNKNOWN_ERROR,
+                           "[OAuth] unknown error");
+    }
+  else if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
+    {
+      /* Check non-succesful SoupMessage's only */
       if (msg->status_code == SOUP_STATUS_CANCELLED)
         err = g_error_new (FSP_ERROR, FSP_ERROR_CANCELLED,
                            "Cancelled by user");
@@ -938,6 +956,8 @@ _check_errors_on_soup_response           (SoupMessage  *msg,
         err = g_error_new (FSP_ERROR, FSP_ERROR_NETWORK_ERROR,
                            "Network error");
     }
+
+  g_free (response_str);
 
   /* Propagate error */
   if (err != NULL)
@@ -1142,6 +1162,27 @@ _get_signed_url                       (FspSession          *self,
   g_free (signed_query);
 
   return retval;
+}
+
+static void
+_clear_token_information              (FspSession *self)
+{
+  FspSessionPrivate *priv = NULL;
+
+  g_return_if_fail (FSP_IS_SESSION (self));
+
+  priv = self->priv;
+  if (priv->token)
+    {
+      g_free (priv->token);
+      priv->token = NULL;
+    }
+
+  if (priv->token_secret)
+    {
+      g_free (priv->token_secret);
+      priv->token_secret = NULL; 
+    }
 }
 
 static void
@@ -1653,20 +1694,12 @@ fsp_session_get_auth_url_async          (FspSession          *self,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
-  priv = self->priv;
-
-  /* We need to make sure that any token is removed at this point to
-     avoid calculating the signature wrongly, and also because they
-     will get replaced anyway by the new token. */
-  g_free (priv->token);
-  priv->token = NULL;
-  g_free (priv->token_secret);
-  priv->token_secret = NULL;
+  /* If we're here, we're no longer interested in former tokens */
+  _clear_token_information (self);
 
   /* Build the signed url */
   url = _get_signed_url (self,
@@ -1676,7 +1709,7 @@ fsp_session_get_auth_url_async          (FspSession          *self,
                          NULL);
 
   /* Perform the async request */
-  _perform_async_request (priv->soup_session, url,
+  _perform_async_request (self->priv->soup_session, url,
                           _get_request_token_session_cb, G_OBJECT (self),
                           c, cb, fsp_session_get_auth_url_async, data);
 
@@ -1726,6 +1759,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
 
 void
 fsp_session_complete_auth_async         (FspSession          *self,
+                                         const gchar         *code,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
@@ -1742,15 +1776,15 @@ fsp_session_complete_auth_async         (FspSession          *self,
 
       /* Build the signed url */
       url = _get_signed_url (self,
-                             FLICKR_API_BASE_URL,
-                             AUTHORIZATION_METHOD_ORIGINAL,
-                             "method", "flickr.auth.getToken",
-                             "api_key", priv->api_key,
+                             FLICKR_ACCESS_TOKEN_OAUTH_URL,
+                             AUTHORIZATION_METHOD_OAUTH_1,
+                             "oauth_token", priv->token,
+                             "oauth_verifier", code,
                              NULL);
 
       /* Perform the async request */
       _perform_async_request (priv->soup_session, url,
-                              _get_auth_token_soup_session_cb, G_OBJECT (self),
+                              _get_access_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_complete_auth_async, data);
 
       g_free (url);
@@ -1760,9 +1794,11 @@ fsp_session_complete_auth_async         (FspSession          *self,
       GError *err = NULL;
 
       /* Build and report error */
-      err = g_error_new (FSP_ERROR, FSP_ERROR_ACCESS_TOKEN, "No access token got");
+      err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET, "Not authorized yet");
       g_simple_async_report_gerror_in_idle (G_OBJECT (self),
                                             cb, data, err);
+      /* Ensure we clean things up */
+      _clear_token_information (self);
     }
 }
 
@@ -1815,7 +1851,7 @@ fsp_session_check_auth_info_async       (FspSession          *self,
 
       /* Perform the async request */
       _perform_async_request (priv->soup_session, url,
-                              _get_auth_token_soup_session_cb, G_OBJECT (self),
+                              _get_access_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_check_auth_info_async, data);
 
       g_free (url);

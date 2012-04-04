@@ -589,7 +589,7 @@ get_auth_url_cb                         (GObject      *object,
 
       /* Continue finishing the authorization */
       g_print ("Finishing authorization...\n");
-      fsp_session_complete_auth_async (session, NULL, complete_auth_cb, NULL);
+      fsp_session_complete_auth_async (session, NULL, NULL, complete_auth_cb, NULL);
 
       g_free (auth_url);
     }

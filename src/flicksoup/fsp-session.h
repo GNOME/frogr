@@ -101,6 +101,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
 
 void
 fsp_session_complete_auth_async         (FspSession          *self,
+                                         const gchar         *code,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
                                          gpointer             data);

@@ -108,7 +108,7 @@ void frogr_controller_show_add_to_group_dialog (FrogrController *self,
 
 void frogr_controller_open_auth_url (FrogrController *self);
 
-void frogr_controller_complete_auth (FrogrController *self);
+void frogr_controller_complete_auth (FrogrController *self, const gchar *verification_code);
 
 gboolean frogr_controller_is_authorized (FrogrController *self);
 

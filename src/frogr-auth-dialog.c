@@ -100,11 +100,12 @@ _code_entry_text_inserted_cb (GtkEditable *editable, gchar *new_text,
 }
 
 static GtkWidget *
-_build_verification_code_entry_widget ()
+_build_verification_code_entry_widget (GtkWidget *dialog)
 {
   GtkWidget *hbox = NULL;
   GtkWidget *entry = NULL;
   GtkWidget *separator = NULL;
+  gchar *entry_key = NULL;
   gint i = 0;
 
   hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -115,10 +116,13 @@ _build_verification_code_entry_widget ()
       gtk_entry_set_width_chars (GTK_ENTRY (entry), 3);
       gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, FALSE, 6);
 
+      entry_key = g_strdup_printf ("vercode-%d", i + 1);
+      g_object_set_data (G_OBJECT (dialog), entry_key, entry);
+      g_free (entry_key);
+
       g_signal_connect (G_OBJECT (entry), "insert-text",
                     G_CALLBACK (_code_entry_text_inserted_cb),
                     NULL);
-
       if (i < 2)
         {
           separator = frogr_gtk_compat_separator_new (GTK_ORIENTATION_HORIZONTAL);
@@ -155,7 +159,7 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
   /* Entry widgets for the verification code */
-  ver_code_entry = _build_verification_code_entry_widget ();
+  ver_code_entry = _build_verification_code_entry_widget (dialog);
   gtk_box_pack_start (GTK_BOX (vbox), ver_code_entry, TRUE, TRUE, 0);
 
   /* Description label */
@@ -171,13 +175,34 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   gtk_widget_show_all (dialog);
 }
 
+static const gchar*
+_get_entry_code_for_dialog (GtkDialog *dialog, const gchar *entry_key)
+{
+  GtkWidget *entry = g_object_get_data (G_OBJECT (dialog), entry_key);
+  if (entry == NULL)
+    return NULL;
+
+  return gtk_entry_get_text (GTK_ENTRY (entry));
+}
+
 static void
 _ask_for_auth_confirmation_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   if (response == GTK_RESPONSE_OK)
     {
-      FrogrController *controller = frogr_controller_get_instance();
-      frogr_controller_complete_auth (controller);
+      const gchar *vercode_part1 = NULL;
+      const gchar *vercode_part2 = NULL;
+      const gchar *vercode_part3 = NULL;
+      gchar *vercode_full = NULL;
+
+      vercode_part1 = _get_entry_code_for_dialog (dialog, "vercode-1");
+      vercode_part2 = _get_entry_code_for_dialog (dialog, "vercode-2");
+      vercode_part3 = _get_entry_code_for_dialog (dialog, "vercode-3");
+
+      vercode_full = g_strdup_printf ("%s-%s-%s", vercode_part1, vercode_part2, vercode_part3);
+
+      frogr_controller_complete_auth (frogr_controller_get_instance(), vercode_full);
+      g_free (vercode_full);
     }
 
   gtk_widget_destroy (GTK_WIDGET (dialog));

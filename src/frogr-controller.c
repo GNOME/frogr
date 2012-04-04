@@ -357,9 +357,19 @@ _notify_error_to_user (FrogrController *self, GError *error)
       error_function = frogr_util_show_error_dialog;
       break;
 
-    case FSP_ERROR_REQUEST_TOKEN:
-    case FSP_ERROR_ACCESS_TOKEN:
-      msg = g_strdup_printf (_("Unable to authenticate in flickr"));
+    case FSP_ERROR_OAUTH_UNKNOWN_ERROR:
+      msg = g_strdup_printf (_("Unable to authenticate in flickr\nPlease try again."));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET:
+      msg = g_strdup_printf (_("You have not properly authorized %s yet.\n"
+                               "Please try again."), APP_SHORTNAME);
+      error_function = frogr_util_show_error_dialog;
+      break;
+
+    case FSP_ERROR_OAUTH_VERIFIER_INVALID:
+      msg = g_strdup_printf (_("Invalid verification code.\nPlease try again."));
       error_function = frogr_util_show_error_dialog;
       break;
 
@@ -2507,7 +2517,7 @@ frogr_controller_open_auth_url (FrogrController *self)
 }
 
 void
-frogr_controller_complete_auth (FrogrController *self)
+frogr_controller_complete_auth (FrogrController *self, const gchar *verification_code)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2516,7 +2526,7 @@ frogr_controller_complete_auth (FrogrController *self)
   priv->fetching_auth_token = TRUE;
   _enable_cancellable (self, TRUE);
 
-  fsp_session_complete_auth_async (priv->session, priv->last_cancellable, _complete_auth_cb, self);
+  fsp_session_complete_auth_async (priv->session, verification_code, priv->last_cancellable, _complete_auth_cb, self);
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_TOKEN));
 
   /* Make sure we show proper feedback if connection is too slow */
