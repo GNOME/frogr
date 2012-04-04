@@ -1691,8 +1691,8 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
   FspDataAuthToken *auth_token = NULL;
   gchar *auth_url = NULL;
 
-  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
-  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
   auth_token =
     FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
