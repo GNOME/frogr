@@ -81,6 +81,8 @@ struct _FrogrConfigPrivate
   gchar *proxy_port;
   gchar *proxy_username;
   gchar *proxy_password;
+
+  gchar *settings_version;
 };
 
 static FrogrConfig *_instance = NULL;
@@ -289,6 +291,17 @@ _load_settings (FrogrConfig *self)
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "http-proxy"))
             _load_proxy_data_xml (self, xml, node);
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "version"))
+            {
+              xmlChar *content = NULL;
+
+              content = xmlNodeGetContent (node);
+              g_free (priv->settings_version);
+              priv->settings_version = g_strdup ((gchar *) content);
+
+              xmlFree (content);
+            }
         }
     }
   else if (node && node->name)
@@ -705,6 +718,7 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (node, "use-gnome-proxy", priv->use_gnome_proxy);
   xmlAddChild (root, node);
 
+  /* Settings versioning */
   _xml_add_string_child (root, "version", SETTINGS_FORMAT_VERSION);
 
   xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
@@ -897,6 +911,7 @@ _finalize (GObject *object)
   g_free (priv->proxy_port);
   g_free (priv->proxy_username);
   g_free (priv->proxy_password);
+  g_free (priv->settings_version);
 
   /* Call superclass */
   G_OBJECT_CLASS (frogr_config_parent_class)->finalize (object);
@@ -968,6 +983,7 @@ frogr_config_init (FrogrConfig *self)
   priv->proxy_port = NULL;
   priv->proxy_username = NULL;
   priv->proxy_password = NULL;
+  priv->settings_version = NULL;
 
   /* Ensure that we have the config directory in place. */
   config_dir = g_build_filename (g_get_user_config_dir (), APP_SHORTNAME, NULL);
@@ -1590,4 +1606,15 @@ frogr_config_get_proxy_password (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->proxy_password;
+}
+
+const gchar *
+frogr_config_get_settings_version (FrogrConfig *self)
+{
+  FrogrConfigPrivate * priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->settings_version;
 }

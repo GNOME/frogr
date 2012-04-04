@@ -166,6 +166,8 @@ void frogr_config_set_proxy_password (FrogrConfig *self, const gchar *password);
 
 const gchar *frogr_config_get_proxy_password (FrogrConfig *self);
 
+const gchar *frogr_config_get_settings_version (FrogrConfig *self);
+
 G_END_DECLS
 
 #endif /* !_FROGR_CONFIG_H */
