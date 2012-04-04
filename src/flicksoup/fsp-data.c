@@ -45,6 +45,7 @@ fsp_data_new                            (FspDataType type)
     {
     case FSP_AUTH_TOKEN:
       new_data->auth_token.token = NULL;
+      new_data->auth_token.token_secret = NULL;
       new_data->auth_token.permissions = NULL;
       new_data->auth_token.nsid = NULL;
       new_data->auth_token.username = NULL;
@@ -126,6 +127,7 @@ fsp_data_copy                           (const FspData *data)
     {
     case FSP_AUTH_TOKEN:
       new_data->auth_token.token = g_strdup (data->auth_token.token);
+      new_data->auth_token.token_secret = g_strdup (data->auth_token.token_secret);
       new_data->auth_token.permissions = g_strdup (data->auth_token.permissions);
       new_data->auth_token.nsid = g_strdup (data->auth_token.nsid);
       new_data->auth_token.username = g_strdup (data->auth_token.username);
@@ -205,6 +207,7 @@ fsp_data_free                           (FspData *data)
     {
     case FSP_AUTH_TOKEN:
       g_free (data->auth_token.token);
+      g_free (data->auth_token.token_secret);
       g_free (data->auth_token.permissions);
       g_free (data->auth_token.nsid);
       g_free (data->auth_token.username);

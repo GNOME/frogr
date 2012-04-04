@@ -131,6 +131,7 @@ struct _FspDataAuthToken
 {
   FspDataType  type;
   gchar       *token;
+  gchar       *token_secret;
   gchar       *permissions;
   gchar       *nsid;
   gchar       *username;
