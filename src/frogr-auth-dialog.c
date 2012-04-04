@@ -22,6 +22,7 @@
 
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
+#include "frogr-gtk-compat.h"
 
 #include <config.h>
 #include <glib/gi18n.h>
@@ -31,8 +32,7 @@ static gchar *unauth_txt =
      "and then come back to this screen to complete the process.");
 
 static gchar *auth_txt =
-  N_("Press the button to start using %s once you've "
-     "authorized it in your flickr account.");
+  N_("Enter verification code.");
 
 /* Prototypes */
 
@@ -82,21 +82,88 @@ _ask_for_authorization_response_cb (GtkDialog *dialog, gint response, gpointer d
 }
 
 static void
+_code_entry_text_inserted_cb (GtkEditable *editable, gchar *new_text,
+                              gint new_text_length, gint *position,
+                              gpointer data)
+{
+  gint i = 0;
+  for (i = 0; i < new_text_length; i++)
+    {
+      /* Stop this signal's emission if one of the new characters is
+         not an integer, and stop searching, obviously */
+      if (!g_ascii_isdigit (new_text[i]))
+        {
+          g_signal_stop_emission_by_name (editable, "insert-text");
+          break;
+        }
+    }
+}
+
+static GtkWidget *
+_build_verification_code_entry_widget ()
+{
+  GtkWidget *hbox = NULL;
+  GtkWidget *entry = NULL;
+  GtkWidget *separator = NULL;
+  gint i = 0;
+
+  hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  for (i = 0; i < 3; i++)
+    {
+      entry = gtk_entry_new ();
+      gtk_entry_set_max_length (GTK_ENTRY (entry), 3);
+      gtk_entry_set_width_chars (GTK_ENTRY (entry), 3);
+      gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, FALSE, 6);
+
+      g_signal_connect (G_OBJECT (entry), "insert-text",
+                    G_CALLBACK (_code_entry_text_inserted_cb),
+                    NULL);
+
+      if (i < 2)
+        {
+          separator = frogr_gtk_compat_separator_new (GTK_ORIENTATION_HORIZONTAL);
+          gtk_box_pack_start (GTK_BOX (hbox), separator, TRUE, TRUE, 0);
+        }
+    }
+
+  return hbox;
+}
+
+static void
 _ask_for_auth_confirmation (GtkWindow *parent)
 {
   GtkWidget *dialog = NULL;
+  GtkWidget *content_area = NULL;
+  GtkWidget *vbox = NULL;
+  GtkWidget *ver_code_entry = NULL;
+  GtkWidget *label = NULL;
   gchar *title = NULL;
 
-  dialog = gtk_message_dialog_new (parent,
-                                   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                   GTK_MESSAGE_INFO,
-                                   GTK_BUTTONS_OK,
-                                   _(auth_txt),
-                                   APP_SHORTNAME);
-
-  title = g_strdup_printf ("Authorize %s", APP_SHORTNAME);
-  gtk_window_set_title (GTK_WINDOW (dialog), title);
+  title = g_strdup_printf (_("Authorize %s"), APP_SHORTNAME);
+  dialog = gtk_dialog_new_with_buttons (title,
+                                        parent,
+                                        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                        GTK_STOCK_OK,
+                                        GTK_RESPONSE_OK,
+                                        NULL);
   g_free (title);
+
+  gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+
+  /* Fill action area */
+  content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+  vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 0);
+
+  /* Entry widgets for the verification code */
+  ver_code_entry = _build_verification_code_entry_widget ();
+  gtk_box_pack_start (GTK_BOX (vbox), ver_code_entry, TRUE, TRUE, 0);
+
+  /* Description label */
+  label = gtk_label_new (auth_txt);
+  gtk_misc_set_padding (GTK_MISC (label), 12, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 6);
+
+  gtk_container_add (GTK_CONTAINER (content_area), vbox);
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_ask_for_auth_confirmation_response_cb), NULL);
