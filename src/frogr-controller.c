@@ -453,15 +453,18 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   if (auth_url != NULL && error == NULL)
     {
       GtkWindow *window = NULL;
+      gchar *url_with_permissions = NULL;
 
-      frogr_util_open_uri (auth_url);
+      url_with_permissions = g_strdup_printf ("%s&perms=write", auth_url);
+      frogr_util_open_uri (url_with_permissions);
 
       /* Run the auth confirmation dialog */
       window = frogr_main_view_get_window (priv->mainview);
       frogr_auth_dialog_show (window, CONFIRM_AUTHORIZATION);
 
-      DEBUG ("Auth URL: %s", auth_url);
+      DEBUG ("Auth URL: %s", url_with_permissions);
 
+      g_free (url_with_permissions);
       g_free (auth_url);
     }
 
@@ -498,10 +501,12 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 
           /* Set and save the auth token and the settings to disk */
           account = frogr_account_new_with_token (auth_token->token);
-          frogr_account_set_permissions (account, auth_token->permissions);
           frogr_account_set_id (account, auth_token->nsid);
           frogr_account_set_username (account, auth_token->username);
           frogr_account_set_fullname (account, auth_token->fullname);
+
+          /* Frogr always always ask for 'write' permissions at the moment */
+          frogr_account_set_permissions (account, "write");
 
           frogr_controller_set_active_account (controller, account);
 

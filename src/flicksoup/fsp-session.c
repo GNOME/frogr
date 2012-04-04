@@ -1745,8 +1745,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
 
       /* Build the authorization url */
       auth_url = g_strdup_printf ("http://www.flickr.com/services/oauth/authorize"
-                                  "?perms=write"
-                                  "&oauth_token=%s",
+                                  "?oauth_token=%s",
                                   priv->token);
 
       fsp_data_free (FSP_DATA (auth_token));
