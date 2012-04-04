@@ -48,14 +48,10 @@ frogr_SOURCES = \
 	frogr-account.h \
 	frogr-add-tags-dialog.c \
 	frogr-add-tags-dialog.h \
-	frogr-live-entry.c \
-	frogr-live-entry.h \
-	frogr-add-to-set-dialog.c \
-	frogr-add-to-set-dialog.h \
 	frogr-add-to-group-dialog.c \
 	frogr-add-to-group-dialog.h \
-	frogr-photoset.c \
-	frogr-photoset.h \
+	frogr-add-to-set-dialog.c \
+	frogr-add-to-set-dialog.h \
 	frogr-auth-dialog.c \
 	frogr-auth-dialog.h \
 	frogr-config.c \
@@ -69,12 +65,18 @@ frogr_SOURCES = \
 	frogr-global-defs.h \
 	frogr-group.c \
 	frogr-group.h \
+	frogr-gtk-compat.c \
+	frogr-gtk-compat.h \
+	frogr-live-entry.c \
+	frogr-live-entry.h \
+	frogr-location.c \
+	frogr-location.h \
 	frogr-main-view-model.c \
 	frogr-main-view-model.h \
 	frogr-main-view.c \
 	frogr-main-view.h \
-	frogr-location.c \
-	frogr-location.h \
+	frogr-photoset.c \
+	frogr-photoset.h \
 	frogr-picture-loader.c \
 	frogr-picture-loader.h \
 	frogr-picture-uploader.c \
