@@ -150,6 +150,8 @@ static void _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data);
 
 static void _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data);
 
+static void _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data);
+
 static gboolean _cancel_authorization_on_timeout (gpointer data);
 
 static void _upload_picture (FrogrController *self, FrogrPicture *picture,
@@ -517,6 +519,44 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
     }
 
   if (error != NULL)
+    {
+      _notify_error_to_user (controller, error);
+      DEBUG ("Authorization failed: %s", error->message);
+      g_error_free (error);
+    }
+
+  frogr_main_view_hide_progress (priv->mainview);
+  priv->fetching_auth_token = FALSE;
+}
+
+static void
+_exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
+{
+  FspSession *session = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  controller = FROGR_CONTROLLER (data);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  fsp_session_exchange_token_finish (session, result, &error);
+  if (error == NULL)
+    {
+      /* If everything went fine, get the token and secret from the
+         session and update the current user account */
+      frogr_account_set_token (priv->account,
+                               fsp_session_get_token (priv->session));
+      frogr_account_set_token_secret (priv->account,
+                                      fsp_session_get_token_secret (priv->session));
+      /* Update accounts on disk */
+      frogr_config_save_accounts (priv->config);
+
+      /* Try to pre-fetch some data from the server right after launch */
+      _fetch_everything (controller, TRUE);
+    }
+  else
     {
       _notify_error_to_user (controller, error);
       DEBUG ("Authorization failed: %s", error->message);
@@ -2225,6 +2265,7 @@ frogr_controller_set_active_account (FrogrController *self,
   if (new_account)
     {
       const gchar *new_account_id = NULL;
+      const gchar *account_version = NULL;
 
       new_account_id = frogr_account_get_id (new_account);
       if (!frogr_config_set_active_account (priv->config, new_account_id))
@@ -2237,6 +2278,15 @@ frogr_controller_set_active_account (FrogrController *self,
       /* Get the token for setting it later on */
       token = frogr_account_get_token (new_account);
       token_secret = frogr_account_get_token_secret (new_account);
+
+      /* Update tokens stored for this account if needed */
+      account_version = frogr_account_get_version (priv->account);
+      if (!g_strcmp0 (account_version, "1"))
+        {
+          priv->fetching_auth_token = TRUE;
+          _enable_cancellable (self, TRUE);
+          fsp_session_exchange_token_async (priv->session, priv->last_cancellable, _exchange_token_cb, self);
+        }
     }
   else
     {
@@ -2254,7 +2304,7 @@ frogr_controller_set_active_account (FrogrController *self,
   fsp_session_set_token_secret (priv->session, token_secret);
 
   /* Prefetch info for this user */
-  if (new_account)
+  if (new_account && !priv->fetching_auth_token)
     _fetch_everything (self, TRUE);
 
   /* Emit proper signals */
