@@ -72,7 +72,7 @@ struct _FrogrControllerPrivate
   /* We use this booleans as flags */
   gboolean app_running;
   gboolean uploading_picture;
-  gboolean exchanging_token;
+  gboolean fetching_token_replacement;
   gboolean fetching_auth_url;
   gboolean fetching_auth_token;
   gboolean fetching_account_info;
@@ -121,7 +121,7 @@ typedef struct {
 
 typedef enum {
   FETCHING_NOTHING,
-  EXCHANGING_TOKEN,
+  FETCHING_TOKEN_REPLACEMENT,
   FETCHING_AUTH_URL,
   FETCHING_AUTH_TOKEN,
   FETCHING_ACCOUNT_INFO,
@@ -570,7 +570,7 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
     }
 
   frogr_main_view_hide_progress (priv->mainview);
-  priv->exchanging_token = FALSE;
+  priv->fetching_token_replacement = FALSE;
 }
 
 static gboolean
@@ -579,7 +579,7 @@ _cancel_authorization_on_timeout (gpointer data)
   FrogrController *self = FROGR_CONTROLLER (data);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  if (priv->fetching_auth_url || priv->fetching_auth_token || priv->exchanging_token)
+  if (priv->fetching_auth_url || priv->fetching_auth_token || priv->fetching_token_replacement)
     {
       GtkWindow *window = NULL;
 
@@ -1776,9 +1776,9 @@ _show_progress_on_idle (gpointer data)
   activity = GPOINTER_TO_INT (data);
   switch (activity)
     {
-    case EXCHANGING_TOKEN:
+    case FETCHING_TOKEN_REPLACEMENT:
       text = _("Updating credentials…");
-      show_dialog = priv->exchanging_token;
+      show_dialog = priv->fetching_token_replacement;
       break;
 
     case FETCHING_AUTH_URL:
@@ -2118,7 +2118,7 @@ frogr_controller_init (FrogrController *self)
   priv->last_cancellable = NULL;
   priv->app_running = FALSE;
   priv->uploading_picture = FALSE;
-  priv->exchanging_token = FALSE;
+  priv->fetching_token_replacement = FALSE;
   priv->fetching_auth_url = FALSE;
   priv->fetching_auth_token = FALSE;
   priv->fetching_account_info = FALSE;
@@ -2292,10 +2292,10 @@ frogr_controller_set_active_account (FrogrController *self,
   account_version = frogr_account_get_version (account);
   if (g_strcmp0 (account_version, ACCOUNTS_CURRENT_VERSION))
     {
-      priv->exchanging_token = TRUE;
+      priv->fetching_token_replacement = TRUE;
       _enable_cancellable (self, FALSE);
       fsp_session_exchange_token_async (priv->session, priv->last_cancellable, _exchange_token_cb, self);
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (EXCHANGING_TOKEN));
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TOKEN_REPLACEMENT));
 
       /* Make sure we show proper feedback if connection is too slow */
       gdk_threads_add_timeout (MAX_AUTH_TIMEOUT, (GSourceFunc) _cancel_authorization_on_timeout, self);
@@ -2436,7 +2436,7 @@ frogr_controller_show_auth_dialog (FrogrController *self)
 
   /* Do not show the authorization dialog if we are exchanging an old
      token for a new one, as it should re-authorize automatically */
-  if (priv->exchanging_token)
+  if (priv->fetching_token_replacement)
     return;
 
   /* Run the auth dialog */
