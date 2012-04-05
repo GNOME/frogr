@@ -22,6 +22,9 @@
 
 #include "frogr-account.h"
 
+/* Increase this when changing the xml schema for storing accounts */
+#define ACCOUNTS_FORMAT_VERSION "2"
+
 #define FROGR_ACCOUNT_GET_PRIVATE(object)               \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
                                 FROGR_TYPE_ACCOUNT,     \
@@ -270,7 +273,7 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                "version",
                                "Version of the format used to store"
                                "the details for an account",
-                               "",
+                               ACCOUNTS_FORMAT_VERSION,
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_VERSION, pspec);
 
@@ -392,7 +395,7 @@ frogr_account_get_token_secret (FrogrAccount *self)
 
 void
 frogr_account_set_token_secret (FrogrAccount *self,
-                                      const gchar *token_secret)
+                                const gchar *token_secret)
 {
   FrogrAccountPrivate *priv = NULL;
 

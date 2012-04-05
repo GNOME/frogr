@@ -34,9 +34,6 @@
 #define ACCOUNTS_FILENAME "accounts.xml"
 #define SETTINGS_FILENAME "settings.xml"
 
-/* Increase this when changing the xml schema for storing accounts */
-#define ACCOUNTS_FORMAT_VERSION "2"
-
 /* Increase this when changing the xml schema for storing settings */
 #define SETTINGS_FORMAT_VERSION "1"
 
@@ -785,7 +782,7 @@ _save_account_xml (FrogrAccount *faccount, xmlNodePtr parent)
     const gchar *token = NULL;
 
     /* Accounts versioning */
-    xmlSetProp (node, (const xmlChar*) "version", (const xmlChar*) ACCOUNTS_FORMAT_VERSION);
+    xmlSetProp (node, (const xmlChar*) "version", (const xmlChar*) frogr_account_get_version (faccount));
 
     if ((token = frogr_account_get_token (faccount)))
       _xml_add_string_child (node, "token", token);
