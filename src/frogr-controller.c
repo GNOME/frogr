@@ -72,6 +72,7 @@ struct _FrogrControllerPrivate
   /* We use this booleans as flags */
   gboolean app_running;
   gboolean uploading_picture;
+  gboolean exchanging_token;
   gboolean fetching_auth_url;
   gboolean fetching_auth_token;
   gboolean fetching_account_info;
@@ -120,6 +121,7 @@ typedef struct {
 
 typedef enum {
   FETCHING_NOTHING,
+  EXCHANGING_TOKEN,
   FETCHING_AUTH_URL,
   FETCHING_AUTH_TOKEN,
   FETCHING_ACCOUNT_INFO,
@@ -550,11 +552,15 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
                                fsp_session_get_token (priv->session));
       frogr_account_set_token_secret (priv->account,
                                       fsp_session_get_token_secret (priv->session));
+
+      /* Make sure we update the version for the account too */
+      frogr_account_set_version (priv->account, ACCOUNTS_CURRENT_VERSION);
+
       /* Update accounts on disk */
       frogr_config_save_accounts (priv->config);
 
-      /* Try to pre-fetch some data from the server right after launch */
-      _fetch_everything (controller, TRUE);
+      /* Finally, try to set the active account again */
+      frogr_controller_set_active_account (controller, priv->account);
     }
   else
     {
@@ -564,7 +570,7 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
     }
 
   frogr_main_view_hide_progress (priv->mainview);
-  priv->fetching_auth_token = FALSE;
+  priv->exchanging_token = FALSE;
 }
 
 static gboolean
@@ -573,7 +579,7 @@ _cancel_authorization_on_timeout (gpointer data)
   FrogrController *self = FROGR_CONTROLLER (data);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  if (priv->fetching_auth_url || priv->fetching_auth_token)
+  if (priv->fetching_auth_url || priv->fetching_auth_token || priv->exchanging_token)
     {
       GtkWindow *window = NULL;
 
@@ -1770,6 +1776,11 @@ _show_progress_on_idle (gpointer data)
   activity = GPOINTER_TO_INT (data);
   switch (activity)
     {
+    case EXCHANGING_TOKEN:
+      text = _("Updating credentials…");
+      show_dialog = priv->exchanging_token;
+      break;
+
     case FETCHING_AUTH_URL:
       text = _("Retrieving data for authorization…");
       show_dialog = priv->fetching_auth_url;
@@ -2094,6 +2105,7 @@ static void
 frogr_controller_init (FrogrController *self)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrAccount *account = NULL;
 
   /* Default variables */
   priv->state = FROGR_STATE_IDLE;
@@ -2106,6 +2118,7 @@ frogr_controller_init (FrogrController *self)
   priv->last_cancellable = NULL;
   priv->app_running = FALSE;
   priv->uploading_picture = FALSE;
+  priv->exchanging_token = FALSE;
   priv->fetching_auth_url = FALSE;
   priv->fetching_auth_token = FALSE;
   priv->fetching_account_info = FALSE;
@@ -2124,24 +2137,9 @@ frogr_controller_init (FrogrController *self)
   priv->tags_fetched = FALSE;
 
   /* Get account, if any */
-  priv->account = frogr_config_get_active_account (priv->config);
-  if (priv->account)
-    {
-      const gchar *token = NULL;
-      const gchar *token_secret = NULL;
-
-      g_object_ref (priv->account);
-
-      /* If available, set token */
-      token = frogr_account_get_token (priv->account);
-      if (token != NULL)
-        fsp_session_set_token (priv->session, token);
-
-      /* If available, set token secret */
-      token_secret = frogr_account_get_token_secret (priv->account);
-      if (token_secret != NULL)
-        fsp_session_set_token_secret (priv->session, token_secret);
-    }
+  account = frogr_config_get_active_account (priv->config);
+  if (account)
+    frogr_controller_set_active_account (self, account);
 
   /* Set HTTP proxy if needed */
   if (frogr_config_get_use_proxy (priv->config))
@@ -2252,20 +2250,16 @@ frogr_controller_set_active_account (FrogrController *self,
   gboolean accounts_changed = FALSE;
   const gchar *token = NULL;
   const gchar *token_secret = NULL;
+  const gchar *account_version = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  /* Do nothing if we're setting the same account active again*/
-  if (frogr_account_equal (priv->account, account))
-    return;
-
   new_account = FROGR_IS_ACCOUNT (account) ? g_object_ref (account) : NULL;
   if (new_account)
     {
       const gchar *new_account_id = NULL;
-      const gchar *account_version = NULL;
 
       new_account_id = frogr_account_get_id (new_account);
       if (!frogr_config_set_active_account (priv->config, new_account_id))
@@ -2278,15 +2272,6 @@ frogr_controller_set_active_account (FrogrController *self,
       /* Get the token for setting it later on */
       token = frogr_account_get_token (new_account);
       token_secret = frogr_account_get_token_secret (new_account);
-
-      /* Update tokens stored for this account if needed */
-      account_version = frogr_account_get_version (priv->account);
-      if (!g_strcmp0 (account_version, "1"))
-        {
-          priv->fetching_auth_token = TRUE;
-          _enable_cancellable (self, TRUE);
-          fsp_session_exchange_token_async (priv->session, priv->last_cancellable, _exchange_token_cb, self);
-        }
     }
   else
     {
@@ -2303,14 +2288,29 @@ frogr_controller_set_active_account (FrogrController *self,
   fsp_session_set_token (priv->session, token);
   fsp_session_set_token_secret (priv->session, token_secret);
 
-  /* Prefetch info for this user */
-  if (new_account && !priv->fetching_auth_token)
-    _fetch_everything (self, TRUE);
+  /* Update tokens stored for this account if needed */
+  account_version = frogr_account_get_version (account);
+  if (g_strcmp0 (account_version, ACCOUNTS_CURRENT_VERSION))
+    {
+      priv->exchanging_token = TRUE;
+      _enable_cancellable (self, FALSE);
+      fsp_session_exchange_token_async (priv->session, priv->last_cancellable, _exchange_token_cb, self);
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (EXCHANGING_TOKEN));
 
-  /* Emit proper signals */
-  g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
-  if (accounts_changed)
-    g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
+      /* Make sure we show proper feedback if connection is too slow */
+      gdk_threads_add_timeout (MAX_AUTH_TIMEOUT, (GSourceFunc) _cancel_authorization_on_timeout, self);
+    }
+  else
+    {
+      /* Prefetch info for this user */
+      if (new_account)
+        _fetch_everything (self, TRUE);
+
+      /* Emit proper signals */
+      g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
+      if (accounts_changed)
+        g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
+    }
 
   /* Save new state in configuration */
   frogr_config_save_accounts (priv->config);
@@ -2433,9 +2433,14 @@ frogr_controller_show_auth_dialog (FrogrController *self)
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  window = frogr_main_view_get_window (priv->mainview);
+
+  /* Do not show the authorization dialog if we are exchanging an old
+     token for a new one, as it should re-authorize automatically */
+  if (priv->exchanging_token)
+    return;
 
   /* Run the auth dialog */
+  window = frogr_main_view_get_window (priv->mainview);
   frogr_auth_dialog_show (window, REQUEST_AUTHORIZATION);
 }
 
@@ -2606,7 +2611,15 @@ frogr_controller_is_authorized (FrogrController *self)
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  return (priv->account != NULL);
+
+  if (!priv->account)
+    return FALSE;
+
+  /* Old versions for accounts previously stored must be updated first */
+  if (g_strcmp0 (frogr_account_get_version (priv->account), ACCOUNTS_CURRENT_VERSION))
+    return FALSE;
+
+  return TRUE;;
 }
 
 void
