@@ -138,6 +138,12 @@ static void
 _get_access_token_soup_session_cb       (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
+
+static void
+_exchange_token_soup_session_cb         (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
 static void
 _get_upload_status_soup_session_cb      (SoupSession *session,
                                          SoupMessage *msg,
@@ -511,6 +517,20 @@ _get_access_token_soup_session_cb       (SoupSession *session,
   /* Handle message with the right parser */
   _handle_soup_response (msg,
                          (FspParserFunc) fsp_parser_get_access_token,
+                         data);
+}
+
+static void
+_exchange_token_soup_session_cb         (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_exchange_token,
                          data);
 }
 
@@ -1181,13 +1201,19 @@ _get_signed_url                       (FspSession          *self,
   /* Get the hash table for the params */
   table = _get_params_table_from_valist (first_param, args);
 
+  /* Fill the table with mandatory parameters */
   if (auth_method == AUTHORIZATION_METHOD_OAUTH_1)
     {
       _fill_hash_table_with_oauth_params (table, priv->api_key, priv->token);
       signing_key = g_strdup_printf ("%s&%s", priv->secret, priv->token_secret ? priv->token_secret : "");
     }
   else
-    signing_key = g_strdup (priv->secret);
+    {
+      g_hash_table_insert (table, g_strdup ("api_key"), g_strdup (priv->api_key));
+      if (priv->token)
+        g_hash_table_insert (table, g_strdup ("auth_token"), g_strdup (priv->token));
+      signing_key = g_strdup (priv->secret);
+    }
 
   api_sig = _get_api_signature_from_hash_table (url, table, signing_key, http_method, auth_method);
   g_free (signing_key);
@@ -1861,10 +1887,86 @@ fsp_session_complete_auth_finish        (FspSession    *self,
                                                 error));
 
   /* Complete the authorization saving the token if present */
-  if (auth_token != NULL && auth_token->token != NULL)
-    fsp_session_set_token (self, auth_token->token);
+  if (auth_token != NULL)
+    {
+      if (auth_token->token != NULL)
+        fsp_session_set_token (self, auth_token->token);
+
+      if (auth_token->token_secret != NULL)
+        fsp_session_set_token_secret (self, auth_token->token_secret);
+    }
 
   return auth_token;
+}
+
+void
+fsp_session_exchange_token_async        (FspSession          *self,
+                                         GCancellable        *c,
+                                         GAsyncReadyCallback cb,
+                                         gpointer             data)
+{
+  FspSessionPrivate *priv = NULL;
+
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (cb != NULL);
+
+  priv = self->priv;
+  if (priv->token != NULL)
+    {
+      gchar *url = NULL;
+
+      /* Build the signed url */
+      url = _get_signed_url (self,
+                             FLICKR_API_BASE_URL,
+                             AUTHORIZATION_METHOD_ORIGINAL,
+                             "GET",
+                             "method", "flickr.auth.oauth.getAccessToken",
+                             NULL);
+
+      /* Perform the async request */
+      _perform_async_request (priv->soup_session, url,
+                              _exchange_token_soup_session_cb, G_OBJECT (self),
+                              c, cb, fsp_session_exchange_token_async, data);
+
+      g_free (url);
+    }
+  else
+    {
+      GError *err = NULL;
+
+      /* Build and report error */
+      err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET, "Not authorized yet");
+      g_simple_async_report_gerror_in_idle (G_OBJECT (self),
+                                            cb, data, err);
+      /* Ensure we clean things up */
+      _clear_token_information (self);
+    }
+}
+
+void
+fsp_session_exchange_token_finish       (FspSession    *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  FspDataAuthToken *auth_token = NULL;
+
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (G_IS_ASYNC_RESULT (res));
+
+  auth_token =
+    FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
+                                                fsp_session_exchange_token_async,
+                                                error));
+  if (auth_token != NULL)
+    {
+      if (auth_token->token != NULL)
+        fsp_session_set_token (self, auth_token->token);
+
+      if (auth_token->token_secret != NULL)
+        fsp_session_set_token_secret (self, auth_token->token_secret);
+
+      fsp_data_free (FSP_DATA (auth_token));
+    }
 }
 
 void

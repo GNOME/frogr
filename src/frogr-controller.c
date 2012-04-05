@@ -2097,6 +2097,7 @@ frogr_controller_init (FrogrController *self)
       if (token != NULL)
         fsp_session_set_token (priv->session, token);
 
+      /* If available, set token secret */
       token_secret = frogr_account_get_token_secret (priv->account);
       if (token_secret != NULL)
         fsp_session_set_token_secret (priv->session, token_secret);

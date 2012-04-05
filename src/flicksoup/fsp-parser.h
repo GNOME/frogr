@@ -79,6 +79,12 @@ fsp_parser_get_access_token             (FspParser  *self,
                                          gulong            buf_size,
                                          GError          **error);
 
+FspDataAuthToken *
+fsp_parser_exchange_token               (FspParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
 FspDataUploadStatus *
 fsp_parser_get_upload_status            (FspParser  *self,
                                          const gchar      *buffer,
