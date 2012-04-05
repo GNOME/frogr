@@ -1801,19 +1801,13 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
   /* Build the auth URL from the request token */
   if (auth_token != NULL)
     {
-      FspSessionPrivate *priv = self->priv;
-
       /* Save the data */
-      g_free (priv->token);
-      priv->token = g_strdup (auth_token->token);
-
-      g_free (priv->token_secret);
-      priv->token_secret = g_strdup (auth_token->token_secret);
+      fsp_session_set_token (self, auth_token->token);
+      fsp_session_set_token_secret (self, auth_token->token_secret);
 
       /* Build the authorization url */
       auth_url = g_strdup_printf ("http://www.flickr.com/services/oauth/authorize"
-                                  "?oauth_token=%s",
-                                  priv->token);
+                                  "?oauth_token=%s", auth_token->token);
 
       fsp_data_free (FSP_DATA (auth_token));
     }
@@ -1885,11 +1879,8 @@ fsp_session_complete_auth_finish        (FspSession    *self,
   /* Complete the authorization saving the token if present */
   if (auth_token != NULL)
     {
-      if (auth_token->token != NULL)
-        fsp_session_set_token (self, auth_token->token);
-
-      if (auth_token->token_secret != NULL)
-        fsp_session_set_token_secret (self, auth_token->token_secret);
+      fsp_session_set_token (self, auth_token->token);
+      fsp_session_set_token_secret (self, auth_token->token_secret);
     }
 
   return auth_token;
@@ -1954,12 +1945,8 @@ fsp_session_exchange_token_finish       (FspSession    *self,
                                                 error));
   if (auth_token != NULL)
     {
-      if (auth_token->token != NULL)
-        fsp_session_set_token (self, auth_token->token);
-
-      if (auth_token->token_secret != NULL)
-        fsp_session_set_token_secret (self, auth_token->token_secret);
-
+      fsp_session_set_token (self, auth_token->token);
+      fsp_session_set_token_secret (self, auth_token->token_secret);
       fsp_data_free (FSP_DATA (auth_token));
     }
 }
