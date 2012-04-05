@@ -598,9 +598,10 @@ _get_soup_message_for_upload            (GFile       *file,
   SoupMultipart *mpart = NULL;
   SoupBuffer *buffer = NULL;
   GHashTableIter iter;
-  gpointer key, value;
-  gchar *mime_type;
-  gchar *fileuri;
+  const gchar *key, *value;
+  gchar *mime_type = NULL;
+  gchar *fileuri = NULL;
+  gchar *auth_header = NULL;
 
   /* Gather needed information */
   fileuri = g_file_get_uri (file);
@@ -619,8 +620,25 @@ _get_soup_message_for_upload            (GFile       *file,
   /* Traverse extra_params to append them to the message */
   g_hash_table_iter_init (&iter, extra_params);
 
-  while (g_hash_table_iter_next (&iter, &key, &value))
-    soup_multipart_append_form_string (mpart, key, value);
+  while (g_hash_table_iter_next (&iter, (void **) &key, (void **) &value))
+    {
+      /* OAuth info goes to the Authorization header, the rest
+         of the info goes to the body of the HTTP message */
+      if (g_str_has_prefix (key, "oauth"))
+        {
+          gchar *current = NULL;
+
+          if (!auth_header)
+            current = g_strdup_printf ("OAuth %s=\"%s\"", key, value);
+          else
+            current = g_strdup_printf ("%s,%s=\"%s\"", auth_header, key, value);
+
+          g_free (auth_header);
+          auth_header = current;
+        }
+      else
+        soup_multipart_append_form_string (mpart, key, value);
+    }
 
   /* Append the content of the file */
   buffer = soup_buffer_new (SOUP_MEMORY_TAKE, contents, length);
@@ -629,6 +647,10 @@ _get_soup_message_for_upload            (GFile       *file,
 
   /* Get the associated message */
   msg = soup_form_request_new_from_multipart (FLICKR_API_UPLOAD_URL, mpart);
+
+  /* Append the Authorization header */
+  soup_message_headers_append (msg->request_headers, "Authorization", auth_header);
+  g_free (auth_header);
 
   /* Free */
   soup_multipart_free (mpart);
@@ -1985,6 +2007,7 @@ fsp_session_upload_async                (FspSession          *self,
   AsyncRequestData *ard_clos = NULL;
   UploadPhotoData *up_clos = NULL;
   GFile *file = NULL;
+  gchar *signing_key = NULL;
   gchar *api_sig = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
@@ -2003,9 +2026,11 @@ fsp_session_upload_async                (FspSession          *self,
   _fill_hash_table_with_oauth_params (extra_params, priv->api_key, priv->token);
 
   /* Build the api signature and add it to the hash table */
-  api_sig = _get_api_signature_from_hash_table (FLICKR_API_UPLOAD_URL, extra_params, priv->secret,
+  signing_key = g_strdup_printf ("%s&%s", priv->secret, priv->token_secret);
+  api_sig = _get_api_signature_from_hash_table (FLICKR_API_UPLOAD_URL, extra_params, signing_key,
                                                 "POST", AUTHORIZATION_METHOD_OAUTH_1);
   g_hash_table_insert (extra_params, g_strdup ("oauth_signature"), api_sig);
+  g_free (signing_key);
 
   /* Save important data for the callback */
   ard_clos = g_slice_new0 (AsyncRequestData);
