@@ -242,7 +242,6 @@ static gchar *
 _get_signed_url                       (FspSession          *self,
                                        const gchar         *url,
                                        AuthorizationMethod  auth_method,
-                                       const gchar         *http_method,
                                        const gchar         *first_param,
                                        ... );
 
@@ -1179,7 +1178,6 @@ static gchar *
 _get_signed_url                       (FspSession          *self,
                                        const gchar         *url,
                                        AuthorizationMethod  auth_method,
-                                       const gchar         *http_method,
                                        const gchar         *first_param,
                                        ... )
 {
@@ -1215,7 +1213,7 @@ _get_signed_url                       (FspSession          *self,
       signing_key = g_strdup (priv->secret);
     }
 
-  api_sig = _get_api_signature_from_hash_table (url, table, signing_key, http_method, auth_method);
+  api_sig = _get_api_signature_from_hash_table (url, table, signing_key, "GET", auth_method);
   g_free (signing_key);
 
   /* Get the signed URL with the needed params */
@@ -1774,7 +1772,6 @@ fsp_session_get_auth_url_async          (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_REQUEST_TOKEN_OAUTH_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "oauth_callback", OAUTH_CALLBACK_URL,
                          NULL);
 
@@ -1847,7 +1844,6 @@ fsp_session_complete_auth_async         (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_ACCESS_TOKEN_OAUTH_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
-                             "GET",
                              "oauth_verifier", code,
                              NULL);
 
@@ -1919,7 +1915,6 @@ fsp_session_exchange_token_async        (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_ORIGINAL,
-                             "GET",
                              "method", "flickr.auth.oauth.getAccessToken",
                              NULL);
 
@@ -1989,7 +1984,6 @@ fsp_session_check_auth_info_async       (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
-                             "GET",
                              "method", "flickr.auth.checkToken",
                              NULL);
 
@@ -2048,7 +2042,6 @@ fsp_session_get_upload_status_async     (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
-                             "GET",
                              "method", "flickr.people.getUploadStatus",
                              NULL);
 
@@ -2184,7 +2177,6 @@ fsp_session_get_info_async              (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.photos.getInfo",
                          "photo_id", photo_id,
                          NULL);
@@ -2230,7 +2222,6 @@ fsp_session_get_photosets_async         (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.photosets.getList",
                          NULL);
 
@@ -2275,7 +2266,6 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.photosets.addPhoto",
                          "photo_id", photo_id,
                          "photoset_id", photoset_id,
@@ -2326,7 +2316,6 @@ fsp_session_create_photoset_async       (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.photosets.create",
                          "title", title,
                          "description", description ? description : "",
@@ -2374,7 +2363,6 @@ fsp_session_get_groups_async            (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.groups.pools.getGroups",
                          NULL);
 
@@ -2419,7 +2407,6 @@ fsp_session_add_to_group_async          (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.groups.pools.add",
                          "photo_id", photo_id,
                          "group_id", group_id,
@@ -2465,7 +2452,6 @@ fsp_session_get_tags_list_async         (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.tags.getListUser",
                          NULL);
 
@@ -2510,7 +2496,6 @@ fsp_session_set_license_async           (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.photos.licenses.setLicense",
                          "photo_id", photo_id,
                          "license_id", license_str,
@@ -2573,7 +2558,6 @@ fsp_session_set_location_async           (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
-                         "GET",
                          "method", "flickr.photos.geo.setLocation",
                          "photo_id", photo_id,
                          "lat", lat_str,
