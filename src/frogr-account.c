@@ -22,9 +22,6 @@
 
 #include "frogr-account.h"
 
-/* Increase this when changing the xml schema for storing accounts */
-#define ACCOUNTS_FORMAT_VERSION "2"
-
 #define FROGR_ACCOUNT_GET_PRIVATE(object)               \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
                                 FROGR_TYPE_ACCOUNT,     \
@@ -273,7 +270,7 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                "version",
                                "Version of the format used to store"
                                "the details for an account",
-                               ACCOUNTS_FORMAT_VERSION,
+                               ACCOUNTS_CURRENT_VERSION,
                                G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_VERSION, pspec);
 
@@ -336,17 +333,14 @@ frogr_account_init (FrogrAccount *self)
 FrogrAccount *
 frogr_account_new (void)
 {
-  return FROGR_ACCOUNT (g_object_new (FROGR_TYPE_ACCOUNT, NULL));
+  return frogr_account_new_full (NULL, NULL);
 }
 
 FrogrAccount *
 frogr_account_new_with_token (const gchar *token)
 {
   g_return_val_if_fail (token, NULL);
-
-  return FROGR_ACCOUNT (g_object_new (FROGR_TYPE_ACCOUNT,
-                                      "token", token,
-                                      NULL));
+  return frogr_account_new_full (token, NULL);
 }
 
 FrogrAccount*
@@ -355,6 +349,7 @@ frogr_account_new_full (const gchar *token, const gchar *token_secret)
   return FROGR_ACCOUNT (g_object_new (FROGR_TYPE_ACCOUNT,
                                       "token", token,
                                       "token-secret", token_secret,
+                                      "version", ACCOUNTS_CURRENT_VERSION,
                                       NULL));
 }
 

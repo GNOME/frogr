@@ -40,6 +40,9 @@ G_BEGIN_DECLS
 #define FROGR_CONFIG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST(klass,  FROGR_TYPE_CONFIG, FrogrConfigClass))
 #define FROGR_CONFIG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS(obj,  FROGR_TYPE_CONFIG, FrogrConfigClass))
 
+/* Increase this when changing the xml schema for storing settings */
+#define SETTINGS_CURRENT_VERSION "1"
+
 typedef struct _FrogrConfig        FrogrConfig;
 typedef struct _FrogrConfigClass   FrogrConfigClass;
 

@@ -35,6 +35,9 @@ G_BEGIN_DECLS
 #define FROGR_ACCOUNT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST(klass,  FROGR_TYPE_ACCOUNT, FrogrAccountClass))
 #define FROGR_ACCOUNT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS(obj,  FROGR_TYPE_ACCOUNT, FrogrAccountClass))
 
+/* Increase this when changing the xml schema for storing accounts */
+#define ACCOUNTS_CURRENT_VERSION "2"
+
 typedef struct _FrogrAccount      FrogrAccount;
 typedef struct _FrogrAccountClass FrogrAccountClass;
 

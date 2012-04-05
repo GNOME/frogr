@@ -34,9 +34,6 @@
 #define ACCOUNTS_FILENAME "accounts.xml"
 #define SETTINGS_FILENAME "settings.xml"
 
-/* Increase this when changing the xml schema for storing settings */
-#define SETTINGS_FORMAT_VERSION "1"
-
 #define FROGR_CONFIG_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
                                 FROGR_TYPE_CONFIG,      \
@@ -679,7 +676,7 @@ _save_settings (FrogrConfig *self)
   xmlDocSetRootElement (xml, root);
 
   /* Settings versioning */
-  xmlSetProp (root, (const xmlChar*) "version", (const xmlChar*) SETTINGS_FORMAT_VERSION);
+  xmlSetProp (root, (const xmlChar*) "version", (const xmlChar*) SETTINGS_CURRENT_VERSION);
 
   /* Default visibility */
   node = xmlNewNode (NULL, (const xmlChar*) "default-visibility");
