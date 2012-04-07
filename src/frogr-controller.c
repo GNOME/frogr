@@ -137,8 +137,7 @@ static void _set_state (FrogrController *self, FrogrControllerState state);
 
 static void _enable_cancellable (FrogrController *self, gboolean enable);
 
-static void _notify_error_to_user (FrogrController *self,
-                                   GError *error);
+static void _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_user);
 
 static void _show_auth_failed_dialog (GtkWindow *parent, const gchar *message, gboolean auto_retry);
 
@@ -266,7 +265,7 @@ _enable_cancellable (FrogrController *self, gboolean enable)
 }
 
 static void
-_notify_error_to_user (FrogrController *self, GError *error)
+_handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_user)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   void (* error_function) (GtkWindow *, const gchar *) = NULL;
@@ -356,11 +355,6 @@ _notify_error_to_user (FrogrController *self, GError *error)
       error_function = frogr_util_show_error_dialog;
       break;
 
-    case FSP_ERROR_SERVICE_UNAVAILABLE:
-      msg = g_strdup_printf (_("Error:\nService not available"));
-      error_function = frogr_util_show_error_dialog;
-      break;
-
     case FSP_ERROR_OAUTH_UNKNOWN_ERROR:
       msg = g_strdup_printf (_("Unable to authenticate in flickr\nPlease try again."));
       error_function = frogr_util_show_error_dialog;
@@ -377,6 +371,11 @@ _notify_error_to_user (FrogrController *self, GError *error)
       error_function = frogr_util_show_error_dialog;
       break;
 
+    case FSP_ERROR_SERVICE_UNAVAILABLE:
+      msg = g_strdup_printf (_("Error:\nService not available"));
+      error_function = frogr_util_show_error_dialog;
+      break;
+
     default:
       /* General error: just dump the raw error description */
       msg = g_strdup_printf (_("An error happened: %s."),
@@ -384,7 +383,7 @@ _notify_error_to_user (FrogrController *self, GError *error)
       error_function = frogr_util_show_error_dialog;
     }
 
-  if (error_function)
+  if (notify_user && error_function)
     {
       GtkWindow *window = NULL;
       window = frogr_main_view_get_window (priv->mainview);
@@ -474,7 +473,7 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
 
   if (error != NULL)
     {
-      _notify_error_to_user (self, error);
+      _handle_flicksoup_error (self, error, TRUE);
       DEBUG ("Error getting auth URL: %s", error->message);
       g_error_free (error);
     }
@@ -512,6 +511,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           /* Frogr always always ask for 'write' permissions at the moment */
           frogr_account_set_permissions (account, "write");
 
+          /* Try to set the active account again */
           frogr_controller_set_active_account (controller, account);
 
           DEBUG ("%s", "Authorization successfully completed!");
@@ -522,7 +522,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 
   if (error != NULL)
     {
-      _notify_error_to_user (controller, error);
+      _handle_flicksoup_error (controller, error, TRUE);
       DEBUG ("Authorization failed: %s", error->message);
       g_error_free (error);
     }
@@ -564,7 +564,7 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
     }
   else
     {
-      _notify_error_to_user (controller, error);
+      _handle_flicksoup_error (controller, error, TRUE);
       DEBUG ("Authorization failed: %s", error->message);
       g_error_free (error);
     }
@@ -1344,7 +1344,7 @@ _on_pictures_uploaded (FrogrController *self,
     }
   else
     {
-      _notify_error_to_user (self, error);
+      _handle_flicksoup_error (self, error, TRUE);
       DEBUG ("Error uploading pictures: %s", error->message);
       g_error_free (error);
     }
@@ -1420,8 +1420,7 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       DEBUG ("Fetching list of sets: %s (%d)", error->message, error->code);
 
-      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
-        frogr_controller_revoke_authorization (controller);
+      _handle_flicksoup_error (controller, error, FALSE);
 
       /* If no photosets are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
@@ -1502,8 +1501,7 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       DEBUG ("Fetching list of groups: %s (%d)", error->message, error->code);
 
-      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
-        frogr_controller_revoke_authorization (controller);
+      _handle_flicksoup_error (controller, error, FALSE);
 
       /* If no groups are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
@@ -1578,21 +1576,16 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
   if (error != NULL)
     {
       DEBUG ("Fetching basic info from the account: %s", error->message);
-
-      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
-        frogr_controller_revoke_authorization (controller);
-
+      _handle_flicksoup_error (controller, error, FALSE);
       g_error_free (error);
     }
 
-  if (auth_token)
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  if (auth_token && priv->account)
     {
-      FrogrControllerPrivate *priv = NULL;
       const gchar *old_username = NULL;
       const gchar *old_fullname = NULL;
       gboolean username_changed = FALSE;
-
-      priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
       /* Check for changes (only for fields that it makes sense) */
       old_username = frogr_account_get_username (priv->account);
@@ -1612,13 +1605,12 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
           frogr_config_save_accounts (priv->config);
           g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
         }
-
-      fsp_data_free (FSP_DATA (auth_token));
     }
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  priv->account_info_fetched = TRUE;
+  priv->account_info_fetched = (auth_token != NULL);
   priv->fetching_account_info = FALSE;
+
+  fsp_data_free (FSP_DATA (auth_token));
 }
 
 static void _fetch_account_extra_info (FrogrController *self)
@@ -1655,21 +1647,16 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
   if (error != NULL)
     {
       DEBUG ("Fetching extra info from the account: %s", error->message);
-
-      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
-        frogr_controller_revoke_authorization (controller);
-
+      _handle_flicksoup_error (controller, error, FALSE);
       g_error_free (error);
     }
 
-  if (upload_status)
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+  if (upload_status && priv->account)
     {
-      FrogrControllerPrivate *priv = NULL;
       gulong old_remaining_bw;
       gulong old_max_bw;
       gboolean old_is_pro;
-
-      priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
       /* Check for changes */
       old_remaining_bw = frogr_account_get_remaining_bandwidth (priv->account);
@@ -1689,13 +1676,12 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
           /* Emit signal if extra info changed */
           g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
         }
-
-      fsp_data_free (FSP_DATA (upload_status));
     }
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  priv->account_extra_info_fetched = TRUE;
+  priv->account_extra_info_fetched = (upload_status != NULL);
   priv->fetching_account_extra_info = FALSE;
+
+  fsp_data_free (FSP_DATA (upload_status));
 }
 
 static void
@@ -1740,8 +1726,7 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       DEBUG ("Fetching list of tags: %s", error->message);
 
-      if (error->code == FSP_ERROR_NOT_AUTHENTICATED)
-        frogr_controller_revoke_authorization (controller);
+      _handle_flicksoup_error (controller, error, FALSE);
 
       /* If no tags are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
@@ -2273,24 +2258,25 @@ frogr_controller_set_active_account (FrogrController *self,
       token = frogr_account_get_token (new_account);
       token_secret = frogr_account_get_token_secret (new_account);
     }
-  else
+  else if (FROGR_IS_ACCOUNT (priv->account))
     {
       /* If NULL is passed it means 'delete current account' */
       const gchar *account_id = frogr_account_get_id (priv->account);
       accounts_changed = frogr_config_remove_account (priv->config, account_id);
     }
 
-  /* Update internal pointer in the controller and token in the session */
+  /* Update internal pointer in the controller */
   if (priv->account)
     g_object_unref (priv->account);
-
   priv->account = new_account;
+
+  /* Update token in the session */
   fsp_session_set_token (priv->session, token);
   fsp_session_set_token_secret (priv->session, token_secret);
 
-  /* Update tokens stored for this account if needed */
-  account_version = frogr_account_get_version (account);
-  if (g_strcmp0 (account_version, ACCOUNTS_CURRENT_VERSION))
+  /* Fetch needed info for this account or update tokens stored */
+  account_version = new_account ? frogr_account_get_version (new_account) : NULL;
+  if (account_version && g_strcmp0 (account_version, ACCOUNTS_CURRENT_VERSION))
     {
       priv->fetching_token_replacement = TRUE;
       _enable_cancellable (self, FALSE);
@@ -2302,12 +2288,12 @@ frogr_controller_set_active_account (FrogrController *self,
     }
   else
     {
-      /* Prefetch info for this user */
+      /* If a new account has been activated, fetch everything */
       if (new_account)
         _fetch_everything (self, TRUE);
 
       /* Emit proper signals */
-      g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, account);
+      g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, new_account);
       if (accounts_changed)
         g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
     }
