@@ -546,18 +546,19 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
   fsp_session_exchange_token_finish (session, result, &error);
   if (error == NULL)
     {
+      const gchar *token = NULL;
+      const gchar *token_secret = NULL;
+
       /* If everything went fine, get the token and secret from the
          session and update the current user account */
-      frogr_account_set_token (priv->account,
-                               fsp_session_get_token (priv->session));
-      frogr_account_set_token_secret (priv->account,
-                                      fsp_session_get_token_secret (priv->session));
+      token = fsp_session_get_token (priv->session);
+      frogr_account_set_token (priv->account, token);
+
+      token_secret = fsp_session_get_token_secret (priv->session);
+      frogr_account_set_token_secret (priv->account, token_secret);
 
       /* Make sure we update the version for the account too */
       frogr_account_set_version (priv->account, ACCOUNTS_CURRENT_VERSION);
-
-      /* Update accounts on disk */
-      frogr_config_save_accounts (priv->config);
 
       /* Finally, try to set the active account again */
       frogr_controller_set_active_account (controller, priv->account);
