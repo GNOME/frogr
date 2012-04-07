@@ -2091,7 +2091,6 @@ static void
 frogr_controller_init (FrogrController *self)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  FrogrAccount *account = NULL;
 
   /* Default variables */
   priv->state = FROGR_STATE_IDLE;
@@ -2123,9 +2122,22 @@ frogr_controller_init (FrogrController *self)
   priv->tags_fetched = FALSE;
 
   /* Get account, if any */
-  account = frogr_config_get_active_account (priv->config);
-  if (account)
-    frogr_controller_set_active_account (self, account);
+  priv->account = frogr_config_get_active_account (priv->config);
+  if (priv->account)
+    {
+      const gchar *token = NULL;
+      const gchar *token_secret = NULL;
+
+      g_object_ref (priv->account);
+
+      /* If available, set token */
+      token = frogr_account_get_token (priv->account);
+      fsp_session_set_token (priv->session, token);
+
+      /* If available, set token secret */
+      token_secret = frogr_account_get_token_secret (priv->account);
+      fsp_session_set_token_secret (priv->session, token_secret);
+    }
 
   /* Set HTTP proxy if needed */
   if (frogr_config_get_use_proxy (priv->config))
@@ -2167,6 +2179,7 @@ gboolean
 frogr_controller_run_app (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
+  FrogrAccount *account = NULL;
 
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
@@ -2185,11 +2198,12 @@ frogr_controller_run_app (FrogrController *self)
   /* Update flag */
   priv->app_running = TRUE;
 
-  /* Try to pre-fetch some data from the server right after launch */
-  _fetch_everything (self, TRUE);
-
   /* Start on idle state */
   _set_state (self, FROGR_STATE_IDLE);
+
+  account = frogr_config_get_active_account (priv->config);
+  if (account)
+    frogr_controller_set_active_account (self, account);
 
   /* Run UI */
   gtk_main ();
