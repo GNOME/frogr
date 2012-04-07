@@ -142,6 +142,7 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *private_vbox = NULL;
   GtkWidget *content_type_hbox = NULL;
   GtkWidget *safety_level_hbox = NULL;
+
   GtkWidget *align = NULL;
   GtkWidget *label = NULL;
   GtkWidget *widget = NULL;
@@ -223,14 +224,6 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (internal_hbox), visibility_vbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
-
-  widget = gtk_check_button_new_with_mnemonic (_("Send picture _location if available"));
-  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
-  priv->send_location_cb = widget;
-
-  widget = gtk_check_button_new_with_mnemonic (_("_Show up in Global Search Results"));
-  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
-  priv->show_in_search_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
@@ -316,6 +309,30 @@ _create_widgets (FrogrDetailsDialog *self)
 
   priv->license_cb = widget;
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
+
+  /* Other properties */
+
+  section_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
+
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("Other properties"));
+  widget = gtk_label_new (markup);
+  gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 0);
+  gtk_container_add (GTK_CONTAINER (align), widget);
+  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
+
+  widget = gtk_check_button_new_with_mnemonic (_("Set geo_location data if available"));
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  priv->send_location_cb = widget;
+
+  widget = gtk_check_button_new_with_mnemonic (_("_Show up in Global Search Results"));
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  priv->show_in_search_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 

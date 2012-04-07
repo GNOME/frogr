@@ -212,13 +212,6 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_pack_start (GTK_BOX (padding_hbox), box2, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (box1), padding_hbox, FALSE, FALSE, 0);
 
-  _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("Send picture _location if available"),
-                        &priv->send_geolocation_data_cb);
-  _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("_Show up in Global Search Results"),
-                        &priv->show_in_search_cb);
-
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
 
   /* Default Content type */
@@ -292,6 +285,30 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   g_signal_connect (G_OBJECT (priv->license_cb), "changed",
                     G_CALLBACK (_on_combo_changed),
                     self);
+
+  /* Other defaults */
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+  markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
+                                    _("Other defaults"));
+  gtk_label_set_markup (GTK_LABEL (label), markup);
+  g_free (markup);
+
+  align = gtk_alignment_new (0, 0, 0, 1);
+  gtk_container_add (GTK_CONTAINER (align), label);
+  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+
+  box1 = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
+
+  _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
+                        _("Send geo_location data if available"),
+                        &priv->send_geolocation_data_cb);
+  _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
+                        _("_Show up in Global Search Results"),
+                        &priv->show_in_search_cb);
+
+  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_General")));
