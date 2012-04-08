@@ -160,11 +160,19 @@ _get_upload_extra_params                (const gchar    *title,
                                          FspContentType  content_type,
                                          FspSearchScope  hidden);
 
+static void
+_encode_param_from_table_for_signature  (GHashTable *table,
+                                         const gchar *key);
+
+static void
+_decode_param_from_table_for_signature  (GHashTable *table,
+                                         const gchar *key);
+
 static SoupMessage *
 _get_soup_message_for_upload            (GFile       *file,
                                          const gchar *contents,
                                          gsize        length,
-                                         GHashTable  *extra_params);
+                                         GHashTable  *table);
 
 static void
 _load_file_contents_cb                  (GObject      *object,
@@ -186,10 +194,6 @@ _hmac_sha1_signature                    (const gchar *message,
 static GHashTable *
 _get_params_table_from_valist           (const gchar *first_param,
                                          va_list      args);
-
-static gboolean
-_should_encode_key                      (const gchar         *key,
-                                         AuthorizationMethod  auth_method);
 
 static gchar *
 _get_signed_query_with_params           (const gchar         *api_sig,
@@ -615,11 +619,41 @@ _get_upload_extra_params                (const gchar    *title,
   return table;
 }
 
+static void
+_encode_param_from_table_for_signature  (GHashTable *table,
+                                         const gchar *key)
+{
+  gchar *current = NULL;
+  gchar *new = NULL;
+
+  current = g_hash_table_lookup (table, key);
+  if (current != NULL)
+    {
+      new = _encode_uri (current);
+      g_hash_table_replace (table, g_strdup (key), new);
+    }
+}
+
+static void
+_decode_param_from_table_for_signature  (GHashTable *table,
+                                         const gchar *key)
+{
+  gchar *current = NULL;
+  gchar *new = NULL;
+
+  current = g_hash_table_lookup (table, key);
+  if (current != NULL)
+    {
+      new = soup_uri_decode (current);
+      g_hash_table_replace (table, g_strdup (key), new);
+    }
+}
+
 static SoupMessage *
 _get_soup_message_for_upload            (GFile       *file,
                                          const gchar *contents,
                                          gsize        length,
-                                         GHashTable  *extra_params)
+                                         GHashTable  *table)
 {
   GFileInfo *file_info = NULL;
   SoupMessage *msg = NULL;
@@ -645,8 +679,8 @@ _get_soup_message_for_upload            (GFile       *file,
   /* Init multipart container */
   mpart = soup_multipart_new (SOUP_FORM_MIME_TYPE_MULTIPART);
 
-  /* Traverse extra_params to append them to the message */
-  g_hash_table_iter_init (&iter, extra_params);
+  /* Traverse table to append them to the message */
+  g_hash_table_iter_init (&iter, table);
 
   while (g_hash_table_iter_next (&iter, (void **) &key, (void **) &value))
     {
@@ -845,27 +879,13 @@ _get_params_table_from_valist           (const gchar *first_param,
 
       /* Ignore parameter with no value */
       if (v != NULL)
-        g_hash_table_insert (table, g_strdup (p), g_strdup (v));
+        /* Values should be always encoded */
+        g_hash_table_insert (table, g_strdup (p), _encode_uri (v));
       else
         DEBUG ("Missing value for %s. Ignoring parameter.", p);
     }
 
   return table;
-}
-
-static gboolean
-_should_encode_key                      (const gchar         *key,
-                                         AuthorizationMethod  auth_method)
-{
-  if (auth_method == AUTHORIZATION_METHOD_ORIGINAL)
-    return g_strcmp0 (key, "api_key") && g_strcmp0 (key, "auth_token")
-      && g_strcmp0 (key, "method");
-
-  /* Using the new OAuth-based authorization API */
-  return g_strcmp0 (key, "oauth_token") && g_strcmp0 (key, "oauth_verifier")
-    && g_strcmp0 (key, "oauth_consumer_key") && g_strcmp0 (key, "oauth_signature_method")
-    && g_strcmp0 (key, "oauth_version") && g_strcmp0 (key, "oauth_signature")
-    && g_strcmp0 (key, "oauth_callback") && g_strcmp0 (key, "method");
 }
 
 static gchar *
@@ -897,15 +917,11 @@ _get_signed_query_with_params           (const gchar         *api_sig,
       /* Fill arrays */
       for (k = keys; k; k = g_list_next (k))
         {
-          gchar *key = (gchar*) k->data;
-          gchar *value = g_hash_table_lookup (params_table, key);
+          gchar *key = NULL;
           gchar *actual_value = NULL;
 
-          /* Do not encode basic pairs key-value */
-          if (_should_encode_key (key, auth_method))
-            actual_value = _encode_uri (value);
-          else
-            actual_value = g_strdup (value);
+          key = (gchar*) k->data;
+          actual_value = g_strdup (g_hash_table_lookup (params_table, key));
 
           url_params_array[i++] = g_strdup_printf ("%s=%s", key, actual_value);
           g_free (actual_value);
@@ -2092,10 +2108,22 @@ fsp_session_upload_async                (FspSession          *self,
   /* Add mandatory parameters according to OAuth specification */
   _fill_hash_table_with_oauth_params (extra_params, priv->api_key, priv->token);
 
+  /* OAuth requires to encode some fields just to calculate the
+     signature, so do some extra encoding now and undo it later */
+  _encode_param_from_table_for_signature (extra_params, "title");
+  _encode_param_from_table_for_signature (extra_params, "description");
+  _encode_param_from_table_for_signature (extra_params, "tags");
+
   /* Build the api signature and add it to the hash table */
   signing_key = g_strdup_printf ("%s&%s", priv->secret, priv->token_secret);
   api_sig = _get_api_signature_from_hash_table (FLICKR_API_UPLOAD_URL, extra_params, signing_key,
                                                 "POST", AUTHORIZATION_METHOD_OAUTH_1);
+
+  /* Signature is calculated, decode the fields we encoded before */
+  _decode_param_from_table_for_signature (extra_params, "title");
+  _decode_param_from_table_for_signature (extra_params, "description");
+  _decode_param_from_table_for_signature (extra_params, "tags");
+
   g_hash_table_insert (extra_params, g_strdup ("oauth_signature"), api_sig);
   g_free (signing_key);
 
