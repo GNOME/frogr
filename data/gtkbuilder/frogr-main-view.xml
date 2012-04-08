@@ -31,8 +31,8 @@
     <property name="label" translatable="yes">Authorize _frogr</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkToggleAction" id="disable_tooltips_action">
-    <property name="label" translatable="yes">Disable _Tooltips</property>
+  <object class="GtkToggleAction" id="enable_tooltips_action">
+    <property name="label" translatable="yes">Enable _Tooltips</property>
     <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
   </object>
   <object class="GtkToggleAction" id="use_dark_theme_action">
@@ -537,10 +537,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckMenuItem" id="disable_tooltips_menu_item">
+              <object class="GtkCheckMenuItem" id="enable_tooltips_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">disable_tooltips_action</property>
+                <property name="related_action">enable_tooltips_action</property>
               </object>
             </child>
             <child>

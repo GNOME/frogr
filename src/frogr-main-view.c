@@ -107,7 +107,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkAction *add_to_set_action;
   GtkAction *help_action;
   GtkAction *about_action;
-  GtkToggleAction *disable_tooltips_action;
+  GtkToggleAction *enable_tooltips_action;
   GtkToggleAction *reversed_order_action;
   GtkToggleAction *use_dark_theme_action;
   GtkToggleAction *sort_as_loaded_action;
@@ -442,10 +442,10 @@ _on_toggle_action_changed (GtkToggleAction *action,
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
 
   checked = gtk_toggle_action_get_active (action);
-  if (action == priv->disable_tooltips_action)
+  if (action == priv->enable_tooltips_action)
     {
-      frogr_config_set_mainview_enable_tooltips (priv->config, !checked);
-      priv->tooltips_enabled = !checked;
+      frogr_config_set_mainview_enable_tooltips (priv->config, checked);
+      priv->tooltips_enabled = checked;
     }
   else if (action == priv->reversed_order_action)
     {
@@ -1603,9 +1603,9 @@ frogr_main_view_init (FrogrMainView *self)
     GTK_ACTION (gtk_builder_get_object (builder, "help_action"));
   priv->about_action =
     GTK_ACTION (gtk_builder_get_object (builder, "about_action"));
-  priv->disable_tooltips_action =
+  priv->enable_tooltips_action =
     GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
-                                               "disable_tooltips_action"));
+                                               "enable_tooltips_action"));
   priv->sort_by_title_action =
     GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
                                                "sort_by_title_action"));
@@ -1643,8 +1643,7 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* Read value for 'tooltips enabled' */
   priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);
-  gtk_toggle_action_set_active (priv->disable_tooltips_action,
-                                !priv->tooltips_enabled);
+  gtk_toggle_action_set_active (priv->enable_tooltips_action, priv->tooltips_enabled);
 
 #if GTK_CHECK_VERSION (3,2,0)
   /* Read value for 'use dark theme' (for GTK >= 3.2 only) */

@@ -66,7 +66,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *proxy_password_entry;
   GtkWidget *use_gnome_proxy_cb;
 
-  GtkWidget *disable_tags_autocompletion_cb;
+  GtkWidget *enable_tags_autocompletion_cb;
   GtkWidget *keep_file_extensions_cb;
   GtkWidget *import_tags_cb;
 
@@ -75,7 +75,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean friend_visibility;
   gboolean show_in_search;
   gboolean send_geolocation_data;
-  gboolean disable_tags_autocompletion;
+  gboolean enable_tags_autocompletion;
   gboolean keep_file_extensions;
   gboolean import_tags;
   FspLicense license;
@@ -489,14 +489,14 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
-                        _("Disa_ble Tags Auto-Completion"),
-                        &priv->disable_tags_autocompletion_cb);
+                        _("Ena_ble Tags Auto-Completion"),
+                        &priv->enable_tags_autocompletion_cb);
+  _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
+                        _("_Import Tags from Pictures Metadata"),
+                        &priv->import_tags_cb);
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
                         _("_Keep File Extensions in Titles when Loading Pictures"),
                         &priv->keep_file_extensions_cb);
-  _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
-                        _("Don't _Import Tags from Pictures Metadata"),
-                        &priv->import_tags_cb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
 
@@ -519,7 +519,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->license = frogr_config_get_default_license (priv->config);
   priv->content_type = frogr_config_get_default_content_type (priv->config);
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
-  priv->disable_tags_autocompletion = !frogr_config_get_tags_autocompletion (priv->config);
+  priv->enable_tags_autocompletion = frogr_config_get_tags_autocompletion (priv->config);
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (priv->config);
   priv->import_tags = frogr_config_get_import_tags_from_metadata (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
@@ -581,12 +581,12 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   else
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->safe_rb), TRUE);
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->disable_tags_autocompletion_cb),
-                                priv->disable_tags_autocompletion);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->enable_tags_autocompletion_cb),
+                                priv->enable_tags_autocompletion);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->keep_file_extensions_cb),
                                 priv->keep_file_extensions);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->import_tags_cb),
-                                !priv->import_tags);
+                                priv->import_tags);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
@@ -628,7 +628,7 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_content_type (priv->config, priv->content_type);
   frogr_config_set_default_safety_level (priv->config, priv->safety_level);
 
-  frogr_config_set_tags_autocompletion (priv->config, !priv->disable_tags_autocompletion);
+  frogr_config_set_tags_autocompletion (priv->config, priv->enable_tags_autocompletion);
   frogr_config_set_keep_file_extensions (priv->config, priv->keep_file_extensions);
   frogr_config_set_import_tags_from_metadata (priv->config, priv->import_tags);
 
@@ -775,10 +775,10 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("Content type set to %d", priv->safety_level);
     }
 
-  if (GTK_WIDGET (button) == priv->disable_tags_autocompletion_cb)
+  if (GTK_WIDGET (button) == priv->enable_tags_autocompletion_cb)
     {
-      priv->disable_tags_autocompletion = active;
-      DEBUG ("Disable tags autocompletion set to %s", active ? "TRUE" : "FALSE");
+      priv->enable_tags_autocompletion = active;
+      DEBUG ("Enable tags autocompletion set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->keep_file_extensions_cb)
@@ -789,7 +789,7 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
 
   if (GTK_WIDGET (button) == priv->import_tags_cb)
     {
-      priv->import_tags = !active;
+      priv->import_tags = active;
       DEBUG ("Don't import tags from pictures metadata set to %s", active ? "TRUE" : "FALSE");
     }
 
@@ -862,7 +862,7 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
       return;
 
   /* Fetch tags if needed */
-  if (!priv->disable_tags_autocompletion)
+  if (priv->enable_tags_autocompletion)
     frogr_controller_fetch_tags_if_needed (priv->controller);
 
   /* Update proxy status */
@@ -944,7 +944,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->safe_rb = NULL;
   priv->moderate_rb = NULL;
   priv->restricted_rb = NULL;
-  priv->disable_tags_autocompletion_cb = NULL;
+  priv->enable_tags_autocompletion_cb = NULL;
   priv->keep_file_extensions_cb = NULL;
   priv->import_tags_cb = NULL;
   priv->use_proxy_cb = NULL;
@@ -965,9 +965,9 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->license = FSP_LICENSE_NONE;
   priv->safety_level = FSP_SAFETY_LEVEL_NONE;
   priv->content_type = FSP_CONTENT_TYPE_NONE;
-  priv->disable_tags_autocompletion = FALSE;
+  priv->enable_tags_autocompletion = TRUE;
   priv->keep_file_extensions = FALSE;
-  priv->import_tags = FALSE;
+  priv->import_tags = TRUE;
   priv->use_proxy = FALSE;
   priv->use_gnome_proxy = FALSE;
   priv->proxy_host = NULL;
