@@ -127,40 +127,6 @@ _compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
   return result;
 }
 
-static GSList *
-_get_tags_list_from_string (const gchar *tags_string)
-{
-  GSList *tags_list = NULL;
-  gchar *stripped_tags = NULL;
-
-  if (!tags_string)
-    return NULL;
-
-  stripped_tags = g_strstrip (g_strdup (tags_string));
-  if (!g_str_equal (stripped_tags, ""))
-    {
-      gchar **tags_array = NULL;
-      gchar *tag;
-      gint i;
-
-      /* Now iterate over every token, adding it to the list */
-      tags_array = g_strsplit (stripped_tags, TAGS_DELIMITER, -1);
-      for (i = 0; tags_array[i]; i++)
-        {
-          /* add stripped tag if not already set*/
-          tag = g_strstrip(g_strdup (tags_array[i]));
-          if (!g_str_equal (tag, ""))
-            tags_list = g_slist_append (tags_list, tag);
-        }
-
-      /* Free */
-      g_strfreev (tags_array);
-    }
-  g_free (stripped_tags);
-
-  return tags_list;
-}
-
 static void
 _frogr_main_view_model_dispose (GObject* object)
 {
@@ -658,29 +624,42 @@ frogr_main_view_model_get_local_tags_list (FrogrMainViewModel *self)
 
 void
 frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
-                                                  const gchar *tags_str)
+                                                  const gchar *tags_string)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
-  GSList *tags_list = NULL;
-  GSList *current = NULL;
+  gchar *stripped_tags = NULL;
 
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  if (!tags_string || !tags_string[0])
+    return;
 
-  tags_list = _get_tags_list_from_string (tags_str);
-  for (current = tags_list; current; current = g_slist_next (current))
+  stripped_tags = g_strstrip (g_strdup (tags_string));
+  if (!g_str_equal (stripped_tags, ""))
     {
-      if (!g_slist_find_custom (priv->local_tags, current->data, (GCompareFunc)g_strcmp0))
-        {
-          priv->local_tags = g_slist_prepend (priv->local_tags, g_strdup ((const gchar *)current->data));
-          priv->n_local_tags++;
-        }
-    }
-  priv->local_tags = g_slist_sort (priv->local_tags, (GCompareFunc)g_strcmp0);
+      FrogrMainViewModelPrivate *priv = NULL;
+      gchar **tags_array = NULL;
+      gchar *tag;
+      gint i;
 
-  g_slist_foreach (tags_list, (GFunc)g_free, NULL);
-  g_slist_free (tags_list);
+      /* Now iterate over every token, adding it to the list */
+      priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+      tags_array = g_strsplit (stripped_tags, TAGS_DELIMITER, -1);
+      for (i = 0; tags_array[i]; i++)
+        {
+          /* add stripped tag if not already set*/
+          tag = g_strstrip(g_strdup (tags_array[i]));
+          if (!g_str_equal (tag, "") && !g_slist_find_custom (priv->local_tags, tag, (GCompareFunc)g_strcmp0))
+            {
+              priv->local_tags = g_slist_prepend (priv->local_tags, g_strdup (tag));
+              priv->n_local_tags++;
+            }
+          g_free (tag);
+        }
+      g_strfreev (tags_array);
+
+      priv->local_tags = g_slist_sort (priv->local_tags, (GCompareFunc)g_strcmp0);
+    }
+  g_free (stripped_tags);
 }
 
 void

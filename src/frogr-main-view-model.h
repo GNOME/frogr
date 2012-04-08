@@ -106,7 +106,7 @@ guint frogr_main_view_model_n_remote_tags (FrogrMainViewModel *self);
 GSList *frogr_main_view_model_get_local_tags_list (FrogrMainViewModel *self);
 
 void frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
-                                                       const gchar *tags_str);
+                                                       const gchar *tags_string);
 
 void frogr_main_view_model_remove_local_tags (FrogrMainViewModel *self);
 
