@@ -86,7 +86,7 @@ enum  {
 
 /* Prototypes */
 
-static gboolean _tag_is_photoset (FrogrPicture *self, const gchar *tag);
+static gboolean _tag_is_set (FrogrPicture *self, const gchar *tag);
 static void _add_tags_to_tags_list (FrogrPicture *self,
                                     const gchar *tags_string);
 static void _update_tags_string (FrogrPicture *self);
@@ -94,7 +94,7 @@ static void _update_tags_string (FrogrPicture *self);
 /* Private API */
 
 static gboolean
-_tag_is_photoset (FrogrPicture *self, const gchar *tag)
+_tag_is_set (FrogrPicture *self, const gchar *tag)
 {
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (self);
   GSList *item;
@@ -134,7 +134,7 @@ _add_tags_to_tags_list (FrogrPicture *self,
             {
               /* add stripped tag if not already set*/
               tag = g_strstrip(g_strdup (tags_array[i]));
-              if (!g_str_equal (tag, "") && !_tag_is_photoset (self, tag))
+              if (!g_str_equal (tag, "") && !_tag_is_set (self, tag))
                 priv->tags_list = g_slist_append (priv->tags_list, tag);
             }
 

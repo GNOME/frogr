@@ -25,6 +25,8 @@
 #include "frogr-global-defs.h"
 #include "frogr-gtk-compat.h"
 #include "frogr-live-entry.h"
+#include "frogr-main-view.h"
+#include "frogr-main-view-model.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
 
@@ -986,6 +988,17 @@ _save_data (FrogrDetailsDialog *self)
 
           /* Everything went fine */
           result = TRUE;
+        }
+
+      /* Add tags to the model */
+      if (!g_str_equal (tags, ""))
+        {
+          FrogrMainView *mainview = NULL;
+          FrogrMainViewModel *model = NULL;
+
+          mainview = frogr_controller_get_main_view (frogr_controller_get_instance ());
+          model = frogr_main_view_get_model (mainview);
+          frogr_main_view_model_add_local_tags_from_string (model, tags);
         }
     }
   else

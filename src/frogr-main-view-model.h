@@ -94,14 +94,25 @@ GSList *frogr_main_view_model_get_groups (FrogrMainViewModel *self);
 void frogr_main_view_model_set_groups (FrogrMainViewModel *self,
                                        GSList *groups_list);
 
-GSList *frogr_main_view_model_get_tags_list (FrogrMainViewModel *self);
+GSList *frogr_main_view_model_get_remote_tags (FrogrMainViewModel *self);
 
-void frogr_main_view_model_set_tags_list (FrogrMainViewModel *self,
-                                          GSList *tags_list);
+void frogr_main_view_model_set_remote_tags (FrogrMainViewModel *self,
+                                            GSList *tags_list);
 
-void frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self);
+void frogr_main_view_model_remove_remote_tags (FrogrMainViewModel *self);
 
-guint frogr_main_view_model_n_tags (FrogrMainViewModel *self);
+guint frogr_main_view_model_n_remote_tags (FrogrMainViewModel *self);
+
+GSList *frogr_main_view_model_get_local_tags_list (FrogrMainViewModel *self);
+
+void frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
+                                                       const gchar *tags_str);
+
+void frogr_main_view_model_remove_local_tags (FrogrMainViewModel *self);
+
+guint frogr_main_view_model_n_local_tags (FrogrMainViewModel *self);
+
+GSList *frogr_main_view_model_get_all_tags (FrogrMainViewModel *self);
 
 G_END_DECLS
 

@@ -45,8 +45,13 @@ struct _FrogrMainViewModelPrivate
   GSList *groups_list;
   guint n_groups;
 
-  GSList *tags_list;
-  guint n_tags;
+  GSList *remote_tags;
+  guint n_remote_tags;
+
+  GSList *local_tags;
+  guint n_local_tags;
+
+  GSList *all_tags;
 };
 
 /* Signals */
@@ -122,6 +127,40 @@ _compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
   return result;
 }
 
+static GSList *
+_get_tags_list_from_string (const gchar *tags_string)
+{
+  GSList *tags_list = NULL;
+  gchar *stripped_tags = NULL;
+
+  if (!tags_string)
+    return NULL;
+
+  stripped_tags = g_strstrip (g_strdup (tags_string));
+  if (!g_str_equal (stripped_tags, ""))
+    {
+      gchar **tags_array = NULL;
+      gchar *tag;
+      gint i;
+
+      /* Now iterate over every token, adding it to the list */
+      tags_array = g_strsplit (stripped_tags, TAGS_DELIMITER, -1);
+      for (i = 0; tags_array[i]; i++)
+        {
+          /* add stripped tag if not already set*/
+          tag = g_strstrip(g_strdup (tags_array[i]));
+          if (!g_str_equal (tag, ""))
+            tags_list = g_slist_append (tags_list, tag);
+        }
+
+      /* Free */
+      g_strfreev (tags_array);
+    }
+  g_free (stripped_tags);
+
+  return tags_list;
+}
+
 static void
 _frogr_main_view_model_dispose (GObject* object)
 {
@@ -155,11 +194,24 @@ _frogr_main_view_model_dispose (GObject* object)
       priv->groups_list = NULL;
     }
 
-  if (priv->tags_list)
+  if (priv->remote_tags)
     {
-      g_slist_foreach (priv->tags_list, (GFunc)g_free, NULL);
-      g_slist_free (priv->tags_list);
-      priv->tags_list = NULL;
+      g_slist_foreach (priv->remote_tags, (GFunc)g_free, NULL);
+      g_slist_free (priv->remote_tags);
+      priv->remote_tags = NULL;
+    }
+
+  if (priv->local_tags)
+    {
+      g_slist_foreach (priv->local_tags, (GFunc)g_free, NULL);
+      g_slist_free (priv->local_tags);
+      priv->local_tags = NULL;
+    }
+
+  if (priv->all_tags)
+    {
+      g_slist_free (priv->all_tags);
+      priv->all_tags = NULL;
     }
 
   G_OBJECT_CLASS (frogr_main_view_model_parent_class)->dispose (object);
@@ -215,8 +267,13 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
   priv->groups_list = NULL;
   priv->n_groups = 0;
 
-  priv->tags_list = NULL;
-  priv->n_tags = 0;
+  priv->remote_tags = NULL;
+  priv->n_remote_tags = 0;
+
+  priv->local_tags = NULL;
+  priv->n_local_tags = 0;
+
+  priv->all_tags = NULL;
 }
 
 /* Public API */
@@ -537,32 +594,32 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
 }
 
 GSList *
-frogr_main_view_model_get_tags_list (FrogrMainViewModel *self)
+frogr_main_view_model_get_remote_tags (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->tags_list;
+  return priv->remote_tags;
 }
 
 void
-frogr_main_view_model_set_tags_list (FrogrMainViewModel *self, GSList *tags_list)
+frogr_main_view_model_set_remote_tags (FrogrMainViewModel *self, GSList *tags_list)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
-  frogr_main_view_model_remove_all_tags (self);
+  frogr_main_view_model_remove_remote_tags (self);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->tags_list = tags_list;
-  priv->n_tags = g_slist_length (tags_list);
+  priv->remote_tags = tags_list;
+  priv->n_remote_tags = g_slist_length (tags_list);
 }
 
 void
-frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self)
+frogr_main_view_model_remove_remote_tags (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
@@ -570,20 +627,113 @@ frogr_main_view_model_remove_all_tags (FrogrMainViewModel *self)
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
-  g_slist_foreach (priv->tags_list, (GFunc)g_free, NULL);
-  g_slist_free (priv->tags_list);
+  g_slist_foreach (priv->remote_tags, (GFunc)g_free, NULL);
+  g_slist_free (priv->remote_tags);
 
-  priv->tags_list = NULL;
-  priv->n_tags = 0;
+  priv->remote_tags = NULL;
+  priv->n_remote_tags = 0;
 }
 
 guint
-frogr_main_view_model_n_tags (FrogrMainViewModel *self)
+frogr_main_view_model_n_remote_tags (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->n_tags;
+  return priv->n_remote_tags;
+}
+
+GSList *
+frogr_main_view_model_get_local_tags_list (FrogrMainViewModel *self)
+{
+  FrogrMainViewModelPrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  return priv->local_tags;
+}
+
+void
+frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
+                                                  const gchar *tags_str)
+{
+  FrogrMainViewModelPrivate *priv = NULL;
+  GSList *tags_list = NULL;
+  GSList *current = NULL;
+
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  tags_list = _get_tags_list_from_string (tags_str);
+  for (current = tags_list; current; current = g_slist_next (current))
+    {
+      if (!g_slist_find_custom (priv->local_tags, current->data, (GCompareFunc)g_strcmp0))
+        {
+          priv->local_tags = g_slist_prepend (priv->local_tags, g_strdup ((const gchar *)current->data));
+          priv->n_local_tags++;
+        }
+    }
+  priv->local_tags = g_slist_sort (priv->local_tags, (GCompareFunc)g_strcmp0);
+
+  g_slist_foreach (tags_list, (GFunc)g_free, NULL);
+  g_slist_free (tags_list);
+}
+
+void
+frogr_main_view_model_remove_local_tags (FrogrMainViewModel *self)
+{
+  FrogrMainViewModelPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  g_slist_foreach (priv->local_tags, (GFunc)g_free, NULL);
+  g_slist_free (priv->local_tags);
+
+  priv->local_tags = NULL;
+  priv->n_local_tags = 0;
+}
+
+guint
+frogr_main_view_model_n_local_tags (FrogrMainViewModel *self)
+{
+  FrogrMainViewModelPrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  return priv->n_local_tags;
+}
+
+GSList *
+frogr_main_view_model_get_all_tags (FrogrMainViewModel *self)
+{
+  FrogrMainViewModelPrivate *priv = NULL;
+  GSList *list = NULL;
+  GSList *current = NULL;
+
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+
+  /* Copy the list of remote tags and add those locally added */
+  list = g_slist_copy (priv->remote_tags);
+  for (current = priv->local_tags; current; current = g_slist_next (current))
+    {
+      if (!g_slist_find_custom (list, current->data, (GCompareFunc)g_strcmp0))
+        list = g_slist_prepend (list, current->data);
+    }
+  list = g_slist_sort (list, (GCompareFunc)g_strcmp0);
+
+  /* Update internal pointers to the result list */
+  if (priv->all_tags)
+    g_slist_free (priv->all_tags);
+  priv->all_tags = list;
+
+  return priv->all_tags;
 }
