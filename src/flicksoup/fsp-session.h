@@ -269,6 +269,18 @@ gboolean
 fsp_session_set_location_finish          (FspSession    *self,
                                           GAsyncResult  *res,
                                           GError       **error);
+
+void
+fsp_session_get_location_async           (FspSession          *self,
+                                          const gchar         *photo_id,
+                                          GCancellable        *cancellable,
+                                          GAsyncReadyCallback  callback,
+                                          gpointer             data);
+
+FspDataLocation *
+fsp_session_get_location_finish          (FspSession    *self,
+                                          GAsyncResult  *res,
+                                          GError       **error);
 G_END_DECLS
 
 #endif

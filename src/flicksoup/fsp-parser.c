@@ -104,8 +104,11 @@ static gpointer
 _set_license_parser                     (xmlDoc  *doc,
                                          GError **error);
 static gpointer
-_set_location_parser                     (xmlDoc  *doc,
-                                          GError **error);
+_set_location_parser                    (xmlDoc  *doc,
+                                         GError **error);
+static gpointer
+_get_location_parser                    (xmlDoc  *doc,
+                                         GError **error);
 
 static FspDataPhotoInfo *
 _get_photo_info_from_node               (xmlNode *node);
@@ -293,6 +296,8 @@ _get_error_method_from_parser           (gpointer (*body_parser)
     error_method = FSP_ERROR_METHOD_SET_LICENSE;
   else if (body_parser == _set_location_parser)
     error_method = FSP_ERROR_METHOD_SET_LOCATION;
+  else if (body_parser == _get_location_parser)
+    error_method = FSP_ERROR_METHOD_GET_LOCATION;
 
   return error_method;
 }
@@ -875,11 +880,73 @@ _set_license_parser                     (xmlDoc  *doc,
 }
 
 static gpointer
-_set_location_parser                     (xmlDoc  *doc,
+_set_location_parser                    (xmlDoc  *doc,
                                          GError **error)
 {
   /* Dummy parser, as there is no response for this method */
   return NULL;
+}
+
+static gpointer
+_get_location_parser                    (xmlDoc  *doc,
+                                         GError **error)
+{
+  xmlXPathContext *xpathCtx = NULL;
+  xmlXPathObject * xpathObj = NULL;
+  FspDataLocation *location = NULL;
+  GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
+
+  xpathCtx = xmlXPathNewContext (doc);
+  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/photo/location", xpathCtx);
+
+  if ((xpathObj != NULL) && (xpathObj->nodesetval->nodeNr > 0))
+    {
+      /* Matching nodes found */
+      xmlNode *node = NULL;
+
+      location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
+      node = xpathObj->nodesetval->nodeTab[0];
+      if (node && !g_strcmp0 ((gchar *) node->name, "location"))
+        {
+          xmlChar *value = NULL;
+
+          value = xmlGetProp (node, (const xmlChar *) "latitude");
+          location->latitude = g_ascii_strtod ((gchar *) value, NULL);
+          xmlFree (value);
+
+          value = xmlGetProp (node, (const xmlChar *) "longitude");
+          location->longitude = g_ascii_strtod ((gchar *) value, NULL);
+          xmlFree (value);
+
+          value = xmlGetProp (node, (const xmlChar *) "accuracy");
+          location->accuracy = (gushort) g_ascii_strtoll ((gchar *) value, NULL, 10);
+          xmlFree (value);
+        }
+
+      if (!location->latitude || !location->longitude)
+        {
+          /* If we don't get enough information, return NULL */
+          fsp_data_free (FSP_DATA (location));
+          location = NULL;
+
+          err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                             "No location data found in the response");
+        }
+    }
+  else
+    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                       "No 'location' node found in the response");
+  /* Free */
+  xmlXPathFreeObject (xpathObj);
+  xmlXPathFreeContext (xpathCtx);
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  return location;
 }
 
 static FspDataPhotoInfo *
@@ -1258,7 +1325,6 @@ fsp_parser_check_token                  (FspParser  *self,
     FSP_DATA_AUTH_TOKEN (_process_xml_response (self, buffer, buf_size,
                                                 _check_token_parser,
                                                 error));
-
   /* Return value */
   return auth_token;
 }
@@ -1487,4 +1553,24 @@ fsp_parser_set_location                  (FspParser  *self,
 
   /* No return value for this method */
   return GINT_TO_POINTER ((gint)(*error == NULL));
+}
+
+FspDataLocation *
+fsp_parser_get_location                  (FspParser   *self,
+                                          const gchar *buffer,
+                                          gulong       buf_size,
+                                          GError     **error)
+{
+  FspDataLocation *location = NULL;
+
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  /* Process the response */
+  location =
+    FSP_DATA_LOCATION (_process_xml_response (self, buffer, buf_size,
+                                              _get_location_parser,
+                                              error));
+  /* Return value */
+  return location;
 }

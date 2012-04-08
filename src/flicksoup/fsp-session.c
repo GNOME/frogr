@@ -327,6 +327,11 @@ _set_location_soup_session_cb            (SoupSession *session,
                                           SoupMessage *msg,
                                           gpointer     data);
 
+static void
+_get_location_soup_session_cb            (SoupSession *session,
+                                          SoupMessage *msg,
+                                          gpointer     data);
+
 /* Private API */
 
 static void
@@ -1586,6 +1591,20 @@ _set_location_soup_session_cb            (SoupSession *session,
                          data);
 }
 
+static void
+_get_location_soup_session_cb            (SoupSession *session,
+                                          SoupMessage *msg,
+                                          gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_get_location,
+                         data);
+}
+
 /* Public API */
 
 FspSession *
@@ -2591,4 +2610,50 @@ fsp_session_set_location_finish          (FspSession    *self,
                                   fsp_session_set_location_async, error);
 
   return result ? TRUE : FALSE;
+}
+
+void
+fsp_session_get_location_async           (FspSession          *self,
+                                          const gchar         *photo_id,
+                                          GCancellable        *cancellable,
+                                          GAsyncReadyCallback  callback,
+                                          gpointer             data)
+{
+  SoupSession *soup_session = NULL;
+  gchar *url = NULL;
+
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+
+  url = _get_signed_url (self,
+                         FLICKR_API_BASE_URL,
+                         AUTHORIZATION_METHOD_OAUTH_1,
+                         "method", "flickr.photos.geo.getLocation",
+                         "photo_id", photo_id,
+                         NULL);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  _perform_async_request (soup_session, url,
+                          _get_location_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_get_location_async, data);
+
+  g_free (url);
+}
+
+FspDataLocation *
+fsp_session_get_location_finish          (FspSession    *self,
+                                          GAsyncResult  *res,
+                                          GError       **error)
+{
+  FspDataLocation *location = NULL;
+
+  g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+
+  location =
+    FSP_DATA_LOCATION (_finish_async_request (G_OBJECT (self), res,
+                                              fsp_session_get_location_async,
+                                              error));
+  return location;
 }
