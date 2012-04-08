@@ -1102,8 +1102,8 @@ _calculate_api_signature                (const gchar          *url,
   /* Using the new OAuth-based authorization API */
   encoded_url = _encode_uri (url);
   encoded_params = _encode_uri (params_str);
-
   base_string = g_strdup_printf ("%s&%s&%s", http_method, encoded_url, encoded_params);
+  DEBUG ("Base string for signing: %s", base_string);
   g_free (encoded_url);
   g_free (encoded_params);
 
