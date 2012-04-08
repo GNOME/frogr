@@ -4,9 +4,6 @@
  * Copyright (C) 2010-2011 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
- * Some parts of this file were based on source code from the libsoup
- * library, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 3 of the GNU Lesser General
  * Public License as published by the Free Software Foundation.
@@ -189,11 +186,6 @@ _hmac_sha1_signature                    (const gchar *message,
 static GHashTable *
 _get_params_table_from_valist           (const gchar *first_param,
                                          va_list      args);
-
-/* This function is based in append_form_encoded() from libsoup's
-   SoupForm, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.) */
-static gchar *
-_encode_query_value (const char *value);
 
 static gboolean
 _should_encode_key                      (const gchar         *key,
@@ -861,30 +853,6 @@ _get_params_table_from_valist           (const gchar *first_param,
   return table;
 }
 
-/* This function is based in append_form_encoded() from libsoup's
-   SoupForm, licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.) */
-static gchar *
-_encode_query_value (const char *value)
-{
-  GString *result = NULL;
-  const unsigned char *str = NULL;
-
-  result = g_string_new ("");
-  str = (const unsigned char *) value;
-
-  while (*str) {
-    if (*str == ' ') {
-      g_string_append_c (result, '+');
-      str++;
-    } else if (!g_ascii_isalnum (*str))
-      g_string_append_printf (result, "%%%02X", (int)*str++);
-    else
-      g_string_append_c (result, *str++);
-  }
-
-  return g_string_free (result, FALSE);
-}
-
 static gboolean
 _should_encode_key                      (const gchar         *key,
                                          AuthorizationMethod  auth_method)
@@ -935,7 +903,7 @@ _get_signed_query_with_params           (const gchar         *api_sig,
 
           /* Do not encode basic pairs key-value */
           if (_should_encode_key (key, auth_method))
-            actual_value = _encode_query_value (value);
+            actual_value = _encode_uri (value);
           else
             actual_value = g_strdup (value);
 

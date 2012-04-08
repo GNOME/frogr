@@ -66,10 +66,6 @@ keep it as part of the project for the time being.
 
 -------------------------------------------
 
-Some parts of the Frogr's Flickr API implementation (under
-src/flicksoup) based on source code from the libsoup library,
-licensed as LGPLv2 (Copyright 2008 Red Hat, Inc.)
-
 Implementation of the get_gps_coordinate () function inside of the
 FrogrPictureLoader taken from tracker, licensed under the GNU Lesser
 General Public License Version 2.1 (Copyright 2009, Nokia Corp.)
