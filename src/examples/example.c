@@ -22,6 +22,7 @@
 #include <glib.h>
 
 #include <flicksoup/flicksoup.h>
+#include <libsoup/soup.h>
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
@@ -32,9 +33,11 @@ static gchar *uploaded_photo_id = NULL;
 static gchar *created_photoset_id = NULL;
 static gchar *first_group_id = NULL;
 static gchar *test_photo_path = NULL;
+static char buffer[64];
 
 /* Prototypes */
 
+static gchar *encode_uri (const gchar *uri);
 void upload_cb (GObject *object, GAsyncResult *res, gpointer source_func);
 void added_to_group_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_groups_cb (GObject *object, GAsyncResult *res, gpointer unused);
@@ -51,6 +54,12 @@ void get_auth_url_cb (GObject *object, GAsyncResult *res, gpointer unused);
 gboolean do_work (gpointer unused);
 
 /* Implementations */
+
+static gchar *
+encode_uri                             (const gchar *uri)
+{
+  return soup_uri_encode (uri, "%!*'();:@&=+$,/?#[] ");
+}
 
 void
 upload_cb                               (GObject      *object,
@@ -547,6 +556,7 @@ complete_auth_cb                        (GObject      *object,
 
       g_print ("[complete_auth_cb]::Auth token\n");
       g_print ("[complete_auth_cb]::\ttoken = %s\n", auth_token->token);
+      g_print ("[complete_auth_cb]::\ttoken_secret = %s\n", auth_token->token_secret);
       g_print ("[complete_auth_cb]::\tpermissions = %s\n", auth_token->permissions);
       g_print ("[complete_auth_cb]::\tnsid = %s\n", auth_token->nsid);
       g_print ("[complete_auth_cb]::\tusername = %s\n", auth_token->username);
@@ -580,18 +590,22 @@ get_auth_url_cb                         (GObject      *object,
     }
   else
     {
-      g_print ("[get_auth_url_cb]::Result: %s\n\n",
+      gchar *verifier = NULL;
+
+      g_print ("[get_auth_url_cb]::Result: %s&perms=write\n\n",
                auth_url ? auth_url : "No URL got");
 
       /* Make a pause before continuing */
-      g_print ("Press ENTER to continue (after the authorization)...\n\n");
-      getchar ();
+      g_print ("\nEnter the verification code and press ENTER to continue:");
+      gets(buffer);
+      verifier = encode_uri (buffer);
 
       /* Continue finishing the authorization */
       g_print ("Finishing authorization...\n");
-      fsp_session_complete_auth_async (session, NULL, NULL, complete_auth_cb, NULL);
+      fsp_session_complete_auth_async (session, verifier, NULL, complete_auth_cb, NULL);
 
       g_free (auth_url);
+      g_free (verifier);
     }
 }
 
