@@ -68,6 +68,7 @@ struct _FrogrConfigPrivate
   SortingCriteria mainview_sorting_criteria;
   gboolean mainview_sorting_reversed;
   gboolean mainview_enable_tooltips;
+  gboolean use_dark_theme;
 
   gboolean use_proxy;
   gboolean use_gnome_proxy;
@@ -295,6 +296,16 @@ _load_settings (FrogrConfig *self)
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "http-proxy"))
             _load_proxy_data_xml (self, xml, node);
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "use-dark-theme"))
+            {
+              xmlChar *content = NULL;
+
+              content = xmlNodeGetContent (node);
+              priv->use_dark_theme = !xmlStrcmp (content, (const xmlChar*) "1");
+
+              xmlFree (content);
+            }
         }
     }
   else if (node && node->name)
@@ -698,6 +709,7 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (root, "tags-autocompletion", priv->tags_autocompletion);
   _xml_add_bool_child (root, "keep-file-extensions", priv->keep_file_extensions);
   _xml_add_bool_child (root, "import-tags-from-metadata", priv->import_tags_from_metadata);
+  _xml_add_bool_child (root, "use-dark-theme", priv->use_dark_theme);
   node = xmlNewNode (NULL, (const xmlChar*) "mainview-options");
   _xml_add_bool_child (node, "enable-tooltips", priv->mainview_enable_tooltips);
   _xml_add_int_child (node, "sorting-criteria", priv->mainview_sorting_criteria);
@@ -973,6 +985,7 @@ frogr_config_init (FrogrConfig *self)
   priv->mainview_sorting_criteria = SORT_AS_LOADED;
   priv->mainview_sorting_reversed = FALSE;
   priv->mainview_enable_tooltips = TRUE;
+  priv->use_dark_theme = FALSE;
   priv->use_proxy = FALSE;
   priv->use_gnome_proxy = FALSE;
   priv->proxy_host = NULL;
@@ -1410,6 +1423,28 @@ frogr_config_get_mainview_enable_tooltips (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->mainview_enable_tooltips;
+}
+
+void
+frogr_config_set_use_dark_theme (FrogrConfig *self, gboolean value)
+{
+  FrogrConfigPrivate * priv = NULL;
+
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->use_dark_theme = value;
+}
+
+gboolean
+frogr_config_get_use_dark_theme (FrogrConfig *self)
+{
+  FrogrConfigPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->use_dark_theme;
 }
 
 void

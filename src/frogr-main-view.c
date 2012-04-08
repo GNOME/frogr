@@ -70,6 +70,7 @@ typedef struct _FrogrMainViewPrivate {
   SortingCriteria sorting_criteria;
   gboolean sorting_reversed;
   gboolean tooltips_enabled;
+  gboolean using_dark_theme;
   gint n_selected_pictures;
 
   GtkWindow *window;
@@ -108,6 +109,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkAction *about_action;
   GtkToggleAction *disable_tooltips_action;
   GtkToggleAction *reversed_order_action;
+  GtkToggleAction *use_dark_theme_action;
   GtkToggleAction *sort_as_loaded_action;
   GtkToggleAction *sort_by_title_action;
   GtkToggleAction *sort_by_date_taken_action;
@@ -129,6 +131,7 @@ static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 #ifdef MAC_INTEGRATION
 static void _tweak_menu_bar_for_mac (FrogrMainView *self);
 #endif
+
 static void _populate_accounts_submenu (FrogrMainView *self);
 
 static void _initialize_drag_n_drop (FrogrMainView *self);
@@ -185,6 +188,7 @@ static void _load_pictures (FrogrMainView *self, GSList *fileuris);
 static void _upload_pictures (FrogrMainView *self);
 static void _show_help_contents (FrogrMainView *self);
 static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed);
+static void _use_dark_theme (FrogrMainView *mainview, gboolean enabled);
 
 static void _progress_dialog_response (GtkDialog *dialog,
                                        gint response_id,
@@ -440,8 +444,6 @@ _on_toggle_action_changed (GtkToggleAction *action,
   checked = gtk_toggle_action_get_active (action);
   if (action == priv->disable_tooltips_action)
     {
-      gboolean checked =
-        gtk_toggle_action_get_active (action);
       frogr_config_set_mainview_enable_tooltips (priv->config, !checked);
       priv->tooltips_enabled = !checked;
     }
@@ -449,6 +451,11 @@ _on_toggle_action_changed (GtkToggleAction *action,
     {
       _reorder_pictures (mainview, priv->sorting_criteria, checked);
       frogr_config_set_mainview_sorting_reversed (priv->config, checked);
+    }
+  else if (action == priv->use_dark_theme_action)
+    {
+      frogr_config_set_use_dark_theme (priv->config, checked);
+      _use_dark_theme (mainview, checked);
     }
   else if (checked)
     {
@@ -1091,6 +1098,19 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
 }
 
 static void
+_use_dark_theme (FrogrMainView *mainview, gboolean enabled)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  GtkSettings *gtk_settings = NULL;
+
+  gtk_settings = gtk_settings_get_default ();
+  g_object_set (G_OBJECT (gtk_settings), "gtk-application-prefer-dark-theme", enabled, NULL);
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+  priv->using_dark_theme = enabled;
+}
+
+static void
 _progress_dialog_response (GtkDialog *dialog,
                            gint response_id,
                            gpointer data)
@@ -1480,6 +1500,10 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *toolbar;
 #endif
 
+#if !GTK_CHECK_VERSION (3,2,0)
+  GtkWidget *dark_theme_menu_item = NULL;
+#endif
+
   /* Init model, controller and configuration */
   priv->model = frogr_main_view_model_new ();
   priv->controller = g_object_ref (frogr_controller_get_instance ());
@@ -1594,6 +1618,9 @@ frogr_main_view_init (FrogrMainView *self)
   priv->reversed_order_action =
     GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
                                                "reversed_order_action"));
+  priv->use_dark_theme_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "use_dark_theme_action"));
 #ifndef MAC_INTEGRATION
   priv->quit_action =
     GTK_ACTION (gtk_builder_get_object (builder, "quit_action"));
@@ -1612,14 +1639,20 @@ frogr_main_view_init (FrogrMainView *self)
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_as_loaded_action), TRUE);
 
   priv->sorting_reversed = frogr_config_get_mainview_sorting_reversed (priv->config);
-  gtk_toggle_action_set_active (priv->reversed_order_action,
-                                priv->sorting_reversed);
+  gtk_toggle_action_set_active (priv->reversed_order_action, priv->sorting_reversed);
 
   /* Read value for 'tooltips enabled' */
   priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);
-
   gtk_toggle_action_set_active (priv->disable_tooltips_action,
                                 !priv->tooltips_enabled);
+
+#if GTK_CHECK_VERSION (3,2,0)
+  /* Read value for 'use dark theme' (for GTK >= 3.2 only) */
+  priv->using_dark_theme = frogr_config_get_use_dark_theme (priv->config);
+  _use_dark_theme (self, priv->using_dark_theme);
+  gtk_toggle_action_set_active (priv->use_dark_theme_action,
+                                priv->using_dark_theme);
+#endif
 
   /* No selected pictures at the beginning */
   priv->n_selected_pictures = 0;
@@ -1755,8 +1788,14 @@ frogr_main_view_init (FrogrMainView *self)
 
   gtk_builder_connect_signals (builder, self);
 
-  /* Show the UI, but hiding some widgets */
+  /* Show the UI */
   gtk_widget_show_all (GTK_WIDGET(priv->window));
+
+#if !GTK_CHECK_VERSION (3,2,0)
+  /* Hide the option to select the dark theme if GTK < 3.2 */
+  dark_theme_menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "use_dark_theme_menu_item"));
+  gtk_widget_hide (dark_theme_menu_item);
+#endif
 
   /* Update UI */
   _update_ui (FROGR_MAIN_VIEW (self));
