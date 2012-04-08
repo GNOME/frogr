@@ -96,7 +96,7 @@ upload_cb                               (GObject      *object,
       else if (source_func == photoset_created_cb)
         {
           /* Continue adding the picture to the photoset */
-          g_print ("Creatine a new photoset...\n");
+          g_print ("Adding picture to photoset...\n");
           fsp_session_add_to_photoset_async (session,
                                              uploaded_photo_id,
                                              created_photoset_id,
@@ -104,8 +104,8 @@ upload_cb                               (GObject      *object,
         }
       else if (source_func == get_groups_cb)
         {
-          /* Continue adding the picture to the photoset */
-          g_print ("Creatine a new photoset...\n");
+          /* Continue adding the picture to the group */
+          g_print ("Adding picture to group...\n");
           fsp_session_add_to_group_async (session,
                                           uploaded_photo_id,
                                           first_group_id,
@@ -440,8 +440,8 @@ get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused)
       g_print ("Uploading a picture...\n");
       fsp_session_upload_async (session,
                                 test_photo_path,
-                                "title",
-                                "description",
+                                "title with spaces and wéïrd characters!",
+                                "description with\nmultiple lines",
                                 "áèïôu "
                                 "çÇ*+[]{} "
                                 "qwerty "
