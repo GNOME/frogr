@@ -45,6 +45,8 @@ void added_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photo_get_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void get_location_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void set_location_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void set_license_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused);
@@ -373,6 +375,72 @@ photo_get_info_cb                       (GObject      *object,
 }
 
 void
+get_location_cb                         (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspSession *session = FSP_SESSION (object);
+  GError *error = NULL;
+  FspDataLocation *location = NULL;
+
+  location = fsp_session_get_location_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error getting location: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[get_location_cb]::Success! Location got:\n");
+      g_print ("[get_location_cb]::\tLatitude: %g\n", location->latitude);
+      g_print ("[get_location_cb]::\tLongitude: %g\n", location->longitude);
+      g_print ("[get_location_cb]::\tAccuracy: %d\n", location->accuracy);
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue getting info about the picture */
+      g_print ("Getting info for photo %s...\n", uploaded_photo_id);
+      fsp_session_get_info_async (session, uploaded_photo_id, NULL,
+                                  photo_get_info_cb, NULL);
+
+      fsp_data_free (FSP_DATA (location));
+    }
+}
+
+void
+set_location_cb                         (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspSession *session = FSP_SESSION (object);
+  GError *error = NULL;
+  gboolean result = FALSE;
+
+  result = fsp_session_set_location_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error setting location: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[set_location_cb]::Success! (%s)\n\n",
+               result ? "OK" : "FAIL");
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue getting the location for the picture (should match) */
+      g_print ("Getting location for photo %s...\n", uploaded_photo_id);
+      fsp_session_get_location_async (session, uploaded_photo_id, NULL,
+                                      get_location_cb, NULL);
+    }
+}
+
+void
 set_license_cb                          (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
@@ -389,6 +457,8 @@ set_license_cb                          (GObject      *object,
     }
   else
     {
+      FspDataLocation *location = NULL;
+
       g_print ("[set_license_cb]::Success! (%s)\n\n",
                result ? "OK" : "FAIL");
 
@@ -396,10 +466,23 @@ set_license_cb                          (GObject      *object,
       g_print ("Press ENTER to continue...\n\n");
       getchar ();
 
-      /* Continue getting info about the picture */
-      g_print ("Getting info for photo %s...\n", uploaded_photo_id);
-      fsp_session_get_info_async (session, uploaded_photo_id, NULL,
-                                  photo_get_info_cb, NULL);
+      /* Continue setting a location for the picture */
+      location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
+      location->latitude = 42.166448;
+      location->longitude = -7.182521;
+      location->accuracy = 10;
+
+      g_print ("Setting location for photo %s to (%g, %g, %d)...\n",
+               uploaded_photo_id,
+               location->latitude,
+               location->longitude,
+               location->accuracy);
+
+      fsp_session_set_location_async (session, uploaded_photo_id,
+                                      location, NULL,
+                                      set_location_cb, NULL);
+
+      fsp_data_free (FSP_DATA (location));
     }
 }
 
@@ -596,7 +679,7 @@ get_auth_url_cb                         (GObject      *object,
                auth_url ? auth_url : "No URL got");
 
       /* Make a pause before continuing */
-      g_print ("\nEnter the verification code and press ENTER to continue:");
+      g_print ("\nEnter the verification code and press ENTER to continue: ");
       gets(buffer);
       verifier = encode_uri (buffer);
 
