@@ -412,7 +412,7 @@ _check_token_parser                     (xmlDoc  *doc,
       if (!auth_token->token)
         {
           /* If we don't get enough information, return NULL */
-          g_object_unref (auth_token);
+          fsp_data_free (FSP_DATA (auth_token));
           auth_token = NULL;
 
           err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
@@ -557,7 +557,7 @@ _get_upload_status_parser               (xmlDoc  *doc,
       if (!upload_status->id)
         {
           /* If we don't get enough information, return NULL */
-          g_object_unref (upload_status);
+          fsp_data_free (FSP_DATA (upload_status));
           upload_status = NULL;
 
           err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
