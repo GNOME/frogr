@@ -68,6 +68,9 @@ _get_error_method_from_parser           (gpointer (*body_parser)
                                          (xmlDoc  *doc,
                                           GError **error));
 static gpointer
+_check_token_parser                     (xmlDoc  *doc,
+                                         GError **error);
+static gpointer
 _exchange_token_parser                  (xmlDoc  *doc,
                                          GError **error);
 static gpointer
@@ -264,7 +267,9 @@ _get_error_method_from_parser           (gpointer (*body_parser)
 {
   FspErrorMethod error_method = FSP_ERROR_METHOD_UNDEFINED;
 
-  if (body_parser == _exchange_token_parser)
+  if (body_parser == _check_token_parser)
+    error_method = FSP_ERROR_METHOD_CHECK_TOKEN;
+  else if (body_parser == _exchange_token_parser)
     error_method = FSP_ERROR_METHOD_EXCHANGE_TOKEN;
   else if (body_parser == _get_upload_status_parser)
     error_method = FSP_ERROR_METHOD_GET_UPLOAD_STATUS;
@@ -337,6 +342,95 @@ _process_xml_response                          (FspParser  *self,
     g_propagate_error (error, err);
 
   return retval;
+}
+
+
+static gpointer
+_check_token_parser                     (xmlDoc  *doc,
+                                         GError **error)
+{
+  xmlXPathContext *xpathCtx = NULL;
+  xmlXPathObject * xpathObj = NULL;
+  FspDataAuthToken *auth_token = NULL;
+  GError *err = NULL;
+
+  g_return_val_if_fail (doc != NULL, NULL);
+
+  xpathCtx = xmlXPathNewContext (doc);
+  xpathObj = xmlXPathEvalExpression ((xmlChar *)"/rsp/oauth", xpathCtx);
+
+  if ((xpathObj != NULL) && (xpathObj->nodesetval->nodeNr > 0))
+    {
+      /* Matching nodes found */
+      xmlNode *node = NULL;
+      xmlChar *content = NULL;
+
+      auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
+
+      /* Traverse children of the 'auth' node */
+      node = xpathObj->nodesetval->nodeTab[0];
+      for (node = node->children; node != NULL; node = node->next)
+        {
+          if (node->type != XML_ELEMENT_NODE)
+            continue;
+
+          /* Token string */
+          if (!g_strcmp0 ((gchar *) node->name, "token"))
+            {
+              content = xmlNodeGetContent (node);
+              auth_token->token = g_strdup ((gchar *) content);
+              xmlFree (content);
+            }
+
+          /* Permissions */
+          if (!g_strcmp0 ((gchar *) node->name, "perms"))
+            {
+              content = xmlNodeGetContent (node);
+              auth_token->permissions = g_strdup ((gchar *) content);
+              xmlFree (content);
+            }
+
+          /* User profile */
+          if (!g_strcmp0 ((gchar *) node->name, "user"))
+            {
+              xmlChar *value = NULL;
+
+              value = xmlGetProp (node, (const xmlChar *) "nsid");
+              auth_token->nsid = g_strdup ((gchar *) value);
+              xmlFree (value);
+
+              value = xmlGetProp (node, (const xmlChar *) "username");
+              auth_token->username = g_strdup ((gchar *) value);
+              xmlFree (value);
+
+              value = xmlGetProp (node, (const xmlChar *) "fullname");
+              auth_token->fullname = g_strdup ((gchar *) value);
+              xmlFree (value);
+            }
+        }
+
+      if (!auth_token->token)
+        {
+          /* If we don't get enough information, return NULL */
+          g_object_unref (auth_token);
+          auth_token = NULL;
+
+          err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                             "No token found in the response");
+        }
+    }
+  else
+    err = g_error_new (FSP_ERROR, FSP_ERROR_MISSING_DATA,
+                       "No 'auth' node found in the response");
+  /* Free */
+  xmlXPathFreeObject (xpathObj);
+  xmlXPathFreeContext (xpathCtx);
+
+  /* Propagate error */
+  if (err != NULL)
+    g_propagate_error (error, err);
+
+  return auth_token;
 }
 
 static gpointer
@@ -1143,6 +1237,27 @@ fsp_parser_get_access_token             (FspParser   *self,
       if (err != NULL)
         g_propagate_error (error, err);
     }
+
+  /* Return value */
+  return auth_token;
+}
+
+FspDataAuthToken *
+fsp_parser_check_token                  (FspParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error)
+{
+  FspDataAuthToken *auth_token = NULL;
+
+  g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
+  g_return_val_if_fail (buffer != NULL, NULL);
+
+  /* Process the response */
+  auth_token =
+    FSP_DATA_AUTH_TOKEN (_process_xml_response (self, buffer, buf_size,
+                                                _check_token_parser,
+                                                error));
 
   /* Return value */
   return auth_token;

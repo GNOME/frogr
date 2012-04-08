@@ -138,7 +138,10 @@ static void
 _get_access_token_soup_session_cb       (SoupSession *session,
                                          SoupMessage *msg,
                                          gpointer     data);
-
+static void
+_check_token_soup_session_cb            (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer data);
 static void
 _exchange_token_soup_session_cb         (SoupSession *session,
                                          SoupMessage *msg,
@@ -516,6 +519,20 @@ _get_access_token_soup_session_cb       (SoupSession *session,
   /* Handle message with the right parser */
   _handle_soup_response (msg,
                          (FspParserFunc) fsp_parser_get_access_token,
+                         data);
+}
+
+static void
+_check_token_soup_session_cb            (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_check_token,
                          data);
 }
 
@@ -1971,12 +1988,12 @@ fsp_session_check_auth_info_async       (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
-                             "method", "flickr.auth.checkToken",
+                             "method", "flickr.auth.oauth.checkToken",
                              NULL);
 
       /* Perform the async request */
       _perform_async_request (priv->soup_session, url,
-                              _get_access_token_soup_session_cb, G_OBJECT (self),
+                              _check_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_check_auth_info_async, data);
 
       g_free (url);

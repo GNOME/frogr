@@ -80,6 +80,12 @@ fsp_parser_get_access_token             (FspParser  *self,
                                          GError          **error);
 
 FspDataAuthToken *
+fsp_parser_check_token                  (FspParser  *self,
+                                         const gchar      *buffer,
+                                         gulong            buf_size,
+                                         GError          **error);
+
+FspDataAuthToken *
 fsp_parser_exchange_token               (FspParser  *self,
                                          const gchar      *buffer,
                                          gulong            buf_size,
