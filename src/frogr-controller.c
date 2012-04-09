@@ -2150,6 +2150,9 @@ frogr_controller_init (FrogrController *self)
       frogr_controller_set_proxy (self, use_gnome_proxy,
                                   host, port, username, password);
     }
+
+  /* Select the dark theme if needed */
+  frogr_controller_set_use_dark_theme (self, frogr_config_get_use_dark_theme (priv->config));
 }
 
 
@@ -2706,6 +2709,15 @@ frogr_controller_reorder_pictures (FrogrController *self)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   frogr_main_view_reorder_pictures (priv->mainview);
+}
+
+void
+frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value)
+{
+  GtkSettings *gtk_settings = NULL;
+
+  gtk_settings = gtk_settings_get_default ();
+  g_object_set (G_OBJECT (gtk_settings), "gtk-application-prefer-dark-theme", value, NULL);
 }
 
 void

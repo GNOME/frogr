@@ -985,7 +985,7 @@ frogr_config_init (FrogrConfig *self)
   priv->mainview_sorting_criteria = SORT_AS_LOADED;
   priv->mainview_sorting_reversed = FALSE;
   priv->mainview_enable_tooltips = TRUE;
-  priv->use_dark_theme = FALSE;
+  priv->use_dark_theme = TRUE;
   priv->use_proxy = FALSE;
   priv->use_gnome_proxy = FALSE;
   priv->proxy_host = NULL;

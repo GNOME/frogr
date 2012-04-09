@@ -35,10 +35,6 @@
     <property name="label" translatable="yes">Enable _Tooltips</property>
     <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
   </object>
-  <object class="GtkToggleAction" id="use_dark_theme_action">
-    <property name="label" translatable="yes">Use _Dark Theme</property>
-    <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
-  </object>
   <object class="GtkAction" id="edit_details_action">
     <property name="label" translatable="yes">Edit _Details…</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
@@ -537,17 +533,17 @@
               </object>
             </child>
             <child>
+              <object class="GtkSeparatorMenuItem" id="separator7">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkCheckMenuItem" id="enable_tooltips_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="related_action">enable_tooltips_action</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckMenuItem" id="use_dark_theme_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="related_action">use_dark_theme_action</property>
               </object>
             </child>
           </object>

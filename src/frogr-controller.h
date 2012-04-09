@@ -120,6 +120,8 @@ void frogr_controller_upload_pictures (FrogrController *self);
 
 void frogr_controller_reorder_pictures (FrogrController *self);
 
+void frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value);
+
 void frogr_controller_cancel_ongoing_request (FrogrController *self);
 
 G_END_DECLS
