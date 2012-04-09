@@ -1238,6 +1238,7 @@ _craft_state_description (FrogrMainView *mainview)
   FrogrMainViewPrivate *priv = NULL;
   FrogrAccount *account = NULL;
   GSList *pictures = NULL;
+  guint n_pictures = 0;
   const gchar *login = NULL;
   gchar *description = NULL;
   gchar *login_str = NULL;
@@ -1284,7 +1285,7 @@ _craft_state_description (FrogrMainView *mainview)
              till the end of the month, in a CURRENT / MAX fashion.
              The '-' at the beginning is just a separator, since more
              blocks of text will be shown in the status bar too. */
-          bandwidth_str = g_strdup_printf (_(" - %s / %s remaining for the current month"),
+          bandwidth_str = g_strdup_printf (_(" - %s / %s remaining"),
                                            remaining_bw_str,
                                            max_bw_str);
         }
@@ -1295,7 +1296,8 @@ _craft_state_description (FrogrMainView *mainview)
 
   /* Check size of the loaded pictures, if any */
   pictures = frogr_main_view_model_get_pictures (priv->model);
-  if (g_slist_length (pictures) > 0)
+  n_pictures = frogr_main_view_model_n_pictures (priv->model);
+  if (n_pictures > 0)
     {
       GSList *item = NULL;
       gulong total_size = 0;
@@ -1306,12 +1308,13 @@ _craft_state_description (FrogrMainView *mainview)
 
       total_size_str = frogr_util_get_datasize_string (total_size);
 
-      /* Will show in the status bar the amount of data (in KB, MB or
-         GB) that would be uploaded as the sum of the sizes for every
-         picture currently loadad in the application */
-      upload_size_str = g_strdup_printf (_(" - %s to be uploaded"),
-                                         total_size_str);
-
+      /* Will show in the status bar the amount of pictures and data
+         (in KB, MB or GB) that would be uploaded as the sum of the
+         sizes for every picture loaded in the application */
+      upload_size_str = g_strdup_printf (n_pictures > 1
+                                         ? _(" - %d pictures to upload (%s)")
+                                         : _(" - %d picture to upload (%s)"),
+                                         n_pictures, total_size_str);
       g_free (total_size_str);
     }
 
