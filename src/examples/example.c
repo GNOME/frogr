@@ -1,7 +1,7 @@
 /*
  * example.c -- Random example to test the flicksoup files
  *
- * Copyright (C) 2010-2011 Mario Sanchez Prada
+ * Copyright (C) 2010-2012 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *
  * This program is free software; you can redistribute it and/or

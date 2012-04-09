@@ -4,16 +4,9 @@ Mario Sanchez Prada <msanchez@igalia.com>
 Adrian Perez de Castro <aperez@igalia.com>
 * Artwork
 * Original configuration management system
-* Fedora packaging
-
-Alberto Garcia <agarcia@igalia.com>
-* Debian packaging
 
 Alejandro Piñeiro Iglesias <apinheiro@igalia.com>
 * Gettext support for i18n
-
-Javier Jardon <javierjc1982@gmail.com>
-* Cleanup and improvements for GNOME 3.0
 
 Joaquim Rocha <jrocha@igalia.com>
 * Migration to GtkActions
