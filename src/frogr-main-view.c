@@ -842,6 +842,7 @@ _add_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer dat
       if (fileuris != NULL)
         {
           _load_pictures (FROGR_MAIN_VIEW (self), fileuris);
+          g_slist_foreach (fileuris, (GFunc) g_free, NULL);
           g_slist_free (fileuris);
         }
     }

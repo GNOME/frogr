@@ -72,6 +72,9 @@ _load_pictures_on_idle (gpointer data)
 
   frogr_controller_load_pictures (fcontroller, fileuris);
 
+  g_slist_foreach (fileuris, (GFunc)g_free, NULL);
+  g_slist_free (fileuris);
+
   return FALSE;
 }
 
@@ -108,12 +111,6 @@ main (int argc, char **argv)
     gdk_threads_add_idle (_load_pictures_on_idle, fileuris);
 
   frogr_controller_run_app (fcontroller);
-
-  if (fileuris)
-    {
-      g_slist_foreach (fileuris, (GFunc)g_free, NULL);
-      g_slist_free (fileuris);
-    }
 
   /* cleanup libxml2 library */
   xmlCleanupParser();
