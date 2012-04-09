@@ -291,7 +291,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   label = gtk_label_new (NULL);
   gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
-                                    _("Other defaults"));
+                                    _("Other Defaults"));
   gtk_label_set_markup (GTK_LABEL (label), markup);
   g_free (markup);
 
@@ -302,10 +302,10 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box1 = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("Send geo_location data if available"),
+                        _("Send Geo_location Data for Pictures"),
                         &priv->send_geolocation_data_cb);
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("_Show up in Global Search Results"),
+                        _("_Show Pictures in Global Search Results"),
                         &priv->show_in_search_cb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
