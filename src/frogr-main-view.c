@@ -279,16 +279,8 @@ _tweak_menu_bar_for_mac (FrogrMainView *self)
   gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 6);
   gtk_widget_show_all (menu_item);
 
-  /* Hide menus, menu items and separators that won't be shown in the Mac */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "contents_menu_item"));
-  gtk_widget_hide (menu_item);
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator2"));
-  gtk_widget_hide (menu_item);
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator3"));
-  gtk_widget_hide (menu_item);
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator4"));
-  gtk_widget_hide (menu_item);
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "quit_menu_item"));
+  /* Hide the traditional application menu that won't be shown in the Mac */
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "frogr_menu_item"));
   gtk_widget_hide (menu_item);
 }
 #endif
@@ -1649,10 +1641,6 @@ frogr_main_view_init (FrogrMainView *self)
   priv->add_to_set_menu_item =
     GTK_WIDGET (gtk_builder_get_object (builder, "add_to_set_menu_item"));
 
-#ifdef MAC_INTEGRATION
-  _tweak_menu_bar_for_mac (self);
-#endif
-
   /* populate accounts submenu from model */
   _populate_accounts_submenu (self);
 
@@ -1772,12 +1760,13 @@ frogr_main_view_init (FrogrMainView *self)
   /* Show the UI */
   gtk_widget_show_all (GTK_WIDGET(priv->window));
 
-  /* Update UI */
-  _update_ui (FROGR_MAIN_VIEW (self));
-
 #ifdef MAC_INTEGRATION
+  _tweak_menu_bar_for_mac (self);
   gtk_osxapplication_ready(osx_app);
 #endif
+
+  /* Update UI */
+  _update_ui (FROGR_MAIN_VIEW (self));
 
   /* Show the auth dialog, if needed, on idle */
   g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
