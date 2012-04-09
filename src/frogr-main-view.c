@@ -280,9 +280,7 @@ _tweak_menu_bar_for_mac (FrogrMainView *self)
   gtk_widget_show_all (menu_item);
 
   /* Hide menus, menu items and separators that won't be shown in the Mac */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_submenu"));
-  gtk_widget_hide (menu_item);
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_menu_item"));
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "contents_menu_item"));
   gtk_widget_hide (menu_item);
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator2"));
   gtk_widget_hide (menu_item);
