@@ -872,25 +872,28 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
   FrogrSettingsDialog *self = FROGR_SETTINGS_DIALOG (dialog);
   FrogrSettingsDialogPrivate *priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
-  /* Try to save data if response is OK */
-  if (response == GTK_RESPONSE_OK && _save_data (self) == FALSE)
-      return;
+  if (response == GTK_RESPONSE_OK)
+    {
+      /* Try to save data if response is OK */
+      if (!_save_data (self))
+        return;
 
-  /* Fetch tags if needed */
-  if (priv->enable_tags_autocompletion)
-    frogr_controller_fetch_tags_if_needed (priv->controller);
+      /* Fetch tags if needed */
+      if (priv->enable_tags_autocompletion)
+        frogr_controller_fetch_tags_if_needed (priv->controller);
 
-  /* Update proxy status */
-  if (priv->use_proxy)
-    frogr_controller_set_proxy (priv->controller,
-                                priv->use_gnome_proxy,
-                                priv->proxy_host, priv->proxy_port,
-                                priv->proxy_username, priv->proxy_password);
-  else
-    frogr_controller_set_proxy (priv->controller, FALSE, NULL, NULL, NULL, NULL);
+      /* Update proxy status */
+      if (priv->use_proxy)
+        frogr_controller_set_proxy (priv->controller,
+                                    priv->use_gnome_proxy,
+                                    priv->proxy_host, priv->proxy_port,
+                                    priv->proxy_username, priv->proxy_password);
+      else
+        frogr_controller_set_proxy (priv->controller, FALSE, NULL, NULL, NULL, NULL);
 
-  /* Update dark theme related stuff */
-  frogr_controller_set_use_dark_theme (priv->controller, priv->use_dark_theme);
+      /* Update dark theme related stuff */
+      frogr_controller_set_use_dark_theme (priv->controller, priv->use_dark_theme);
+    }
 
   gtk_widget_hide (GTK_WIDGET (self));
 }
