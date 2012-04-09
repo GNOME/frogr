@@ -146,7 +146,7 @@ frogr_location_new (gdouble latitude, gdouble longitude)
 
 /* Data Managing functions */
 
-const gdouble
+gdouble
 frogr_location_get_latitude (FrogrLocation *self)
 {
   FrogrLocationPrivate *priv = NULL;
@@ -169,7 +169,7 @@ frogr_location_set_latitude (FrogrLocation *self,
   priv->latitude = latitude;
 }
 
-const gdouble
+gdouble
 frogr_location_get_longitude (FrogrLocation *self)
 {
   FrogrLocationPrivate *priv = NULL;

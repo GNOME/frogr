@@ -59,11 +59,11 @@ FrogrLocation *frogr_location_new (gdouble latitude, gdouble longitude);
 
 /* Data Managing functions */
 
-const gdouble frogr_location_get_latitude (FrogrLocation *self);
+gdouble frogr_location_get_latitude (FrogrLocation *self);
 void frogr_location_set_latitude (FrogrLocation *self,
                                   gdouble latitude);
 
-const gdouble frogr_location_get_longitude (FrogrLocation *self);
+gdouble frogr_location_get_longitude (FrogrLocation *self);
 void frogr_location_set_longitude (FrogrLocation *self,
                                    gdouble longitude);
 
