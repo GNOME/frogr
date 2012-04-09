@@ -1,7 +1,37 @@
 0.7 (??)
 ========
 
-  *
+  * Migrated to the new, OAuth-based, authentication system. Previous
+    versions of frogr using the old API will be seamlessly updated.
+  * Import tags from picture's metainformation if present..
+  * Allow setting the geolocation information for a picture, if
+    available, as extracted from its EXIF data.
+  * New tags added are inmmediately added to the auto-completion feature.
+  * Allow using a dark theme if available (Ignacio Casal Quinteiro)
+  * Show error when loading a picture if bigger than maximum allowed size.
+  * Small redesign in the 'edit details' dialog.
+  * Better integration with GTK+3 (e.g. primary toolbar).
+  * Introduced new dependency: libgcrypt (for OAuth).
+  * As usual, other minor improvements, bug fixes and cleanups.
+
+Bug fixes:
+
+  * #656448: Use the dark theme
+  * #656466: Warning if filesize limit is reached
+  * #658120: Add new tags to the completion
+  * #656519: memleak fixes
+
+News and updated translations:
+
+  * cs (Marek Černocký)
+  * de (Mario Blättermann)
+  * es (aniel Mustieles)
+  * fr (Alain Lojewski)
+  * fr (Bruno Brouard)
+  * gl ( Fran Dieguez)
+  * nb (artan Maraas)
+  * nn (Kevin Brubeck Unhammer)
+  * sl (Matej Urbančič)
 
 
 0.6.1 (19 Aug 2011)
