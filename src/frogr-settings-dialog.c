@@ -69,7 +69,9 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *enable_tags_autocompletion_cb;
   GtkWidget *keep_file_extensions_cb;
   GtkWidget *import_tags_cb;
+#ifdef GTK_API_VERSION_3
   GtkWidget *use_dark_theme_cb;
+#endif
 
   gboolean public_visibility;
   gboolean family_visibility;
@@ -79,7 +81,10 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean enable_tags_autocompletion;
   gboolean keep_file_extensions;
   gboolean import_tags;
+#ifdef GTK_API_VERSION_3
   gboolean use_dark_theme;
+#endif
+
   FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
@@ -496,9 +501,13 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
                         _("_Import Tags from Pictures Metadata"),
                         &priv->import_tags_cb);
+
+#ifdef GTK_API_VERSION_3
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
                         _("Use _Dark Theme (if available)"),
                         &priv->use_dark_theme_cb);
+#endif
+
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
                         _("_Keep File Extensions in Titles when Loading Pictures"),
                         &priv->keep_file_extensions_cb);
@@ -527,7 +536,9 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->enable_tags_autocompletion = frogr_config_get_tags_autocompletion (priv->config);
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (priv->config);
   priv->import_tags = frogr_config_get_import_tags_from_metadata (priv->config);
+#ifdef GTK_API_VERSION_3
   priv->use_dark_theme = frogr_config_get_use_dark_theme (priv->config);
+#endif
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 #ifdef HAVE_LIBSOUP_GNOME
   priv->use_gnome_proxy = frogr_config_get_use_gnome_proxy (priv->config);
@@ -593,9 +604,10 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
                                 priv->keep_file_extensions);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->import_tags_cb),
                                 priv->import_tags);
+#ifdef GTK_API_VERSION_3
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_dark_theme_cb),
                                 priv->use_dark_theme);
-
+#endif
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
 #ifdef HAVE_LIBSOUP_GNOME
@@ -639,7 +651,9 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_tags_autocompletion (priv->config, priv->enable_tags_autocompletion);
   frogr_config_set_keep_file_extensions (priv->config, priv->keep_file_extensions);
   frogr_config_set_import_tags_from_metadata (priv->config, priv->import_tags);
+#ifdef GTK_API_VERSION_3
   frogr_config_set_use_dark_theme (priv->config, priv->use_dark_theme);
+#endif
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 #ifdef HAVE_LIBSOUP_GNOME
@@ -802,11 +816,13 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("import tags from pictures metadata set to %s", active ? "TRUE" : "FALSE");
     }
 
+#ifdef GTK_API_VERSION_3
   if (GTK_WIDGET (button) == priv->use_dark_theme_cb)
     {
       priv->use_dark_theme = active;
       DEBUG ("Use Dark Theme if Available set to %s", active ? "TRUE" : "FALSE");
     }
+#endif
 
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
     {
@@ -891,8 +907,10 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
       else
         frogr_controller_set_proxy (priv->controller, FALSE, NULL, NULL, NULL, NULL);
 
+#ifdef GTK_API_VERSION_3
       /* Update dark theme related stuff */
       frogr_controller_set_use_dark_theme (priv->controller, priv->use_dark_theme);
+#endif
     }
 
   gtk_widget_hide (GTK_WIDGET (self));
@@ -968,7 +986,9 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->enable_tags_autocompletion_cb = NULL;
   priv->keep_file_extensions_cb = NULL;
   priv->import_tags_cb = NULL;
+#ifdef GTK_API_VERSION_3
   priv->use_dark_theme_cb = NULL;
+#endif
   priv->use_proxy_cb = NULL;
   priv->use_gnome_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
@@ -990,7 +1010,9 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->enable_tags_autocompletion = TRUE;
   priv->keep_file_extensions = FALSE;
   priv->import_tags = TRUE;
+#ifdef GTK_API_VERSION_3
   priv->use_dark_theme = TRUE;
+#endif
   priv->use_proxy = FALSE;
   priv->use_gnome_proxy = FALSE;
   priv->proxy_host = NULL;

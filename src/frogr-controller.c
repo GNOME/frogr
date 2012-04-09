@@ -2151,8 +2151,10 @@ frogr_controller_init (FrogrController *self)
                                   host, port, username, password);
     }
 
+#ifdef GTK_API_VERSION_3
   /* Select the dark theme if needed */
   frogr_controller_set_use_dark_theme (self, frogr_config_get_use_dark_theme (priv->config));
+#endif
 }
 
 
@@ -2712,15 +2714,6 @@ frogr_controller_reorder_pictures (FrogrController *self)
 }
 
 void
-frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value)
-{
-  GtkSettings *gtk_settings = NULL;
-
-  gtk_settings = gtk_settings_get_default ();
-  g_object_set (G_OBJECT (gtk_settings), "gtk-application-prefer-dark-theme", value, NULL);
-}
-
-void
 frogr_controller_cancel_ongoing_request (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
@@ -2735,3 +2728,14 @@ frogr_controller_cancel_ongoing_request (FrogrController *self)
   g_cancellable_cancel (priv->last_cancellable);
   priv->last_cancellable = NULL;
 }
+
+#ifdef GTK_API_VERSION_3
+void
+frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value)
+{
+  GtkSettings *gtk_settings = NULL;
+
+  gtk_settings = gtk_settings_get_default ();
+  g_object_set (G_OBJECT (gtk_settings), "gtk-application-prefer-dark-theme", value, NULL);
+}
+#endif

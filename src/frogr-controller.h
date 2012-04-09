@@ -25,6 +25,7 @@
 #include "frogr-main-view.h"
 #include "frogr-picture.h"
 
+#include <config.h>
 #include <glib.h>
 #include <glib-object.h>
 
@@ -120,9 +121,11 @@ void frogr_controller_upload_pictures (FrogrController *self);
 
 void frogr_controller_reorder_pictures (FrogrController *self);
 
-void frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value);
-
 void frogr_controller_cancel_ongoing_request (FrogrController *self);
+
+#ifdef GTK_API_VERSION_3
+void frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value);
+#endif
 
 G_END_DECLS
 
