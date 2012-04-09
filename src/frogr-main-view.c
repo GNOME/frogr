@@ -262,16 +262,29 @@ _tweak_menu_bar_for_mac (FrogrMainView *self)
   gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 1);
   gtk_widget_show_all (menu_item);
 
+  /* Relocate the 'accounts' menu item in the app menu */
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "accounts_menu_item"));
+  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 2);
+  gtk_widget_show_all (menu_item);
+
+  /* Relocate the 'authorize' menu item in the app menu */
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_frogr_menu_item"));
+  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 3);
+  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 4);
+  gtk_widget_show_all (menu_item);
+
   /* Relocate the 'preferences' menu item in the app menu */
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "preferences_menu_item"));
-  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 2);
-  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 3);
+  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 5);
+  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 6);
   gtk_widget_show_all (menu_item);
 
   /* Hide menus, menu items and separators that won't be shown in the Mac */
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_submenu"));
   gtk_widget_hide (menu_item);
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_menu_item"));
+  gtk_widget_hide (menu_item);
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator2"));
   gtk_widget_hide (menu_item);
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "separator3"));
   gtk_widget_hide (menu_item);
