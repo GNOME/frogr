@@ -19,7 +19,9 @@ noinst_PROGRAMS = \
 example_CFLAGS = \
 	-I$(top_srcdir)/src \
 	$(GLIB_CFLAGS)	    \
-	$(LIBSOUP_CFLAGS)
+	$(LIBSOUP_CFLAGS)   \
+	$(LIBXML2_CFLAGS)   \
+	$(LIBGCRYPT_CFLAGS)
 
 example_LDADD = \
 	$(top_builddir)/src/flicksoup/libflicksoup.a \
