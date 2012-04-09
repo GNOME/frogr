@@ -284,7 +284,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   combo = frogr_gtk_compat_combo_box_text_new ();
   for (i = 0; license_descriptions[i]; i++)
-    frogr_gtk_compat_combo_box_text_insert (GTK_COMBO_BOX_TEXT (combo), i, _(license_descriptions[i]));
+    frogr_gtk_compat_combo_box_text_insert (GTK_COMBO_BOX (combo), i, _(license_descriptions[i]));
 
   gtk_box_pack_start (GTK_BOX (vbox), combo, FALSE, FALSE, 0);
   priv->license_cb = combo;

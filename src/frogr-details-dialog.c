@@ -307,7 +307,7 @@ _create_widgets (FrogrDetailsDialog *self)
 
   widget = frogr_gtk_compat_combo_box_text_new ();
   for (i = 0; license_descriptions[i]; i++)
-    frogr_gtk_compat_combo_box_text_insert (GTK_COMBO_BOX_TEXT (widget), i, _(license_descriptions[i]));
+    frogr_gtk_compat_combo_box_text_insert (GTK_COMBO_BOX (widget), i, _(license_descriptions[i]));
 
   priv->license_cb = widget;
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);

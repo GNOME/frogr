@@ -31,7 +31,7 @@ GtkWidget *frogr_gtk_compat_separator_new (GtkOrientation orientation);
 
 GtkWidget *frogr_gtk_compat_combo_box_text_new (void);
 
-void frogr_gtk_compat_combo_box_text_insert (GtkComboBoxText *combo_box,
+void frogr_gtk_compat_combo_box_text_insert (GtkComboBox *combo_box,
                                              gint position,
                                              const gchar *text);
 G_END_DECLS

@@ -70,14 +70,14 @@ frogr_gtk_compat_combo_box_text_new (void)
 }
 
 void
-frogr_gtk_compat_combo_box_text_insert (GtkComboBoxText *combo_box,
+frogr_gtk_compat_combo_box_text_insert (GtkComboBox *combo_box,
                                         gint position,
                                         const gchar *text)
 {
 #ifdef GTK_API_VERSION_3
-  gtk_combo_box_text_insert (combo_box, position, NULL, text);
+  gtk_combo_box_text_insert (GTK_COMBO_BOX_TEXT (combo_box), position, NULL, text);
 #elif GTK_CHECK_VERSION (2,24,0)
-  gtk_combo_box_text_insert_text (combo_box, position, text);
+  gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo_box), position, text);
 #else
   gtk_combo_box_insert_text (combo_box, position, text);
 #endif
