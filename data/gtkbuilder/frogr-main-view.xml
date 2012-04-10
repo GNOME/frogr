@@ -7,7 +7,7 @@
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="add_pictures_action">
-    <property name="label" translatable="yes">_Add Pictures</property>
+    <property name="label" translatable="yes">_Add Pictures…</property>
     <property name="stock_id">gtk-add</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
@@ -28,7 +28,7 @@
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="auth_action">
-    <property name="label" translatable="yes">Authorize _frogr</property>
+    <property name="label" translatable="yes">Aut_horize account…</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkToggleAction" id="enable_tooltips_action">
@@ -292,19 +292,19 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
+              <object class="GtkMenuItem" id="authorize_menu_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="related_action">auth_action</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkMenuItem" id="accounts_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes">Accou_nts</property>
                 <property name="use_underline">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="authorize_frogr_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="related_action">auth_action</property>
               </object>
             </child>
             <child>

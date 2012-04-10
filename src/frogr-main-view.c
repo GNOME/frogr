@@ -262,13 +262,13 @@ _tweak_menu_bar_for_mac (FrogrMainView *self)
   gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 1);
   gtk_widget_show_all (menu_item);
 
-  /* Relocate the 'accounts' menu item in the app menu */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "accounts_menu_item"));
+  /* Relocate the 'authorize' menu item in the app menu */
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
   gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 2);
   gtk_widget_show_all (menu_item);
 
-  /* Relocate the 'authorize' menu item in the app menu */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_frogr_menu_item"));
+  /* Relocate the 'accounts' menu item in the app menu */
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "accounts_menu_item"));
   gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 3);
   gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 4);
   gtk_widget_show_all (menu_item);
