@@ -291,8 +291,6 @@ frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_hei
   const gchar *orientation;
   gint width;
   gint height;
-  gint new_width;
-  gint new_height;
 
   g_return_val_if_fail (max_width > 0, NULL);
   g_return_val_if_fail (max_height > 0, NULL);
@@ -300,21 +298,27 @@ frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_hei
   /* Look for the right side to reduce */
   width = gdk_pixbuf_get_width (pixbuf);
   height = gdk_pixbuf_get_height (pixbuf);
-  if (width > height)
+
+  DEBUG ("Original size: %dx%d\n", width, height);
+
+  if (width > max_width)
     {
-      new_width = max_width;
-      new_height = (float)new_width * height / width;
-    }
-  else
-    {
-      new_height = max_height;
-      new_width = (float)new_height * width / height;
+      height = (float)height * max_width / width;
+      width = max_width;
     }
 
+  if (height > max_height)
+    {
+      width = (float)width * max_height / height;
+      height = max_height;
+    }
+
+  DEBUG ("Scaled size: %dx%d\n", width, height);
+
   /* Scale the pixbuf to its best size */
-  scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
-                                           new_width, new_height,
-                                           GDK_INTERP_TILES);
+  scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf, width, height,
+                                           GDK_INTERP_BILINEAR);
+
   /* Correct orientation if needed */
   orientation = gdk_pixbuf_get_option (pixbuf, "orientation");
 
