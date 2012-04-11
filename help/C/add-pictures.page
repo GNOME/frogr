@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <page xmlns="http://projectmallard.org/1.0/"
       type="topic"
-      id="add-pictures">
+      id="load-pictures">
 
   <info>
     <link type="guide" xref="pictures"/>
-    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
-    <desc>Add Pictures</desc>
+    <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
+    <desc>Load Pictures</desc>
   </info>
 
-  <title>Add Pictures</title>
-  <p>You can add a picture using the toolbar <gui>Plus</gui> button. Or, you can use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>. The added pictures will be displayed and available for transfer to Flickr.</p>
+  <title>Load Pictures</title>
+  <p>You can load a picture using the toolbar <gui>Plus</gui> button. Or, you can use the menu <guiseq><gui>Actions</gui><gui>Load Pictures</gui></guiseq>. The loaded pictures will be displayed and available for transfer to Flickr.</p>
 
 </page>

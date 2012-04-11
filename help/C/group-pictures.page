@@ -5,12 +5,18 @@
 
   <info>
     <link type="guide" xref="organize"/>
-    <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
     <desc>Group Pictures</desc>
   </info>
 
   <title>Group Pictures</title>
   <p>You may add pictures to an already defined group.</p>
+  <figure>
+    <title>Adding pictures to groups</title>
+    <desc>Adding pictures to groups</desc>
+    <media type="image" src="figures/add-to-groups.png" mime="image/png" style="right">
+    </media>
+  </figure>
 
 </page>
 

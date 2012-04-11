@@ -14,6 +14,12 @@ include $(top_srcdir)/gnome-doc-utils.make
 
 DOC_ID = frogr
 DOC_FIGURES = \
+	figures/add-tags-dialog.png \
+	figures/add-to-groups.png \
+	figures/add-to-sets.png \
+	figures/auth-dialog-step1.png \
+	figures/auth-dialog-step2.png \
+	figures/create-new-set.png \
 	figures/edit-picture-details.png \
 	figures/frogr-remote-organizer.png \
 	figures/preferences-connection.png \

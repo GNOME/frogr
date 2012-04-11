@@ -4,7 +4,7 @@
       id="introduction">
 <info>
   <link type="guide" xref="index"/>
-  <revision pkgversion="0" version="0.6" date="2011-01-06" status="draft"/>
+    <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
   <desc>
     Introduction to the <app>Frogr</app> Remote Organizer.
   </desc>
@@ -34,7 +34,7 @@
   </section>
 
   <section><title>About</title>
-    <p>You can have more information about <app>Frogr</app> using the menu <guiseq><gui>Help</gui><gui>About</gui></guiseq>.</p>
+    <p>You can have more information about <app>Frogr</app> using the menu <guiseq><gui>Frogr</gui><gui>About</gui></guiseq>.</p>
   </section>
 
 </page>
