@@ -27,6 +27,7 @@
 #include "frogr-config.h"
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
+#include "frogr-gtk-compat.h"
 #include "frogr-main-view-model.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
@@ -34,15 +35,9 @@
 #include <config.h>
 #include <flicksoup/flicksoup.h>
 #include <gdk/gdk.h>
-#include <gdk/gdkkeysyms.h>
 
 #ifdef MAC_INTEGRATION
 #include <gtkosxapplication.h>
-#endif
-
-/* Access to old GDK names from GTK+ 2 when compiling with GTK+ 3 */
-#ifndef GTK_API_VERSION_2
-#include <gdk/gdkkeysyms-compat.h>
 #endif
 
 #include <glib/gi18n.h>
@@ -300,71 +295,71 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
   gtk_window_add_accel_group(priv->window, accel);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_a,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_a,
                              GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "preferences_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_p,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_p,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_F1,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_F1,
                              0, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "quit_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_q,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_q,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_pictures_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_l,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_l,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "remove_pictures_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_Delete,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_Delete,
                              0, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "edit_details_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_d,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_d,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_tags_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_t,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_t,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_group_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_g,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_g,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_existing_set_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_s,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "create_new_set_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_s,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
                              GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "open_in_external_viewer_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_v,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_v,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "upload_all_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_u,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_u,
                              GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "as_loaded_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_l,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_l,
                              GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "by_title_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_t,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_t,
                              GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "by_date_taken_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_d,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_d,
                              GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "reversed_order_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_r,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_r,
                              GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 }
 
@@ -574,7 +569,7 @@ _on_icon_view_key_press_event (GtkWidget *widget,
     return TRUE;
 
   /* Show contextual menu if pressed the 'Menu' key */
-  if (event->type == GDK_KEY_PRESS && event->keyval == GDK_Menu
+  if (event->type == GDK_KEY_PRESS && event->keyval == GDK_KEY_Menu
       && priv->n_selected_pictures > 0)
     {
       GtkMenu *menu = GTK_MENU (priv->pictures_ctxt_menu);
