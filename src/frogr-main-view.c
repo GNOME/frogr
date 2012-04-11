@@ -96,7 +96,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkBuilder *builder;
 
-  GtkAction *add_pictures_action;
+  GtkAction *load_pictures_action;
   GtkAction *remove_pictures_action;
   GtkAction *upload_pictures_action;
   GtkAction *open_in_external_viewer_action;
@@ -130,8 +130,10 @@ enum {
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
 #ifdef MAC_INTEGRATION
-static void _tweak_menu_bar_for_mac (FrogrMainView *self);
+static void _tweak_menu_bar_for_mac (FrogrMainView *self);w
 #endif
+
+static void _setup_keyboard_shortcuts (FrogrMainView *self);
 
 static void _populate_accounts_submenu (FrogrMainView *self);
 
@@ -171,11 +173,11 @@ static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _open_pictures_in_external_viewer (FrogrMainView *self);
 
-static void _add_pictures_dialog_response_cb (GtkDialog *dialog,
+static void _load_pictures_dialog_response_cb (GtkDialog *dialog,
                                               gint response,
                                               gpointer data);
 
-static void _add_pictures_dialog (FrogrMainView *self);
+static void _load_pictures_dialog (FrogrMainView *self);
 
 
 static gboolean _pictures_selected_required_check (FrogrMainView *self);
@@ -284,6 +286,87 @@ _tweak_menu_bar_for_mac (FrogrMainView *self)
   gtk_widget_hide (menu_item);
 }
 #endif
+
+static void
+_setup_keyboard_shortcuts (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  GtkAccelGroup *accel = NULL;
+  GtkWidget *menu_item = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  accel = gtk_accel_group_new();
+  gtk_window_add_accel_group(priv->window, accel);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_a,
+                             GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "preferences_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_p,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_F1,
+                             0, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "quit_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_q,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_pictures_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_l,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "remove_pictures_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_Delete,
+                             0, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "edit_details_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_d,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_tags_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_t,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_group_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_g,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_existing_set_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_s,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "create_new_set_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_s,
+                             GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "open_in_external_viewer_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_v,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "upload_all_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_u,
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "as_loaded_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_l,
+                             GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "by_title_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_t,
+                             GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "by_date_taken_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_d,
+                             GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "reversed_order_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_r,
+                             GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+}
 
 static void
 _populate_accounts_submenu (FrogrMainView *self)
@@ -401,8 +484,8 @@ _on_action_activated (GtkAction *action, gpointer data)
   FrogrMainViewPrivate *priv = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  if (action == priv->add_pictures_action)
-    _add_pictures_dialog (mainview);
+  if (action == priv->load_pictures_action)
+    _load_pictures_dialog (mainview);
   else if (action == priv->remove_pictures_action)
     _remove_selected_pictures (mainview);
   else if (action == priv->upload_pictures_action)
@@ -489,10 +572,6 @@ _on_icon_view_key_press_event (GtkWidget *widget,
   /* Do nothing if there's no picture loaded yet */
   if (!_n_pictures (mainview))
     return TRUE;
-
-  /* Remove selected pictures if pressed Supr */
-  if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
-    _remove_selected_pictures (mainview);
 
   /* Show contextual menu if pressed the 'Menu' key */
   if (event->type == GDK_KEY_PRESS && event->keyval == GDK_Menu
@@ -835,7 +914,7 @@ _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture)
 }
 
 static void
-_add_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
+_load_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
 
@@ -857,7 +936,7 @@ _add_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer dat
 }
 
 static void
-_add_pictures_dialog (FrogrMainView *self)
+_load_pictures_dialog (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
@@ -897,7 +976,7 @@ _add_pictures_dialog (FrogrMainView *self)
   gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), FALSE);
 
   g_signal_connect (G_OBJECT (dialog), "response",
-                    G_CALLBACK (_add_pictures_dialog_response_cb), self);
+                    G_CALLBACK (_load_pictures_dialog_response_cb), self);
 
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_widget_show_all (dialog);
@@ -1350,7 +1429,7 @@ _update_sensitiveness (FrogrMainView *self)
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
-      gtk_action_set_sensitive (priv->add_pictures_action, FALSE);
+      gtk_action_set_sensitive (priv->load_pictures_action, FALSE);
       gtk_action_set_sensitive (priv->remove_pictures_action, FALSE);
       gtk_action_set_sensitive (priv->upload_pictures_action, FALSE);
       gtk_action_set_sensitive (priv->open_in_external_viewer_action, FALSE);
@@ -1369,7 +1448,7 @@ _update_sensitiveness (FrogrMainView *self)
       has_accounts = (priv->accounts_menu != NULL);
       n_selected_pics = priv->n_selected_pictures;
 
-      gtk_action_set_sensitive (priv->add_pictures_action, TRUE);
+      gtk_action_set_sensitive (priv->load_pictures_action, TRUE);
       gtk_action_set_sensitive (priv->auth_action, TRUE);
       gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts);
       gtk_action_set_sensitive (priv->upload_pictures_action, has_pics);
@@ -1561,8 +1640,8 @@ frogr_main_view_init (FrogrMainView *self)
   priv->status_bar = status_bar;
 
   /* Get actions from GtkBuilder */
-  priv->add_pictures_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_pictures_action"));
+  priv->load_pictures_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "load_pictures_action"));
   priv->remove_pictures_action =
     GTK_ACTION (gtk_builder_get_object (builder, "remove_pictures_action"));
   priv->upload_pictures_action =
@@ -1607,6 +1686,9 @@ frogr_main_view_init (FrogrMainView *self)
   priv->quit_action =
     GTK_ACTION (gtk_builder_get_object (builder, "quit_action"));
 #endif
+
+  /* Set Keyboard shortcuts */
+  _setup_keyboard_shortcuts (self);
 
   /* Init main model's state description */
   _update_state_description (self);

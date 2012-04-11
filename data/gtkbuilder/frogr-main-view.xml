@@ -6,8 +6,8 @@
     <property name="stock_id">gtk-about</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="add_pictures_action">
-    <property name="label" translatable="yes">_Add Pictures…</property>
+  <object class="GtkAction" id="load_pictures_action">
+    <property name="label" translatable="yes">_Load Pictures…</property>
     <property name="stock_id">gtk-add</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
@@ -198,7 +198,7 @@
               <object class="GtkToolButton" id="add_button">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">add_pictures_action</property>
+                <property name="related_action">load_pictures_action</property>
                 <property name="label" translatable="yes">Add</property>
                 <property name="use_underline">True</property>
               </object>
@@ -331,7 +331,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkImageMenuItem" id="contents_menu_item">
+              <object class="GtkImageMenuItem" id="help_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="related_action">help_action</property>
@@ -369,7 +369,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuItem" id="menuitem2">
+      <object class="GtkMenuItem" id="actions_menu_item">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="use_action_appearance">False</property>
@@ -380,10 +380,10 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkImageMenuItem" id="add_pictures_menu_item">
+              <object class="GtkImageMenuItem" id="load_pictures_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">add_pictures_action</property>
+                <property name="related_action">load_pictures_action</property>
                 <property name="use_underline">True</property>
                 <property name="use_stock">True</property>
               </object>
@@ -514,7 +514,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkRadioMenuItem" id="as_loaded_radio_menu_item">
+                      <object class="GtkRadioMenuItem" id="as_loaded_menu_item">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="related_action">sort_as_loaded_action</property>
@@ -527,7 +527,7 @@
                         <property name="can_focus">False</property>
                         <property name="related_action">sort_by_title_action</property>
                         <property name="draw_as_radio">True</property>
-                        <property name="group">as_loaded_radio_menu_item</property>
+                        <property name="group">as_loaded_menu_item</property>
                       </object>
                     </child>
                     <child>
@@ -536,7 +536,7 @@
                         <property name="can_focus">False</property>
                         <property name="related_action">sort_by_date_taken_action</property>
                         <property name="draw_as_radio">True</property>
-                        <property name="group">as_loaded_radio_menu_item</property>
+                        <property name="group">as_loaded_menu_item</property>
                       </object>
                     </child>
                     <child>
