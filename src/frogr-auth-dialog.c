@@ -30,7 +30,7 @@
 
 static gchar *unauth_txt =
   N_("Please press the button to authorize %s "
-     "and then come back to this screen to complete the process.");
+     "and then come back to complete the process.");
 
 static gchar *auth_txt =
   N_("Enter verification code.");
