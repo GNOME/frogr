@@ -235,7 +235,7 @@ _create_widgets (FrogrDetailsDialog *self)
   content_type_hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
-                                    _("Content type"));
+                                    _("Content Type"));
   widget = gtk_label_new (markup);
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
@@ -266,7 +266,7 @@ _create_widgets (FrogrDetailsDialog *self)
   safety_level_hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
-                                    _("Safety level"));
+                                    _("Safety Level"));
   widget = gtk_label_new (markup);
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
@@ -296,7 +296,7 @@ _create_widgets (FrogrDetailsDialog *self)
   section_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
-                                    _("License type"));
+                                    _("License Type"));
   widget = gtk_label_new (markup);
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
@@ -319,7 +319,7 @@ _create_widgets (FrogrDetailsDialog *self)
   section_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
-                                    _("Other properties"));
+                                    _("Other Properties"));
   widget = gtk_label_new (markup);
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
@@ -328,11 +328,11 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
-  widget = gtk_check_button_new_with_mnemonic (_("Set geo_location data if available"));
+  widget = gtk_check_button_new_with_mnemonic (_("Set Geo_location Information"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
   priv->send_location_cb = widget;
 
-  widget = gtk_check_button_new_with_mnemonic (_("_Show up in Global Search Results"));
+  widget = gtk_check_button_new_with_mnemonic (_("_Show Up in Global Search Results"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
   priv->show_in_search_cb = widget;
 

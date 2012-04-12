@@ -33,7 +33,7 @@ static gchar *unauth_txt =
      "and then come back to complete the process.");
 
 static gchar *auth_txt =
-  N_("Enter verification code.");
+  N_("Enter verification code:");
 
 /* Prototypes */
 
@@ -159,14 +159,14 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
   vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
-  /* Entry widgets for the verification code */
-  ver_code_entry = _build_verification_code_entry_widget (dialog);
-  gtk_box_pack_start (GTK_BOX (vbox), ver_code_entry, TRUE, TRUE, 0);
-
   /* Description label */
   label = gtk_label_new (auth_txt);
   gtk_misc_set_padding (GTK_MISC (label), 12, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 6);
+
+  /* Entry widgets for the verification code */
+  ver_code_entry = _build_verification_code_entry_widget (dialog);
+  gtk_box_pack_start (GTK_BOX (vbox), ver_code_entry, TRUE, TRUE, 6);
 
   gtk_container_add (GTK_CONTAINER (content_area), vbox);
 

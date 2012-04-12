@@ -67,7 +67,7 @@
   <object class="GtkActionGroup" id="on_idle_action_group">
     <child>
       <object class="GtkAction" id="auth_action">
-        <property name="label" translatable="yes">Aut_horize account…</property>
+        <property name="label" translatable="yes">Aut_horize Account…</property>
         <signal name="activate" handler="_on_action_activated" swapped="no"/>
       </object>
     </child>

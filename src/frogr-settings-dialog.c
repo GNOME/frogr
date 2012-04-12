@@ -309,7 +309,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box1 = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("Send Geo_location Data for Pictures"),
+                        _("Set Geo_location Information for Pictures"),
                         &priv->send_geolocation_data_cb);
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
                         _("_Show Pictures in Global Search Results"),
@@ -504,12 +504,12 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
 #ifdef GTK_API_VERSION_3
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
-                        _("Use _Dark Theme (if available)"),
+                        _("Use _Dark GTK Theme"),
                         &priv->use_dark_theme_cb);
 #endif
 
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
-                        _("_Keep File Extensions in Titles when Loading Pictures"),
+                        _("_Keep File Extensions in Titles when Loading"),
                         &priv->keep_file_extensions_cb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
@@ -820,7 +820,7 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
   if (GTK_WIDGET (button) == priv->use_dark_theme_cb)
     {
       priv->use_dark_theme = active;
-      DEBUG ("Use Dark Theme if Available set to %s", active ? "TRUE" : "FALSE");
+      DEBUG ("Use Dark Theme set to %s", active ? "TRUE" : "FALSE");
     }
 #endif
 

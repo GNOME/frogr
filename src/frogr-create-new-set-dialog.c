@@ -318,7 +318,7 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   table = gtk_table_new (2, 2, FALSE);
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 6);
 
-  widget = gtk_label_new (_("Set's title:"));
+  widget = gtk_label_new (_("Title:"));
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 0, 1,
@@ -331,7 +331,7 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
                     GTK_EXPAND | GTK_FILL, 0, 6, 6);
   priv->title_entry = widget;
 
-  widget = gtk_label_new (_("Set's description:"));
+  widget = gtk_label_new (_("Description:"));
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_table_attach (GTK_TABLE (table), align, 0, 1, 1, 2,
@@ -354,7 +354,7 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   priv->description_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
   priv->description_tv = widget;
 
-  widget = gtk_check_button_new_with_mnemonic (_("Fill pictures details with title and description"));
+  widget = gtk_check_button_new_with_mnemonic (_("Fill Pictures Details with Title and Description"));
   align = gtk_alignment_new (1, 0, 1, 0);
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_table_attach (GTK_TABLE (table), align, 1, 2, 2, 3,
@@ -375,7 +375,7 @@ frogr_create_new_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *p
 {
   GtkWidget *dialog = NULL;
   dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_CREATE_NEW_SET_DIALOG,
-                                     "title", _("Create new Set"),
+                                     "title", _("Create New Set"),
                                      "modal", TRUE,
                                      "pictures", pictures,
                                      "photosets", photosets,
