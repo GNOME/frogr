@@ -1,137 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
-  <object class="GtkActionGroup" id="global_action_group">
-    <child>
-      <object class="GtkAction" id="about_action">
-        <property name="label" translatable="yes">_About</property>
-        <property name="stock_id">gtk-about</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="help_action">
-        <property name="label" translatable="yes">_Help</property>
-        <property name="stock_id">gtk-help</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="preferences_action">
-        <property name="label" translatable="yes">_Preferences…</property>
-        <property name="stock_id">gtk-preferences</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="quit_action">
-        <property name="label" translatable="yes">_Quit</property>
-        <property name="stock_id">gtk-quit</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkToggleAction" id="enable_tooltips_action">
-        <property name="label" translatable="yes">Enable _Tooltips</property>
-        <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkToggleAction" id="reversed_order_action">
-        <property name="label" translatable="yes">_Reversed Order</property>
-        <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkRadioAction" id="sort_as_loaded_action">
-        <property name="label" translatable="yes">As _Loaded</property>
-        <property name="draw_as_radio">True</property>
-        <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkRadioAction" id="sort_by_date_taken_action">
-        <property name="label" translatable="yes">By _Date Taken</property>
-        <property name="draw_as_radio">True</property>
-        <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkRadioAction" id="sort_by_title_action">
-        <property name="label" translatable="yes">By _Title</property>
-        <property name="draw_as_radio">True</property>
-        <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
-      </object>
-    </child>
+  <object class="GtkAction" id="about_action">
+    <property name="label" translatable="yes">_About</property>
+    <property name="stock_id">gtk-about</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkActionGroup" id="on_idle_action_group">
-    <child>
-      <object class="GtkAction" id="auth_action">
-        <property name="label" translatable="yes">Aut_horize Account…</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="load_pictures_action">
-        <property name="label" translatable="yes">_Load Pictures…</property>
-        <property name="stock_id">gtk-add</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
+  <object class="GtkAction" id="load_pictures_action">
+    <property name="label" translatable="yes">_Load Pictures…</property>
+    <property name="stock_id">gtk-add</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkActionGroup" id="upload_action_group">
-    <child>
-      <object class="GtkAction" id="upload_pictures_action">
-        <property name="label" translatable="yes">_Upload All</property>
-        <property name="stock_id">gtk-go-up</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
+  <object class="GtkAction" id="add_tags_action">
+    <property name="label" translatable="yes">Add _Tags…</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkActionGroup" id="edition_action_group">
-    <child>
-      <object class="GtkAction" id="add_tags_action">
-        <property name="label" translatable="yes">Add _Tags…</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="add_to_group_action">
-        <property name="label" translatable="yes">Add to _Group…</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="add_to_new_set_action">
-        <property name="label" translatable="yes">_Create New Set…</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="add_to_set_action">
-        <property name="label" translatable="yes">Add to _Existing Set…</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="edit_details_action">
-        <property name="label" translatable="yes">Edit _Details…</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="remove_pictures_action">
-        <property name="label" translatable="yes">_Remove Pictures</property>
-        <property name="stock_id">gtk-remove</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="open_in_external_viewer_action">
-        <property name="label" translatable="yes">Open in E_xternal Viewer</property>
-        <signal name="activate" handler="_on_action_activated" swapped="no"/>
-      </object>
-    </child>
+  <object class="GtkAction" id="add_to_group_action">
+    <property name="label" translatable="yes">Add to _Group…</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="add_to_new_set_action">
+    <property name="label" translatable="yes">_Create New Set…</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="add_to_set_action">
+    <property name="label" translatable="yes">Add to _Existing Set…</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="auth_action">
+    <property name="label" translatable="yes">Aut_horize Account…</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkToggleAction" id="enable_tooltips_action">
+    <property name="label" translatable="yes">Enable _Tooltips</property>
+    <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="edit_details_action">
+    <property name="label" translatable="yes">Edit _Details…</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="help_action">
+    <property name="label" translatable="yes">_Help</property>
+    <property name="stock_id">gtk-help</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="open_in_external_viewer_action">
+    <property name="label" translatable="yes">Open in E_xternal Viewer</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="preferences_action">
+    <property name="label" translatable="yes">_Preferences…</property>
+    <property name="stock_id">gtk-preferences</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="quit_action">
+    <property name="label" translatable="yes">_Quit</property>
+    <property name="stock_id">gtk-quit</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="remove_pictures_action">
+    <property name="label" translatable="yes">_Remove Pictures</property>
+    <property name="stock_id">gtk-remove</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkToggleAction" id="reversed_order_action">
+    <property name="label" translatable="yes">_Reversed Order</property>
+    <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
+  </object>
+  <object class="GtkRadioAction" id="sort_as_loaded_action">
+    <property name="label" translatable="yes">As _Loaded</property>
+    <property name="draw_as_radio">True</property>
+    <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
+  </object>
+  <object class="GtkRadioAction" id="sort_by_date_taken_action">
+    <property name="label" translatable="yes">By _Date Taken</property>
+    <property name="draw_as_radio">True</property>
+    <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
+  </object>
+  <object class="GtkRadioAction" id="sort_by_title_action">
+    <property name="label" translatable="yes">By _Title</property>
+    <property name="draw_as_radio">True</property>
+    <signal name="toggled" handler="_on_toggle_action_changed" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="upload_pictures_action">
+    <property name="label" translatable="yes">_Upload All</property>
+    <property name="stock_id">gtk-go-up</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
   <object class="GtkMenu" id="ctxt_menu">
     <property name="visible">True</property>
