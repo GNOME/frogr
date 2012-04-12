@@ -9,7 +9,8 @@
   * New tags added are inmmediately added to the auto-completion feature.
   * Allow using a dark theme if available (Ignacio Casal Quinteiro)
   * Show error when loading a picture if bigger than maximum allowed size.
-  * Small redesign in the 'edit details' dialog.
+  * Some redesign in the menubar and in the 'edit details' dialog.
+  * Added keyboard accelerators to menu items.
   * Better integration with GTK+3 (e.g. primary toolbar).
   * Introduced new dependency: libgcrypt (for OAuth).
   * As usual, other minor improvements, bug fixes and cleanups.
