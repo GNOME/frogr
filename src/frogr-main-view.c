@@ -91,6 +91,11 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkBuilder *builder;
 
+  GtkActionGroup *global_action_group;
+  GtkActionGroup *on_idle_action_group;
+  GtkActionGroup *upload_action_group;
+  GtkActionGroup *edition_action_group;
+
   GtkAction *load_pictures_action;
   GtkAction *remove_pictures_action;
   GtkAction *upload_pictures_action;
@@ -1424,16 +1429,9 @@ _update_sensitiveness (FrogrMainView *self)
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
-      gtk_action_set_sensitive (priv->load_pictures_action, FALSE);
-      gtk_action_set_sensitive (priv->remove_pictures_action, FALSE);
-      gtk_action_set_sensitive (priv->upload_pictures_action, FALSE);
-      gtk_action_set_sensitive (priv->open_in_external_viewer_action, FALSE);
-      gtk_action_set_sensitive (priv->auth_action, FALSE);
-      gtk_action_set_sensitive (priv->add_tags_action, FALSE);
-      gtk_action_set_sensitive (priv->edit_details_action, FALSE);
-      gtk_action_set_sensitive (priv->add_to_group_action, FALSE);
-      gtk_action_set_sensitive (priv->add_to_set_action, FALSE);
-      gtk_action_set_sensitive (priv->add_to_new_set_action, FALSE);
+      gtk_action_group_set_sensitive (priv->on_idle_action_group, FALSE);
+      gtk_action_group_set_sensitive (priv->upload_action_group, FALSE);
+      gtk_action_group_set_sensitive (priv->edition_action_group, FALSE);
       gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE);
       gtk_widget_set_sensitive (priv->add_to_set_menu_item, FALSE);
       break;
@@ -1443,17 +1441,10 @@ _update_sensitiveness (FrogrMainView *self)
       has_accounts = (priv->accounts_menu != NULL);
       n_selected_pics = priv->n_selected_pictures;
 
-      gtk_action_set_sensitive (priv->load_pictures_action, TRUE);
-      gtk_action_set_sensitive (priv->auth_action, TRUE);
+      gtk_action_group_set_sensitive (priv->on_idle_action_group, TRUE);
+      gtk_action_group_set_sensitive (priv->upload_action_group, has_pics);
+      gtk_action_group_set_sensitive (priv->edition_action_group, n_selected_pics > 0);
       gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts);
-      gtk_action_set_sensitive (priv->upload_pictures_action, has_pics);
-      gtk_action_set_sensitive (priv->remove_pictures_action, n_selected_pics > 0);
-      gtk_action_set_sensitive (priv->open_in_external_viewer_action, n_selected_pics > 0);
-      gtk_action_set_sensitive (priv->add_tags_action, n_selected_pics > 0);
-      gtk_action_set_sensitive (priv->edit_details_action, n_selected_pics > 0);
-      gtk_action_set_sensitive (priv->add_to_group_action, n_selected_pics > 0);
-      gtk_action_set_sensitive (priv->add_to_set_action, n_selected_pics > 0);
-      gtk_action_set_sensitive (priv->add_to_new_set_action, n_selected_pics > 0);
       gtk_widget_set_sensitive (priv->add_to_set_menu_item, n_selected_pics > 0);
       break;
 
@@ -1633,6 +1624,16 @@ frogr_main_view_init (FrogrMainView *self)
 
   status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
   priv->status_bar = status_bar;
+
+  /* Get action groups from GtkBuilder */
+  priv->global_action_group =
+    GTK_ACTION_GROUP (gtk_builder_get_object (builder, "global_action_group"));
+  priv->on_idle_action_group =
+    GTK_ACTION_GROUP (gtk_builder_get_object (builder, "on_idle_action_group"));
+  priv->upload_action_group =
+    GTK_ACTION_GROUP (gtk_builder_get_object (builder, "upload_action_group"));
+  priv->edition_action_group =
+    GTK_ACTION_GROUP (gtk_builder_get_object (builder, "edition_action_group"));
 
   /* Get actions from GtkBuilder */
   priv->load_pictures_action =
