@@ -11,7 +11,7 @@
   * Show error when loading a picture if bigger than maximum allowed size.
   * Some redesign in the menubar and in the 'edit details' dialog.
   * Added keyboard accelerators to menu items.
-  * Better integration with GTK+3 (e.g. primary toolbar).
+  * Better integration with GTK+3 (e.g. primary toolbar, dark theme).
   * Introduced new dependency: libgcrypt (for OAuth).
   * As usual, other minor improvements, bug fixes and cleanups.
 
