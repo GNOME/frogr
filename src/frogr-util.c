@@ -164,28 +164,13 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
     }
 }
 
-#ifdef MAC_INTEGRATION
-static void
-_open_uri_for_mac (const gchar *uri)
+void
+frogr_util_open_uri (const gchar *uri)
 {
-  GList *uris_list = NULL;
-
-  /* Early return */
-  if (!uri)
-    return;
-
-  uris_list = g_list_append (uris_list, (gchar*) uri);
-  _open_uris_with_app_info (uris_list, NULL);
-  g_list_free (uris_list);
-}
-#endif
-
 #ifndef MAC_INTEGRATION
-static void
-_open_uri_for_gnome (const gchar *uri)
-{
   static GAppInfo *http_app_info = NULL;
   static GAppInfo *help_app_info = NULL;
+#endif
   GAppInfo *app_info = NULL;
   GList *uris_list = NULL;
 
@@ -193,6 +178,7 @@ _open_uri_for_gnome (const gchar *uri)
   if (!uri)
     return;
 
+#ifndef MAC_INTEGRATION
   /* Supported network URIs */
   if (g_str_has_prefix (uri, "http:") || g_str_has_prefix (uri, "https:"))
     {
@@ -210,21 +196,11 @@ _open_uri_for_gnome (const gchar *uri)
 
       app_info = help_app_info;
     }
+#endif
 
   uris_list = g_list_append (uris_list, (gchar *) uri);
   _open_uris_with_app_info (uris_list, app_info);
   g_list_free (uris_list);
-}
-#endif
-
-void
-frogr_util_open_uri (const gchar *uri)
-{
-#ifdef MAC_INTEGRATION
-  _open_uri_for_mac (uri);
-#else
-  _open_uri_for_gnome (uri);
-#endif
 }
 
 void
