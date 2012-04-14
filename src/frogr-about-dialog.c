@@ -64,7 +64,7 @@ static const gchar *license =
   "but it's neither approved nor certified by flickr.";
 #endif
 
-#if !GTK_CHECK_VERSION (2,24,0)
+#if !GTK_CHECK_VERSION (2,24,0) || MAC_INTEGRATION
 static void
 _frogr_about_dialog_uri_hook (GtkAboutDialog *about,
                               const gchar *link,
@@ -88,7 +88,7 @@ frogr_about_dialog_show (GtkWindow *parent)
   logo = gdk_pixbuf_new_from_file (icon_full_path, NULL);
   g_free (icon_full_path);
 
-#if !GTK_CHECK_VERSION (2,24,0)
+#if !GTK_CHECK_VERSION (2,24,0) || MAC_INTEGRATION
   /* Install about dialog hooks */
   gtk_about_dialog_set_url_hook (_frogr_about_dialog_uri_hook, "", NULL);
   gtk_about_dialog_set_email_hook (_frogr_about_dialog_uri_hook, "mailto:",
