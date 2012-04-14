@@ -146,7 +146,13 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 
       uris = _get_uris_string_from_list (uris_list);
 
+#ifdef MAC_INTEGRATION
+      /* In MacOSX use 'open' instead of 'gnome-open' */
+      command = g_strdup_printf ("open %s", uris);
+#else
       command = g_strdup_printf ("gnome-open %s", uris);
+#endif
+
       _spawn_command (command);
 
       if (error)
@@ -164,20 +170,16 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 static void
 _open_uri_for_mac (const gchar *uri)
 {
-  GError *error = NULL;
-  gchar *command = NULL;
+  GList *uris_list = NULL;
 
-  /* In MacOSX use 'open' instead of 'gnome-open' */
-  command = g_strdup_printf ("open %s", uri);
-  _spawn_command (command);
+  /* Early return */
+  if (!uri)
+    return;
 
-  if (error)
-    {
-      DEBUG ("Error opening URI %s: %s", uri, error->message);
-      g_error_free (error);
-    }
+  uris_list = g_list_append (uris_list, g_strdup (uri));
+  _open_uris_with_app_info (uris_list, NULL);
 
-  g_free (command);
+  g_list_free (uris_list);
 }
 #endif
 
@@ -215,8 +217,7 @@ _open_uri_for_gnome (const gchar *uri)
       app_info = help_app_info;
     }
 
-  if (app_info)
-    _open_uris_with_app_info (uris_list, app_info);
+  _open_uris_with_app_info (uris_list, app_info);
 
   g_list_free (uris_list);
 }
