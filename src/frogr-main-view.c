@@ -35,12 +35,18 @@
 #include <config.h>
 #include <flicksoup/flicksoup.h>
 #include <gdk/gdk.h>
+#include <glib/gi18n.h>
 
 #ifdef MAC_INTEGRATION
 #include <gtkosxapplication.h>
+#define GDK_PRIMARY_MODIFIER GDK_META_MASK
+#define GDK_SECONDARY_MODIFIER GDK_SHIFT_MASK | GDK_META_MASK
+#define GDK_KEY_REMOVE GDK_KEY_BackSpace
+#else
+#define GDK_PRIMARY_MODIFIER GDK_CONTROL_MASK
+#define GDK_SECONDARY_MODIFIER GDK_SHIFT_MASK
+#define GDK_KEY_REMOVE GDK_KEY_Delete
 #endif
-
-#include <glib/gi18n.h>
 
 /* Paths relative to the icons dir */
 #define MAIN_VIEW_ICON(_s) "/hicolor/" _s "/apps/frogr.png"
@@ -74,6 +80,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkWidget *icon_view;
   GtkWidget *status_bar;
+  GtkWidget *menu_bar;
   GtkWidget *accounts_menu_item;
   GtkWidget *accounts_menu;
   GtkWidget *add_to_set_menu_item;
@@ -109,6 +116,7 @@ typedef struct _FrogrMainViewPrivate {
   GtkToggleAction *sort_as_loaded_action;
   GtkToggleAction *sort_by_title_action;
   GtkToggleAction *sort_by_date_taken_action;
+
 #ifndef MAC_INTEGRATION
   GtkAction *quit_action;
 #endif
@@ -125,6 +133,7 @@ enum {
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
 #ifdef MAC_INTEGRATION
+static gboolean osx_can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data);
 static void _tweak_menu_bar_for_mac (FrogrMainView *self);
 #endif
 
@@ -245,13 +254,23 @@ _maybe_show_auth_dialog_on_idle (FrogrMainView *self)
 }
 
 #ifdef MAC_INTEGRATION
+static gboolean
+osx_can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
+{
+  return gtk_widget_is_sensitive(widget);
+}
+
 static void
 _tweak_menu_bar_for_mac (FrogrMainView *self)
 {
-  GtkWidget *menu_item;
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  FrogrMainViewPrivate *priv = NULL;
+  GtkOSXApplication *osx_app = NULL;
+  GtkWidget *menu_item = NULL;
 
-  GtkOSXApplication *osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
+  gtk_osxapplication_set_menu_bar (osx_app, GTK_MENU_SHELL(priv->menu_bar));
 
   /* Relocate the 'about' menu item in the app menu */
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "about_menu_item"));
@@ -279,6 +298,12 @@ _tweak_menu_bar_for_mac (FrogrMainView *self)
   /* Hide the traditional application menu that won't be shown in the Mac */
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "frogr_menu_item"));
   gtk_widget_hide (menu_item);
+
+  /* Make sure accelerators are visible when needed */
+  g_signal_connect(priv->menu_bar, "can-activate-accel",
+                   G_CALLBACK(osx_can_activate_cb), NULL);
+
+  gtk_osxapplication_ready(osx_app);
 }
 #endif
 
@@ -296,11 +321,11 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_a,
-                             GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER | GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "preferences_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_p,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_F1,
@@ -308,59 +333,59 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "quit_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_q,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_pictures_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_l,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "remove_pictures_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_Delete,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_REMOVE,
                              0, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "edit_details_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_d,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_tags_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_t,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_group_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_g,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_existing_set_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "create_new_set_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
-                             GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER | GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "open_in_external_viewer_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_v,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "upload_all_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_u,
-                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "as_loaded_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_l,
-                             GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "by_title_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_t,
-                             GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "by_date_taken_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_d,
-                             GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "reversed_order_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_r,
-                             GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
 }
 
 static void
@@ -568,6 +593,12 @@ _on_icon_view_key_press_event (GtkWidget *widget,
   if (!_n_pictures (mainview))
     return TRUE;
 
+#ifdef MAC_INTEGRATION
+  /* Remove selected pictures if pressed Supr */
+  if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
+    _remove_selected_pictures (mainview);
+#endif
+
   /* Show contextual menu if pressed the 'Menu' key */
   if (event->type == GDK_KEY_PRESS && event->keyval == GDK_KEY_Menu
       && priv->n_selected_pictures > 0)
@@ -612,9 +643,9 @@ _on_icon_view_button_press_event (GtkWidget *widget,
           || ((event->button == 3) && !path_selected))
         {
           if (!(event->state & GDK_SHIFT_MASK)
-              && !(event->state & GDK_CONTROL_MASK))
+              && !(event->state & GDK_PRIMARY_MODIFIER))
             {
-              /* Deselect all items if not pressing Ctrl or shift */
+              /* Deselect all items if not pressing Ctrl/Meta or shift */
               gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
             }
 
@@ -627,7 +658,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
       if ((event->button == 1)                   /* left button */
           && (event->type == GDK_2BUTTON_PRESS ) /* doubleclick */
           && !(event->state & GDK_SHIFT_MASK)    /*  not shift  */
-          && !(event->state & GDK_CONTROL_MASK)) /*  not Ctrl   */
+          && !(event->state & GDK_PRIMARY_MODIFIER)) /*  not Ctrl/Meta */
         {
           /* edit selected item */
           _edit_selected_pictures (mainview);
@@ -1542,7 +1573,6 @@ frogr_main_view_init (FrogrMainView *self)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GtkBuilder *builder;
   GtkWindow *window;
-  GtkWidget *menu_bar;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
   GtkWidget *progress_dialog;
@@ -1553,9 +1583,7 @@ frogr_main_view_init (FrogrMainView *self)
   gchar *full_path;
   GList *icons = NULL;
 
-#ifdef MAC_INTEGRATION
-  GtkOSXApplication *osx_app;
-#else
+#ifndef MAC_INTEGRATION
   GtkWidget *main_vbox;
 #endif
 
@@ -1610,13 +1638,10 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_window_set_title (GTK_WINDOW (window), _(APP_NAME));
   priv->window = window;
 
-  menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
-  gtk_widget_show_all (menu_bar);
+  priv->menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
+  gtk_widget_show_all (priv->menu_bar);
 
-#ifdef MAC_INTEGRATION
-  osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
-  gtk_osxapplication_set_menu_bar (osx_app, GTK_MENU_SHELL(menu_bar));
-#else
+#ifndef MAC_INTEGRATION
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
   gtk_box_pack_start (GTK_BOX (main_vbox), menu_bar, FALSE, FALSE, 0);
   gtk_box_reorder_child (GTK_BOX (main_vbox), menu_bar, 0);
@@ -1839,7 +1864,6 @@ frogr_main_view_init (FrogrMainView *self)
 
 #ifdef MAC_INTEGRATION
   _tweak_menu_bar_for_mac (self);
-  gtk_osxapplication_ready(osx_app);
 #endif
 
   /* Update UI */
