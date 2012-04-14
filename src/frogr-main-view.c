@@ -125,7 +125,7 @@ enum {
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
 #ifdef MAC_INTEGRATION
-static void _tweak_menu_bar_for_mac (FrogrMainView *self);w
+static void _tweak_menu_bar_for_mac (FrogrMainView *self);
 #endif
 
 static void _setup_keyboard_shortcuts (FrogrMainView *self);
