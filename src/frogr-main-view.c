@@ -1095,7 +1095,6 @@ _open_pictures_in_external_viewer (FrogrMainView *self)
   GSList *current_pic = NULL;
   GList *uris_list = NULL;
   FrogrPicture *picture = NULL;
-  gchar *fileuri = NULL;
 
   if (!_pictures_selected_required_check (self))
     return;
@@ -1104,16 +1103,12 @@ _open_pictures_in_external_viewer (FrogrMainView *self)
   for (current_pic = pictures; current_pic; current_pic = g_slist_next (current_pic))
     {
       picture = FROGR_PICTURE (current_pic->data);
-      fileuri = g_strdup (frogr_picture_get_fileuri (picture));
-
-      /* Dupped uris in the GList must NOT be freed here */
-      uris_list = g_list_append (uris_list, fileuri);
+      uris_list = g_list_append (uris_list, (gchar *) frogr_picture_get_fileuri (picture));
     }
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
   g_slist_free (pictures);
 
   frogr_util_open_images_in_viewer (uris_list);
-
   g_list_free (uris_list);
 }
 

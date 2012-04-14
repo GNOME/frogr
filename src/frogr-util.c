@@ -123,7 +123,7 @@ _get_uris_string_from_list (GList *uris_list)
     uris_array[i++] = (gchar *) (current_uri->data);
 
   uris_str = g_strjoinv (" ", uris_array);
-  g_strfreev (uris_array);
+  g_free (uris_array);
 
   return uris_str;
 }
@@ -140,7 +140,6 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
   if (!app_info || !g_app_info_launch_uris (app_info, uris_list, NULL, &error))
     {
       /* The default app didn't succeed, so try 'gnome-open' / 'open' */
-
       gchar *command = NULL;
       gchar *uris = NULL;
 
@@ -152,7 +151,6 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 #else
       command = g_strdup_printf ("gnome-open %s", uris);
 #endif
-
       _spawn_command (command);
 
       if (error)
@@ -176,9 +174,8 @@ _open_uri_for_mac (const gchar *uri)
   if (!uri)
     return;
 
-  uris_list = g_list_append (uris_list, g_strdup (uri));
+  uris_list = g_list_append (uris_list, (gchar*) uri);
   _open_uris_with_app_info (uris_list, NULL);
-
   g_list_free (uris_list);
 }
 #endif
@@ -195,9 +192,6 @@ _open_uri_for_gnome (const gchar *uri)
   /* Early return */
   if (!uri)
     return;
-
-  /* Dupped uris in the GList must NOT be freed here */
-  uris_list = g_list_append (uris_list, g_strdup (uri));
 
   /* Supported network URIs */
   if (g_str_has_prefix (uri, "http:") || g_str_has_prefix (uri, "https:"))
@@ -217,8 +211,8 @@ _open_uri_for_gnome (const gchar *uri)
       app_info = help_app_info;
     }
 
+  uris_list = g_list_append (uris_list, (gchar *) uri);
   _open_uris_with_app_info (uris_list, app_info);
-
   g_list_free (uris_list);
 }
 #endif
