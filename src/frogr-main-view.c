@@ -1643,8 +1643,8 @@ frogr_main_view_init (FrogrMainView *self)
 
 #ifndef MAC_INTEGRATION
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
-  gtk_box_pack_start (GTK_BOX (main_vbox), menu_bar, FALSE, FALSE, 0);
-  gtk_box_reorder_child (GTK_BOX (main_vbox), menu_bar, 0);
+  gtk_box_pack_start (GTK_BOX (main_vbox), priv->menu_bar, FALSE, FALSE, 0);
+  gtk_box_reorder_child (GTK_BOX (main_vbox), priv->menu_bar, 0);
 #endif
 
 #ifdef GTK_API_VERSION_3
