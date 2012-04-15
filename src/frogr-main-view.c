@@ -40,12 +40,8 @@
 #ifdef MAC_INTEGRATION
 #include <gtkosxapplication.h>
 #define GDK_PRIMARY_MODIFIER GDK_META_MASK
-#define GDK_SECONDARY_MODIFIER GDK_SHIFT_MASK | GDK_META_MASK
-#define GDK_KEY_REMOVE GDK_KEY_BackSpace
 #else
 #define GDK_PRIMARY_MODIFIER GDK_CONTROL_MASK
-#define GDK_SECONDARY_MODIFIER GDK_SHIFT_MASK
-#define GDK_KEY_REMOVE GDK_KEY_Delete
 #endif
 
 /* Paths relative to the icons dir */
@@ -321,7 +317,7 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_a,
-                             GDK_PRIMARY_MODIFIER | GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "preferences_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_p,
@@ -338,10 +334,6 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_pictures_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_l,
                              GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "remove_pictures_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_REMOVE,
-                             0, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "edit_details_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_d,
@@ -361,31 +353,15 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "create_new_set_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
-                             GDK_PRIMARY_MODIFIER | GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "open_in_external_viewer_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_v,
-                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "upload_all_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_u,
-                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "as_loaded_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_l,
-                             GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "by_title_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_t,
-                             GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "by_date_taken_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_d,
-                             GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "reversed_order_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_r,
-                             GDK_SECONDARY_MODIFIER, GTK_ACCEL_VISIBLE);
+                             GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 }
 
 static void
@@ -593,11 +569,9 @@ _on_icon_view_key_press_event (GtkWidget *widget,
   if (!_n_pictures (mainview))
     return TRUE;
 
-#ifdef MAC_INTEGRATION
   /* Remove selected pictures if pressed Supr */
-  if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_Delete))
+  if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_KEY_Delete))
     _remove_selected_pictures (mainview);
-#endif
 
   /* Show contextual menu if pressed the 'Menu' key */
   if (event->type == GDK_KEY_PRESS && event->keyval == GDK_KEY_Menu
