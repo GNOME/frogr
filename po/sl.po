@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-04-10 13:28+0000\n"
-"PO-Revision-Date: 2012-04-10 19:41+0100\n"
+"POT-Creation-Date: 2012-04-15 21:03+0000\n"
+"PO-Revision-Date: 2012-04-21 12:45+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -73,12 +73,12 @@ msgstr "Dodaj skupinam"
 
 #: ../src/frogr-auth-dialog.c:32
 #, c-format
-msgid "Please press the button to authorize %s and then come back to this screen to complete the process."
-msgstr "Pritisnite gumb za odobritev %s in se potem vrnite na to okno, da dokončate opravilo."
+msgid "Please press the button to authorize %s and then come back to complete the process."
+msgstr "Pritisnite gumb za overitev %s in se vrnite na to okno za dokončanje opravila."
 
 #: ../src/frogr-auth-dialog.c:36
-msgid "Enter verification code."
-msgstr "Vnos kode za overitev."
+msgid "Enter verification code:"
+msgstr "Vnos kode za overitev:"
 
 #: ../src/frogr-auth-dialog.c:63
 #: ../src/frogr-auth-dialog.c:147
@@ -340,19 +340,19 @@ msgid "Missing data required"
 msgstr "Zahtevani so manjkajoči podatki"
 
 #: ../src/frogr-create-new-set-dialog.c:321
-msgid "Set's title:"
-msgstr "Naslov nabora:"
+msgid "Title:"
+msgstr "Naslov:"
 
 #: ../src/frogr-create-new-set-dialog.c:334
-msgid "Set's description:"
-msgstr "Opis nabora:"
+msgid "Description:"
+msgstr "Opis:"
 
 #: ../src/frogr-create-new-set-dialog.c:357
-msgid "Fill pictures details with title and description"
+msgid "Fill Pictures Details with Title and Description"
 msgstr "Izpolni podrobnosti slike s podatki naslova in opisa"
 
 #: ../src/frogr-create-new-set-dialog.c:378
-msgid "Create new Set"
+msgid "Create New Set"
 msgstr "Ustvari nov nabor"
 
 #: ../src/frogr-details-dialog.c:91
@@ -427,7 +427,7 @@ msgid "Visible to F_riends"
 msgstr "Vidno _prijateljem"
 
 #: ../src/frogr-details-dialog.c:238
-msgid "Content type"
+msgid "Content Type"
 msgstr "Vrsta vsebine"
 
 #: ../src/frogr-details-dialog.c:247
@@ -446,7 +446,7 @@ msgid "Oth_er"
 msgstr "Dru_go"
 
 #: ../src/frogr-details-dialog.c:269
-msgid "Safety level"
+msgid "Safety Level"
 msgstr "Raven varnosti"
 
 #: ../src/frogr-details-dialog.c:278
@@ -465,19 +465,19 @@ msgid "Restr_icted"
 msgstr "_Omejeno"
 
 #: ../src/frogr-details-dialog.c:299
-msgid "License type"
+msgid "License Type"
 msgstr "Vrsta dovoljenja"
 
 #: ../src/frogr-details-dialog.c:322
-msgid "Other properties"
+msgid "Other Properties"
 msgstr "Druge lastnosti"
 
 #: ../src/frogr-details-dialog.c:331
-msgid "Set geo_location data if available"
-msgstr "Nastavi _geolokacijske podatke, če so na voljo"
+msgid "Set Geo_location Information"
+msgstr "Pošlji _geolokacijske podatke"
 
 #: ../src/frogr-details-dialog.c:335
-msgid "_Show up in Global Search Results"
+msgid "_Show Up in Global Search Results"
 msgstr "_Pokaži v splošnih rezultatih iskanja"
 
 #: ../src/frogr-details-dialog.c:347
@@ -511,39 +511,39 @@ msgid "Edit Picture Details"
 msgstr "Urejanje podrobnosti slike"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:674
+#: ../src/frogr-main-view.c:753
 #, c-format
 msgid "Taken: %s"
 msgstr "Posneto: %s"
 
-#: ../src/frogr-main-view.c:679
+#: ../src/frogr-main-view.c:758
 #, c-format
 msgid "File size: %s"
 msgstr "Velikost datoteke: %s"
 
-#: ../src/frogr-main-view.c:867
+#: ../src/frogr-main-view.c:946
 msgid "Select a Picture"
 msgstr "Izberi sliko"
 
-#: ../src/frogr-main-view.c:893
+#: ../src/frogr-main-view.c:972
 msgid "images"
 msgstr "slike"
 
-#: ../src/frogr-main-view.c:914
+#: ../src/frogr-main-view.c:993
 msgid "You need to select some pictures first"
 msgstr "Najprej je treba izbrati nekaj slik"
 
-#: ../src/frogr-main-view.c:1260
+#: ../src/frogr-main-view.c:1334
 msgid "Not connected to flickr"
 msgstr "Ni povezave s flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:1270
+#: ../src/frogr-main-view.c:1344
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Povezanva ustvarjena za %s%s"
 
-#: ../src/frogr-main-view.c:1271
+#: ../src/frogr-main-view.c:1345
 msgid " (PRO account)"
 msgstr "(PRO račun)"
 
@@ -552,17 +552,17 @@ msgstr "(PRO račun)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:1295
+#: ../src/frogr-main-view.c:1369
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - še %s / %s"
 
-#: ../src/frogr-main-view.c:1322
+#: ../src/frogr-main-view.c:1396
 #, c-format
 msgid " - %d pictures to upload (%s)"
 msgstr " - slike %d za pošiljanje (%s)"
 
-#: ../src/frogr-main-view.c:1323
+#: ../src/frogr-main-view.c:1397
 #, c-format
 msgid " - %d picture to upload (%s)"
 msgstr " - slika %d za pošiljanje (%s)"
@@ -599,7 +599,7 @@ msgid "Other Defaults"
 msgstr "Drugo privzeto"
 
 #: ../src/frogr-settings-dialog.c:312
-msgid "Send Geo_location Data for Pictures"
+msgid "Set Geo_location Information for Pictures"
 msgstr "Pošlji _geolokacijske podatke slik"
 
 #: ../src/frogr-settings-dialog.c:315
@@ -660,11 +660,11 @@ msgid "_Import Tags from Pictures Metadata"
 msgstr "_Uvozi oznake iz metapodatkov slik"
 
 #: ../src/frogr-settings-dialog.c:507
-msgid "Use _Dark Theme (if available)"
-msgstr "Uporabi _temno temo (če je na voljo)"
+msgid "Use _Dark GTK Theme"
+msgstr "Uporabi _temno temo"
 
 #: ../src/frogr-settings-dialog.c:512
-msgid "_Keep File Extensions in Titles when Loading Pictures"
+msgid "_Keep File Extensions in Titles when Loading"
 msgstr "_Ohrani pripono datotek v naslovu med nalaganjem slik"
 
 #: ../src/frogr-settings-dialog.c:518
@@ -680,8 +680,8 @@ msgid "_About"
 msgstr "_O programu"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:2
-msgid "_Add Pictures…"
-msgstr "_Dodaj slike ..."
+msgid "_Load Pictures…"
+msgstr "_Naloži slike ..."
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:3
 msgid "Add _Tags…"
@@ -700,8 +700,8 @@ msgid "Add to _Existing Set…"
 msgstr "D_odaj k že obstoječemu naboru ..."
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:7
-msgid "Aut_horize account…"
-msgstr "Pooblastitev računa ..."
+msgid "Aut_horize Account…"
+msgstr "_Overi račun ..."
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:8
 msgid "Enable _Tooltips"
@@ -791,40 +791,3 @@ msgstr "_Pogled"
 msgid "_Sort Pictures"
 msgstr "_Razvrsti slike"
 
-#~ msgid "Authorize _frogr"
-#~ msgstr "Pooblasti _frogr"
-
-#~ msgid "_File"
-#~ msgstr "_Datoteka"
-
-#~ msgid "Send geo_location data if available"
-#~ msgstr "Pošlji _geolokacijske podatke, če so na voljo"
-
-#~ msgid ""
-#~ "Press the button to start using %s once you've authorized it in your "
-#~ "flickr account."
-#~ msgstr ""
-#~ "Pritisnite gumb za pričetek uporabe %s po tem, ko ste odobrili svoj račun "
-#~ "flickr."
-
-#~ msgid ""
-#~ "Could not display help for Frogr:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Ni mogoče prikazati pomoči za Frogr:\n"
-#~ "%s"
-
-#~ msgid "_Contents"
-#~ msgstr "_Vsebina"
-
-#~ msgid "_About frogr..."
-#~ msgstr "_O programu ..."
-
-#~ msgid "Authorization successfully completed!"
-#~ msgstr "Pooblastitev je bila uspešno zaključena!"
-
-#~ msgid "Operation successfully completed!"
-#~ msgstr "Postopek je bil uspešno zaključen!"
-
-#~ msgid "Open _Browser after Uploading Pictures"
-#~ msgstr "Odpri _brskalnik po končanem pošiljanju slik"
