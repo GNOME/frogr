@@ -752,7 +752,7 @@ _set_license_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       /* We do not anything special if something went wrong here */
       DEBUG ("Error setting license for picture: %s", error->message);
-      g_free (error);
+      g_error_free (error);
     }
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
@@ -777,7 +777,7 @@ _set_location_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       /* We do not anything special if something went wrong here */
       DEBUG ("Error setting location for picture: %s", error->message);
-      g_free (error);
+      g_error_free (error);
     }
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
