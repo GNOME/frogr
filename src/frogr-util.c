@@ -167,10 +167,6 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 void
 frogr_util_open_uri (const gchar *uri)
 {
-#ifndef MAC_INTEGRATION
-  static GAppInfo *http_app_info = NULL;
-  static GAppInfo *help_app_info = NULL;
-#endif
   GAppInfo *app_info = NULL;
   GList *uris_list = NULL;
 
@@ -181,21 +177,11 @@ frogr_util_open_uri (const gchar *uri)
 #ifndef MAC_INTEGRATION
   /* Supported network URIs */
   if (g_str_has_prefix (uri, "http:") || g_str_has_prefix (uri, "https:"))
-    {
-      if (http_app_info == NULL)
-        http_app_info = g_app_info_get_default_for_uri_scheme ("http");
-
-      app_info = http_app_info;
-    }
+    app_info = g_app_info_get_default_for_uri_scheme ("http");
 
   /* Supported help URIs */
   if (g_str_has_prefix (uri, "ghelp:"))
-    {
-      if (help_app_info == NULL)
-        help_app_info = g_app_info_get_default_for_uri_scheme ("ghelp");
-
-      app_info = help_app_info;
-    }
+    app_info = g_app_info_get_default_for_uri_scheme ("ghelp");
 #endif
 
   uris_list = g_list_append (uris_list, (gchar *) uri);
@@ -206,15 +192,13 @@ frogr_util_open_uri (const gchar *uri)
 void
 frogr_util_open_images_in_viewer (GList *uris_list)
 {
-  static GAppInfo *app_info = NULL;
+  GAppInfo *app_info = NULL;
 
   /* Early return */
   if (!uris_list)
     return;
 
-  if (app_info == NULL)
-    app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
-
+  app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
   _open_uris_with_app_info (uris_list, app_info);
 }
 
