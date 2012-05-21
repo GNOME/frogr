@@ -673,22 +673,26 @@ get_auth_url_cb                         (GObject      *object,
     }
   else
     {
-      gchar *verifier = NULL;
-
       g_print ("[get_auth_url_cb]::Result: %s&perms=write\n\n",
                auth_url ? auth_url : "No URL got");
 
       /* Make a pause before continuing */
       g_print ("\nEnter the verification code and press ENTER to continue: ");
-      gets(buffer);
-      verifier = encode_uri (buffer);
+      if (gets(buffer))
+        {
+          gchar *verifier = NULL;
 
-      /* Continue finishing the authorization */
-      g_print ("Finishing authorization...\n");
-      fsp_session_complete_auth_async (session, verifier, NULL, complete_auth_cb, NULL);
+          verifier = encode_uri (buffer);
+
+          /* Continue finishing the authorization */
+          g_print ("Finishing authorization...\n");
+          fsp_session_complete_auth_async (session, verifier, NULL, complete_auth_cb, NULL);
+          g_free (verifier);
+        }
+      else
+        g_print ("Authorization failed. Can't continue.\n");
 
       g_free (auth_url);
-      g_free (verifier);
     }
 }
 
