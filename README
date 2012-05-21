@@ -15,6 +15,7 @@ To work properly, frogr needs some libraries to be installed first:
  - libxml (version 2.6.8 or higher)
  - libsoup (version 2.26 or higher)
  - libexif (version 0.6.14 or higher)
+ - libgcrypt
 
 -------------------------------------------
 
@@ -70,7 +71,7 @@ Implementation of the get_gps_coordinate () function inside of the
 FrogrPictureLoader taken from tracker, licensed under the GNU Lesser
 General Public License Version 2.1 (Copyright 2009, Nokia Corp.)
 
-The specific theme customizations for the MacOSX version of
+The specific theme customizations for the Mac OS X version of
 frogr through a gtkrc file were taken from the Banshee project
 (http://banshee.fm), written by Aaron Bockover <abockover@novell.com>
 and released under the MIT/X11 license (Copyright 2010 Novell, Inc.)
