@@ -982,7 +982,7 @@ _check_errors_on_soup_response           (SoupMessage  *msg,
 
   /* First check it's not an OAuth problem */
   response_str = g_strndup (msg->response_body->data, msg->response_body->length);
-  if (g_str_has_prefix (response_str, "oauth_problem="))
+  if (response_str && g_str_has_prefix (response_str, "oauth_problem="))
     {
       if (!g_strcmp0 (&response_str[14], "token_rejected"))
         err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET,
