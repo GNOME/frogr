@@ -95,7 +95,7 @@ frogr_about_dialog_show (GtkWindow *parent)
                                    NULL);
 #endif
 
-  version = g_strdup_printf ("%s", VERSION);
+  version = g_strdup_printf ("%s~unreleased", VERSION);
 
   /* Show about dialog */
   gtk_show_about_dialog (GTK_WINDOW (parent),

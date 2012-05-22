@@ -1,3 +1,10 @@
+frogr (0.8~unreleased) unstable; urgency=low
+
+  * New upstream release (see NEWS file for details).
+  * Package manually generated out of any distro.
+
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Tue, 22 May 2012 02:36:18 +0200
+
 frogr (0.7) unstable; urgency=low
 
   * New upstream release (see NEWS file for details).
