@@ -75,6 +75,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Fri May 22 2012 Mario Sanchez Prada <msanchez at, igalia.com> 0.7-0
+- New upstream release (see NEWS file for details).
+- Package manually generated out of any distro.
+
 * Fri Aug 19 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.6.1-0
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.

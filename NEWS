@@ -1,5 +1,5 @@
-0.7 (??)
-========
+0.7 (22 May 2012)
+=================
 
   * Migrated to the new, OAuth-based, authentication system. Previous
     versions of frogr using the old API will be seamlessly updated.
