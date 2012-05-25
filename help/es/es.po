@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2012-04-12 09:52+0000\n"
-"PO-Revision-Date: 2012-04-12 16:42+0200\n"
+"POT-Creation-Date: 2012-05-25 10:25+0000\n"
+"PO-Revision-Date: 2012-05-25 18:01+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,6 @@ msgstr ""
 "subir todas para conservar el resto."
 
 #: C/pictures.page:9(desc)
-#| msgid "Add, remove and upload pictures"
 msgid "Load, remove and upload pictures"
 msgstr "Cargar, quitar y subir imágenes"
 
@@ -41,7 +40,6 @@ msgid "Transfer Pictures"
 msgstr "Transferir imágenes"
 
 #: C/pictures.page:13(p)
-#| msgid "You first have to add pictures before to be able to upload it."
 msgid ""
 "You first have to load pictures into frogr before being able to upload them."
 msgstr "Antes de poder subir imágenes, debe añadirlas a frogr."
@@ -78,7 +76,6 @@ msgstr ""
 "las etiquetas."
 
 #: C/tag.page:16(title) C/tag.page:17(desc)
-#| msgid "Allow adding tags to pictures"
 msgid "Adding tags to pictures"
 msgstr "Añadir etiquetas a las imágenes"
 
@@ -107,9 +104,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/set-pictures.page:18(None)
-#| msgid ""
-#| "@@image: 'figures/edit-picture-details.png'; "
-#| "md5=305ef58c4cb4c2c1ed917da9ee37dce0"
 msgid ""
 "@@image: 'figures/add-to-sets.png'; md5=4271e55d0c04feebbe4bbd5fe9d3712c"
 msgstr ""
@@ -118,9 +112,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/set-pictures.page:25(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-misc.png'; "
-#| "md5=f145c5c40cfe7a3765ae4dab44039520"
 msgid ""
 "@@image: 'figures/create-new-set.png'; md5=ca6b1733aed1e41984b1b2f673d6882f"
 msgstr ""
@@ -166,9 +157,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/introduction.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/frogr-remote-organizer.png'; "
-#| "md5=bd66e93467aa7dee791f09206435283d"
 msgid ""
 "@@image: 'figures/frogr-remote-organizer.png'; "
 "md5=cd9eadcb6249af468861b5eafdff1196"
@@ -253,9 +241,6 @@ msgid "About"
 msgstr "Acerca de"
 
 #: C/introduction.page:37(p)
-#| msgid ""
-#| "You can have more information about <app>Frogr</app> using the menu "
-#| "<guiseq><gui>Help</gui><gui>About</gui></guiseq>."
 msgid ""
 "You can have more information about <app>Frogr</app> using the menu "
 "<guiseq><gui>Frogr</gui><gui>About</gui></guiseq>."
@@ -317,9 +302,6 @@ msgstr ""
 "existente."
 
 #: C/create-account.page:21(p)
-#| msgid ""
-#| "Then, authorize <app>Frogr</app> to access to this account. You may now "
-#| "go back to <app>Frogr</app> window and use it to upload any picture!"
 msgid ""
 "Then, authorize <app>Frogr</app> to access to this account. You may now go "
 "back to <app>Frogr</app> window, enter the verification code and use the "
@@ -338,10 +320,6 @@ msgid "Remove Pictures"
 msgstr "Quitar imágenes"
 
 #: C/remove-pictures.page:13(p)
-#| msgid ""
-#| "You can remove a picture using the toolbar <gui>Minus</gui> button. Or, "
-#| "you can use the menu <guiseq><gui>File</gui><gui>Remove Pictures</gui></"
-#| "guiseq>."
 msgid ""
 "You can remove a picture using the toolbar <gui>Minus</gui> button. Or, you "
 "can use the menu <guiseq><gui>Actions</gui><gui>Remove Pictures</gui></"
@@ -390,9 +368,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/edit-pictures.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/edit-picture-details.png'; "
-#| "md5=305ef58c4cb4c2c1ed917da9ee37dce0"
 msgid ""
 "@@image: 'figures/edit-picture-details.png'; "
 "md5=54f76888df9e06aa6d36c4bc2e0684b3"
@@ -446,7 +421,6 @@ msgid "Tags"
 msgstr "Etiquetas"
 
 #: C/edit-pictures.page:24(p)
-#| msgid "Add some description the picture"
 msgid "Add some tags to better categorize the picture"
 msgstr "Añadir etiquetas para mejorar la clasificación de la imagen"
 
@@ -516,18 +490,18 @@ msgstr ""
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/preferences.page:21(None)
 #| msgid ""
-#| "@@image: 'figures/preferences-general.png'; "
-#| "md5=460f7b3c2898b98b94a2f50287719510"
-msgid "@@image: 'figures/preferences-general.png'; md5=THIS FILE DOESN'T EXIST"
+#| "@@image: 'figures/preferences-misc.png'; "
+#| "md5=679b3d09b469bb1e63dc2614df62f437"
+msgid ""
+"@@image: 'figures/preferences-general.png'; "
+"md5=da6a7c358a0e81df431fe9e3e91ca875"
 msgstr ""
-"@@image: 'figures/preferences-general.png'; md5=THIS FILE DOESN'T EXIST"
+"@@image: 'figures/preferences-general.png'; "
+"md5=da6a7c358a0e81df431fe9e3e91ca875"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/preferences.page:33(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-connection.png'; "
-#| "md5=578627558fa359ee0790ddcdb645676c"
 msgid ""
 "@@image: 'figures/preferences-connection.png'; "
 "md5=0ffe62069a2d649ce45d729e76c78a11"
@@ -538,9 +512,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/preferences.page:44(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-misc.png'; "
-#| "md5=f145c5c40cfe7a3765ae4dab44039520"
 msgid ""
 "@@image: 'figures/preferences-misc.png'; md5=679b3d09b469bb1e63dc2614df62f437"
 msgstr ""
@@ -551,9 +522,6 @@ msgid "Preferences"
 msgstr "Preferencias"
 
 #: C/preferences.page:14(p)
-#| msgid ""
-#| "Go to Preferences using menu <guiseq><gui>File</gui><gui>Preferences</"
-#| "gui></guiseq>."
 msgid ""
 "Go to Preferences using menu <guiseq><gui>Frogr</gui><gui>Preferences</gui></"
 "guiseq>."
@@ -612,9 +580,6 @@ msgstr "Ventana de preferencias varias de <app>Frogr</app>."
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/group-pictures.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/edit-picture-details.png'; "
-#| "md5=305ef58c4cb4c2c1ed917da9ee37dce0"
 msgid ""
 "@@image: 'figures/add-to-groups.png'; md5=8afe23df54ab15e0e76deea82cf3ed77"
 msgstr ""
@@ -633,15 +598,10 @@ msgid "Adding pictures to groups"
 msgstr "Añadir imágenes a grupos"
 
 #: C/add-pictures.page:9(desc) C/add-pictures.page:12(title)
-#| msgid "Upload Pictures"
 msgid "Load Pictures"
 msgstr "Cargar imágenes"
 
 #: C/add-pictures.page:13(p)
-#| msgid ""
-#| "You can add a picture using the toolbar <gui>Plus</gui> button. Or, you "
-#| "can use the menu <guiseq><gui>File</gui><gui>Add Pictures</gui></guiseq>. "
-#| "The added pictures will be displayed and available for transfer to Flickr."
 msgid ""
 "You can load a picture using the toolbar <gui>Plus</gui> button. Or, you can "
 "use the menu <guiseq><gui>Actions</gui><gui>Load Pictures</gui></guiseq>. "
@@ -656,6 +616,14 @@ msgstr ""
 #: C/index.page:0(None)
 msgid "translator-credits"
 msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011 - 2012"
+
+#~| msgid ""
+#~| "@@image: 'figures/preferences-general.png'; "
+#~| "md5=460f7b3c2898b98b94a2f50287719510"
+#~ msgid ""
+#~ "@@image: 'figures/preferences-general.png'; md5=THIS FILE DOESN'T EXIST"
+#~ msgstr ""
+#~ "@@image: 'figures/preferences-general.png'; md5=THIS FILE DOESN'T EXIST"
 
 #~ msgid "You can amend the type of the picture."
 #~ msgstr "Puede corregir el tipo de imagen."
