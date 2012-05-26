@@ -617,9 +617,9 @@ _on_icon_view_button_press_event (GtkWidget *widget,
           || ((event->button == 3) && !path_selected))
         {
           if (!(event->state & GDK_SHIFT_MASK)
-              && !(event->state & GDK_PRIMARY_MODIFIER))
+              && !(event->state & GDK_CONTROL_MASK))
             {
-              /* Deselect all items if not pressing Ctrl/Meta or shift */
+              /* Deselect all items if not pressing Ctrl or shift */
               gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
             }
 
@@ -632,7 +632,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
       if ((event->button == 1)                   /* left button */
           && (event->type == GDK_2BUTTON_PRESS ) /* doubleclick */
           && !(event->state & GDK_SHIFT_MASK)    /*  not shift  */
-          && !(event->state & GDK_PRIMARY_MODIFIER)) /*  not Ctrl/Meta */
+          && !(event->state & GDK_CONTROL_MASK)) /*  not Ctrl */
         {
           /* edit selected item */
           _edit_selected_pictures (mainview);
