@@ -4,20 +4,23 @@
 #
 # Arvis Lācis <arvis.lacis@gmail.com>, 2012.
 # Anita Reitere <nitalynx@gmail.com>, 2012.
+# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2012.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-06-23 13:30+0000\n"
-"PO-Revision-Date: 2012-08-16 13:25+0300\n"
-"Last-Translator: Anita Reitere <nitalynx@gmail.com>\n"
-"Language-Team: Latviešu <kde-i18n-doc@kde.org>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-16 13:51+0300\n"
+"PO-Revision-Date: 2012-08-16 13:52+0300\n"
+"Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
+"Language-Team: Latviešu <lata-l10n@googlegroups.com>\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
-"Language: lv\n"
-"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
+"X-Generator: Gtranslator 2.91.5\n"
 
 #: ../data/frogr.desktop.in.in.h:1
 msgid "Flickr Remote Organizer"
@@ -51,8 +54,7 @@ msgstr "Pievienot birkas"
 msgid "Title"
 msgstr "Nosaukums"
 
-#: ../src/frogr-add-to-set-dialog.c:146
-#: ../src/frogr-add-to-group-dialog.c:146
+#: ../src/frogr-add-to-set-dialog.c:146 ../src/frogr-add-to-group-dialog.c:146
 msgid "Elements"
 msgstr "Elementi"
 
@@ -70,15 +72,18 @@ msgstr "Pievienot grupām"
 
 #: ../src/frogr-auth-dialog.c:32
 #, c-format
-msgid "Please press the button to authorize %s and then come back to complete the process."
-msgstr "Lūdzu, nospiediet pogu, lai pilnvarotu %s, un tad atgriezieties, lai pabeigtu procesu."
+msgid ""
+"Please press the button to authorize %s and then come back to complete the "
+"process."
+msgstr ""
+"Lūdzu, nospiediet pogu, lai pilnvarotu %s, un tad atgriezieties, lai "
+"pabeigtu procesu."
 
 #: ../src/frogr-auth-dialog.c:36
 msgid "Enter verification code:"
 msgstr "Ievadiet verifikācijas kodu:"
 
-#: ../src/frogr-auth-dialog.c:63
-#: ../src/frogr-auth-dialog.c:147
+#: ../src/frogr-auth-dialog.c:63 ../src/frogr-auth-dialog.c:147
 #, c-format
 msgid "Authorize %s"
 msgstr "Pilnvarot %s"
@@ -286,8 +291,12 @@ msgstr "Pievieno attēlu grupām..."
 #. uploaded to flickr (different for free and PRO accounts).
 #: ../src/frogr-controller.c:1292
 #, c-format
-msgid "Can't load picture %s: size of file is bigger than the maximum allowed for this account (%s)"
-msgstr "Nevar ielādēt attēlu %s — datnes izmērs ir lielāks nekā maksimāli atļautais šim kontam (%s)"
+msgid ""
+"Can't load picture %s: size of file is bigger than the maximum allowed for "
+"this account (%s)"
+msgstr ""
+"Nevar ielādēt attēlu %s — datnes izmērs ir lielāks nekā maksimāli atļautais "
+"šim kontam (%s)"
 
 #: ../src/frogr-controller.c:1766
 msgid "Updating credentials…"
@@ -331,8 +340,7 @@ msgstr ""
 "Lūdzu, atkārtoti pilnvarojiet to."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:134
-#: ../src/frogr-details-dialog.c:1007
+#: ../src/frogr-create-new-set-dialog.c:134 ../src/frogr-details-dialog.c:1007
 msgid "Missing data required"
 msgstr "Trūkst nepieciešamo datu"
 
@@ -352,45 +360,37 @@ msgstr "Aizpildīt attēlu informāciju ar nosaukumu un aprakstu"
 msgid "Create New Set"
 msgstr "Izveidot jaunu kolekciju"
 
-#: ../src/frogr-details-dialog.c:91
-#: ../src/frogr-settings-dialog.c:105
+#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:105
 msgid "Default (as specified in flickr)"
 msgstr "Noklusējums (kā norādīts Flickr)"
 
-#: ../src/frogr-details-dialog.c:92
-#: ../src/frogr-settings-dialog.c:106
+#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:106
 msgid "All rights reserved"
 msgstr "Visas tiesības aizsargātas"
 
-#: ../src/frogr-details-dialog.c:93
-#: ../src/frogr-settings-dialog.c:107
+#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:107
 msgid "CC Attribution-NonCommercial-ShareAlike"
-msgstr ""
+msgstr "CC Attribution-NonCommercial-ShareAlike"
 
-#: ../src/frogr-details-dialog.c:94
-#: ../src/frogr-settings-dialog.c:108
+#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:108
 msgid "CC Attribution-NonCommercial"
-msgstr ""
+msgstr "CC Attribution-NonCommercial"
 
-#: ../src/frogr-details-dialog.c:95
-#: ../src/frogr-settings-dialog.c:109
+#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:109
 msgid "CC Attribution-NonCommercial-NoDerivs"
-msgstr ""
+msgstr "CC Attribution-NonCommercial-NoDerivs"
 
-#: ../src/frogr-details-dialog.c:96
-#: ../src/frogr-settings-dialog.c:110
+#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:110
 msgid "CC Attribution"
-msgstr ""
+msgstr "CC Attribution"
 
-#: ../src/frogr-details-dialog.c:97
-#: ../src/frogr-settings-dialog.c:111
+#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:111
 msgid "CC Attribution-ShareAlike"
-msgstr ""
+msgstr "CC Attribution-ShareAlike"
 
-#: ../src/frogr-details-dialog.c:98
-#: ../src/frogr-settings-dialog.c:112
+#: ../src/frogr-details-dialog.c:98 ../src/frogr-settings-dialog.c:112
 msgid "CC Attribution-NoDerivs"
-msgstr ""
+msgstr "CC Attribution-NoDerivs"
 
 #: ../src/frogr-details-dialog.c:166
 msgid "Open with image viewer"
@@ -400,23 +400,19 @@ msgstr "Atvērt ar attēlu skatītāju"
 msgid "Visibility"
 msgstr "Redzamība"
 
-#: ../src/frogr-details-dialog.c:200
-#: ../src/frogr-settings-dialog.c:204
+#: ../src/frogr-details-dialog.c:200 ../src/frogr-settings-dialog.c:204
 msgid "_Private"
 msgstr "_Privāts"
 
-#: ../src/frogr-details-dialog.c:204
-#: ../src/frogr-settings-dialog.c:206
+#: ../src/frogr-details-dialog.c:204 ../src/frogr-settings-dialog.c:206
 msgid "P_ublic"
 msgstr "P_ublisks"
 
-#: ../src/frogr-details-dialog.c:212
-#: ../src/frogr-settings-dialog.c:213
+#: ../src/frogr-details-dialog.c:212 ../src/frogr-settings-dialog.c:213
 msgid "Visible to _Family"
 msgstr "Redzams ģime_nei"
 
-#: ../src/frogr-details-dialog.c:216
-#: ../src/frogr-settings-dialog.c:215
+#: ../src/frogr-details-dialog.c:216 ../src/frogr-settings-dialog.c:215
 msgid "Visible to F_riends"
 msgstr "Redzams d_raugiem"
 
@@ -424,18 +420,15 @@ msgstr "Redzams d_raugiem"
 msgid "Content Type"
 msgstr "Satura veids"
 
-#: ../src/frogr-details-dialog.c:247
-#: ../src/frogr-settings-dialog.c:240
+#: ../src/frogr-details-dialog.c:247 ../src/frogr-settings-dialog.c:240
 msgid "P_hoto"
 msgstr "_Fotogrāfija"
 
-#: ../src/frogr-details-dialog.c:251
-#: ../src/frogr-settings-dialog.c:242
+#: ../src/frogr-details-dialog.c:251 ../src/frogr-settings-dialog.c:242
 msgid "Scree_nshot"
 msgstr "Ekrānuzņē_mums"
 
-#: ../src/frogr-details-dialog.c:255
-#: ../src/frogr-settings-dialog.c:244
+#: ../src/frogr-details-dialog.c:255 ../src/frogr-settings-dialog.c:244
 msgid "Oth_er"
 msgstr "_Cits"
 
@@ -443,18 +436,15 @@ msgstr "_Cits"
 msgid "Safety Level"
 msgstr "Drošuma līmenis"
 
-#: ../src/frogr-details-dialog.c:278
-#: ../src/frogr-settings-dialog.c:264
+#: ../src/frogr-details-dialog.c:278 ../src/frogr-settings-dialog.c:264
 msgid "S_afe"
 msgstr "_Drošs"
 
-#: ../src/frogr-details-dialog.c:282
-#: ../src/frogr-settings-dialog.c:266
+#: ../src/frogr-details-dialog.c:282 ../src/frogr-settings-dialog.c:266
 msgid "_Moderate"
 msgstr "_Mērens"
 
-#: ../src/frogr-details-dialog.c:286
-#: ../src/frogr-settings-dialog.c:268
+#: ../src/frogr-details-dialog.c:286 ../src/frogr-settings-dialog.c:268
 msgid "Restr_icted"
 msgstr "_Ierobežots"
 
@@ -783,5 +773,3 @@ msgstr "_Skats"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:29
 msgid "_Sort Pictures"
 msgstr "Kārtot attēlu_s"
-
-
