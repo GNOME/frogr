@@ -2,7 +2,7 @@
  * frogr-about-dialog.c -- About dialog
  *
  * Copyright (C) 2009-2012 Mario Sanchez Prada
- * Authors: Mario Sanchez Prada <msanchez@igalia.com>
+ * Authors: Mario Sanchez Prada <msanchez@gnome.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 3 of the GNU General Public
@@ -30,7 +30,7 @@
 #define ABOUT_DIALOG_ICON "/hicolor/48x48/apps/frogr.png"
 
 static const gchar *authors[] = {
-  "Mario Sanchez Prada <msanchez@igalia.com>",
+  "Mario Sanchez Prada <msanchez@gnome.org>",
   "",
   NULL
 };

@@ -2,7 +2,7 @@
  * frogr-picture-loader.c -- Asynchronous picture loader in frogr
  *
  * Copyright (C) 2009-2012 Mario Sanchez Prada
- * Authors: Mario Sanchez Prada <msanchez@igalia.com>
+ * Authors: Mario Sanchez Prada <msanchez@gnome.org>
  *
  * Some parts of this file were based on source code from tracker,
  * licensed under the GNU Lesser General Public License Version 2.1

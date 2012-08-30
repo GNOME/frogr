@@ -41,7 +41,7 @@ msgid "translator-credits"
 msgstr ""
 "Jorge González <jorgegonz@svn.gnome.org>, 2011\n"
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011 - 2012\n"
-"Mario Sanchez Prada <msanchez@igalia.com>, 2010\n"
+"Mario Sanchez Prada <msanchez@gnome.org>, 2010\n"
 "Alejandro Pinheiro <apinheiro@igalia.com>, 2009"
 
 #: ../src/frogr-add-tags-dialog.c:201

@@ -13,7 +13,7 @@
   <maintainer>
     <foaf:Person>
       <foaf:name>Mario Sanchez Prada</foaf:name>
-      <foaf:mbox rdf:resource="mailto:msanchez@igalia.com" />
+      <foaf:mbox rdf:resource="mailto:msanchez@gnome.org" />
       <gnome:userid>msanchez</gnome:userid>
     </foaf:Person>
   </maintainer>

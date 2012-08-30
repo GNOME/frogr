@@ -5,7 +5,7 @@
  *           (C) 2009 Adrian Perez
  * Authors:
  *   Adrian Perez <aperez@igalia.com>
- *   Mario Sanchez Prada <msanchez@igalia.com>
+ *   Mario Sanchez Prada <msanchez@gnome.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 3 of the GNU General Public
