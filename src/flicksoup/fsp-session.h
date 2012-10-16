@@ -90,7 +90,7 @@ void
 fsp_session_set_token_secret            (FspSession  *self,
                                          const gchar *token_secret);
 void
-fsp_session_get_auth_url_async          (FspSession          *self,
+fsp_session_get_auth_url                (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
                                          gpointer             data);
@@ -100,7 +100,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_complete_auth_async         (FspSession          *self,
+fsp_session_complete_auth               (FspSession          *self,
                                          const gchar         *code,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
@@ -111,7 +111,7 @@ fsp_session_complete_auth_finish        (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_exchange_token_async        (FspSession          *self,
+fsp_session_exchange_token              (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
                                          gpointer             data);
@@ -121,7 +121,7 @@ fsp_session_exchange_token_finish       (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_check_auth_info_async       (FspSession          *self,
+fsp_session_check_auth_info             (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
                                          gpointer             data);
@@ -131,7 +131,7 @@ fsp_session_check_auth_info_finish      (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_get_upload_status_async     (FspSession          *self,
+fsp_session_get_upload_status           (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
                                          gpointer             data);
@@ -141,7 +141,7 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_upload_async                (FspSession          *self,
+fsp_session_upload                      (FspSession          *self,
                                          const gchar         *fileuri,
                                          const gchar         *title,
                                          const gchar         *description,
@@ -162,7 +162,7 @@ fsp_session_upload_finish               (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_get_info_async              (FspSession          *self,
+fsp_session_get_info                    (FspSession          *self,
                                          const gchar         *photo_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
@@ -173,7 +173,7 @@ fsp_session_get_info_finish             (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error);
 void
-fsp_session_get_photosets_async         (FspSession          *self,
+fsp_session_get_photosets               (FspSession          *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data);
@@ -184,7 +184,7 @@ fsp_session_get_photosets_finish        (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_add_to_photoset_async       (FspSession          *self,
+fsp_session_add_to_photoset             (FspSession          *self,
                                          const gchar         *photo_id,
                                          const gchar         *photoset_id,
                                          GCancellable        *cancellable,
@@ -196,7 +196,7 @@ fsp_session_add_to_photoset_finish      (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error);
 void
-fsp_session_create_photoset_async       (FspSession          *self,
+fsp_session_create_photoset             (FspSession          *self,
                                          const gchar         *title,
                                          const gchar         *description,
                                          const gchar         *primary_photo_id,
@@ -210,7 +210,7 @@ fsp_session_create_photoset_finish      (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_get_groups_async            (FspSession          *self,
+fsp_session_get_groups                  (FspSession          *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data);
@@ -221,7 +221,7 @@ fsp_session_get_groups_finish           (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_add_to_group_async          (FspSession          *self,
+fsp_session_add_to_group                (FspSession          *self,
                                          const gchar         *photo_id,
                                          const gchar         *group_id,
                                          GCancellable        *cancellable,
@@ -234,7 +234,7 @@ fsp_session_add_to_group_finish         (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_get_tags_list_async         (FspSession          *self,
+fsp_session_get_tags_list               (FspSession          *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data);
@@ -245,7 +245,7 @@ fsp_session_get_tags_list_finish        (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_set_license_async           (FspSession          *self,
+fsp_session_set_license                 (FspSession          *self,
                                          const gchar         *photo_id,
                                          FspLicense          license,
                                          GCancellable        *cancellable,
@@ -258,7 +258,7 @@ fsp_session_set_license_finish          (FspSession    *self,
                                          GError       **error);
 
 void
-fsp_session_set_location_async           (FspSession          *self,
+fsp_session_set_location                 (FspSession          *self,
                                           const gchar         *photo_id,
                                           FspDataLocation     *location,
                                           GCancellable        *cancellable,
@@ -271,7 +271,7 @@ fsp_session_set_location_finish          (FspSession    *self,
                                           GError       **error);
 
 void
-fsp_session_get_location_async           (FspSession          *self,
+fsp_session_get_location                 (FspSession          *self,
                                           const gchar         *photo_id,
                                           GCancellable        *cancellable,
                                           GAsyncReadyCallback  callback,

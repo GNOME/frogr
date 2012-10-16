@@ -637,18 +637,18 @@ _upload_picture (FrogrController *self, FrogrPicture *picture,
                     self);
 
   _enable_cancellable (self, TRUE);
-  fsp_session_upload_async (priv->session,
-                            frogr_picture_get_fileuri (picture),
-                            frogr_picture_get_title (picture),
-                            frogr_picture_get_description (picture),
-                            frogr_picture_get_tags (picture),
-                            public_visibility,
-                            family_visibility,
-                            friend_visibility,
-                            safety_level,
-                            content_type,
-                            search_scope,
-                            priv->last_cancellable, _upload_picture_cb, up_st);
+  fsp_session_upload (priv->session,
+                      frogr_picture_get_fileuri (picture),
+                      frogr_picture_get_title (picture),
+                      frogr_picture_get_description (picture),
+                      frogr_picture_get_tags (picture),
+                      public_visibility,
+                      family_visibility,
+                      friend_visibility,
+                      safety_level,
+                      content_type,
+                      search_scope,
+                      priv->last_cancellable, _upload_picture_cb, up_st);
 }
 
 static void
@@ -697,12 +697,12 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
         {
           priv->setting_license = TRUE;
           _notify_setting_license (controller, picture);
-          fsp_session_set_license_async (session,
-                                         frogr_picture_get_id (picture),
-                                         license,
-                                         priv->last_cancellable,
-                                         _set_license_cb,
-                                         up_st);
+          fsp_session_set_license (session,
+                                   frogr_picture_get_id (picture),
+                                   license,
+                                   priv->last_cancellable,
+                                   _set_license_cb,
+                                   up_st);
         }
 
       if (frogr_picture_send_location (picture)
@@ -809,12 +809,12 @@ _set_location_on_idle (gpointer data)
   data_location->longitude = frogr_location_get_longitude (location);
  
   _notify_setting_location (controller, picture);
-  fsp_session_set_location_async (priv->session,
-                                  frogr_picture_get_id (picture),
-                                  data_location,
-                                  priv->last_cancellable,
-                                  _set_location_cb,
-                                  up_st);
+  fsp_session_set_location (priv->session,
+                            frogr_picture_get_id (picture),
+                            data_location,
+                            priv->last_cancellable,
+                            _set_location_cb,
+                            up_st);
 
   fsp_data_free (FSP_DATA (data_location));
 
@@ -866,24 +866,24 @@ _create_set_or_add_picture (FrogrController *self,
     {
       /* Set with ID: Add picture to it */
       _notify_adding_to_set (self, picture, set);
-      fsp_session_add_to_photoset_async (priv->session,
-                                         frogr_picture_get_id (picture),
-                                         frogr_photoset_get_id (set),
-                                         priv->last_cancellable,
-                                         _add_to_photoset_cb,
-                                         up_st);
+      fsp_session_add_to_photoset (priv->session,
+                                   frogr_picture_get_id (picture),
+                                   frogr_photoset_get_id (set),
+                                   priv->last_cancellable,
+                                   _add_to_photoset_cb,
+                                   up_st);
     }
   else
     {
       /* Set with ID: Create set aliong with this picture */
       _notify_creating_set (self, picture, set);
-      fsp_session_create_photoset_async (priv->session,
-                                         frogr_photoset_get_title (set),
-                                         frogr_photoset_get_description (set),
-                                         frogr_picture_get_id (picture),
-                                         priv->last_cancellable,
-                                         _create_photoset_cb,
-                                         up_st);
+      fsp_session_create_photoset (priv->session,
+                                   frogr_photoset_get_title (set),
+                                   frogr_photoset_get_description (set),
+                                   frogr_picture_get_id (picture),
+                                   priv->last_cancellable,
+                                   _create_photoset_cb,
+                                   up_st);
     }
 
   return TRUE;
@@ -1031,12 +1031,12 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
           up_st->groups = groups;
 
           _notify_adding_to_group (controller, picture, group);
-          fsp_session_add_to_group_async (session,
-                                          frogr_picture_get_id (picture),
-                                          frogr_group_get_id (group),
-                                          priv->last_cancellable,
-                                          _add_to_group_cb,
-                                          up_st);
+          fsp_session_add_to_group (session,
+                                    frogr_picture_get_id (picture),
+                                    frogr_group_get_id (group),
+                                    priv->last_cancellable,
+                                    _add_to_group_cb,
+                                    up_st);
           keep_going = TRUE;
         }
     }
@@ -1092,12 +1092,12 @@ _add_picture_to_groups_on_idle (gpointer data)
   _notify_adding_to_group (controller, picture, group);
 
   session = priv->session;
-  fsp_session_add_to_group_async (session,
-                                  frogr_picture_get_id (picture),
-                                  frogr_group_get_id (group),
-                                  priv->last_cancellable,
-                                  _add_to_group_cb,
-                                  up_st);
+  fsp_session_add_to_group (session,
+                            frogr_picture_get_id (picture),
+                            frogr_group_get_id (group),
+                            priv->last_cancellable,
+                            _add_to_group_cb,
+                            up_st);
   return FALSE;
 }
 
@@ -1397,8 +1397,8 @@ _fetch_photosets (FrogrController *self)
   priv->fetching_photosets = TRUE;
 
   _enable_cancellable (self, TRUE);
-  fsp_session_get_photosets_async (priv->session, priv->last_cancellable,
-                                   _fetch_photosets_cb, self);
+  fsp_session_get_photosets (priv->session, priv->last_cancellable,
+                             _fetch_photosets_cb, self);
 }
 
 static void
@@ -1478,8 +1478,8 @@ _fetch_groups (FrogrController *self)
   priv->fetching_groups = TRUE;
 
   _enable_cancellable (self, TRUE);
-  fsp_session_get_groups_async (priv->session, priv->last_cancellable,
-                                _fetch_groups_cb, self);
+  fsp_session_get_groups (priv->session, priv->last_cancellable,
+                          _fetch_groups_cb, self);
 }
 
 static void
@@ -1557,8 +1557,8 @@ static void _fetch_account_info (FrogrController *self)
   priv->fetching_account_info = TRUE;
 
   _enable_cancellable (self, FALSE);
-  fsp_session_check_auth_info_async (priv->session, NULL,
-                                     _fetch_account_info_cb, self);
+  fsp_session_check_auth_info (priv->session, NULL,
+                               _fetch_account_info_cb, self);
 }
 
 static void
@@ -1628,8 +1628,8 @@ static void _fetch_account_extra_info (FrogrController *self)
   priv->fetching_account_extra_info = TRUE;
 
   _enable_cancellable (self, FALSE);
-  fsp_session_get_upload_status_async (priv->session, NULL,
-                                       _fetch_account_extra_info_cb, self);
+  fsp_session_get_upload_status (priv->session, NULL,
+                                 _fetch_account_extra_info_cb, self);
 }
 
 static void
@@ -1705,7 +1705,7 @@ _fetch_tags (FrogrController *self)
   priv->fetching_tags = TRUE;
 
   _enable_cancellable (self, TRUE);
-  fsp_session_get_tags_list_async (priv->session, priv->last_cancellable, _fetch_tags_cb, self);
+  fsp_session_get_tags_list (priv->session, priv->last_cancellable, _fetch_tags_cb, self);
 }
 
 static void
@@ -2300,7 +2300,7 @@ frogr_controller_set_active_account (FrogrController *self,
     {
       priv->fetching_token_replacement = TRUE;
       _enable_cancellable (self, FALSE);
-      fsp_session_exchange_token_async (priv->session, priv->last_cancellable, _exchange_token_cb, self);
+      fsp_session_exchange_token (priv->session, priv->last_cancellable, _exchange_token_cb, self);
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TOKEN_REPLACEMENT));
 
       /* Make sure we show proper feedback if connection is too slow */
@@ -2585,7 +2585,7 @@ frogr_controller_open_auth_url (FrogrController *self)
   priv->fetching_auth_url = TRUE;
   _enable_cancellable (self, TRUE);
 
-  fsp_session_get_auth_url_async (priv->session, priv->last_cancellable, _get_auth_url_cb, self);
+  fsp_session_get_auth_url (priv->session, priv->last_cancellable, _get_auth_url_cb, self);
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_URL));
 
   /* Make sure we show proper feedback if connection is too slow */
@@ -2602,7 +2602,7 @@ frogr_controller_complete_auth (FrogrController *self, const gchar *verification
   priv->fetching_auth_token = TRUE;
   _enable_cancellable (self, TRUE);
 
-  fsp_session_complete_auth_async (priv->session, verification_code, priv->last_cancellable, _complete_auth_cb, self);
+  fsp_session_complete_auth (priv->session, verification_code, priv->last_cancellable, _complete_auth_cb, self);
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_TOKEN));
 
   /* Make sure we show proper feedback if connection is too slow */

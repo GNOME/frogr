@@ -1776,7 +1776,7 @@ fsp_session_set_token_secret            (FspSession  *self,
 /* Get authorization URL */
 
 void
-fsp_session_get_auth_url_async          (FspSession          *self,
+fsp_session_get_auth_url                (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
@@ -1798,7 +1798,7 @@ fsp_session_get_auth_url_async          (FspSession          *self,
   /* Perform the async request */
   _perform_async_request (self->priv->soup_session, url,
                           _get_request_token_session_cb, G_OBJECT (self),
-                          c, cb, fsp_session_get_auth_url_async, data);
+                          c, cb, fsp_session_get_auth_url, data);
 
   g_free (url);
 }
@@ -1816,7 +1816,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
 
   auth_token =
     FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
-                                                fsp_session_get_auth_url_async,
+                                                fsp_session_get_auth_url,
                                                 error));
   /* Build the auth URL from the request token */
   if (auth_token != NULL)
@@ -1838,7 +1838,7 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
 /* Complete authorization */
 
 void
-fsp_session_complete_auth_async         (FspSession          *self,
+fsp_session_complete_auth               (FspSession          *self,
                                          const gchar         *code,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
@@ -1864,7 +1864,7 @@ fsp_session_complete_auth_async         (FspSession          *self,
       /* Perform the async request */
       _perform_async_request (priv->soup_session, url,
                               _get_access_token_soup_session_cb, G_OBJECT (self),
-                              c, cb, fsp_session_complete_auth_async, data);
+                              c, cb, fsp_session_complete_auth, data);
 
       g_free (url);
     }
@@ -1893,7 +1893,7 @@ fsp_session_complete_auth_finish        (FspSession    *self,
 
   auth_token =
     FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
-                                                fsp_session_complete_auth_async,
+                                                fsp_session_complete_auth,
                                                 error));
 
   /* Complete the authorization saving the token if present */
@@ -1907,7 +1907,7 @@ fsp_session_complete_auth_finish        (FspSession    *self,
 }
 
 void
-fsp_session_exchange_token_async        (FspSession          *self,
+fsp_session_exchange_token              (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
                                          gpointer             data)
@@ -1932,7 +1932,7 @@ fsp_session_exchange_token_async        (FspSession          *self,
       /* Perform the async request */
       _perform_async_request (priv->soup_session, url,
                               _exchange_token_soup_session_cb, G_OBJECT (self),
-                              c, cb, fsp_session_exchange_token_async, data);
+                              c, cb, fsp_session_exchange_token, data);
 
       g_free (url);
     }
@@ -1961,7 +1961,7 @@ fsp_session_exchange_token_finish       (FspSession    *self,
 
   auth_token =
     FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
-                                                fsp_session_exchange_token_async,
+                                                fsp_session_exchange_token,
                                                 error));
   if (auth_token != NULL)
     {
@@ -1972,7 +1972,7 @@ fsp_session_exchange_token_finish       (FspSession    *self,
 }
 
 void
-fsp_session_check_auth_info_async       (FspSession          *self,
+fsp_session_check_auth_info             (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
@@ -1997,7 +1997,7 @@ fsp_session_check_auth_info_async       (FspSession          *self,
       /* Perform the async request */
       _perform_async_request (priv->soup_session, url,
                               _check_token_soup_session_cb, G_OBJECT (self),
-                              c, cb, fsp_session_check_auth_info_async, data);
+                              c, cb, fsp_session_check_auth_info, data);
 
       g_free (url);
     }
@@ -2024,13 +2024,13 @@ fsp_session_check_auth_info_finish      (FspSession    *self,
 
   auth_token =
     FSP_DATA_AUTH_TOKEN (_finish_async_request (G_OBJECT (self), res,
-                                                fsp_session_check_auth_info_async,
+                                                fsp_session_check_auth_info,
                                                 error));
   return auth_token;
 }
 
 void
-fsp_session_get_upload_status_async     (FspSession          *self,
+fsp_session_get_upload_status           (FspSession          *self,
                                          GCancellable        *c,
                                          GAsyncReadyCallback cb,
                                          gpointer             data)
@@ -2055,7 +2055,7 @@ fsp_session_get_upload_status_async     (FspSession          *self,
       /* Perform the async request */
       _perform_async_request (priv->soup_session, url,
                               _get_upload_status_soup_session_cb, G_OBJECT (self),
-                              c, cb, fsp_session_get_upload_status_async, data);
+                              c, cb, fsp_session_get_upload_status, data);
 
       g_free (url);
     }
@@ -2082,13 +2082,13 @@ fsp_session_get_upload_status_finish    (FspSession    *self,
 
   upload_status =
     FSP_DATA_UPLOAD_STATUS (_finish_async_request (G_OBJECT (self), res,
-                                                   fsp_session_get_upload_status_async,
+                                                   fsp_session_get_upload_status,
                                                    error));
   return upload_status;
 }
 
 void
-fsp_session_upload_async                (FspSession          *self,
+fsp_session_upload                      (FspSession          *self,
                                          const gchar         *fileuri,
                                          const gchar         *title,
                                          const gchar         *description,
@@ -2153,7 +2153,7 @@ fsp_session_upload_async                (FspSession          *self,
   ard_clos->soup_message = NULL;
   ard_clos->cancellable = cancellable;
   ard_clos->callback = callback;
-  ard_clos->source_tag = fsp_session_upload_async;
+  ard_clos->source_tag = fsp_session_upload;
   ard_clos->data = data;
 
   /* Save important data for the upload process itself */
@@ -2175,12 +2175,12 @@ fsp_session_upload_finish               (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
   return (gchar*) _finish_async_request (G_OBJECT (self), res,
-                                         fsp_session_upload_async,
+                                         fsp_session_upload,
                                          error);
 }
 
 void
-fsp_session_get_info_async              (FspSession          *self,
+fsp_session_get_info                    (FspSession          *self,
                                          const gchar         *photo_id,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
@@ -2204,7 +2204,7 @@ fsp_session_get_info_async              (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _photo_get_info_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_get_info_async, data);
+                          cancellable, callback, fsp_session_get_info, data);
 
   g_free (url);
 }
@@ -2221,13 +2221,13 @@ fsp_session_get_info_finish             (FspSession    *self,
 
   photo_info =
     FSP_DATA_PHOTO_INFO (_finish_async_request (G_OBJECT (self), res,
-                                                fsp_session_get_info_async,
+                                                fsp_session_get_info,
                                                 error));
   return photo_info;
 }
 
 void
-fsp_session_get_photosets_async         (FspSession          *self,
+fsp_session_get_photosets               (FspSession          *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
@@ -2248,7 +2248,7 @@ fsp_session_get_photosets_async         (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _get_photosets_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_get_photosets_async, data);
+                          cancellable, callback, fsp_session_get_photosets, data);
 
   g_free (url);
 }
@@ -2262,12 +2262,12 @@ fsp_session_get_photosets_finish        (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
   return (GSList*) _finish_async_request (G_OBJECT (self), res,
-                                          fsp_session_get_photosets_async,
+                                          fsp_session_get_photosets,
                                           error);
 }
 
 void
-fsp_session_add_to_photoset_async       (FspSession          *self,
+fsp_session_add_to_photoset             (FspSession          *self,
                                          const gchar         *photo_id,
                                          const gchar         *photoset_id,
                                          GCancellable        *cancellable,
@@ -2294,7 +2294,7 @@ fsp_session_add_to_photoset_async       (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _add_to_photoset_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_add_to_photoset_async, data);
+                          cancellable, callback, fsp_session_add_to_photoset, data);
 
   g_free (url);
 }
@@ -2310,13 +2310,13 @@ fsp_session_add_to_photoset_finish      (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
   result = _finish_async_request (G_OBJECT (self), res,
-                                  fsp_session_add_to_photoset_async, error);
+                                  fsp_session_add_to_photoset, error);
 
   return result ? TRUE : FALSE;
 }
 
 void
-fsp_session_create_photoset_async       (FspSession          *self,
+fsp_session_create_photoset             (FspSession          *self,
                                          const gchar         *title,
                                          const gchar         *description,
                                          const gchar         *primary_photo_id,
@@ -2345,7 +2345,7 @@ fsp_session_create_photoset_async       (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _create_photoset_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_create_photoset_async, data);
+                          cancellable, callback, fsp_session_create_photoset, data);
 
   g_free (url);
 }
@@ -2362,13 +2362,13 @@ fsp_session_create_photoset_finish      (FspSession    *self,
 
   photoset_id =
     (gchar*) _finish_async_request (G_OBJECT (self), res,
-                                    fsp_session_create_photoset_async,
+                                    fsp_session_create_photoset,
                                     error);
   return photoset_id;
 }
 
 void
-fsp_session_get_groups_async            (FspSession          *self,
+fsp_session_get_groups                  (FspSession          *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
@@ -2389,7 +2389,7 @@ fsp_session_get_groups_async            (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _get_groups_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_get_groups_async, data);
+                          cancellable, callback, fsp_session_get_groups, data);
 
   g_free (url);
 }
@@ -2403,12 +2403,12 @@ fsp_session_get_groups_finish           (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
 
   return (GSList*) _finish_async_request (G_OBJECT (self), res,
-                                          fsp_session_get_groups_async,
+                                          fsp_session_get_groups,
                                           error);
 }
 
 void
-fsp_session_add_to_group_async          (FspSession          *self,
+fsp_session_add_to_group                (FspSession          *self,
                                          const gchar         *photo_id,
                                          const gchar         *group_id,
                                          GCancellable        *cancellable,
@@ -2435,7 +2435,7 @@ fsp_session_add_to_group_async          (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _add_to_group_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_add_to_group_async, data);
+                          cancellable, callback, fsp_session_add_to_group, data);
 
   g_free (url);
 }
@@ -2451,13 +2451,13 @@ fsp_session_add_to_group_finish         (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
   result = _finish_async_request (G_OBJECT (self), res,
-                                  fsp_session_add_to_group_async, error);
+                                  fsp_session_add_to_group, error);
 
   return result ? TRUE : FALSE;
 }
 
 void
-fsp_session_get_tags_list_async         (FspSession          *self,
+fsp_session_get_tags_list               (FspSession          *self,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
@@ -2478,7 +2478,7 @@ fsp_session_get_tags_list_async         (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _get_tags_list_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_get_tags_list_async, data);
+                          cancellable, callback, fsp_session_get_tags_list, data);
 
   g_free (url);
 }
@@ -2492,11 +2492,11 @@ fsp_session_get_tags_list_finish        (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
   return (GSList*) _finish_async_request (G_OBJECT (self), res,
-                                          fsp_session_get_tags_list_async, error);
+                                          fsp_session_get_tags_list, error);
 }
 
 void
-fsp_session_set_license_async           (FspSession          *self,
+fsp_session_set_license                 (FspSession          *self,
                                          const gchar         *photo_id,
                                          FspLicense          license,
                                          GCancellable        *cancellable,
@@ -2525,7 +2525,7 @@ fsp_session_set_license_async           (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _set_license_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_set_license_async, data);
+                          cancellable, callback, fsp_session_set_license, data);
 
   g_free (url);
 }
@@ -2541,13 +2541,13 @@ fsp_session_set_license_finish          (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
   result = _finish_async_request (G_OBJECT (self), res,
-                                  fsp_session_set_license_async, error);
+                                  fsp_session_set_license, error);
 
   return result ? TRUE : FALSE;
 }
 
 void
-fsp_session_set_location_async           (FspSession          *self,
+fsp_session_set_location                 (FspSession          *self,
                                           const gchar         *photo_id,
                                           FspDataLocation     *location,
                                           GCancellable        *cancellable,
@@ -2591,7 +2591,7 @@ fsp_session_set_location_async           (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _set_location_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_set_location_async, data);
+                          cancellable, callback, fsp_session_set_location, data);
 
   g_free (url);
 }
@@ -2607,13 +2607,13 @@ fsp_session_set_location_finish          (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
   result = _finish_async_request (G_OBJECT (self), res,
-                                  fsp_session_set_location_async, error);
+                                  fsp_session_set_location, error);
 
   return result ? TRUE : FALSE;
 }
 
 void
-fsp_session_get_location_async           (FspSession          *self,
+fsp_session_get_location                 (FspSession          *self,
                                           const gchar         *photo_id,
                                           GCancellable        *cancellable,
                                           GAsyncReadyCallback  callback,
@@ -2636,7 +2636,7 @@ fsp_session_get_location_async           (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _get_location_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_get_location_async, data);
+                          cancellable, callback, fsp_session_get_location, data);
 
   g_free (url);
 }
@@ -2653,7 +2653,7 @@ fsp_session_get_location_finish          (FspSession    *self,
 
   location =
     FSP_DATA_LOCATION (_finish_async_request (G_OBJECT (self), res,
-                                              fsp_session_get_location_async,
+                                              fsp_session_get_location,
                                               error));
   return location;
 }

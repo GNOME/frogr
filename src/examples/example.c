@@ -91,27 +91,27 @@ upload_cb                               (GObject      *object,
         {
           /* Continue setting a license for the picture */
           g_print ("Setting license for photo %s...\n", uploaded_photo_id);
-          fsp_session_set_license_async (session, uploaded_photo_id,
-                                         FSP_LICENSE_AT_NC_ND, NULL,
-                                         set_license_cb, NULL);
+          fsp_session_set_license (session, uploaded_photo_id,
+                                   FSP_LICENSE_AT_NC_ND, NULL,
+                                   set_license_cb, NULL);
         }
       else if (source_func == photoset_created_cb)
         {
           /* Continue adding the picture to the photoset */
           g_print ("Adding picture to photoset...\n");
-          fsp_session_add_to_photoset_async (session,
-                                             uploaded_photo_id,
-                                             created_photoset_id,
-                                             NULL, added_to_photoset_cb, NULL);
+          fsp_session_add_to_photoset (session,
+                                       uploaded_photo_id,
+                                       created_photoset_id,
+                                       NULL, added_to_photoset_cb, NULL);
         }
       else if (source_func == get_groups_cb)
         {
           /* Continue adding the picture to the group */
           g_print ("Adding picture to group...\n");
-          fsp_session_add_to_group_async (session,
-                                          uploaded_photo_id,
-                                          first_group_id,
-                                          NULL, added_to_group_cb, NULL);
+          fsp_session_add_to_group (session,
+                                    uploaded_photo_id,
+                                    first_group_id,
+                                    NULL, added_to_group_cb, NULL);
         }
     }
 }
@@ -182,19 +182,19 @@ get_groups_cb                           (GObject      *object,
 
       /* Continue adding a picture to the group, but first upload a new one */
       g_print ("Uploading a new picture to be added to the group...");
-      fsp_session_upload_async (session,
-                                test_photo_path,
-                                "Yet another title",
-                                "Yet another description ",
-                                "yet some other tags",
-                                FSP_VISIBILITY_NO,
-                                FSP_VISIBILITY_YES,
-                                FSP_VISIBILITY_NONE,
-                                FSP_SAFETY_LEVEL_NONE,
-                                FSP_CONTENT_TYPE_PHOTO,
-                                FSP_SEARCH_SCOPE_NONE,
-                                NULL, upload_cb,
-                                (gpointer) get_groups_cb);
+      fsp_session_upload (session,
+                          test_photo_path,
+                          "Yet another title",
+                          "Yet another description ",
+                          "yet some other tags",
+                          FSP_VISIBILITY_NO,
+                          FSP_VISIBILITY_YES,
+                          FSP_VISIBILITY_NONE,
+                          FSP_SAFETY_LEVEL_NONE,
+                          FSP_CONTENT_TYPE_PHOTO,
+                          FSP_SEARCH_SCOPE_NONE,
+                          NULL, upload_cb,
+                          (gpointer) get_groups_cb);
 
       g_slist_free (groups_list);
     }
@@ -226,8 +226,8 @@ added_to_photoset_cb                    (GObject      *object,
 
       /* Continue getting the list of groups */
       g_print ("Getting list of groups...\n");
-      fsp_session_get_groups_async (session, NULL,
-                                    get_groups_cb, NULL);
+      fsp_session_get_groups (session, NULL,
+                              get_groups_cb, NULL);
     }
 }
 
@@ -255,19 +255,19 @@ photoset_created_cb                     (GObject      *object,
 
       /* Continue adding a picture to the photoset, but first upload a new one */
       g_print ("Uploading a new picture to be added to the photoset...");
-      fsp_session_upload_async (session,
-                                test_photo_path,
-                                "Yet another title",
-                                "Yet another description ",
-                                "yet some other tags",
-                                FSP_VISIBILITY_NO,
-                                FSP_VISIBILITY_YES,
-                                FSP_VISIBILITY_NONE,
-                                FSP_SAFETY_LEVEL_NONE,
-                                FSP_CONTENT_TYPE_PHOTO,
-                                FSP_SEARCH_SCOPE_NONE,
-                                NULL, upload_cb,
-                                (gpointer) photoset_created_cb);
+      fsp_session_upload (session,
+                          test_photo_path,
+                          "Yet another title",
+                          "Yet another description ",
+                          "yet some other tags",
+                          FSP_VISIBILITY_NO,
+                          FSP_VISIBILITY_YES,
+                          FSP_VISIBILITY_NONE,
+                          FSP_SAFETY_LEVEL_NONE,
+                          FSP_CONTENT_TYPE_PHOTO,
+                          FSP_SEARCH_SCOPE_NONE,
+                          NULL, upload_cb,
+                          (gpointer) photoset_created_cb);
     }
 }
 
@@ -312,11 +312,11 @@ get_photosets_cb                        (GObject      *object,
 
       /* Continue creating a new photoset */
       g_print ("Creatine a new photoset...\n");
-      fsp_session_create_photoset_async (session,
-                                         "Photoset's title",
-                                         "Photoset's description\nasdasda",
-                                         uploaded_photo_id,
-                                         NULL, photoset_created_cb, NULL);
+      fsp_session_create_photoset (session,
+                                   "Photoset's title",
+                                   "Photoset's description\nasdasda",
+                                   uploaded_photo_id,
+                                   NULL, photoset_created_cb, NULL);
       g_slist_free (photosets_list);
     }
 }
@@ -367,8 +367,7 @@ photo_get_info_cb                       (GObject      *object,
 
       /* Continue getting the list of photosets */
       g_print ("Getting list of photosets...\n");
-      fsp_session_get_photosets_async (session, NULL,
-                                       get_photosets_cb, NULL);
+      fsp_session_get_photosets (session, NULL, get_photosets_cb, NULL);
 
       fsp_data_free (FSP_DATA (photo_info));
     }
@@ -402,8 +401,8 @@ get_location_cb                         (GObject      *object,
 
       /* Continue getting info about the picture */
       g_print ("Getting info for photo %s...\n", uploaded_photo_id);
-      fsp_session_get_info_async (session, uploaded_photo_id, NULL,
-                                  photo_get_info_cb, NULL);
+      fsp_session_get_info (session, uploaded_photo_id, NULL,
+                            photo_get_info_cb, NULL);
 
       fsp_data_free (FSP_DATA (location));
     }
@@ -435,8 +434,8 @@ set_location_cb                         (GObject      *object,
 
       /* Continue getting the location for the picture (should match) */
       g_print ("Getting location for photo %s...\n", uploaded_photo_id);
-      fsp_session_get_location_async (session, uploaded_photo_id, NULL,
-                                      get_location_cb, NULL);
+      fsp_session_get_location (session, uploaded_photo_id, NULL,
+                                get_location_cb, NULL);
     }
 }
 
@@ -478,10 +477,8 @@ set_license_cb                          (GObject      *object,
                location->longitude,
                location->accuracy);
 
-      fsp_session_set_location_async (session, uploaded_photo_id,
-                                      location, NULL,
-                                      set_location_cb, NULL);
-
+      fsp_session_set_location (session, uploaded_photo_id, location,
+                                NULL, set_location_cb, NULL);
       fsp_data_free (FSP_DATA (location));
     }
 }
@@ -521,23 +518,23 @@ get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused)
 
       /* Continue uploading a picture */
       g_print ("Uploading a picture...\n");
-      fsp_session_upload_async (session,
-                                test_photo_path,
-                                "title with spaces and wéïrd characters!",
-                                "description with\nmultiple lines",
-                                "áèïôu "
-                                "çÇ*+[]{} "
-                                "qwerty "
-                                "!·$%&/(@#~^*+ "
-                                "\"Tag With Spaces\"",
-                                FSP_VISIBILITY_NO,
-                                FSP_VISIBILITY_YES,
-                                FSP_VISIBILITY_NONE,
-                                FSP_SAFETY_LEVEL_NONE,
-                                FSP_CONTENT_TYPE_PHOTO,
-                                FSP_SEARCH_SCOPE_NONE,
-                                NULL, upload_cb,
-                                (gpointer) get_tags_list_cb);
+      fsp_session_upload (session,
+                          test_photo_path,
+                          "title with spaces and wéïrd characters!",
+                          "description with\nmultiple lines",
+                          "áèïôu "
+                          "çÇ*+[]{} "
+                          "qwerty "
+                          "!·$%&/(@#~^*+ "
+                          "\"Tag With Spaces\"",
+                          FSP_VISIBILITY_NO,
+                          FSP_VISIBILITY_YES,
+                          FSP_VISIBILITY_NONE,
+                          FSP_SAFETY_LEVEL_NONE,
+                          FSP_CONTENT_TYPE_PHOTO,
+                          FSP_SEARCH_SCOPE_NONE,
+                          NULL, upload_cb,
+                          (gpointer) get_tags_list_cb);
     }
 }
 
@@ -575,9 +572,7 @@ get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
 
       /* Continue getting the list of tags */
       g_print ("Getting the list of tags...\n");
-      fsp_session_get_tags_list_async (session, NULL,
-                                       get_tags_list_cb, NULL);
-
+      fsp_session_get_tags_list (session, NULL, get_tags_list_cb, NULL);
       fsp_data_free (FSP_DATA (upload_status));
     }
 }
@@ -612,7 +607,7 @@ check_auth_info_cb (GObject *object, GAsyncResult *res, gpointer unused)
 
       /* Continue getting the upload status */
       g_print ("Retrieving upload status...\n");
-      fsp_session_get_upload_status_async (session, NULL, get_upload_status_cb, NULL);
+      fsp_session_get_upload_status (session, NULL, get_upload_status_cb, NULL);
 
       fsp_data_free (FSP_DATA (auth_token));
     }
@@ -651,7 +646,7 @@ complete_auth_cb                        (GObject      *object,
 
       /* Continue checking the authorization information */
       g_print ("Checking the authorization information...\n");
-      fsp_session_check_auth_info_async (session, NULL, check_auth_info_cb, NULL);
+      fsp_session_check_auth_info (session, NULL, check_auth_info_cb, NULL);
 
       fsp_data_free (FSP_DATA (auth_token));
     }
@@ -686,7 +681,7 @@ get_auth_url_cb                         (GObject      *object,
 
           /* Continue finishing the authorization */
           g_print ("Finishing authorization...\n");
-          fsp_session_complete_auth_async (session, verifier, NULL, complete_auth_cb, NULL);
+          fsp_session_complete_auth (session, verifier, NULL, complete_auth_cb, NULL);
           g_free (verifier);
         }
       else
@@ -712,7 +707,7 @@ do_work (gpointer unused)
   g_print ("\tAPI key: %s\n\tSecret: %s\n\n", api_key, secret);
 
   g_print ("Getting authorization URL...\n");
-  fsp_session_get_auth_url_async (session, NULL, get_auth_url_cb, NULL);
+  fsp_session_get_auth_url (session, NULL, get_auth_url_cb, NULL);
 
   return FALSE;
 }
