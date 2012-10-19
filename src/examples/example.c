@@ -718,7 +718,10 @@ main                                    (int    argc,
 {
   GMainLoop *mainloop;
   g_type_init ();
+
+#if !GLIB_CHECK_VERSION(2,32,0)
   g_thread_init (NULL);
+#endif
 
   g_print ("Running flicksoup example...\n\n");
 
