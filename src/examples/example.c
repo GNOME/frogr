@@ -717,7 +717,10 @@ main                                    (int    argc,
                                          char **args)
 {
   GMainLoop *mainloop;
+
+#if !GLIB_CHECK_VERSION(2,36,0)
   g_type_init ();
+#endif
 
 #if !GLIB_CHECK_VERSION(2,32,0)
   g_thread_init (NULL);
