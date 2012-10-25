@@ -21,13 +21,8 @@
 #ifndef _FROGR_LOCATION_H
 #define _FROGR_LOCATION_H
 
-#include "frogr-photoset.h"
-#include "frogr-group.h"
-
 #include <glib.h>
 #include <glib-object.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#include <flicksoup/flicksoup.h>
 
 G_BEGIN_DECLS
 
