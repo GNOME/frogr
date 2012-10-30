@@ -210,9 +210,9 @@ static void _notify_adding_to_group (FrogrController *self,
                                      FrogrPicture *picture,
                                      FrogrGroup *group);
 
-static gboolean _on_file_loaded (FrogrController *self, FrogrPicture *picture);
+static void _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrController *self);
 
-static void _on_files_loaded (FrogrController *self);
+static void _on_files_loaded (FrogrFileLoader *loader, FrogrController *self);
 
 static void _fetch_everything (FrogrController *self, gboolean force_fetch);
 
@@ -1344,55 +1344,24 @@ _notify_adding_to_group (FrogrController *self,
   g_free (debug_msg);
 }
 
-static gboolean
-_on_file_loaded (FrogrController *self, FrogrPicture *picture)
+static void
+_on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  gulong picture_filesize = 0;
-  gulong max_filesize = G_MAXULONG;
 
-  g_return_val_if_fail (FROGR_IS_CONTROLLER (self), FALSE);
-  g_return_val_if_fail (FROGR_IS_PICTURE (picture), FALSE);
+  g_return_if_fail (FROGR_IS_CONTROLLER (self));
+  g_return_if_fail (FROGR_IS_PICTURE (picture));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  /* We need this info if account info was already fetched. */
-  if (priv->account && priv->account_extra_info_fetched)
-    {
-      max_filesize = frogr_account_get_max_filesize (priv->account);
-      picture_filesize = frogr_picture_get_filesize (picture);
-    }
-
-  /* Check max filesize limit, and stop the process if needed. */
-  if (picture_filesize > max_filesize)
-    {
-      GtkWindow *window = NULL;
-      gchar *msg = NULL;
-
-      /* First %s is the title of the picture (filename of the file by
-         default). Second %s is the max allowed size for a picture to be
-         uploaded to flickr (different for free and PRO accounts). */
-      msg = g_strdup_printf (_("Can't load picture %s: size of file is bigger "
-                               "than the maximum allowed for this account (%s)"),
-                             frogr_picture_get_title (picture),
-                             frogr_util_get_datasize_string (max_filesize));
-
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_util_show_error_dialog (window, msg);
-      g_free (msg);
-
-      return FALSE;
-    }
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_add_picture (mainview_model, picture);
   g_signal_emit (self, signals[PICTURE_LOADED], 0, picture);
-  return TRUE;
 }
 
 static void
-_on_files_loaded (FrogrController *self)
+_on_files_loaded (FrogrFileLoader *loader, FrogrController *self)
 {
   g_return_if_fail (FROGR_IS_CONTROLLER (self));
 
@@ -2693,11 +2662,28 @@ void
 frogr_controller_load_pictures (FrogrController *self,
                                 GSList *fileuris)
 {
-  FrogrFileLoader *loader;
-  loader = frogr_file_loader_new (fileuris,
-                                  (FrogrFileLoadedCallback) _on_file_loaded,
-                                  (FrogrFilesLoadedCallback) _on_files_loaded,
-                                  self);
+  FrogrControllerPrivate *priv = NULL;
+  FrogrFileLoader *loader = NULL;
+  gulong max_filesize = G_MAXULONG;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* We need this info if account info was already fetched. */
+  if (priv->account && priv->account_extra_info_fetched)
+    max_filesize = frogr_account_get_max_filesize (priv->account);
+
+  loader = frogr_file_loader_new (fileuris, max_filesize);
+
+  g_signal_connect (G_OBJECT (loader), "file-loaded",
+                    G_CALLBACK (_on_file_loaded),
+                    self);
+
+  g_signal_connect (G_OBJECT (loader), "files-loaded",
+                    G_CALLBACK (_on_files_loaded),
+                    self);
+
   /* Load the pictures! */
   _set_state (self, FROGR_STATE_LOADING_PICTURES);
   frogr_file_loader_load (loader);

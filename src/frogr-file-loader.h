@@ -38,13 +38,6 @@ G_BEGIN_DECLS
 typedef struct _FrogrFileLoader FrogrFileLoader;
 typedef struct _FrogrFileLoaderClass FrogrFileLoaderClass;
 
-/* Callback to be executed after every single load */
-typedef gboolean (*FrogrFileLoadedCallback) (GObject *source,
-                                             FrogrPicture *picture);
-
-/* Callback to be executed after all the files are loaded */
-typedef void (*FrogrFilesLoadedCallback) (GObject *source);
-
 struct _FrogrFileLoader
 {
   GObject parent_instance;
@@ -58,10 +51,7 @@ struct _FrogrFileLoaderClass
 
 GType frogr_file_loader_get_type(void) G_GNUC_CONST;
 
-FrogrFileLoader *frogr_file_loader_new (GSList *file_uris,
-                                        FrogrFileLoadedCallback file_loaded_cb,
-                                        FrogrFilesLoadedCallback files_loaded_cb,
-                                        gpointer object);
+FrogrFileLoader *frogr_file_loader_new (GSList *file_uris, gulong max_filesize);
 
 void frogr_file_loader_load (FrogrFileLoader *self);
 

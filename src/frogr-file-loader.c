@@ -61,6 +61,7 @@ struct _FrogrFileLoaderPrivate
   guint index;
   guint n_files;
 
+  gulong max_filesize;
   gboolean keep_file_extensions;
   gboolean import_tags;
   gboolean public_visibility;
@@ -71,11 +72,16 @@ struct _FrogrFileLoaderPrivate
   FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
-
-  FrogrFileLoadedCallback file_loaded_cb;
-  FrogrFilesLoadedCallback files_loaded_cb;
-  GObject *object;
 };
+
+/* Signals */
+enum {
+  FILE_LOADED,
+  FILES_LOADED,
+  N_SIGNALS
+};
+
+static guint signals[N_SIGNALS] = { 0 };
 
 #ifndef MAC_INTEGRATION
 /* Don't use this in Mac OSX, where GNOME VFS daemon won't be running,
@@ -213,6 +219,7 @@ _load_next_file_cb (GObject *object,
   GError *error = NULL;
   gchar *contents = NULL;
   gsize length = 0;
+  gulong picture_filesize = 0;
   gboolean keep_going = TRUE;
 
   self = FROGR_FILE_LOADER (data);;
@@ -380,10 +387,29 @@ _load_next_file_cb (GObject *object,
 
   /* Update status and progress */
   _update_status_and_progress (self);
+  g_signal_emit (self, signals[FILE_LOADED], 0, fpicture);
 
-  /* Execute 'file-loaded' callback */
-  if (priv->file_loaded_cb && fpicture)
-    keep_going = priv->file_loaded_cb (priv->object, fpicture);
+  /* Check if we must interrupt the process */
+  picture_filesize = frogr_picture_get_filesize (fpicture);
+  if (picture_filesize > priv->max_filesize)
+    {
+      GtkWindow *window = NULL;
+      gchar *msg = NULL;
+
+      /* First %s is the title of the picture (filename of the file by
+         default). Second %s is the max allowed size for a picture to be
+         uploaded to flickr (different for free and PRO accounts). */
+      msg = g_strdup_printf (_("Can't load picture %s: size of file is bigger "
+                               "than the maximum allowed for this account (%s)"),
+                             frogr_picture_get_title (fpicture),
+                             frogr_util_get_datasize_string (priv->max_filesize));
+
+      window = frogr_main_view_get_window (priv->mainview);
+      frogr_util_show_error_dialog (window, msg);
+      g_free (msg);
+
+      keep_going = FALSE;
+    }
 
   if (fpicture != NULL)
     g_object_unref (fpicture);
@@ -555,14 +581,7 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
 static void
 _finish_task_and_self_destruct (FrogrFileLoader *self)
 {
-  FrogrFileLoaderPrivate *priv =
-    FROGR_FILE_LOADER_GET_PRIVATE (self);
-
-  /* Execute final callback */
-  if (priv->files_loaded_cb)
-    priv->files_loaded_cb (priv->object);
-
-  /* Process finished, self-destruct */
+  g_signal_emit (self, signals[FILES_LOADED], 0);
   g_object_unref (self);
 }
 
@@ -608,6 +627,22 @@ frogr_file_loader_class_init(FrogrFileLoaderClass *klass)
   obj_class->dispose = _frogr_file_loader_dispose;
   obj_class->finalize = _frogr_file_loader_finalize;
 
+  signals[FILE_LOADED] =
+    g_signal_new ("file-loaded",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__OBJECT,
+                  G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
+
+  signals[FILES_LOADED] =
+    g_signal_new ("files-loaded",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
+
   g_type_class_add_private (obj_class, sizeof (FrogrFileLoaderPrivate));
 }
 
@@ -626,6 +661,7 @@ frogr_file_loader_init (FrogrFileLoader *self)
   priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
 
   /* Initialize values from frogr configuration */
+  priv->max_filesize = G_MAXULONG;
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (config);
   priv->import_tags = frogr_config_get_import_tags_from_metadata (config);
   priv->public_visibility = frogr_config_get_default_public (config);
@@ -647,10 +683,7 @@ frogr_file_loader_init (FrogrFileLoader *self)
 /* Public API */
 
 FrogrFileLoader *
-frogr_file_loader_new (GSList *file_uris,
-                       FrogrFileLoadedCallback file_loaded_cb,
-                       FrogrFilesLoadedCallback files_loaded_cb,
-                       gpointer object)
+frogr_file_loader_new (GSList *file_uris, gulong max_filesize)
 {
   FrogrFileLoader *self = NULL;
   FrogrFileLoaderPrivate *priv = NULL;
@@ -665,14 +698,10 @@ frogr_file_loader_new (GSList *file_uris,
   priv->file_uris = g_slist_reverse (priv->file_uris);
 
   /* Other internal data */
+  priv->max_filesize = max_filesize;
   priv->current = priv->file_uris;
   priv->index = 0;
   priv->n_files = g_slist_length (priv->file_uris);
-
-  /* Callback data */
-  priv->file_loaded_cb = file_loaded_cb;
-  priv->files_loaded_cb = files_loaded_cb;
-  priv->object = object;
 
   return self;
 }
