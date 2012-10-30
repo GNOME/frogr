@@ -177,9 +177,7 @@ static gboolean _set_location_on_idle (gpointer data);
 
 static gboolean _create_set_or_add_picture_on_idle (gpointer data);
 
-static gboolean _create_set_or_add_picture (FrogrController *self,
-                                            FrogrPicture *picture,
-                                            UploadOnePictureData *uop_data);
+static gboolean _create_set_or_add_picture (FrogrController *self, gpointer data);
 
 static void _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data);
 
@@ -896,17 +894,13 @@ _set_location_on_idle (gpointer data)
   uop_data = (UploadOnePictureData*) data;
   controller = uop_data->controller;
 
-  /* Keep the source while busy */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if (priv->setting_license)
-    return TRUE;
-
   picture = uop_data->picture;
   location = frogr_picture_get_location (picture);
   data_location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
   data_location->latitude = frogr_location_get_latitude (location);
   data_location->longitude = frogr_location_get_longitude (location);
 
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   fsp_session_set_location (priv->session,
                             frogr_picture_get_id (picture),
                             data_location,
@@ -931,33 +925,22 @@ static gboolean
 _create_set_or_add_picture_on_idle (gpointer data)
 {
   UploadOnePictureData *uop_data = NULL;
-  FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
-  FrogrPicture *picture = NULL;
-
   uop_data = (UploadOnePictureData*) data;
-  controller = uop_data->controller;
-
-  /* Keep the source while busy */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if ((priv->setting_license) || (priv->setting_location))
-    return TRUE;
-
-  picture = uop_data->picture;
-  _create_set_or_add_picture (controller, picture, uop_data);
+  _create_set_or_add_picture (uop_data->controller, uop_data);
   return FALSE;
 }
 
 static gboolean
-_create_set_or_add_picture (FrogrController *self,
-                            FrogrPicture *picture,
-                            UploadOnePictureData *uop_data)
+_create_set_or_add_picture (FrogrController *self, gpointer data)
 {
   FrogrControllerPrivate *priv = NULL;
+  UploadOnePictureData *uop_data = NULL;
+  FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
   const gchar *id = NULL;
   GSList *photosets = NULL;
 
+  uop_data = (UploadOnePictureData*) data;
   photosets = uop_data->photosets;
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   if (g_slist_length (photosets) == 0)
@@ -966,6 +949,7 @@ _create_set_or_add_picture (FrogrController *self,
       return FALSE;
     }
 
+  picture = uop_data->picture;
   set = FROGR_PHOTOSET (photosets->data);
   id = frogr_photoset_get_id (set);
   if (id != NULL)
@@ -1018,7 +1002,6 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   UploadOnePictureData *uop_data = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
   GSList *photosets = NULL;
   gchar *photoset_id = NULL;
@@ -1028,7 +1011,6 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   session = FSP_SESSION (object);
   uop_data = (UploadOnePictureData*) data;
   controller = uop_data->controller;
-  picture = uop_data->picture;
   photosets = uop_data->photosets;
 
   photoset_id = fsp_session_create_photoset_finish (session, res, &error);
@@ -1045,7 +1027,7 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* When adding pictures to photosets, we only stop if the process
      was not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _create_set_or_add_picture (controller, picture, uop_data);
+    keep_going = _create_set_or_add_picture (controller, uop_data);
 
   if (error && error->code != FSP_ERROR_CANCELLED)
     {
@@ -1072,7 +1054,6 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   UploadOnePictureData *uop_data = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
   GSList *photosets = NULL;
   GError *error = NULL;
@@ -1081,7 +1062,6 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   session = FSP_SESSION (object);
   uop_data = (UploadOnePictureData*) data;
   controller = uop_data->controller;
-  picture = uop_data->picture;
   photosets = uop_data->photosets;
 
   fsp_session_add_to_photoset_finish (session, res, &error);
@@ -1095,7 +1075,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* When adding pictures to photosets, we only stop if the process
      was not explicitly cancelled by the user */
   if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _create_set_or_add_picture (controller, picture, uop_data);
+    keep_going = _create_set_or_add_picture (controller, uop_data);
 
   if (error && error->code != FSP_ERROR_CANCELLED)
     {
@@ -1194,11 +1174,7 @@ _add_picture_to_groups_on_idle (gpointer data)
 
   uop_data = (UploadOnePictureData*) data;
   controller = uop_data->controller;
-
-  /* Keep the source while busy */
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if (priv->setting_license || priv->setting_location || priv->adding_to_set)
-    return TRUE;
 
   /* Add pictures to groups, if any */
   groups = uop_data->groups;
@@ -1258,7 +1234,6 @@ _complete_picture_upload_on_idle (gpointer data)
       _update_upload_progress (controller, up_data);
       return TRUE;
     }
-
   picture = uop_data->picture;
 
   if (!uop_data->error)
