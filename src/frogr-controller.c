@@ -189,25 +189,9 @@ static void _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
 
 static gboolean _add_picture_to_groups_on_idle (gpointer data);
 
+static void _notify_adding_to_group (FrogrController *self, FrogrPicture *picture, FrogrGroup *group);
+
 static gboolean _complete_picture_upload_on_idle (gpointer data);
-
-static void _notify_setting_license (FrogrController *self,
-                                     FrogrPicture *picture);
-
-static void _notify_setting_location (FrogrController *self,
-                                      FrogrPicture *picture);
-
-static void _notify_creating_set (FrogrController *self,
-                                  FrogrPicture *picture,
-                                  FrogrPhotoSet *set);
-
-static void _notify_adding_to_set (FrogrController *self,
-                                   FrogrPicture *picture,
-                                   FrogrPhotoSet *set);
-
-static void _notify_adding_to_group (FrogrController *self,
-                                     FrogrPicture *picture,
-                                     FrogrGroup *group);
 
 static void _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrController *self);
 
@@ -772,14 +756,21 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       /* Set license if needed */
       if (license != FSP_LICENSE_NONE)
         {
+          gchar *debug_msg = NULL;
+
           priv->setting_license = TRUE;
-          _notify_setting_license (controller, picture);
           fsp_session_set_license (session,
                                    frogr_picture_get_id (picture),
                                    license,
                                    priv->last_cancellable,
                                    _set_license_cb,
                                    uop_data);
+
+          debug_msg = g_strdup_printf ("Setting license %d for picture %s…",
+                                       frogr_picture_get_license (picture),
+                                       frogr_picture_get_title (picture));
+          DEBUG ("%s", debug_msg);
+          g_free (debug_msg);
         }
 
       if (frogr_picture_send_location (picture)
@@ -900,6 +891,7 @@ _set_location_on_idle (gpointer data)
   FrogrPicture *picture = NULL;
   FrogrLocation *location = NULL;
   FspDataLocation *data_location = NULL;
+  gchar *debug_msg = NULL;
 
   uop_data = (UploadOnePictureData*) data;
   controller = uop_data->controller;
@@ -914,14 +906,21 @@ _set_location_on_idle (gpointer data)
   data_location = FSP_DATA_LOCATION (fsp_data_new (FSP_LOCATION));
   data_location->latitude = frogr_location_get_latitude (location);
   data_location->longitude = frogr_location_get_longitude (location);
- 
-  _notify_setting_location (controller, picture);
+
   fsp_session_set_location (priv->session,
                             frogr_picture_get_id (picture),
                             data_location,
                             priv->last_cancellable,
                             _set_location_cb,
                             uop_data);
+
+  location = frogr_picture_get_location (picture);
+  debug_msg = g_strdup_printf ("Setting geolocation (%f, %f) for picture %s…",
+                               frogr_location_get_latitude (location),
+                               frogr_location_get_longitude (location),
+                               frogr_picture_get_title (picture));
+  DEBUG ("%s", debug_msg);
+  g_free (debug_msg);
 
   fsp_data_free (FSP_DATA (data_location));
 
@@ -971,19 +970,27 @@ _create_set_or_add_picture (FrogrController *self,
   id = frogr_photoset_get_id (set);
   if (id != NULL)
     {
+      gchar *debug_msg = NULL;
+
       /* Set with ID: Add picture to it */
-      _notify_adding_to_set (self, picture, set);
       fsp_session_add_to_photoset (priv->session,
                                    frogr_picture_get_id (picture),
                                    frogr_photoset_get_id (set),
                                    priv->last_cancellable,
                                    _add_to_photoset_cb,
                                    uop_data);
+
+      debug_msg = g_strdup_printf ("Adding picture %s to photoset %s…",
+                                   frogr_picture_get_title (picture),
+                                   frogr_photoset_get_title (set));
+      DEBUG ("%s", debug_msg);
+      g_free (debug_msg);
     }
   else
     {
-      /* Set with ID: Create set aliong with this picture */
-      _notify_creating_set (self, picture, set);
+      gchar *debug_msg = NULL;
+
+      /* Set with ID: Create set along with this picture */
       fsp_session_create_photoset (priv->session,
                                    frogr_photoset_get_title (set),
                                    frogr_photoset_get_description (set),
@@ -991,6 +998,14 @@ _create_set_or_add_picture (FrogrController *self,
                                    priv->last_cancellable,
                                    _create_photoset_cb,
                                    uop_data);
+
+      debug_msg = g_strdup_printf ("Creating new photoset for picture %s. "
+                                   "Title: %s / Description: %s",
+                                   frogr_picture_get_title (picture),
+                                   frogr_photoset_get_title (set),
+                                   frogr_photoset_get_description (set));
+      DEBUG ("%s", debug_msg);
+      g_free (debug_msg);
     }
 
   return TRUE;
@@ -1208,6 +1223,20 @@ _add_picture_to_groups_on_idle (gpointer data)
   return FALSE;
 }
 
+static void
+_notify_adding_to_group (FrogrController *self,
+                         FrogrPicture *picture,
+                         FrogrGroup *group)
+{
+  gchar *debug_msg = NULL;
+
+  debug_msg = g_strdup_printf ("Adding picture %s to group %s…",
+                               frogr_picture_get_title (picture),
+                               frogr_group_get_name (group));
+  DEBUG ("%s", debug_msg);
+  g_free (debug_msg);
+}
+
 static gboolean
 _complete_picture_upload_on_idle (gpointer data)
 {
@@ -1219,17 +1248,18 @@ _complete_picture_upload_on_idle (gpointer data)
 
   uop_data = (UploadOnePictureData*) data;
   controller = uop_data->controller;
+  up_data = uop_data->up_data;
 
   /* Keep the source while busy */
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   if (priv->setting_license || priv->setting_location || priv->adding_to_set || priv->adding_to_group)
     {
       frogr_main_view_pulse_progress (priv->mainview);
+      _update_upload_progress (controller, up_data);
       return TRUE;
     }
 
   picture = uop_data->picture;
-  up_data = uop_data->up_data;
 
   if (!uop_data->error)
     {
@@ -1252,120 +1282,6 @@ _complete_picture_upload_on_idle (gpointer data)
   g_slice_free (UploadOnePictureData, uop_data);
 
   return FALSE;
-}
-
-static void
-_notify_setting_license (FrogrController *self,
-                         FrogrPicture *picture)
-{
-  FrogrControllerPrivate *priv = NULL;
-  const gchar *picture_title = NULL;
-  FspLicense license = FSP_LICENSE_NONE;
-  gchar *debug_msg = NULL;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_description(priv->mainview, _("Setting license for picture…"));
-
-  picture_title = frogr_picture_get_title (picture);
-  license = frogr_picture_get_license (picture);
-  debug_msg = g_strdup_printf ("Setting license %d for picture %s…",
-                               license, picture_title);
-  DEBUG ("%s", debug_msg);
-
-  g_free (debug_msg);
-}
-
-static void
-_notify_setting_location (FrogrController *self,
-                          FrogrPicture *picture)
-{
-  FrogrControllerPrivate *priv = NULL;
-  const gchar *picture_title = NULL;
-  FrogrLocation *location;
-  gchar *debug_msg = NULL;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_description(priv->mainview, _("Setting geolocation for picture…"));
-
-  picture_title = frogr_picture_get_title (picture);
-  location = frogr_picture_get_location (picture);
-
-  debug_msg = g_strdup_printf ("Setting geolocation (%f, %f) for picture %s…",
-                               frogr_location_get_latitude (location),
-                               frogr_location_get_longitude (location),
-                               picture_title);
-  DEBUG ("%s", debug_msg);
-
-  g_free (debug_msg);
-}
-
-static void
-_notify_creating_set (FrogrController *self,
-                      FrogrPicture *picture,
-                      FrogrPhotoSet *set)
-{
-  FrogrControllerPrivate *priv = NULL;
-  const gchar *picture_title = NULL;
-  const gchar *set_title = NULL;
-  const gchar *set_desc = NULL;
-  gchar *debug_msg = NULL;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_description (priv->mainview, _("Creating new photosets…"));
-
-  picture_title = frogr_picture_get_title (picture);
-  set_title = frogr_photoset_get_title (set);
-  set_desc = frogr_photoset_get_description (set);
-  debug_msg = g_strdup_printf ("Creating new photoset for picture %s. "
-                               "Title: %s / Description: %s",
-                               picture_title, set_title, set_desc);
-  DEBUG ("%s", debug_msg);
-
-  g_free (debug_msg);
-}
-
-static void
-_notify_adding_to_set (FrogrController *self,
-                       FrogrPicture *picture,
-                       FrogrPhotoSet *set)
-{
-  FrogrControllerPrivate *priv = NULL;
-  const gchar *picture_title = NULL;
-  const gchar *set_title = NULL;
-  gchar *debug_msg = NULL;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_description(priv->mainview, _("Adding picture to photosets…"));
-
-  picture_title = frogr_picture_get_title (picture);
-  set_title = frogr_photoset_get_title (set);
-  debug_msg = g_strdup_printf ("Adding picture %s to photoset %s…",
-                               picture_title, set_title);
-  DEBUG ("%s", debug_msg);
-
-  g_free (debug_msg);
-}
-
-static void
-_notify_adding_to_group (FrogrController *self,
-                         FrogrPicture *picture,
-                         FrogrGroup *group)
-{
-  FrogrControllerPrivate *priv = NULL;
-  const gchar *picture_title = NULL;
-  const gchar *group_name = NULL;
-  gchar *debug_msg = NULL;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_set_progress_description(priv->mainview, _("Adding picture to groups…"));
-
-  picture_title = frogr_picture_get_title (picture);
-  group_name = frogr_group_get_name (group);
-  debug_msg = g_strdup_printf ("Adding picture %s to group %s…",
-                               picture_title, group_name);
-  DEBUG ("%s", debug_msg);
-
-  g_free (debug_msg);
 }
 
 static void

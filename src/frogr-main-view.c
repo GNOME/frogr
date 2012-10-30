@@ -1905,6 +1905,9 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
   /* Reset values */
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), "");
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), 0.0);
+#ifdef GTK_API_VERSION_3
+  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), FALSE);
+#endif
 
   gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
   gtk_window_present (GTK_WINDOW (priv->progress_dialog));
@@ -1932,7 +1935,12 @@ frogr_main_view_set_progress_status_text (FrogrMainView *self, const gchar *text
 
   /* Set superimposed text, if specified */
   if (text != NULL)
-    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
+    {
+#ifdef GTK_API_VERSION_3
+      gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), TRUE);
+#endif
+      gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
+    }
 }
 
 void
@@ -1966,7 +1974,11 @@ frogr_main_view_pulse_progress (FrogrMainView *self)
   gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv->progress_bar));
 
   /* Empty text for this */
+#ifdef GTK_API_VERSION_3
+  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), FALSE);
+#else
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), NULL);
+#endif
 }
 
 void
