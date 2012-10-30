@@ -47,6 +47,8 @@
 #define DEFAULT_TIMEOUT 100
 #define MAX_AUTH_TIMEOUT 60000
 
+#define MAX_UPLOAD_ATTEMPTS 5
+
 #define FROGR_CONTROLLER_GET_PRIVATE(object)                    \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
                                 FROGR_TYPE_CONTROLLER,          \
@@ -108,6 +110,7 @@ typedef struct {
   GSList *current;
   guint index;
   guint n_pictures;
+  gint n_attempts;
   GError *error;
 } UploadPicturesData;
 
@@ -608,10 +611,16 @@ _update_upload_progress (FrogrController *self, UploadPicturesData *up_data)
       gchar *title = g_strdup (frogr_picture_get_title (picture));
 
       /* Update progress */
-      description = g_strdup_printf (_("Uploading '%s'…"), title);
-      status_text = g_strdup_printf ("%d / %d",
-                                           up_data->index + 1,
-                                           up_data->n_pictures);
+      if (up_data->n_attempts > 0)
+        {
+          description = g_strdup_printf (_("Retrying Upload (attempt %d/%d)…"),
+                                         (up_data->n_attempts), MAX_UPLOAD_ATTEMPTS);
+        }
+      else
+        {
+          description = g_strdup_printf (_("Uploading '%s'…"), title);
+        }
+      status_text = g_strdup_printf ("%d / %d", up_data->index, up_data->n_pictures);
       g_free (title);
     }
   frogr_main_view_set_progress_description(priv->mainview, description);
@@ -626,9 +635,20 @@ static void
 _upload_next_picture (FrogrController *self, UploadPicturesData *up_data)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Advance the list only if not in the first element */
+  if (up_data->index > 0)
+    up_data->current = g_slist_next(up_data->current);
+
   if (up_data->current)
     {
       FrogrPicture *picture = FROGR_PICTURE (up_data->current->data);
+
+      up_data->index++;
+      up_data->n_attempts = 0;
+      up_data->error = NULL;
+
+      _update_upload_progress (self, up_data);
       _upload_picture (self, picture, up_data);
     }
   else
@@ -698,6 +718,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
   UploadOnePictureData *uop_data = NULL;
+  UploadPicturesData *up_data = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
@@ -722,8 +743,22 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* Stop reporting to the user */
   g_signal_handlers_disconnect_by_func (priv->session, _data_fraction_sent_cb, controller);
 
-  /* Check whether it's needed or not to set a specific license for a
-     picture or to add the picture to sets or groups */
+  up_data = uop_data->up_data;
+  if (error && error->code != FSP_ERROR_CANCELLED && up_data->n_attempts < MAX_UPLOAD_ATTEMPTS)
+    {
+      up_data->n_attempts++;
+      _update_upload_progress (controller, up_data);
+
+      DEBUG("Error uploading picture %s. Retrying... (attempt %d / %d)",
+            frogr_picture_get_title (picture), up_data->n_attempts, MAX_UPLOAD_ATTEMPTS);
+
+      g_slice_free (UploadOnePictureData, uop_data);
+      _upload_picture (controller, picture, up_data);
+      return;
+    }
+
+  /* Check whether it's needed or not to set a specific license
+     for a picture or to add the picture to sets or groups */
   if (!error)
     {
       GSList *photosets = NULL;
@@ -1194,12 +1229,7 @@ _complete_picture_upload_on_idle (gpointer data)
     }
 
   picture = uop_data->picture;
-
-  /* Update the global count and progress*/
   up_data = uop_data->up_data;
-  up_data->current = g_slist_next (up_data->current);
-  up_data->index++;
-  _update_upload_progress (controller, up_data);
 
   if (!uop_data->error)
     {
@@ -1212,13 +1242,15 @@ _complete_picture_upload_on_idle (gpointer data)
     up_data->error = uop_data->error;
     up_data->current = NULL;
   }
-  g_slice_free (UploadOnePictureData, uop_data);
 
   /* Re-check account info to make sure we have up-to-date info */
   _fetch_account_extra_info (controller);
   g_object_unref (picture);
 
   _upload_next_picture (controller, up_data);
+
+  g_slice_free (UploadOnePictureData, uop_data);
+
   return FALSE;
 }
 
@@ -2682,7 +2714,6 @@ frogr_controller_upload_pictures (FrogrController *self)
           up_data->current = up_data->pictures;
           up_data->index = 0;
           up_data->n_pictures = g_slist_length (pictures);
-          up_data->error = NULL;
 
           /* Add references */
           g_slist_foreach (up_data->pictures, (GFunc)g_object_ref, NULL);
@@ -2690,7 +2721,6 @@ frogr_controller_upload_pictures (FrogrController *self)
           /* Load the pictures! */
           _set_state (self, FROGR_STATE_UPLOADING_PICTURES);
           frogr_main_view_show_progress (priv->mainview, NULL);
-          _update_upload_progress (self, up_data);
           _upload_next_picture (self, up_data);
         }
     }
