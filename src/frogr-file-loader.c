@@ -1,5 +1,5 @@
 /*
- * frogr-picture-loader.c -- Asynchronous picture loader in frogr
+ * frogr-file-loader.c -- Asynchronous file loader in frogr
  *
  * Copyright (C) 2009-2012 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>
@@ -22,7 +22,7 @@
  *
  */
 
-#include "frogr-picture-loader.h"
+#include "frogr-file-loader.h"
 
 #include "frogr-config.h"
 #include "frogr-controller.h"
@@ -42,16 +42,16 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 
-#define FROGR_PICTURE_LOADER_GET_PRIVATE(object)                \
+#define FROGR_FILE_LOADER_GET_PRIVATE(object)                   \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_PICTURE_LOADER,      \
-                                FrogrPictureLoaderPrivate))
+                                FROGR_TYPE_FILE_LOADER,         \
+                                FrogrFileLoaderPrivate))
 
-G_DEFINE_TYPE (FrogrPictureLoader, frogr_picture_loader, G_TYPE_OBJECT)
+G_DEFINE_TYPE (FrogrFileLoader, frogr_file_loader, G_TYPE_OBJECT)
 
 /* Private struct */
-typedef struct _FrogrPictureLoaderPrivate FrogrPictureLoaderPrivate;
-struct _FrogrPictureLoaderPrivate
+typedef struct _FrogrFileLoaderPrivate FrogrFileLoaderPrivate;
+struct _FrogrFileLoaderPrivate
 {
   FrogrController *controller;
   FrogrMainView *mainview;
@@ -59,7 +59,7 @@ struct _FrogrPictureLoaderPrivate
   GSList *file_uris;
   GSList *current;
   guint index;
-  guint n_pictures;
+  guint n_files;
 
   gboolean keep_file_extensions;
   gboolean import_tags;
@@ -72,8 +72,8 @@ struct _FrogrPictureLoaderPrivate
   FspSafetyLevel safety_level;
   FspContentType content_type;
 
-  FrogrPictureLoadedCallback picture_loaded_cb;
-  FrogrPicturesLoadedCallback pictures_loaded_cb;
+  FrogrFileLoadedCallback file_loaded_cb;
+  FrogrFilesLoadedCallback files_loaded_cb;
   GObject *object;
 };
 
@@ -91,11 +91,11 @@ static const gchar *valid_mimetypes[] = {
 
 /* Prototypes */
 
-static void _update_status_and_progress (FrogrPictureLoader *self);
-static void _load_next_picture (FrogrPictureLoader *self);
-static void _load_next_picture_cb (GObject *object,
-                                   GAsyncResult *res,
-                                   gpointer data);
+static void _update_status_and_progress (FrogrFileLoader *self);
+static void _load_next_file (FrogrFileLoader *self);
+static void _load_next_file_cb (GObject *object,
+                                GAsyncResult *res,
+                                gpointer data);
 
 static gboolean get_gps_coordinate (ExifData *exif,
                                     ExifTag   tag,
@@ -105,22 +105,22 @@ static FrogrLocation *get_location_from_exif (ExifData *exif_data);
 
 static gchar *remove_spaces_from_keyword (const gchar *keyword);
 static gchar *import_tags_from_xmp_keywords (const char *buffer, size_t len);
-static void _finish_task_and_self_destruct (FrogrPictureLoader *self);
+static void _finish_task_and_self_destruct (FrogrFileLoader *self);
 
 /* Private API */
 
 static void
-_update_status_and_progress (FrogrPictureLoader *self)
+_update_status_and_progress (FrogrFileLoader *self)
 {
-  FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+  FrogrFileLoaderPrivate *priv =
+    FROGR_FILE_LOADER_GET_PRIVATE (self);
 
   gchar *status_text = NULL;
 
   /* Update progress */
   if (priv->current)
-    status_text = g_strdup_printf (_("Loading pictures %d / %d"),
-                                   priv->index, priv->n_pictures);
+    status_text = g_strdup_printf (_("Loading files %d / %d"),
+                                   priv->index, priv->n_files);
 
   frogr_main_view_set_status_text (priv->mainview, status_text);
 
@@ -129,10 +129,10 @@ _update_status_and_progress (FrogrPictureLoader *self)
 }
 
 static void
-_load_next_picture (FrogrPictureLoader *self)
+_load_next_file (FrogrFileLoader *self)
 {
-  FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+  FrogrFileLoaderPrivate *priv =
+    FROGR_FILE_LOADER_GET_PRIVATE (self);
 
   if (priv->current)
     {
@@ -176,21 +176,21 @@ _load_next_picture (FrogrPictureLoader *self)
         }
 #endif
 
-      /* Asynchronously load the picture if mime is valid */
+      /* Asynchronously load the file if mime is valid */
       if (file_info && valid_mime)
         {
           g_file_load_contents_async (gfile,
                                       NULL,
-                                      _load_next_picture_cb,
+                                      _load_next_file_cb,
                                       self);
           DEBUG ("Adding file %s", file_uri);
         }
       else
         {
-          /* update internal status and check the next picture */
+          /* update internal status and check the next file */
           priv->current = g_slist_next (priv->current);
           priv->index++;
-          _load_next_picture (self);
+          _load_next_file (self);
         }
     }
   else
@@ -202,12 +202,12 @@ _load_next_picture (FrogrPictureLoader *self)
 }
 
 static void
-_load_next_picture_cb (GObject *object,
-                       GAsyncResult *res,
-                       gpointer data)
+_load_next_file_cb (GObject *object,
+                    GAsyncResult *res,
+                    gpointer data)
 {
-  FrogrPictureLoader *self = NULL;
-  FrogrPictureLoaderPrivate *priv = NULL;
+  FrogrFileLoader *self = NULL;
+  FrogrFileLoaderPrivate *priv = NULL;
   FrogrPicture *fpicture = NULL;
   GFile *file = NULL;
   GError *error = NULL;
@@ -215,8 +215,8 @@ _load_next_picture_cb (GObject *object,
   gsize length = 0;
   gboolean keep_going = TRUE;
 
-  self = FROGR_PICTURE_LOADER (data);;
-  priv = FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+  self = FROGR_FILE_LOADER (data);;
+  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
 
   file = G_FILE (object);
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
@@ -381,16 +381,16 @@ _load_next_picture_cb (GObject *object,
   /* Update status and progress */
   _update_status_and_progress (self);
 
-  /* Execute 'picture-loaded' callback */
-  if (priv->picture_loaded_cb && fpicture)
-    keep_going = priv->picture_loaded_cb (priv->object, fpicture);
+  /* Execute 'file-loaded' callback */
+  if (priv->file_loaded_cb && fpicture)
+    keep_going = priv->file_loaded_cb (priv->object, fpicture);
 
   if (fpicture != NULL)
     g_object_unref (fpicture);
 
-  /* Go for the next picture, if needed */
+  /* Go for the next file, if needed */
   if (keep_going)
-    _load_next_picture (self);
+    _load_next_file (self);
   else
     _finish_task_and_self_destruct (self);
 }
@@ -430,8 +430,8 @@ get_gps_coordinate (ExifData *exif,
         }
 
       f = (double)c1.numerator/c1.denominator+
-          (double)c2.numerator/(c2.denominator*60)+
-          (double)c3.numerator/(c3.denominator*60*60);
+        (double)c2.numerator/(c2.denominator*60)+
+        (double)c3.numerator/(c3.denominator*60*60);
 
       if (ref == 'S' || ref == 'W')
         {
@@ -553,24 +553,24 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
 }
 
 static void
-_finish_task_and_self_destruct (FrogrPictureLoader *self)
+_finish_task_and_self_destruct (FrogrFileLoader *self)
 {
-  FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+  FrogrFileLoaderPrivate *priv =
+    FROGR_FILE_LOADER_GET_PRIVATE (self);
 
   /* Execute final callback */
-  if (priv->pictures_loaded_cb)
-    priv->pictures_loaded_cb (priv->object);
+  if (priv->files_loaded_cb)
+    priv->files_loaded_cb (priv->object);
 
   /* Process finished, self-destruct */
   g_object_unref (self);
 }
 
 static void
-_frogr_picture_loader_dispose (GObject* object)
+_frogr_file_loader_dispose (GObject* object)
 {
-  FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (object);
+  FrogrFileLoaderPrivate *priv =
+    FROGR_FILE_LOADER_GET_PRIVATE (object);
 
   if (priv->mainview)
     {
@@ -584,38 +584,38 @@ _frogr_picture_loader_dispose (GObject* object)
       priv->controller = NULL;
     }
 
-  G_OBJECT_CLASS (frogr_picture_loader_parent_class)->dispose(object);
+  G_OBJECT_CLASS (frogr_file_loader_parent_class)->dispose(object);
 }
 
 static void
-_frogr_picture_loader_finalize (GObject* object)
+_frogr_file_loader_finalize (GObject* object)
 {
-  FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (object);
+  FrogrFileLoaderPrivate *priv =
+    FROGR_FILE_LOADER_GET_PRIVATE (object);
 
   /* Free */
   g_slist_foreach (priv->file_uris, (GFunc)g_free, NULL);
   g_slist_free (priv->file_uris);
 
-  G_OBJECT_CLASS (frogr_picture_loader_parent_class)->finalize(object);
+  G_OBJECT_CLASS (frogr_file_loader_parent_class)->finalize(object);
 }
 
 static void
-frogr_picture_loader_class_init(FrogrPictureLoaderClass *klass)
+frogr_file_loader_class_init(FrogrFileLoaderClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
 
-  obj_class->dispose = _frogr_picture_loader_dispose;
-  obj_class->finalize = _frogr_picture_loader_finalize;
+  obj_class->dispose = _frogr_file_loader_dispose;
+  obj_class->finalize = _frogr_file_loader_finalize;
 
-  g_type_class_add_private (obj_class, sizeof (FrogrPictureLoaderPrivate));
+  g_type_class_add_private (obj_class, sizeof (FrogrFileLoaderPrivate));
 }
 
 static void
-frogr_picture_loader_init (FrogrPictureLoader *self)
+frogr_file_loader_init (FrogrFileLoader *self)
 {
-  FrogrPictureLoaderPrivate *priv =
-    FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+  FrogrFileLoaderPrivate *priv =
+    FROGR_FILE_LOADER_GET_PRIVATE (self);
 
   FrogrConfig *config = frogr_config_get_instance ();
 
@@ -641,23 +641,23 @@ frogr_picture_loader_init (FrogrPictureLoader *self)
   priv->file_uris = NULL;
   priv->current = NULL;
   priv->index = -1;
-  priv->n_pictures = 0;
+  priv->n_files = 0;
 }
 
 /* Public API */
 
-FrogrPictureLoader *
-frogr_picture_loader_new (GSList *file_uris,
-                          FrogrPictureLoadedCallback picture_loaded_cb,
-                          FrogrPicturesLoadedCallback pictures_loaded_cb,
-                          gpointer object)
+FrogrFileLoader *
+frogr_file_loader_new (GSList *file_uris,
+                       FrogrFileLoadedCallback file_loaded_cb,
+                       FrogrFilesLoadedCallback files_loaded_cb,
+                       gpointer object)
 {
-  FrogrPictureLoader *self = NULL;
-  FrogrPictureLoaderPrivate *priv = NULL;
+  FrogrFileLoader *self = NULL;
+  FrogrFileLoaderPrivate *priv = NULL;
   GSList *uri = NULL;
 
-  self = FROGR_PICTURE_LOADER (g_object_new(FROGR_TYPE_PICTURE_LOADER, NULL));
-  priv = FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+  self = FROGR_FILE_LOADER (g_object_new(FROGR_TYPE_FILE_LOADER, NULL));
+  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
 
   /* We need to gain ownership of the strings */
   for (uri = file_uris; uri; uri = g_slist_next (uri))
@@ -667,24 +667,24 @@ frogr_picture_loader_new (GSList *file_uris,
   /* Other internal data */
   priv->current = priv->file_uris;
   priv->index = 0;
-  priv->n_pictures = g_slist_length (priv->file_uris);
+  priv->n_files = g_slist_length (priv->file_uris);
 
   /* Callback data */
-  priv->picture_loaded_cb = picture_loaded_cb;
-  priv->pictures_loaded_cb = pictures_loaded_cb;
+  priv->file_loaded_cb = file_loaded_cb;
+  priv->files_loaded_cb = files_loaded_cb;
   priv->object = object;
 
   return self;
 }
 
 void
-frogr_picture_loader_load (FrogrPictureLoader *self)
+frogr_file_loader_load (FrogrFileLoader *self)
 {
-  FrogrPictureLoaderPrivate *priv = NULL;
+  FrogrFileLoaderPrivate *priv = NULL;
 
-  g_return_if_fail (FROGR_IS_PICTURE_LOADER (self));
+  g_return_if_fail (FROGR_IS_FILE_LOADER (self));
 
-  priv = FROGR_PICTURE_LOADER_GET_PRIVATE (self);
+  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
 
   /* Check first whether there's something to load */
   if (priv->file_uris == NULL)
@@ -694,5 +694,5 @@ frogr_picture_loader_load (FrogrPictureLoader *self)
   _update_status_and_progress (self);
 
   /* Trigger the asynchronous process */
-  _load_next_picture (self);
+  _load_next_file (self);
 }

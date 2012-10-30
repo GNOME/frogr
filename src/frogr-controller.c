@@ -23,15 +23,15 @@
 #include "frogr-about-dialog.h"
 #include "frogr-account.h"
 #include "frogr-add-tags-dialog.h"
-#include "frogr-add-to-set-dialog.h"
 #include "frogr-add-to-group-dialog.h"
+#include "frogr-add-to-set-dialog.h"
 #include "frogr-auth-dialog.h"
 #include "frogr-config.h"
 #include "frogr-create-new-set-dialog.h"
 #include "frogr-details-dialog.h"
+#include "frogr-file-loader.h"
 #include "frogr-global-defs.h"
 #include "frogr-main-view.h"
-#include "frogr-picture-loader.h"
 #include "frogr-settings-dialog.h"
 #include "frogr-util.h"
 
@@ -210,9 +210,9 @@ static void _notify_adding_to_group (FrogrController *self,
                                      FrogrPicture *picture,
                                      FrogrGroup *group);
 
-static gboolean _on_picture_loaded (FrogrController *self, FrogrPicture *picture);
+static gboolean _on_file_loaded (FrogrController *self, FrogrPicture *picture);
 
-static void _on_pictures_loaded (FrogrController *self);
+static void _on_files_loaded (FrogrController *self);
 
 static void _fetch_everything (FrogrController *self, gboolean force_fetch);
 
@@ -1345,7 +1345,7 @@ _notify_adding_to_group (FrogrController *self,
 }
 
 static gboolean
-_on_picture_loaded (FrogrController *self, FrogrPicture *picture)
+_on_file_loaded (FrogrController *self, FrogrPicture *picture)
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
@@ -1392,7 +1392,7 @@ _on_picture_loaded (FrogrController *self, FrogrPicture *picture)
 }
 
 static void
-_on_pictures_loaded (FrogrController *self)
+_on_files_loaded (FrogrController *self)
 {
   g_return_if_fail (FROGR_IS_CONTROLLER (self));
 
@@ -2693,15 +2693,14 @@ void
 frogr_controller_load_pictures (FrogrController *self,
                                 GSList *fileuris)
 {
-  FrogrPictureLoader *fploader;
-  fploader = frogr_picture_loader_new (fileuris,
-                                       (FrogrPictureLoadedCallback) _on_picture_loaded,
-                                       (FrogrPicturesLoadedCallback) _on_pictures_loaded,
-                                       self);
+  FrogrFileLoader *loader;
+  loader = frogr_file_loader_new (fileuris,
+                                  (FrogrFileLoadedCallback) _on_file_loaded,
+                                  (FrogrFilesLoadedCallback) _on_files_loaded,
+                                  self);
   /* Load the pictures! */
   _set_state (self, FROGR_STATE_LOADING_PICTURES);
-
-  frogr_picture_loader_load (fploader);
+  frogr_file_loader_load (loader);
 }
 
 void
