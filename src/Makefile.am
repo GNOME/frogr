@@ -79,8 +79,6 @@ frogr_SOURCES = \
 	frogr-photoset.h \
 	frogr-picture-loader.c \
 	frogr-picture-loader.h \
-	frogr-picture-uploader.c \
-	frogr-picture-uploader.h \
 	frogr-picture.c \
 	frogr-picture.h \
 	frogr-settings-dialog.c \
