@@ -94,10 +94,6 @@ struct _FrogrControllerPrivate
 /* Signals */
 enum {
   STATE_CHANGED,
-  PICTURE_LOADED,
-  PICTURES_LOADED,
-  PICTURE_UPLOADED,
-  PICTURES_UPLOADED,
   ACTIVE_ACCOUNT_CHANGED,
   ACCOUNTS_CHANGED,
   N_SIGNALS
@@ -798,11 +794,9 @@ _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_d
       g_error_free (up_data->error);
     }
 
-  /* Change state and emit signals */
+  /* Change state and clean up */
   _set_state (self, FROGR_STATE_IDLE);
-  g_signal_emit (self, signals[PICTURES_UPLOADED], 0);
 
-  /* Clean up */
   if (up_data->pictures)
     {
       g_slist_foreach (up_data->pictures, (GFunc)g_object_unref, NULL);
@@ -1222,8 +1216,6 @@ _complete_picture_upload_on_idle (gpointer data)
 
   /* Re-check account info to make sure we have up-to-date info */
   _fetch_account_extra_info (controller);
-
-  g_signal_emit (controller, signals[PICTURE_UPLOADED], 0, picture);
   g_object_unref (picture);
 
   _upload_next_picture (controller, up_data);
@@ -1357,17 +1349,13 @@ _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrController
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
   frogr_main_view_model_add_picture (mainview_model, picture);
-  g_signal_emit (self, signals[PICTURE_LOADED], 0, picture);
 }
 
 static void
 _on_files_loaded (FrogrFileLoader *loader, FrogrController *self)
 {
   g_return_if_fail (FROGR_IS_CONTROLLER (self));
-
-  /* Change state and emit signals */
   _set_state (self, FROGR_STATE_IDLE);
-  g_signal_emit (self, signals[PICTURES_LOADED], 0);
 }
 
 static void
@@ -2050,38 +2038,6 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__INT,
                   G_TYPE_NONE, 1, G_TYPE_INT);
-
-  signals[PICTURE_LOADED] =
-    g_signal_new ("picture-loaded",
-                  G_OBJECT_CLASS_TYPE (klass),
-                  G_SIGNAL_RUN_FIRST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__OBJECT,
-                  G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
-
-  signals[PICTURES_LOADED] =
-    g_signal_new ("pictures-loaded",
-                  G_OBJECT_CLASS_TYPE (klass),
-                  G_SIGNAL_RUN_FIRST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__VOID,
-                  G_TYPE_NONE, 0);
-
-  signals[PICTURE_UPLOADED] =
-    g_signal_new ("picture-uploaded",
-                  G_OBJECT_CLASS_TYPE (klass),
-                  G_SIGNAL_RUN_FIRST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__OBJECT,
-                  G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
-
-  signals[PICTURES_UPLOADED] =
-    g_signal_new ("pictures-uploaded",
-                  G_OBJECT_CLASS_TYPE (klass),
-                  G_SIGNAL_RUN_FIRST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__VOID,
-                  G_TYPE_NONE, 0);
 
   signals[ACTIVE_ACCOUNT_CHANGED] =
     g_signal_new ("active-account-changed",
