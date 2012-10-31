@@ -162,6 +162,8 @@ static void _upload_picture (FrogrController *self, FrogrPicture *picture, Uploa
 
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
 
+static void _finish_upload_one_picture_process (FrogrController *self, UploadOnePictureData *uop_data);
+
 static void _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_data);
 
 static void _set_license_cb (GObject *object, GAsyncResult *res, gpointer data);
@@ -727,7 +729,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       DEBUG("Error uploading picture %s. Retrying... (attempt %d / %d)",
             frogr_picture_get_title (picture), up_data->n_attempts, MAX_UPLOAD_ATTEMPTS);
 
-      g_slice_free (UploadOnePictureData, uop_data);
+      _finish_upload_one_picture_process (controller, uop_data);
       _upload_picture (controller, picture, up_data);
       return;
     }
@@ -791,6 +793,13 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   /* Complete the upload process when possible */
   uop_data->error = error;
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, _complete_picture_upload_on_idle, uop_data);
+}
+
+static void
+_finish_upload_one_picture_process (FrogrController *self, UploadOnePictureData *uop_data)
+{
+  g_object_unref (uop_data->picture);
+  g_slice_free (UploadOnePictureData, uop_data);
 }
 
 static void
@@ -1243,11 +1252,9 @@ _complete_picture_upload_on_idle (gpointer data)
 
   /* Re-check account info to make sure we have up-to-date info */
   _fetch_account_extra_info (controller);
-  g_object_unref (picture);
 
+  _finish_upload_one_picture_process (controller, uop_data);
   _upload_next_picture (controller, up_data);
-
-  g_slice_free (UploadOnePictureData, uop_data);
 
   return FALSE;
 }
