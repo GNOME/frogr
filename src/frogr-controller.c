@@ -105,7 +105,7 @@ typedef struct {
   GSList *current;
   guint index;
   guint n_pictures;
-  gint n_attempts;
+  gint upload_attempts;
   GError *error;
 } UploadPicturesData;
 
@@ -590,10 +590,10 @@ _update_upload_progress (FrogrController *self, UploadPicturesData *up_data)
       gchar *title = g_strdup (frogr_picture_get_title (picture));
 
       /* Update progress */
-      if (up_data->n_attempts > 0)
+      if (up_data->upload_attempts > 0)
         {
           description = g_strdup_printf (_("Retrying Upload (attempt %d/%d)…"),
-                                         (up_data->n_attempts), MAX_UPLOAD_ATTEMPTS);
+                                         (up_data->upload_attempts), MAX_UPLOAD_ATTEMPTS);
         }
       else
         {
@@ -624,7 +624,7 @@ _upload_next_picture (FrogrController *self, UploadPicturesData *up_data)
       FrogrPicture *picture = FROGR_PICTURE (up_data->current->data);
 
       up_data->index++;
-      up_data->n_attempts = 0;
+      up_data->upload_attempts = 0;
       up_data->error = NULL;
 
       _update_upload_progress (self, up_data);
@@ -721,13 +721,13 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   g_signal_handlers_disconnect_by_func (priv->session, _data_fraction_sent_cb, controller);
 
   up_data = uop_data->up_data;
-  if (error && error->code != FSP_ERROR_CANCELLED && up_data->n_attempts < MAX_UPLOAD_ATTEMPTS)
+  if (error && error->code != FSP_ERROR_CANCELLED && up_data->upload_attempts < MAX_UPLOAD_ATTEMPTS)
     {
-      up_data->n_attempts++;
+      up_data->upload_attempts++;
       _update_upload_progress (controller, up_data);
 
       DEBUG("Error uploading picture %s. Retrying... (attempt %d / %d)",
-            frogr_picture_get_title (picture), up_data->n_attempts, MAX_UPLOAD_ATTEMPTS);
+            frogr_picture_get_title (picture), up_data->upload_attempts, MAX_UPLOAD_ATTEMPTS);
 
       _finish_upload_one_picture_process (controller, uop_data);
       _upload_picture (controller, picture, up_data);
