@@ -72,12 +72,9 @@ struct _FrogrControllerPrivate
 
   /* We use this booleans as flags */
   gboolean app_running;
-  gboolean uploading_picture;
   gboolean fetching_token_replacement;
   gboolean fetching_auth_url;
   gboolean fetching_auth_token;
-  gboolean fetching_account_info;
-  gboolean fetching_account_extra_info;
   gboolean fetching_photosets;
   gboolean fetching_groups;
   gboolean fetching_tags;
@@ -86,8 +83,6 @@ struct _FrogrControllerPrivate
   gboolean adding_to_set;
   gboolean adding_to_group;
 
-  gboolean account_info_fetched;
-  gboolean account_extra_info_fetched;
   gboolean photosets_fetched;
   gboolean groups_fetched;
   gboolean tags_fetched;
@@ -665,7 +660,6 @@ _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesDat
   uop_data->up_data = up_data;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->uploading_picture = TRUE;
   g_object_ref (picture);
 
   public_visibility = frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO;
@@ -720,7 +714,6 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  priv->uploading_picture = FALSE;
 
   /* Stop reporting to the user */
   g_signal_handlers_disconnect_by_func (priv->session, _data_fraction_sent_cb, controller);
@@ -1479,8 +1472,6 @@ static void _fetch_account_info (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->account_info_fetched = FALSE;
-  priv->fetching_account_info = TRUE;
 
   _enable_cancellable (self, FALSE);
   fsp_session_check_auth_info (priv->session, NULL,
@@ -1534,9 +1525,6 @@ _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
         }
     }
 
-  priv->account_info_fetched = (auth_token != NULL);
-  priv->fetching_account_info = FALSE;
-
   fsp_data_free (FSP_DATA (auth_token));
 }
 
@@ -1550,8 +1538,6 @@ static void _fetch_account_extra_info (FrogrController *self)
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->account_extra_info_fetched = FALSE;
-  priv->fetching_account_extra_info = TRUE;
 
   _enable_cancellable (self, FALSE);
   fsp_session_get_upload_status (priv->session, NULL,
@@ -1604,9 +1590,6 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
           g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
         }
     }
-
-  priv->account_extra_info_fetched = (upload_status != NULL);
-  priv->fetching_account_extra_info = FALSE;
 
   fsp_data_free (FSP_DATA (upload_status));
 }
@@ -2016,12 +1999,9 @@ frogr_controller_init (FrogrController *self)
   priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
   priv->last_cancellable = NULL;
   priv->app_running = FALSE;
-  priv->uploading_picture = FALSE;
   priv->fetching_token_replacement = FALSE;
   priv->fetching_auth_url = FALSE;
   priv->fetching_auth_token = FALSE;
-  priv->fetching_account_info = FALSE;
-  priv->fetching_account_extra_info = FALSE;
   priv->fetching_photosets = FALSE;
   priv->fetching_groups = FALSE;
   priv->fetching_tags = FALSE;
@@ -2029,8 +2009,6 @@ frogr_controller_init (FrogrController *self)
   priv->setting_location = FALSE;
   priv->adding_to_set = FALSE;
   priv->adding_to_group = FALSE;
-  priv->account_info_fetched = FALSE;
-  priv->account_extra_info_fetched = FALSE;
   priv->photosets_fetched = FALSE;
   priv->groups_fetched = FALSE;
   priv->tags_fetched = FALSE;
@@ -2574,10 +2552,7 @@ frogr_controller_load_pictures (FrogrController *self,
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  /* We need this info if account info was already fetched. */
-  if (priv->account && priv->account_extra_info_fetched)
-    max_filesize = frogr_account_get_max_filesize (priv->account);
-
+  max_filesize = frogr_account_get_max_filesize (priv->account);
   loader = frogr_file_loader_new (fileuris, max_filesize);
 
   g_signal_connect (G_OBJECT (loader), "file-loaded",
