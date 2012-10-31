@@ -1761,6 +1761,10 @@ _show_details_dialog_on_idle (GSList *pictures)
   window = frogr_main_view_get_window (priv->mainview);
   frogr_details_dialog_show (window, pictures, tags_list);
 
+  /* FrogrController's responsibility over this list ends here */
+  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
+  g_slist_free (pictures);
+
   return FALSE;
 }
 
@@ -1791,6 +1795,10 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   window = frogr_main_view_get_window (priv->mainview);
   frogr_add_tags_dialog_show (window, pictures, tags_list);
 
+  /* FrogrController's responsibility over this list ends here */
+  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
+  g_slist_free (pictures);
+
   return FALSE;
 }
 
@@ -1819,6 +1827,10 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
 
   window = frogr_main_view_get_window (priv->mainview);
   frogr_create_new_set_dialog_show (window, pictures, photosets);
+
+  /* FrogrController's responsibility over this list ends here */
+  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
+  g_slist_free (pictures);
 
   return FALSE;
 }
@@ -1852,6 +1864,10 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
   else if (priv->photosets_fetched)
     frogr_util_show_info_dialog (window, _("No sets found"));
 
+  /* FrogrController's responsibility over this list ends here */
+  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
+  g_slist_free (pictures);
+
   return FALSE;
 }
 
@@ -1883,6 +1899,10 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
     frogr_add_to_group_dialog_show (window, pictures, groups);
   else if (priv->groups_fetched)
     frogr_util_show_info_dialog (window, _("No groups found"));
+
+  /* FrogrController's responsibility over this list ends here */
+  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
+  g_slist_free (pictures);
 
   return FALSE;
 }
@@ -2378,6 +2398,7 @@ frogr_controller_show_details_dialog (FrogrController *self,
     }
 
   /* Show the dialog when possible */
+  g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_details_dialog_on_idle, pictures);
 }
 
@@ -2400,6 +2421,7 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
     }
 
   /* Show the dialog when possible */
+  g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_tags_dialog_on_idle, pictures);
 }
 
@@ -2422,6 +2444,7 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
     }
 
   /* Show the dialog when possible */
+  g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_create_new_set_dialog_on_idle, pictures);
 }
 
@@ -2444,6 +2467,7 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
     }
 
   /* Show the dialog when possible */
+  g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_set_dialog_on_idle, pictures);
 }
 
@@ -2466,6 +2490,7 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
     }
 
   /* Show the dialog when possible */
+  g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_group_dialog_on_idle, pictures);
 }
 

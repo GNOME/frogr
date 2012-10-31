@@ -52,9 +52,19 @@ enum  {
 
 /* Prototypes */
 
+static void _set_pictures (FrogrAddTagsDialog *self, const GSList *pictures);
+
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 /* Private API */
+
+static void
+_set_pictures (FrogrAddTagsDialog *self, const GSList *pictures)
+{
+  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
+  priv->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+}
 
 static void
 _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
@@ -109,12 +119,10 @@ _frogr_add_tags_dialog_set_property (GObject *object,
                                      const GValue *value,
                                      GParamSpec *pspec)
 {
-  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (object);
-
   switch (prop_id)
     {
     case PROP_PICTURES:
-      priv->pictures = (GSList *) g_value_get_pointer (value);
+      _set_pictures (FROGR_ADD_TAGS_DIALOG (object), g_value_get_pointer (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -215,7 +223,7 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 /* Public API */
 
 void
-frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures, GSList *tags)
+frogr_add_tags_dialog_show (GtkWindow *parent, const GSList *pictures, const GSList *tags)
 {
   FrogrConfig *config = NULL;
   GObject *new = NULL;

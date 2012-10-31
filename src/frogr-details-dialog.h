@@ -47,7 +47,9 @@ struct _FrogrDetailsDialog
 
 GType frogr_details_dialog_get_type (void) G_GNUC_CONST;
 
-void frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures, GSList *tags);
+void frogr_details_dialog_show (GtkWindow *parent,
+                                const GSList *pictures,
+                                const GSList *tags);
 
 G_END_DECLS  /* FROGR_DETAILS_DIALOG_H */
 

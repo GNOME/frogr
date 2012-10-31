@@ -687,21 +687,15 @@ frogr_file_loader_new (GSList *file_uris, gulong max_filesize)
 {
   FrogrFileLoader *self = NULL;
   FrogrFileLoaderPrivate *priv = NULL;
-  GSList *uri = NULL;
 
   self = FROGR_FILE_LOADER (g_object_new(FROGR_TYPE_FILE_LOADER, NULL));
   priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
 
-  /* We need to gain ownership of the strings */
-  for (uri = file_uris; uri; uri = g_slist_next (uri))
-    priv->file_uris = g_slist_prepend (priv->file_uris, g_strdup ((gchar *)uri->data));
-  priv->file_uris = g_slist_reverse (priv->file_uris);
-
-  /* Other internal data */
-  priv->max_filesize = max_filesize;
+  priv->file_uris = file_uris;
   priv->current = priv->file_uris;
   priv->index = 0;
   priv->n_files = g_slist_length (priv->file_uris);
+  priv->max_filesize = max_filesize;
 
   return self;
 }

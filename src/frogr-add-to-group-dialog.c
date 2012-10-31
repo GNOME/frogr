@@ -68,6 +68,10 @@ enum {
 
 /* Prototypes */
 
+static void _set_pictures (FrogrAddToGroupDialog *self, const GSList *pictures);
+
+static void _set_groups (FrogrAddToGroupDialog *self, const GSList *groups);
+
 static GtkWidget *_create_tree_view (FrogrAddToGroupDialog *self);
 
 static void _column_clicked_cb (GtkTreeViewColumn *col, gpointer data);
@@ -96,6 +100,23 @@ static void _update_pictures (FrogrAddToGroupDialog *self);
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 /* Private API */
+
+static void
+_set_pictures (FrogrAddToGroupDialog *self, const GSList *pictures)
+{
+  FrogrAddToGroupDialogPrivate *priv = FROGR_ADD_TO_GROUP_DIALOG_GET_PRIVATE (self);
+  priv->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+}
+
+static void _set_groups (FrogrAddToGroupDialog *self, const GSList *groups)
+{
+  FrogrAddToGroupDialogPrivate *priv = NULL;
+
+  priv = FROGR_ADD_TO_GROUP_DIALOG_GET_PRIVATE (self);
+  priv->groups = g_slist_copy ((GSList*)groups);
+  g_slist_foreach (priv->groups, (GFunc)g_object_ref, NULL);
+}
 
 static GtkWidget *
 _create_tree_view (FrogrAddToGroupDialog *self)
@@ -381,7 +402,6 @@ _update_pictures (FrogrAddToGroupDialog *self)
       picture = FROGR_PICTURE (item->data);
       frogr_picture_set_groups (picture, selected_groups);
     }
-  g_slist_free (selected_groups);
 }
 
 static void
@@ -405,15 +425,13 @@ _frogr_add_to_group_dialog_set_property (GObject *object,
                                          const GValue *value,
                                          GParamSpec *pspec)
 {
-  FrogrAddToGroupDialogPrivate *priv = FROGR_ADD_TO_GROUP_DIALOG_GET_PRIVATE (object);
-
   switch (prop_id)
     {
     case PROP_PICTURES:
-      priv->pictures = (GSList *) g_value_get_pointer (value);
+      _set_pictures (FROGR_ADD_TO_GROUP_DIALOG (object), g_value_get_pointer (value));
       break;
     case PROP_GROUPS:
-      priv->groups = (GSList *) g_value_get_pointer (value);
+      _set_groups (FROGR_ADD_TO_GROUP_DIALOG (object), g_value_get_pointer (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -455,8 +473,12 @@ _frogr_add_to_group_dialog_dispose (GObject *object)
       priv->pictures = NULL;
     }
 
-  if (priv->groups)
-    priv->groups = NULL;
+   if (priv->groups)
+    {
+      g_slist_foreach (priv->groups, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->groups);
+      priv->groups = NULL;
+    }
 
   if (priv->treemodel)
     {
@@ -554,7 +576,9 @@ frogr_add_to_group_dialog_init (FrogrAddToGroupDialog *self)
 /* Public API */
 
 void
-frogr_add_to_group_dialog_show (GtkWindow *parent, GSList *pictures, GSList *groups)
+frogr_add_to_group_dialog_show (GtkWindow *parent,
+                                const GSList *pictures,
+                                const GSList *groups)
 {
   FrogrAddToGroupDialog *self = NULL;
   GObject *new = NULL;

@@ -48,8 +48,8 @@ struct _FrogrAddToGroupDialog
 GType frogr_add_to_group_dialog_get_type (void) G_GNUC_CONST;
 
 void frogr_add_to_group_dialog_show (GtkWindow *parent,
-                                     GSList *pictures,
-                                     GSList *groups);
+                                     const GSList *pictures,
+                                     const GSList *groups);
 
 G_END_DECLS  /* FROGR_ADD_TO_GROUP_DIALOG_H */
 

@@ -49,7 +49,7 @@ enum {
 
 /* Prototypes */
 
-static void _populate_treemodel_with_data (GtkTreeModel *treemodel, GSList *entries);
+static void _populate_treemodel_with_data (GtkTreeModel *treemodel, const GSList *entries);
 
 static gboolean _entry_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
                                              GtkTreeIter *iter, gpointer data);
@@ -60,11 +60,11 @@ static gboolean _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTr
 /* Private API */
 
 static void
-_populate_treemodel_with_data (GtkTreeModel *treemodel, GSList *entries)
+_populate_treemodel_with_data (GtkTreeModel *treemodel, const GSList *entries)
 {
   if (treemodel && entries)
     {
-      GSList *item = NULL;
+      const GSList *item = NULL;
       gchar *entry = NULL;
       GtkTreeIter iter;
 
@@ -217,7 +217,7 @@ frogr_live_entry_new (void)
 }
 
 void
-frogr_live_entry_set_auto_completion (FrogrLiveEntry *self, GSList *data)
+frogr_live_entry_set_auto_completion (FrogrLiveEntry *self, const GSList *data)
 {
   FrogrLiveEntryPrivate *priv = NULL;
 
@@ -246,7 +246,7 @@ frogr_live_entry_set_auto_completion (FrogrLiveEntry *self, GSList *data)
     }
 
   /* Enable or disable auto-completion as needed */
-  gtk_entry_set_completion (GTK_ENTRY (self), data ? priv->entry_completion: NULL);
+  gtk_entry_set_completion (GTK_ENTRY (self), data ? priv->entry_completion : NULL);
 
   /* Populate the tree model with the data (or 'no data) passed */
   if (priv->treemodel)

@@ -68,6 +68,10 @@ enum {
 
 /* Prototypes */
 
+static void _set_pictures (FrogrAddToSetDialog *self, const GSList *pictures);
+
+static void _set_photosets (FrogrAddToSetDialog *self, const GSList *photosets);
+
 static GtkWidget *_create_tree_view (FrogrAddToSetDialog *self);
 
 static void _column_clicked_cb (GtkTreeViewColumn *col, gpointer data);
@@ -96,6 +100,24 @@ static void _update_pictures (FrogrAddToSetDialog *self);
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 /* Private API */
+
+static void
+_set_pictures (FrogrAddToSetDialog *self, const GSList *pictures)
+{
+  FrogrAddToSetDialogPrivate *priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
+  priv->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+}
+
+static void
+_set_photosets (FrogrAddToSetDialog *self, const GSList *photosets)
+{
+  FrogrAddToSetDialogPrivate *priv = NULL;
+
+  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
+  priv->photosets = g_slist_copy ((GSList*)photosets);
+  g_slist_foreach (priv->photosets, (GFunc)g_object_ref, NULL);
+}
 
 static GtkWidget *
 _create_tree_view (FrogrAddToSetDialog *self)
@@ -381,7 +403,6 @@ _update_pictures (FrogrAddToSetDialog *self)
       picture = FROGR_PICTURE (item->data);
       frogr_picture_set_photosets (picture, selected_sets);
     }
-  g_slist_free (selected_sets);
 }
 
 static void
@@ -405,15 +426,13 @@ _frogr_add_to_set_dialog_set_property (GObject *object,
                                        const GValue *value,
                                        GParamSpec *pspec)
 {
-  FrogrAddToSetDialogPrivate *priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (object);
-
   switch (prop_id)
     {
     case PROP_PICTURES:
-      priv->pictures = (GSList *) g_value_get_pointer (value);
+      _set_pictures (FROGR_ADD_TO_SET_DIALOG (object), g_value_get_pointer (value));
       break;
     case PROP_PHOTOSETS:
-      priv->photosets = (GSList *) g_value_get_pointer (value);
+      _set_photosets (FROGR_ADD_TO_SET_DIALOG (object), g_value_get_pointer (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -455,8 +474,12 @@ _frogr_add_to_set_dialog_dispose (GObject *object)
       priv->pictures = NULL;
     }
 
-  if (priv->photosets)
-    priv->photosets = NULL;
+   if (priv->photosets)
+    {
+      g_slist_foreach (priv->photosets, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->photosets);
+      priv->photosets = NULL;
+    }
 
   if (priv->treemodel)
     {
@@ -554,7 +577,9 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
 /* Public API */
 
 void
-frogr_add_to_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *photosets)
+frogr_add_to_set_dialog_show (GtkWindow *parent,
+                              const GSList *pictures,
+                              const GSList *photosets)
 {
   FrogrAddToSetDialog *self = NULL;
   GObject *new = NULL;

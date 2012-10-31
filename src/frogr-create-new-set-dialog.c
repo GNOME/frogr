@@ -58,6 +58,10 @@ enum  {
 
 /* Prototypes */
 
+static void _set_pictures (FrogrCreateNewSetDialog *self, const GSList *pictures);
+
+static void _set_photosets (FrogrCreateNewSetDialog *self, const GSList *photosets);
+
 static void _on_button_toggled (GtkToggleButton *button, gpointer data);
 
 static gboolean _validate_dialog_data (FrogrCreateNewSetDialog *self);
@@ -71,6 +75,24 @@ static gboolean _update_model (FrogrCreateNewSetDialog *self,
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
 /* Private API */
+
+static void
+_set_pictures (FrogrCreateNewSetDialog *self, const GSList *pictures)
+{
+  FrogrCreateNewSetDialogPrivate *priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
+  priv->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+}
+
+static void
+_set_photosets (FrogrCreateNewSetDialog *self, const GSList *photosets)
+{
+  FrogrCreateNewSetDialogPrivate *priv = NULL;
+
+  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
+  priv->photosets = g_slist_copy ((GSList*)photosets);
+  g_slist_foreach (priv->photosets, (GFunc)g_object_ref, NULL);
+}
 
 static void
 _on_button_toggled (GtkToggleButton *button, gpointer data)
@@ -203,15 +225,13 @@ _frogr_create_new_set_dialog_set_property (GObject *object,
                                            const GValue *value,
                                            GParamSpec *pspec)
 {
-  FrogrCreateNewSetDialogPrivate *priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (object);
-
   switch (prop_id)
     {
     case PROP_PICTURES:
-      priv->pictures = (GSList *) g_value_get_pointer (value);
+      _set_pictures (FROGR_CREATE_NEW_SET_DIALOG (object), g_value_get_pointer (value));
       break;
     case PROP_PHOTOSETS:
-      priv->photosets = (GSList *) g_value_get_pointer (value);
+      _set_photosets (FROGR_CREATE_NEW_SET_DIALOG (object), g_value_get_pointer (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -254,7 +274,11 @@ _frogr_create_new_set_dialog_dispose (GObject *object)
     }
 
   if (priv->photosets)
-    priv->photosets = NULL;
+    {
+      g_slist_foreach (priv->photosets, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->photosets);
+      priv->photosets = NULL;
+    }
 
   G_OBJECT_CLASS(frogr_create_new_set_dialog_parent_class)->dispose (object);
 }
@@ -371,7 +395,9 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
 /* Public API */
 
 void
-frogr_create_new_set_dialog_show (GtkWindow *parent, GSList *pictures, GSList *photosets)
+frogr_create_new_set_dialog_show (GtkWindow *parent,
+                                  const GSList *pictures,
+                                  const GSList *photosets)
 {
   GtkWidget *dialog = NULL;
   dialog = GTK_WIDGET (g_object_new (FROGR_TYPE_CREATE_NEW_SET_DIALOG,

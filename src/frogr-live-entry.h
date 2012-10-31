@@ -49,7 +49,7 @@ GType frogr_live_entry_get_type (void) G_GNUC_CONST;
 
 GtkWidget *frogr_live_entry_new (void);
 
-void frogr_live_entry_set_auto_completion (FrogrLiveEntry *self, GSList *data);
+void frogr_live_entry_set_auto_completion (FrogrLiveEntry *self, const GSList *data);
 
 G_END_DECLS  /* FROGR_LIVE_ENTRY_H */
 

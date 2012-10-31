@@ -102,6 +102,8 @@ static const gchar *license_descriptions[] = {
 
 /* Prototypes */
 
+static void _set_pictures (FrogrDetailsDialog *self, const GSList *pictures);
+
 static void _create_widgets (FrogrDetailsDialog *self);
 
 static void _update_ui (FrogrDetailsDialog *self);
@@ -130,6 +132,14 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 
 
 /* Private API */
+
+static void
+_set_pictures (FrogrDetailsDialog *self, const GSList *pictures)
+{
+  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
+  priv->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+}
 
 static void
 _create_widgets (FrogrDetailsDialog *self)
@@ -1053,25 +1063,19 @@ _on_toggle_button_toggled (GtkToggleButton *tbutton, gpointer data)
 static void
 _on_picture_button_clicked (GtkButton *button, gpointer data)
 {
-  FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (data);
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
+  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (data);
   GSList *current_pic = NULL;
   GList *uris_list = NULL;
   FrogrPicture *picture = NULL;
-  gchar *fileuri = NULL;
 
   for (current_pic = priv->pictures; current_pic; current_pic = g_slist_next (current_pic))
     {
       picture = FROGR_PICTURE (current_pic->data);
-      fileuri = g_strdup (frogr_picture_get_fileuri (picture));
-
-      /* Dupped uris in the GList must NOT be freed here */
-      uris_list = g_list_append (uris_list, fileuri);
+      uris_list = g_list_append (uris_list, g_strdup (frogr_picture_get_fileuri (picture)));
     }
 
+  /* This function will already free the list and its elements */
   frogr_util_open_images_in_viewer (uris_list);
-
-  g_list_free (uris_list);
 }
 
 static void
@@ -1096,12 +1100,10 @@ _frogr_details_dialog_set_property (GObject *object,
                                     const GValue *value,
                                     GParamSpec *pspec)
 {
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (object);
-
   switch (prop_id)
     {
     case PROP_PICTURES:
-      priv->pictures = (GSList *) g_value_get_pointer (value);
+      _set_pictures (FROGR_DETAILS_DIALOG (object), g_value_get_pointer (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1212,14 +1214,16 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
 /* Public API */
 
 void
-frogr_details_dialog_show (GtkWindow *parent, GSList *fpictures, GSList *tags)
+frogr_details_dialog_show (GtkWindow *parent,
+                           const GSList *pictures,
+                           const GSList *tags)
 {
   FrogrConfig *config = NULL;
   GObject *new = NULL;
 
   new = g_object_new (FROGR_TYPE_DETAILS_DIALOG,
                       "modal", TRUE,
-                      "pictures", fpictures,
+                      "pictures", pictures,
                       "transient-for", parent,
                       "width-request", DIALOG_MIN_WIDTH,
                       "height-request", -1,

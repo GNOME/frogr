@@ -162,6 +162,9 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
       g_free (command);
       g_free (uris);
     }
+
+  g_list_foreach (uris_list, (GFunc) g_free, NULL);
+  g_list_free (uris_list);
 }
 
 void
@@ -184,9 +187,8 @@ frogr_util_open_uri (const gchar *uri)
     app_info = g_app_info_get_default_for_uri_scheme ("ghelp");
 #endif
 
-  uris_list = g_list_append (uris_list, (gchar *) uri);
+  uris_list = g_list_append (uris_list, g_strdup (uri));
   _open_uris_with_app_info (uris_list, app_info);
-  g_list_free (uris_list);
 }
 
 void

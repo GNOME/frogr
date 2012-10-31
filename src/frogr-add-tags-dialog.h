@@ -47,7 +47,7 @@ struct _FrogrAddTagsDialog
 
 GType frogr_add_tags_dialog_get_type (void) G_GNUC_CONST;
 
-void frogr_add_tags_dialog_show (GtkWindow *parent, GSList *pictures, GSList *tags);
+void frogr_add_tags_dialog_show (GtkWindow *parent, const GSList *pictures, const GSList *tags);
 
 G_END_DECLS  /* FROGR_ADD_TAGS_DIALOG_H */
 

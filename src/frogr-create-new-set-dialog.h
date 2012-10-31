@@ -48,8 +48,8 @@ struct _FrogrCreateNewSetDialog
 GType frogr_create_new_set_dialog_get_type (void) G_GNUC_CONST;
 
 void frogr_create_new_set_dialog_show (GtkWindow *parent,
-                                       GSList *pictures,
-                                       GSList *photosets);
+                                       const GSList *pictures,
+                                       const GSList *photosets);
 
 G_END_DECLS  /* FROGR_CREATE_NEW_SET_DIALOG_H */
 

@@ -454,11 +454,8 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   fileuris_array = g_strsplit ((const gchar*)files_string, "\r\n", -1);
   for (i = 0;  fileuris_array[i]; i++)
     {
-      gchar *fileuri = g_strdup (fileuris_array[i]);
-      if (fileuri && !g_str_equal (g_strstrip (fileuri), ""))
-        fileuris_list = g_slist_append (fileuris_list, fileuri);
-      else
-        g_free (fileuri);
+      if (fileuris_array[i] && fileuris_array[i][0] != '\0')
+        fileuris_list = g_slist_append (fileuris_list, g_strdup (fileuris_array[i]));
     }
 
   /* Load pictures */
@@ -470,7 +467,6 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
 
   /* Free */
   g_strfreev (fileuris_array);
-  g_slist_free (fileuris_list);
 }
 
 void
@@ -828,9 +824,7 @@ _get_selected_pictures (FrogrMainView *self)
                           -1);
 
       /* Add the picture to the list */
-      g_object_ref (picture);
-      pictures = g_slist_prepend (pictures, picture);
-
+      pictures = g_slist_prepend (pictures, g_object_ref (picture));
       gtk_tree_path_free (path);
     }
 
@@ -925,11 +919,7 @@ _load_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer da
       /* Add selected pictures to icon view area */
       fileuris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (dialog));
       if (fileuris != NULL)
-        {
-          _load_pictures (FROGR_MAIN_VIEW (self), fileuris);
-          g_slist_foreach (fileuris, (GFunc) g_free, NULL);
-          g_slist_free (fileuris);
-        }
+        _load_pictures (FROGR_MAIN_VIEW (self), fileuris);
     }
 
   gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -1077,13 +1067,12 @@ _open_pictures_in_external_viewer (FrogrMainView *self)
   for (current_pic = pictures; current_pic; current_pic = g_slist_next (current_pic))
     {
       picture = FROGR_PICTURE (current_pic->data);
-      uris_list = g_list_append (uris_list, (gchar *) frogr_picture_get_fileuri (picture));
+      uris_list = g_list_append (uris_list, g_strdup (frogr_picture_get_fileuri (picture)));
     }
-  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
   g_slist_free (pictures);
 
+  /* This function will already free the list and its elements */
   frogr_util_open_images_in_viewer (uris_list);
-  g_list_free (uris_list);
 }
 
 static void
@@ -1108,7 +1097,6 @@ _remove_selected_pictures (FrogrMainView *self)
   _update_ui (self);
 
   /* Free */
-  g_slist_foreach (selected_pictures, (GFunc)g_object_unref, NULL);
   g_slist_free (selected_pictures);
 }
 
