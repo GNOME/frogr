@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-12 14:56+0200\n"
+"POT-Creation-Date: 2012-10-31 12:48+0100\n"
 "PO-Revision-Date: 2012-04-12 15:06+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <gnome-l10n-gl@gnome.org>\n"
@@ -487,25 +487,25 @@ msgid "Edit Picture Details"
 msgstr "Editar os detalles da imaxe"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:748
+#: ../src/frogr-main-view.c:753
 #, c-format
 msgid "Taken: %s"
 msgstr "Capturada: %s"
 
-#: ../src/frogr-main-view.c:753
+#: ../src/frogr-main-view.c:758
 #, c-format
 msgid "File size: %s"
 msgstr "Tamaño do ficheiro: %s"
 
-#: ../src/frogr-main-view.c:941
+#: ../src/frogr-main-view.c:946
 msgid "Select a Picture"
 msgstr "Seleccione una imaxe"
 
-#: ../src/frogr-main-view.c:967
+#: ../src/frogr-main-view.c:972
 msgid "images"
 msgstr "imaxes"
 
-#: ../src/frogr-main-view.c:988
+#: ../src/frogr-main-view.c:993
 msgid "You need to select some pictures first"
 msgstr "Primeiro debe seleccionar algunhas imaxes"
 
