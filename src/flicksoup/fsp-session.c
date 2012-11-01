@@ -1284,7 +1284,7 @@ _perform_async_request                  (SoupSession         *soup_session,
   clos->object = source_object;
   clos->soup_session = soup_session;
   clos->soup_message = msg;
-  clos->cancellable = cancellable;
+  clos->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
   clos->callback = callback;
   clos->source_tag = source_tag;
   clos->data = data;
@@ -1395,7 +1395,7 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
   /* Make sure the "cancelled" signal gets disconnected in another
      iteration of the main loop to avoid a dead-lock with itself */
   cancellable_data = g_slice_new0 (GCancellableData);
-  cancellable_data->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
+  cancellable_data->cancellable = cancellable;
   cancellable_data->cancellable_id = cancellable_id;
 
   g_idle_add ((GSourceFunc) _disconnect_cancellable_on_idle, cancellable_data);
@@ -2151,7 +2151,7 @@ fsp_session_upload                      (FspSession          *self,
   ard_clos->object = G_OBJECT (self);
   ard_clos->soup_session = soup_session;
   ard_clos->soup_message = NULL;
-  ard_clos->cancellable = cancellable;
+  ard_clos->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
   ard_clos->callback = callback;
   ard_clos->source_tag = fsp_session_upload;
   ard_clos->data = data;
