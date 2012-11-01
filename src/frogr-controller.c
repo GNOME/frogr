@@ -165,6 +165,8 @@ static void _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer 
 
 static gboolean _cancel_authorization_on_timeout (gpointer data);
 
+static gboolean _should_retry_operation (gint attempts, GError *error);
+
 static void _update_upload_progress (FrogrController *self, UploadPicturesData *up_data);
 
 static void _upload_next_picture (FrogrController *self, UploadPicturesData *up_data);
@@ -605,6 +607,25 @@ _cancel_authorization_on_timeout (gpointer data)
   return FALSE;
 }
 
+static gboolean
+_should_retry_operation (gint attempts, GError *error)
+{
+  if (!error
+      || error->code == FSP_ERROR_CANCELLED
+      || error->code == FSP_ERROR_UPLOAD_INVALID_FILE
+      || error->code == FSP_ERROR_UPLOAD_QUOTA_EXCEEDED
+      || error->code == FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET
+      || error->code == FSP_ERROR_NOT_AUTHENTICATED
+      || error->code == FSP_ERROR_NOT_ENOUGH_PERMISSIONS
+      || error->code == FSP_ERROR_INVALID_API_KEY)
+    {
+      /* We are pretty sure we don't want to retry in these cases */
+      return FALSE;
+    }
+
+  return attempts < MAX_ATTEMPTS;
+}
+
 static void
 _update_upload_progress (FrogrController *self, UploadPicturesData *up_data)
 {
@@ -750,7 +771,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   g_signal_handlers_disconnect_by_func (priv->session, _data_fraction_sent_cb, controller);
 
   up_data = uop_data->up_data;
-  if (error && error->code != FSP_ERROR_CANCELLED && up_data->upload_attempts < MAX_ATTEMPTS)
+  if (_should_retry_operation (up_data->upload_attempts, error))
     {
       up_data->upload_attempts++;
       _update_upload_progress (controller, up_data);
@@ -852,8 +873,7 @@ _set_license_cb (GObject *object, GAsyncResult *res, gpointer data)
   controller = uop_data->controller;
 
   fsp_session_set_license_finish (session, res, &error);
-  if (error && error->code != FSP_ERROR_CANCELLED
-      && uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE] < MAX_ATTEMPTS)
+  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE], error))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE]++;
 
@@ -916,8 +936,7 @@ _set_location_cb (GObject *object, GAsyncResult *res, gpointer data)
   controller = uop_data->controller;
 
   fsp_session_set_location_finish (session, res, &error);
-  if (error && error->code != FSP_ERROR_CANCELLED
-      && uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION] < MAX_ATTEMPTS)
+  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION], error))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION]++;
 
@@ -1051,8 +1070,7 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   set = FROGR_PHOTOSET (photosets->data);
 
   photoset_id = fsp_session_create_photoset_finish (session, res, &error);
-  if (error && error->code != FSP_ERROR_CANCELLED
-      && uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] < MAX_ATTEMPTS)
+  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET], error))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET]++;
 
@@ -1142,8 +1160,7 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   set = FROGR_PHOTOSET (photosets->data);
 
   fsp_session_add_to_photoset_finish (session, res, &error);
-  if (error && error->code != FSP_ERROR_CANCELLED
-      && uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] < MAX_ATTEMPTS)
+  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET], error))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET]++;
 
@@ -1245,8 +1262,7 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
   group = FROGR_GROUP (groups->data);
 
   fsp_session_add_to_group_finish (session, res, &error);
-  if (error && error->code != FSP_ERROR_CANCELLED
-      && uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP] < MAX_ATTEMPTS)
+  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP], error))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP]++;
 
