@@ -123,7 +123,6 @@ typedef struct {
   GSList *photosets;
   GSList *groups;
   gint after_upload_attempts[N_AFTER_UPLOAD_OPS];
-  GError *error;
   UploadPicturesData *up_data;
 } UploadOnePictureData;
 
@@ -165,7 +164,7 @@ static void _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer 
 
 static gboolean _cancel_authorization_on_timeout (gpointer data);
 
-static gboolean _should_retry_operation (gint attempts, GError *error);
+static gboolean _should_retry_operation (GError *error, gint attempts);
 
 static void _update_upload_progress (FrogrController *self, UploadPicturesData *up_data);
 
@@ -178,6 +177,8 @@ static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer dat
 static void _finish_upload_one_picture_process (FrogrController *self, UploadOnePictureData *uop_data);
 
 static void _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_data);
+
+static void _perform_after_upload_operations (FrogrController *controller, UploadOnePictureData *uop_data);
 
 static void _set_license_cb (GObject *object, GAsyncResult *res, gpointer data);
 
@@ -608,10 +609,9 @@ _cancel_authorization_on_timeout (gpointer data)
 }
 
 static gboolean
-_should_retry_operation (gint attempts, GError *error)
+_should_retry_operation (GError *error, gint attempts)
 {
-  if (!error
-      || error->code == FSP_ERROR_CANCELLED
+  if (error->code == FSP_ERROR_CANCELLED
       || error->code == FSP_ERROR_UPLOAD_INVALID_FILE
       || error->code == FSP_ERROR_UPLOAD_QUOTA_EXCEEDED
       || error->code == FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET
@@ -708,7 +708,6 @@ _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesDat
   uop_data->picture = picture;
   uop_data->photosets = NULL;
   uop_data->groups = NULL;
-  uop_data->error = NULL;
   uop_data->up_data = up_data;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -765,61 +764,37 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       g_free (photo_id);
     }
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-
   /* Stop reporting to the user */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
   g_signal_handlers_disconnect_by_func (priv->session, _data_fraction_sent_cb, controller);
 
   up_data = uop_data->up_data;
-  if (_should_retry_operation (up_data->upload_attempts, error))
+  if (error && _should_retry_operation (error, up_data->upload_attempts))
     {
       up_data->upload_attempts++;
       _update_upload_progress (controller, up_data);
 
-      DEBUG("Error uploading picture %s. Retrying... (attempt %d / %d)",
-            frogr_picture_get_title (picture), up_data->upload_attempts, MAX_ATTEMPTS);
+      DEBUG("Error uploading picture %s: %s. Retrying... (attempt %d / %d)",
+            frogr_picture_get_title (picture), error->message,
+            up_data->upload_attempts, MAX_ATTEMPTS);
+      g_error_free (error);
 
+      /* Try again! */
       _finish_upload_one_picture_process (controller, uop_data);
       _upload_picture (controller, picture, up_data);
-      return;
     }
-
-  /* Check whether it's needed or not to set a specific license
-     for a picture or to add the picture to sets or groups */
-  if (!error)
+  else
     {
-      /* Set license if needed */
-      if (frogr_picture_get_license (picture) != FSP_LICENSE_NONE)
-        {
-          uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE] = 0;
-          _set_license_for_picture (controller, uop_data);
-        }
+      if (!error)
+        _perform_after_upload_operations (controller, uop_data);
+      else
+        DEBUG ("Error uploading picture %s: %s",
+               frogr_picture_get_title (picture), error->message);
 
-      if (frogr_picture_send_location (picture)
-          && frogr_picture_get_location (picture) != NULL)
-        {
-          uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION] = 0;
-          _set_location_for_picture (controller, uop_data);
-        }
-
-      /* Add picture to set if needed (and maybe create a new one) */
-      if (g_slist_length (frogr_picture_get_photosets (picture)) > 0)
-        {
-          uop_data->photosets = frogr_picture_get_photosets (picture);
-          _add_picture_to_photosets_or_create (controller, uop_data);
-        }
-
-      /* Add picture to groups if needed */
-      if (g_slist_length (frogr_picture_get_groups (picture)) > 0)
-        {
-          uop_data->groups = frogr_picture_get_groups (picture);
-          _add_picture_to_groups (controller, uop_data);
-        }
+      /* Complete the upload process when possible */
+      uop_data->up_data->error = error;
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, _complete_picture_upload_on_idle, uop_data);
     }
-
-  /* Complete the upload process when possible */
-  uop_data->error = error;
-  gdk_threads_add_timeout (DEFAULT_TIMEOUT, _complete_picture_upload_on_idle, uop_data);
 }
 
 static void
@@ -860,12 +835,40 @@ _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_d
 }
 
 static void
+_perform_after_upload_operations (FrogrController *controller, UploadOnePictureData *uop_data)
+{
+  if (frogr_picture_get_license (uop_data->picture) != FSP_LICENSE_NONE)
+    {
+      uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE] = 0;
+      _set_license_for_picture (controller, uop_data);
+    }
+
+  if (frogr_picture_send_location (uop_data->picture)
+      && frogr_picture_get_location (uop_data->picture) != NULL)
+    {
+      uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION] = 0;
+      _set_location_for_picture (controller, uop_data);
+    }
+
+  if (g_slist_length (frogr_picture_get_photosets (uop_data->picture)) > 0)
+    {
+      uop_data->photosets = frogr_picture_get_photosets (uop_data->picture);
+      _add_picture_to_photosets_or_create (controller, uop_data);
+    }
+
+  if (g_slist_length (frogr_picture_get_groups (uop_data->picture)) > 0)
+    {
+      uop_data->groups = frogr_picture_get_groups (uop_data->picture);
+      _add_picture_to_groups (controller, uop_data);
+    }
+}
+
+static void
 _set_license_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
   UploadOnePictureData *uop_data = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
@@ -873,28 +876,28 @@ _set_license_cb (GObject *object, GAsyncResult *res, gpointer data)
   controller = uop_data->controller;
 
   fsp_session_set_license_finish (session, res, &error);
-  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE], error))
+  if (error && _should_retry_operation (error, uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE]))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE]++;
 
-      DEBUG("Error setting license for picture %s. Retrying... (attempt %d / %d)",
+      DEBUG("Error setting license for picture %s: %s. Retrying... (attempt %d / %d)",
             frogr_picture_get_title (uop_data->picture),
+            error->message,
             uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE],
             MAX_ATTEMPTS);
-
-      _set_license_for_picture (controller, uop_data);
-      return;
-    }
-
-  if (error)
-    {
-      /* We do not anything special if something went wrong here */
-      DEBUG ("Error setting license for picture: %s", error->message);
       g_error_free (error);
-    }
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  priv->setting_license = FALSE;
+      /* Try again! */
+      _set_license_for_picture (controller, uop_data);
+    }
+  else
+    {
+      if (error)
+        DEBUG ("Error setting license for picture: %s", error->message);
+
+      uop_data->up_data->error = error;
+      FROGR_CONTROLLER_GET_PRIVATE (controller)->setting_license = FALSE;
+    }
 }
 
 static void
@@ -928,7 +931,6 @@ _set_location_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   UploadOnePictureData *uop_data = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
@@ -936,28 +938,27 @@ _set_location_cb (GObject *object, GAsyncResult *res, gpointer data)
   controller = uop_data->controller;
 
   fsp_session_set_location_finish (session, res, &error);
-  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION], error))
+  if (error && _should_retry_operation (error, uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION]))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION]++;
 
-      DEBUG("Error setting location for picture %s. Retrying... (attempt %d / %d)",
+      DEBUG("Error setting location for picture %s: %s. Retrying... (attempt %d / %d)",
             frogr_picture_get_title (uop_data->picture),
+            error->message,
             uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION],
             MAX_ATTEMPTS);
+      g_error_free (error);
 
       _set_location_for_picture (controller, uop_data);
-      return;
     }
-
-  if (error)
+  else
     {
-      /* We do not anything special if something went wrong here */
-      DEBUG ("Error setting location for picture: %s", error->message);
-      g_error_free (error);
-    }
+      if (error)
+        DEBUG ("Error setting location for picture: %s", error->message);
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  priv->setting_location = FALSE;
+      uop_data->up_data->error = error;
+      FROGR_CONTROLLER_GET_PRIVATE (controller)->setting_location = FALSE;
+    }
 }
 
 static void
@@ -1061,7 +1062,6 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   GSList *photosets = NULL;
   gchar *photoset_id = NULL;
   GError *error = NULL;
-  gboolean keep_going = FALSE;
 
   session = FSP_SESSION (object);
   uop_data = (UploadOnePictureData*) data;
@@ -1070,49 +1070,41 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   set = FROGR_PHOTOSET (photosets->data);
 
   photoset_id = fsp_session_create_photoset_finish (session, res, &error);
-  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET], error))
+  if (error && _should_retry_operation (error, uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET]))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET]++;
 
-      DEBUG("Error adding picture %s to NEW photoset %s. Retrying... (attempt %d / %d)",
+      DEBUG("Error adding picture %s to NEW photoset %s: %s. Retrying... (attempt %d / %d)",
             frogr_picture_get_title (uop_data->picture),
+            error->message,
             frogr_photoset_get_title (set),
             uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET],
             MAX_ATTEMPTS);
+      g_error_free (error);
 
       _add_picture_to_photoset (controller, uop_data);
-      return;
     }
-
-  /* Update set with the new ID */
-  frogr_photoset_set_id (set, photoset_id);
-  g_free (photoset_id);
-
-  uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] = 0;
-  uop_data->photosets = g_slist_next (photosets);
-  uop_data->error = error;
-
-  /* When adding pictures to photosets, we only stop if the process
-     was not explicitly cancelled by the user */
-  if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _add_picture_to_photosets_or_create (controller, uop_data);
-
-  if (error && error->code != FSP_ERROR_CANCELLED)
+  else
     {
-      /* We plainly ignore errors in this stage, as we don't want
-         them to interrupt the global upload process */
-      DEBUG ("Error creating set: %s", error->message);
-      g_error_free (error);
-      uop_data->error = NULL;
-    }
-  else if (!error)
-    {
-      /* Update the number of items in the album */
-      frogr_photoset_set_n_photos (set, frogr_photoset_get_n_photos (set) + 1);
-    }
+      gboolean keep_going = FALSE;
 
-  if (!keep_going)
-    FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_set = FALSE;
+      if (!error)
+        {
+          frogr_photoset_set_id (set, photoset_id);
+          frogr_photoset_set_n_photos (set, frogr_photoset_get_n_photos (set) + 1);
+          g_free (photoset_id);
+
+          uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] = 0;
+          uop_data->photosets = g_slist_next (photosets);
+          keep_going = _add_picture_to_photosets_or_create (controller, uop_data);
+        }
+      else
+        DEBUG ("Error creating set: %s", error->message);
+
+      uop_data->up_data->error = error;
+      if (!keep_going)
+        FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_set = FALSE;
+    }
 }
 
 static void
@@ -1151,7 +1143,6 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrPhotoSet *set = NULL;
   GSList *photosets = NULL;
   GError *error = NULL;
-  gboolean keep_going = FALSE;
 
   session = FSP_SESSION (object);
   uop_data = (UploadOnePictureData*) data;
@@ -1160,45 +1151,39 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   set = FROGR_PHOTOSET (photosets->data);
 
   fsp_session_add_to_photoset_finish (session, res, &error);
-  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET], error))
+  if (error && _should_retry_operation (error, uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET]))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET]++;
 
-      DEBUG("Error adding picture %s to EXISTING photoset %s. Retrying... (attempt %d / %d)",
+      DEBUG("Error adding picture %s to EXISTING photoset %s: %s. Retrying... (attempt %d / %d)",
             frogr_picture_get_title (uop_data->picture),
+            error->message,
             frogr_photoset_get_title (set),
             uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET],
             MAX_ATTEMPTS);
+      g_error_free (error);
 
       _add_picture_to_photoset (controller, uop_data);
-      return;
     }
-
-  uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] = 0;
-  uop_data->photosets = g_slist_next (photosets);
-  uop_data->error = error;
-
-  /* When adding pictures to photosets, we only stop if the process
-     was not explicitly cancelled by the user */
-  if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _add_picture_to_photosets_or_create (controller, uop_data);
-
-  if (error && error->code != FSP_ERROR_CANCELLED)
+  else
     {
-      /* We plainly ignore errors in this stage, as we don't want
-         them to interrupt the global upload process */
-      DEBUG ("Error adding picture to set: %s", error->message);
-      g_error_free (error);
-      uop_data->error = NULL;
-    }
-  else if (!error)
-    {
-      /* Update the number of items in the album */
-      frogr_photoset_set_n_photos (set, frogr_photoset_get_n_photos (set) + 1);
-    }
+      gboolean keep_going = FALSE;
 
-  if (!keep_going)
-    FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_set = FALSE;
+      if (!error)
+        {
+          frogr_photoset_set_n_photos (set, frogr_photoset_get_n_photos (set) + 1);
+
+          uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] = 0;
+          uop_data->photosets = g_slist_next (photosets);
+          keep_going = _add_picture_to_photosets_or_create (controller, uop_data);
+        }
+      else
+        DEBUG ("Error adding picture to set: %s", error->message);
+
+      uop_data->up_data->error = error;
+      if (!keep_going)
+        FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_set = FALSE;
+    }
 }
 
 static gboolean
@@ -1253,7 +1238,6 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrGroup *group = NULL;
   GSList *groups = NULL;
   GError *error = NULL;
-  gboolean keep_going = FALSE;
 
   session = FSP_SESSION (object);
   uop_data = (UploadOnePictureData*) data;
@@ -1262,45 +1246,39 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
   group = FROGR_GROUP (groups->data);
 
   fsp_session_add_to_group_finish (session, res, &error);
-  if (_should_retry_operation (uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP], error))
+  if (_should_retry_operation (error, uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP]))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP]++;
 
-      DEBUG("Error adding picture %s to group %s. Retrying... (attempt %d / %d)",
+      DEBUG("Error adding picture %s to group %s: %s. Retrying... (attempt %d / %d)",
             frogr_picture_get_title (uop_data->picture),
+            error->message,
             frogr_group_get_name (group),
             uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP],
             MAX_ATTEMPTS);
+      g_error_free (error);
 
       _add_picture_to_group (controller, uop_data);
-      return;
     }
-
-  uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP] = 0;
-  uop_data->groups = g_slist_next (groups);
-  uop_data->error = error;
-
-  /* When adding pictures to groups, we only stop if the process was
-     not explicitly cancelled by the user */
-  if (!error || error->code != FSP_ERROR_CANCELLED)
-    keep_going = _add_picture_to_groups (controller, uop_data);
-
-  if (error && error->code != FSP_ERROR_CANCELLED)
+  else
     {
-      /* We plainly ignore errors in this stage, as we don't want
-         them to interrupt the global upload process */
-      DEBUG ("Error adding picture to group: %s", error->message);
-      g_error_free (error);
-      uop_data->error = NULL;
-    }
-  else if (!error)
-    {
-      /* Update the number of items in the group */
-      frogr_group_set_n_photos (group, frogr_group_get_n_photos (group) + 1);
-    }
+      gboolean keep_going = FALSE;
 
-  if (!keep_going)
-    FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_group = FALSE;
+      if (!error)
+        {
+          frogr_group_set_n_photos (group, frogr_group_get_n_photos (group) + 1);
+
+          uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP] = 0;
+          uop_data->groups = g_slist_next (groups);
+          keep_going = _add_picture_to_groups (controller, uop_data);
+        }
+      else
+        DEBUG ("Error adding picture to group: %s", error->message);
+
+      uop_data->up_data->error = error;
+      if (!keep_going)
+        FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_group = FALSE;
+    }
 }
 
 static gboolean
@@ -1326,7 +1304,7 @@ _complete_picture_upload_on_idle (gpointer data)
     }
   picture = uop_data->picture;
 
-  if (!uop_data->error)
+  if (!up_data->error)
     {
       /* Remove it from the model if no error happened */
       FrogrMainViewModel *mainview_model = NULL;
@@ -1334,7 +1312,6 @@ _complete_picture_upload_on_idle (gpointer data)
       frogr_main_view_model_remove_picture (mainview_model, picture);
     }
   else {
-    up_data->error = uop_data->error;
     up_data->current = NULL;
   }
 
