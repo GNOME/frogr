@@ -96,6 +96,10 @@ gboolean frogr_account_is_active (FrogrAccount *self);
 
 void frogr_account_set_is_active (FrogrAccount *self, gboolean is_active);
 
+gboolean frogr_account_has_extra_info (FrogrAccount *self);
+
+void frogr_account_set_has_extra_info (FrogrAccount *self, gboolean has_extra_info);
+
 gulong frogr_account_get_remaining_bandwidth (FrogrAccount *self);
 
 void frogr_account_set_remaining_bandwidth (FrogrAccount *self,

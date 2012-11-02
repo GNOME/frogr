@@ -1636,6 +1636,9 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
       frogr_account_set_max_filesize (priv->account, upload_status->fs_max_kb);
       frogr_account_set_is_pro (priv->account, upload_status->pro_user);
 
+      /* Mark that we received this extra info for the user */
+      frogr_account_set_has_extra_info (priv->account, TRUE);
+
       if (old_remaining_bw != upload_status->bw_remaining_kb
           || old_max_bw != upload_status->bw_max_kb
           || old_is_pro != upload_status->pro_user)

@@ -42,6 +42,7 @@ struct _FrogrAccountPrivate
   gchar *fullname;
   gchar *version;
   gboolean is_active;
+  gboolean has_extra_info;
 
   /* Following properties won't be persistent */
   gulong remaining_bandwidth;
@@ -62,6 +63,7 @@ enum {
   PROP_FULLNAME,
   PROP_VERSION,
   PROP_IS_ACTIVE,
+  PROP_HAS_EXTRA_INFO,
   PROP_REMAINING_BANDWIDTH,
   PROP_MAX_BANDWIDTH,
   PROP_MAX_FILESIZE,
@@ -111,6 +113,10 @@ _frogr_account_set_property (GObject      *object,
 
     case PROP_IS_ACTIVE:
       frogr_account_set_is_active (self, g_value_get_boolean (value));
+      break;
+
+    case PROP_HAS_EXTRA_INFO:
+      frogr_account_set_has_extra_info (self, g_value_get_boolean (value));
       break;
 
     case PROP_REMAINING_BANDWIDTH:
@@ -174,6 +180,10 @@ _frogr_account_get_property (GObject    *object,
 
     case PROP_IS_ACTIVE:
       g_value_set_boolean (value, priv->is_active);
+      break;
+
+    case PROP_HAS_EXTRA_INFO:
+      g_value_set_boolean (value, priv->has_extra_info);
       break;
 
     case PROP_REMAINING_BANDWIDTH:
@@ -281,6 +291,14 @@ frogr_account_class_init (FrogrAccountClass *klass)
                                 G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_IS_ACTIVE, pspec);
 
+  pspec = g_param_spec_boolean ("has-extra-info",
+                                "has-extra-info",
+                                "Whether the account has been filled with "
+                                "extra information as retrieved from flickr",
+                                FALSE,
+                                G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_HAS_EXTRA_INFO, pspec);
+
   pspec = g_param_spec_ulong ("remaining-bandwidth",
                               "remaining-bandwidth",
                               "Remaining monthly bandwidth in KB",
@@ -324,6 +342,7 @@ frogr_account_init (FrogrAccount *self)
   priv->fullname = NULL;
   priv->version = NULL;
   priv->is_active = FALSE;
+  priv->has_extra_info = FALSE;
   priv->remaining_bandwidth = G_MAXULONG;
   priv->max_bandwidth = G_MAXULONG;
   priv->max_filesize = G_MAXULONG;
@@ -513,6 +532,28 @@ frogr_account_set_is_active (FrogrAccount *self, gboolean is_active)
 
   priv = FROGR_ACCOUNT_GET_PRIVATE (self);
   priv->is_active = is_active;
+}
+
+gboolean
+frogr_account_has_extra_info (FrogrAccount *self)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), FALSE);
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->has_extra_info;
+}
+
+void
+frogr_account_set_has_extra_info (FrogrAccount *self, gboolean has_extra_info)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->has_extra_info = has_extra_info;
 }
 
 gulong
