@@ -379,7 +379,7 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
       msg = g_strdup_printf (_("An error happened: %s."), error->message);
     }
 
-  if (notify_user)
+  if (notify_user && error_function)
     {
       GtkWindow *window = NULL;
       window = frogr_main_view_get_window (priv->mainview);
