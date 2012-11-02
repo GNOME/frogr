@@ -273,7 +273,8 @@ _clear_cancellable (FrogrController *self)
   FrogrControllerPrivate *priv = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  g_object_unref (priv->cancellable);
+  if (priv->cancellable)
+    g_object_unref (priv->cancellable);
 
   priv->cancellable = NULL;
 }
