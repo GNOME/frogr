@@ -929,9 +929,10 @@ static void
 _load_pictures_dialog (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   GtkWidget *dialog;
   GtkFileFilter *filter;
+  const gchar * const *supported_files;
+  gint i;
 
   dialog = gtk_file_chooser_dialog_new (_("Select a Picture"),
                                         GTK_WINDOW (priv->window),
@@ -942,21 +943,16 @@ _load_pictures_dialog (FrogrMainView *self)
 
   /* Set images filter */
   filter = gtk_file_filter_new ();
+  supported_files = frogr_util_get_supported_files ();
 
 #ifdef MAC_INTEGRATION
   /* Workaround for Mac OSX, where GNOME VFS daemon won't be running,
      so we can't check filter by mime type (will be text/plain) */
-  gtk_file_filter_add_pattern (filter, "*.[jJ][pP][gG]");
-  gtk_file_filter_add_pattern (filter, "*.[jJ][pP][eE][gG]");
-  gtk_file_filter_add_pattern (filter, "*.[pP][nN][gG]");
-  gtk_file_filter_add_pattern (filter, "*.[bB][mM][pP]");
-  gtk_file_filter_add_pattern (filter, "*.[gG][iI][fF]");
+  for (i = 0; supported_files[i]; i++)
+    gtk_file_filter_add_pattern (filter, supported_files[i]);
 #else
-  gtk_file_filter_add_mime_type (filter, "image/jpg");
-  gtk_file_filter_add_mime_type (filter, "image/jpeg");
-  gtk_file_filter_add_mime_type (filter, "image/png");
-  gtk_file_filter_add_mime_type (filter, "image/bmp");
-  gtk_file_filter_add_mime_type (filter, "image/gif");
+  for (i = 0; supported_files[i]; i++)
+    gtk_file_filter_add_mime_type (filter, supported_files[i]);
 #endif
 
   gtk_file_filter_set_name (filter, _("images"));

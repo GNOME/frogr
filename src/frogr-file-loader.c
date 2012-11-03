@@ -83,18 +83,6 @@ enum {
 
 static guint signals[N_SIGNALS] = { 0 };
 
-#ifndef MAC_INTEGRATION
-/* Don't use this in Mac OSX, where GNOME VFS daemon won't be running,
-   so we couldn't reliably check mime types (will be text/plain) */
-static const gchar *valid_mimetypes[] = {
-  "image/jpg",
-  "image/jpeg",
-  "image/png",
-  "image/bmp",
-  "image/gif",
-  NULL};
-#endif
-
 /* Prototypes */
 
 static void _update_status_and_progress (FrogrFileLoader *self);
@@ -167,9 +155,10 @@ _load_next_file (FrogrFileLoader *self)
 
           if (mime_type)
             {
-              for (i = 0; valid_mimetypes[i]; i++)
+              const gchar * const *supported_files = frogr_util_get_supported_files ();
+              for (i = 0; supported_files[i]; i++)
                 {
-                  if (g_str_equal (valid_mimetypes[i], mime_type))
+                  if (g_str_equal (supported_files[i], mime_type))
                     {
                       valid_mime = TRUE;
                       break;

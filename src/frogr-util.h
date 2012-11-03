@@ -45,6 +45,8 @@ GdkPixbuf *frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, g
 
 gchar *frogr_util_get_datasize_string (gulong datasize);
 
+const gchar * const *frogr_util_get_supported_files (void);
+
 G_END_DECLS
 
 #endif /* FROGR_UTIL_H */

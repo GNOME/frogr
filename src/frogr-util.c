@@ -350,3 +350,31 @@ frogr_util_get_datasize_string (gulong datasize)
 
   return result;
 }
+
+const gchar * const *
+frogr_util_get_supported_files (void)
+{
+#ifdef MAC_INTEGRATION
+  /* Workaround for Mac OSX, where GNOME VFS daemon won't be running,
+     so we can't filter by mime type (will be text/plain) */
+  static const gchar *frogr_supported_files[] = {
+    "*.[jJ][pP][gG]",
+    "*.[jJ][pP][eE][gG]",
+    "*.[pP][nN][gG]",
+    "*.[bB][mM][pP]",
+    "*.[gG][iI][fF]",
+    NULL
+};
+#else
+  static const gchar *frogr_supported_files[] = {
+    "image/jpg",
+    "image/jpeg",
+    "image/png",
+    "image/bmp",
+    "image/gif",
+    NULL
+  };
+#endif
+
+  return frogr_supported_files;
+}
