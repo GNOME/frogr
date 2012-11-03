@@ -26,6 +26,7 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <gst/gst.h>
 #include <libxml/parser.h>
 
 #ifdef MAC_INTEGRATION
@@ -83,11 +84,19 @@ main (int argc, char **argv)
 {
   FrogrController *fcontroller = NULL;
   GSList *fileuris = NULL;
+  GError *error = NULL;
 
   /* Check optional command line parameters */
   if (argc > 1)
     fileuris = _get_uris_list_from_array (&argv[1], argc - 1);
 
+  gst_init_check (&argc, &argv, &error);
+  if (error)
+    {
+      /* TODO: Disable video support when this happens */
+      DEBUG ("Gstreamer could not be initialized: %s", error->message);
+      g_error_free (error);
+    }
   gtk_init (&argc, &argv);
 
   g_set_application_name(APP_SHORTNAME);
