@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>
  *
+ * Parts of this file based on code from gst-plugins-base, licensed as
+ * GPL version 2 or later (Copyright (C) <2007> Wim Taymans <wim.taymans@gmail.com>)
  */
 
 #include "frogr-util.h"
@@ -24,12 +26,15 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <gst/gst.h>
 #include <libexif/exif-byte-order.h>
 #include <libexif/exif-data.h>
 #include <libexif/exif-entry.h>
 #include <libexif/exif-format.h>
 #include <libexif/exif-loader.h>
 #include <libexif/exif-tag.h>
+
+#define CAPS "video/x-raw-rgb,width=160,pixel-aspect-ratio=1/1,bpp=(int)24,depth=(int)24,endianness=(int)4321,red_mask=(int)0xff0000, green_mask=(int)0x00ff00, blue_mask=(int)0x0000ff"
 
 static gboolean
 _spawn_command (const gchar* cmd)
@@ -306,6 +311,193 @@ frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_hei
 
   /* No rotation was applied, return the scaled pixbuf */
   return scaled_pixbuf;
+}
+
+static GdkPixbuf *
+_get_pixbuf_from_image_contents (const guchar *contents, gsize length, GError **out_error)
+{
+  GdkPixbufLoader *pixbuf_loader = NULL;
+  GdkPixbuf *pixbuf = NULL;
+  GError *error = NULL;
+
+  pixbuf_loader = gdk_pixbuf_loader_new ();
+  if (gdk_pixbuf_loader_write (pixbuf_loader,
+                               (const guchar *)contents,
+                               length,
+                               &error))
+    {
+      gdk_pixbuf_loader_close (pixbuf_loader, NULL);
+      pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
+    }
+
+  if (error)
+    {
+      DEBUG ("Error loading pixbuf: %s", error->message);
+      g_propagate_error (out_error, error);
+    }
+
+  /* Keep the pixbuf before destroying the loader */
+  if (pixbuf)
+    g_object_ref (pixbuf);
+  g_object_unref (pixbuf_loader);
+
+  return pixbuf;
+}
+
+/* The following function is based in GStreamer's snapshot example,
+   from gst-plugins-base, licensed as GPL version 2 or later
+   (Copyright (C) <2007> Wim Taymans <wim.taymans@gmail.com>) */
+static GdkPixbuf *
+_get_pixbuf_from_video_file (GFile *file, GError **out_error)
+{
+  GdkPixbuf *pixbuf = NULL;
+  GstElement *pipeline, *sink;
+  GstBuffer *buffer;
+  GstFormat format;
+  GstStateChangeReturn ret;
+  gchar *file_uri;
+  gchar *descr;
+  gint width, height;
+  gint64 duration, position;
+  GError *error = NULL;
+  gboolean res;
+
+  /* create a new pipeline */
+  file_uri = g_file_get_uri (file);
+  descr = g_strdup_printf ("uridecodebin uri=%s ! ffmpegcolorspace ! videoscale ! "
+                           " appsink name=sink caps=\"" CAPS "\"", file_uri);
+  g_free (file_uri);
+
+  pipeline = gst_parse_launch (descr, &error);
+  g_free (descr);
+
+  if (error != NULL) {
+    DEBUG ("Could not construct pipeline: %s\n", error->message);
+    g_propagate_error (out_error, error);
+    return NULL;
+  }
+
+  /* get sink */
+  sink = gst_bin_get_by_name (GST_BIN (pipeline), "sink");
+
+  /* set to PAUSED to make the first frame arrive in the sink */
+  ret = gst_element_set_state (pipeline, GST_STATE_PAUSED);
+  switch (ret) {
+    case GST_STATE_CHANGE_FAILURE:
+      DEBUG ("failed to play the file\n");
+      return NULL;
+    case GST_STATE_CHANGE_NO_PREROLL:
+      /* for live sources, we need to set the pipeline to PLAYING before we can
+       * receive a buffer. We don't do that yet */
+      DEBUG ("live sources not supported yet\n");
+      return NULL;
+    default:
+      break;
+  }
+
+  /* This can block for up to 5 seconds. If your machine is really overloaded,
+   * it might time out before the pipeline prerolled and we generate an error. A
+   * better way is to run a mainloop and catch errors there. */
+  ret = gst_element_get_state (pipeline, NULL, NULL, 5 * GST_SECOND);
+  if (ret == GST_STATE_CHANGE_FAILURE) {
+    DEBUG ("failed to play the file\n");
+    return NULL;
+  }
+
+  /* get the duration */
+  format = GST_FORMAT_TIME;
+  gst_element_query_duration (pipeline, &format, &duration);
+
+  if (duration != -1)
+    /* we have a duration, seek to 50% */
+    position = duration * 0.5;
+  else
+    /* no duration, seek to 1 second, this could EOS */
+    position = 1 * GST_SECOND;
+
+  /* seek to the a position in the file. Most files have a black first frame so
+   * by seeking to somewhere else we have a bigger chance of getting something
+   * more interesting. */
+  gst_element_seek_simple (pipeline, GST_FORMAT_TIME,
+      GST_SEEK_FLAG_KEY_UNIT | GST_SEEK_FLAG_FLUSH, position);
+
+  /* get the preroll buffer from appsink, this block untils appsink really prerolls */
+  g_signal_emit_by_name (sink, "pull-preroll", &buffer, NULL);
+
+  /* if we have a buffer now, convert it to a pixbuf. It's possible that we
+   * don't have a buffer because we went EOS right away or had an error. */
+  if (buffer) {
+    GstCaps *caps;
+    GstStructure *s;
+
+    /* get the snapshot buffer format now. We set the caps on the appsink so
+     * that it can only be an rgb buffer. The only thing we have not specified
+     * on the caps is the height, which is dependant on the pixel-aspect-ratio
+     * of the source material */
+    caps = GST_BUFFER_CAPS (buffer);
+    if (!caps) {
+      DEBUG ("could not get snapshot format\n");
+      return NULL;
+    }
+    s = gst_caps_get_structure (caps, 0);
+
+    /* we need to get the final caps on the buffer to get the size */
+    res = gst_structure_get_int (s, "width", &width);
+    res |= gst_structure_get_int (s, "height", &height);
+    if (!res) {
+      DEBUG ("could not get snapshot dimension\n");
+      return NULL;
+    }
+
+    /* create pixmap from buffer and save, gstreamer video buffers have a stride
+     * that is rounded up to the nearest multiple of 4 */
+    pixbuf = gdk_pixbuf_new_from_data (GST_BUFFER_DATA (buffer),
+        GDK_COLORSPACE_RGB, FALSE, 8, width, height,
+        GST_ROUND_UP_4 (width * 3), NULL, NULL);
+
+  } else {
+    DEBUG ("could not make snapshot\n");
+  }
+
+  /* cleanup and exit */
+  gst_element_set_state (pipeline, GST_STATE_NULL);
+  gst_object_unref (pipeline);
+
+  return pixbuf;
+}
+
+GdkPixbuf *
+frogr_util_get_pixbuf_for_video_file (GFile *file, gint max_width, gint max_height, GError **error)
+{
+  GdkPixbuf *pixbuf = NULL;
+
+  pixbuf = _get_pixbuf_from_video_file (file, error);
+  if (pixbuf)
+    {
+      GdkPixbuf *c_pixbuf = NULL;
+      c_pixbuf = frogr_util_get_corrected_pixbuf (pixbuf, max_width, max_height);
+      g_object_unref (pixbuf);
+      pixbuf = c_pixbuf;
+    }
+
+  return pixbuf;
+}
+
+GdkPixbuf *
+frogr_util_get_pixbuf_from_image_contents (const guchar *contents, gsize length, gint max_width, gint max_height, GError **error)
+{
+  GdkPixbuf *pixbuf = NULL;
+
+  pixbuf = _get_pixbuf_from_image_contents (contents, length, error);
+  if (pixbuf)
+    {
+      GdkPixbuf *c_pixbuf = NULL;
+      c_pixbuf = frogr_util_get_corrected_pixbuf (pixbuf, max_width, max_height);
+      g_object_unref (pixbuf);
+      pixbuf = c_pixbuf;
+    }
+
+  return pixbuf;
 }
 
 gchar *

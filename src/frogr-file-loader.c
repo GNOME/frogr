@@ -217,145 +217,139 @@ _load_next_file_cb (GObject *object,
   file = G_FILE (object);
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
-      GdkPixbufLoader *pixbuf_loader = gdk_pixbuf_loader_new ();
+      GdkPixbuf *pixbuf = NULL;
+      GFileInfo* file_info = NULL;
+      ExifLoader *exif_loader = NULL;
+      ExifData *exif_data = NULL;
+      ExifEntry *exif_entry = NULL;
+      gchar *file_uri = NULL;
+      gchar *file_name = NULL;
+      const gchar *mime_type = NULL;
+      guint64 filesize = 0;
+      gboolean is_video = FALSE;
 
-      if (gdk_pixbuf_loader_write (pixbuf_loader,
-                                   (const guchar *)contents,
-                                   length,
-                                   &error))
+      /* Gather needed information */
+      file_info = g_file_query_info (file,
+                                     G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME
+                                     "," G_FILE_ATTRIBUTE_STANDARD_SIZE
+                                     "," G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                     G_FILE_QUERY_INFO_NONE,
+                                     NULL, &error);
+      if (!error)
         {
-          GdkPixbuf *pixbuf = NULL;
-          GdkPixbuf *s_pixbuf = NULL;
-          GFileInfo* file_info = NULL;
-          ExifLoader *exif_loader = NULL;
-          ExifData *exif_data = NULL;
-          ExifEntry *exif_entry = NULL;
-          gchar *file_uri = NULL;
-          gchar *file_name = NULL;
-          guint64 filesize = 0;
-
-          /* Gather needed information */
-          file_info = g_file_query_info (file,
-                                         G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME
-                                         "," G_FILE_ATTRIBUTE_STANDARD_SIZE,
-                                         G_FILE_QUERY_INFO_NONE,
-                                         NULL, &error);
-          if (!error)
-            {
-              file_name = g_strdup (g_file_info_get_display_name (file_info));
-              filesize = g_file_info_get_size (file_info);
-            }
-          else
-            {
-              g_warning ("Not able to write pixbuf: %s", error->message);
-              g_error_free (error);
-
-              /* Fallback if g_file_query_info() failed */
-              file_name = g_file_get_basename (file);
-            }
-
-          if (!priv->keep_file_extensions)
-            {
-              gchar *extension_dot = NULL;
-
-              /* Remove extension if present */
-              extension_dot = g_strrstr (file_name, ".");
-              if (extension_dot)
-                *extension_dot = '\0';
-            }
-
-          file_uri = g_file_get_uri (file);
-          gdk_pixbuf_loader_close (pixbuf_loader, NULL);
-          pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
-
-          /* Get (scaled, and maybe rotated) pixbuf */
-          s_pixbuf = frogr_util_get_corrected_pixbuf (pixbuf, IV_THUMB_WIDTH, IV_THUMB_HEIGHT);
-
-          /* Build the FrogrPicture */
-          fpicture = frogr_picture_new (file_uri,
-                                        file_name,
-                                        priv->public_visibility,
-                                        priv->family_visibility,
-                                        priv->friend_visibility,
-                                        FALSE);
-
-          frogr_picture_set_send_location (fpicture, priv->send_location);
-          frogr_picture_set_show_in_search (fpicture, priv->show_in_search);
-          frogr_picture_set_license (fpicture, priv->license);
-          frogr_picture_set_content_type (fpicture, priv->content_type);
-          frogr_picture_set_safety_level (fpicture, priv->safety_level);
-          frogr_picture_set_pixbuf (fpicture, s_pixbuf);
-
-          /* FrogrPicture stores the size in KB */
-          frogr_picture_set_filesize (fpicture, filesize / 1024);
-
-          /* Set date and time from exif data, if present */
-          exif_loader = exif_loader_new();
-          exif_loader_write (exif_loader, (unsigned char *) contents, length);
-
-          exif_data = exif_loader_get_data (exif_loader);
-          if (exif_data)
-            {
-              FrogrLocation *location = NULL;
-
-              /* Date and time for picture taken */
-              exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
-              if (exif_entry)
-                {
-                  if (exif_entry->format == EXIF_FORMAT_ASCII)
-                    {
-                      gchar *value = g_new0 (char, 20);
-                      exif_entry_get_value (exif_entry, value, 20);
-
-                      frogr_picture_set_datetime (fpicture, value);
-                      g_free (value);
-                    }
-                  else
-                    g_warning ("Found DateTime exif tag of invalid type");
-                }
-
-              /* Import tags from XMP metadata, if required */
-              if (priv->import_tags)
-                {
-                  gchar *imported_tags = NULL;
-
-                  imported_tags = import_tags_from_xmp_keywords (contents, length);
-                  if (imported_tags)
-                    {
-                      frogr_picture_set_tags (fpicture, imported_tags);
-                      g_free (imported_tags);
-                    }
-                }
-
-              /* GPS coordinates */
-              location = get_location_from_exif (exif_data);
-              if (location != NULL)
-                {
-                  /* frogr_picture_set_location takes ownership of location */
-                  frogr_picture_set_location (fpicture, location);
-                  g_object_unref (location);
-                }
-              exif_data_unref (exif_data);
-            }
-
-          if (file_info)
-            g_object_unref (file_info);
-
-          exif_loader_unref (exif_loader);
-
-          g_object_unref (s_pixbuf);
-          g_free (file_uri);
-          g_free (file_name);
+          file_name = g_strdup (g_file_info_get_display_name (file_info));
+          filesize = g_file_info_get_size (file_info);
         }
       else
         {
-          /* Not able to write pixbuf */
-          g_warning ("Not able to write pixbuf: %s",
-                     error->message);
+          g_warning ("Not able to read file information: %s", error->message);
+          g_error_free (error);
+
+          /* Fallback if g_file_query_info() failed */
+          file_name = g_file_get_basename (file);
+        }
+
+      mime_type = g_file_info_get_content_type (file_info);
+      is_video = g_str_has_prefix (mime_type, "video");
+
+      /* Load the pixbuf for the video or the image */
+      if (is_video)
+        pixbuf = frogr_util_get_pixbuf_for_video_file (file, IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
+      else
+        pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
+                                                            IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
+      if (error)
+        {
+          g_warning ("Not able to read pixbuf: %s", error->message);
           g_error_free (error);
         }
 
-      g_object_unref (pixbuf_loader);
+      if (!priv->keep_file_extensions)
+        {
+          gchar *extension_dot = NULL;
+
+          /* Remove extension if present */
+          extension_dot = g_strrstr (file_name, ".");
+          if (extension_dot)
+            *extension_dot = '\0';
+        }
+
+      /* Build the FrogrPicture */
+      file_uri = g_file_get_uri (file);
+      fpicture = frogr_picture_new (file_uri,
+                                    file_name,
+                                    priv->public_visibility,
+                                    priv->family_visibility,
+                                    priv->friend_visibility,
+                                    is_video);
+
+      frogr_picture_set_send_location (fpicture, priv->send_location);
+      frogr_picture_set_show_in_search (fpicture, priv->show_in_search);
+      frogr_picture_set_license (fpicture, priv->license);
+      frogr_picture_set_content_type (fpicture, priv->content_type);
+      frogr_picture_set_safety_level (fpicture, priv->safety_level);
+      frogr_picture_set_pixbuf (fpicture, pixbuf);
+
+      /* FrogrPicture stores the size in KB */
+      frogr_picture_set_filesize (fpicture, filesize / 1024);
+
+      /* Set date and time from exif data, if present */
+      exif_loader = exif_loader_new();
+      exif_loader_write (exif_loader, (unsigned char *) contents, length);
+
+      exif_data = exif_loader_get_data (exif_loader);
+      if (exif_data)
+        {
+          FrogrLocation *location = NULL;
+
+          /* Date and time for picture taken */
+          exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
+          if (exif_entry)
+            {
+              if (exif_entry->format == EXIF_FORMAT_ASCII)
+                {
+                  gchar *value = g_new0 (char, 20);
+                  exif_entry_get_value (exif_entry, value, 20);
+
+                  frogr_picture_set_datetime (fpicture, value);
+                  g_free (value);
+                }
+              else
+                g_warning ("Found DateTime exif tag of invalid type");
+            }
+
+          /* Import tags from XMP metadata, if required */
+          if (priv->import_tags)
+            {
+              gchar *imported_tags = NULL;
+
+              imported_tags = import_tags_from_xmp_keywords (contents, length);
+              if (imported_tags)
+                {
+                  frogr_picture_set_tags (fpicture, imported_tags);
+                  g_free (imported_tags);
+                }
+            }
+
+          /* GPS coordinates */
+          location = get_location_from_exif (exif_data);
+          if (location != NULL)
+            {
+              /* frogr_picture_set_location takes ownership of location */
+              frogr_picture_set_location (fpicture, location);
+              g_object_unref (location);
+            }
+          exif_data_unref (exif_data);
+        }
+
+      if (file_info)
+        g_object_unref (file_info);
+
+      exif_loader_unref (exif_loader);
+
+      g_object_unref (pixbuf);
+      g_free (file_uri);
+      g_free (file_name);
     }
   else
     {

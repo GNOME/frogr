@@ -43,6 +43,10 @@ void frogr_util_show_error_dialog (GtkWindow *parent, const gchar *message);
 
 GdkPixbuf *frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height);
 
+GdkPixbuf *frogr_util_get_pixbuf_for_video_file (GFile *file, gint max_width, gint max_height, GError **error);
+
+GdkPixbuf *frogr_util_get_pixbuf_from_image_contents (const guchar *contents, gsize length, gint max_width, gint max_height, GError **error);
+
 gchar *frogr_util_get_datasize_string (gulong datasize);
 
 const gchar * const *frogr_util_get_supported_files (void);

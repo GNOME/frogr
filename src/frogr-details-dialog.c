@@ -526,30 +526,26 @@ _load_picture_from_disk_cb (GObject *object,
   file = G_FILE (object);
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
-      GdkPixbufLoader *pixbuf_loader = gdk_pixbuf_loader_new ();
+      FrogrPicture *picture = NULL;
+      GdkPixbuf *pixbuf = NULL;
 
-      if (gdk_pixbuf_loader_write (pixbuf_loader,
-                                   (const guchar *)contents,
-                                   length,
-                                   &error))
+      picture = FROGR_PICTURE (priv->pictures->data);
+      if (frogr_picture_is_video (picture))
+        pixbuf = frogr_util_get_pixbuf_for_video_file (file, PICTURE_WIDTH, PICTURE_HEIGHT, &error);
+      else
+        pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
+                                                            PICTURE_WIDTH, PICTURE_HEIGHT, &error);
+
+      if (pixbuf)
         {
-          GdkPixbuf *pixbuf = NULL;
-          GdkPixbuf *s_pixbuf = NULL;
-
-          gdk_pixbuf_loader_close (pixbuf_loader, NULL);
-          pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
-
-          /* Get (scaled, and maybe rotated) pixbuf */
-          s_pixbuf = frogr_util_get_corrected_pixbuf (pixbuf, PICTURE_WIDTH, PICTURE_HEIGHT);
-
-          gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), s_pixbuf);
-          g_object_unref (s_pixbuf);
-
-          /* Everything should be fine by now, show it */
-          _place_picture_in_dialog_and_show (self);
+          gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), pixbuf);
+          g_object_unref (pixbuf);
         }
 
-      g_object_unref (pixbuf_loader);
+      /* Everything should be fine by now, show it */
+      _place_picture_in_dialog_and_show (self);
+
+      g_free (contents);
     }
 
   /* Show error to the user and finalize dialog if needed */
