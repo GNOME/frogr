@@ -61,7 +61,8 @@ struct _FrogrFileLoaderPrivate
   guint index;
   guint n_files;
 
-  gulong max_filesize;
+  gulong max_photo_size;
+  gulong max_video_size;
   gboolean keep_file_extensions;
   gboolean import_tags;
   gboolean public_visibility;
@@ -209,6 +210,7 @@ _load_next_file_cb (GObject *object,
   gchar *contents = NULL;
   gsize length = 0;
   gulong picture_filesize = 0;
+  gulong max_filesize = 0;
   gboolean keep_going = TRUE;
 
   self = FROGR_FILE_LOADER (data);;
@@ -375,7 +377,9 @@ _load_next_file_cb (GObject *object,
 
   /* Check if we must interrupt the process */
   picture_filesize = frogr_picture_get_filesize (fpicture);
-  if (picture_filesize > priv->max_filesize)
+  max_filesize = frogr_picture_is_video (fpicture) ? priv->max_video_size : priv->max_photo_size;
+
+  if (picture_filesize > max_filesize)
     {
       GtkWindow *window = NULL;
       gchar *msg = NULL;
@@ -383,10 +387,10 @@ _load_next_file_cb (GObject *object,
       /* First %s is the title of the picture (filename of the file by
          default). Second %s is the max allowed size for a picture to be
          uploaded to flickr (different for free and PRO accounts). */
-      msg = g_strdup_printf (_("Can't load picture %s: size of file is bigger "
+      msg = g_strdup_printf (_("Can't load file %s: size of file is bigger "
                                "than the maximum allowed for this account (%s)"),
                              frogr_picture_get_title (fpicture),
-                             frogr_util_get_datasize_string (priv->max_filesize));
+                             frogr_util_get_datasize_string (max_filesize));
 
       window = frogr_main_view_get_window (priv->mainview);
       frogr_util_show_error_dialog (window, msg);
@@ -645,7 +649,8 @@ frogr_file_loader_init (FrogrFileLoader *self)
   priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
 
   /* Initialize values from frogr configuration */
-  priv->max_filesize = G_MAXULONG;
+  priv->max_photo_size = G_MAXULONG;
+  priv->max_video_size = G_MAXULONG;
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (config);
   priv->import_tags = frogr_config_get_import_tags_from_metadata (config);
   priv->public_visibility = frogr_config_get_default_public (config);
@@ -667,7 +672,7 @@ frogr_file_loader_init (FrogrFileLoader *self)
 /* Public API */
 
 FrogrFileLoader *
-frogr_file_loader_new (GSList *file_uris, gulong max_filesize)
+frogr_file_loader_new (GSList *file_uris, gulong max_photo_size, gulong max_video_size)
 {
   FrogrFileLoader *self = NULL;
   FrogrFileLoaderPrivate *priv = NULL;
@@ -679,7 +684,8 @@ frogr_file_loader_new (GSList *file_uris, gulong max_filesize)
   priv->current = priv->file_uris;
   priv->index = 0;
   priv->n_files = g_slist_length (priv->file_uris);
-  priv->max_filesize = max_filesize;
+  priv->max_photo_size = max_photo_size;
+  priv->max_video_size = max_video_size;
 
   return self;
 }
