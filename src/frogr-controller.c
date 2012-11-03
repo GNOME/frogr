@@ -1635,10 +1635,14 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
       old_max_bw = frogr_account_get_max_bandwidth (priv->account);
       old_is_pro = frogr_account_is_pro (priv->account);
 
-      frogr_account_set_remaining_bandwidth (priv->account,
-                                             upload_status->bw_remaining_kb);
+      frogr_account_set_remaining_bandwidth (priv->account, upload_status->bw_remaining_kb);
       frogr_account_set_max_bandwidth (priv->account, upload_status->bw_max_kb);
       frogr_account_set_max_photo_filesize (priv->account, upload_status->photo_fs_max_kb);
+
+      frogr_account_set_remaining_videos (priv->account, upload_status->bw_remaining_videos);
+      frogr_account_set_current_videos (priv->account, upload_status->bw_used_videos);
+      frogr_account_set_max_video_filesize (priv->account, upload_status->video_fs_max_kb);
+
       frogr_account_set_is_pro (priv->account, upload_status->pro_user);
 
       /* Mark that we received this extra info for the user */
