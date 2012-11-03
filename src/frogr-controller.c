@@ -307,7 +307,7 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
       break;
 
     case FSP_ERROR_UPLOAD_INVALID_FILE:
-      msg = g_strdup (_("Error uploading picture:\nFile invalid"));
+      msg = g_strdup (_("Error uploading:\nFile invalid"));
       break;
 
     case FSP_ERROR_UPLOAD_QUOTA_PHOTO_EXCEEDED:
@@ -315,7 +315,9 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
       break;
 
     case FSP_ERROR_UPLOAD_QUOTA_VIDEO_EXCEEDED:
-      msg = g_strdup (_("Error uploading video:\nQuota exceeded"));
+      msg = g_strdup_printf (_("Error uploading video:\nYou can't upload more videos with this account\n"
+                               "Quota exceeded (limit: %d videos per month)"),
+                             frogr_account_get_current_videos (priv->account));
       break;
 
     case FSP_ERROR_PHOTO_NOT_FOUND:
