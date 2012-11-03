@@ -1401,8 +1401,8 @@ _craft_state_description (FrogrMainView *mainview)
          (in KB, MB or GB) that would be uploaded as the sum of the
          sizes for every picture loaded in the application */
       upload_size_str = g_strdup_printf (n_pictures > 1
-                                         ? _(" - %d pictures to upload (%s)")
-                                         : _(" - %d picture to upload (%s)"),
+                                         ? _(" - %d files to upload (%s)")
+                                         : _(" - %d file to upload (%s)"),
                                          n_pictures, total_size_str);
       g_free (total_size_str);
     }
