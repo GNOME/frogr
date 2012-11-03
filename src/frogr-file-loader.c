@@ -276,7 +276,8 @@ _load_next_file_cb (GObject *object,
                                         file_name,
                                         priv->public_visibility,
                                         priv->family_visibility,
-                                        priv->friend_visibility);
+                                        priv->friend_visibility,
+                                        FALSE);
 
           frogr_picture_set_send_location (fpicture, priv->send_location);
           frogr_picture_set_show_in_search (fpicture, priv->show_in_search);

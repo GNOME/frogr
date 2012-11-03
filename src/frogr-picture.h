@@ -60,7 +60,8 @@ FrogrPicture *frogr_picture_new (const gchar *fileuri,
                                  const gchar *title,
                                  gboolean public,
                                  gboolean family,
-                                 gboolean friend);
+                                 gboolean friend,
+                                 gboolean is_video);
 
 /* Data managing methods */
 
@@ -118,6 +119,8 @@ void frogr_picture_set_show_in_search (FrogrPicture *self,
 GdkPixbuf *frogr_picture_get_pixbuf (FrogrPicture *self);
 void frogr_picture_set_pixbuf (FrogrPicture *self,
                                GdkPixbuf *pixbuf);
+
+gboolean frogr_picture_is_video (FrogrPicture *self);
 
 gulong frogr_picture_get_filesize (FrogrPicture *self);
 void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize);

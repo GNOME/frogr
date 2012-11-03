@@ -51,6 +51,8 @@ struct _FrogrPicturePrivate
   gboolean show_in_search;
   gboolean send_location;
 
+  gboolean is_video;
+
   gulong filesize; /* In KB */
   gchar *datetime; /* ASCII, locale dependent, string */
 
@@ -77,6 +79,7 @@ enum  {
   PROP_LOCATION,
   PROP_SHOW_IN_SEARCH,
   PROP_SEND_LOCATION,
+  PROP_IS_VIDEO,
   PROP_FILESIZE,
   PROP_DATETIME,
   PROP_PHOTOSETS,
@@ -237,6 +240,9 @@ _frogr_picture_set_property (GObject *object,
     case PROP_SEND_LOCATION:
       frogr_picture_set_send_location (self, g_value_get_boolean (value));
       break;
+    case PROP_IS_VIDEO:
+      priv->is_video = g_value_get_boolean (value);
+      break;
     case PROP_FILESIZE:
       frogr_picture_set_filesize (self, g_value_get_long (value));
       break;
@@ -309,6 +315,9 @@ _frogr_picture_get_property (GObject *object,
       break;
     case PROP_SEND_LOCATION:
       g_value_set_boolean (value, priv->send_location);
+      break;
+    case PROP_IS_VIDEO:
+      g_value_set_boolean (value, priv->is_video);
       break;
     case PROP_FILESIZE:
       g_value_set_long (value, priv->filesize);
@@ -527,6 +536,13 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                       0,
                                                       G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
+                                   PROP_IS_VIDEO,
+                                   g_param_spec_boolean ("is-video",
+                                                         "is-video",
+                                                         "Whether FrogrPicture represents a video",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+  g_object_class_install_property (obj_class,
                                    PROP_DATETIME,
                                    g_param_spec_string ("datetime",
                                                         "datetime",
@@ -582,6 +598,8 @@ frogr_picture_init (FrogrPicture *self)
   priv->show_in_search = TRUE;
   priv->send_location = FALSE;
 
+  priv->is_video = FALSE;
+
   priv->filesize = 0;
   priv->datetime = NULL;
 
@@ -599,7 +617,8 @@ frogr_picture_new (const gchar *fileuri,
                    const gchar *title,
                    gboolean public,
                    gboolean family,
-                   gboolean friend)
+                   gboolean friend,
+                   gboolean is_video)
 {
   g_return_val_if_fail (fileuri, NULL);
   g_return_val_if_fail (title, NULL);
@@ -610,6 +629,7 @@ frogr_picture_new (const gchar *fileuri,
                                      "is-public", public,
                                      "is-family", family,
                                      "is-friend", friend,
+                                     "is-video", is_video,
                                      NULL));
 }
 
@@ -987,6 +1007,16 @@ frogr_picture_set_pixbuf (FrogrPicture *self,
     g_object_unref (priv->pixbuf);
 
   priv->pixbuf = GDK_IS_PIXBUF (pixbuf) ? g_object_ref (pixbuf) : NULL;
+}
+
+gboolean frogr_picture_is_video (FrogrPicture *self)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  return priv->is_video;
 }
 
 gulong frogr_picture_get_filesize (FrogrPicture *self)
