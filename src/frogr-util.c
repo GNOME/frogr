@@ -561,18 +561,26 @@ frogr_util_get_datasize_string (gulong datasize)
   return result;
 }
 
-const gchar * const *
-frogr_util_get_supported_files (void)
-{
 #ifdef MAC_INTEGRATION
-  /* Workaround for Mac OSX, where GNOME VFS daemon won't be running,
-     so we can't filter by mime type (will be text/plain) */
-  static const gchar *frogr_supported_files[] = {
+const gchar * const *
+frogr_util_get_supported_images (void)
+{
+  static const gchar *supported_images[] = {
     "*.[jJ][pP][gG]",
     "*.[jJ][pP][eE][gG]",
     "*.[pP][nN][gG]",
     "*.[bB][mM][pP]",
     "*.[gG][iI][fF]",
+    NULL
+  };
+
+  return supported_images;
+}
+
+const gchar * const *
+frogr_util_get_supported_videos (void)
+{
+  static const gchar *supported_videos[] = {
     "*.[mM][pP]4",
     "*.[mM][oO][vV]",
     "*.[qQ][tT]",
@@ -581,9 +589,17 @@ frogr_util_get_supported_files (void)
     "*.[mM][pP][gG]",
     "*.avi",
     NULL
-};
+  };
+
+  return supported_images;
+}
+
 #else
-  static const gchar *frogr_supported_files[] = {
+
+const gchar * const *
+frogr_util_get_supported_mimetypes (void)
+{
+  static const gchar *supported_mimetypes[] = {
     "image/jpg",
     "image/jpeg",
     "image/png",
@@ -595,7 +611,7 @@ frogr_util_get_supported_files (void)
     "video/x-msvideo",
     NULL
   };
-#endif
 
-  return frogr_supported_files;
+  return supported_mimetypes;
 }
+#endif /* MAC_INTEGRATION */

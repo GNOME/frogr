@@ -930,9 +930,17 @@ _load_pictures_dialog (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GtkWidget *dialog;
-  GtkFileFilter *filter;
-  const gchar * const *supported_files;
+  GtkFileFilter *all_filter;
+  GtkFileFilter *image_filter;
+  GtkFileFilter *video_filter;
   gint i;
+
+#ifdef MAC_INTEGRATION
+  const gchar * const *supported_images;
+  const gchar * const *supported_videos;
+#else
+  const gchar * const *supported_mimetypes;
+#endif
 
   dialog = gtk_file_chooser_dialog_new (_("Select a Picture"),
                                         GTK_WINDOW (priv->window),
@@ -942,22 +950,48 @@ _load_pictures_dialog (FrogrMainView *self)
                                         NULL);
 
   /* Set images filter */
-  filter = gtk_file_filter_new ();
-  supported_files = frogr_util_get_supported_files ();
+  all_filter = gtk_file_filter_new ();
+  image_filter = gtk_file_filter_new ();
+  video_filter = gtk_file_filter_new ();
 
 #ifdef MAC_INTEGRATION
   /* Workaround for Mac OSX, where GNOME VFS daemon won't be running,
      so we can't check filter by mime type (will be text/plain) */
-  for (i = 0; supported_files[i]; i++)
-    gtk_file_filter_add_pattern (filter, supported_files[i]);
+  supported_images = frogr_util_get_supported_images ();
+  for (i = 0; supported_images[i]; i++)
+    {
+      gtk_file_filter_add_pattern (image_filter, supported_images[i]);
+      gtk_file_filter_add_pattern (all_filter, supported_images[i]);
+    }
+
+  supported_videos = frogr_util_get_supported_videos ();
+  for (i = 0; supported_videos[i]; i++)
+    {
+      gtk_file_filter_add_pattern (video_filter, supported_videos[i]);
+      gtk_file_filter_add_pattern (all_filter, supported_videos[i]);
+    }
 #else
-  for (i = 0; supported_files[i]; i++)
-    gtk_file_filter_add_mime_type (filter, supported_files[i]);
+  supported_mimetypes = frogr_util_get_supported_mimetypes ();
+  for (i = 0; supported_mimetypes[i]; i++)
+    {
+      if (g_str_has_prefix (supported_mimetypes[i], "video"))
+        gtk_file_filter_add_mime_type (video_filter, supported_mimetypes[i]);
+      else
+        gtk_file_filter_add_mime_type (image_filter, supported_mimetypes[i]);
+
+      gtk_file_filter_add_mime_type (all_filter, supported_mimetypes[i]);
+    }
 #endif
 
-  gtk_file_filter_set_name (filter, _("images"));
+  gtk_file_filter_set_name (all_filter, _("All"));
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), all_filter);
 
-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+  gtk_file_filter_set_name (image_filter, _("Images"));
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), image_filter);
+
+  gtk_file_filter_set_name (video_filter, _("Videos"));
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), video_filter);
+
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
   gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), FALSE);
 

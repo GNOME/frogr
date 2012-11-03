@@ -155,10 +155,10 @@ _load_next_file (FrogrFileLoader *self)
 
           if (mime_type)
             {
-              const gchar * const *supported_files = frogr_util_get_supported_files ();
-              for (i = 0; supported_files[i]; i++)
+              const gchar * const *supported_mimetypes = frogr_util_get_supported_mimetypes ();
+              for (i = 0; supported_mimetypes[i]; i++)
                 {
-                  if (g_str_equal (supported_files[i], mime_type))
+                  if (g_str_equal (supported_mimetypes[i], mime_type))
                     {
                       valid_mime = TRUE;
                       break;
