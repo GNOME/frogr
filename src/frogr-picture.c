@@ -191,6 +191,7 @@ _frogr_picture_set_property (GObject *object,
                              GParamSpec *pspec)
 {
   FrogrPicture *self = FROGR_PICTURE (object);
+  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (self);
 
   switch (prop_id)
     {
@@ -198,7 +199,7 @@ _frogr_picture_set_property (GObject *object,
       frogr_picture_set_id (self, g_value_get_string (value));
       break;
     case PROP_FILEURI:
-      frogr_picture_set_fileuri (self, g_value_get_string (value));
+      priv->fileuri = g_value_dup_string (value);
       break;
     case PROP_TITLE:
       frogr_picture_set_title (self, g_value_get_string (value));
@@ -413,7 +414,7 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                         "Full fileuri at disk "
                                                         "for the picture",
                                                         NULL,
-                                                        G_PARAM_READWRITE));
+                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
   g_object_class_install_property (obj_class,
                                    PROP_TITLE,
                                    g_param_spec_string ("title",
@@ -648,19 +649,6 @@ frogr_picture_get_fileuri (FrogrPicture *self)
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
   return (const gchar *)priv->fileuri;
-}
-
-void
-frogr_picture_set_fileuri (FrogrPicture *self,
-                           const gchar *fileuri)
-{
-  FrogrPicturePrivate *priv = NULL;
-
-  g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  g_free (priv->fileuri);
-  priv->fileuri = g_strdup (fileuri);
 }
 
 const gchar *
