@@ -263,8 +263,8 @@ frogr_util_show_error_dialog (GtkWindow *parent, const gchar *message)
   _show_message_dialog (parent, message, GTK_MESSAGE_ERROR);
 }
 
-GdkPixbuf *
-frogr_util_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height)
+static GdkPixbuf *
+_get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height)
 {
   GdkPixbuf *scaled_pixbuf = NULL;
   GdkPixbuf *rotated_pixbuf;
@@ -493,7 +493,7 @@ frogr_util_get_pixbuf_for_video_file (GFile *file, gint max_width, gint max_heig
   if (pixbuf)
     {
       GdkPixbuf *c_pixbuf = NULL;
-      c_pixbuf = frogr_util_get_corrected_pixbuf (pixbuf, max_width, max_height);
+      c_pixbuf = _get_corrected_pixbuf (pixbuf, max_width, max_height);
       g_object_unref (pixbuf);
       pixbuf = c_pixbuf;
     }
@@ -510,7 +510,7 @@ frogr_util_get_pixbuf_from_image_contents (const guchar *contents, gsize length,
   if (pixbuf)
     {
       GdkPixbuf *c_pixbuf = NULL;
-      c_pixbuf = frogr_util_get_corrected_pixbuf (pixbuf, max_width, max_height);
+      c_pixbuf = _get_corrected_pixbuf (pixbuf, max_width, max_height);
       g_object_unref (pixbuf);
       pixbuf = c_pixbuf;
     }
