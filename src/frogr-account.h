@@ -110,10 +110,25 @@ gulong frogr_account_get_max_bandwidth (FrogrAccount *self);
 void frogr_account_set_max_bandwidth (FrogrAccount *self,
                                       gulong max_bandwidth);
 
-gulong frogr_account_get_max_filesize (FrogrAccount *self);
+gulong frogr_account_get_max_photo_filesize (FrogrAccount *self);
 
-void frogr_account_set_max_filesize (FrogrAccount *self,
-                                     gulong max_filesize);
+void frogr_account_set_max_photo_filesize (FrogrAccount *self,
+                                           gulong max_filesize);
+
+gulong frogr_account_get_remaining_videos (FrogrAccount *self);
+
+void frogr_account_set_remaining_videos (FrogrAccount *self,
+                                         guint remaining_videos);
+
+guint frogr_account_get_current_videos (FrogrAccount *self);
+
+void frogr_account_set_current_videos (FrogrAccount *self,
+                                       guint current_videos);
+
+gulong frogr_account_get_max_video_filesize (FrogrAccount *self);
+
+void frogr_account_set_max_video_filesize (FrogrAccount *self,
+                                           gulong max_filesize);
 
 gboolean frogr_account_is_pro (FrogrAccount *self);
 

@@ -47,7 +47,10 @@ struct _FrogrAccountPrivate
   /* Following properties won't be persistent */
   gulong remaining_bandwidth;
   gulong max_bandwidth;
-  gulong max_filesize;
+  gulong max_photo_filesize;
+  gulong max_video_filesize;
+  guint remaining_videos;
+  guint current_videos;
   gboolean is_pro;
 };
 
@@ -66,7 +69,10 @@ enum {
   PROP_HAS_EXTRA_INFO,
   PROP_REMAINING_BANDWIDTH,
   PROP_MAX_BANDWIDTH,
-  PROP_MAX_FILESIZE,
+  PROP_MAX_PHOTO_FILESIZE,
+  PROP_MAX_VIDEO_FILESIZE,
+  PROP_REMAINING_VIDEOS,
+  PROP_CURRENT_VIDEOS,
   PROP_IS_PRO
 };
 
@@ -127,8 +133,20 @@ _frogr_account_set_property (GObject      *object,
       frogr_account_set_max_bandwidth (self, g_value_get_ulong (value));
       break;
 
-    case PROP_MAX_FILESIZE:
-      frogr_account_set_max_filesize (self, g_value_get_ulong (value));
+    case PROP_MAX_PHOTO_FILESIZE:
+      frogr_account_set_max_photo_filesize (self, g_value_get_ulong (value));
+      break;
+
+    case PROP_MAX_VIDEO_FILESIZE:
+      frogr_account_set_max_video_filesize (self, g_value_get_ulong (value));
+      break;
+
+    case PROP_REMAINING_VIDEOS:
+      frogr_account_set_remaining_videos (self, g_value_get_uint (value));
+      break;
+
+    case PROP_CURRENT_VIDEOS:
+      frogr_account_set_current_videos (self, g_value_get_uint (value));
       break;
 
     case PROP_IS_PRO:
@@ -194,8 +212,20 @@ _frogr_account_get_property (GObject    *object,
       g_value_set_ulong (value, priv->max_bandwidth);
       break;
 
-    case PROP_MAX_FILESIZE:
-      g_value_set_ulong (value, priv->max_filesize);
+    case PROP_MAX_PHOTO_FILESIZE:
+      g_value_set_ulong (value, priv->max_photo_filesize);
+      break;
+
+    case PROP_MAX_VIDEO_FILESIZE:
+      g_value_set_ulong (value, priv->max_video_filesize);
+      break;
+
+    case PROP_REMAINING_VIDEOS:
+      g_value_set_uint (value, priv->remaining_videos);
+      break;
+
+    case PROP_CURRENT_VIDEOS:
+      g_value_set_uint (value, priv->current_videos);
       break;
 
     case PROP_IS_PRO:
@@ -313,12 +343,33 @@ frogr_account_class_init (FrogrAccountClass *klass)
                               G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_MAX_BANDWIDTH, pspec);
 
-  pspec = g_param_spec_ulong ("max-filesize",
-                              "max-filesize",
-                              "Max allowed filesize in KB",
+  pspec = g_param_spec_ulong ("max-photo-filesize",
+                              "max-photo-filesize",
+                              "Max allowed filesize for photos in KB",
                               0, G_MAXULONG, G_MAXULONG,
                               G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_MAX_FILESIZE, pspec);
+  g_object_class_install_property (obj_class, PROP_MAX_PHOTO_FILESIZE, pspec);
+
+  pspec = g_param_spec_ulong ("max-video-filesize",
+                              "max-video-filesize",
+                              "Max allowed filesize for videos in KB",
+                              0, G_MAXULONG, G_MAXULONG,
+                              G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_MAX_VIDEO_FILESIZE, pspec);
+
+  pspec = g_param_spec_uint ("remaining-videos",
+                             "remaining-videos",
+                             "Remaining number of videos for upload",
+                             0, G_MAXUINT, G_MAXUINT,
+                             G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_REMAINING_VIDEOS, pspec);
+
+  pspec = g_param_spec_uint ("current-videos",
+                             "current-videos",
+                             "Current number of videos uploaded",
+                             0, G_MAXUINT, G_MAXUINT,
+                             G_PARAM_READWRITE);
+  g_object_class_install_property (obj_class, PROP_CURRENT_VIDEOS, pspec);
 
   pspec = g_param_spec_boolean ("is-pro",
                                 "is-pro",
@@ -345,7 +396,10 @@ frogr_account_init (FrogrAccount *self)
   priv->has_extra_info = FALSE;
   priv->remaining_bandwidth = G_MAXULONG;
   priv->max_bandwidth = G_MAXULONG;
-  priv->max_filesize = G_MAXULONG;
+  priv->max_photo_filesize = G_MAXULONG;
+  priv->max_video_filesize = G_MAXULONG;
+  priv->remaining_videos = G_MAXUINT;
+  priv->current_videos = G_MAXUINT;
   priv->is_pro = FALSE;
 }
 
@@ -600,27 +654,93 @@ frogr_account_set_max_bandwidth (FrogrAccount *self, gulong max_bandwidth)
   priv->max_bandwidth = max_bandwidth;
 }
 
-gulong frogr_account_get_max_filesize (FrogrAccount *self)
+gulong frogr_account_get_max_photo_filesize (FrogrAccount *self)
 {
   FrogrAccountPrivate *priv = NULL;
 
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXULONG);
 
   priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  return priv->max_filesize;
+  return priv->max_photo_filesize;
 }
 
-void frogr_account_set_max_filesize (FrogrAccount *self,
-                                     gulong max_filesize)
+void frogr_account_set_max_photo_filesize (FrogrAccount *self,
+                                           gulong max_filesize)
 {
   FrogrAccountPrivate *priv = NULL;
 
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
   priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  priv->max_filesize = max_filesize;
+  priv->max_photo_filesize = max_filesize;
 }
 
+gulong
+frogr_account_get_max_video_filesize (FrogrAccount *self)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXULONG);
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->max_video_filesize;
+
+}
+
+void
+frogr_account_set_max_video_filesize (FrogrAccount *self, gulong max_filesize)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->max_video_filesize = max_filesize;
+}
+
+gulong
+frogr_account_get_remaining_videos (FrogrAccount *self)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXUINT);
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->remaining_videos;
+}
+
+void
+frogr_account_set_remaining_videos (FrogrAccount *self, guint remaining_videos)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->remaining_videos = remaining_videos;
+}
+
+guint
+frogr_account_get_current_videos (FrogrAccount *self)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXUINT);
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  return priv->current_videos;
+}
+
+void
+frogr_account_set_current_videos (FrogrAccount *self, guint current_videos)
+{
+  FrogrAccountPrivate *priv = NULL;
+
+  g_return_if_fail (FROGR_IS_ACCOUNT (self));
+
+  priv = FROGR_ACCOUNT_GET_PRIVATE (self);
+  priv->current_videos = current_videos;
+}
 
 gboolean
 frogr_account_is_pro (FrogrAccount *self)
