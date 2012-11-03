@@ -974,10 +974,10 @@ _load_pictures_dialog (FrogrMainView *self)
   supported_mimetypes = frogr_util_get_supported_mimetypes ();
   for (i = 0; supported_mimetypes[i]; i++)
     {
-      if (g_str_has_prefix (supported_mimetypes[i], "video"))
-        gtk_file_filter_add_mime_type (video_filter, supported_mimetypes[i]);
-      else
+      if (g_str_has_prefix (supported_mimetypes[i], "image"))
         gtk_file_filter_add_mime_type (image_filter, supported_mimetypes[i]);
+      else
+        gtk_file_filter_add_mime_type (video_filter, supported_mimetypes[i]);
 
       gtk_file_filter_add_mime_type (all_filter, supported_mimetypes[i]);
     }

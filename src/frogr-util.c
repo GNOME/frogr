@@ -587,7 +587,12 @@ frogr_util_get_supported_videos (void)
     "*.[mM][pP][eE]",
     "*.[mM][pP][eE][gG]",
     "*.[mM][pP][gG]",
-    "*.avi",
+    "*.[aA][vV][iI]",
+    "*.[wW][mM][vV]",
+    "*.[oO][gG][vV]",
+    "*.[oO][gG][gG]",
+    "*.[mM]2[tT][sS]",
+    "*.3[gG][pP]",
     NULL
   };
 
@@ -609,6 +614,14 @@ frogr_util_get_supported_mimetypes (void)
     "video/mp4",
     "video/quicktime",
     "video/x-msvideo",
+    "video/ogg",
+    "video/x-ms-wmv",
+    "video/3gpp",
+    "video/m2ts",
+    "video/avchd-stream",
+    "video/mp2t",
+    "video/vnd.dlna.mpeg-tts",
+    "application/ogg",
     NULL
   };
 

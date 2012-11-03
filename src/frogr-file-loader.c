@@ -252,7 +252,7 @@ _load_next_file_cb (GObject *object,
         }
 
       mime_type = g_file_info_get_content_type (file_info);
-      is_video = g_str_has_prefix (mime_type, "video");
+      is_video = !g_str_has_prefix (mime_type, "image");
 
       /* Load the pixbuf for the video or the image */
       if (is_video)
