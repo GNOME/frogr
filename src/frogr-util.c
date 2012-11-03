@@ -363,6 +363,13 @@ frogr_util_get_supported_files (void)
     "*.[pP][nN][gG]",
     "*.[bB][mM][pP]",
     "*.[gG][iI][fF]",
+    "*.[mM][pP]4",
+    "*.[mM][oO][vV]",
+    "*.[qQ][tT]",
+    "*.[mM][pP][eE]",
+    "*.[mM][pP][eE][gG]",
+    "*.[mM][pP][gG]",
+    "*.avi",
     NULL
 };
 #else
@@ -372,6 +379,10 @@ frogr_util_get_supported_files (void)
     "image/png",
     "image/bmp",
     "image/gif",
+    "video/mpeg",
+    "video/mp4",
+    "video/quicktime",
+    "video/x-msvideo",
     NULL
   };
 #endif
