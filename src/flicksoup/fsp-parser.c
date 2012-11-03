@@ -554,7 +554,27 @@ _get_upload_status_parser               (xmlDoc  *doc,
           if (!g_strcmp0 ((gchar *) node->name, "filesize"))
             {
               value = xmlGetProp (node, (const xmlChar *) "maxkb");
-              upload_status->fs_max_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              upload_status->photo_fs_max_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              xmlFree (value);
+            }
+
+          /* Videosize */
+          if (!g_strcmp0 ((gchar *) node->name, "videosize"))
+            {
+              value = xmlGetProp (node, (const xmlChar *) "maxkb");
+              upload_status->video_fs_max_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              xmlFree (value);
+            }
+
+          /* Videos */
+          if (!g_strcmp0 ((gchar *) node->name, "videos"))
+            {
+              value = xmlGetProp (node, (const xmlChar *) "remaining");
+              upload_status->bw_remaining_videos = (guint) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              xmlFree (value);
+
+              value = xmlGetProp (node, (const xmlChar *) "uploaded");
+              upload_status->bw_used_videos = (guint) g_ascii_strtoll ((gchar *) value, NULL, 10);
               xmlFree (value);
             }
         }

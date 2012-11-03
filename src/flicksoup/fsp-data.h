@@ -144,10 +144,16 @@ struct _FspDataUploadStatus
   gchar       *id;
   gchar       *username;
   gboolean     pro_user;
-  gulong      bw_max_kb;       /* Bandwith max KB */
-  gulong      bw_used_kb;      /* Bandwith used KB */
-  gulong      bw_remaining_kb; /* Bandwith remaining KB */
-  gulong      fs_max_kb;       /* Filesize max KB */
+
+  gulong       bw_max_kb;           /* Bandwith max KB */
+  gulong       bw_used_kb;          /* Bandwith used KB */
+  gulong       bw_remaining_kb;     /* Bandwith remaining KB */
+
+  guint        bw_used_videos;      /* Current number of videos */
+  guint        bw_remaining_videos; /* Remaining number of videos */
+
+  gulong       photo_fs_max_kb;     /* Filesize max KB */
+  gulong       video_fs_max_kb;     /* Filesize max KB */
 };
 
 struct _FspDataPhotoInfo

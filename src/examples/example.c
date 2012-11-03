@@ -563,8 +563,14 @@ get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
                upload_status->bw_used_kb);
       g_print ("[get_upload_status_cb]::\tBandwitdh Remaining KB: %lu\n",
                upload_status->bw_remaining_kb);
-      g_print ("[get_upload_status_cb]::\tFilesize Max KB: %lu\n",
-               upload_status->fs_max_kb);
+      g_print ("[get_upload_status_cb]::\tBandwitdh Used videos: %u\n",
+               upload_status->bw_used_videos);
+      g_print ("[get_upload_status_cb]::\tBandwitdh Remaining videos: %u\n",
+               upload_status->bw_remaining_videos);
+      g_print ("[get_upload_status_cb]::\tPhoto filesize Max KB: %lu\n",
+               upload_status->photo_fs_max_kb);
+      g_print ("[get_upload_status_cb]::\tVideo filesize Max KB: %lu\n",
+               upload_status->video_fs_max_kb);
 
       /* Make a pause before continuing */
       g_print ("Press ENTER to continue...\n\n");
