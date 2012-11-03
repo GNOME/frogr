@@ -20,6 +20,7 @@
  * GPL version 2 or later (Copyright (C) <2007> Wim Taymans <wim.taymans@gmail.com>)
  */
 
+#include "frogr-picture.h"
 #include "frogr-util.h"
 #include "frogr-global-defs.h"
 
@@ -197,15 +198,32 @@ frogr_util_open_uri (const gchar *uri)
 }
 
 void
-frogr_util_open_images_in_viewer (GList *uris_list)
+frogr_util_open_pictures_in_viewer (GSList *pictures)
 {
   GAppInfo *app_info = NULL;
+  GList *uris_list = NULL;
+  GSList *current_pic = NULL;
+  FrogrPicture *picture = NULL;
 
   /* Early return */
-  if (!uris_list)
+  if (!pictures)
     return;
 
-  app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
+  for (current_pic = pictures; current_pic; current_pic = g_slist_next (current_pic))
+    {
+      picture = FROGR_PICTURE (current_pic->data);
+      uris_list = g_list_append (uris_list, g_strdup (frogr_picture_get_fileuri (picture)));
+    }
+
+  /* We currently choose the application based in the mime type of the
+     first picture. This is very basic, but probably good enough for now */
+  picture = FROGR_PICTURE (pictures->data);
+  if (frogr_picture_is_video (picture))
+    app_info = g_app_info_get_default_for_type ("video/mpeg", TRUE);
+  else
+    app_info = g_app_info_get_default_for_type ("image/jpg", TRUE);
+
+  /* uris_list will be freed inside of the function */
   _open_uris_with_app_info (uris_list, app_info);
 }
 

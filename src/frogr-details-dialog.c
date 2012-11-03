@@ -1060,18 +1060,7 @@ static void
 _on_picture_button_clicked (GtkButton *button, gpointer data)
 {
   FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (data);
-  GSList *current_pic = NULL;
-  GList *uris_list = NULL;
-  FrogrPicture *picture = NULL;
-
-  for (current_pic = priv->pictures; current_pic; current_pic = g_slist_next (current_pic))
-    {
-      picture = FROGR_PICTURE (current_pic->data);
-      uris_list = g_list_append (uris_list, g_strdup (frogr_picture_get_fileuri (picture)));
-    }
-
-  /* This function will already free the list and its elements */
-  frogr_util_open_images_in_viewer (uris_list);
+  frogr_util_open_pictures_in_viewer (priv->pictures);
 }
 
 static void

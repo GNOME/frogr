@@ -1052,23 +1052,13 @@ static void
 _open_pictures_in_external_viewer (FrogrMainView *self)
 {
   GSList *pictures = NULL;
-  GSList *current_pic = NULL;
-  GList *uris_list = NULL;
-  FrogrPicture *picture = NULL;
 
   if (!_pictures_selected_required_check (self))
     return;
 
   pictures = _get_selected_pictures (self);
-  for (current_pic = pictures; current_pic; current_pic = g_slist_next (current_pic))
-    {
-      picture = FROGR_PICTURE (current_pic->data);
-      uris_list = g_list_append (uris_list, g_strdup (frogr_picture_get_fileuri (picture)));
-    }
+  frogr_util_open_pictures_in_viewer (pictures);
   g_slist_free (pictures);
-
-  /* This function will already free the list and its elements */
-  frogr_util_open_images_in_viewer (uris_list);
 }
 
 static void
