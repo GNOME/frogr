@@ -61,7 +61,7 @@ struct _FrogrFileLoaderPrivate
   guint index;
   guint n_files;
 
-  gulong max_photo_size;
+  gulong max_picture_size;
   gulong max_video_size;
   gboolean keep_file_extensions;
   gboolean import_tags;
@@ -377,7 +377,7 @@ _load_next_file_cb (GObject *object,
 
   /* Check if we must interrupt the process */
   picture_filesize = frogr_picture_get_filesize (fpicture);
-  max_filesize = frogr_picture_is_video (fpicture) ? priv->max_video_size : priv->max_photo_size;
+  max_filesize = frogr_picture_is_video (fpicture) ? priv->max_video_size : priv->max_picture_size;
 
   if (picture_filesize > max_filesize)
     {
@@ -649,7 +649,7 @@ frogr_file_loader_init (FrogrFileLoader *self)
   priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
 
   /* Initialize values from frogr configuration */
-  priv->max_photo_size = G_MAXULONG;
+  priv->max_picture_size = G_MAXULONG;
   priv->max_video_size = G_MAXULONG;
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (config);
   priv->import_tags = frogr_config_get_import_tags_from_metadata (config);
@@ -672,7 +672,7 @@ frogr_file_loader_init (FrogrFileLoader *self)
 /* Public API */
 
 FrogrFileLoader *
-frogr_file_loader_new (GSList *file_uris, gulong max_photo_size, gulong max_video_size)
+frogr_file_loader_new (GSList *file_uris, gulong max_picture_size, gulong max_video_size)
 {
   FrogrFileLoader *self = NULL;
   FrogrFileLoaderPrivate *priv = NULL;
@@ -684,7 +684,7 @@ frogr_file_loader_new (GSList *file_uris, gulong max_photo_size, gulong max_vide
   priv->current = priv->file_uris;
   priv->index = 0;
   priv->n_files = g_slist_length (priv->file_uris);
-  priv->max_photo_size = max_photo_size;
+  priv->max_picture_size = max_picture_size;
   priv->max_video_size = max_video_size;
 
   return self;

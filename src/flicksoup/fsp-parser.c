@@ -554,7 +554,7 @@ _get_upload_status_parser               (xmlDoc  *doc,
           if (!g_strcmp0 ((gchar *) node->name, "filesize"))
             {
               value = xmlGetProp (node, (const xmlChar *) "maxkb");
-              upload_status->photo_fs_max_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
+              upload_status->picture_fs_max_kb = (gulong) g_ascii_strtoll ((gchar *) value, NULL, 10);
               xmlFree (value);
             }
 

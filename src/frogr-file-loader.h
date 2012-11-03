@@ -51,7 +51,7 @@ struct _FrogrFileLoaderClass
 
 GType frogr_file_loader_get_type(void) G_GNUC_CONST;
 
-FrogrFileLoader *frogr_file_loader_new (GSList *file_uris, gulong max_photo_size, gulong max_video_size);
+FrogrFileLoader *frogr_file_loader_new (GSList *file_uris, gulong max_picture_size, gulong max_video_size);
 
 void frogr_file_loader_load (FrogrFileLoader *self);
 

@@ -25,16 +25,16 @@
 #define N_ERRORS (N_SPECIFIC_ERRORS + N_GENERAL_ERRORS)
 
 static const FspError photo_upload_translations [N_SPECIFIC_ERRORS] = {
-  FSP_ERROR_UNKNOWN,                     /* 0 */
-  FSP_ERROR_UNKNOWN,                     /* 1 */
-  FSP_ERROR_UPLOAD_MISSING_PHOTO,        /* 2 */
-  FSP_ERROR_UPLOAD_GENERAL_FAILURE,      /* 3 */
-  FSP_ERROR_UPLOAD_INVALID_FILE,         /* 4 */
-  FSP_ERROR_UPLOAD_INVALID_FILE,         /* 5 */
-  FSP_ERROR_UPLOAD_QUOTA_PHOTO_EXCEEDED, /* 6 */
-  FSP_ERROR_UPLOAD_QUOTA_VIDEO_EXCEEDED, /* 7 */
-  FSP_ERROR_UNKNOWN,                     /* 8 */
-  FSP_ERROR_UNKNOWN,                     /* 9 */
+  FSP_ERROR_UNKNOWN,                       /* 0 */
+  FSP_ERROR_UNKNOWN,                       /* 1 */
+  FSP_ERROR_UPLOAD_MISSING_PHOTO,          /* 2 */
+  FSP_ERROR_UPLOAD_GENERAL_FAILURE,        /* 3 */
+  FSP_ERROR_UPLOAD_INVALID_FILE,           /* 4 */
+  FSP_ERROR_UPLOAD_INVALID_FILE,           /* 5 */
+  FSP_ERROR_UPLOAD_QUOTA_PICTURE_EXCEEDED, /* 6 */
+  FSP_ERROR_UPLOAD_QUOTA_VIDEO_EXCEEDED,   /* 7 */
+  FSP_ERROR_UNKNOWN,                       /* 8 */
+  FSP_ERROR_UNKNOWN,                       /* 9 */
 };
 
 static const FspError photo_get_info_translations [N_SPECIFIC_ERRORS] = {

@@ -110,10 +110,10 @@ gulong frogr_account_get_max_bandwidth (FrogrAccount *self);
 void frogr_account_set_max_bandwidth (FrogrAccount *self,
                                       gulong max_bandwidth);
 
-gulong frogr_account_get_max_photo_filesize (FrogrAccount *self);
+gulong frogr_account_get_max_picture_filesize (FrogrAccount *self);
 
-void frogr_account_set_max_photo_filesize (FrogrAccount *self,
-                                           gulong max_filesize);
+void frogr_account_set_max_picture_filesize (FrogrAccount *self,
+                                             gulong max_filesize);
 
 gulong frogr_account_get_remaining_videos (FrogrAccount *self);
 

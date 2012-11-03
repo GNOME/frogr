@@ -310,7 +310,7 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
       msg = g_strdup (_("Error uploading:\nFile invalid"));
       break;
 
-    case FSP_ERROR_UPLOAD_QUOTA_PHOTO_EXCEEDED:
+    case FSP_ERROR_UPLOAD_QUOTA_PICTURE_EXCEEDED:
       msg = g_strdup (_("Error uploading picture:\nQuota exceeded"));
       break;
 
@@ -601,7 +601,7 @@ _should_retry_operation (GError *error, gint attempts)
 {
   if (error->code == FSP_ERROR_CANCELLED
       || error->code == FSP_ERROR_UPLOAD_INVALID_FILE
-      || error->code == FSP_ERROR_UPLOAD_QUOTA_PHOTO_EXCEEDED
+      || error->code == FSP_ERROR_UPLOAD_QUOTA_PICTURE_EXCEEDED
       || error->code == FSP_ERROR_UPLOAD_QUOTA_VIDEO_EXCEEDED
       || error->code == FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET
       || error->code == FSP_ERROR_NOT_AUTHENTICATED
@@ -1639,7 +1639,7 @@ _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       frogr_account_set_remaining_bandwidth (priv->account, upload_status->bw_remaining_kb);
       frogr_account_set_max_bandwidth (priv->account, upload_status->bw_max_kb);
-      frogr_account_set_max_photo_filesize (priv->account, upload_status->photo_fs_max_kb);
+      frogr_account_set_max_picture_filesize (priv->account, upload_status->picture_fs_max_kb);
 
       frogr_account_set_remaining_videos (priv->account, upload_status->bw_remaining_videos);
       frogr_account_set_current_videos (priv->account, upload_status->bw_used_videos);
@@ -2616,17 +2616,17 @@ frogr_controller_load_pictures (FrogrController *self,
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrFileLoader *loader = NULL;
-  gulong max_photo_filesize = G_MAXULONG;
+  gulong max_picture_filesize = G_MAXULONG;
   gulong max_video_filesize = G_MAXULONG;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  max_photo_filesize = frogr_account_get_max_photo_filesize (priv->account);
+  max_picture_filesize = frogr_account_get_max_picture_filesize (priv->account);
   max_video_filesize = frogr_account_get_max_video_filesize (priv->account);
 
-  loader = frogr_file_loader_new (fileuris, max_photo_filesize, max_video_filesize);
+  loader = frogr_file_loader_new (fileuris, max_picture_filesize, max_video_filesize);
 
   g_signal_connect (G_OBJECT (loader), "file-loaded",
                     G_CALLBACK (_on_file_loaded),

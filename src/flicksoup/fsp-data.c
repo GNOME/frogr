@@ -61,7 +61,7 @@ fsp_data_new                            (FspDataType type)
       new_data->upload_status.bw_used_videos = G_MAXUINT;
       new_data->upload_status.bw_remaining_videos = G_MAXUINT;
       new_data->upload_status.bw_remaining_kb = G_MAXUINT32;
-      new_data->upload_status.photo_fs_max_kb = G_MAXUINT32;
+      new_data->upload_status.picture_fs_max_kb = G_MAXUINT32;
       new_data->upload_status.video_fs_max_kb = G_MAXUINT32;
       break;
 
@@ -146,7 +146,7 @@ fsp_data_copy                           (const FspData *data)
       new_data->upload_status.bw_remaining_kb = data->upload_status.bw_remaining_kb;
       new_data->upload_status.bw_used_videos = data->upload_status.bw_used_videos;
       new_data->upload_status.bw_remaining_videos = data->upload_status.bw_remaining_videos;
-      new_data->upload_status.photo_fs_max_kb = data->upload_status.photo_fs_max_kb;
+      new_data->upload_status.picture_fs_max_kb = data->upload_status.picture_fs_max_kb;
       new_data->upload_status.video_fs_max_kb = data->upload_status.video_fs_max_kb;
       break;
 

@@ -152,8 +152,8 @@ struct _FspDataUploadStatus
   guint        bw_used_videos;      /* Current number of videos */
   guint        bw_remaining_videos; /* Remaining number of videos */
 
-  gulong       photo_fs_max_kb;     /* Filesize max KB */
-  gulong       video_fs_max_kb;     /* Filesize max KB */
+  gulong       picture_fs_max_kb;   /* Filesize max KB for pictures */
+  gulong       video_fs_max_kb;     /* Filesize max KB for videos */
 };
 
 struct _FspDataPhotoInfo

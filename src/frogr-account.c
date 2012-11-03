@@ -47,7 +47,7 @@ struct _FrogrAccountPrivate
   /* Following properties won't be persistent */
   gulong remaining_bandwidth;
   gulong max_bandwidth;
-  gulong max_photo_filesize;
+  gulong max_picture_filesize;
   gulong max_video_filesize;
   guint remaining_videos;
   guint current_videos;
@@ -69,7 +69,7 @@ enum {
   PROP_HAS_EXTRA_INFO,
   PROP_REMAINING_BANDWIDTH,
   PROP_MAX_BANDWIDTH,
-  PROP_MAX_PHOTO_FILESIZE,
+  PROP_MAX_PICTURE_FILESIZE,
   PROP_MAX_VIDEO_FILESIZE,
   PROP_REMAINING_VIDEOS,
   PROP_CURRENT_VIDEOS,
@@ -133,8 +133,8 @@ _frogr_account_set_property (GObject      *object,
       frogr_account_set_max_bandwidth (self, g_value_get_ulong (value));
       break;
 
-    case PROP_MAX_PHOTO_FILESIZE:
-      frogr_account_set_max_photo_filesize (self, g_value_get_ulong (value));
+    case PROP_MAX_PICTURE_FILESIZE:
+      frogr_account_set_max_picture_filesize (self, g_value_get_ulong (value));
       break;
 
     case PROP_MAX_VIDEO_FILESIZE:
@@ -212,8 +212,8 @@ _frogr_account_get_property (GObject    *object,
       g_value_set_ulong (value, priv->max_bandwidth);
       break;
 
-    case PROP_MAX_PHOTO_FILESIZE:
-      g_value_set_ulong (value, priv->max_photo_filesize);
+    case PROP_MAX_PICTURE_FILESIZE:
+      g_value_set_ulong (value, priv->max_picture_filesize);
       break;
 
     case PROP_MAX_VIDEO_FILESIZE:
@@ -343,12 +343,12 @@ frogr_account_class_init (FrogrAccountClass *klass)
                               G_PARAM_READWRITE);
   g_object_class_install_property (obj_class, PROP_MAX_BANDWIDTH, pspec);
 
-  pspec = g_param_spec_ulong ("max-photo-filesize",
-                              "max-photo-filesize",
-                              "Max allowed filesize for photos in KB",
+  pspec = g_param_spec_ulong ("max-picture-filesize",
+                              "max-picture-filesize",
+                              "Max allowed filesize for pictures in KB",
                               0, G_MAXULONG, G_MAXULONG,
                               G_PARAM_READWRITE);
-  g_object_class_install_property (obj_class, PROP_MAX_PHOTO_FILESIZE, pspec);
+  g_object_class_install_property (obj_class, PROP_MAX_PICTURE_FILESIZE, pspec);
 
   pspec = g_param_spec_ulong ("max-video-filesize",
                               "max-video-filesize",
@@ -396,7 +396,7 @@ frogr_account_init (FrogrAccount *self)
   priv->has_extra_info = FALSE;
   priv->remaining_bandwidth = G_MAXULONG;
   priv->max_bandwidth = G_MAXULONG;
-  priv->max_photo_filesize = G_MAXULONG;
+  priv->max_picture_filesize = G_MAXULONG;
   priv->max_video_filesize = G_MAXULONG;
   priv->remaining_videos = G_MAXUINT;
   priv->current_videos = G_MAXUINT;
@@ -654,17 +654,17 @@ frogr_account_set_max_bandwidth (FrogrAccount *self, gulong max_bandwidth)
   priv->max_bandwidth = max_bandwidth;
 }
 
-gulong frogr_account_get_max_photo_filesize (FrogrAccount *self)
+gulong frogr_account_get_max_picture_filesize (FrogrAccount *self)
 {
   FrogrAccountPrivate *priv = NULL;
 
   g_return_val_if_fail (FROGR_IS_ACCOUNT (self), G_MAXULONG);
 
   priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  return priv->max_photo_filesize;
+  return priv->max_picture_filesize;
 }
 
-void frogr_account_set_max_photo_filesize (FrogrAccount *self,
+void frogr_account_set_max_picture_filesize (FrogrAccount *self,
                                            gulong max_filesize)
 {
   FrogrAccountPrivate *priv = NULL;
@@ -672,7 +672,7 @@ void frogr_account_set_max_photo_filesize (FrogrAccount *self,
   g_return_if_fail (FROGR_IS_ACCOUNT (self));
 
   priv = FROGR_ACCOUNT_GET_PRIVATE (self);
-  priv->max_photo_filesize = max_filesize;
+  priv->max_picture_filesize = max_filesize;
 }
 
 gulong
