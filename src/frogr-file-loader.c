@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>
  *
+ * Parts of this file based on code from GTK+, licensed as GPL version 2
+ * or later (Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.)
  */
 
 #include "frogr-file-loader.h"
@@ -92,6 +94,7 @@ static void _load_next_file_cb (GObject *object,
                                 GAsyncResult *res,
                                 gpointer data);
 
+static gboolean _is_video_file (GFile *file);
 static gboolean get_gps_coordinate (ExifData *exif,
                                     ExifTag   tag,
                                     ExifTag   reftag,
@@ -226,15 +229,13 @@ _load_next_file_cb (GObject *object,
       ExifEntry *exif_entry = NULL;
       gchar *file_uri = NULL;
       gchar *file_name = NULL;
-      const gchar *mime_type = NULL;
       guint64 filesize = 0;
       gboolean is_video = FALSE;
 
       /* Gather needed information */
       file_info = g_file_query_info (file,
                                      G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME
-                                     "," G_FILE_ATTRIBUTE_STANDARD_SIZE
-                                     "," G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                     "," G_FILE_ATTRIBUTE_STANDARD_SIZE,
                                      G_FILE_QUERY_INFO_NONE,
                                      NULL, &error);
       if (!error)
@@ -251,10 +252,8 @@ _load_next_file_cb (GObject *object,
           file_name = g_file_get_basename (file);
         }
 
-      mime_type = g_file_info_get_content_type (file_info);
-      is_video = !g_str_has_prefix (mime_type, "image");
-
       /* Load the pixbuf for the video or the image */
+      is_video = _is_video_file (file);
       if (is_video)
         pixbuf = frogr_util_get_pixbuf_for_video_file (file, IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
       else
@@ -407,6 +406,214 @@ _load_next_file_cb (GObject *object,
     _load_next_file (self);
   else
     _finish_task_and_self_destruct (self);
+}
+
+#ifdef MAC_INTEGRATION
+/* The following functions get_char() and _file_matches_pattern() are
+   based in code from GTK+'s gtkfilefilter.c and fnmatch.c, licensed
+   as GPL version 2 or later (Copyright (C) 1991, 1992, 1993 Free
+   Software Foundation, Inc.) */
+static gunichar
+get_char (const char **str)
+{
+  gunichar c = g_utf8_get_char (*str);
+  *str = g_utf8_next_char (*str);
+
+  return c;
+}
+
+static gboolean
+_file_matches_pattern (const char *pattern,
+                       const char *string,
+                       gboolean    component_start)
+{
+  const char *p = pattern, *n = string;
+
+  while (*p)
+    {
+      const char *last_n = n;
+
+      gunichar c = get_char (&p);
+      gunichar nc = get_char (&n);
+
+      switch (c)
+	{
+   	case '?':
+	  if (nc == '\0')
+	    return FALSE;
+	  else if (nc == G_DIR_SEPARATOR)
+	    return FALSE;
+	  break;
+	case '\\':
+	  if (nc != c)
+	    return FALSE;
+	  break;
+	case '*':
+	  {
+	    const char *last_p = p;
+
+	    for (last_p = p, c = get_char (&p);
+		 c == '?' || c == '*';
+		 last_p = p, c = get_char (&p))
+	      {
+		if (c == '?')
+		  {
+		    if (nc == '\0')
+		      return FALSE;
+		    else if (nc == G_DIR_SEPARATOR)
+		      return FALSE;
+		    else
+		      {
+			last_n = n; nc = get_char (&n);
+		      }
+		  }
+	      }
+
+	    /* If the pattern ends with wildcards, we have a
+	     * guaranteed match unless there is a dir separator
+	     * in the remainder of the string.
+	     */
+	    if (c == '\0')
+	      {
+		if (strchr (last_n, G_DIR_SEPARATOR) != NULL)
+		  return FALSE;
+		else
+		  return TRUE;
+	      }
+
+	    for (p = last_p; nc != '\0';)
+	      {
+		if ((c == '[' || nc == c) &&
+		    _file_matches_pattern (p, last_n, component_start))
+		  return TRUE;
+
+		component_start = (nc == G_DIR_SEPARATOR);
+		last_n = n;
+		nc = get_char (&n);
+	      }
+
+	    return FALSE;
+	  }
+
+	case '[':
+	  {
+	    /* Nonzero if the sense of the character class is inverted.  */
+	    gboolean not;
+
+	    if (nc == '\0' || nc == G_DIR_SEPARATOR)
+	      return FALSE;
+
+	    not = (*p == '!' || *p == '^');
+	    if (not)
+	      ++p;
+
+	    c = get_char (&p);
+	    for (;;)
+	      {
+		register gunichar cstart = c, cend = c;
+		if (c == '\0')
+		  /* [ (unterminated) loses.  */
+		  return FALSE;
+
+		c = get_char (&p);
+
+		if (c == '-' && *p != ']')
+		  {
+		    cend = get_char (&p);
+		    if (cend == '\0')
+		      return FALSE;
+
+		    c = get_char (&p);
+		  }
+
+		if (nc >= cstart && nc <= cend)
+		  goto matched;
+
+		if (c == ']')
+		  break;
+	      }
+	    if (!not)
+	      return FALSE;
+	    break;
+
+	  matched:;
+	    /* Skip the rest of the [...] that already matched.  */
+	    while (c != ']')
+	      {
+		if (c == '\0')
+		  /* [... (unterminated) loses.  */
+		  return FALSE;
+
+		c = get_char (&p);
+	      }
+	    if (not)
+	      return FALSE;
+	  }
+	  break;
+
+	default:
+	  if (c != nc)
+	    return FALSE;
+	}
+
+      component_start = (nc == G_DIR_SEPARATOR);
+    }
+
+  if (*n == '\0')
+    return TRUE;
+
+  return FALSE;
+}
+#endif /* MAC_INTEGRATION */
+
+static gboolean
+_is_video_file (GFile *file)
+{
+#ifdef MAC_INTEGRATION
+  const gchar * const *supported_videos = NULL;
+  gchar *basename = NULL;
+  gint i;
+#else
+  GFileInfo* file_info = NULL;
+  GError *error = NULL;
+#endif
+  gboolean is_video = FALSE;
+
+#ifdef MAC_INTEGRATION
+  /* In the Mac we can't use mime types so we match against the list
+     of supported file extensions for videos. */
+  basename = g_file_get_basename (file);
+  supported_videos = frogr_util_get_supported_videos ();
+  for (i = 0; supported_videos[i]; i++)
+    {
+      if (_file_matches_pattern (supported_videos[i], basename, TRUE))
+        {
+          is_video = TRUE;
+          break;
+        }
+    }
+  g_free (basename);
+
+#else
+  /* Use mime types when not in the Mac */
+  file_info = g_file_query_info (file,
+                                 G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                 G_FILE_QUERY_INFO_NONE,
+                                 NULL, &error);
+  if (!error)
+    {
+      const gchar *mime_type = NULL;
+      mime_type = g_file_info_get_content_type (file_info);
+      is_video = !g_str_has_prefix (mime_type, "image");
+    }
+  else
+    {
+      g_warning ("Not able to read file information: %s", error->message);
+      g_error_free (error);
+    }
+#endif
+
+  return is_video;
 }
 
 /* This function was taken from tracker, licensed under the GNU Lesser
