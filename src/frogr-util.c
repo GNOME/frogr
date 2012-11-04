@@ -582,6 +582,7 @@ frogr_util_get_supported_videos (void)
 {
   static const gchar *supported_videos[] = {
     "*.[mM][pP]4",
+    "*.[mM]4[vV]",
     "*.[mM][oO][vV]",
     "*.[qQ][tT]",
     "*.[mM][pP][eE]",
