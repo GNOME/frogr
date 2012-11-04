@@ -597,7 +597,7 @@ frogr_util_get_supported_videos (void)
     NULL
   };
 
-  return supported_images;
+  return supported_videos;
 }
 
 #else
