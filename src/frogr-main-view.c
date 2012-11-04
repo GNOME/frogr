@@ -1339,7 +1339,7 @@ _craft_state_description (FrogrMainView *mainview)
   account = frogr_controller_get_active_account (priv->controller);
 
   if (!FROGR_IS_ACCOUNT (account) || !frogr_account_has_extra_info (account))
-    return g_strdup (_("Not connected to flickr"));
+    return g_strdup (_("Not connected to Flickr"));
 
   /* Just use the username here ant not the fullname (when available),
      since it could happen that the full name was the same for two

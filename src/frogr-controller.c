@@ -360,11 +360,11 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
     case FSP_ERROR_NOT_AUTHENTICATED:
       frogr_controller_revoke_authorization (self);
       msg = g_strdup_printf (_("Error\n%s is not properly authorized to upload pictures "
-                               "to flickr.\nPlease re-authorize it"), APP_SHORTNAME);
+                               "to Flickr.\nPlease re-authorize it"), APP_SHORTNAME);
       break;
 
     case FSP_ERROR_OAUTH_UNKNOWN_ERROR:
-      msg = g_strdup_printf (_("Unable to authenticate in flickr\nPlease try again."));
+      msg = g_strdup_printf (_("Unable to authenticate in Flickr\nPlease try again."));
       break;
 
     case FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET:
@@ -2657,7 +2657,7 @@ frogr_controller_upload_pictures (FrogrController *self)
       gchar *msg = NULL;
 
       msg = g_strdup_printf (_("You need to properly authorize %s before"
-                               " uploading any pictures to flickr.\n"
+                               " uploading any pictures to Flickr.\n"
                                "Please re-authorize it."), APP_SHORTNAME);
 
       window = frogr_main_view_get_window (priv->mainview);
