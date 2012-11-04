@@ -1400,9 +1400,9 @@ _craft_state_description (FrogrMainView *mainview)
       /* Will show in the status bar the amount of pictures and data
          (in KB, MB or GB) that would be uploaded as the sum of the
          sizes for every picture loaded in the application */
-      upload_size_str = g_strdup_printf (n_pictures > 1
-                                         ? _(" - %d files to upload (%s)")
-                                         : _(" - %d file to upload (%s)"),
+      upload_size_str = g_strdup_printf (ngettext (" - %d file to upload (%s)",
+                                                   " - %d files to upload (%s)",
+                                                   n_pictures),
                                          n_pictures, total_size_str);
       g_free (total_size_str);
     }
