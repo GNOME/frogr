@@ -20,6 +20,8 @@
 
 #include "frogr-picture.h"
 
+#include <json-glib/json-glib.h>
+
 #define TAGS_DELIMITER " "
 
 #define FROGR_PICTURE_GET_PRIVATE(object)               \
@@ -27,7 +29,11 @@
                                 FROGR_TYPE_PICTURE,     \
                                 FrogrPicturePrivate))
 
-G_DEFINE_TYPE (FrogrPicture, frogr_picture, G_TYPE_OBJECT)
+static void json_serializable_init (JsonSerializableIface *iface);
+
+G_DEFINE_TYPE_EXTENDED (FrogrPicture, frogr_picture, G_TYPE_OBJECT, 0,
+                        G_IMPLEMENT_INTERFACE (JSON_TYPE_SERIALIZABLE,
+                                               json_serializable_init))
 
 /* Private struct */
 typedef struct _FrogrPicturePrivate FrogrPicturePrivate;
@@ -94,6 +100,19 @@ static void _add_tags_to_tags_list (FrogrPicture *self,
                                     const gchar *tags_string);
 static void _update_tags_string (FrogrPicture *self);
 
+static JsonNode *_serialize_list (GSList *objects_list);
+static gboolean _deserialize_list (GType g_type, JsonNode *node, GValue *value);
+static gboolean _free_deserialized_object_list_on_idle (GSList *list);
+
+static JsonNode *_serialize_property (JsonSerializable *serializable,
+                                      const gchar *name,
+                                      const GValue *value,
+                                      GParamSpec *pspec);
+static gboolean _deserialize_property (JsonSerializable *serializable,
+                                       const gchar *name,
+                                       GValue *value,
+                                       GParamSpec *pspec,
+                                       JsonNode *node);
 /* Private API */
 
 static gboolean
@@ -185,6 +204,141 @@ _update_tags_string (FrogrPicture *self)
       /* Store final result */
       priv->tags_string = new_str;
     }
+}
+
+static JsonNode *
+_serialize_list (GSList *objects_list)
+{
+  JsonArray *json_array = NULL;
+  JsonNode *list_node = NULL;
+  JsonNode *object_node = NULL;
+  GObject *object = NULL;
+  GSList *item = NULL;
+
+  json_array = json_array_new ();
+  for (item = objects_list; item; item = g_slist_next (item))
+    {
+      object = G_OBJECT (item->data);
+      object_node = json_gobject_serialize (object);
+      if (object_node)
+        json_array_add_element (json_array, object_node);
+    }
+
+  list_node = json_node_new(JSON_NODE_ARRAY);
+  json_node_set_array (list_node, json_array);
+
+  return list_node;
+}
+
+static gboolean
+_deserialize_list (GType g_type, JsonNode *node, GValue *value)
+{
+  JsonArray *json_array = NULL;
+  GList *nodes_list = NULL;
+
+  g_return_val_if_fail (node != NULL, FALSE);
+  g_return_val_if_fail (JSON_NODE_HOLDS_ARRAY (node), FALSE);
+
+  json_array = json_node_get_array (node);
+  nodes_list = json_array_get_elements (json_array);
+  if (nodes_list)
+    {
+      JsonNode *node = NULL;
+      GSList *objects = NULL;
+      GList *item = NULL;
+      GObject *object = NULL;
+
+      for (item = nodes_list; item; item = g_list_next (item))
+        {
+          node = (JsonNode*)item->data;
+          object = json_gobject_deserialize (g_type, node);
+          objects = g_slist_append (objects, object);
+        }
+
+      g_value_set_pointer (value, objects);
+      g_idle_add ((GSourceFunc)_free_deserialized_object_list_on_idle, objects);
+    }
+
+  return TRUE;
+}
+
+static gboolean
+_free_deserialized_object_list_on_idle (GSList *list)
+{
+  if (list)
+    {
+      g_slist_foreach (list, (GFunc) g_object_unref, NULL);
+      g_slist_free (list);
+    }
+  return FALSE;
+}
+
+static JsonNode *
+_serialize_property (JsonSerializable *serializable,
+                     const gchar *name,
+                     const GValue *value,
+                     GParamSpec *pspec)
+{
+  FrogrPicturePrivate *priv = NULL;
+  JsonNode *json_node = NULL;
+
+  g_return_val_if_fail (FROGR_IS_PICTURE (serializable), FALSE);
+
+  priv = FROGR_PICTURE_GET_PRIVATE (serializable);
+  if (g_str_equal (name, "photosets"))
+    json_node = _serialize_list (priv->photosets);
+  else if (g_str_equal (name, "groups"))
+    json_node = _serialize_list (priv->groups);
+  else if (!g_str_equal (name, "pixbuf"))
+    {
+      /* Default serialization here (pixbufs excluded) */
+      JsonSerializableIface *iface = NULL;
+      iface = g_type_default_interface_peek (JSON_TYPE_SERIALIZABLE);
+      json_node = iface->serialize_property (serializable,
+                                             name,
+                                             value,
+                                             pspec);
+    }
+
+  return json_node; /* NULL indicates default deserializer */
+}
+
+static gboolean
+_deserialize_property (JsonSerializable *serializable,
+                       const gchar *name,
+                       GValue *value,
+                       GParamSpec *pspec,
+                       JsonNode *node)
+{
+  gboolean result = FALSE;
+
+  g_return_val_if_fail (node != NULL, FALSE);
+
+  if (g_str_equal (name, "photosets"))
+    result = _deserialize_list (FROGR_TYPE_PHOTOSET, node, value);
+  else if (g_str_equal (name, "groups"))
+    result = _deserialize_list (FROGR_TYPE_GROUP, node, value);
+  else if (!g_str_equal (name, "pixbuf"))
+    {
+      /* Default deserialization (photosets, groups and pixbufs excluded) */
+      JsonSerializableIface *iface = NULL;
+
+      iface = g_type_default_interface_peek (JSON_TYPE_SERIALIZABLE);
+      result = iface->deserialize_property (serializable,
+                                            name,
+                                            value,
+                                            pspec,
+                                            node);
+    }
+
+  return result;
+}
+
+static void
+json_serializable_init (JsonSerializableIface *iface)
+{
+  iface->serialize_property = _serialize_property;
+  iface->deserialize_property = _deserialize_property;
 }
 
 static void
@@ -508,7 +662,6 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                         "Location for this picture",
                                                         FROGR_TYPE_LOCATION,
                                                         G_PARAM_READWRITE));
-
   g_object_class_install_property (obj_class,
                                    PROP_SHOW_IN_SEARCH,
                                    g_param_spec_boolean ("show-in-search",
