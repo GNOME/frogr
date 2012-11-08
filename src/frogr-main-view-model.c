@@ -55,6 +55,7 @@ enum {
   PICTURE_ADDED,
   PICTURE_REMOVED,
   PICTURES_REORDERED,
+  MODEL_CHANGED,
   N_SIGNALS
 };
 
@@ -260,6 +261,14 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
                   g_cclosure_marshal_VOID__POINTER,
                   G_TYPE_NONE, 1, G_TYPE_POINTER);
 
+  signals[MODEL_CHANGED] =
+    g_signal_new ("model-changed",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
+
   g_type_class_add_private (obj_class, sizeof (FrogrMainViewModelPrivate));
 }
 
@@ -310,6 +319,7 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
 
   g_object_ref (picture);
   g_signal_emit (self, signals[PICTURE_ADDED], 0, picture);
+  g_signal_emit (self, signals[MODEL_CHANGED], 0);
 }
 
 void
@@ -328,6 +338,7 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
   g_object_unref (picture);
 
   g_signal_emit (self, signals[PICTURE_REMOVED], 0, picture);
+  g_signal_emit (self, signals[MODEL_CHANGED], 0);
 }
 
 guint
@@ -464,6 +475,8 @@ frogr_main_view_model_add_local_photoset (FrogrMainViewModel *self,
   /* When adding one by one we prepend always to keep the order */
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->local_sets = g_slist_prepend (priv->local_sets, g_object_ref (set));
+
+  g_signal_emit (self, signals[MODEL_CHANGED], 0);
 }
 
 GSList *
@@ -606,6 +619,7 @@ frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
                                                   const gchar *tags_string)
 {
   gchar *stripped_tags = NULL;
+  gboolean added_new_tags = FALSE;
 
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
@@ -628,7 +642,10 @@ frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
           /* add stripped tag if not already set*/
           tag = g_strstrip(g_strdup (tags_array[i]));
           if (!g_str_equal (tag, "") && !g_slist_find_custom (priv->local_tags, tag, (GCompareFunc)g_strcmp0))
-            priv->local_tags = g_slist_prepend (priv->local_tags, g_strdup (tag));
+            {
+              priv->local_tags = g_slist_prepend (priv->local_tags, g_strdup (tag));
+              added_new_tags = TRUE;
+            }
 
           g_free (tag);
         }
@@ -637,6 +654,9 @@ frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
       priv->local_tags = g_slist_sort (priv->local_tags, (GCompareFunc)g_strcmp0);
     }
   g_free (stripped_tags);
+
+  if (added_new_tags)
+    g_signal_emit (self, signals[MODEL_CHANGED], 0);
 }
 
 GSList *
