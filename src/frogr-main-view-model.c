@@ -140,7 +140,7 @@ _frogr_main_view_model_dispose (GObject* object)
       priv->pictures_list = NULL;
     }
 
-  if (priv->pictures_list)
+  if (priv->pictures_list_as_loaded)
     {
       g_slist_free (priv->pictures_list_as_loaded);
       priv->pictures_list_as_loaded = NULL;
@@ -307,6 +307,17 @@ frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->pictures_list;
+}
+
+GSList *
+frogr_main_view_model_get_pictures_as_loaded (FrogrMainViewModel *self)
+{
+  FrogrMainViewModelPrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  return priv->pictures_list_as_loaded;
 }
 
 void
