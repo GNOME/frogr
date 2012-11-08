@@ -32,7 +32,6 @@
 #include "frogr-file-loader.h"
 #include "frogr-global-defs.h"
 #include "frogr-main-view.h"
-#include "frogr-serializer.h"
 #include "frogr-settings-dialog.h"
 #include "frogr-util.h"
 
@@ -40,6 +39,7 @@
 #include <flicksoup/flicksoup.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <json-glib/json-glib.h>
 #include <string.h>
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
@@ -66,7 +66,6 @@ struct _FrogrControllerPrivate
 
   FrogrMainView *mainview;
   FrogrConfig *config;
-  FrogrSerializer *serializer;
   FrogrAccount *account;
 
   FspSession *session;
@@ -2002,12 +2001,6 @@ _frogr_controller_dispose (GObject* object)
       priv->config = NULL;
     }
 
-  if (priv->serializer)
-    {
-      g_object_unref (priv->serializer);
-      priv->serializer = NULL;
-    }
-
   if (priv->account)
     {
       g_object_unref (priv->account);
@@ -2075,9 +2068,6 @@ frogr_controller_init (FrogrController *self)
 
   priv->config = frogr_config_get_instance ();
   g_object_ref (priv->config);
-
-  priv->serializer = frogr_serializer_get_instance ();
-  g_object_ref (priv->serializer);
 
   priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
   priv->cancellable = NULL;
@@ -2739,22 +2729,31 @@ frogr_controller_save_session_to_file (FrogrController *self, const gchar *path)
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
-  GSList *pictures = NULL;
-  GSList *photosets = NULL;
-  GSList *groups = NULL;
+  JsonGenerator *json_gen = NULL;
+  JsonNode *serialized_model = NULL;
+  GError *error = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
-  pictures = frogr_main_view_model_get_pictures_as_loaded (mainview_model);
-  photosets = frogr_main_view_model_get_photosets (mainview_model);
-  groups = frogr_main_view_model_get_groups (mainview_model);
+  serialized_model = frogr_main_view_model_serialize (mainview_model);
 
-  frogr_serializer_save_session_to_file (priv->serializer,
-                                         pictures, photosets, groups,
-                                         path);
+  /* Create a JsonGenerator using the JsonNode as root */
+  json_gen = json_generator_new ();
+  json_generator_set_root (json_gen, serialized_model);
+  json_node_free (serialized_model);
+
+  /* Save to disk */
+  json_generator_to_file (json_gen, path, &error);
+  if (error)
+    {
+      DEBUG ("Error serializing current state to %s: %s",
+             path, error->message);
+      g_error_free (error);
+    }
+  g_object_unref (json_gen);
 }
 
 #ifdef GTK_API_VERSION_3

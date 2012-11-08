@@ -135,6 +135,32 @@ _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
   return g_strcmp0 (frogr_photoset_get_id (photoset1), frogr_photoset_get_id (photoset2));
 }
 
+static JsonArray *
+serialize_list_to_json_array (GSList *list, GType g_type)
+{
+  JsonArray *json_array = NULL;
+  JsonNode *json_node = NULL;
+  GSList *item = NULL;
+
+  /* Generate a JsonArray with contents */
+  json_array = json_array_new ();
+  for (item = list; item; item = g_slist_next (item))
+    {
+      if (g_type == G_TYPE_OBJECT)
+        json_node = json_gobject_serialize (G_OBJECT (item->data));
+      else if (g_type == G_TYPE_STRING)
+        {
+          json_node = json_node_new (JSON_NODE_VALUE);
+          json_node_set_string (json_node, (const gchar*)item->data);
+        }
+
+      if (json_node)
+        json_array_add_element (json_array, json_node);
+    }
+
+  return json_array;
+}
+
 static void
 _frogr_main_view_model_dispose (GObject* object)
 {
@@ -639,4 +665,44 @@ frogr_main_view_model_get_tags (FrogrMainViewModel *self)
   priv->all_tags = list;
 
   return priv->all_tags;
+}
+
+JsonNode *
+frogr_main_view_model_serialize (FrogrMainViewModel *self)
+{
+  JsonArray *json_array = NULL;
+  JsonNode *root_node = NULL;
+  JsonObject *root_object = NULL;
+  GSList *data_list = NULL;
+
+  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+
+  root_object = json_object_new ();
+
+  data_list = frogr_main_view_model_get_pictures (self);
+  json_array = serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
+  json_object_set_array_member (root_object, "pictures", json_array);
+
+  data_list = frogr_main_view_model_get_photosets (self);
+  json_array = serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
+  json_object_set_array_member (root_object, "photosets", json_array);
+
+  data_list = frogr_main_view_model_get_groups (self);
+  json_array = serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
+  json_object_set_array_member (root_object, "groups", json_array);
+
+  data_list = frogr_main_view_model_get_tags (self);
+  json_array = serialize_list_to_json_array (data_list, G_TYPE_STRING);
+  json_object_set_array_member (root_object, "tags", json_array);
+
+  root_node = json_node_new (JSON_NODE_OBJECT);
+  json_node_set_object (root_node, root_object);
+
+  return root_node;
+}
+
+void
+frogr_main_view_model_deserialize (FrogrMainViewModel *self, JsonNode *json_node)
+{
+  /* TODO */
 }

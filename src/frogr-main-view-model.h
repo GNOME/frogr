@@ -27,6 +27,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <json-glib/json-glib.h>
 
 G_BEGIN_DECLS
 
@@ -109,6 +110,12 @@ void frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
                                                        const gchar *tags_string);
 
 GSList *frogr_main_view_model_get_tags (FrogrMainViewModel *self);
+
+/* Serialization */
+
+JsonNode *frogr_main_view_model_serialize (FrogrMainViewModel *self);
+
+void frogr_main_view_model_deserialize (FrogrMainViewModel *self, JsonNode *json_node);
 
 G_END_DECLS
 

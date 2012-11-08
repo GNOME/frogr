@@ -81,8 +81,6 @@ frogr_SOURCES = \
 	frogr-photoset.h \
 	frogr-picture.c \
 	frogr-picture.h \
-	frogr-serializer.c \
-	frogr-serializer.h \
 	frogr-settings-dialog.c \
 	frogr-settings-dialog.h \
 	frogr-util.c \
