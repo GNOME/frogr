@@ -6,18 +6,18 @@
     <property name="stock_id">gtk-about</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="load_session_action">
-    <property name="label" translatable="yes">_Load Session…</property>
+  <object class="GtkAction" id="load_project_action">
+    <property name="label" translatable="yes">_Load Project…</property>
     <property name="stock_id">gtk-open</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="save_session_action">
-    <property name="label" translatable="yes">_Save Session</property>
+  <object class="GtkAction" id="save_project_action">
+    <property name="label" translatable="yes">_Save Project</property>
     <property name="stock_id">gtk-save</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="save_session_as_action">
-    <property name="label" translatable="yes">_Save Session As…</property>
+  <object class="GtkAction" id="save_project_as_action">
+    <property name="label" translatable="yes">_Save Project As…</property>
     <property name="stock_id">gtk-save-as</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
@@ -307,28 +307,28 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkImageMenuItem" id="load_session_menu_item">
+              <object class="GtkImageMenuItem" id="load_project_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">load_session_action</property>
+                <property name="related_action">load_project_action</property>
                 <property name="use_underline">True</property>
                 <property name="use_stock">True</property>
               </object>
             </child>
             <child>
-              <object class="GtkImageMenuItem" id="save_session_menu_item">
+              <object class="GtkImageMenuItem" id="save_project_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">save_session_action</property>
+                <property name="related_action">save_project_action</property>
                 <property name="use_underline">True</property>
                 <property name="use_stock">True</property>
               </object>
             </child>
             <child>
-              <object class="GtkImageMenuItem" id="save_session_as_menu_item">
+              <object class="GtkImageMenuItem" id="save_project_as_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">save_session_as_action</property>
+                <property name="related_action">save_project_as_action</property>
                 <property name="use_underline">True</property>
                 <property name="use_stock">True</property>
               </object>

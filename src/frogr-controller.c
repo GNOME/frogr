@@ -2725,7 +2725,7 @@ frogr_controller_cancel_ongoing_request (FrogrController *self)
 }
 
 void
-frogr_controller_save_session_to_file (FrogrController *self, const gchar *path)
+frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;

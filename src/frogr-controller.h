@@ -123,7 +123,7 @@ void frogr_controller_reorder_pictures (FrogrController *self);
 
 void frogr_controller_cancel_ongoing_request (FrogrController *self);
 
-void frogr_controller_save_session_to_file (FrogrController *self, const gchar *path);
+void frogr_controller_save_project_to_file (FrogrController *self, const gchar *path);
 
 #ifdef GTK_API_VERSION_3
 void frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value);
