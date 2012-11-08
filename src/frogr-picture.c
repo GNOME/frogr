@@ -99,6 +99,9 @@ static void _add_tags_to_tags_list (FrogrPicture *self,
                                     const gchar *tags_string);
 static void _update_tags_string (FrogrPicture *self);
 
+static gint _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2);
+static gint _compare_groups (FrogrGroup *group1, FrogrGroup *group2);
+
 static JsonNode *_serialize_list (GSList *objects_list);
 static gboolean _deserialize_list (GType g_type, JsonNode *node, GValue *value);
 static gboolean _free_deserialized_object_list_on_idle (GSList *list);
@@ -203,6 +206,60 @@ _update_tags_string (FrogrPicture *self)
       /* Store final result */
       priv->tags_string = new_str;
     }
+}
+
+static gint
+_compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
+{
+  const gchar *id1 = NULL;
+  const gchar *id2 = NULL;
+  const gchar *title1 = NULL;
+  const gchar *title2 = NULL;
+
+  g_return_val_if_fail (FROGR_IS_PHOTOSET (photoset1), 1);
+  g_return_val_if_fail (FROGR_IS_PHOTOSET (photoset2), -1);
+
+  if (photoset1 == photoset2)
+    return 0;
+
+  id1 = frogr_photoset_get_id (photoset1);
+  id2 = frogr_photoset_get_id (photoset2);
+
+  if (id1 != NULL && id2 != NULL)
+    return g_strcmp0 (id1, id2);
+
+  title1 = frogr_photoset_get_title (photoset1);
+  if (title1 == NULL)
+    return 1;
+
+  title2 = frogr_photoset_get_title (photoset2);
+  if (title2 == NULL)
+    return -1;
+
+  return g_utf8_collate (title1, title2);
+}
+
+static gint
+_compare_groups (FrogrGroup *group1, FrogrGroup *group2)
+{
+  const gchar *id1 = NULL;
+  const gchar *id2 = NULL;
+
+  g_return_val_if_fail (FROGR_IS_GROUP (group1), 1);
+  g_return_val_if_fail (FROGR_IS_GROUP (group2), -1);
+
+  if (group1 == group2)
+    return 0;
+
+  id1 = frogr_group_get_id (group1);
+  if (id1 != NULL)
+    return 1;
+
+  id2 = frogr_group_get_id (group2);
+  if (id2 != NULL)
+    return -1;
+
+  return g_strcmp0 (id1, id2);
 }
 
 static JsonNode *
@@ -1260,7 +1317,8 @@ frogr_picture_in_photoset (FrogrPicture *self, FrogrPhotoSet *photoset)
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
-  if (g_slist_index (priv->photosets, photoset) != -1)
+  if (g_slist_find_custom (priv->photosets, photoset,
+                           (GCompareFunc)_compare_photosets))
     return TRUE;
 
   return FALSE;
@@ -1310,7 +1368,8 @@ frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group)
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
-  if (g_slist_index (priv->groups, group) != -1)
+  if (g_slist_find_custom (priv->groups, group,
+                           (GCompareFunc)_compare_groups))
     return TRUE;
 
   return FALSE;
