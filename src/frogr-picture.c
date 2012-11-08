@@ -89,8 +89,7 @@ enum  {
   PROP_FILESIZE,
   PROP_DATETIME,
   PROP_PHOTOSETS,
-  PROP_GROUPS,
-  PROP_PIXBUF
+  PROP_GROUPS
 };
 
 /* Prototypes */
@@ -289,9 +288,9 @@ _serialize_property (JsonSerializable *serializable,
     json_node = _serialize_list (priv->photosets);
   else if (g_str_equal (name, "groups"))
     json_node = _serialize_list (priv->groups);
-  else if (!g_str_equal (name, "pixbuf"))
+  else
     {
-      /* Default serialization here (pixbufs excluded) */
+      /* Default serialization here */
       JsonSerializableIface *iface = NULL;
       iface = g_type_default_interface_peek (JSON_TYPE_SERIALIZABLE);
       json_node = iface->serialize_property (serializable,
@@ -318,9 +317,9 @@ _deserialize_property (JsonSerializable *serializable,
     result = _deserialize_list (FROGR_TYPE_PHOTOSET, node, value);
   else if (g_str_equal (name, "groups"))
     result = _deserialize_list (FROGR_TYPE_GROUP, node, value);
-  else if (!g_str_equal (name, "pixbuf"))
+  else
     {
-      /* Default deserialization (photosets, groups and pixbufs excluded) */
+      /* Default deserialization */
       JsonSerializableIface *iface = NULL;
 
       iface = g_type_default_interface_peek (JSON_TYPE_SERIALIZABLE);
@@ -409,9 +408,6 @@ _frogr_picture_set_property (GObject *object,
     case PROP_GROUPS:
       frogr_picture_set_groups (self, (GSList *) g_value_get_pointer (value));
       break;
-    case PROP_PIXBUF:
-      frogr_picture_set_pixbuf (self, GDK_PIXBUF (g_value_get_object (value)));
-      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -484,9 +480,6 @@ _frogr_picture_get_property (GObject *object,
       break;
     case PROP_GROUPS:
       g_value_set_pointer (value, priv->groups);
-      break;
-    case PROP_PIXBUF:
-      g_value_set_object (value, priv->pixbuf);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -714,14 +707,6 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                          "groups",
                                                          "List of groups the picture is in",
                                                          G_PARAM_READWRITE));
-  g_object_class_install_property (obj_class,
-                                   PROP_PIXBUF,
-                                   g_param_spec_object ("pixbuf",
-                                                        "pixbuf",
-                                                        "Pre-loaded GdkPixbuf "
-                                                        "for this picture",
-                                                        GDK_TYPE_PIXBUF,
-                                                        G_PARAM_READWRITE));
 
   g_type_class_add_private (obj_class, sizeof (FrogrPicturePrivate));
 }
