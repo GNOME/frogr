@@ -73,6 +73,8 @@ typedef struct _FrogrMainViewPrivate {
   gint n_selected_pictures;
 
   GtkWindow *window;
+  gchar *project_name;
+  gchar *project_filepath;
 
   GtkWidget *icon_view;
   GtkWidget *status_bar;
@@ -94,6 +96,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkBuilder *builder;
 
+  GtkAction *save_session_action;
   GtkAction *save_session_as_action;
   GtkAction *load_pictures_action;
   GtkAction *remove_pictures_action;
@@ -126,6 +129,9 @@ enum {
 };
 
 /* Prototypes */
+
+static void _update_project_path (FrogrMainView *self, const gchar *path);
+static void _update_window_title (FrogrMainView *self);
 
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
@@ -172,9 +178,13 @@ static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_pictures (FrogrMainView *self);
 static void _open_pictures_in_external_viewer (FrogrMainView *self);
 
+static void _save_current_session (FrogrMainView *self);
+
+static void _save_session_to_file (FrogrMainView *self, const gchar *filepath);
+
 static void _save_session_as_dialog_response_cb (GtkDialog *dialog,
-                                              gint response,
-                                              gpointer data);
+                                                 gint response,
+                                                 gpointer data);
 
 static void _save_session_as_dialog (FrogrMainView *self);
 
@@ -239,6 +249,61 @@ static void _update_ui (FrogrMainView *self);
 
 
 /* Private API */
+
+static void
+_update_project_path (FrogrMainView *self, const gchar *path)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Early return if nothing changed */
+  if (!g_strcmp0 (priv->project_filepath, path))
+      return;
+
+  g_free (priv->project_name);
+  g_free (priv->project_filepath);
+
+  if (!path)
+    {
+      priv->project_name = NULL;
+      priv->project_filepath = NULL;
+    }
+  else
+    {
+      GFile *file = NULL;
+      GFileInfo *file_info;
+
+      file = g_file_new_for_path (path);
+      file_info = g_file_query_info (file,
+                                     G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+                                     G_FILE_QUERY_INFO_NONE,
+                                     NULL,
+                                     NULL);
+
+      priv->project_name = g_strdup (g_file_info_get_display_name (file_info));
+      priv->project_filepath = g_strdup (path);
+    }
+
+  _update_window_title (self);
+}
+
+static void
+_update_window_title (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  gchar *session_string = NULL;
+  gchar *window_title = NULL;
+
+  session_string = priv->project_name
+    ? g_strdup_printf ("%s - ", priv->project_name)
+    : g_strdup("");
+
+  window_title = g_strdup_printf ("%s%s", session_string, APP_SHORTNAME);
+  g_free (session_string);
+
+  gtk_window_set_title (GTK_WINDOW (priv->window), window_title);
+  g_free (window_title);
+}
 
 static gboolean
 _maybe_show_auth_dialog_on_idle (FrogrMainView *self)
@@ -493,7 +558,9 @@ _on_action_activated (GtkAction *action, gpointer data)
   FrogrMainViewPrivate *priv = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  if (action == priv->save_session_as_action)
+  if (action == priv->save_session_action)
+    _save_current_session (mainview);
+  else if (action == priv->save_session_as_action)
     _save_session_as_dialog (mainview);
   else if (action == priv->load_pictures_action)
     _load_pictures_dialog (mainview);
@@ -863,21 +930,43 @@ _n_pictures (FrogrMainView *self)
 }
 
 static void
+_save_current_session (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  if (priv->project_filepath)
+    _save_session_to_file (self, priv->project_filepath);
+  else
+    _save_session_as_dialog (self);
+}
+
+static void
+_save_session_to_file (FrogrMainView *self, const gchar *filepath)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  GFile *file = NULL;
+
+  /* Add selected pictures to icon view area */
+  file = g_file_new_for_path (filepath);
+  frogr_controller_save_session_to_file (priv->controller, filepath);
+  _update_project_path (self, filepath);
+
+  g_object_unref (file);
+}
+
+static void
 _save_session_as_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
 
   if (response == GTK_RESPONSE_ACCEPT)
-    { 
+    {
       gchar *filename = NULL;
 
-      /* Add selected pictures to icon view area */
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
       if (filename != NULL)
-        {
-          FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-          frogr_controller_save_session_to_file (priv->controller, filename);
-        }
+        _save_session_to_file (self, filename);
+
       g_free (filename);
     }
 
@@ -897,7 +986,7 @@ _save_session_as_dialog (FrogrMainView *self)
                                         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
                                         NULL);
 
-  gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled.frogr"));
+  gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled Project"));
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
   gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
 
@@ -1486,6 +1575,7 @@ _update_sensitiveness (FrogrMainView *self)
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
+      gtk_action_set_sensitive (priv->save_session_action, FALSE);
       gtk_action_set_sensitive (priv->save_session_as_action, FALSE);
       gtk_action_set_sensitive (priv->load_pictures_action, FALSE);
       gtk_action_set_sensitive (priv->remove_pictures_action, FALSE);
@@ -1506,6 +1596,7 @@ _update_sensitiveness (FrogrMainView *self)
       has_accounts = (priv->accounts_menu != NULL);
       n_selected_pics = priv->n_selected_pictures;
 
+      gtk_action_set_sensitive (priv->save_session_action, TRUE);
       gtk_action_set_sensitive (priv->save_session_as_action, TRUE);
       gtk_action_set_sensitive (priv->load_pictures_action, TRUE);
       gtk_action_set_sensitive (priv->auth_action, TRUE);
@@ -1583,8 +1674,10 @@ _frogr_main_view_finalize (GObject *object)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
 
-  gtk_widget_destroy (GTK_WIDGET (priv->window));
+  g_free (priv->project_name);
+  g_free (priv->project_filepath);
   g_free (priv->state_description);
+  gtk_widget_destroy (GTK_WIDGET (priv->window));
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
 }
@@ -1668,7 +1761,6 @@ frogr_main_view_init (FrogrMainView *self)
   g_free (full_path);
 
   window = GTK_WINDOW(gtk_builder_get_object (builder, "main_window"));
-  gtk_window_set_title (GTK_WINDOW (window), _(APP_NAME));
   priv->window = window;
 
   priv->menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
@@ -1693,6 +1785,8 @@ frogr_main_view_init (FrogrMainView *self)
   priv->status_bar = status_bar;
 
   /* Get actions from GtkBuilder */
+  priv->save_session_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "save_session_action"));
   priv->save_session_as_action =
     GTK_ACTION (gtk_builder_get_object (builder, "save_session_as_action"));
   priv->load_pictures_action =
@@ -1747,6 +1841,9 @@ frogr_main_view_init (FrogrMainView *self)
 
   /* Init main model's state description */
   _update_state_description (self);
+
+  /* Init the details of the current project */
+  _update_project_path (self, NULL);
 
   /* Initialize sorting criteria and reverse */
   priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
