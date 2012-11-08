@@ -213,8 +213,8 @@ _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
 {
   const gchar *id1 = NULL;
   const gchar *id2 = NULL;
-  const gchar *title1 = NULL;
-  const gchar *title2 = NULL;
+  const gchar *local_id1 = NULL;
+  const gchar *local_id2 = NULL;
 
   g_return_val_if_fail (FROGR_IS_PHOTOSET (photoset1), 1);
   g_return_val_if_fail (FROGR_IS_PHOTOSET (photoset2), -1);
@@ -224,19 +224,18 @@ _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
 
   id1 = frogr_photoset_get_id (photoset1);
   id2 = frogr_photoset_get_id (photoset2);
-
   if (id1 != NULL && id2 != NULL)
     return g_strcmp0 (id1, id2);
 
-  title1 = frogr_photoset_get_title (photoset1);
-  if (title1 == NULL)
+  local_id1 = frogr_photoset_get_local_id (photoset1);
+  local_id2 = frogr_photoset_get_local_id (photoset2);
+  if (local_id1 != NULL && local_id2 != NULL)
+    return g_strcmp0 (local_id1, local_id2);
+
+  if (id1 != NULL)
     return 1;
-
-  title2 = frogr_photoset_get_title (photoset2);
-  if (title2 == NULL)
+  else
     return -1;
-
-  return g_utf8_collate (title1, title2);
 }
 
 static gint
@@ -252,14 +251,14 @@ _compare_groups (FrogrGroup *group1, FrogrGroup *group2)
     return 0;
 
   id1 = frogr_group_get_id (group1);
+  id2 = frogr_group_get_id (group2);
+  if (id1 != NULL && id2 != NULL)
+    return g_strcmp0 (id1, id2);
+
   if (id1 != NULL)
     return 1;
-
-  id2 = frogr_group_get_id (group2);
-  if (id2 != NULL)
+  else
     return -1;
-
-  return g_strcmp0 (id1, id2);
 }
 
 static JsonNode *
