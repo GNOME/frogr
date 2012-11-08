@@ -131,7 +131,7 @@ enum {
 /* Prototypes */
 
 static void _update_project_path (FrogrMainView *self, const gchar *path);
-static void _update_window_title (FrogrMainView *self);
+static void _update_window_title (FrogrMainView *self, gboolean dirty);
 
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
@@ -237,6 +237,8 @@ static void _model_pictures_reordered (FrogrController *controller,
                                        gpointer new_order,
                                        gpointer data);
 
+static void _model_changed (FrogrController *controller, gpointer data);
+
 static void _update_account_menu_items (FrogrMainView *mainview);
 
 static void _update_state_description (FrogrMainView *mainview);
@@ -282,12 +284,10 @@ _update_project_path (FrogrMainView *self, const gchar *path)
       priv->project_name = g_strdup (g_file_info_get_display_name (file_info));
       priv->project_filepath = g_strdup (path);
     }
-
-  _update_window_title (self);
 }
 
 static void
-_update_window_title (FrogrMainView *self)
+_update_window_title (FrogrMainView *self, gboolean dirty)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
@@ -295,7 +295,7 @@ _update_window_title (FrogrMainView *self)
   gchar *window_title = NULL;
 
   session_string = priv->project_name
-    ? g_strdup_printf ("%s - ", priv->project_name)
+    ? g_strdup_printf ("%s%s - ", (dirty ? "*" : ""), priv->project_name)
     : g_strdup("");
 
   window_title = g_strdup_printf ("%s%s", session_string, APP_SHORTNAME);
@@ -400,10 +400,6 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_a,
                              GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "preferences_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_p,
-                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_F1,
@@ -946,10 +942,13 @@ _save_project_to_file (FrogrMainView *self, const gchar *filepath)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GFile *file = NULL;
 
-  /* Add selected pictures to icon view area */
+  /* Save to disk and update project's path */
   file = g_file_new_for_path (filepath);
   frogr_controller_save_project_to_file (priv->controller, filepath);
   _update_project_path (self, filepath);
+
+  /* Update title marking it as non-dirty again */
+  _update_window_title (self, FALSE);
 
   g_object_unref (file);
 }
@@ -1407,13 +1406,17 @@ _model_pictures_reordered (FrogrController *controller,
                            gpointer new_order,
                            gpointer data)
 {
-  FrogrMainView *self = NULL;
   FrogrMainViewPrivate *priv = NULL;
 
-  self = FROGR_MAIN_VIEW (data);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (FROGR_MAIN_VIEW (data));
   gtk_list_store_reorder (GTK_LIST_STORE (priv->tree_model), new_order);
+}
+
+static void
+_model_changed (FrogrController *controller, gpointer data)
+{
+  /* Reflect that the current state is 'dirty' in the title */
+  _update_window_title (FROGR_MAIN_VIEW (data), TRUE);
 }
 
 static void
@@ -1990,6 +1993,9 @@ frogr_main_view_init (FrogrMainView *self)
   g_signal_connect (G_OBJECT (priv->model), "pictures-reordered",
                     G_CALLBACK (_model_pictures_reordered), self);
 
+  g_signal_connect (G_OBJECT (priv->model), "model-changed",
+                    G_CALLBACK (_model_changed), self);
+
   gtk_builder_connect_signals (builder, self);
 
   /* Show the UI */
@@ -1998,6 +2004,9 @@ frogr_main_view_init (FrogrMainView *self)
 #ifdef MAC_INTEGRATION
   _tweak_menu_bar_for_mac (self);
 #endif
+
+  /* Update window title */
+  _update_window_title (self, FALSE);
 
   /* Update UI */
   _update_ui (FROGR_MAIN_VIEW (self));
