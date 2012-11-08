@@ -949,9 +949,12 @@ _save_data (FrogrDetailsDialog *self)
   /* validate dialog */
   if (_validate_dialog_data (self))
     {
+      FrogrMainViewModel *model = NULL;
       FrogrPicture *picture;
       GSList *item;
       guint n_pictures;
+
+      model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
 
       /* Iterate over the rest of elements */
       n_pictures = g_slist_length (priv->pictures);
@@ -998,11 +1001,10 @@ _save_data (FrogrDetailsDialog *self)
 
       /* Add tags to the model */
       if (!g_str_equal (tags, ""))
-        {
-          FrogrMainViewModel *model = NULL;
-          model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
-          frogr_main_view_model_add_local_tags_from_string (model, tags);
-        }
+        frogr_main_view_model_add_local_tags_from_string (model, tags);
+
+      /* Notify the model that pictures details have probably changed */
+      frogr_main_view_model_notify_changes_in_pictures (model);
     }
   else
     {

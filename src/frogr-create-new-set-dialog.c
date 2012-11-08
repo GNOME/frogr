@@ -23,7 +23,6 @@
 #include "frogr-photoset.h"
 #include "frogr-controller.h"
 #include "frogr-main-view-model.h"
-#include "frogr-main-view.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
 
@@ -198,6 +197,7 @@ _update_model (FrogrCreateNewSetDialog *self,
         }
     }
 
+  frogr_main_view_model_notify_changes_in_pictures (mainview_model);
 }
 
 static void

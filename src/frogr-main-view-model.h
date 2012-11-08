@@ -70,6 +70,9 @@ GSList *frogr_main_view_model_get_pictures (FrogrMainViewModel *self);
 void frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
                                              const gchar *property_name,
                                              gboolean reversed);
+
+void frogr_main_view_model_notify_changes_in_pictures (FrogrMainViewModel *self);
+
 /* Photosets */
 
 void frogr_main_view_model_set_remote_photosets (FrogrMainViewModel *self,

@@ -420,6 +420,13 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
 }
 
 void
+frogr_main_view_model_notify_changes_in_pictures (FrogrMainViewModel *self)
+{
+  /* Just emit the signal so the main view gets notified too */
+  g_signal_emit (self, signals[MODEL_CHANGED], 0);
+}
+
+void
 frogr_main_view_model_set_remote_photosets (FrogrMainViewModel *self,
                                             GSList *remote_sets)
 {
