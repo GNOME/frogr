@@ -68,9 +68,9 @@ static gboolean _validate_dialog_data (FrogrCreateNewSetDialog *self);
 
 static gboolean _save_data (FrogrCreateNewSetDialog *self);
 
-static gboolean _update_model (FrogrCreateNewSetDialog *self,
-                               const gchar *title,
-                               const gchar *description);
+static void _update_model (FrogrCreateNewSetDialog *self,
+                           const gchar *title,
+                           const gchar *description);
 
 static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data);
 
@@ -149,9 +149,10 @@ _save_data (FrogrCreateNewSetDialog *self)
                                           &start, &end, FALSE);
   description = g_strstrip (description);
 
-  /* validate dialog */
-  if (_validate_dialog_data (self))
-    result = _update_model (self, title, description);
+  /* validate and update */
+  result = _validate_dialog_data (self);
+  if (result)
+    _update_model (self, title, description);
   else
     frogr_util_show_error_dialog (GTK_WINDOW (self), _("Missing data required"));
 
@@ -163,7 +164,7 @@ _save_data (FrogrCreateNewSetDialog *self)
   return result;
 }
 
-static gboolean
+static void
 _update_model (FrogrCreateNewSetDialog *self,
                const gchar *title,
                const gchar *description)
@@ -174,7 +175,6 @@ _update_model (FrogrCreateNewSetDialog *self,
   FrogrPhotoSet *new_set = NULL;
   FrogrPicture *picture = NULL;
   GSList *item = NULL;
-  gboolean result = FALSE;
 
   priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   controller = frogr_controller_get_instance ();
@@ -196,11 +196,8 @@ _update_model (FrogrCreateNewSetDialog *self,
           frogr_picture_set_title (picture, title);
           frogr_picture_set_description (picture, description);
         }
-
-      result = TRUE;
     }
 
-  return result;
 }
 
 static void
