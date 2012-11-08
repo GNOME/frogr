@@ -137,7 +137,8 @@ frogr_serializer_save_current_session (FrogrSerializer *self, GSList *pictures)
   JsonGenerator *json_gen = NULL;
   JsonArray *json_array = NULL;
   JsonNode *json_node = NULL;
-  JsonNode *array_node = NULL;
+  JsonNode *root_node = NULL;
+  JsonObject *root_object = NULL;
   GSList *item = NULL;
   gchar *session_path = NULL;
   GError *error = NULL;
@@ -153,14 +154,16 @@ frogr_serializer_save_current_session (FrogrSerializer *self, GSList *pictures)
         json_array_add_element (json_array, json_node);
     }
 
-  /* Generate a JsonNode from the JsonArray */
-  array_node = json_node_new(JSON_NODE_ARRAY);
-  json_node_set_array (array_node, json_array);
+  /* Generate the root JsonNode */
+  root_object = json_object_new ();
+  json_object_set_array_member (root_object, "pictures", json_array);
+  root_node = json_node_new (JSON_NODE_OBJECT);
+  json_node_set_object (root_node, root_object);
 
   /* Create a JsonGenerator using the JsonNode as root */
   json_gen = json_generator_new ();
-  json_generator_set_root (json_gen, array_node);
-  json_node_free (array_node);
+  json_generator_set_root (json_gen, root_node);
+  json_node_free (root_node);
 
   /* Save to disk */
   priv = FROGR_SERIALIZER_GET_PRIVATE (self);
