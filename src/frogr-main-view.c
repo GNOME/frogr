@@ -169,8 +169,6 @@ static void _on_icon_view_selection_changed (GtkWidget *icon_view,
 
 static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_pictures (FrogrMainView *self);
-static void _add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture);
-static void _remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture);
 static void _open_pictures_in_external_viewer (FrogrMainView *self);
 
 static void _load_pictures_dialog_response_cb (GtkDialog *dialog,
@@ -843,71 +841,6 @@ _n_pictures (FrogrMainView *self)
 }
 
 static void
-_add_picture_to_ui (FrogrMainView *self, FrogrPicture *picture)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GdkPixbuf *pixbuf = NULL;
-  const gchar *fileuri = NULL;
-  GtkTreeIter iter;
-
-  /* Add to GtkIconView */
-  fileuri = frogr_picture_get_fileuri (picture);
-  pixbuf = frogr_picture_get_pixbuf (picture);
-
-  gtk_list_store_append (GTK_LIST_STORE (priv->tree_model), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (priv->tree_model), &iter,
-                      FILEURI_COL, fileuri,
-                      PIXBUF_COL, pixbuf,
-                      FPICTURE_COL, picture,
-                      -1);
-
-  /* Reorder if needed */
-  if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
-    frogr_main_view_reorder_pictures (self);
-
-  /* Update upload size in state description */
-  _update_state_description (self);
-}
-
-static void
-_remove_picture_from_ui (FrogrMainView *self, FrogrPicture *picture)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  GtkTreeModel *tree_model = NULL;
-  GtkTreeIter iter;
-
-  /* Check items in the icon_view */
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  tree_model = gtk_icon_view_get_model (GTK_ICON_VIEW (priv->icon_view));
-  if (gtk_tree_model_get_iter_first (tree_model, &iter))
-    {
-      /* Look for the picture and remove it */
-      do
-        {
-          FrogrPicture *picture_from_ui;
-
-          /* Get needed information */
-          gtk_tree_model_get (priv->tree_model,
-                              &iter,
-                              FPICTURE_COL, &picture_from_ui,
-                              -1);
-
-          if (picture_from_ui == picture)
-            {
-              /* Remove from the GtkIconView and break loop */
-              gtk_list_store_remove (GTK_LIST_STORE (priv->tree_model), &iter);
-              break;
-            }
-        }
-      while (gtk_tree_model_iter_next (tree_model, &iter));
-    }
-
-  /* Update upload size in state description */
-  _update_state_description (self);
-}
-
-static void
 _load_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
@@ -1245,8 +1178,32 @@ _model_picture_added (FrogrController *controller,
                       FrogrPicture *picture,
                       gpointer data)
 {
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _add_picture_to_ui (mainview, picture);
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  GdkPixbuf *pixbuf = NULL;
+  const gchar *fileuri = NULL;
+  GtkTreeIter iter;
+
+  /* Add to GtkIconView */
+  fileuri = frogr_picture_get_fileuri (picture);
+  pixbuf = frogr_picture_get_pixbuf (picture);
+
+  gtk_list_store_append (GTK_LIST_STORE (priv->tree_model), &iter);
+  gtk_list_store_set (GTK_LIST_STORE (priv->tree_model), &iter,
+                      FILEURI_COL, fileuri,
+                      PIXBUF_COL, pixbuf,
+                      FPICTURE_COL, picture,
+                      -1);
+
+  /* Reorder if needed */
+  if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
+    frogr_main_view_reorder_pictures (self);
+
+  /* Update upload size in state description */
+  _update_state_description (self);
+
+  /* Make sure the session file is removed */
+  frogr_controller_save_current_session (priv->controller);
 }
 
 static void
@@ -1254,8 +1211,43 @@ _model_picture_removed (FrogrController *controller,
                         FrogrPicture *picture,
                         gpointer data)
 {
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _remove_picture_from_ui (mainview, picture);
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+  FrogrMainViewPrivate *priv = NULL;
+  GtkTreeModel *tree_model = NULL;
+  GtkTreeIter iter;
+
+  /* Check items in the icon_view */
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  tree_model = gtk_icon_view_get_model (GTK_ICON_VIEW (priv->icon_view));
+  if (gtk_tree_model_get_iter_first (tree_model, &iter))
+    {
+      /* Look for the picture and remove it */
+      do
+        {
+          FrogrPicture *picture_from_ui;
+
+          /* Get needed information */
+          gtk_tree_model_get (priv->tree_model,
+                              &iter,
+                              FPICTURE_COL, &picture_from_ui,
+                              -1);
+
+          if (picture_from_ui == picture)
+            {
+              /* Remove from the GtkIconView and break loop */
+              gtk_list_store_remove (GTK_LIST_STORE (priv->tree_model), &iter);
+              break;
+            }
+        }
+      while (gtk_tree_model_iter_next (tree_model, &iter));
+    }
+
+  /* Update upload size in state description */
+  _update_state_description (self);
+
+  /* Make sure the session file is removed */
+  frogr_controller_save_current_session (priv->controller);
 }
 
 static void
@@ -1270,6 +1262,9 @@ _model_pictures_reordered (FrogrController *controller,
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   gtk_list_store_reorder (GTK_LIST_STORE (priv->tree_model), new_order);
+
+  /* Make sure the session file is updated */
+  frogr_controller_save_current_session (priv->controller);
 }
 
 static void
