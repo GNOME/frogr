@@ -184,7 +184,7 @@ _update_model (FrogrCreateNewSetDialog *self,
 
   /* Add the set to the model */
   new_set = frogr_photoset_new (title, description);
-  frogr_main_view_model_add_photoset (mainview_model, new_set);
+  frogr_main_view_model_add_local_photoset (mainview_model, new_set);
 
   /* Add the set to the list of sets for each picture */
   for (item = priv->pictures; item; item = g_slist_next (item))

@@ -1446,7 +1446,7 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   /* Update main view's model */
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  frogr_main_view_model_set_photosets (mainview_model, sets_list);
+  frogr_main_view_model_set_remote_photosets (mainview_model, sets_list);
 
   priv->fetching_photosets = FALSE;
 }
