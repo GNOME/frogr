@@ -313,6 +313,18 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
   accel = gtk_accel_group_new();
   gtk_window_add_accel_group(priv->window, accel);
 
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_session_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_o,
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "save_session_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
+                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
+
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "save_session_as_menu_item"));
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
+                             GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_a,
                              GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
@@ -346,11 +358,11 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
                              GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "add_to_existing_set_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_p,
                              GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "create_new_set_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
+  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_p,
                              GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "open_in_external_viewer_menu_item"));
