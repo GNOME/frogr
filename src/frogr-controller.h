@@ -124,7 +124,7 @@ void frogr_controller_upload_pictures (FrogrController *self);
 
 void frogr_controller_reorder_pictures (FrogrController *self);
 
-void frogr_controller_cancel_ongoing_request (FrogrController *self);
+void frogr_controller_cancel_ongoing_requests (FrogrController *self);
 
 void frogr_controller_save_project_to_file (FrogrController *self, const gchar *path);
 

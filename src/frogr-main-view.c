@@ -1302,7 +1302,7 @@ _progress_dialog_response (GtkDialog *dialog,
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  frogr_controller_cancel_ongoing_request (priv->controller);
+  frogr_controller_cancel_ongoing_requests (priv->controller);
   gtk_widget_hide (priv->progress_dialog);
 }
 
@@ -1314,7 +1314,7 @@ _progress_dialog_delete_event (GtkWidget *widget,
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  frogr_controller_cancel_ongoing_request (priv->controller);
+  frogr_controller_cancel_ongoing_requests (priv->controller);
   gtk_widget_hide (priv->progress_dialog);
 
   return TRUE;

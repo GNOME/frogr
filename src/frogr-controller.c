@@ -594,7 +594,7 @@ _cancel_authorization_on_timeout (gpointer data)
     {
       GtkWindow *window = NULL;
 
-      frogr_controller_cancel_ongoing_request (self);
+      frogr_controller_cancel_ongoing_requests (self);
       frogr_main_view_hide_progress (priv->mainview);
 
       window = frogr_main_view_get_window (priv->mainview);
@@ -2722,7 +2722,7 @@ frogr_controller_reorder_pictures (FrogrController *self)
 }
 
 void
-frogr_controller_cancel_ongoing_request (FrogrController *self)
+frogr_controller_cancel_ongoing_requests (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
 
