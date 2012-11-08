@@ -847,13 +847,13 @@ _perform_after_upload_operations (FrogrController *controller, UploadOnePictureD
       _set_location_for_picture (controller, uop_data);
     }
 
-  if (g_slist_length (frogr_picture_get_photosets (uop_data->picture)) > 0)
+  if (frogr_picture_get_photosets (uop_data->picture))
     {
       uop_data->photosets = frogr_picture_get_photosets (uop_data->picture);
       _add_picture_to_photosets_or_create (controller, uop_data);
     }
 
-  if (g_slist_length (frogr_picture_get_groups (uop_data->picture)) > 0)
+  if (frogr_picture_get_groups (uop_data->picture))
     {
       uop_data->groups = frogr_picture_get_groups (uop_data->picture);
       _add_picture_to_groups (controller, uop_data);
