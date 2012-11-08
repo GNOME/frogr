@@ -130,33 +130,52 @@ frogr_serializer_get_instance (void)
   return FROGR_SERIALIZER (g_object_new (FROGR_TYPE_SERIALIZER, NULL));
 }
 
-void
-frogr_serializer_save_current_session (FrogrSerializer *self, GSList *pictures)
+static JsonArray *
+serialize_list_to_json_array (GSList *list)
 {
-  FrogrSerializerPrivate *priv = NULL;
-  JsonGenerator *json_gen = NULL;
   JsonArray *json_array = NULL;
   JsonNode *json_node = NULL;
-  JsonNode *root_node = NULL;
-  JsonObject *root_object = NULL;
   GSList *item = NULL;
-  gchar *session_path = NULL;
-  GError *error = NULL;
-
-  g_return_if_fail(FROGR_IS_SERIALIZER (self));
 
   /* Generate a JsonArray with contents */
   json_array = json_array_new ();
-  for (item = pictures; item; item = g_slist_next (item))
+  for (item = list; item; item = g_slist_next (item))
     {
       json_node = json_gobject_serialize (G_OBJECT (item->data));
       if (json_node)
         json_array_add_element (json_array, json_node);
     }
 
-  /* Generate the root JsonNode */
+  return json_array;
+}
+
+void
+frogr_serializer_save_current_session (FrogrSerializer *self,
+                                       GSList *pictures,
+                                       GSList *photosets,
+                                       GSList *groups)
+{
+  FrogrSerializerPrivate *priv = NULL;
+  JsonGenerator *json_gen = NULL;
+  JsonArray *json_array = NULL;
+  JsonNode *root_node = NULL;
+  JsonObject *root_object = NULL;
+  gchar *session_path = NULL;
+  GError *error = NULL;
+
+  g_return_if_fail(FROGR_IS_SERIALIZER (self));
+
   root_object = json_object_new ();
+
+  json_array = serialize_list_to_json_array (pictures);
   json_object_set_array_member (root_object, "pictures", json_array);
+
+  json_array = serialize_list_to_json_array (photosets);
+  json_object_set_array_member (root_object, "photosets", json_array);
+
+  json_array = serialize_list_to_json_array (groups);
+  json_object_set_array_member (root_object, "groups", json_array);
+
   root_node = json_node_new (JSON_NODE_OBJECT);
   json_node_set_object (root_node, root_object);
 

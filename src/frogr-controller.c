@@ -2742,16 +2742,20 @@ frogr_controller_save_current_session (FrogrController *self)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   GSList *pictures = NULL;
+  GSList *photosets = NULL;
+  GSList *groups = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   mainview_model = frogr_main_view_get_model (priv->mainview);
 
-  if (frogr_main_view_model_n_pictures (mainview_model) > 0)
-    pictures = frogr_main_view_model_get_pictures_as_loaded (mainview_model);
+  pictures = frogr_main_view_model_get_pictures_as_loaded (mainview_model);
+  photosets = frogr_main_view_model_get_photosets (mainview_model);
+  groups = frogr_main_view_model_get_groups (mainview_model);
 
-  frogr_serializer_save_current_session (priv->serializer, pictures);
+  frogr_serializer_save_current_session (priv->serializer,
+                                         pictures, photosets, groups);
 }
 
 #ifdef GTK_API_VERSION_3
