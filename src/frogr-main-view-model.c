@@ -44,7 +44,6 @@ struct _FrogrMainViewModelPrivate
   GSList *all_sets;
 
   GSList *groups_list;
-  guint n_groups;
 
   GSList *remote_tags;
   GSList *local_tags;
@@ -254,7 +253,6 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
   priv->all_sets = NULL;
 
   priv->groups_list = NULL;
-  priv->n_groups = 0;
 
   priv->remote_tags = NULL;
   priv->local_tags = NULL;
@@ -493,7 +491,6 @@ frogr_main_view_model_add_group (FrogrMainViewModel *self,
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->groups_list = g_slist_append (priv->groups_list, group);
-  priv->n_groups++;
 
   g_object_ref (group);
 }
@@ -511,7 +508,6 @@ frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self)
   g_slist_free (priv->groups_list);
 
   priv->groups_list = NULL;
-  priv->n_groups = 0;
 }
 
 guint
@@ -522,7 +518,7 @@ frogr_main_view_model_n_groups (FrogrMainViewModel *self)
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->n_groups;
+  return g_slist_length (priv->groups_list);
 }
 
 GSList *
@@ -551,8 +547,6 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
 
   /* Set groups now */
   priv->groups_list = groups_list;
-  priv->n_groups = g_slist_length (groups_list);
-
 }
 
 void
