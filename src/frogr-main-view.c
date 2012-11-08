@@ -1099,13 +1099,13 @@ _load_pictures_dialog (FrogrMainView *self)
     }
 #endif
 
-  gtk_file_filter_set_name (all_filter, _("All"));
+  gtk_file_filter_set_name (all_filter, _("All Files"));
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), all_filter);
 
-  gtk_file_filter_set_name (image_filter, _("Images"));
+  gtk_file_filter_set_name (image_filter, _("Image Files"));
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), image_filter);
 
-  gtk_file_filter_set_name (video_filter, _("Videos"));
+  gtk_file_filter_set_name (video_filter, _("Video Files"));
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), video_filter);
 
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
