@@ -25,8 +25,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define TEMPORARY_ID_PREFIX "localset_"
-
 #define FROGR_PHOTOSET_GET_PRIVATE(object)              \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
                                 FROGR_TYPE_PHOTOSET,    \
@@ -41,6 +39,7 @@ struct _FrogrPhotoSetPrivate
   gchar *title;
   gchar *description;
   gchar *id;
+  gchar *local_id; /* For locally created sets only */
   gchar *primary_photo_id;
   gint n_photos;
 };
@@ -51,6 +50,7 @@ enum  {
   PROP_TITLE,
   PROP_DESCRIPTION,
   PROP_ID,
+  PROP_LOCAL_ID,
   PROP_PRIMARY_PHOTO_ID,
   PROP_N_PHOTOS
 };
@@ -91,8 +91,7 @@ _create_temporary_id_for_photoset (void)
 
   /* The letters may increase uniqueness by preventing "melds"
      i.e. 01t01k01 and 0101t0k1 are not the same */
-  key = g_strdup_printf("%s%ut%uut%uu%up%ur%uk%u",
-                        TEMPORARY_ID_PREFIX,
+  key = g_strdup_printf("%ut%uut%uu%up%ur%uk%u",
                         /* Duplicate keys must be generated
                            by two different program instances */
                         serial,
@@ -137,6 +136,9 @@ _frogr_photoset_set_property (GObject *object,
     case PROP_ID:
       frogr_photoset_set_id (self, g_value_get_string (value));
       break;
+    case PROP_LOCAL_ID:
+      frogr_photoset_set_local_id (self, g_value_get_string (value));
+      break;
     case PROP_PRIMARY_PHOTO_ID:
       frogr_photoset_set_primary_photo_id (self, g_value_get_string (value));
       break;
@@ -168,6 +170,9 @@ _frogr_photoset_get_property (GObject *object,
     case PROP_ID:
       g_value_set_string (value, frogr_photoset_get_id (self));
       break;
+    case PROP_LOCAL_ID:
+      g_value_set_string (value, frogr_photoset_get_local_id (self));
+      break;
     case PROP_PRIMARY_PHOTO_ID:
       g_value_set_string (value, frogr_photoset_get_primary_photo_id (self));
       break;
@@ -189,6 +194,7 @@ _frogr_photoset_finalize (GObject* object)
   g_free (priv->title);
   g_free (priv->description);
   g_free (priv->id);
+  g_free (priv->local_id);
   g_free (priv->primary_photo_id);
 
   /* call super class */
@@ -227,7 +233,14 @@ frogr_photoset_class_init(FrogrPhotoSetClass *klass)
                                                         "Photoset ID from flickr",
                                                         NULL,
                                                         G_PARAM_READWRITE));
-
+  g_object_class_install_property (obj_class,
+                                   PROP_LOCAL_ID,
+                                   g_param_spec_string ("local-id",
+                                                        "local-id",
+                                                        "Photoset ID locally generated"
+                                                        "(for new sets only)",
+                                                        NULL,
+                                                        G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_PRIMARY_PHOTO_ID,
                                    g_param_spec_string ("primary-photo-id",
@@ -259,6 +272,7 @@ frogr_photoset_init (FrogrPhotoSet *self)
   priv->title = NULL;
   priv->description = NULL;
   priv->id = NULL;
+  priv->local_id = NULL;
   priv->primary_photo_id = NULL;
   priv->n_photos = 0;
 }
@@ -267,29 +281,10 @@ frogr_photoset_init (FrogrPhotoSet *self)
 /* Public API */
 
 FrogrPhotoSet *
-frogr_photoset_new (const gchar *title,
+frogr_photoset_new (const gchar *id,
+                    const gchar *title,
                     const gchar *description)
 {
-  FrogrPhotoSet *new_set;
-  gchar *id;
-
-  g_return_val_if_fail (title, NULL);
-  g_return_val_if_fail (description, NULL);
-
-  /* We always need to have an id (locally created photosets) */
-  id = _create_temporary_id_for_photoset ();
-  new_set = frogr_photoset_new_with_id (id, title, description);
-  g_free (id);
-
-  return new_set;
-}
-
-FrogrPhotoSet *
-frogr_photoset_new_with_id (const gchar *id,
-                            const gchar *title,
-                            const gchar *description)
-{
-  g_return_val_if_fail (id, NULL);
   g_return_val_if_fail (title, NULL);
   g_return_val_if_fail (description, NULL);
 
@@ -298,6 +293,26 @@ frogr_photoset_new_with_id (const gchar *id,
                                       "title", title,
                                       "description", description,
                                       NULL));
+}
+
+FrogrPhotoSet *
+frogr_photoset_new_local (const gchar *title,
+                          const gchar *description)
+{
+  FrogrPhotoSet *new_set;
+  gchar *id;
+
+  g_return_val_if_fail (title, NULL);
+  g_return_val_if_fail (description, NULL);
+
+  new_set = frogr_photoset_new (NULL, title, description);
+
+  /* We always need to have an id in locally created photosets */
+  id = _create_temporary_id_for_photoset ();
+  frogr_photoset_set_local_id (new_set, id);
+  g_free (id);
+
+  return new_set;
 }
 
 /* Data Managing functions */
@@ -376,6 +391,30 @@ frogr_photoset_set_id (FrogrPhotoSet *self,
 }
 
 const gchar *
+frogr_photoset_get_local_id (FrogrPhotoSet *self)
+{
+  FrogrPhotoSetPrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PHOTOSET(self), NULL);
+
+  priv = FROGR_PHOTOSET_GET_PRIVATE (self);
+  return (const gchar *)priv->local_id;
+}
+
+void
+frogr_photoset_set_local_id (FrogrPhotoSet *self,
+                             const gchar *id)
+{
+  FrogrPhotoSetPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PHOTOSET(self));
+
+  priv = FROGR_PHOTOSET_GET_PRIVATE (self);
+  g_free (priv->local_id);
+  priv->local_id = g_strdup (id);
+}
+
+const gchar *
 frogr_photoset_get_primary_photo_id (FrogrPhotoSet *self)
 {
   FrogrPhotoSetPrivate *priv = NULL;
@@ -423,12 +462,12 @@ frogr_photoset_set_n_photos (FrogrPhotoSet *self,
 }
 
 gboolean
-frogr_photoset_is_local_only (FrogrPhotoSet *self)
+frogr_photoset_is_local (FrogrPhotoSet *self)
 {
   FrogrPhotoSetPrivate *priv = NULL;
 
   g_return_val_if_fail(FROGR_IS_PHOTOSET(self), FALSE);
 
   priv = FROGR_PHOTOSET_GET_PRIVATE (self);
-  return g_str_has_prefix (priv->id, TEMPORARY_ID_PREFIX);
+  return priv->id == NULL && priv->local_id != NULL;
 }

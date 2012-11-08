@@ -50,17 +50,22 @@ struct _FrogrPhotoSetClass
 GType frogr_photoset_get_type(void) G_GNUC_CONST;
 
 /* Constructors */
-FrogrPhotoSet *frogr_photoset_new (const gchar *title,
+
+FrogrPhotoSet *frogr_photoset_new (const gchar *id,
+                                   const gchar *title,
                                    const gchar *description);
 
-FrogrPhotoSet *frogr_photoset_new_with_id (const gchar *id,
-                                           const gchar *title,
-                                           const gchar *description);
+FrogrPhotoSet *frogr_photoset_new_local (const gchar *title,
+                                         const gchar *description);
 /* Data managing methods */
 
 const gchar *frogr_photoset_get_id (FrogrPhotoSet *self);
 void frogr_photoset_set_id (FrogrPhotoSet *self,
                             const gchar *id);
+
+const gchar *frogr_photoset_get_local_id (FrogrPhotoSet *self);
+void frogr_photoset_set_local_id (FrogrPhotoSet *self,
+                                  const gchar *id);
 
 const gchar *frogr_photoset_get_title (FrogrPhotoSet *self);
 void frogr_photoset_set_title (FrogrPhotoSet *self,
@@ -78,7 +83,7 @@ gint frogr_photoset_get_n_photos (FrogrPhotoSet *self);
 void frogr_photoset_set_n_photos (FrogrPhotoSet *self,
                                   gint n);
 
-gboolean frogr_photoset_is_local_only (FrogrPhotoSet *self);
+gboolean frogr_photoset_is_local (FrogrPhotoSet *self);
 
 G_END_DECLS
 

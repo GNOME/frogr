@@ -183,7 +183,7 @@ _update_model (FrogrCreateNewSetDialog *self,
   mainview_model = frogr_main_view_get_model (mainview);
 
   /* Add the set to the model */
-  new_set = frogr_photoset_new (title, description);
+  new_set = frogr_photoset_new_local (title, description);
   frogr_main_view_model_add_local_photoset (mainview_model, new_set);
 
   /* Add the set to the list of sets for each picture */
