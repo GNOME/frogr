@@ -97,6 +97,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkBuilder *builder;
 
+  GtkAction *load_project_action;
   GtkAction *save_project_action;
   GtkAction *save_project_as_action;
   GtkAction *load_pictures_action;
@@ -178,6 +179,14 @@ static void _on_icon_view_selection_changed (GtkWidget *icon_view,
 static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_pictures (FrogrMainView *self);
 static void _open_pictures_in_external_viewer (FrogrMainView *self);
+
+static void _load_project_from_file (FrogrMainView *self, const gchar *filepath);
+
+static void _load_project_dialog_response_cb (GtkDialog *dialog,
+                                              gint response,
+                                              gpointer data);
+
+static void _load_project_dialog (FrogrMainView *self);
 
 static void _save_current_project (FrogrMainView *self);
 
@@ -580,7 +589,9 @@ _on_action_activated (GtkAction *action, gpointer data)
   FrogrMainViewPrivate *priv = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  if (action == priv->save_project_action)
+  if (action == priv->load_project_action)
+    _load_project_dialog (mainview);
+  else if (action == priv->save_project_action)
     _save_current_project (mainview);
   else if (action == priv->save_project_as_action)
     _save_project_as_dialog (mainview);
@@ -952,6 +963,72 @@ _n_pictures (FrogrMainView *self)
 }
 
 static void
+_load_project_from_file (FrogrMainView *self, const gchar *filepath)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Load from disk and update project's path */
+  frogr_controller_load_project_from_file (priv->controller, filepath);
+  _update_project_path (self, filepath);
+
+  /* Update title marking it as non-dirty (just loaded) */
+  /* FIXME: This should not happen until we know the load is finished */
+  _update_window_title (self, FALSE);
+}
+
+static void
+_load_project_dialog_response_cb (GtkDialog *dialog,
+                                  gint response,
+                                  gpointer data)
+{
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+
+  if (response == GTK_RESPONSE_ACCEPT)
+    {
+      gchar *filename = NULL;
+
+      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+      if (filename != NULL)
+        _load_project_from_file (self, filename);
+
+      g_free (filename);
+    }
+
+  gtk_widget_destroy (GTK_WIDGET (dialog));
+
+}
+
+static void
+_load_project_dialog (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  GtkWidget *dialog;
+  GtkFileFilter *filter;
+
+  dialog = gtk_file_chooser_dialog_new (_("Select File"),
+                                        GTK_WINDOW (priv->window),
+                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                        NULL);
+
+  gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
+  gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
+
+  /* Let's allow text files only */
+  filter = gtk_file_filter_new ();
+  gtk_file_filter_add_mime_type (filter, "text/*");
+  gtk_file_filter_set_name (filter, _("Text Files"));
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (_load_project_dialog_response_cb), self);
+
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_widget_show_all (dialog);
+}
+
+static void
 _save_current_project (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
@@ -966,17 +1043,13 @@ static void
 _save_project_to_file (FrogrMainView *self, const gchar *filepath)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  GFile *file = NULL;
 
   /* Save to disk and update project's path */
-  file = g_file_new_for_path (filepath);
   frogr_controller_save_project_to_file (priv->controller, filepath);
   _update_project_path (self, filepath);
 
-  /* Update title marking it as non-dirty again */
+  /* Update title marking it as non-dirty (just saved) */
   _update_window_title (self, FALSE);
-
-  g_object_unref (file);
 }
 
 static void
@@ -1605,6 +1678,7 @@ _update_sensitiveness (FrogrMainView *self)
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
+      gtk_action_set_sensitive (priv->load_project_action, FALSE);
       gtk_action_set_sensitive (priv->save_project_action, FALSE);
       gtk_action_set_sensitive (priv->save_project_as_action, FALSE);
       gtk_action_set_sensitive (priv->load_pictures_action, FALSE);
@@ -1626,6 +1700,7 @@ _update_sensitiveness (FrogrMainView *self)
       has_accounts = (priv->accounts_menu != NULL);
       n_selected_pics = priv->n_selected_pictures;
 
+      gtk_action_set_sensitive (priv->load_project_action, TRUE);
       gtk_action_set_sensitive (priv->save_project_action, TRUE);
       gtk_action_set_sensitive (priv->save_project_as_action, TRUE);
       gtk_action_set_sensitive (priv->load_pictures_action, TRUE);
@@ -1816,6 +1891,8 @@ frogr_main_view_init (FrogrMainView *self)
   priv->status_bar = status_bar;
 
   /* Get actions from GtkBuilder */
+  priv->load_project_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "load_project_action"));
   priv->save_project_action =
     GTK_ACTION (gtk_builder_get_object (builder, "save_project_action"));
   priv->save_project_as_action =

@@ -2739,6 +2739,51 @@ frogr_controller_cancel_ongoing_requests (FrogrController *self)
 }
 
 void
+frogr_controller_load_project_from_file (FrogrController *self, const gchar *path)
+{
+  JsonParser *json_parser = NULL;
+  GError *error = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  /* Load from disk */
+  json_parser = json_parser_new ();
+  json_parser_load_from_file (json_parser, path, &error);
+  if (error)
+    {
+      DEBUG ("Error loading project file from %s: %s",
+             path, error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      FrogrControllerPrivate *priv = NULL;
+      FrogrMainViewModel *mainview_model = NULL;
+      JsonNode *json_root = NULL;
+
+      priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+      /* Make sure we are not fetching any data from the network at
+         this moment, or cancel otherwise, so the model is ready */
+      if (priv->fetching_photosets || priv->fetching_groups || priv->fetching_tags)
+        frogr_controller_cancel_ongoing_requests (self);
+
+      /* Deserialize from the JSON data and update the model */
+      mainview_model = frogr_main_view_get_model (priv->mainview);
+      json_root = json_parser_get_root (json_parser);
+      frogr_main_view_model_deserialize (mainview_model, json_root);
+
+      /* TODO: We now should have the relevant data in the model, and
+         so we would just need to load the pixbufs for all the pictures */
+
+      json_node_free (json_root);
+ }
+
+  g_object_unref (json_parser);
+
+}
+
+void
 frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
 {
   FrogrControllerPrivate *priv = NULL;
