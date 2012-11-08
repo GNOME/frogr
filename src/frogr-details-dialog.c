@@ -999,11 +999,8 @@ _save_data (FrogrDetailsDialog *self)
       /* Add tags to the model */
       if (!g_str_equal (tags, ""))
         {
-          FrogrMainView *mainview = NULL;
           FrogrMainViewModel *model = NULL;
-
-          mainview = frogr_controller_get_main_view (frogr_controller_get_instance ());
-          model = frogr_main_view_get_model (mainview);
+          model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
           frogr_main_view_model_add_local_tags_from_string (model, tags);
         }
     }

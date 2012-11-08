@@ -85,7 +85,6 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
       /* Check if there's something to add */
       if (tags && !g_str_equal (tags, ""))
         {
-          FrogrMainView *mainview = NULL;
           FrogrMainViewModel *model = NULL;
           FrogrPicture *picture = NULL;
           GSList *item = NULL;
@@ -100,8 +99,7 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
             }
 
           /* Add tags to the model */
-          mainview = frogr_controller_get_main_view (frogr_controller_get_instance ());
-          model = frogr_main_view_get_model (mainview);
+          model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
           frogr_main_view_model_add_local_tags_from_string (model, tags);
         }
 

@@ -2145,6 +2145,20 @@ frogr_controller_get_main_view (FrogrController *self)
   return priv->mainview;
 }
 
+FrogrMainViewModel *
+frogr_controller_get_main_view_model (FrogrController *self)
+{
+  FrogrControllerPrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  if (!priv->mainview)
+    return NULL;
+
+  return frogr_main_view_get_model (priv->mainview);;
+}
+
 gboolean
 frogr_controller_run_app (FrogrController *self)
 {

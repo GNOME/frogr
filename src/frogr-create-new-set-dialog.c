@@ -170,7 +170,6 @@ _update_model (FrogrCreateNewSetDialog *self,
 {
   FrogrCreateNewSetDialogPrivate *priv = NULL;
   FrogrController *controller = NULL;
-  FrogrMainView *mainview = NULL;
   FrogrMainViewModel *mainview_model = NULL;
   FrogrPhotoSet *new_set = NULL;
   FrogrPicture *picture = NULL;
@@ -179,8 +178,7 @@ _update_model (FrogrCreateNewSetDialog *self,
 
   priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   controller = frogr_controller_get_instance ();
-  mainview = frogr_controller_get_main_view (controller);
-  mainview_model = frogr_main_view_get_model (mainview);
+  mainview_model = frogr_controller_get_main_view_model (controller);
 
   /* Add the set to the model */
   new_set = frogr_photoset_new_local (title, description);
