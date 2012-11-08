@@ -314,10 +314,9 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->pictures = g_slist_append (priv->pictures, picture);
-  priv->pictures_as_loaded = g_slist_append (priv->pictures_as_loaded, picture);
+  priv->pictures_as_loaded = g_slist_append (priv->pictures_as_loaded, g_object_ref (picture));
   priv->n_pictures++;
 
-  g_object_ref (picture);
   g_signal_emit (self, signals[PICTURE_ADDED], 0, picture);
   g_signal_emit (self, signals[MODEL_CHANGED], 0);
 }
@@ -361,17 +360,6 @@ frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->pictures;
-}
-
-GSList *
-frogr_main_view_model_get_pictures_as_loaded (FrogrMainViewModel *self)
-{
-  FrogrMainViewModelPrivate *priv = NULL;
-
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
-
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->pictures_as_loaded;
 }
 
 void
