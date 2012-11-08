@@ -987,6 +987,7 @@ _save_project_as_dialog (FrogrMainView *self)
                                         NULL);
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled Project"));
+  gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
   gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
 
