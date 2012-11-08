@@ -437,9 +437,7 @@ frogr_main_view_model_add_local_photoset (FrogrMainViewModel *self,
 
   /* When adding one by one we prepend always to keep the order */
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->local_sets = g_slist_prepend (priv->local_sets, set);
-
-  g_object_ref (set);
+  priv->local_sets = g_slist_prepend (priv->local_sets, g_object_ref (set));
 }
 
 GSList *
