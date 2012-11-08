@@ -1000,22 +1000,20 @@ _add_picture_to_photosets_or_create (FrogrController *self, UploadOnePictureData
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrPhotoSet *set = NULL;
-  const gchar *id = NULL;
 
   if (g_slist_length (uop_data->photosets) == 0)
     return FALSE;
-
-  set = FROGR_PHOTOSET (uop_data->photosets->data);
-  id = frogr_photoset_get_id (set);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   priv->adding_to_set = TRUE;
 
   uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] = 0;
-  if (id != NULL)
-    _add_picture_to_photoset (self, uop_data);
-  else
+
+  set = FROGR_PHOTOSET (uop_data->photosets->data);
+  if (frogr_photoset_is_local_only (set))
     _create_photoset_for_picture (self, uop_data);
+  else
+    _add_picture_to_photoset (self, uop_data);
 
   return TRUE;
 }
@@ -1429,9 +1427,9 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
           for (item = data_sets_list; item; item = g_slist_next (item))
             {
               current_data_set = FSP_DATA_PHOTO_SET (item->data);
-              current_set = frogr_photoset_new (current_data_set->title,
-                                                current_data_set->description);
-              frogr_photoset_set_id (current_set, current_data_set->id);
+              current_set = frogr_photoset_new_with_id (current_data_set->id,
+                                                        current_data_set->title,
+                                                        current_data_set->description);
               frogr_photoset_set_primary_photo_id (current_set, current_data_set->primary_photo_id);
               frogr_photoset_set_n_photos (current_set, current_data_set->n_photos);
 
