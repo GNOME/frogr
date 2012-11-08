@@ -35,15 +35,15 @@ G_DEFINE_TYPE (FrogrMainViewModel, frogr_main_view_model, G_TYPE_OBJECT)
 typedef struct _FrogrMainViewModelPrivate FrogrMainViewModelPrivate;
 struct _FrogrMainViewModelPrivate
 {
-  GSList *pictures_list;
-  GSList *pictures_list_as_loaded;
+  GSList *pictures;
+  GSList *pictures_as_loaded;
   guint n_pictures;
 
   GSList *remote_sets;
   GSList *local_sets;
   GSList *all_sets;
 
-  GSList *groups_list;
+  GSList *groups;
 
   GSList *remote_tags;
   GSList *local_tags;
@@ -141,17 +141,17 @@ _frogr_main_view_model_dispose (GObject* object)
   FrogrMainViewModelPrivate *priv =
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (object);
 
-  if (priv->pictures_list)
+  if (priv->pictures)
     {
-      g_slist_foreach (priv->pictures_list, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->pictures_list);
-      priv->pictures_list = NULL;
+      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->pictures);
+      priv->pictures = NULL;
     }
 
-  if (priv->pictures_list_as_loaded)
+  if (priv->pictures_as_loaded)
     {
-      g_slist_free (priv->pictures_list_as_loaded);
-      priv->pictures_list_as_loaded = NULL;
+      g_slist_free (priv->pictures_as_loaded);
+      priv->pictures_as_loaded = NULL;
     }
 
   if (priv->remote_sets)
@@ -174,11 +174,11 @@ _frogr_main_view_model_dispose (GObject* object)
       priv->all_sets = NULL;
     }
 
-  if (priv->groups_list)
+  if (priv->groups)
     {
-      g_slist_foreach (priv->groups_list, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->groups_list);
-      priv->groups_list = NULL;
+      g_slist_foreach (priv->groups, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->groups);
+      priv->groups = NULL;
     }
 
   if (priv->remote_tags)
@@ -244,15 +244,15 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
     FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   /* Init private data */
-  priv->pictures_list = NULL;
-  priv->pictures_list_as_loaded = NULL;
+  priv->pictures = NULL;
+  priv->pictures_as_loaded = NULL;
   priv->n_pictures = 0;
 
   priv->remote_sets = NULL;
   priv->local_sets = NULL;
   priv->all_sets = NULL;
 
-  priv->groups_list = NULL;
+  priv->groups = NULL;
 
   priv->remote_tags = NULL;
   priv->local_tags = NULL;
@@ -278,8 +278,8 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
   g_return_if_fail(FROGR_IS_PICTURE (picture));
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->pictures_list = g_slist_append (priv->pictures_list, picture);
-  priv->pictures_list_as_loaded = g_slist_append (priv->pictures_list_as_loaded, picture);
+  priv->pictures = g_slist_append (priv->pictures, picture);
+  priv->pictures_as_loaded = g_slist_append (priv->pictures_as_loaded, picture);
   priv->n_pictures++;
 
   g_object_ref (picture);
@@ -296,8 +296,8 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
-  priv->pictures_list = g_slist_remove (priv->pictures_list, picture);
-  priv->pictures_list_as_loaded = g_slist_remove (priv->pictures_list_as_loaded, picture);
+  priv->pictures = g_slist_remove (priv->pictures, picture);
+  priv->pictures_as_loaded = g_slist_remove (priv->pictures_as_loaded, picture);
   priv->n_pictures--;
   g_object_unref (picture);
 
@@ -323,7 +323,7 @@ frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->pictures_list;
+  return priv->pictures;
 }
 
 GSList *
@@ -334,7 +334,7 @@ frogr_main_view_model_get_pictures_as_loaded (FrogrMainViewModel *self)
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->pictures_list_as_loaded;
+  return priv->pictures_as_loaded;
 }
 
 void
@@ -356,11 +356,11 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
 
   /* Temporarily save the current list, and alloc an array to
      represent the new order compared to the old positions */
-  current_list = g_slist_copy (priv->pictures_list);
+  current_list = g_slist_copy (priv->pictures);
   new_order = g_new0 (gint, g_slist_length (current_list));
 
   /* Use the original list (as loaded) as reference for sorting */
-  list_as_loaded = g_slist_copy (priv->pictures_list_as_loaded);
+  list_as_loaded = g_slist_copy (priv->pictures_as_loaded);
 
   /* Only sort if we have specified a property name */
   if (property_name)
@@ -371,19 +371,19 @@ frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
     }
 
   /* Update the list of pictures */
-  if (priv->pictures_list)
-    g_slist_free (priv->pictures_list);
-  priv->pictures_list = g_slist_copy (list_as_loaded);
+  if (priv->pictures)
+    g_slist_free (priv->pictures);
+  priv->pictures = g_slist_copy (list_as_loaded);
 
   /* If we're reordering in reverse order, reverse the result list */
   if (reversed)
-    priv->pictures_list = g_slist_reverse (priv->pictures_list);
+    priv->pictures = g_slist_reverse (priv->pictures);
 
   /* Build the new_order array */
   current_pos = 0;
   for (current_item = current_list; current_item; current_item = g_slist_next (current_item))
     {
-      new_pos = g_slist_index (priv->pictures_list, current_item->data);
+      new_pos = g_slist_index (priv->pictures, current_item->data);
       new_order[new_pos] = current_pos++;
     }
 
@@ -488,7 +488,7 @@ frogr_main_view_model_add_group (FrogrMainViewModel *self,
   g_return_if_fail(FROGR_IS_GROUP (group));
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->groups_list = g_slist_append (priv->groups_list, group);
+  priv->groups = g_slist_append (priv->groups, group);
 
   g_object_ref (group);
 }
@@ -502,10 +502,10 @@ frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self)
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
-  g_slist_foreach (priv->groups_list, (GFunc)g_object_unref, NULL);
-  g_slist_free (priv->groups_list);
+  g_slist_foreach (priv->groups, (GFunc)g_object_unref, NULL);
+  g_slist_free (priv->groups);
 
-  priv->groups_list = NULL;
+  priv->groups = NULL;
 }
 
 guint
@@ -516,7 +516,7 @@ frogr_main_view_model_n_groups (FrogrMainViewModel *self)
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return g_slist_length (priv->groups_list);
+  return g_slist_length (priv->groups);
 }
 
 GSList *
@@ -527,12 +527,12 @@ frogr_main_view_model_get_groups (FrogrMainViewModel *self)
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->groups_list;
+  return priv->groups;
 }
 
 void
 frogr_main_view_model_set_groups (FrogrMainViewModel *self,
-                                  GSList *groups_list)
+                                  GSList *groups)
 {
   FrogrMainViewModelPrivate *priv = NULL;
 
@@ -544,7 +544,7 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
   frogr_main_view_model_remove_all_groups (self);
 
   /* Set groups now */
-  priv->groups_list = groups_list;
+  priv->groups = groups;
 }
 
 void
