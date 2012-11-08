@@ -582,7 +582,7 @@ frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
 }
 
 GSList *
-frogr_main_view_model_get_all_tags (FrogrMainViewModel *self)
+frogr_main_view_model_get_tags (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;
   GSList *list = NULL;

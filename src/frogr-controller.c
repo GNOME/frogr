@@ -1814,7 +1814,7 @@ _show_details_dialog_on_idle (GSList *pictures)
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  tags_list = frogr_main_view_model_get_all_tags (mainview_model);
+  tags_list = frogr_main_view_model_get_tags (mainview_model);
 
   /* Sets already pre-fetched: show the dialog */
   window = frogr_main_view_get_window (priv->mainview);
@@ -1848,7 +1848,7 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   frogr_main_view_hide_progress (mainview);
 
   mainview_model = frogr_main_view_get_model (priv->mainview);
-  tags_list = frogr_main_view_model_get_all_tags (mainview_model);
+  tags_list = frogr_main_view_model_get_tags (mainview_model);
 
   /* Sets already pre-fetched: show the dialog */
   window = frogr_main_view_get_window (priv->mainview);
