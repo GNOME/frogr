@@ -56,11 +56,16 @@ GType frogr_serializer_get_type (void) G_GNUC_CONST;
 
 FrogrSerializer* frogr_serializer_get_instance (void);
 
-void frogr_serializer_save_current_session (FrogrSerializer *self,
+void frogr_serializer_save_session (FrogrSerializer *self,
+                                    GSList *pictures,
+                                    GSList *photosets,
+                                    GSList *groups);
+
+void frogr_serializer_save_session_to_file (FrogrSerializer *self,
                                             GSList *pictures,
                                             GSList *photosets,
-                                            GSList *groups);
-
+                                            GSList *groups,
+                                            const gchar *path);
 G_END_DECLS
 
 #endif /* !_FROGR_SERIALIZER_H */

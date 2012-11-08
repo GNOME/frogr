@@ -150,17 +150,48 @@ serialize_list_to_json_array (GSList *list)
 }
 
 void
-frogr_serializer_save_current_session (FrogrSerializer *self,
-                                       GSList *pictures,
-                                       GSList *photosets,
-                                       GSList *groups)
+frogr_serializer_save_session (FrogrSerializer *self,
+                               GSList *pictures,
+                               GSList *photosets,
+                               GSList *groups)
 {
   FrogrSerializerPrivate *priv = NULL;
+  gchar *session_path = NULL;
+
+  g_return_if_fail(FROGR_IS_SERIALIZER (self));
+
+  priv = FROGR_SERIALIZER_GET_PRIVATE (self);
+  session_path = g_build_filename (priv->data_dir, SESSION_FILENAME, NULL);
+  frogr_serializer_save_session_to_file (self, pictures, photosets, groups, session_path);
+}
+
+void
+frogr_serializer_save_session_to_file (FrogrSerializer *self,
+                                       GSList *pictures,
+                                       GSList *photosets,
+                                       GSList *groups,
+                                       const gchar *path)
+{
+  FrogrSerializerPrivate *priv = NULL;
+  gchar *session_path = NULL;
+
+  g_return_if_fail(FROGR_IS_SERIALIZER (self));
+
+  priv = FROGR_SERIALIZER_GET_PRIVATE (self);
+  session_path = g_build_filename (priv->data_dir, SESSION_FILENAME, NULL);
+  frogr_serializer_save_session_to_file (self, pictures, photosets, session_path);
+}
+
+void
+frogr_serializer_save_session_to_file (FrogrSerializer *self,
+                                       GSList *pictures,
+                                       GSList *photosets,
+                                       const gchar *path)
+{
   JsonGenerator *json_gen = NULL;
   JsonArray *json_array = NULL;
   JsonNode *root_node = NULL;
   JsonObject *root_object = NULL;
-  gchar *session_path = NULL;
   GError *error = NULL;
 
   g_return_if_fail(FROGR_IS_SERIALIZER (self));
@@ -185,14 +216,11 @@ frogr_serializer_save_current_session (FrogrSerializer *self,
   json_node_free (root_node);
 
   /* Save to disk */
-  priv = FROGR_SERIALIZER_GET_PRIVATE (self);
-  session_path = g_build_filename (priv->data_dir, SESSION_FILENAME, NULL);
-  json_generator_to_file (json_gen, session_path, &error);
+  json_generator_to_file (json_gen, path, &error);
   if (error)
     {
       DEBUG ("Error serializing current state to %s: %s",
-             session_path, error->message);
+             path, error->message);
       g_error_free (error);
     }
-  g_free (session_path);
 }

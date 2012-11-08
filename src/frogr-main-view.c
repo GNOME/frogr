@@ -1201,9 +1201,6 @@ _model_picture_added (FrogrController *controller,
 
   /* Update upload size in state description */
   _update_state_description (self);
-
-  /* Make sure the session file is removed */
-  frogr_controller_save_current_session (priv->controller);
 }
 
 static void
@@ -1245,9 +1242,6 @@ _model_picture_removed (FrogrController *controller,
 
   /* Update upload size in state description */
   _update_state_description (self);
-
-  /* Make sure the session file is removed */
-  frogr_controller_save_current_session (priv->controller);
 }
 
 static void
@@ -1262,9 +1256,6 @@ _model_pictures_reordered (FrogrController *controller,
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   gtk_list_store_reorder (GTK_LIST_STORE (priv->tree_model), new_order);
-
-  /* Make sure the session file is updated */
-  frogr_controller_save_current_session (priv->controller);
 }
 
 static void

@@ -2735,7 +2735,7 @@ frogr_controller_cancel_ongoing_request (FrogrController *self)
 }
 
 void
-frogr_controller_save_current_session (FrogrController *self)
+frogr_controller_save_session_to_file (FrogrController *self, const gchar *path)
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrMainViewModel *mainview_model = NULL;
@@ -2752,8 +2752,9 @@ frogr_controller_save_current_session (FrogrController *self)
   photosets = frogr_main_view_model_get_photosets (mainview_model);
   groups = frogr_main_view_model_get_groups (mainview_model);
 
-  frogr_serializer_save_current_session (priv->serializer,
-                                         pictures, photosets, groups);
+  frogr_serializer_save_session_to_file (priv->serializer,
+                                         pictures, photosets, groups,
+                                         path);
 }
 
 #ifdef GTK_API_VERSION_3
