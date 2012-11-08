@@ -518,21 +518,6 @@ frogr_main_view_model_n_photosets (FrogrMainViewModel *self)
 }
 
 void
-frogr_main_view_model_add_group (FrogrMainViewModel *self,
-                                 FrogrGroup *group)
-{
-  FrogrMainViewModelPrivate *priv = NULL;
-
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
-  g_return_if_fail(FROGR_IS_GROUP (group));
-
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->groups = g_slist_append (priv->groups, group);
-
-  g_object_ref (group);
-}
-
-void
 frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;

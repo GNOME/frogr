@@ -88,9 +88,6 @@ guint frogr_main_view_model_n_photosets (FrogrMainViewModel *self);
 
 /* Groups */
 
-void frogr_main_view_model_add_group (FrogrMainViewModel *self,
-                                      FrogrGroup *fgroup);
-
 void frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self);
 
 guint frogr_main_view_model_n_groups (FrogrMainViewModel *self);
