@@ -74,6 +74,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkWindow *window;
   gchar *project_name;
+  gchar *project_dir;
   gchar *project_filepath;
 
   GtkWidget *icon_view;
@@ -262,27 +263,51 @@ _update_project_path (FrogrMainView *self, const gchar *path)
       return;
 
   g_free (priv->project_name);
+  g_free (priv->project_dir);
   g_free (priv->project_filepath);
 
   if (!path)
     {
       priv->project_name = NULL;
+      priv->project_dir = NULL;
       priv->project_filepath = NULL;
     }
   else
     {
       GFile *file = NULL;
-      GFileInfo *file_info;
+      GFile *dir = NULL;
+      GFileInfo *file_info = NULL;
+      gchar *dir_path = NULL;
+      const gchar *home_dir = NULL;
 
+      /* Get the display name in beautiful UTF-8 */
       file = g_file_new_for_path (path);
       file_info = g_file_query_info (file,
                                      G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
                                      G_FILE_QUERY_INFO_NONE,
                                      NULL,
                                      NULL);
-
       priv->project_name = g_strdup (g_file_info_get_display_name (file_info));
+
+      /* Get the base directory, in beautiful UTF-8 too */
+      dir = g_file_get_parent (file);
+      dir_path = g_file_get_parse_name (dir);
+      home_dir = g_get_home_dir ();
+      if (g_str_has_prefix (dir_path, home_dir))
+        {
+          gchar *tmp_path = NULL;
+
+          tmp_path = dir_path;
+          dir_path = g_strdup_printf ("~%s", &dir_path[g_utf8_strlen (home_dir, -1)]);
+          g_free (tmp_path);
+        }
+      priv->project_dir = dir_path;
+
+      /* Finally, store the raw path too */
       priv->project_filepath = g_strdup (path);
+
+      g_object_unref (file);
+      g_object_unref (dir);
     }
 }
 
@@ -295,7 +320,8 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
   gchar *window_title = NULL;
 
   session_string = priv->project_name
-    ? g_strdup_printf ("%s%s - ", (dirty ? "*" : ""), priv->project_name)
+    ? g_strdup_printf ("%s%s (%s) - ", (dirty ? "*" : ""),
+                       priv->project_name, priv->project_dir)
     : g_strdup("");
 
   window_title = g_strdup_printf ("%s%s", session_string, APP_SHORTNAME);
@@ -1679,6 +1705,7 @@ _frogr_main_view_finalize (GObject *object)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
 
   g_free (priv->project_name);
+  g_free (priv->project_dir);
   g_free (priv->project_filepath);
   g_free (priv->state_description);
   gtk_widget_destroy (GTK_WIDGET (priv->window));
