@@ -458,13 +458,6 @@ frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
-  /* Remove all photosets attached to every picture */
-  for (item = priv->pictures_list; item; item = g_slist_next (item))
-    {
-      picture = FROGR_PICTURE (item->data);
-      frogr_picture_remove_photosets (picture);
-    }
-
   /* Remove all the photosets */
   frogr_main_view_model_remove_all_photosets (self);
 
@@ -553,13 +546,6 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
-  /* Remove all the groups attached to every picture */
-  for (item = priv->pictures_list; item; item = g_slist_next (item))
-    {
-      picture = FROGR_PICTURE (item->data);
-      frogr_picture_remove_groups (picture);
-    }
 
   /* Remove all groups */
   frogr_main_view_model_remove_all_groups (self);
