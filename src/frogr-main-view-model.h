@@ -55,6 +55,8 @@ GType frogr_main_view_model_get_type(void) G_GNUC_CONST;
 
 FrogrMainViewModel *frogr_main_view_model_new (void);
 
+/* Pictures */
+
 void frogr_main_view_model_add_picture (FrogrMainViewModel *self,
                                         FrogrPicture *fset);
 void frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
@@ -69,11 +71,11 @@ GSList *frogr_main_view_model_get_pictures_as_loaded (FrogrMainViewModel *self);
 void frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
                                              const gchar *property_name,
                                              gboolean reversed);
+/* Photosets */
 
 void frogr_main_view_model_add_photoset (FrogrMainViewModel *self,
                                          FrogrPhotoSet *fset);
-void frogr_main_view_model_remove_photoset (FrogrMainViewModel *self,
-                                            FrogrPhotoSet *fset);
+
 void frogr_main_view_model_remove_all_photosets (FrogrMainViewModel *self);
 
 guint frogr_main_view_model_n_photosets (FrogrMainViewModel *self);
@@ -82,11 +84,11 @@ GSList *frogr_main_view_model_get_photosets (FrogrMainViewModel *self);
 
 void frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
                                           GSList *photosets_list);
+/* Groups */
 
 void frogr_main_view_model_add_group (FrogrMainViewModel *self,
                                       FrogrGroup *fgroup);
-void frogr_main_view_model_remove_group (FrogrMainViewModel *self,
-                                         FrogrGroup *fgroup);
+
 void frogr_main_view_model_remove_all_groups (FrogrMainViewModel *self);
 
 guint frogr_main_view_model_n_groups (FrogrMainViewModel *self);
@@ -95,24 +97,15 @@ GSList *frogr_main_view_model_get_groups (FrogrMainViewModel *self);
 
 void frogr_main_view_model_set_groups (FrogrMainViewModel *self,
                                        GSList *groups_list);
-
-GSList *frogr_main_view_model_get_remote_tags (FrogrMainViewModel *self);
+/* Tags */
 
 void frogr_main_view_model_set_remote_tags (FrogrMainViewModel *self,
                                             GSList *tags_list);
 
 void frogr_main_view_model_remove_remote_tags (FrogrMainViewModel *self);
 
-guint frogr_main_view_model_n_remote_tags (FrogrMainViewModel *self);
-
-GSList *frogr_main_view_model_get_local_tags_list (FrogrMainViewModel *self);
-
 void frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
                                                        const gchar *tags_string);
-
-void frogr_main_view_model_remove_local_tags (FrogrMainViewModel *self);
-
-guint frogr_main_view_model_n_local_tags (FrogrMainViewModel *self);
 
 GSList *frogr_main_view_model_get_all_tags (FrogrMainViewModel *self);
 
