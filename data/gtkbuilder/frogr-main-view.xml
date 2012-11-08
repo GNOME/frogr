@@ -6,6 +6,21 @@
     <property name="stock_id">gtk-about</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
+  <object class="GtkAction" id="load_session_action">
+    <property name="label" translatable="yes">_Load Session…</property>
+    <property name="stock_id">gtk-open</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="save_session_action">
+    <property name="label" translatable="yes">_Save Session</property>
+    <property name="stock_id">gtk-save</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="save_session_as_action">
+    <property name="label" translatable="yes">_Save Session As…</property>
+    <property name="stock_id">gtk-save-as</property>
+    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+  </object>
   <object class="GtkAction" id="load_pictures_action">
     <property name="label" translatable="yes">_Load Pictures…</property>
     <property name="stock_id">gtk-add</property>
@@ -291,6 +306,40 @@
           <object class="GtkMenu" id="menu1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <child>
+              <object class="GtkImageMenuItem" id="load_session_menu_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="related_action">load_session_action</property>
+                <property name="use_underline">True</property>
+                <property name="use_stock">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImageMenuItem" id="save_session_menu_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="related_action">save_session_action</property>
+                <property name="use_underline">True</property>
+                <property name="use_stock">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImageMenuItem" id="save_session_as_menu_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="related_action">save_session_as_action</property>
+                <property name="use_underline">True</property>
+                <property name="use_stock">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparatorMenuItem" id="separator9">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+              </object>
+            </child>
             <child>
               <object class="GtkMenuItem" id="authorize_menu_item">
                 <property name="visible">True</property>

@@ -505,6 +505,7 @@ _on_action_activated (GtkAction *action, gpointer data)
     frogr_controller_quit_app (priv->controller);
 #endif
 
+  /* TODO: Load / Save / Save As (Session) */
 }
 
 void
