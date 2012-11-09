@@ -627,8 +627,6 @@ _on_action_activated (GtkAction *action, gpointer data)
   else if (action == priv->quit_action)
     frogr_controller_quit_app (priv->controller);
 #endif
-
-  /* TODO: Load / Save / Save As (Session) */
 }
 
 void
