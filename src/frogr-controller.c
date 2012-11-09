@@ -2784,14 +2784,12 @@ frogr_controller_load_project_from_file (FrogrController *self, const gchar *pat
       json_root = json_parser_get_root (json_parser);
       frogr_main_view_model_deserialize (mainview_model, json_root);
 
-      json_node_free (json_root);
       g_signal_connect (G_OBJECT (mainview_model), "model-deserialized",
                         G_CALLBACK (_on_model_deserialized),
                         self);
     }
 
   g_object_unref (json_parser);
-
 }
 
 void
