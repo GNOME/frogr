@@ -122,8 +122,8 @@ void frogr_picture_set_pixbuf (FrogrPicture *self,
 
 gboolean frogr_picture_is_video (FrogrPicture *self);
 
-gulong frogr_picture_get_filesize (FrogrPicture *self);
-void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize);
+guint frogr_picture_get_filesize (FrogrPicture *self);
+void frogr_picture_set_filesize (FrogrPicture *self, guint filesize);
 
 void frogr_picture_set_datetime (FrogrPicture *self, const gchar *datetime);
 const gchar *frogr_picture_get_datetime (FrogrPicture *self);

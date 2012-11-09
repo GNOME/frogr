@@ -59,7 +59,7 @@ struct _FrogrPicturePrivate
 
   gboolean is_video;
 
-  gulong filesize; /* In KB */
+  guint filesize; /* In KB */
   gchar *datetime; /* ASCII, locale dependent, string */
 
   GSList *photosets;
@@ -453,7 +453,7 @@ _frogr_picture_set_property (GObject *object,
       priv->is_video = g_value_get_boolean (value);
       break;
     case PROP_FILESIZE:
-      frogr_picture_set_filesize (self, g_value_get_long (value));
+      frogr_picture_set_filesize (self, g_value_get_uint (value));
       break;
     case PROP_DATETIME:
       frogr_picture_set_datetime (self, g_value_get_string (value));
@@ -526,7 +526,7 @@ _frogr_picture_get_property (GObject *object,
       g_value_set_boolean (value, priv->is_video);
       break;
     case PROP_FILESIZE:
-      g_value_set_long (value, priv->filesize);
+      g_value_set_uint (value, priv->filesize);
       break;
     case PROP_DATETIME:
       g_value_set_string (value, priv->datetime);
@@ -730,11 +730,11 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                          G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
                                    PROP_FILESIZE,
-                                   g_param_spec_long ("filesize",
+                                   g_param_spec_uint ("filesize",
                                                       "filesize",
                                                       "Filesize in KB for the file",
-                                                      G_MINLONG,
-                                                      G_MAXLONG,
+                                                      0,
+                                                      G_MAXUINT,
                                                       0,
                                                       G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
@@ -1213,7 +1213,7 @@ gboolean frogr_picture_is_video (FrogrPicture *self)
   return priv->is_video;
 }
 
-gulong frogr_picture_get_filesize (FrogrPicture *self)
+guint frogr_picture_get_filesize (FrogrPicture *self)
 {
   FrogrPicturePrivate *priv = NULL;
 
@@ -1223,7 +1223,7 @@ gulong frogr_picture_get_filesize (FrogrPicture *self)
   return priv->filesize;
 }
 
-void frogr_picture_set_filesize (FrogrPicture *self, gulong filesize)
+void frogr_picture_set_filesize (FrogrPicture *self, guint filesize)
 {
   FrogrPicturePrivate *priv = NULL;
 
