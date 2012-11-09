@@ -285,6 +285,8 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   void (* error_function) (GtkWindow *, const gchar *) = NULL;
   gchar *msg = NULL;
+  gchar *video_quota_msg = NULL;
+  gint n_videos = 0;
 
   error_function = frogr_util_show_error_dialog;
   switch (error->code)
@@ -315,9 +317,14 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
       break;
 
     case FSP_ERROR_UPLOAD_QUOTA_VIDEO_EXCEEDED:
-      msg = g_strdup_printf (_("Error uploading video:\nYou can't upload more videos with this account\n"
-                               "Quota exceeded (limit: %d videos per month)"),
-                             frogr_account_get_current_videos (priv->account));
+      n_videos = frogr_account_get_current_videos (priv->account);
+      video_quota_msg = g_strdup_printf (ngettext ("Quota exceeded (limit: %d video per month)",
+                                                   "Quota exceeded (limit: %d videos per month)", n_videos),
+                                         n_videos);
+      msg = g_strdup_printf ("%s\n%s",
+                             _("Error uploading video:\nYou can't upload more videos with this account"),
+                             video_quota_msg);
+      g_free (video_quota_msg);
       break;
 
     case FSP_ERROR_PHOTO_NOT_FOUND:
