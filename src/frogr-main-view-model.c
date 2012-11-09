@@ -56,6 +56,7 @@ enum {
   PICTURE_REMOVED,
   PICTURES_REORDERED,
   MODEL_CHANGED,
+  MODEL_DESERIALIZED,
   N_SIGNALS
 };
 
@@ -263,6 +264,14 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
 
   signals[MODEL_CHANGED] =
     g_signal_new ("model-changed",
+                  G_OBJECT_CLASS_TYPE (klass),
+                  G_SIGNAL_RUN_FIRST,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
+
+  signals[MODEL_DESERIALIZED] =
+    g_signal_new ("model-deserialized",
                   G_OBJECT_CLASS_TYPE (klass),
                   G_SIGNAL_RUN_FIRST,
                   0, NULL, NULL,

@@ -211,6 +211,8 @@ static void _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, Fro
 
 static void _on_files_loaded (FrogrFileLoader *loader, FrogrController *self);
 
+static void _on_model_deserialized (FrogrMainViewModel *model, FrogrController *self);
+
 static void _fetch_everything (FrogrController *self, gboolean force_fetch);
 
 static void _fetch_photosets (FrogrController *self);
@@ -1336,6 +1338,13 @@ _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrController
 
 static void
 _on_files_loaded (FrogrFileLoader *loader, FrogrController *self)
+{
+  g_return_if_fail (FROGR_IS_CONTROLLER (self));
+  _set_state (self, FROGR_STATE_IDLE);
+}
+
+static void
+_on_model_deserialized (FrogrMainViewModel *model, FrogrController *self)
 {
   g_return_if_fail (FROGR_IS_CONTROLLER (self));
   _set_state (self, FROGR_STATE_IDLE);
@@ -2745,6 +2754,7 @@ frogr_controller_load_project_from_file (FrogrController *self, const gchar *pat
   GError *error = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
+  g_return_if_fail(path);
 
   /* Load from disk */
   json_parser = json_parser_new ();
@@ -2761,10 +2771,11 @@ frogr_controller_load_project_from_file (FrogrController *self, const gchar *pat
       FrogrMainViewModel *mainview_model = NULL;
       JsonNode *json_root = NULL;
 
-      priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+      _set_state (self, FROGR_STATE_LOADING_PICTURES);
 
       /* Make sure we are not fetching any data from the network at
          this moment, or cancel otherwise, so the model is ready */
+      priv = FROGR_CONTROLLER_GET_PRIVATE (self);
       if (priv->fetching_photosets || priv->fetching_groups || priv->fetching_tags)
         frogr_controller_cancel_ongoing_requests (self);
 
@@ -2773,11 +2784,11 @@ frogr_controller_load_project_from_file (FrogrController *self, const gchar *pat
       json_root = json_parser_get_root (json_parser);
       frogr_main_view_model_deserialize (mainview_model, json_root);
 
-      /* TODO: We now should have the relevant data in the model, and
-         so we would just need to load the pixbufs for all the pictures */
-
       json_node_free (json_root);
- }
+      g_signal_connect (G_OBJECT (mainview_model), "model-deserialized",
+                        G_CALLBACK (_on_model_deserialized),
+                        self);
+    }
 
   g_object_unref (json_parser);
 

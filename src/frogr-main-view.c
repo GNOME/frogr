@@ -249,6 +249,8 @@ static void _model_pictures_reordered (FrogrController *controller,
 
 static void _model_changed (FrogrController *controller, gpointer data);
 
+static void _model_deserialized (FrogrController *controller, gpointer data);
+
 static void _update_account_menu_items (FrogrMainView *mainview);
 
 static void _update_state_description (FrogrMainView *mainview);
@@ -1519,6 +1521,13 @@ _model_changed (FrogrController *controller, gpointer data)
 }
 
 static void
+_model_deserialized (FrogrController *controller, gpointer data)
+{
+  /* Reflect that the current state is not 'dirty' (just loaded) */
+  _update_window_title (FROGR_MAIN_VIEW (data), FALSE);
+}
+
+static void
 _update_account_menu_items (FrogrMainView *mainview)
 {
   FrogrMainViewPrivate *priv = NULL;
@@ -2099,6 +2108,9 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->model), "model-changed",
                     G_CALLBACK (_model_changed), self);
+
+  g_signal_connect (G_OBJECT (priv->model), "model-deserialized",
+                    G_CALLBACK (_model_deserialized), self);
 
   gtk_builder_connect_signals (builder, self);
 
