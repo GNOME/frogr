@@ -21,6 +21,7 @@
 #include "frogr-main-view-model.h"
 
 #include "frogr-account.h"
+#include "frogr-file-loader.h"
 
 #define TAGS_DELIMITER " "
 
@@ -138,7 +139,7 @@ _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
 }
 
 static JsonArray *
-serialize_list_to_json_array (GSList *list, GType g_type)
+_serialize_list_to_json_array (GSList *list, GType g_type)
 {
   JsonArray *json_array = NULL;
   JsonNode *json_node = NULL;
@@ -161,6 +162,47 @@ serialize_list_to_json_array (GSList *list, GType g_type)
     }
 
   return json_array;
+}
+
+static GSList *
+_deserialize_list_from_json_array (JsonArray *array, GType g_type)
+{
+  JsonNode *json_node = NULL;
+  GSList *result_list = NULL;
+  gpointer element;
+  guint n_elements = 0;
+  guint i = 0;
+
+  n_elements = json_array_get_length (array);
+  if (!n_elements)
+    return NULL;
+
+  for (i = 0; i < n_elements; i++)
+    {
+      json_node = json_array_get_element (array, i);
+      if (JSON_NODE_HOLDS_OBJECT (json_node))
+        element = json_gobject_deserialize (g_type, json_node);
+      else if (g_type == G_TYPE_STRING)
+        element = json_node_dup_string (json_node);
+
+      if (element)
+        result_list = g_slist_append (result_list, element);
+    }
+
+  return result_list;
+}
+
+static void
+_on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrMainViewModel *self)
+{
+  g_return_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self));
+  frogr_main_view_model_add_picture (self, picture);
+}
+
+static void
+_on_files_loaded (FrogrFileLoader *loader, FrogrMainViewModel *self)
+{
+  g_signal_emit (self, signals[MODEL_DESERIALIZED], 0);
 }
 
 static void
@@ -737,19 +779,19 @@ frogr_main_view_model_serialize (FrogrMainViewModel *self)
   root_object = json_object_new ();
 
   data_list = frogr_main_view_model_get_pictures (self);
-  json_array = serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
+  json_array = _serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
   json_object_set_array_member (root_object, "pictures", json_array);
 
   data_list = frogr_main_view_model_get_photosets (self);
-  json_array = serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
+  json_array = _serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
   json_object_set_array_member (root_object, "photosets", json_array);
 
   data_list = frogr_main_view_model_get_groups (self);
-  json_array = serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
+  json_array = _serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
   json_object_set_array_member (root_object, "groups", json_array);
 
   data_list = frogr_main_view_model_get_tags (self);
-  json_array = serialize_list_to_json_array (data_list, G_TYPE_STRING);
+  json_array = _serialize_list_to_json_array (data_list, G_TYPE_STRING);
   json_object_set_array_member (root_object, "tags", json_array);
 
   root_node = json_node_new (JSON_NODE_OBJECT);
@@ -761,5 +803,52 @@ frogr_main_view_model_serialize (FrogrMainViewModel *self)
 void
 frogr_main_view_model_deserialize (FrogrMainViewModel *self, JsonNode *json_node)
 {
-  /* TODO */
+  FrogrFileLoader *loader = NULL;
+  JsonObject *root_object = NULL;
+  JsonArray *array_member = NULL;
+  GSList *pictures = NULL;
+  GSList *sets = NULL;
+  GSList *groups = NULL;
+  GSList *tags = NULL;
+
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  /* First we get the different lists with data */
+  root_object = json_node_get_object (json_node);
+
+  array_member = json_object_get_array_member (root_object, "pictures");
+  if (array_member)
+    pictures = _deserialize_list_from_json_array (array_member, FROGR_TYPE_PICTURE);
+
+  array_member = json_object_get_array_member (root_object, "photosets");
+  if (array_member)
+    sets = _deserialize_list_from_json_array (array_member, FROGR_TYPE_PHOTOSET);
+
+  array_member = json_object_get_array_member (root_object, "groups");
+  if (array_member)
+    groups = _deserialize_list_from_json_array (array_member, FROGR_TYPE_GROUP);
+
+  array_member = json_object_get_array_member (root_object, "tags");
+  if (array_member)
+    tags = _deserialize_list_from_json_array (array_member, G_TYPE_STRING);
+
+  /* We set the sets, groups and tags */
+  frogr_main_view_model_set_photosets (self, sets);
+  frogr_main_view_model_set_groups (self, groups);
+  frogr_main_view_model_set_remote_tags (self, tags);
+
+  /* Now we take the list of pictures and carefully ad them into the
+     model as long as the associated thumbnails are being loaded */
+  loader = frogr_file_loader_new_from_pictures (pictures);
+
+  g_signal_connect (G_OBJECT (loader), "file-loaded",
+                    G_CALLBACK (_on_file_loaded),
+                    self);
+
+  g_signal_connect (G_OBJECT (loader), "files-loaded",
+                    G_CALLBACK (_on_files_loaded),
+                    self);
+
+  /* Load the pictures! */
+  frogr_file_loader_load (loader);
 }
