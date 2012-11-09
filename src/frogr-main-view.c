@@ -180,8 +180,6 @@ static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_pictures (FrogrMainView *self);
 static void _open_pictures_in_external_viewer (FrogrMainView *self);
 
-static void _load_project_from_file (FrogrMainView *self, const gchar *filepath);
-
 static void _load_project_dialog_response_cb (GtkDialog *dialog,
                                               gint response,
                                               gpointer data);
@@ -963,20 +961,6 @@ _n_pictures (FrogrMainView *self)
 }
 
 static void
-_load_project_from_file (FrogrMainView *self, const gchar *filepath)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  /* Load from disk and update project's path */
-  frogr_controller_load_project_from_file (priv->controller, filepath);
-  _update_project_path (self, filepath);
-
-  /* Update title marking it as non-dirty (just loaded) */
-  /* FIXME: This should not happen until we know the load is finished */
-  _update_window_title (self, FALSE);
-}
-
-static void
 _load_project_dialog_response_cb (GtkDialog *dialog,
                                   gint response,
                                   gpointer data)
@@ -989,13 +973,18 @@ _load_project_dialog_response_cb (GtkDialog *dialog,
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
       if (filename != NULL)
-        _load_project_from_file (self, filename);
+        {
+          FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-      g_free (filename);
+          /* Load from disk and update project's path */
+          frogr_controller_load_project_from_file (priv->controller, filename);
+          _update_project_path (self, filename);
+
+          g_free (filename);
+        }
     }
 
   gtk_widget_destroy (GTK_WIDGET (dialog));
-
 }
 
 static void
