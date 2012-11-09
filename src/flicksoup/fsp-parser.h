@@ -56,7 +56,7 @@ struct _FspParserClass
 
 /* All the parsers should be defined like this type */
 typedef
-gpointer (* FspParserFunc)              (FspParser  *self,
+gpointer (* FspParserFunc)        (FspParser  *self,
                                    const gchar      *buffer,
                                    gulong            buf_size,
                                    GError          **error);
