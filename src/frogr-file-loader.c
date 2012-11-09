@@ -51,6 +51,11 @@
 
 G_DEFINE_TYPE (FrogrFileLoader, frogr_file_loader, G_TYPE_OBJECT)
 
+typedef enum {
+  LOADING_MODE_FROM_URIS,
+  LOADING_MODE_FROM_PICTURES,
+} LoadingMode;
+
 /* Private struct */
 typedef struct _FrogrFileLoaderPrivate FrogrFileLoaderPrivate;
 struct _FrogrFileLoaderPrivate
@@ -58,8 +63,14 @@ struct _FrogrFileLoaderPrivate
   FrogrController *controller;
   FrogrMainView *mainview;
 
-  GSList *file_uris;
-  GSList *current;
+  LoadingMode loading_mode;
+
+  GSList *file_uris; /* For URI-based loading */
+  GSList *current_uri;
+
+  GSList *pictures;  /* For loading the pixbufs in the pictures */
+  GSList *current_picture;
+
   guint index;
   guint n_files;
 
@@ -89,8 +100,9 @@ static guint signals[N_SIGNALS] = { 0 };
 /* Prototypes */
 
 static void _update_status_and_progress (FrogrFileLoader *self);
-static void _load_next_file (FrogrFileLoader *self);
-static void _load_next_file_cb (GObject *object,
+static void _advance_to_next_file (FrogrFileLoader *self);
+static void _load_current_file (FrogrFileLoader *self);
+static void _load_current_file_cb (GObject *object,
                                 GAsyncResult *res,
                                 gpointer data);
 
@@ -100,6 +112,12 @@ static gboolean get_gps_coordinate (ExifData *exif,
                                     ExifTag   reftag,
                                     gdouble  *coordinate);
 static FrogrLocation *get_location_from_exif (ExifData *exif_data);
+static FrogrPicture* _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf);
+static void _update_picture_with_exif_data (FrogrFileLoader *self,
+                                            const gchar *contents,
+                                            gsize length,
+                                            FrogrPicture *picture);
+static gboolean _check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture);
 
 static gchar *remove_spaces_from_keyword (const gchar *keyword);
 static gchar *import_tags_from_xmp_keywords (const char *buffer, size_t len);
@@ -116,7 +134,7 @@ _update_status_and_progress (FrogrFileLoader *self)
   gchar *status_text = NULL;
 
   /* Update progress */
-  if (priv->current)
+  if (priv->current_uri || priv->current_picture)
     status_text = g_strdup_printf (_("Loading files %d / %d"),
                                    priv->index, priv->n_files);
 
@@ -127,14 +145,38 @@ _update_status_and_progress (FrogrFileLoader *self)
 }
 
 static void
-_load_next_file (FrogrFileLoader *self)
+_advance_to_next_file (FrogrFileLoader *self)
 {
   FrogrFileLoaderPrivate *priv =
     FROGR_FILE_LOADER_GET_PRIVATE (self);
 
-  if (priv->current)
+  /* update internal status and check the next file */
+  if (priv->loading_mode == LOADING_MODE_FROM_PICTURES)
+    priv->current_picture = g_slist_next (priv->current_picture);
+  else
+    priv->current_uri = g_slist_next (priv->current_uri);
+
+  priv->index++;
+}
+
+static void
+_load_current_file (FrogrFileLoader *self)
+{
+  FrogrFileLoaderPrivate *priv =
+    FROGR_FILE_LOADER_GET_PRIVATE (self);
+  const gchar *file_uri = NULL;
+
+  /* Get the uri for the file first */
+  if (priv->loading_mode == LOADING_MODE_FROM_URIS && priv->current_uri)
+    file_uri = (const gchar *)priv->current_uri->data;
+  else if (priv->current_picture)
     {
-      gchar *file_uri = (gchar *)priv->current->data;
+      FrogrPicture *picture = FROGR_PICTURE (priv->current_picture->data);
+      file_uri = frogr_picture_get_fileuri (picture);
+    }
+
+  if (file_uri)
+    {
       GFile *gfile = g_file_new_for_uri (file_uri);
       GFileInfo *file_info;
       gboolean valid_mime = TRUE;
@@ -180,16 +222,14 @@ _load_next_file (FrogrFileLoader *self)
         {
           g_file_load_contents_async (gfile,
                                       NULL,
-                                      _load_next_file_cb,
+                                      _load_current_file_cb,
                                       self);
           DEBUG ("Adding file %s", file_uri);
         }
       else
         {
-          /* update internal status and check the next file */
-          priv->current = g_slist_next (priv->current);
-          priv->index++;
-          _load_next_file (self);
+          _advance_to_next_file (self);
+          _load_current_file (self);
         }
     }
   else
@@ -201,20 +241,18 @@ _load_next_file (FrogrFileLoader *self)
 }
 
 static void
-_load_next_file_cb (GObject *object,
+_load_current_file_cb (GObject *object,
                     GAsyncResult *res,
                     gpointer data)
 {
   FrogrFileLoader *self = NULL;
   FrogrFileLoaderPrivate *priv = NULL;
-  FrogrPicture *fpicture = NULL;
+  FrogrPicture *picture = NULL;
   GFile *file = NULL;
   GError *error = NULL;
   gchar *contents = NULL;
   gsize length = 0;
-  gulong picture_filesize = 0;
-  gulong max_filesize = 0;
-  gboolean keep_going = TRUE;
+  gboolean keep_going = FALSE;
 
   self = FROGR_FILE_LOADER (data);;
   priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
@@ -223,34 +261,7 @@ _load_next_file_cb (GObject *object,
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
       GdkPixbuf *pixbuf = NULL;
-      GFileInfo* file_info = NULL;
-      ExifLoader *exif_loader = NULL;
-      ExifData *exif_data = NULL;
-      ExifEntry *exif_entry = NULL;
-      gchar *file_uri = NULL;
-      gchar *file_name = NULL;
-      guint64 filesize = 0;
       gboolean is_video = FALSE;
-
-      /* Gather needed information */
-      file_info = g_file_query_info (file,
-                                     G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME
-                                     "," G_FILE_ATTRIBUTE_STANDARD_SIZE,
-                                     G_FILE_QUERY_INFO_NONE,
-                                     NULL, &error);
-      if (!error)
-        {
-          file_name = g_strdup (g_file_info_get_display_name (file_info));
-          filesize = g_file_info_get_size (file_info);
-        }
-      else
-        {
-          g_warning ("Not able to read file information: %s", error->message);
-          g_error_free (error);
-
-          /* Fallback if g_file_query_info() failed */
-          file_name = g_file_get_basename (file);
-        }
 
       /* Load the pixbuf for the video or the image */
       is_video = _is_video_file (file);
@@ -259,98 +270,27 @@ _load_next_file_cb (GObject *object,
       else
         pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
                                                             IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
-      if (error)
+      if (!error)
+        {
+          if (priv->loading_mode == LOADING_MODE_FROM_PICTURES)
+            {
+              /* Just update the picture if we are not loading from URIs */
+              picture = FROGR_PICTURE (priv->current_picture->data);
+              frogr_picture_set_pixbuf (picture, pixbuf);
+            }
+          else
+            {
+              picture = _create_new_picture (self, file, pixbuf);
+              _update_picture_with_exif_data (self, contents, length, picture);
+            }
+
+          g_object_unref (pixbuf);
+        }
+      else
         {
           g_warning ("Not able to read pixbuf: %s", error->message);
           g_error_free (error);
         }
-
-      if (!priv->keep_file_extensions)
-        {
-          gchar *extension_dot = NULL;
-
-          /* Remove extension if present */
-          extension_dot = g_strrstr (file_name, ".");
-          if (extension_dot)
-            *extension_dot = '\0';
-        }
-
-      /* Build the FrogrPicture */
-      file_uri = g_file_get_uri (file);
-      fpicture = frogr_picture_new (file_uri,
-                                    file_name,
-                                    priv->public_visibility,
-                                    priv->family_visibility,
-                                    priv->friend_visibility,
-                                    is_video);
-
-      frogr_picture_set_send_location (fpicture, priv->send_location);
-      frogr_picture_set_show_in_search (fpicture, priv->show_in_search);
-      frogr_picture_set_license (fpicture, priv->license);
-      frogr_picture_set_content_type (fpicture, priv->content_type);
-      frogr_picture_set_safety_level (fpicture, priv->safety_level);
-      frogr_picture_set_pixbuf (fpicture, pixbuf);
-
-      /* FrogrPicture stores the size in KB */
-      frogr_picture_set_filesize (fpicture, filesize / 1024);
-
-      /* Set date and time from exif data, if present */
-      exif_loader = exif_loader_new();
-      exif_loader_write (exif_loader, (unsigned char *) contents, length);
-
-      exif_data = exif_loader_get_data (exif_loader);
-      if (exif_data)
-        {
-          FrogrLocation *location = NULL;
-
-          /* Date and time for picture taken */
-          exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
-          if (exif_entry)
-            {
-              if (exif_entry->format == EXIF_FORMAT_ASCII)
-                {
-                  gchar *value = g_new0 (char, 20);
-                  exif_entry_get_value (exif_entry, value, 20);
-
-                  frogr_picture_set_datetime (fpicture, value);
-                  g_free (value);
-                }
-              else
-                g_warning ("Found DateTime exif tag of invalid type");
-            }
-
-          /* Import tags from XMP metadata, if required */
-          if (priv->import_tags)
-            {
-              gchar *imported_tags = NULL;
-
-              imported_tags = import_tags_from_xmp_keywords (contents, length);
-              if (imported_tags)
-                {
-                  frogr_picture_set_tags (fpicture, imported_tags);
-                  g_free (imported_tags);
-                }
-            }
-
-          /* GPS coordinates */
-          location = get_location_from_exif (exif_data);
-          if (location != NULL)
-            {
-              /* frogr_picture_set_location takes ownership of location */
-              frogr_picture_set_location (fpicture, location);
-              g_object_unref (location);
-            }
-          exif_data_unref (exif_data);
-        }
-
-      if (file_info)
-        g_object_unref (file_info);
-
-      exif_loader_unref (exif_loader);
-
-      g_object_unref (pixbuf);
-      g_free (file_uri);
-      g_free (file_name);
     }
   else
     {
@@ -367,43 +307,22 @@ _load_next_file_cb (GObject *object,
   g_object_unref (file);
 
   /* Update internal status */
-  priv->current = g_slist_next (priv->current);
-  priv->index++;
+  _advance_to_next_file (self);
 
   /* Update status and progress */
   _update_status_and_progress (self);
-  g_signal_emit (self, signals[FILE_LOADED], 0, fpicture);
+  g_signal_emit (self, signals[FILE_LOADED], 0, picture);
 
   /* Check if we must interrupt the process */
-  picture_filesize = frogr_picture_get_filesize (fpicture);
-  max_filesize = frogr_picture_is_video (fpicture) ? priv->max_video_size : priv->max_picture_size;
+  keep_going = _check_filesize_limits (self, picture);
 
-  if (picture_filesize > max_filesize)
-    {
-      GtkWindow *window = NULL;
-      gchar *msg = NULL;
-
-      /* First %s is the title of the picture (filename of the file by
-         default). Second %s is the max allowed size for a picture to be
-         uploaded to flickr (different for free and PRO accounts). */
-      msg = g_strdup_printf (_("Can't load file %s: size of file is bigger "
-                               "than the maximum allowed for this account (%s)"),
-                             frogr_picture_get_title (fpicture),
-                             frogr_util_get_datasize_string (max_filesize));
-
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_util_show_error_dialog (window, msg);
-      g_free (msg);
-
-      keep_going = FALSE;
-    }
-
-  if (fpicture != NULL)
-    g_object_unref (fpicture);
+  /* We only unref the picture if it was created here */
+  if (picture != NULL && priv->loading_mode != LOADING_MODE_FROM_PICTURES)
+    g_object_unref (picture);
 
   /* Go for the next file, if needed */
   if (keep_going)
-    _load_next_file (self);
+    _load_current_file (self);
   else
     _finish_task_and_self_destruct (self);
 }
@@ -690,6 +609,175 @@ get_location_from_exif (ExifData *exif_data)
   return location;
 }
 
+static FrogrPicture*
+_create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf)
+{
+  FrogrFileLoaderPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+  GFileInfo* file_info = NULL;
+  gchar *file_name = NULL;
+  gchar *file_uri = NULL;
+  guint64 filesize = 0;
+  gboolean is_video = FALSE;
+  GError *error = NULL;
+
+  /* Gather needed information */
+  file_info = g_file_query_info (file,
+                                 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME
+                                 "," G_FILE_ATTRIBUTE_STANDARD_SIZE,
+                                 G_FILE_QUERY_INFO_NONE,
+                                 NULL, &error);
+  if (!error)
+    {
+      file_name = g_strdup (g_file_info_get_display_name (file_info));
+      filesize = g_file_info_get_size (file_info);
+    }
+  else
+    {
+      g_warning ("Not able to read file information: %s", error->message);
+      g_error_free (error);
+
+      /* Fallback if g_file_query_info() failed */
+      file_name = g_file_get_basename (file);
+    }
+
+  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
+
+  if (!priv->keep_file_extensions)
+    {
+      gchar *extension_dot = NULL;
+
+      /* Remove extension if present */
+      extension_dot = g_strrstr (file_name, ".");
+      if (extension_dot)
+        *extension_dot = '\0';
+    }
+
+  /* Build the FrogrPicture */
+  file_uri = g_file_get_uri (file);
+  picture = frogr_picture_new (file_uri,
+                                file_name,
+                                priv->public_visibility,
+                                priv->family_visibility,
+                                priv->friend_visibility,
+                                is_video);
+
+  frogr_picture_set_send_location (picture, priv->send_location);
+  frogr_picture_set_show_in_search (picture, priv->show_in_search);
+  frogr_picture_set_license (picture, priv->license);
+  frogr_picture_set_content_type (picture, priv->content_type);
+  frogr_picture_set_safety_level (picture, priv->safety_level);
+  frogr_picture_set_pixbuf (picture, pixbuf);
+
+  /* FrogrPicture stores the size in KB */
+  frogr_picture_set_filesize (picture, filesize / 1024);
+
+  if (file_info)
+    g_object_unref (file_info);
+
+  g_free (file_uri);
+  g_free (file_name);
+
+  return picture;
+}
+
+static void
+_update_picture_with_exif_data (FrogrFileLoader *self,
+                                const gchar *contents,
+                                gsize length,
+                                FrogrPicture *picture)
+{
+  ExifLoader *exif_loader = NULL;
+  ExifData *exif_data = NULL;
+
+  /* Set date and time from exif data, if present */
+  exif_loader = exif_loader_new();
+  exif_loader_write (exif_loader, (unsigned char *) contents, length);
+
+  exif_data = exif_loader_get_data (exif_loader);
+  if (exif_data)
+    {
+      FrogrLocation *location = NULL;
+      ExifEntry *exif_entry = NULL;
+
+      /* Date and time for picture taken */
+      exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
+      if (exif_entry)
+        {
+          if (exif_entry->format == EXIF_FORMAT_ASCII)
+            {
+              gchar *value = g_new0 (char, 20);
+              exif_entry_get_value (exif_entry, value, 20);
+
+              frogr_picture_set_datetime (picture, value);
+              g_free (value);
+            }
+          else
+            g_warning ("Found DateTime exif tag of invalid type");
+        }
+
+      /* Import tags from XMP metadata, if required */
+      if (FROGR_FILE_LOADER_GET_PRIVATE (self)->import_tags)
+        {
+          gchar *imported_tags = NULL;
+
+          imported_tags = import_tags_from_xmp_keywords (contents, length);
+          if (imported_tags)
+            {
+              frogr_picture_set_tags (picture, imported_tags);
+              g_free (imported_tags);
+            }
+        }
+
+      /* GPS coordinates */
+      location = get_location_from_exif (exif_data);
+      if (location != NULL)
+        {
+          /* frogr_picture_set_location takes ownership of location */
+          frogr_picture_set_location (picture, location);
+          g_object_unref (location);
+        }
+      exif_data_unref (exif_data);
+    }
+
+  exif_loader_unref (exif_loader);
+}
+
+static gboolean
+_check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture)
+{
+  FrogrFileLoaderPrivate *priv = NULL;
+  gulong picture_filesize = 0;
+  gulong max_filesize = 0;
+  gboolean keep_going = TRUE;
+
+  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
+  max_filesize = frogr_picture_is_video (picture) ? priv->max_video_size : priv->max_picture_size;
+  picture_filesize = frogr_picture_get_filesize (picture);
+
+  if (picture_filesize > max_filesize)
+    {
+      GtkWindow *window = NULL;
+      gchar *msg = NULL;
+
+      /* First %s is the title of the picture (filename of the file by
+         default). Second %s is the max allowed size for a picture to be
+         uploaded to flickr (different for free and PRO accounts). */
+      msg = g_strdup_printf (_("Can't load file %s: size of file is bigger "
+                               "than the maximum allowed for this account (%s)"),
+                             frogr_picture_get_title (picture),
+                             frogr_util_get_datasize_string (max_filesize));
+
+      window = frogr_main_view_get_window (priv->mainview);
+      frogr_util_show_error_dialog (window, msg);
+      g_free (msg);
+
+      keep_going = FALSE;
+    }
+
+  return keep_going;
+}
+
 static gchar *
 remove_spaces_from_keyword (const gchar *keyword)
 {
@@ -871,7 +959,9 @@ frogr_file_loader_init (FrogrFileLoader *self)
 
   /* Init the rest of private data */
   priv->file_uris = NULL;
-  priv->current = NULL;
+  priv->pictures = NULL;
+  priv->current_uri = NULL;
+  priv->current_picture = NULL;
   priv->index = -1;
   priv->n_files = 0;
 }
@@ -879,20 +969,43 @@ frogr_file_loader_init (FrogrFileLoader *self)
 /* Public API */
 
 FrogrFileLoader *
-frogr_file_loader_new (GSList *file_uris, gulong max_picture_size, gulong max_video_size)
+frogr_file_loader_new_from_uris (GSList *file_uris, gulong max_picture_size, gulong max_video_size)
 {
   FrogrFileLoader *self = NULL;
   FrogrFileLoaderPrivate *priv = NULL;
 
+  g_return_val_if_fail (file_uris, NULL);
+
   self = FROGR_FILE_LOADER (g_object_new(FROGR_TYPE_FILE_LOADER, NULL));
   priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
 
+  priv->loading_mode = LOADING_MODE_FROM_URIS;
   priv->file_uris = file_uris;
-  priv->current = priv->file_uris;
+  priv->current_uri = priv->file_uris;
   priv->index = 0;
   priv->n_files = g_slist_length (priv->file_uris);
   priv->max_picture_size = max_picture_size;
   priv->max_video_size = max_video_size;
+
+  return self;
+}
+
+FrogrFileLoader *
+frogr_file_loader_new_from_pictures (GSList *pictures)
+{
+  FrogrFileLoader *self = NULL;
+  FrogrFileLoaderPrivate *priv = NULL;
+
+  g_return_val_if_fail (pictures, NULL);
+
+  self = FROGR_FILE_LOADER (g_object_new(FROGR_TYPE_FILE_LOADER, NULL));
+  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
+
+  priv->loading_mode = LOADING_MODE_FROM_PICTURES;
+  priv->pictures = pictures;
+  priv->current_picture = pictures;
+  priv->index = 0;
+  priv->n_files = g_slist_length (priv->pictures);
 
   return self;
 }
@@ -907,12 +1020,12 @@ frogr_file_loader_load (FrogrFileLoader *self)
   priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
 
   /* Check first whether there's something to load */
-  if (priv->file_uris == NULL)
+  if (!priv->n_files)
     return;
 
   /* Update status and progress */
   _update_status_and_progress (self);
 
   /* Trigger the asynchronous process */
-  _load_next_file (self);
+  _load_current_file (self);
 }

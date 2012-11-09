@@ -2646,7 +2646,7 @@ frogr_controller_load_pictures (FrogrController *self,
   max_picture_filesize = frogr_account_get_max_picture_filesize (priv->account);
   max_video_filesize = frogr_account_get_max_video_filesize (priv->account);
 
-  loader = frogr_file_loader_new (fileuris, max_picture_filesize, max_video_filesize);
+  loader = frogr_file_loader_new_from_uris (fileuris, max_picture_filesize, max_video_filesize);
 
   g_signal_connect (G_OBJECT (loader), "file-loaded",
                     G_CALLBACK (_on_file_loaded),
