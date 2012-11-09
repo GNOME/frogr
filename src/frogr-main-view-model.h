@@ -85,6 +85,11 @@ void frogr_main_view_model_add_local_photoset (FrogrMainViewModel *self,
 
 GSList *frogr_main_view_model_get_photosets (FrogrMainViewModel *self);
 
+void frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
+                                          GSList *photosets);
+
+void frogr_main_view_model_remove_all_photosets (FrogrMainViewModel *self);
+
 guint frogr_main_view_model_n_photosets (FrogrMainViewModel *self);
 
 /* Groups */
