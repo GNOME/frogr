@@ -137,6 +137,29 @@ _remove_local_photosets (FrogrMainViewModel *self)
 }
 
 static void
+_remove_pictures (FrogrMainViewModel *self)
+{
+  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+
+  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+
+  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  while (priv->pictures)
+    {
+      picture = FROGR_PICTURE (priv->pictures->data);
+      priv->pictures = g_slist_remove (priv->pictures, picture);
+      g_signal_emit (self, signals[PICTURE_REMOVED], 0, picture);
+      g_object_unref (picture);
+    }
+
+  g_slist_free (priv->pictures);
+  priv->pictures = NULL;
+
+  g_signal_emit (self, signals[MODEL_CHANGED], 0);
+}
+
+static void
 _remove_all_photosets (FrogrMainViewModel *self)
 {
   FrogrMainViewModelPrivate *priv = NULL;
@@ -299,13 +322,7 @@ _frogr_main_view_model_dispose (GObject* object)
   FrogrMainViewModel *self = FROGR_MAIN_VIEW_MODEL (object);
   FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (object);
 
-  if (priv->pictures)
-    {
-      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->pictures);
-      priv->pictures = NULL;
-    }
-
+  _remove_pictures (self);
   _remove_all_photosets (self);
   _remove_groups (self);
   _remove_all_tags (self);
@@ -836,5 +853,6 @@ frogr_main_view_model_deserialize (FrogrMainViewModel *self, JsonNode *json_node
                     self);
 
   /* Load the pictures! */
+  _remove_pictures (self);
   frogr_file_loader_load (loader);
 }
