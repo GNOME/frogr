@@ -196,6 +196,7 @@ _update_model (FrogrCreateNewSetDialog *self,
           frogr_picture_set_description (picture, description);
         }
     }
+  g_object_unref (new_set);
 
   frogr_model_notify_changes_in_pictures (model);
 }
