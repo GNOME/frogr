@@ -104,7 +104,6 @@ static gint _compare_groups (FrogrGroup *group1, FrogrGroup *group2);
 
 static JsonNode *_serialize_list (GSList *objects_list);
 static gboolean _deserialize_list (GType g_type, JsonNode *node, GValue *value);
-static gboolean _free_deserialized_object_list_on_idle (GSList *list);
 
 static JsonNode *_serialize_property (JsonSerializable *serializable,
                                       const gchar *name,
@@ -311,21 +310,9 @@ _deserialize_list (GType g_type, JsonNode *node, GValue *value)
         }
 
       g_value_set_pointer (value, objects);
-      g_idle_add ((GSourceFunc)_free_deserialized_object_list_on_idle, objects);
     }
 
   return TRUE;
-}
-
-static gboolean
-_free_deserialized_object_list_on_idle (GSList *list)
-{
-  if (list)
-    {
-      g_slist_foreach (list, (GFunc) g_object_unref, NULL);
-      g_slist_free (list);
-    }
-  return FALSE;
 }
 
 static JsonNode *
