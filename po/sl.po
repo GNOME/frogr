@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-11-04 22:04+0000\n"
-"PO-Revision-Date: 2012-11-05 14:46+0100\n"
+"POT-Creation-Date: 2012-11-09 14:45+0000\n"
+"PO-Revision-Date: 2012-11-10 08:54+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -90,11 +90,11 @@ msgstr "Pooblasti %s"
 msgid "Invalid verification code"
 msgstr "Neveljavna overitvena koda "
 
-#: ../src/frogr-controller.c:293
+#: ../src/frogr-controller.c:295
 msgid "Process cancelled"
 msgstr "Opravilo je bilo prekinjeno"
 
-#: ../src/frogr-controller.c:298
+#: ../src/frogr-controller.c:300
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -102,7 +102,7 @@ msgstr ""
 "Napaka povezave:\n"
 "omrežje ni na voljo"
 
-#: ../src/frogr-controller.c:302
+#: ../src/frogr-controller.c:304
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -110,7 +110,7 @@ msgstr ""
 "Napaka povezave:\n"
 "slaba zahteva"
 
-#: ../src/frogr-controller.c:306
+#: ../src/frogr-controller.c:308
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -118,7 +118,7 @@ msgstr ""
 "Napaka povezave:\n"
 "napaka s strani strežnika"
 
-#: ../src/frogr-controller.c:310
+#: ../src/frogr-controller.c:312
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -126,7 +126,7 @@ msgstr ""
 "Napaka med pošiljanjem:\n"
 "neveljavna datoteka."
 
-#: ../src/frogr-controller.c:314
+#: ../src/frogr-controller.c:316
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -134,18 +134,24 @@ msgstr ""
 "Napaka med pošiljanjem slike:\n"
 "količinska omejitev je presežena."
 
-#: ../src/frogr-controller.c:318
+#: ../src/frogr-controller.c:321
 #, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] "Presežena je omejitev (omejitev: %d posnetkov na mesec)"
+msgstr[1] "Presežena je omejitev (omejitev: %d posnetek na mesec)"
+msgstr[2] "Presežena je omejitev (omejitev: %d posnetka na mesec)"
+msgstr[3] "Presežena je omejitev (omejitev: %d posnetki na mesec)"
+
+#: ../src/frogr-controller.c:325
 msgid ""
 "Error uploading video:\n"
-"You can't upload more videos with this account\n"
-"Quota exceeded (limit: %d videos per month)"
+"You can't upload more videos with this account"
 msgstr ""
 "Napaka pošiljanja videa:\n"
-"Velikost video posnetkov je omejena z računom\n"
-"in ta je trenutno presežena (omejitev: %d videov na mesec)"
+"S tem računom ni več mogoče pošiljati posnetkov"
 
-#: ../src/frogr-controller.c:324
+#: ../src/frogr-controller.c:331
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -153,7 +159,7 @@ msgstr ""
 "Napaka:\n"
 "fotografije ni mogoče najti"
 
-#: ../src/frogr-controller.c:328
+#: ../src/frogr-controller.c:335
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -161,7 +167,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je že v naboru fotografij"
 
-#: ../src/frogr-controller.c:332
+#: ../src/frogr-controller.c:339
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -169,7 +175,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je že v skupini"
 
-#: ../src/frogr-controller.c:336
+#: ../src/frogr-controller.c:343
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -177,7 +183,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je že v največ dovoljenih skupinah "
 
-#: ../src/frogr-controller.c:340
+#: ../src/frogr-controller.c:347
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -185,7 +191,7 @@ msgstr ""
 "Napaka:\n"
 "omejitev skupine je že dosežena."
 
-#: ../src/frogr-controller.c:344
+#: ../src/frogr-controller.c:351
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -193,7 +199,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je dodana v čakalno vrsto skupine"
 
-#: ../src/frogr-controller.c:348
+#: ../src/frogr-controller.c:355
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -201,7 +207,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je že dodana v čakalno vrsto skupine"
 
-#: ../src/frogr-controller.c:352
+#: ../src/frogr-controller.c:359
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -209,7 +215,7 @@ msgstr ""
 "Napaka:\n"
 "vsebina ni dovoljena za to skupino"
 
-#: ../src/frogr-controller.c:356
+#: ../src/frogr-controller.c:363
 #, c-format
 msgid ""
 "Authorization failed.\n"
@@ -218,7 +224,7 @@ msgstr ""
 "Pooblastitev je spodletela.\n"
 "poskusite znova"
 
-#: ../src/frogr-controller.c:362
+#: ../src/frogr-controller.c:369
 #, c-format
 msgid ""
 "Error\n"
@@ -229,7 +235,7 @@ msgstr ""
 "%s ni pravilno odobren za pošiljanje slik na Flickr.\n"
 "Treba je znova odobriti."
 
-#: ../src/frogr-controller.c:367
+#: ../src/frogr-controller.c:374
 #, c-format
 msgid ""
 "Unable to authenticate in Flickr\n"
@@ -238,7 +244,7 @@ msgstr ""
 "Ni mogoče overiti v sistemu Flickr.\n"
 "Poskusite znova."
 
-#: ../src/frogr-controller.c:371
+#: ../src/frogr-controller.c:378
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -247,7 +253,7 @@ msgstr ""
 "%s je treba pred pošiljanjem slik na na flickr pravilno odobriti.\n"
 "Poskusite znova."
 
-#: ../src/frogr-controller.c:376
+#: ../src/frogr-controller.c:383
 #, c-format
 msgid ""
 "Invalid verification code.\n"
@@ -256,7 +262,7 @@ msgstr ""
 "Neveljavna koda za pooblastitev.\n"
 "Poskusite znova."
 
-#: ../src/frogr-controller.c:380
+#: ../src/frogr-controller.c:387
 #, c-format
 msgid ""
 "Error:\n"
@@ -266,58 +272,58 @@ msgstr ""
 "storitev ni na voljo."
 
 #. General error: just dump the raw error description
-#: ../src/frogr-controller.c:385
+#: ../src/frogr-controller.c:392
 #, c-format
 msgid "An error happened: %s."
 msgstr "Prišlo je do napake: %s."
 
-#: ../src/frogr-controller.c:593
+#: ../src/frogr-controller.c:600
 msgid "Authorization failed (timed out)"
 msgstr "Overitev je spodletela (zakasnela)"
 
-#: ../src/frogr-controller.c:634
+#: ../src/frogr-controller.c:641
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Ponovno prejemanje (poskus %d/%d) ..."
 
-#: ../src/frogr-controller.c:639
+#: ../src/frogr-controller.c:646
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Pošiljanje '%s'..."
 
-#: ../src/frogr-controller.c:1742
+#: ../src/frogr-controller.c:1749
 msgid "Updating credentials…"
 msgstr "Posodabljanje poveril ..."
 
-#: ../src/frogr-controller.c:1747
+#: ../src/frogr-controller.c:1754
 msgid "Retrieving data for authorization…"
 msgstr "Pridobivanje podatkov za overitev ..."
 
-#: ../src/frogr-controller.c:1752
+#: ../src/frogr-controller.c:1759
 msgid "Finishing authorization…"
 msgstr "Zaključevanje overitve ..."
 
-#: ../src/frogr-controller.c:1757
+#: ../src/frogr-controller.c:1764
 msgid "Retrieving list of sets…"
 msgstr "Pridobivanje seznama naborov ..."
 
-#: ../src/frogr-controller.c:1762
+#: ../src/frogr-controller.c:1769
 msgid "Retrieving list of groups…"
 msgstr "Pridobivanje seznama skupin ..."
 
-#: ../src/frogr-controller.c:1767
+#: ../src/frogr-controller.c:1774
 msgid "Retrieving list of tags…"
 msgstr "Pridobivanje seznama oznak ..."
 
-#: ../src/frogr-controller.c:1915
+#: ../src/frogr-controller.c:1922
 msgid "No sets found"
 msgstr "Ni najdenih naborov"
 
-#: ../src/frogr-controller.c:1951
+#: ../src/frogr-controller.c:1958
 msgid "No groups found"
 msgstr "Ni najdenih skupin"
 
-#: ../src/frogr-controller.c:2659
+#: ../src/frogr-controller.c:2666
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
