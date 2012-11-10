@@ -562,6 +562,7 @@ frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
 {
   FrogrPhotoSet *set = NULL;
   GSList *item = NULL;
+  GSList *next_item = NULL;
 
   g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
 
@@ -569,16 +570,22 @@ frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
   _remove_all_photosets (self);
 
   /* Set groups now, separating them into two lists: local and remote */
-  for (item = photosets; item; item = g_slist_next (item))
+  item = photosets;
+  while (item)
     {
       set = FROGR_PHOTOSET(item->data);
       if (frogr_photoset_is_local (set))
         {
+          next_item = item->next;
           photosets = g_slist_remove_link (photosets, item);
           frogr_main_view_model_add_local_photoset (self, set);
           g_object_unref (set);
           g_slist_free (item);
+
+          item = next_item;
         }
+      else
+        item = g_slist_next (item);
     }
 
   /* Once separated the local photosets, we assign the remote ones */
