@@ -1728,7 +1728,7 @@ _craft_state_description (FrogrMainView *mainview)
   /* Check size of the loaded pictures, if any */
   pictures = frogr_main_view_model_get_pictures (priv->model);
   n_pictures = frogr_main_view_model_n_pictures (priv->model);
-  if (n_pictures > 0)
+  if (n_pictures)
     {
       GSList *item = NULL;
       gulong total_size = 0;

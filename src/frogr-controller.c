@@ -2696,12 +2696,12 @@ frogr_controller_upload_pictures (FrogrController *self)
   else
     {
       FrogrMainViewModel *mainview_model = NULL;
+      GSList *pictures = NULL;
+
       mainview_model = frogr_main_view_get_model (priv->mainview);
-
-      if (frogr_main_view_model_n_pictures (mainview_model) > 0)
+      pictures = frogr_main_view_model_get_pictures (mainview_model);
+      if (pictures)
         {
-          GSList *pictures = frogr_main_view_model_get_pictures (mainview_model);
-
           UploadPicturesData *up_data = g_slice_new0 (UploadPicturesData);
           up_data->pictures = g_slist_copy (pictures);
           up_data->current = up_data->pictures;

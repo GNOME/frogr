@@ -37,7 +37,6 @@ typedef struct _FrogrMainViewModelPrivate FrogrMainViewModelPrivate;
 struct _FrogrMainViewModelPrivate
 {
   GSList *pictures;
-  guint n_pictures;
 
   /* For sequential access of groups and sets */
   GSList *remote_sets;
@@ -375,8 +374,6 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
 
   /* Init private data */
   priv->pictures = NULL;
-  priv->n_pictures = 0;
-
   priv->remote_sets = NULL;
   priv->local_sets = NULL;
   priv->all_sets = NULL;
@@ -416,7 +413,6 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   priv->pictures = g_slist_append (priv->pictures, g_object_ref (picture));
-  priv->n_pictures++;
 
   g_signal_emit (self, signals[PICTURE_ADDED], 0, picture);
   g_signal_emit (self, signals[MODEL_CHANGED], 0);
@@ -433,11 +429,10 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   priv->pictures = g_slist_remove (priv->pictures, picture);
-  priv->n_pictures--;
-  g_object_unref (picture);
 
   g_signal_emit (self, signals[PICTURE_REMOVED], 0, picture);
   g_signal_emit (self, signals[MODEL_CHANGED], 0);
+  g_object_unref (picture);
 }
 
 guint
@@ -448,7 +443,7 @@ frogr_main_view_model_n_pictures (FrogrMainViewModel *self)
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  return priv->n_pictures;
+  return g_slist_length (priv->pictures);
 }
 
 GSList *
