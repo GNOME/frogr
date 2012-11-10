@@ -25,7 +25,7 @@
 #include "frogr-global-defs.h"
 #include "frogr-live-entry.h"
 #include "frogr-main-view.h"
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 #include "frogr-picture.h"
 
 #include <config.h>
@@ -85,7 +85,7 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
       /* Check if there's something to add */
       if (tags && !g_str_equal (tags, ""))
         {
-          FrogrMainViewModel *model = NULL;
+          FrogrModel *model = NULL;
           FrogrPicture *picture = NULL;
           GSList *item = NULL;
 
@@ -99,8 +99,8 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
             }
 
           /* Add tags to the model */
-          model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
-          frogr_main_view_model_add_local_tags_from_string (model, tags);
+          model = frogr_controller_get_model (frogr_controller_get_instance ());
+          frogr_model_add_local_tags_from_string (model, tags);
         }
 
       /* Free */

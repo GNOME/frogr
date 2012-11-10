@@ -73,10 +73,10 @@ frogr_SOURCES = \
 	frogr-live-entry.h \
 	frogr-location.c \
 	frogr-location.h \
-	frogr-main-view-model.c \
-	frogr-main-view-model.h \
 	frogr-main-view.c \
 	frogr-main-view.h \
+	frogr-model.c \
+	frogr-model.h \
 	frogr-photoset.c \
 	frogr-photoset.h \
 	frogr-picture.c \

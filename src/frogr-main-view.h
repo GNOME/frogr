@@ -21,7 +21,7 @@
 #ifndef FROGR_MAIN_VIEW_H
 #define FROGR_MAIN_VIEW_H
 
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 
 #include <gtk/gtk.h>
 
@@ -69,7 +69,7 @@ void frogr_main_view_hide_progress (FrogrMainView *self);
 
 void frogr_main_view_reorder_pictures (FrogrMainView *self);
 
-FrogrMainViewModel *frogr_main_view_get_model (FrogrMainView *self);
+FrogrModel *frogr_main_view_get_model (FrogrMainView *self);
 
 G_END_DECLS
 

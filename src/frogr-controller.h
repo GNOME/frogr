@@ -23,7 +23,7 @@
 
 #include "frogr-account.h"
 #include "frogr-main-view.h"
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 #include "frogr-picture.h"
 
 #include <config.h>
@@ -67,7 +67,7 @@ FrogrController *frogr_controller_get_instance (void);
 
 FrogrMainView *frogr_controller_get_main_view (FrogrController *self);
 
-FrogrMainViewModel *frogr_controller_get_main_view_model (FrogrController *self);
+FrogrModel *frogr_controller_get_model (FrogrController *self);
 
 gboolean frogr_controller_run_app (FrogrController *self);
 

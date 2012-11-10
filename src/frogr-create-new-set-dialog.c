@@ -22,7 +22,7 @@
 
 #include "frogr-photoset.h"
 #include "frogr-controller.h"
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
 
@@ -170,18 +170,18 @@ _update_model (FrogrCreateNewSetDialog *self,
 {
   FrogrCreateNewSetDialogPrivate *priv = NULL;
   FrogrController *controller = NULL;
-  FrogrMainViewModel *mainview_model = NULL;
+  FrogrModel *model = NULL;
   FrogrPhotoSet *new_set = NULL;
   FrogrPicture *picture = NULL;
   GSList *item = NULL;
 
   priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   controller = frogr_controller_get_instance ();
-  mainview_model = frogr_controller_get_main_view_model (controller);
+  model = frogr_controller_get_model (controller);
 
   /* Add the set to the model */
   new_set = frogr_photoset_new_local (title, description);
-  frogr_main_view_model_add_local_photoset (mainview_model, new_set);
+  frogr_model_add_local_photoset (model, new_set);
 
   /* Add the set to the list of sets for each picture */
   for (item = priv->pictures; item; item = g_slist_next (item))
@@ -197,7 +197,7 @@ _update_model (FrogrCreateNewSetDialog *self,
         }
     }
 
-  frogr_main_view_model_notify_changes_in_pictures (mainview_model);
+  frogr_model_notify_changes_in_pictures (model);
 }
 
 static void

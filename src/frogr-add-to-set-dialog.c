@@ -21,7 +21,7 @@
 #include "frogr-add-to-set-dialog.h"
 
 #include "frogr-controller.h"
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 #include "frogr-photoset.h"
 #include "frogr-picture.h"
 
@@ -402,7 +402,7 @@ _update_pictures (FrogrAddToSetDialog *self)
   selected_sets = _get_selected_photosets (self);
   if (selected_sets)
     {
-      FrogrMainViewModel *model = NULL;
+      FrogrModel *model = NULL;
 
       for (item = priv->pictures; item; item = g_slist_next (item))
         {
@@ -413,8 +413,8 @@ _update_pictures (FrogrAddToSetDialog *self)
           frogr_picture_set_photosets (picture, g_slist_copy (selected_sets));
         }
 
-      model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
-      frogr_main_view_model_notify_changes_in_pictures (model);
+      model = frogr_controller_get_model (frogr_controller_get_instance ());
+      frogr_model_notify_changes_in_pictures (model);
     }
   g_slist_free (selected_sets);
 }

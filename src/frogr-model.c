@@ -1,5 +1,5 @@
 /*
- * frogr-main-view-model.c -- Main view model in frogr
+ * frogr-model.c -- Main view model in frogr
  *
  * Copyright (C) 2009-2012 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>
@@ -18,23 +18,23 @@
  *
  */
 
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 
 #include "frogr-account.h"
 #include "frogr-file-loader.h"
 
 #define TAGS_DELIMITER " "
 
-#define FROGR_MAIN_VIEW_MODEL_GET_PRIVATE(object)               \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_MAIN_VIEW_MODEL,     \
-                                FrogrMainViewModelPrivate))
+#define FROGR_MODEL_GET_PRIVATE(object)                 \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
+                                FROGR_TYPE_MODEL,       \
+                                FrogrModelPrivate))
 
-G_DEFINE_TYPE (FrogrMainViewModel, frogr_main_view_model, G_TYPE_OBJECT)
+G_DEFINE_TYPE (FrogrModel, frogr_model, G_TYPE_OBJECT)
 
 /* Private struct */
-typedef struct _FrogrMainViewModelPrivate FrogrMainViewModelPrivate;
-struct _FrogrMainViewModelPrivate
+typedef struct _FrogrModelPrivate FrogrModelPrivate;
+struct _FrogrModelPrivate
 {
   GSList *pictures;
 
@@ -79,16 +79,16 @@ _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
 }
 
 static void
-_remove_remote_photosets (FrogrMainViewModel *self)
+_remove_remote_photosets (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
   FrogrPhotoSet *set = NULL;
   GSList *item = NULL;
   const gchar *id = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   if (!priv->remote_sets)
     return;
 
@@ -112,15 +112,15 @@ _remove_remote_photosets (FrogrMainViewModel *self)
 }
 
 static void
-_remove_local_photosets (FrogrMainViewModel *self)
+_remove_local_photosets (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
   FrogrPhotoSet *set = NULL;
   GSList *item = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   if (!priv->local_sets)
     return;
 
@@ -137,14 +137,14 @@ _remove_local_photosets (FrogrMainViewModel *self)
 }
 
 static void
-_remove_pictures (FrogrMainViewModel *self)
+_remove_pictures (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   while (priv->pictures)
     {
       picture = FROGR_PICTURE (priv->pictures->data);
@@ -160,13 +160,13 @@ _remove_pictures (FrogrMainViewModel *self)
 }
 
 static void
-_remove_all_photosets (FrogrMainViewModel *self)
+_remove_all_photosets (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   if (priv->all_sets)
     {
       g_slist_free (priv->all_sets);
@@ -181,13 +181,13 @@ _remove_all_photosets (FrogrMainViewModel *self)
 }
 
 static void
-_remove_groups (FrogrMainViewModel *self)
+_remove_groups (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   if (priv->groups)
     {
       g_slist_foreach (priv->groups, (GFunc)g_object_unref, NULL);
@@ -200,13 +200,13 @@ _remove_groups (FrogrMainViewModel *self)
 }
 
 static void
-_remove_remote_tags (FrogrMainViewModel *self)
+_remove_remote_tags (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   if (!priv->remote_tags)
     return;
 
@@ -216,13 +216,13 @@ _remove_remote_tags (FrogrMainViewModel *self)
 }
 
 static void
-_remove_local_tags (FrogrMainViewModel *self)
+_remove_local_tags (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   if (!priv->local_tags)
     return;
 
@@ -232,13 +232,13 @@ _remove_local_tags (FrogrMainViewModel *self)
 }
 
 static void
-_remove_all_tags (FrogrMainViewModel *self)
+_remove_all_tags (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   if (priv->all_tags)
     {
       g_slist_free (priv->all_tags);
@@ -304,23 +304,23 @@ _deserialize_list_from_json_array (JsonArray *array, GType g_type)
 }
 
 static void
-_on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrMainViewModel *self)
+_on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrModel *self)
 {
-  g_return_if_fail (FROGR_IS_MAIN_VIEW_MODEL (self));
-  frogr_main_view_model_add_picture (self, picture);
+  g_return_if_fail (FROGR_IS_MODEL (self));
+  frogr_model_add_picture (self, picture);
 }
 
 static void
-_on_files_loaded (FrogrFileLoader *loader, FrogrMainViewModel *self)
+_on_files_loaded (FrogrFileLoader *loader, FrogrModel *self)
 {
   g_signal_emit (self, signals[MODEL_DESERIALIZED], 0);
 }
 
 static void
-_frogr_main_view_model_dispose (GObject* object)
+_frogr_model_dispose (GObject* object)
 {
-  FrogrMainViewModel *self = FROGR_MAIN_VIEW_MODEL (object);
-  FrogrMainViewModelPrivate *priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (object);
+  FrogrModel *self = FROGR_MODEL (object);
+  FrogrModelPrivate *priv = FROGR_MODEL_GET_PRIVATE (object);
 
   _remove_pictures (self);
   _remove_all_photosets (self);
@@ -339,14 +339,14 @@ _frogr_main_view_model_dispose (GObject* object)
       priv->groups_table = NULL;
     }
 
-  G_OBJECT_CLASS (frogr_main_view_model_parent_class)->dispose (object);
+  G_OBJECT_CLASS (frogr_model_parent_class)->dispose (object);
 }
 
 static void
-frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
+frogr_model_class_init(FrogrModelClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS(klass);
-  obj_class->dispose = _frogr_main_view_model_dispose;
+  obj_class->dispose = _frogr_model_dispose;
 
   signals[PICTURE_ADDED] =
     g_signal_new ("picture-added",
@@ -380,14 +380,14 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
 
-  g_type_class_add_private (obj_class, sizeof (FrogrMainViewModelPrivate));
+  g_type_class_add_private (obj_class, sizeof (FrogrModelPrivate));
 }
 
 static void
-frogr_main_view_model_init (FrogrMainViewModel *self)
+frogr_model_init (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv =
-    FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  FrogrModelPrivate *priv =
+    FROGR_MODEL_GET_PRIVATE (self);
 
   /* Init private data */
   priv->pictures = NULL;
@@ -412,23 +412,23 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
 
 /* Public API */
 
-FrogrMainViewModel *
-frogr_main_view_model_new (void)
+FrogrModel *
+frogr_model_new (void)
 {
-  GObject *new = g_object_new(FROGR_TYPE_MAIN_VIEW_MODEL, NULL);
-  return FROGR_MAIN_VIEW_MODEL (new);
+  GObject *new = g_object_new(FROGR_TYPE_MODEL, NULL);
+  return FROGR_MODEL (new);
 }
 
 void
-frogr_main_view_model_add_picture (FrogrMainViewModel *self,
-                                   FrogrPicture *picture)
+frogr_model_add_picture (FrogrModel *self,
+                         FrogrPicture *picture)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
   g_return_if_fail(FROGR_IS_PICTURE (picture));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   priv->pictures = g_slist_append (priv->pictures, g_object_ref (picture));
 
   g_signal_emit (self, signals[PICTURE_ADDED], 0, picture);
@@ -436,14 +436,14 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
 }
 
 void
-frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
-                                      FrogrPicture *picture)
+frogr_model_remove_picture (FrogrModel *self,
+                            FrogrPicture *picture)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
 
   priv->pictures = g_slist_remove (priv->pictures, picture);
 
@@ -453,51 +453,51 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
 }
 
 guint
-frogr_main_view_model_n_pictures (FrogrMainViewModel *self)
+frogr_model_n_pictures (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), 0);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   return g_slist_length (priv->pictures);
 }
 
 GSList *
-frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
+frogr_model_get_pictures (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), NULL);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   return priv->pictures;
 }
 
 void
-frogr_main_view_model_notify_changes_in_pictures (FrogrMainViewModel *self)
+frogr_model_notify_changes_in_pictures (FrogrModel *self)
 {
   /* Just emit the signal so the main view gets notified too */
   g_signal_emit (self, signals[MODEL_CHANGED], 0);
 }
 
 void
-frogr_main_view_model_set_remote_photosets (FrogrMainViewModel *self,
-                                            GSList *remote_sets)
+frogr_model_set_remote_photosets (FrogrModel *self,
+                                  GSList *remote_sets)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
   FrogrPhotoSet *set = NULL;
   GSList *item = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
 
   /* Remove all the remote photosets */
   _remove_remote_photosets (self);
 
   /* Set photosets now (and update the hash table) */
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   for (item = remote_sets; item; item = g_slist_next (item))
     {
       set = FROGR_PHOTOSET (item->data);
@@ -509,36 +509,36 @@ frogr_main_view_model_set_remote_photosets (FrogrMainViewModel *self,
 }
 
 void
-frogr_main_view_model_add_local_photoset (FrogrMainViewModel *self,
-                                          FrogrPhotoSet *set)
+frogr_model_add_local_photoset (FrogrModel *self,
+                                FrogrPhotoSet *set)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
   g_return_if_fail(FROGR_IS_PHOTOSET (set));
 
   /* When adding one by one we prepend always to keep the order */
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   priv->local_sets = g_slist_prepend (priv->local_sets, g_object_ref (set));
 
   /* Update the hash table too! */
   g_hash_table_insert (priv->sets_table,
-                       g_strdup (frogr_photoset_get_id (set)),
+                       g_strdup (frogr_photoset_get_local_id (set)),
                        g_object_ref (set));
 
   g_signal_emit (self, signals[MODEL_CHANGED], 0);
 }
 
 GSList *
-frogr_main_view_model_get_photosets (FrogrMainViewModel *self)
+frogr_model_get_photosets (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
   GSList *list = NULL;
   GSList *current = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), 0);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
 
   /* Copy the list of remote sets and add those locally added */
   list = g_slist_copy (priv->remote_sets);
@@ -557,14 +557,14 @@ frogr_main_view_model_get_photosets (FrogrMainViewModel *self)
 }
 
 void
-frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
-                                     GSList *photosets)
+frogr_model_set_photosets (FrogrModel *self,
+                           GSList *photosets)
 {
   FrogrPhotoSet *set = NULL;
   GSList *item = NULL;
   GSList *next_item = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
   /* Remove all sets */
   _remove_all_photosets (self);
@@ -578,7 +578,7 @@ frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
         {
           next_item = item->next;
           photosets = g_slist_remove_link (photosets, item);
-          frogr_main_view_model_add_local_photoset (self, set);
+          frogr_model_add_local_photoset (self, set);
           g_object_unref (set);
           g_slist_free (item);
 
@@ -589,64 +589,64 @@ frogr_main_view_model_set_photosets (FrogrMainViewModel *self,
     }
 
   /* Once separated the local photosets, we assign the remote ones */
-  frogr_main_view_model_set_remote_photosets (self, photosets);
+  frogr_model_set_remote_photosets (self, photosets);
 }
 
 guint
-frogr_main_view_model_n_photosets (FrogrMainViewModel *self)
+frogr_model_n_photosets (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), 0);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   return g_slist_length (priv->remote_sets) + g_slist_length (priv->local_sets);
 }
 
 FrogrPhotoSet *
-frogr_main_view_model_get_photoset_by_id (FrogrMainViewModel *self, const gchar *id)
+frogr_model_get_photoset_by_id (FrogrModel *self, const gchar *id)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), NULL);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   return g_hash_table_lookup (priv->sets_table, id);
 }
 
 guint
-frogr_main_view_model_n_groups (FrogrMainViewModel *self)
+frogr_model_n_groups (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), 0);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   return g_slist_length (priv->groups);
 }
 
 GSList *
-frogr_main_view_model_get_groups (FrogrMainViewModel *self)
+frogr_model_get_groups (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), NULL);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   return priv->groups;
 }
 
 void
-frogr_main_view_model_set_groups (FrogrMainViewModel *self,
-                                  GSList *groups)
+frogr_model_set_groups (FrogrModel *self,
+                        GSList *groups)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
   FrogrGroup *group = NULL;
   GSList *item = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
 
   /* Remove all groups */
   _remove_groups (self);
@@ -665,37 +665,37 @@ frogr_main_view_model_set_groups (FrogrMainViewModel *self,
 }
 
 FrogrGroup *
-frogr_main_view_model_get_group_by_id (FrogrMainViewModel *self, const gchar *id)
+frogr_model_get_group_by_id (FrogrModel *self, const gchar *id)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), NULL);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   return g_hash_table_lookup (priv->groups_table, id);
 }
 
 void
-frogr_main_view_model_set_remote_tags (FrogrMainViewModel *self, GSList *tags_list)
+frogr_model_set_remote_tags (FrogrModel *self, GSList *tags_list)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
   _remove_remote_tags (self);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
   priv->remote_tags = tags_list;
 }
 
 void
-frogr_main_view_model_remove_remote_tags (FrogrMainViewModel *self)
+frogr_model_remove_remote_tags (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
 
   g_slist_foreach (priv->remote_tags, (GFunc)g_free, NULL);
   g_slist_free (priv->remote_tags);
@@ -704,13 +704,13 @@ frogr_main_view_model_remove_remote_tags (FrogrMainViewModel *self)
 }
 
 void
-frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
-                                                  const gchar *tags_string)
+frogr_model_add_local_tags_from_string (FrogrModel *self,
+                                        const gchar *tags_string)
 {
   gchar *stripped_tags = NULL;
   gboolean added_new_tags = FALSE;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
   if (!tags_string || !tags_string[0])
     return;
@@ -718,13 +718,13 @@ frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
   stripped_tags = g_strstrip (g_strdup (tags_string));
   if (!g_str_equal (stripped_tags, ""))
     {
-      FrogrMainViewModelPrivate *priv = NULL;
+      FrogrModelPrivate *priv = NULL;
       gchar **tags_array = NULL;
       gchar *tag;
       gint i;
 
       /* Now iterate over every token, adding it to the list */
-      priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+      priv = FROGR_MODEL_GET_PRIVATE (self);
       tags_array = g_strsplit (stripped_tags, TAGS_DELIMITER, -1);
       for (i = 0; tags_array[i]; i++)
         {
@@ -749,15 +749,15 @@ frogr_main_view_model_add_local_tags_from_string (FrogrMainViewModel *self,
 }
 
 GSList *
-frogr_main_view_model_get_tags (FrogrMainViewModel *self)
+frogr_model_get_tags (FrogrModel *self)
 {
-  FrogrMainViewModelPrivate *priv = NULL;
+  FrogrModelPrivate *priv = NULL;
   GSList *list = NULL;
   GSList *current = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), 0);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), 0);
 
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
+  priv = FROGR_MODEL_GET_PRIVATE (self);
 
   /* Copy the list of remote tags and add those locally added */
   list = g_slist_copy (priv->remote_tags);
@@ -777,30 +777,30 @@ frogr_main_view_model_get_tags (FrogrMainViewModel *self)
 }
 
 JsonNode *
-frogr_main_view_model_serialize (FrogrMainViewModel *self)
+frogr_model_serialize (FrogrModel *self)
 {
   JsonArray *json_array = NULL;
   JsonNode *root_node = NULL;
   JsonObject *root_object = NULL;
   GSList *data_list = NULL;
 
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self), NULL);
+  g_return_val_if_fail(FROGR_IS_MODEL (self), NULL);
 
   root_object = json_object_new ();
 
-  data_list = frogr_main_view_model_get_pictures (self);
+  data_list = frogr_model_get_pictures (self);
   json_array = _serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
   json_object_set_array_member (root_object, "pictures", json_array);
 
-  data_list = frogr_main_view_model_get_photosets (self);
+  data_list = frogr_model_get_photosets (self);
   json_array = _serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
   json_object_set_array_member (root_object, "photosets", json_array);
 
-  data_list = frogr_main_view_model_get_groups (self);
+  data_list = frogr_model_get_groups (self);
   json_array = _serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
   json_object_set_array_member (root_object, "groups", json_array);
 
-  data_list = frogr_main_view_model_get_tags (self);
+  data_list = frogr_model_get_tags (self);
   json_array = _serialize_list_to_json_array (data_list, G_TYPE_STRING);
   json_object_set_array_member (root_object, "tags", json_array);
 
@@ -811,7 +811,7 @@ frogr_main_view_model_serialize (FrogrMainViewModel *self)
 }
 
 void
-frogr_main_view_model_deserialize (FrogrMainViewModel *self, JsonNode *json_node)
+frogr_model_deserialize (FrogrModel *self, JsonNode *json_node)
 {
   FrogrFileLoader *loader = NULL;
   JsonObject *root_object = NULL;
@@ -821,7 +821,7 @@ frogr_main_view_model_deserialize (FrogrMainViewModel *self, JsonNode *json_node
   GSList *groups = NULL;
   GSList *tags = NULL;
 
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
+  g_return_if_fail(FROGR_IS_MODEL (self));
 
   /* First we get the different lists with data */
   root_object = json_node_get_object (json_node);
@@ -843,9 +843,9 @@ frogr_main_view_model_deserialize (FrogrMainViewModel *self, JsonNode *json_node
     tags = _deserialize_list_from_json_array (array_member, G_TYPE_STRING);
 
   /* We set the sets, groups and tags */
-  frogr_main_view_model_set_photosets (self, sets);
-  frogr_main_view_model_set_groups (self, groups);
-  frogr_main_view_model_set_remote_tags (self, tags);
+  frogr_model_set_photosets (self, sets);
+  frogr_model_set_groups (self, groups);
+  frogr_model_set_remote_tags (self, tags);
 
   /* Now we take the list of pictures and carefully ad them into the
      model as long as the associated thumbnails are being loaded */

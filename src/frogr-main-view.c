@@ -28,7 +28,7 @@
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
 #include "frogr-gtk-compat.h"
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
 
@@ -63,7 +63,7 @@ G_DEFINE_TYPE (FrogrMainView, frogr_main_view, G_TYPE_OBJECT)
 /* Private Data */
 
 typedef struct _FrogrMainViewPrivate {
-  FrogrMainViewModel *model;
+  FrogrModel *model;
   FrogrController *controller;
 
   FrogrConfig *config;
@@ -958,7 +958,7 @@ _n_pictures (FrogrMainView *self)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Just return the number of pictures in the model */
-  return frogr_main_view_model_n_pictures (priv->model);
+  return frogr_model_n_pictures (priv->model);
 }
 
 static void
@@ -1289,7 +1289,7 @@ _remove_selected_pictures (FrogrMainView *self)
   for (item = selected_pictures; item; item = g_slist_next (item))
     {
       FrogrPicture *picture = FROGR_PICTURE (item->data);
-      frogr_main_view_model_remove_picture (priv->model, picture);
+      frogr_model_remove_picture (priv->model, picture);
     }
 
   /* Update UI */
@@ -1365,7 +1365,7 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
   new_order = g_new0 (gint, g_slist_length (current_list));
 
   /* Use the original list (as loaded) as reference for sorting */
-  list_as_loaded = g_slist_copy (frogr_main_view_model_get_pictures (priv->model));
+  list_as_loaded = g_slist_copy (frogr_model_get_pictures (priv->model));
   if (property_name)
     list_as_loaded = g_slist_sort_with_data (list_as_loaded,
                                              (GCompareDataFunc) _compare_pictures_by_property,
@@ -1726,8 +1726,8 @@ _craft_state_description (FrogrMainView *mainview)
     }
 
   /* Check size of the loaded pictures, if any */
-  pictures = frogr_main_view_model_get_pictures (priv->model);
-  n_pictures = frogr_main_view_model_n_pictures (priv->model);
+  pictures = frogr_model_get_pictures (priv->model);
+  n_pictures = frogr_model_n_pictures (priv->model);
   if (n_pictures)
     {
       GSList *item = NULL;
@@ -1927,7 +1927,7 @@ frogr_main_view_init (FrogrMainView *self)
 #endif
 
   /* Init model, controller and configuration */
-  priv->model = frogr_main_view_model_new ();
+  priv->model = frogr_model_new ();
   priv->controller = g_object_ref (frogr_controller_get_instance ());
   priv->config = g_object_ref (frogr_config_get_instance ());
 
@@ -2386,7 +2386,7 @@ frogr_main_view_reorder_pictures (FrogrMainView *self)
   _reorder_pictures (self, priv->sorting_criteria, priv->sorting_reversed);
 }
 
-FrogrMainViewModel *
+FrogrModel *
 frogr_main_view_get_model (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = NULL;

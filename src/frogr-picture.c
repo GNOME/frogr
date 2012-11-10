@@ -21,7 +21,7 @@
 #include "frogr-picture.h"
 
 #include "frogr-controller.h"
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 
 #include <json-glib/json-glib.h>
 
@@ -299,7 +299,7 @@ _serialize_list (GSList *objects_list, GType g_type)
 static gboolean
 _deserialize_list (JsonNode *node, GValue *value, GType g_type)
 {
-  FrogrMainViewModel *model = NULL;
+  FrogrModel *model = NULL;
   JsonArray *array = NULL;
   GSList *objects = NULL;
   GObject *object = NULL;
@@ -316,15 +316,15 @@ _deserialize_list (JsonNode *node, GValue *value, GType g_type)
 
   /* We need to get the groups and sets from the model by ID, so it's
      mandatory to have imported those first for this to work OK */
-  model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
+  model = frogr_controller_get_model (frogr_controller_get_instance ());
   for (i = 0; i < n_elements; i++)
     {
       const gchar *id = NULL;
       id = json_array_get_string_element (array, i);
       if (g_type == FROGR_TYPE_PHOTOSET)
-        object = G_OBJECT (frogr_main_view_model_get_photoset_by_id (model, id));
+        object = G_OBJECT (frogr_model_get_photoset_by_id (model, id));
       if (g_type == FROGR_TYPE_GROUP)
-        object = G_OBJECT (frogr_main_view_model_get_group_by_id (model, id));
+        object = G_OBJECT (frogr_model_get_group_by_id (model, id));
 
       if (object)
         objects = g_slist_prepend (objects, g_object_ref (object));

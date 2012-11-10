@@ -22,7 +22,7 @@
 
 #include "frogr-controller.h"
 #include "frogr-group.h"
-#include "frogr-main-view-model.h"
+#include "frogr-model.h"
 #include "frogr-picture.h"
 
 #include <config.h>
@@ -401,7 +401,7 @@ _update_pictures (FrogrAddToGroupDialog *self)
   selected_groups = _get_selected_groups (self);
   if (selected_groups)
     {
-      FrogrMainViewModel *model = NULL;
+      FrogrModel *model = NULL;
 
       for (item = priv->pictures; item; item = g_slist_next (item))
         {
@@ -412,8 +412,8 @@ _update_pictures (FrogrAddToGroupDialog *self)
           frogr_picture_set_groups (picture, g_slist_copy (selected_groups));
         }
 
-      model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
-      frogr_main_view_model_notify_changes_in_pictures (model);
+      model = frogr_controller_get_model (frogr_controller_get_instance ());
+      frogr_model_notify_changes_in_pictures (model);
     }
   g_slist_free (selected_groups);
 }
