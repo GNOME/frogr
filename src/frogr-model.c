@@ -823,12 +823,8 @@ frogr_model_deserialize (FrogrModel *self, JsonNode *json_node)
 
   g_return_if_fail(FROGR_IS_MODEL (self));
 
-  /* First we get the different lists with data */
+  /* First we get the different lists with data for sets, groups and tags */
   root_object = json_node_get_object (json_node);
-
-  array_member = json_object_get_array_member (root_object, "pictures");
-  if (array_member)
-    pictures = _deserialize_list_from_json_array (array_member, FROGR_TYPE_PICTURE);
 
   array_member = json_object_get_array_member (root_object, "photosets");
   if (array_member)
@@ -846,6 +842,12 @@ frogr_model_deserialize (FrogrModel *self, JsonNode *json_node)
   frogr_model_set_photosets (self, sets);
   frogr_model_set_groups (self, groups);
   frogr_model_set_remote_tags (self, tags);
+
+  /* Pictures must be deserialized at the end, since they will hold
+     references to sets and groups previously imported in the model */
+  array_member = json_object_get_array_member (root_object, "pictures");
+  if (array_member)
+    pictures = _deserialize_list_from_json_array (array_member, FROGR_TYPE_PICTURE);
 
   /* Now we take the list of pictures and carefully ad them into the
      model as long as the associated thumbnails are being loaded */
