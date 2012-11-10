@@ -1337,6 +1337,22 @@ frogr_picture_set_groups (FrogrPicture *self, GSList *groups)
 }
 
 void
+frogr_picture_add_group (FrogrPicture *self, FrogrGroup *group)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+  g_return_if_fail(FROGR_IS_GROUP(group));
+
+  /* Do not add the same set twice */
+  if (frogr_picture_in_group (self, group))
+    return;
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  priv->groups = g_slist_append (priv->groups, g_object_ref (group));
+}
+
+void
 frogr_picture_remove_groups (FrogrPicture *self)
 {
   g_return_if_fail(FROGR_IS_PICTURE(self));
