@@ -20,6 +20,9 @@
 
 #include "frogr-picture.h"
 
+#include "frogr-controller.h"
+#include "frogr-main-view-model.h"
+
 #include <json-glib/json-glib.h>
 
 #define TAGS_DELIMITER " "
@@ -102,8 +105,8 @@ static void _update_tags_string (FrogrPicture *self);
 static gint _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2);
 static gint _compare_groups (FrogrGroup *group1, FrogrGroup *group2);
 
-static JsonNode *_serialize_list (GSList *objects_list);
-static gboolean _deserialize_list (GType g_type, JsonNode *node, GValue *value);
+static JsonNode *_serialize_list (GSList *objects_list, GType g_type);
+static gboolean _deserialize_list (JsonNode *node, GValue *value, GType g_type);
 
 static JsonNode *_serialize_property (JsonSerializable *serializable,
                                       const gchar *name,
@@ -261,21 +264,30 @@ _compare_groups (FrogrGroup *group1, FrogrGroup *group2)
 }
 
 static JsonNode *
-_serialize_list (GSList *objects_list)
+_serialize_list (GSList *objects_list, GType g_type)
 {
   JsonArray *json_array = NULL;
   JsonNode *list_node = NULL;
-  JsonNode *object_node = NULL;
   GObject *object = NULL;
   GSList *item = NULL;
+  const gchar *id = NULL;
 
   json_array = json_array_new ();
   for (item = objects_list; item; item = g_slist_next (item))
     {
+      /* We just serialize the ID of the group / set */
       object = G_OBJECT (item->data);
-      object_node = json_gobject_serialize (object);
-      if (object_node)
-        json_array_add_element (json_array, object_node);
+      if (g_type == FROGR_TYPE_PHOTOSET)
+        {
+          id = frogr_photoset_get_id (FROGR_PHOTOSET (object));
+          if (!id)
+            id = frogr_photoset_get_local_id (FROGR_PHOTOSET (object));
+        }
+      else if (g_type == FROGR_TYPE_GROUP)
+        id = frogr_group_get_id (FROGR_GROUP (object));
+
+      if (id)
+        json_array_add_string_element (json_array, id);
     }
 
   list_node = json_node_new(JSON_NODE_ARRAY);
@@ -285,32 +297,39 @@ _serialize_list (GSList *objects_list)
 }
 
 static gboolean
-_deserialize_list (GType g_type, JsonNode *node, GValue *value)
+_deserialize_list (JsonNode *node, GValue *value, GType g_type)
 {
-  JsonArray *json_array = NULL;
-  GList *nodes_list = NULL;
+  FrogrMainViewModel *model = NULL;
+  JsonArray *array = NULL;
+  GSList *objects = NULL;
+  GObject *object = NULL;
+  guint n_elements = 0;
+  guint i = 0;
 
   g_return_val_if_fail (node != NULL, FALSE);
   g_return_val_if_fail (JSON_NODE_HOLDS_ARRAY (node), FALSE);
 
-  json_array = json_node_get_array (node);
-  nodes_list = json_array_get_elements (json_array);
-  if (nodes_list)
+  array = json_node_get_array (node);
+  n_elements = json_array_get_length (array);
+  if (!n_elements)
+    return TRUE;
+
+  /* We need to get the groups and sets from the model by ID, so it's
+     mandatory to have imported those first for this to work OK */
+  model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
+  for (i = 0; i < n_elements; i++)
     {
-      JsonNode *node = NULL;
-      GSList *objects = NULL;
-      GList *item = NULL;
-      GObject *object = NULL;
+      const gchar *id = NULL;
+      id = json_array_get_string_element (array, i);
+      if (g_type == FROGR_TYPE_PHOTOSET)
+        object = G_OBJECT (frogr_main_view_model_get_photoset_by_id (model, id));
+      if (g_type == FROGR_TYPE_GROUP)
+        object = G_OBJECT (frogr_main_view_model_get_group_by_id (model, id));
 
-      for (item = nodes_list; item; item = g_list_next (item))
-        {
-          node = (JsonNode*)item->data;
-          object = json_gobject_deserialize (g_type, node);
-          objects = g_slist_append (objects, object);
-        }
-
-      g_value_set_pointer (value, objects);
+      if (object)
+        objects = g_slist_prepend (objects, g_object_ref (object));
     }
+  g_value_set_pointer (value, g_slist_reverse (objects));
 
   return TRUE;
 }
@@ -328,9 +347,9 @@ _serialize_property (JsonSerializable *serializable,
 
   priv = FROGR_PICTURE_GET_PRIVATE (serializable);
   if (g_str_equal (name, "photosets"))
-    json_node = _serialize_list (priv->photosets);
+    json_node = _serialize_list (priv->photosets, FROGR_TYPE_PHOTOSET);
   else if (g_str_equal (name, "groups"))
-    json_node = _serialize_list (priv->groups);
+    json_node = _serialize_list (priv->groups, FROGR_TYPE_GROUP);
   else
     {
       /* Default serialization here */
@@ -357,9 +376,9 @@ _deserialize_property (JsonSerializable *serializable,
   g_return_val_if_fail (node != NULL, FALSE);
 
   if (g_str_equal (name, "photosets"))
-    result = _deserialize_list (FROGR_TYPE_PHOTOSET, node, value);
+    result = _deserialize_list (node, value, FROGR_TYPE_PHOTOSET);
   else if (g_str_equal (name, "groups"))
-    result = _deserialize_list (FROGR_TYPE_GROUP, node, value);
+    result = _deserialize_list (node, value, FROGR_TYPE_GROUP);
   else
     {
       /* Default deserialization */
