@@ -67,6 +67,8 @@ typedef struct _FrogrMainViewPrivate {
   FrogrController *controller;
 
   FrogrConfig *config;
+
+  GSList *sorted_pictures;
   SortingCriteria sorting_criteria;
   gboolean sorting_reversed;
   gboolean tooltips_enabled;
@@ -215,6 +217,9 @@ static void _upload_pictures (FrogrMainView *self);
 static void _show_help_contents (FrogrMainView *self);
 static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed);
 
+static gint _compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
+                                           const gchar *property_name);
+
 static void _progress_dialog_response (GtkDialog *dialog,
                                        gint response_id,
                                        gpointer data);
@@ -240,10 +245,6 @@ static void _model_picture_added (FrogrController *controller,
 static void _model_picture_removed (FrogrController *controller,
                                     FrogrPicture *picture,
                                     gpointer data);
-
-static void _model_pictures_reordered (FrogrController *controller,
-                                       gpointer new_order,
-                                       gpointer data);
 
 static void _model_changed (FrogrController *controller, gpointer data);
 
@@ -1324,6 +1325,13 @@ static void
 _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  GSList *list_as_loaded = NULL;
+  GSList *current_list = NULL;
+  GSList *current_item = NULL;
+  gint *new_order = 0;
+  gint current_pos = 0;
+  gint new_pos = 0;
+
   gchar *property_name = NULL;
 
   priv->sorting_criteria = criteria;
@@ -1332,8 +1340,7 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
   if (!_n_pictures (self))
     return;
 
-  /* Reorder pictures immediately, if any */
-
+  /* Choose the property to sort by */
   switch (criteria)
     {
     case SORT_AS_LOADED:
@@ -1352,8 +1359,103 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
       g_assert_not_reached ();
     }
 
-  frogr_main_view_model_reorder_pictures (priv->model, property_name, reversed);
+  /* Temporarily save the current list, and alloc an array to
+     represent the new order compared to the old positions */
+  current_list = g_slist_copy (priv->sorted_pictures);
+  new_order = g_new0 (gint, g_slist_length (current_list));
+
+  /* Use the original list (as loaded) as reference for sorting */
+  list_as_loaded = g_slist_copy (frogr_main_view_model_get_pictures (priv->model));
+  if (property_name)
+    list_as_loaded = g_slist_sort_with_data (list_as_loaded,
+                                             (GCompareDataFunc) _compare_pictures_by_property,
+                                             (gchar*) property_name);
+  /* Update the list of pictures */
+  if (priv->sorted_pictures)
+    {
+      g_slist_foreach (priv->sorted_pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->sorted_pictures);
+    }
+  priv->sorted_pictures = list_as_loaded;
+  g_slist_foreach (priv->sorted_pictures, (GFunc)g_object_ref, NULL);
+
+  /* If we're reordering in reverse order, reverse the result list */
+  if (reversed)
+    priv->sorted_pictures = g_slist_reverse (priv->sorted_pictures);
+
+  /* Build the new_order array and update the treeview */
+  current_pos = 0;
+  for (current_item = current_list; current_item; current_item = g_slist_next (current_item))
+    {
+      new_pos = g_slist_index (priv->sorted_pictures, current_item->data);
+      new_order[new_pos] = current_pos++;
+    }
+  gtk_list_store_reorder (GTK_LIST_STORE (priv->tree_model), new_order);
+
+  g_slist_free (current_list);
+  g_free (new_order);
   g_free (property_name);
+}
+
+static gint
+_compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
+                               const gchar *property_name)
+{
+  GParamSpec *pspec1 = NULL;
+  GParamSpec *pspec2 = NULL;
+  GValue value1 = { 0 };
+  GValue value2 = { 0 };
+  gint result = 0;
+
+  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
+  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
+
+  pspec1 = g_object_class_find_property (G_OBJECT_GET_CLASS (p1), property_name);
+  pspec2 = g_object_class_find_property (G_OBJECT_GET_CLASS (p2), property_name);
+
+  /* They should be the same! */
+  if (pspec1->value_type != pspec2->value_type)
+    return 0;
+
+  g_value_init (&value1, pspec1->value_type);
+  g_value_init (&value2, pspec1->value_type);
+
+  g_object_get_property (G_OBJECT (p1), property_name, &value1);
+  g_object_get_property (G_OBJECT (p2), property_name, &value2);
+
+  if (G_VALUE_HOLDS_BOOLEAN (&value1))
+    result = g_value_get_boolean (&value1) - g_value_get_boolean (&value2);
+  else if (G_VALUE_HOLDS_INT (&value1))
+    result = g_value_get_int (&value1) - g_value_get_int (&value2);
+  else if (G_VALUE_HOLDS_LONG (&value1))
+    result = g_value_get_long (&value1) - g_value_get_long (&value2);
+  else if (G_VALUE_HOLDS_STRING (&value1))
+    {
+      const gchar *str1 = NULL;
+      const gchar *str2 = NULL;
+      gchar *str1_cf = NULL;
+      gchar *str2_cf = NULL;
+
+      /* Comparison of strings require some additional work to take
+         into account the different rules for each locale */
+      str1 = g_value_get_string (&value1);
+      str2 = g_value_get_string (&value2);
+
+      str1_cf = g_utf8_casefold (str1 ? str1 : "", -1);
+      str2_cf = g_utf8_casefold (str2 ? str2 : "", -1);
+
+      result = g_utf8_collate (str1_cf, str2_cf);
+
+      g_free (str1_cf);
+      g_free (str2_cf);
+    }
+  else
+    g_warning ("Unsupported type for property used for sorting");
+
+  g_value_unset (&value1);
+  g_value_unset (&value2);
+
+  return result;
 }
 
 static void
@@ -1440,6 +1542,10 @@ _model_picture_added (FrogrController *controller,
                       FPICTURE_COL, picture,
                       -1);
 
+  /* Update the list */
+  priv->sorted_pictures = g_slist_append (priv->sorted_pictures,
+                                          g_object_ref (picture));
+
   /* Reorder if needed */
   if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
     frogr_main_view_reorder_pictures (self);
@@ -1479,6 +1585,11 @@ _model_picture_removed (FrogrController *controller,
             {
               /* Remove from the GtkIconView and break loop */
               gtk_list_store_remove (GTK_LIST_STORE (priv->tree_model), &iter);
+
+              /* Update the list */
+              priv->sorted_pictures = g_slist_remove (priv->sorted_pictures, picture);
+              g_object_unref (picture);
+
               break;
             }
         }
@@ -1487,17 +1598,6 @@ _model_picture_removed (FrogrController *controller,
 
   /* Update upload size in state description */
   _update_state_description (self);
-}
-
-static void
-_model_pictures_reordered (FrogrController *controller,
-                           gpointer new_order,
-                           gpointer data)
-{
-  FrogrMainViewPrivate *priv = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (FROGR_MAIN_VIEW (data));
-  gtk_list_store_reorder (GTK_LIST_STORE (priv->tree_model), new_order);
 }
 
 static void
@@ -1743,6 +1843,13 @@ _frogr_main_view_dispose (GObject *object)
       priv->model = NULL;
     }
 
+  if (priv->sorted_pictures)
+    {
+      g_slist_foreach (priv->sorted_pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->sorted_pictures);
+      priv->sorted_pictures = NULL;
+    }
+
   if (priv->controller)
     {
       g_object_unref (priv->controller);
@@ -1950,6 +2057,7 @@ frogr_main_view_init (FrogrMainView *self)
   _update_project_path (self, NULL);
 
   /* Initialize sorting criteria and reverse */
+  priv->sorted_pictures = NULL;
   priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
   if (priv->sorting_criteria == SORT_BY_TITLE)
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_title_action), TRUE);
@@ -2089,9 +2197,6 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->model), "picture-removed",
                     G_CALLBACK (_model_picture_removed), self);
-
-  g_signal_connect (G_OBJECT (priv->model), "pictures-reordered",
-                    G_CALLBACK (_model_pictures_reordered), self);
 
   g_signal_connect (G_OBJECT (priv->model), "model-changed",
                     G_CALLBACK (_model_changed), self);

@@ -37,7 +37,6 @@ typedef struct _FrogrMainViewModelPrivate FrogrMainViewModelPrivate;
 struct _FrogrMainViewModelPrivate
 {
   GSList *pictures;
-  GSList *pictures_as_loaded;
   guint n_pictures;
 
   GSList *remote_sets;
@@ -55,7 +54,6 @@ struct _FrogrMainViewModelPrivate
 enum {
   PICTURE_ADDED,
   PICTURE_REMOVED,
-  PICTURES_REORDERED,
   MODEL_CHANGED,
   MODEL_DESERIALIZED,
   N_SIGNALS
@@ -64,67 +62,6 @@ enum {
 static guint signals[N_SIGNALS] = { 0 };
 
 /* Private API */
-
-static gint
-_compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
-                               const gchar *property_name)
-{
-  GParamSpec *pspec1 = NULL;
-  GParamSpec *pspec2 = NULL;
-  GValue value1 = { 0 };
-  GValue value2 = { 0 };
-  gint result = 0;
-
-  g_return_val_if_fail (FROGR_IS_PICTURE (p1), 0);
-  g_return_val_if_fail (FROGR_IS_PICTURE (p2), 0);
-
-  pspec1 = g_object_class_find_property (G_OBJECT_GET_CLASS (p1), property_name);
-  pspec2 = g_object_class_find_property (G_OBJECT_GET_CLASS (p2), property_name);
-
-  /* They should be the same! */
-  if (pspec1->value_type != pspec2->value_type)
-    return 0;
-
-  g_value_init (&value1, pspec1->value_type);
-  g_value_init (&value2, pspec1->value_type);
-
-  g_object_get_property (G_OBJECT (p1), property_name, &value1);
-  g_object_get_property (G_OBJECT (p2), property_name, &value2);
-
-  if (G_VALUE_HOLDS_BOOLEAN (&value1))
-    result = g_value_get_boolean (&value1) - g_value_get_boolean (&value2);
-  else if (G_VALUE_HOLDS_INT (&value1))
-    result = g_value_get_int (&value1) - g_value_get_int (&value2);
-  else if (G_VALUE_HOLDS_LONG (&value1))
-    result = g_value_get_long (&value1) - g_value_get_long (&value2);
-  else if (G_VALUE_HOLDS_STRING (&value1))
-    {
-      const gchar *str1 = NULL;
-      const gchar *str2 = NULL;
-      gchar *str1_cf = NULL;
-      gchar *str2_cf = NULL;
-
-      /* Comparison of strings require some additional work to take
-         into account the different rules for each locale */
-      str1 = g_value_get_string (&value1);
-      str2 = g_value_get_string (&value2);
-
-      str1_cf = g_utf8_casefold (str1 ? str1 : "", -1);
-      str2_cf = g_utf8_casefold (str2 ? str2 : "", -1);
-
-      result = g_utf8_collate (str1_cf, str2_cf);
-
-      g_free (str1_cf);
-      g_free (str2_cf);
-    }
-  else
-    g_warning ("Unsupported type for property used for sorting");
-
-  g_value_unset (&value1);
-  g_value_unset (&value2);
-
-  return result;
-}
 
 static gint
 _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
@@ -218,12 +155,6 @@ _frogr_main_view_model_dispose (GObject* object)
       priv->pictures = NULL;
     }
 
-  if (priv->pictures_as_loaded)
-    {
-      g_slist_free (priv->pictures_as_loaded);
-      priv->pictures_as_loaded = NULL;
-    }
-
   if (priv->remote_sets)
     {
       g_slist_foreach (priv->remote_sets, (GFunc)g_object_unref, NULL);
@@ -296,14 +227,6 @@ frogr_main_view_model_class_init(FrogrMainViewModelClass *klass)
                   g_cclosure_marshal_VOID__OBJECT,
                   G_TYPE_NONE, 1, FROGR_TYPE_PICTURE);
 
-  signals[PICTURES_REORDERED] =
-    g_signal_new ("pictures-reordered",
-                  G_OBJECT_CLASS_TYPE (klass),
-                  G_SIGNAL_RUN_FIRST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__POINTER,
-                  G_TYPE_NONE, 1, G_TYPE_POINTER);
-
   signals[MODEL_CHANGED] =
     g_signal_new ("model-changed",
                   G_OBJECT_CLASS_TYPE (klass),
@@ -331,7 +254,6 @@ frogr_main_view_model_init (FrogrMainViewModel *self)
 
   /* Init private data */
   priv->pictures = NULL;
-  priv->pictures_as_loaded = NULL;
   priv->n_pictures = 0;
 
   priv->remote_sets = NULL;
@@ -364,8 +286,7 @@ frogr_main_view_model_add_picture (FrogrMainViewModel *self,
   g_return_if_fail(FROGR_IS_PICTURE (picture));
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-  priv->pictures = g_slist_append (priv->pictures, picture);
-  priv->pictures_as_loaded = g_slist_append (priv->pictures_as_loaded, g_object_ref (picture));
+  priv->pictures = g_slist_append (priv->pictures, g_object_ref (picture));
   priv->n_pictures++;
 
   g_signal_emit (self, signals[PICTURE_ADDED], 0, picture);
@@ -383,7 +304,6 @@ frogr_main_view_model_remove_picture (FrogrMainViewModel *self,
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
 
   priv->pictures = g_slist_remove (priv->pictures, picture);
-  priv->pictures_as_loaded = g_slist_remove (priv->pictures_as_loaded, picture);
   priv->n_pictures--;
   g_object_unref (picture);
 
@@ -411,63 +331,6 @@ frogr_main_view_model_get_pictures (FrogrMainViewModel *self)
 
   priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
   return priv->pictures;
-}
-
-void
-frogr_main_view_model_reorder_pictures (FrogrMainViewModel *self,
-                                        const gchar *property_name,
-                                        gboolean reversed)
-{
-  FrogrMainViewModelPrivate *priv = NULL;
-  GSList *list_as_loaded = NULL;
-  GSList *current_list = NULL;
-  GSList *current_item = NULL;
-  gint *new_order = 0;
-  gint current_pos = 0;
-  gint new_pos = 0;
-
-  g_return_if_fail(FROGR_IS_MAIN_VIEW_MODEL (self));
-
-  priv = FROGR_MAIN_VIEW_MODEL_GET_PRIVATE (self);
-
-  /* Temporarily save the current list, and alloc an array to
-     represent the new order compared to the old positions */
-  current_list = g_slist_copy (priv->pictures);
-  new_order = g_new0 (gint, g_slist_length (current_list));
-
-  /* Use the original list (as loaded) as reference for sorting */
-  list_as_loaded = g_slist_copy (priv->pictures_as_loaded);
-
-  /* Only sort if we have specified a property name */
-  if (property_name)
-    {
-      list_as_loaded = g_slist_sort_with_data (list_as_loaded,
-                                               (GCompareDataFunc) _compare_pictures_by_property,
-                                               (gchar*) property_name);
-    }
-
-  /* Update the list of pictures */
-  if (priv->pictures)
-    g_slist_free (priv->pictures);
-  priv->pictures = g_slist_copy (list_as_loaded);
-
-  /* If we're reordering in reverse order, reverse the result list */
-  if (reversed)
-    priv->pictures = g_slist_reverse (priv->pictures);
-
-  /* Build the new_order array */
-  current_pos = 0;
-  for (current_item = current_list; current_item; current_item = g_slist_next (current_item))
-    {
-      new_pos = g_slist_index (priv->pictures, current_item->data);
-      new_order[new_pos] = current_pos++;
-    }
-
-  g_signal_emit (self, signals[PICTURES_REORDERED], 0, new_order);
-
-  g_slist_free (list_as_loaded);
-  g_slist_free (current_list);
-  g_free (new_order);
 }
 
 void
