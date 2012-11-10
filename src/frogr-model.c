@@ -1,5 +1,5 @@
 /*
- * frogr-model.c -- Main view model in frogr
+ * frogr-model.c -- Model in frogr
  *
  * Copyright (C) 2009-2012 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>
