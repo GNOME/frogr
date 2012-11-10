@@ -1243,7 +1243,7 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
   group = FROGR_GROUP (groups->data);
 
   fsp_session_add_to_group_finish (session, res, &error);
-  if (_should_retry_operation (error, uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP]))
+  if (error && _should_retry_operation (error, uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP]))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_GROUP]++;
 
