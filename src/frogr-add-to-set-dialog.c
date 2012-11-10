@@ -407,12 +407,16 @@ _update_pictures (FrogrAddToSetDialog *self)
       for (item = priv->pictures; item; item = g_slist_next (item))
         {
           picture = FROGR_PICTURE (item->data);
-          frogr_picture_set_photosets (picture, selected_sets);
+
+          /* frogr_picture_set_photosets expects transfer-full for photosets */
+          g_slist_foreach (selected_sets, (GFunc) g_object_ref, NULL);
+          frogr_picture_set_photosets (picture, g_slist_copy (selected_sets));
         }
 
       model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
       frogr_main_view_model_notify_changes_in_pictures (model);
     }
+  g_slist_free (selected_sets);
 }
 
 static void

@@ -406,12 +406,16 @@ _update_pictures (FrogrAddToGroupDialog *self)
       for (item = priv->pictures; item; item = g_slist_next (item))
         {
           picture = FROGR_PICTURE (item->data);
-          frogr_picture_set_groups (picture, selected_groups);
+
+          /* frogr_picture_set_groups expects transfer-full for groups */
+          g_slist_foreach (selected_groups, (GFunc) g_object_ref, NULL);
+          frogr_picture_set_groups (picture, g_slist_copy (selected_groups));
         }
 
       model = frogr_controller_get_main_view_model (frogr_controller_get_instance ());
       frogr_main_view_model_notify_changes_in_pictures (model);
     }
+  g_slist_free (selected_groups);
 }
 
 static void
