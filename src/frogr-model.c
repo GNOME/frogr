@@ -100,7 +100,7 @@ _remove_remote_photosets (FrogrModel *self)
       if (id)
         g_hash_table_remove (priv->sets_table, id);
 
-      /* A remote photo soet might be still indexed by its local ID */
+      /* A remote photo set might be still indexed by its local ID */
       id = frogr_photoset_get_local_id (set);
       if (id)
         g_hash_table_remove (priv->sets_table, id);
@@ -849,7 +849,7 @@ frogr_model_deserialize (FrogrModel *self, JsonNode *json_node)
   if (array_member)
     pictures = _deserialize_list_from_json_array (array_member, FROGR_TYPE_PICTURE);
 
-  /* Now we take the list of pictures and carefully ad them into the
+  /* Now we take the list of pictures and carefully add them into the
      model as long as the associated thumbnails are being loaded */
   loader = frogr_file_loader_new_from_pictures (pictures);
 
