@@ -130,9 +130,7 @@ void frogr_controller_load_project_from_file (FrogrController *self, const gchar
 
 void frogr_controller_save_project_to_file (FrogrController *self, const gchar *path);
 
-#ifdef GTK_API_VERSION_3
 void frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value);
-#endif
 
 G_END_DECLS
 

@@ -27,7 +27,6 @@
 #include "frogr-config.h"
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
-#include "frogr-gtk-compat.h"
 #include "frogr-model.h"
 #include "frogr-picture.h"
 #include "frogr-util.h"
@@ -1914,16 +1913,13 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *progress_vbox;
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
+  GtkWidget *toolbar;
   const gchar *icons_path;
   gchar *full_path;
   GList *icons = NULL;
 
 #ifndef MAC_INTEGRATION
   GtkWidget *main_vbox;
-#endif
-
-#ifdef GTK_API_VERSION_3
-  GtkWidget *toolbar;
 #endif
 
   /* Init model, controller and configuration */
@@ -1981,11 +1977,9 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_box_reorder_child (GTK_BOX (main_vbox), priv->menu_bar, 0);
 #endif
 
-#ifdef GTK_API_VERSION_3
   toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "toolbar"));
   gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
                                GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
-#endif
 
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
   priv->icon_view = icon_view;
@@ -2118,12 +2112,7 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_label, FALSE, FALSE, 6);
 
   progress_bar = gtk_progress_bar_new ();
-
-#ifdef GTK_API_VERSION_3
-  /* In GTK3, we need to make this explicit, otherwise no text will be
-     shown superimposed over the progress bar */
   gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progress_bar), TRUE);
-#endif
 
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
 
@@ -2286,9 +2275,7 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
   /* Reset values */
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), "");
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), 0.0);
-#ifdef GTK_API_VERSION_3
   gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), FALSE);
-#endif
 
   gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
   gtk_window_present (GTK_WINDOW (priv->progress_dialog));
@@ -2317,9 +2304,7 @@ frogr_main_view_set_progress_status_text (FrogrMainView *self, const gchar *text
   /* Set superimposed text, if specified */
   if (text != NULL)
     {
-#ifdef GTK_API_VERSION_3
       gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), TRUE);
-#endif
       gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
     }
 }
@@ -2355,11 +2340,7 @@ frogr_main_view_pulse_progress (FrogrMainView *self)
   gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv->progress_bar));
 
   /* Empty text for this */
-#ifdef GTK_API_VERSION_3
   gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), FALSE);
-#else
-  gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), NULL);
-#endif
 }
 
 void

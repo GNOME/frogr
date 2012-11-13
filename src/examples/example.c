@@ -728,10 +728,6 @@ main                                    (int    argc,
   g_type_init ();
 #endif
 
-#if !GLIB_CHECK_VERSION(2,32,0)
-  g_thread_init (NULL);
-#endif
-
   g_print ("Running flicksoup example...\n\n");
 
   /* Find full path to the testing photo */

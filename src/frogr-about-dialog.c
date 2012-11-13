@@ -44,38 +44,6 @@ static const gchar *appdescr = N_("A Flickr remote organizer for GNOME\n");
 static const gchar *copyright = "(c) 2009-2012 Mario Sanchez Prada";
 static const gchar *website = "http://live.gnome.org/Frogr";
 
-#ifndef GTK_API_VERSION_3
-static const gchar *license =
-  "frogr is free software: you can redistribute\n"
-  "it and/or modify it under the terms of the GNU\n"
-  "General Public License version 3 as published by\n"
-  "the Free Software Foundation.\n"
-  "\n"
-  "frogr is distributed in the hope that it will\n"
-  "be useful, but WITHOUT ANY WARRANTY; without even\n"
-  "the implied warranty of MERCHANTABILITY or FITNESS\n"
-  "FOR A PARTICULAR PURPOSE. See the GNU General\n"
-  "Public License for more details.\n"
-  "\n"
-  "You should have received a copy of the GNU General\n"
-  "Public License along with frogr. If not, see\n"
-  "http://www.gnu.org/licenses/\n\n"
-  "This program uses its own implementation of Flickr API,\n"
-  "but it's neither approved nor certified by flickr.";
-#endif
-
-#if !GTK_CHECK_VERSION (2,24,0) || MAC_INTEGRATION
-static void
-_frogr_about_dialog_uri_hook (GtkAboutDialog *about,
-                              const gchar *link,
-                              gpointer data)
-{
-  gchar *uri = g_strconcat (data, link, NULL);
-  frogr_util_open_uri (uri);
-  g_free (uri);
-}
-#endif
-
 void
 frogr_about_dialog_show (GtkWindow *parent)
 {
@@ -88,13 +56,6 @@ frogr_about_dialog_show (GtkWindow *parent)
   logo = gdk_pixbuf_new_from_file (icon_full_path, NULL);
   g_free (icon_full_path);
 
-#if !GTK_CHECK_VERSION (2,24,0) || MAC_INTEGRATION
-  /* Install about dialog hooks */
-  gtk_about_dialog_set_url_hook (_frogr_about_dialog_uri_hook, "", NULL);
-  gtk_about_dialog_set_email_hook (_frogr_about_dialog_uri_hook, "mailto:",
-                                   NULL);
-#endif
-
   version = g_strdup_printf ("%s~unreleased", VERSION);
 
   /* Show about dialog */
@@ -104,11 +65,7 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "artists", artists,
                          "comments", _(appdescr),
                          "copyright", copyright,
-#ifdef GTK_API_VERSION_3
                          "license-type", GTK_LICENSE_GPL_3_0,
-#else
-                         "license", license,
-#endif
                          "version", version,
                          "website", website,
                          "logo", logo,

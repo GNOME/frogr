@@ -23,7 +23,6 @@
 #include "frogr-config.h"
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
-#include "frogr-gtk-compat.h"
 #include "frogr-live-entry.h"
 #include "frogr-main-view.h"
 #include "frogr-model.h"
@@ -167,8 +166,10 @@ _create_widgets (FrogrDetailsDialog *self)
 
   main_vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
 
-  hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-  vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
 
   /* Left side (image, radio buttons, checkboxes...) */
 
@@ -192,8 +193,10 @@ _create_widgets (FrogrDetailsDialog *self)
 
   /* Visibility */
 
-  section_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  visibility_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
+  visibility_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (visibility_vbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Visibility"));
@@ -205,7 +208,8 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
-  internal_hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("_Private"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
@@ -217,7 +221,8 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (visibility_vbox), internal_hbox, FALSE, FALSE, 0);
 
-  private_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  private_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (private_vbox), FALSE);
 
   widget = gtk_check_button_new_with_mnemonic (_("Visible to _Family"));
   gtk_box_pack_start (GTK_BOX (private_vbox), widget, FALSE, FALSE, 0);
@@ -227,12 +232,14 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (private_vbox), widget, FALSE, FALSE, 0);
   priv->friend_cb = widget;
 
-  internal_hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
 
   gtk_box_pack_start (GTK_BOX (internal_hbox), private_vbox, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (visibility_vbox), internal_hbox, FALSE, FALSE, 0);
 
-  internal_hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
 
   gtk_box_pack_start (GTK_BOX (internal_hbox), visibility_vbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
@@ -241,8 +248,10 @@ _create_widgets (FrogrDetailsDialog *self)
 
   /* Content type */
 
-  section_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  content_type_hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
+  content_type_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (content_type_hbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Content Type"));
@@ -272,8 +281,10 @@ _create_widgets (FrogrDetailsDialog *self)
 
   /* Safety level */
 
-  section_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  safety_level_hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
+  safety_level_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (safety_level_hbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Safety Level"));
@@ -303,7 +314,8 @@ _create_widgets (FrogrDetailsDialog *self)
 
   /* License type */
 
-  section_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("License Type"));
@@ -315,9 +327,9 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_container_add (GTK_CONTAINER (align), widget);
   gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
 
-  widget = frogr_gtk_compat_combo_box_text_new ();
+  widget = gtk_combo_box_text_new ();
   for (i = 0; license_descriptions[i]; i++)
-    frogr_gtk_compat_combo_box_text_insert (GTK_COMBO_BOX (widget), i, _(license_descriptions[i]));
+    gtk_combo_box_text_insert (GTK_COMBO_BOX_TEXT (widget), i, NULL, _(license_descriptions[i]));
 
   priv->license_cb = widget;
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
@@ -326,7 +338,8 @@ _create_widgets (FrogrDetailsDialog *self)
 
   /* Other properties */
 
-  section_vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Other Properties"));

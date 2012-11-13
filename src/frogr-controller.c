@@ -2136,10 +2136,8 @@ frogr_controller_init (FrogrController *self)
                                   host, port, username, password);
     }
 
-#ifdef GTK_API_VERSION_3
   /* Select the dark theme if needed */
   frogr_controller_set_use_dark_theme (self, frogr_config_get_use_dark_theme (priv->config));
-#endif
 }
 
 
@@ -2835,7 +2833,6 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   g_object_unref (json_gen);
 }
 
-#ifdef GTK_API_VERSION_3
 void
 frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value)
 {
@@ -2844,4 +2841,3 @@ frogr_controller_set_use_dark_theme (FrogrController *self, gboolean value)
   gtk_settings = gtk_settings_get_default ();
   g_object_set (G_OBJECT (gtk_settings), "gtk-application-prefer-dark-theme", value, NULL);
 }
-#endif

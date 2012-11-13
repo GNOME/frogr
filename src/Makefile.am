@@ -27,16 +27,6 @@ frogr_LDADD = \
 frogr_CFLAGS = $(FROGR_CFLAGS) \
 	-DDATA_DIR=\"$(DATA_DIR)\"
 
-if GTK_API_VERSION_2
-frogr_CFLAGS += \
-	-DGTK_API_VERSION_2=1
-endif
-
-if GTK_API_VERSION_3
-frogr_CFLAGS += \
-	-DGTK_API_VERSION_3=1
-endif
-
 if !HAVE_MAC_INTEGRATION
 frogr_LDFLAGS = -export-dynamic
 endif
@@ -67,8 +57,6 @@ frogr_SOURCES = \
 	frogr-global-defs.h \
 	frogr-group.c \
 	frogr-group.h \
-	frogr-gtk-compat.c \
-	frogr-gtk-compat.h \
 	frogr-live-entry.c \
 	frogr-live-entry.h \
 	frogr-location.c \

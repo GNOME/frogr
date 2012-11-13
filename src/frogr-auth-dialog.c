@@ -22,7 +22,6 @@
 
 #include "frogr-controller.h"
 #include "frogr-global-defs.h"
-#include "frogr-gtk-compat.h"
 #include "frogr-util.h"
 
 #include <config.h>
@@ -109,7 +108,8 @@ _build_verification_code_entry_widget (GtkWidget *dialog)
   gchar *entry_key = NULL;
   gint i = 0;
 
-  hbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
   for (i = 0; i < 3; i++)
     {
       entry = gtk_entry_new ();
@@ -126,7 +126,7 @@ _build_verification_code_entry_widget (GtkWidget *dialog)
                     NULL);
       if (i < 2)
         {
-          separator = frogr_gtk_compat_separator_new (GTK_ORIENTATION_HORIZONTAL);
+          separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
           gtk_box_pack_start (GTK_BOX (hbox), separator, TRUE, TRUE, 0);
         }
     }
@@ -157,7 +157,8 @@ _ask_for_auth_confirmation (GtkWindow *parent)
 
   /* Fill action area */
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-  vbox = frogr_gtk_compat_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
 
   /* Description label */
   label = gtk_label_new (auth_txt);

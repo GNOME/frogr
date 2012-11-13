@@ -18,10 +18,15 @@ CFLAGS="$CFLAGS -DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGDK_DISABLE_DE
 
 # (Platform independent) dependencies for frogr
 
-GLIB_MIN_VERSION=2.22
+GLIB_MIN_VERSION=2.32
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_MIN_VERSION gthread-2.0)
 FROGR_CFLAGS="$FROGR_CFLAGS $GLIB_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $GLIB_LIBS"
+
+GTK3_MIN_VERSION=3.4
+PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= $GTK3_MIN_VERSION)
+FROGR_CFLAGS=$GTK3_CFLAGS
+FROGR_LIBS=$GTK3_LIBS
 
 EXIF_MIN_VERSION=0.6.14
 PKG_CHECK_MODULES(EXIF, libexif >= $EXIF_MIN_VERSION)
@@ -114,68 +119,6 @@ fi
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBSOUP_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $LIBSOUP_LIBS"
 
-# Select target version of GTK to use
-
-AC_MSG_CHECKING([GTK+ version to use])
-
-if test "x$platform" = "xGNOME"; then
-   # For the GNOME platform allow using GTK2 and GTK3 (default for GNOME)
-   AC_ARG_WITH([gtk],
-           [AS_HELP_STRING([--with-gtk=2.0|3.0], [GTK+ version to use (default: 3.0)])],
-           [case "$with_gtk" in
-           2.0|3.0) ;;
-           *) AC_MSG_ERROR([Wrong GTK+ version]) ;;
-           esac],
-           [with_gtk=3.0])
-else
-   # Other non-GNOME platforms (e.g. MacOSX) to support GTK2 only
-   with_gtk=2.0
-fi
-
-GTK2_MIN_VERSION=2.16
-GTK3_MIN_VERSION=3.0
-
-case "$with_gtk" in
-     2.0) GTK_MIN_VERSION=$GTK2_MIN_VERSION
-          GTK_API_VERSION=2.0
-          ;;
-     3.0) GTK_MIN_VERSION=$GTK3_MIN_VERSION
-          GTK_API_VERSION=3.0
-          ;;
-esac
-
-# Make GTK API version available to the code
-AC_SUBST([GTK_API_VERSION])
-
-if test "x$with_gtk" = "x3.0"; then
-   PKG_CHECK_MODULES(GTK3, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION,
-                     [have_gtk_3="yes"], [have_gtk_3="no"])
-
-   if test "x$have_gtk_3" = "xyes"; then
-      GTK_CFLAGS=$GTK3_CFLAGS
-      GTK_LIBS=$GTK3_LIBS
-   else
-      GTK_MIN_VERSION=$GTK2_MIN_VERSION
-      GTK_API_VERSION=2.0
-      with_gtk=2.0
-   fi
-fi
-
-if test "x$with_gtk" = "x2.0"; then
-   PKG_CHECK_MODULES(GTK2, gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION,
-                     [have_gtk_2="yes"], [have_gtk_2="no"])
-   if test "x$have_gtk_2" = "xyes"; then
-      GTK_CFLAGS=$GTK2_CFLAGS
-      GTK_LIBS=$GTK2_LIBS
-   fi
-fi
-
-AM_CONDITIONAL([GTK_API_VERSION_2],[test "$GTK_API_VERSION" = "2.0"])
-AM_CONDITIONAL([GTK_API_VERSION_3],[test "$GTK_API_VERSION" = "3.0"])
-
-FROGR_CFLAGS="$FROGR_CFLAGS $GTK_CFLAGS"
-FROGR_LIBS="$FROGR_LIBS $GTK_LIBS"
-
 # Translations
 FROGR_LOCALE_DIR='${localedir}'
 AM_GLIB_DEFINE_LOCALEDIR([FROGR_LOCALE_DIR])
@@ -225,7 +168,6 @@ echo "*** frogr is ready to be compiled ***"
 echo "*************************************"
 echo ""
 echo "Platform              : $platform"
-echo "Using GTK+ version    : $with_gtk"
 echo "Using libsoup variant : $with_libsoup"
 echo "Enable debug          : $enable_debug"
 echo ""
