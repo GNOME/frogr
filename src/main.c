@@ -29,32 +29,19 @@
 #include <gst/gst.h>
 #include <libxml/parser.h>
 
-#ifdef MAC_INTEGRATION
-#include <gtkosxapplication.h>
-#endif
-
 static GSList *
-_get_uris_list_from_array (char **uris_str, int n_uris)
+_get_files_list_from_array (GFile **files, int n_files)
 {
   GSList *fileuris = NULL;
   int i = 0;
 
-  for (i = 0; i < n_uris; i++)
+  for (i = 0; i < n_files; i++)
     {
-      gchar *uri = NULL;
       gchar *fileuri = NULL;
 
-      /* Add the 'file://' schema if not present */
-      if (g_str_has_prefix (uris_str[i], "/"))
-        uri = g_strdup_printf ("file://%s", uris_str[i]);
-      else
-        uri = g_strdup (uris_str[i]);
-
-      fileuri = g_strdup (uri);
+      fileuri = g_strdup (g_file_get_uri (files[i]));
       if (fileuri)
         fileuris = g_slist_append (fileuris, fileuri);
-
-      g_free (uri);
     }
 
   return fileuris;
@@ -75,17 +62,58 @@ _load_pictures_on_idle (gpointer data)
   return FALSE;
 }
 
+static void
+_app_startup_cb (GApplication *app, gpointer data)
+{
+  FrogrController *fcontroller = NULL;
+
+  DEBUG ("Started!\n");
+
+  /* Initialize libxml2 library */
+  xmlInitParser ();
+
+  /* Initialize internationalization */
+  bindtextdomain (GETTEXT_PACKAGE, frogr_util_get_locale_dir ());
+  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+  textdomain (GETTEXT_PACKAGE);
+
+  /* Actually start the application */
+  fcontroller = frogr_controller_get_instance ();
+  frogr_controller_run_app (fcontroller, GTK_APPLICATION (app));
+}
+
+static void
+_app_activate_cb (GApplication *app, gpointer data)
+{
+  DEBUG ("Activated!\n");
+}
+
+static void
+_app_shutdown_cb (GApplication *app, gpointer data)
+{
+  DEBUG ("%s", "Shutting down application...");
+
+  /* cleanup libxml2 library */
+  xmlCleanupParser();
+}
+
+static void
+_app_open_files_cb (GApplication *app, GFile **files, gint n_files, gchar *hint, gpointer data)
+{
+  DEBUG ("Trying to open %d files\n", n_files);
+
+  GSList *fileuris = _get_files_list_from_array (files, n_files);
+  gdk_threads_add_idle (_load_pictures_on_idle, fileuris);
+}
+
 int
 main (int argc, char **argv)
 {
-  FrogrController *fcontroller = NULL;
-  GSList *fileuris = NULL;
+  GtkApplication *app = NULL;
   GError *error = NULL;
+  int status;
 
-  /* Check optional command line parameters */
-  if (argc > 1)
-    fileuris = _get_uris_list_from_array (&argv[1], argc - 1);
-
+  /* Initialize gstreamer before using any other GLib function */
   gst_init_check (&argc, &argv, &error);
   if (error)
     {
@@ -93,32 +121,20 @@ main (int argc, char **argv)
       DEBUG ("Gstreamer could not be initialized: %s", error->message);
       g_error_free (error);
     }
-  gtk_init (&argc, &argv);
 
+  /* Initialize and run the Gtk application */
   g_set_application_name(APP_SHORTNAME);
+  app = gtk_application_new (APP_ID,
+                             G_APPLICATION_NON_UNIQUE
+                             | G_APPLICATION_HANDLES_OPEN);
 
-#ifdef MAC_INTEGRATION
-  /* Initialize the GtkOSXApplication singleton */
-  g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
-#endif
+  g_signal_connect (app, "activate", G_CALLBACK (_app_activate_cb), NULL);
+  g_signal_connect (app, "startup", G_CALLBACK (_app_startup_cb), NULL);
+  g_signal_connect (app, "shutdown", G_CALLBACK (_app_shutdown_cb), NULL);
+  g_signal_connect (app, "open", G_CALLBACK (_app_open_files_cb), NULL);
 
-  /* Translation domain */
-  bindtextdomain (GETTEXT_PACKAGE, frogr_util_get_locale_dir ());
-  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-  textdomain (GETTEXT_PACKAGE);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
 
-  /* Init libxml2 library */
-  xmlInitParser ();
-
-  /* Run app (and load pictures if present) */
-  fcontroller = frogr_controller_get_instance ();
-  if (fileuris)
-    gdk_threads_add_idle (_load_pictures_on_idle, fileuris);
-
-  frogr_controller_run_app (fcontroller);
-
-  /* cleanup libxml2 library */
-  xmlCleanupParser();
-
-  return 0;
+  return status;
 }

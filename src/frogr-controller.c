@@ -2177,24 +2177,24 @@ frogr_controller_get_model (FrogrController *self)
   return frogr_main_view_get_model (priv->mainview);;
 }
 
-gboolean
-frogr_controller_run_app (FrogrController *self)
+void
+frogr_controller_run_app (FrogrController *self, GtkApplication *app)
 {
   FrogrControllerPrivate *priv = NULL;
   FrogrAccount *account = NULL;
 
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   if (priv->app_running)
     {
       DEBUG ("%s", "Application already running");
-      return FALSE;
+      return;
     }
 
   /* Create UI window */
-  priv->mainview = frogr_main_view_new ();
+  priv->mainview = frogr_main_view_new (app);
   g_object_add_weak_pointer (G_OBJECT (priv->mainview),
                              (gpointer) & priv->mainview);
   /* Update flag */
@@ -2206,22 +2206,14 @@ frogr_controller_run_app (FrogrController *self)
   account = frogr_config_get_active_account (priv->config);
   if (account)
     frogr_controller_set_active_account (self, account);
-
-  /* Run UI */
-  gtk_main ();
-
-  /* Application shutting down from this point on */
-  DEBUG ("%s", "Shutting down application...");
-
-  return TRUE;
 }
 
-gboolean
+void
 frogr_controller_quit_app (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
 
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2235,12 +2227,7 @@ frogr_controller_quit_app (FrogrController *self)
       priv->app_running = FALSE;
 
       frogr_config_save_all (priv->config);
-
-      return TRUE;
     }
-
-  /* Nothing happened */
-  return FALSE;
 }
 
 void

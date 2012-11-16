@@ -198,138 +198,132 @@
     <property name="can_focus">False</property>
     <property name="stock">gtk-missing-image</property>
   </object>
-  <object class="GtkWindow" id="main_window">
+  <object class="GtkVBox" id="main_window_vbox">
+    <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">frogr</property>
     <child>
-      <object class="GtkVBox" id="main_window_vbox">
+      <object class="GtkToolbar" id="toolbar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkToolbar" id="toolbar">
+          <object class="GtkToolButton" id="load_project_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <child>
-              <object class="GtkToolButton" id="load_project_button">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="related_action">load_project_action</property>
-                <property name="label" translatable="yes">Load Project</property>
-                <property name="use_underline">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="save_project_button">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="related_action">save_project_action</property>
-                <property name="label" translatable="yes">Save Project</property>
-                <property name="use_underline">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem" id="separator10">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="use_action_appearance">False</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="add_button">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="related_action">load_pictures_action</property>
-                <property name="label" translatable="yes">Add</property>
-                <property name="use_underline">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="remove_button">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="related_action">remove_pictures_action</property>
-                <property name="label" translatable="yes">Remove</property>
-                <property name="use_underline">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem" id="separator11">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="use_action_appearance">False</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="upload_button">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="related_action">upload_pictures_action</property>
-                <property name="label" translatable="yes">Upload</property>
-                <property name="use_underline">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
+            <property name="related_action">load_project_action</property>
+            <property name="label" translatable="yes">Load Project</property>
+            <property name="use_underline">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="homogeneous">True</property>
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow" id="scrolled_window">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="shadow_type">etched-in</property>
-            <property name="hscrollbar-policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="vscrollbar-policy">GTK_POLICY_AUTOMATIC</property>
-            <child>
-              <object class="GtkIconView" id="icon_view">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <signal name="button-press-event" handler="_on_icon_view_button_press_event" swapped="no"/>
-                <signal name="key-press-event" handler="_on_icon_view_key_press_event" swapped="no"/>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStatusbar" id="status_bar">
+          <object class="GtkToolButton" id="save_project_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="related_action">save_project_action</property>
+            <property name="label" translatable="yes">Save Project</property>
+            <property name="use_underline">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="padding">3</property>
-            <property name="position">3</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparatorToolItem" id="separator10">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="use_action_appearance">False</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="add_button">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="related_action">load_pictures_action</property>
+            <property name="label" translatable="yes">Add</property>
+            <property name="use_underline">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="remove_button">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="related_action">remove_pictures_action</property>
+            <property name="label" translatable="yes">Remove</property>
+            <property name="use_underline">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparatorToolItem" id="separator11">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="use_action_appearance">False</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="upload_button">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="related_action">upload_pictures_action</property>
+            <property name="label" translatable="yes">Upload</property>
+            <property name="use_underline">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
           </packing>
         </child>
       </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow" id="scrolled_window">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="shadow_type">etched-in</property>
+        <property name="hscrollbar-policy">GTK_POLICY_AUTOMATIC</property>
+        <property name="vscrollbar-policy">GTK_POLICY_AUTOMATIC</property>
+        <child>
+          <object class="GtkIconView" id="icon_view">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <signal name="button-press-event" handler="_on_icon_view_button_press_event" swapped="no"/>
+            <signal name="key-press-event" handler="_on_icon_view_key_press_event" swapped="no"/>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkStatusbar" id="status_bar">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="padding">3</property>
+        <property name="position">3</property>
+      </packing>
     </child>
   </object>
   <object class="GtkMenuBar" id="menu_bar">

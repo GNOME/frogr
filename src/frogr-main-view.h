@@ -49,7 +49,7 @@ struct _FrogrMainView
 
 GType frogr_main_view_get_type (void) G_GNUC_CONST;
 
-FrogrMainView *frogr_main_view_new (void);
+FrogrMainView *frogr_main_view_new (GtkApplication *app);
 
 GtkWindow *frogr_main_view_get_window (FrogrMainView *self);
 

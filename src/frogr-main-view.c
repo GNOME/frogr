@@ -73,6 +73,7 @@ typedef struct _FrogrMainViewPrivate {
   gboolean tooltips_enabled;
   gint n_selected_pictures;
 
+  GtkApplication *gtk_app;
   GtkWindow *window;
   gchar *project_name;
   gchar *project_dir;
@@ -125,6 +126,14 @@ typedef struct _FrogrMainViewPrivate {
 #endif
 } FrogrMainViewPrivate;
 
+
+/* Properties */
+enum  {
+  PROP_0,
+  PROP_GTK_APPLICATION
+};
+
+/* Icon view treeview */
 enum {
   FILEURI_COL,
   PIXBUF_COL,
@@ -1831,82 +1840,54 @@ _update_ui (FrogrMainView *self)
 }
 
 static void
-_frogr_main_view_dispose (GObject *object)
+_frogr_main_view_set_property (GObject *object,
+                               guint prop_id,
+                               const GValue *value,
+                               GParamSpec *pspec)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
-
-  /* Free memory */
-  if (priv->model)
-    {
-      g_object_unref (priv->model);
-      priv->model = NULL;
-    }
-
-  if (priv->sorted_pictures)
-    {
-      g_slist_foreach (priv->sorted_pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->sorted_pictures);
-      priv->sorted_pictures = NULL;
-    }
-
-  if (priv->controller)
-    {
-      g_object_unref (priv->controller);
-      priv->controller = NULL;
-    }
-
-  if (priv->config)
-    {
-      g_object_unref (priv->config);
-      priv->config = NULL;
-    }
-
-  if (priv->tree_model)
-    {
-      g_object_unref (priv->tree_model);
-      priv->tree_model = NULL;
-    }
-
-  if (priv->builder)
-    {
-      g_object_unref (priv->builder);
-      priv->builder = NULL;
-    }
-
-  G_OBJECT_CLASS(frogr_main_view_parent_class)->dispose (object);
-}
-
-static void
-_frogr_main_view_finalize (GObject *object)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
-
-  g_free (priv->project_name);
-  g_free (priv->project_dir);
-  g_free (priv->project_filepath);
-  g_free (priv->state_description);
-  gtk_widget_destroy (GTK_WIDGET (priv->window));
-
-  G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
-}
-
-static void
-frogr_main_view_class_init (FrogrMainViewClass *klass)
-{
-  GObjectClass *obj_class = (GObjectClass *)klass;
-
-  obj_class->dispose = _frogr_main_view_dispose;
-  obj_class->finalize = _frogr_main_view_finalize;
-
-  g_type_class_add_private (obj_class, sizeof (FrogrMainViewPrivate));
-}
-
-static void
-frogr_main_view_init (FrogrMainView *self)
-{
+  FrogrMainView *self = FROGR_MAIN_VIEW (object);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  switch (prop_id)
+    {
+    case PROP_GTK_APPLICATION:
+      priv->gtk_app = GTK_APPLICATION (g_value_dup_object (value));
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static void
+_frogr_main_view_get_property (GObject *object,
+                               guint prop_id,
+                               GValue *value,
+                               GParamSpec *pspec)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
+
+  switch (prop_id)
+    {
+    case PROP_GTK_APPLICATION:
+      g_value_set_object (value, priv->gtk_app);
+      break;
+   default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static GObject *
+_frogr_main_view_constructor (GType type,
+                              guint n_construct_properties,
+                              GObjectConstructParam *construct_properties)
+{
+  GObject *object = NULL;
+  FrogrMainView *self = NULL;
+  FrogrMainViewPrivate *priv = NULL;
   GtkBuilder *builder;
-  GtkWindow *window;
+  GtkWidget *main_vbox;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
   GtkWidget *progress_dialog;
@@ -1914,48 +1895,15 @@ frogr_main_view_init (FrogrMainView *self)
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
   GtkWidget *toolbar;
-  const gchar *icons_path;
   gchar *full_path;
-  GList *icons = NULL;
 
-#ifndef MAC_INTEGRATION
-  GtkWidget *main_vbox;
-#endif
-
-  /* Init model, controller and configuration */
-  priv->model = frogr_model_new ();
-  priv->controller = g_object_ref (frogr_controller_get_instance ());
-  priv->config = g_object_ref (frogr_config_get_instance ());
-
-  /* Provide a default icon list in several sizes */
-  icons_path = frogr_util_get_icons_dir ();
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("128x128"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("64x64"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("48x48"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("32x32"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("24x24"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("16x16"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  gtk_window_set_default_icon_list (icons);
-  g_list_foreach (icons, (GFunc) g_object_unref, NULL);
-  g_list_free (icons);
+  /* Chain up to the parent's constructor first */
+  object =
+    G_OBJECT_CLASS (frogr_main_view_parent_class)->constructor (type,
+                                                                 n_construct_properties,
+                                                                 construct_properties);
+  self = FROGR_MAIN_VIEW (object);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Get widgets from GtkBuilder */
   builder = gtk_builder_new ();
@@ -1965,17 +1913,11 @@ frogr_main_view_init (FrogrMainView *self)
   gtk_builder_add_from_file (builder, full_path, NULL);
   g_free (full_path);
 
-  window = GTK_WINDOW(gtk_builder_get_object (builder, "main_window"));
-  priv->window = window;
+  priv->window = GTK_WINDOW (gtk_application_window_new (GTK_APPLICATION (priv->gtk_app)));
+  gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (priv->window), TRUE);
 
-  priv->menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
-  gtk_widget_show_all (priv->menu_bar);
-
-#ifndef MAC_INTEGRATION
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
-  gtk_box_pack_start (GTK_BOX (main_vbox), priv->menu_bar, FALSE, FALSE, 0);
-  gtk_box_reorder_child (GTK_BOX (main_vbox), priv->menu_bar, 0);
-#endif
+  gtk_container_add (GTK_CONTAINER (priv->window), main_vbox);
 
   toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "toolbar"));
   gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
@@ -2050,9 +1992,7 @@ frogr_main_view_init (FrogrMainView *self)
   /* Init the details of the current project */
   _update_project_path (self, NULL);
 
-  /* Initialize sorting criteria and reverse */
-  priv->sorted_pictures = NULL;
-  priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
+  /* Initialize sorting criteria and reverse in the UI */
   if (priv->sorting_criteria == SORT_BY_TITLE)
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_title_action), TRUE);
   else if (priv->sorting_criteria == SORT_BY_DATE)
@@ -2060,17 +2000,12 @@ frogr_main_view_init (FrogrMainView *self)
   else
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_as_loaded_action), TRUE);
 
-  priv->sorting_reversed = frogr_config_get_mainview_sorting_reversed (priv->config);
   gtk_toggle_action_set_active (priv->reversed_order_action, priv->sorting_reversed);
 
-  /* Read value for 'tooltips enabled' */
-  priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);
+  /* Initialize 'tooltips enabled' in the UI */
   gtk_toggle_action_set_active (priv->enable_tooltips_action, priv->tooltips_enabled);
 
-  /* No selected pictures at the beginning */
-  priv->n_selected_pictures = 0;
-
-  /* initialize extra widgets */
+  /* Initialize extra widgets */
 
   /* Accounts menu */
   priv->accounts_menu_item =
@@ -2147,10 +2082,6 @@ frogr_main_view_init (FrogrMainView *self)
                                   "Status bar messages");
 
   /* Connect signals */
-  g_signal_connect (G_OBJECT (priv->window), "destroy",
-                    G_CALLBACK (gtk_main_quit),
-                    NULL);
-
   g_signal_connect (G_OBJECT (priv->window), "delete-event",
                     G_CALLBACK (_on_main_view_delete_event),
                     self);
@@ -2172,6 +2103,168 @@ frogr_main_view_init (FrogrMainView *self)
                     G_CALLBACK(_progress_dialog_delete_event),
                     self);
 
+  gtk_builder_connect_signals (builder, self);
+
+  /* Show the UI */
+  gtk_widget_show_all (GTK_WIDGET(priv->window));
+
+#ifdef MAC_INTEGRATION
+  _tweak_menu_bar_for_mac (self);
+#endif
+
+  /* Update window title */
+  _update_window_title (self, FALSE);
+
+  /* Update UI */
+  _update_ui (FROGR_MAIN_VIEW (self));
+
+  /* Show the auth dialog, if needed, on idle */
+  g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
+
+  return object;
+}
+
+static void
+_frogr_main_view_dispose (GObject *object)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
+
+  /* Free memory */
+  if (priv->model)
+    {
+      g_object_unref (priv->model);
+      priv->model = NULL;
+    }
+
+  if (priv->sorted_pictures)
+    {
+      g_slist_foreach (priv->sorted_pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (priv->sorted_pictures);
+      priv->sorted_pictures = NULL;
+    }
+
+  if (priv->controller)
+    {
+      g_object_unref (priv->controller);
+      priv->controller = NULL;
+    }
+
+  if (priv->config)
+    {
+      g_object_unref (priv->config);
+      priv->config = NULL;
+    }
+
+  if (priv->tree_model)
+    {
+      g_object_unref (priv->tree_model);
+      priv->tree_model = NULL;
+    }
+
+  if (priv->builder)
+    {
+      g_object_unref (priv->builder);
+      priv->builder = NULL;
+    }
+
+  G_OBJECT_CLASS(frogr_main_view_parent_class)->dispose (object);
+}
+
+static void
+_frogr_main_view_finalize (GObject *object)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
+
+  g_free (priv->project_name);
+  g_free (priv->project_dir);
+  g_free (priv->project_filepath);
+  g_free (priv->state_description);
+  gtk_widget_destroy (GTK_WIDGET (priv->window));
+
+  g_application_quit (G_APPLICATION (priv->gtk_app));
+  g_object_unref (priv->gtk_app);
+
+  G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
+}
+
+static void
+frogr_main_view_class_init (FrogrMainViewClass *klass)
+{
+  GObjectClass *obj_class = (GObjectClass *)klass;
+
+  obj_class->set_property = _frogr_main_view_set_property;
+  obj_class->get_property = _frogr_main_view_get_property;
+  obj_class->constructor = _frogr_main_view_constructor;
+  obj_class->dispose = _frogr_main_view_dispose;
+  obj_class->finalize = _frogr_main_view_finalize;
+
+  g_object_class_install_property (obj_class,
+                                   PROP_GTK_APPLICATION,
+                                   g_param_spec_object ("gtk-application",
+                                                        "gtk-application",
+                                                        "GtkApplication associated to the main view",
+                                                        GTK_TYPE_APPLICATION,
+                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
+  g_type_class_add_private (obj_class, sizeof (FrogrMainViewPrivate));
+}
+
+static void
+frogr_main_view_init (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  const gchar *icons_path = NULL;
+  gchar *full_path = NULL;
+  GList *icons = NULL;
+
+  /* Init model, controller and configuration */
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv->model = frogr_model_new ();
+  priv->controller = g_object_ref (frogr_controller_get_instance ());
+  priv->config = g_object_ref (frogr_config_get_instance ());
+
+  /* Provide a default icon list in several sizes */
+  icons_path = frogr_util_get_icons_dir ();
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("128x128"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("64x64"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("48x48"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("32x32"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("24x24"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("16x16"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  gtk_window_set_default_icon_list (icons);
+  g_list_foreach (icons, (GFunc) g_object_unref, NULL);
+  g_list_free (icons);
+
+  /* Initialize sorting criteria and reverse */
+  priv->sorted_pictures = NULL;
+  priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
+  priv->sorting_reversed = frogr_config_get_mainview_sorting_reversed (priv->config);
+
+  /* Read value for 'tooltips enabled' */
+  priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);
+
+  /* No selected pictures at the beginning */
+  priv->n_selected_pictures = 0;
+
+  /* Connect signals */
   g_signal_connect (G_OBJECT (priv->controller), "state-changed",
                     G_CALLBACK (_controller_state_changed), self);
 
@@ -2192,33 +2285,16 @@ frogr_main_view_init (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (priv->model), "model-deserialized",
                     G_CALLBACK (_model_deserialized), self);
-
-  gtk_builder_connect_signals (builder, self);
-
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET(priv->window));
-
-#ifdef MAC_INTEGRATION
-  _tweak_menu_bar_for_mac (self);
-#endif
-
-  /* Update window title */
-  _update_window_title (self, FALSE);
-
-  /* Update UI */
-  _update_ui (FROGR_MAIN_VIEW (self));
-
-  /* Show the auth dialog, if needed, on idle */
-  g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
 }
 
 
 /* Public API */
 
 FrogrMainView *
-frogr_main_view_new (void)
+frogr_main_view_new (GtkApplication *app)
 {
   GObject *new = g_object_new (FROGR_TYPE_MAIN_VIEW,
+                               "gtk-application", app,
                                NULL);
   return FROGR_MAIN_VIEW (new);
 }
