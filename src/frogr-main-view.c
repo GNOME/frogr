@@ -533,8 +533,8 @@ _initialize_drag_n_drop (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  gtk_drag_dest_set ( priv->icon_view, GTK_DEST_DEFAULT_ALL,
-                      NULL, 0, GDK_ACTION_COPY );
+  gtk_drag_dest_set (priv->icon_view, GTK_DEST_DEFAULT_ALL,
+                     NULL, 0, GDK_ACTION_COPY );
   gtk_drag_dest_add_uri_targets (priv->icon_view);
 
   g_signal_connect(G_OBJECT(priv->icon_view), "drag-data-received",
