@@ -72,10 +72,6 @@ _load_pictures_on_idle (gpointer data)
   fileuris = (GSList *)data;
 
   frogr_controller_load_pictures (fcontroller, fileuris);
-
-  g_slist_foreach (fileuris, (GFunc)g_free, NULL);
-  g_slist_free (fileuris);
-
   return FALSE;
 }
 
