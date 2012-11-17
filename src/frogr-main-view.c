@@ -50,7 +50,8 @@
 #define MINIMUM_WINDOW_HEIGHT 600
 
 /* Path relative to the application data dir */
-#define GTKBUILDER_FILE "/gtkbuilder/frogr-main-view.xml"
+#define UI_MAIN_VIEW_FILE "/gtkbuilder/frogr-main-view.xml"
+#define UI_APP_MENU_FILE "/gtkbuilder/frogr-app-menu.xml"
 
 #define FROGR_MAIN_VIEW_GET_PRIVATE(object)             \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
@@ -120,10 +121,6 @@ typedef struct _FrogrMainViewPrivate {
   GtkToggleAction *sort_as_loaded_action;
   GtkToggleAction *sort_by_title_action;
   GtkToggleAction *sort_by_date_taken_action;
-
-#ifndef MAC_INTEGRATION
-  GtkAction *quit_action;
-#endif
 } FrogrMainViewPrivate;
 
 
@@ -222,7 +219,6 @@ static void _edit_selected_pictures (FrogrMainView *self);
 static void _remove_selected_pictures (FrogrMainView *self);
 static void _load_pictures (FrogrMainView *self, GSList *fileuris);
 static void _upload_pictures (FrogrMainView *self);
-static void _show_help_contents (FrogrMainView *self);
 static void _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed);
 
 static gint _compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
@@ -429,30 +425,6 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
   accel = gtk_accel_group_new();
   gtk_window_add_accel_group(priv->window, accel);
 
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_project_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_o,
-                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "save_project_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
-                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "save_project_as_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_s,
-                             GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_a,
-                             GDK_PRIMARY_MODIFIER | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "help_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_F1,
-                             0, GTK_ACCEL_VISIBLE);
-
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "quit_menu_item"));
-  gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_q,
-                             GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
-
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_pictures_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_l,
                              GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
@@ -612,10 +584,6 @@ _on_action_activated (GtkAction *action, gpointer data)
     _upload_pictures (mainview);
   else if (action == priv->open_in_external_viewer_action)
     _open_pictures_in_external_viewer (mainview);
-  else if (action == priv->auth_action)
-    frogr_controller_show_auth_dialog (priv->controller);
-  else if (action == priv->preferences_action)
-    frogr_controller_show_settings_dialog (priv->controller);
   else if (action == priv->add_tags_action)
     _add_tags_to_pictures (mainview);
   else if (action == priv->edit_details_action)
@@ -626,14 +594,6 @@ _on_action_activated (GtkAction *action, gpointer data)
     _add_pictures_to_existing_set (mainview);
   else if (action == priv->add_to_new_set_action)
     _add_pictures_to_new_set (mainview);
-  else if (action == priv->help_action)
-    _show_help_contents (mainview);
-  else if (action == priv->about_action)
-    frogr_controller_show_about_dialog (priv->controller);
-#ifndef MAC_INTEGRATION
-  else if (action == priv->quit_action)
-    frogr_controller_quit_app (priv->controller);
-#endif
 }
 
 void
@@ -806,13 +766,24 @@ _on_account_menu_item_toggled (GtkWidget *widget, gpointer self)
     }
 }
 
+static void
+_quit_application (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  GApplication *app = G_APPLICATION (g_object_ref (priv->gtk_app));
+  frogr_controller_quit_app (priv->controller);
+
+  g_application_quit (app);
+  g_object_unref (app);
+}
+
 static gboolean
 _on_main_view_delete_event (GtkWidget *widget,
                             GdkEvent *event,
                             gpointer self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_quit_app (priv->controller);
+  _quit_application (FROGR_MAIN_VIEW (self));
   return TRUE;
 }
 
@@ -1321,12 +1292,6 @@ _upload_pictures (FrogrMainView *self)
 
   gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
   frogr_controller_upload_pictures (priv->controller);
-}
-
-static void
-_show_help_contents (FrogrMainView *self)
-{
-  frogr_util_open_uri ("ghelp:frogr");
 }
 
 static void
@@ -1851,7 +1816,7 @@ _frogr_main_view_set_property (GObject *object,
   switch (prop_id)
     {
     case PROP_GTK_APPLICATION:
-      priv->gtk_app = GTK_APPLICATION (g_value_dup_object (value));
+      priv->gtk_app = GTK_APPLICATION (g_value_get_object (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1877,6 +1842,87 @@ _frogr_main_view_get_property (GObject *object,
       break;
     }
 }
+
+static void
+_load_project_action (GSimpleAction *action,
+                      GVariant *parameter,
+                      gpointer data)
+{
+  _load_project_dialog (FROGR_MAIN_VIEW (data));
+}
+
+static void
+_save_project_action (GSimpleAction *action,
+                       GVariant *parameter,
+                       gpointer data)
+{
+  _save_current_project (FROGR_MAIN_VIEW (data));
+}
+
+static void
+_save_project_as_action (GSimpleAction *action,
+                         GVariant *parameter,
+                         gpointer data)
+{
+  _save_project_as_dialog (FROGR_MAIN_VIEW (data));
+}
+
+static void
+_authorize_action (GSimpleAction *action,
+                   GVariant *parameter,
+                   gpointer data)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  frogr_controller_show_auth_dialog (priv->controller);
+}
+
+static void
+_preferences_action (GSimpleAction *action,
+                     GVariant *parameter,
+                     gpointer data)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  frogr_controller_show_settings_dialog (priv->controller);
+}
+
+static void
+_about_action (GSimpleAction *action,
+               GVariant *parameter,
+               gpointer data)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  frogr_controller_show_about_dialog (priv->controller);
+}
+
+static void
+_help_action (GSimpleAction *action,
+              GVariant *parameter,
+              gpointer data)
+{
+  frogr_util_open_uri ("ghelp:frogr");
+}
+
+static void
+_quit_action (GSimpleAction *action,
+              GVariant *parameter,
+              gpointer data)
+{
+  _quit_application (FROGR_MAIN_VIEW (data));
+}
+
+static GActionEntry app_entries[] = {
+  { "load_project", _load_project_action, NULL, NULL, NULL },
+  { "save_project", _save_project_action, NULL, NULL, NULL },
+  { "save_project_as", _save_project_as_action, NULL, NULL, NULL },
+  { "authorize", _authorize_action, NULL, NULL, NULL },
+  { "preferences", _preferences_action, NULL, NULL, NULL },
+  { "help", _help_action, NULL, NULL, NULL },
+  { "about", _about_action, NULL, NULL, NULL },
+  { "quit", _quit_action, NULL, NULL, NULL },
+};
 
 static GObject *
 _frogr_main_view_constructor (GType type,
@@ -1909,7 +1955,7 @@ _frogr_main_view_constructor (GType type,
   builder = gtk_builder_new ();
   priv->builder = builder;
 
-  full_path = g_strdup_printf ("%s/" GTKBUILDER_FILE, frogr_util_get_app_data_dir ());
+  full_path = g_strdup_printf ("%s/" UI_MAIN_VIEW_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (builder, full_path, NULL);
   g_free (full_path);
 
@@ -1918,6 +1964,25 @@ _frogr_main_view_constructor (GType type,
 
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
   gtk_container_add (GTK_CONTAINER (priv->window), main_vbox);
+
+  /* Menu bar */
+  priv->menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
+  gtk_widget_show_all (priv->menu_bar);
+
+#ifndef MAC_INTEGRATION
+  gtk_box_pack_start (GTK_BOX (main_vbox), priv->menu_bar, FALSE, FALSE, 0);
+  gtk_box_reorder_child (GTK_BOX (main_vbox), priv->menu_bar, 0);
+#endif
+
+  /* App menu */
+  full_path = g_strdup_printf ("%s/" UI_APP_MENU_FILE, frogr_util_get_app_data_dir ());
+  gtk_builder_add_from_file (builder, full_path, NULL);
+  g_free (full_path);
+  g_action_map_add_action_entries (G_ACTION_MAP (priv->gtk_app),
+                                   app_entries, G_N_ELEMENTS (app_entries),
+                                   self);
+  gtk_application_set_app_menu (GTK_APPLICATION (priv->gtk_app),
+                                G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
 
   toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "toolbar"));
   gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
@@ -1978,11 +2043,6 @@ _frogr_main_view_constructor (GType type,
   priv->reversed_order_action =
     GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
                                                "reversed_order_action"));
-#ifndef MAC_INTEGRATION
-  priv->quit_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "quit_action"));
-#endif
-
   /* Set Keyboard shortcuts */
   _setup_keyboard_shortcuts (self);
 
@@ -2180,9 +2240,6 @@ _frogr_main_view_finalize (GObject *object)
   g_free (priv->project_filepath);
   g_free (priv->state_description);
   gtk_widget_destroy (GTK_WIDGET (priv->window));
-
-  g_application_quit (G_APPLICATION (priv->gtk_app));
-  g_object_unref (priv->gtk_app);
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
 }
