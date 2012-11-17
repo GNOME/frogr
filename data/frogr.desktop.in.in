@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-_Name=Flickr Remote Organizer
+_Name=Frogr
 _GenericName=Frogr: a Flickr Remote Organizer for GNOME
 _Comment=Upload and organize photos in Flickr accounts
 Exec=@BINDIR@/frogr %F
