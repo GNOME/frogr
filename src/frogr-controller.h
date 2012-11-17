@@ -65,13 +65,11 @@ GType frogr_controller_get_type (void) G_GNUC_CONST;
 
 FrogrController *frogr_controller_get_instance (void);
 
+gint frogr_controller_run_app (FrogrController *self, int argc, char **argv);
+
 FrogrMainView *frogr_controller_get_main_view (FrogrController *self);
 
 FrogrModel *frogr_controller_get_model (FrogrController *self);
-
-void frogr_controller_run_app (FrogrController *self, GtkApplication *app);
-
-void frogr_controller_quit_app (FrogrController *self);
 
 void frogr_controller_set_active_account (FrogrController *self,
                                           FrogrAccount *account);

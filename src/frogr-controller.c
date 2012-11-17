@@ -141,6 +141,16 @@ typedef enum {
 
 /* Prototypes */
 
+static gboolean _load_pictures_on_idle (gpointer data);
+
+static void _g_application_startup_cb (GApplication *app, gpointer data);
+
+static void _g_application_activate_cb (GApplication *app, gpointer data);
+
+static void _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gchar *hint, gpointer data);
+
+static void _g_application_shutdown_cb (GApplication *app, gpointer data);
+
 static void _set_state (FrogrController *self, FrogrControllerState state);
 
 static GCancellable *_register_new_cancellable (FrogrController *self);
@@ -248,6 +258,104 @@ static gboolean _show_add_to_set_dialog_on_idle (GSList *pictures);
 static gboolean _show_add_to_group_dialog_on_idle (GSList *pictures);
 
 /* Private functions */
+
+static gboolean
+_load_pictures_on_idle (gpointer data)
+{
+  FrogrController *fcontroller = NULL;
+  GSList *fileuris = NULL;
+
+  g_return_val_if_fail (data, FALSE);
+
+  fcontroller = frogr_controller_get_instance ();
+  fileuris = (GSList *)data;
+
+  frogr_controller_load_pictures (fcontroller, fileuris);
+  return FALSE;
+}
+
+static void
+_g_application_startup_cb (GApplication *app, gpointer data)
+{
+  FrogrController *self = FROGR_CONTROLLER (data);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrAccount *account = NULL;
+  gboolean use_dark_theme;
+
+  DEBUG ("%s", "Application started!\n");
+
+  /* Create UI window */
+  priv->mainview = frogr_main_view_new (GTK_APPLICATION (app));
+  g_object_add_weak_pointer (G_OBJECT (priv->mainview),
+                             (gpointer) & priv->mainview);
+
+  /* Start on idle state */
+  _set_state (self, FROGR_STATE_IDLE);
+
+  /* Select the dark theme if needed */
+  use_dark_theme = frogr_config_get_use_dark_theme (priv->config);
+  frogr_controller_set_use_dark_theme (self, use_dark_theme);
+
+  /* Select the right account */
+  account = frogr_config_get_active_account (priv->config);
+  if (account)
+    frogr_controller_set_active_account (self, account);
+}
+
+static void
+_g_application_activate_cb (GApplication *app, gpointer data)
+{
+  FrogrController *self = FROGR_CONTROLLER (data);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  GtkWindow *mainview_window = NULL;
+
+  DEBUG ("%s", "Application activated!\n");
+
+  mainview_window = frogr_main_view_get_window (priv->mainview);
+  gtk_window_present (mainview_window);
+}
+
+static void
+_g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gchar *hint, gpointer data)
+{
+  GSList *fileuris = NULL;
+  int i = 0;
+
+  DEBUG ("Trying to open %d files\n", n_files);
+
+  for (i = 0; i < n_files; i++)
+    {
+      gchar *fileuri = NULL;
+
+      fileuri = g_strdup (g_file_get_uri (files[i]));
+      if (fileuri)
+        fileuris = g_slist_append (fileuris, fileuri);
+    }
+
+  if (fileuris)
+    gdk_threads_add_idle (_load_pictures_on_idle, fileuris);
+}
+
+static void
+_g_application_shutdown_cb (GApplication *app, gpointer data)
+{
+  FrogrController *self = FROGR_CONTROLLER (data);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  DEBUG ("%s", "Shutting down application...");
+
+  if (priv->app_running)
+    {
+      while (gtk_events_pending ())
+        gtk_main_iteration ();
+
+      g_object_unref (priv->mainview);
+
+      priv->app_running = FALSE;
+
+      frogr_config_save_all (priv->config);
+    }
+}
 
 void
 _set_state (FrogrController *self, FrogrControllerState state)
@@ -2135,9 +2243,6 @@ frogr_controller_init (FrogrController *self)
       frogr_controller_set_proxy (self, use_gnome_proxy,
                                   host, port, username, password);
     }
-
-  /* Select the dark theme if needed */
-  frogr_controller_set_use_dark_theme (self, frogr_config_get_use_dark_theme (priv->config));
 }
 
 
@@ -2150,6 +2255,41 @@ frogr_controller_get_instance (void)
     return _instance;
 
   return FROGR_CONTROLLER (g_object_new (FROGR_TYPE_CONTROLLER, NULL));
+}
+
+gint
+frogr_controller_run_app (FrogrController *self, int argc, char **argv)
+{
+  FrogrControllerPrivate *priv = NULL;
+  GtkApplication *app = NULL;
+  gint status;
+
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), -1);
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  if (priv->app_running)
+    {
+      DEBUG ("%s", "Application already running");
+      return -1;
+    }
+  priv->app_running = TRUE;
+
+  /* Initialize and run the Gtk application */
+  g_set_application_name(APP_SHORTNAME);
+  app = gtk_application_new (APP_ID,
+                             G_APPLICATION_NON_UNIQUE
+                             | G_APPLICATION_HANDLES_OPEN);
+
+  g_signal_connect (app, "startup", G_CALLBACK (_g_application_startup_cb), self);
+  g_signal_connect (app, "activate", G_CALLBACK (_g_application_activate_cb), self);
+  g_signal_connect (app, "shutdown", G_CALLBACK (_g_application_shutdown_cb), self);
+  g_signal_connect (app, "open", G_CALLBACK (_g_application_open_files_cb), self);
+
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
 }
 
 FrogrMainView *
@@ -2175,59 +2315,6 @@ frogr_controller_get_model (FrogrController *self)
     return NULL;
 
   return frogr_main_view_get_model (priv->mainview);;
-}
-
-void
-frogr_controller_run_app (FrogrController *self, GtkApplication *app)
-{
-  FrogrControllerPrivate *priv = NULL;
-  FrogrAccount *account = NULL;
-
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  if (priv->app_running)
-    {
-      DEBUG ("%s", "Application already running");
-      return;
-    }
-
-  /* Create UI window */
-  priv->mainview = frogr_main_view_new (app);
-  g_object_add_weak_pointer (G_OBJECT (priv->mainview),
-                             (gpointer) & priv->mainview);
-  /* Update flag */
-  priv->app_running = TRUE;
-
-  /* Start on idle state */
-  _set_state (self, FROGR_STATE_IDLE);
-
-  account = frogr_config_get_active_account (priv->config);
-  if (account)
-    frogr_controller_set_active_account (self, account);
-}
-
-void
-frogr_controller_quit_app (FrogrController *self)
-{
-  FrogrControllerPrivate *priv = NULL;
-
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  if (priv->app_running)
-    {
-      while (gtk_events_pending ())
-        gtk_main_iteration ();
-
-      g_object_unref (priv->mainview);
-
-      priv->app_running = FALSE;
-
-      frogr_config_save_all (priv->config);
-    }
 }
 
 void

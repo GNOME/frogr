@@ -139,6 +139,15 @@ enum {
 
 /* Prototypes */
 
+static void _load_project_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _save_project_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _save_project_as_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _authorize_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _preferences_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _about_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _help_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _quit_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+
 static void _update_project_path (FrogrMainView *self, const gchar *path);
 static void _update_window_title (FrogrMainView *self, gboolean dirty);
 
@@ -169,6 +178,8 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            gpointer data);
 
 void _on_account_menu_item_toggled (GtkWidget *widget, gpointer self);
+
+static void _quit_application (FrogrMainView *self);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
@@ -266,6 +277,76 @@ static void _update_ui (FrogrMainView *self);
 
 
 /* Private API */
+
+static void
+_load_project_action (GSimpleAction *action,
+                      GVariant *parameter,
+                      gpointer data)
+{
+  _load_project_dialog (FROGR_MAIN_VIEW (data));
+}
+
+static void
+_save_project_action (GSimpleAction *action,
+                       GVariant *parameter,
+                       gpointer data)
+{
+  _save_current_project (FROGR_MAIN_VIEW (data));
+}
+
+static void
+_save_project_as_action (GSimpleAction *action,
+                         GVariant *parameter,
+                         gpointer data)
+{
+  _save_project_as_dialog (FROGR_MAIN_VIEW (data));
+}
+
+static void
+_authorize_action (GSimpleAction *action,
+                   GVariant *parameter,
+                   gpointer data)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  frogr_controller_show_auth_dialog (priv->controller);
+}
+
+static void
+_preferences_action (GSimpleAction *action,
+                     GVariant *parameter,
+                     gpointer data)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  frogr_controller_show_settings_dialog (priv->controller);
+}
+
+static void
+_about_action (GSimpleAction *action,
+               GVariant *parameter,
+               gpointer data)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  frogr_controller_show_about_dialog (priv->controller);
+}
+
+static void
+_help_action (GSimpleAction *action,
+              GVariant *parameter,
+              gpointer data)
+{
+  frogr_util_open_uri ("ghelp:frogr");
+}
+
+static void
+_quit_action (GSimpleAction *action,
+              GVariant *parameter,
+              gpointer data)
+{
+  _quit_application (FROGR_MAIN_VIEW (data));
+}
 
 static void
 _update_project_path (FrogrMainView *self, const gchar *path)
@@ -770,12 +851,7 @@ static void
 _quit_application (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  GApplication *app = G_APPLICATION (g_object_ref (priv->gtk_app));
-  frogr_controller_quit_app (priv->controller);
-
-  g_application_quit (app);
-  g_object_unref (app);
+  g_application_quit (G_APPLICATION (priv->gtk_app));
 }
 
 static gboolean
@@ -1839,76 +1915,6 @@ _frogr_main_view_get_property (GObject *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
-}
-
-static void
-_load_project_action (GSimpleAction *action,
-                      GVariant *parameter,
-                      gpointer data)
-{
-  _load_project_dialog (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_save_project_action (GSimpleAction *action,
-                       GVariant *parameter,
-                       gpointer data)
-{
-  _save_current_project (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_save_project_as_action (GSimpleAction *action,
-                         GVariant *parameter,
-                         gpointer data)
-{
-  _save_project_as_dialog (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_authorize_action (GSimpleAction *action,
-                   GVariant *parameter,
-                   gpointer data)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  frogr_controller_show_auth_dialog (priv->controller);
-}
-
-static void
-_preferences_action (GSimpleAction *action,
-                     GVariant *parameter,
-                     gpointer data)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  frogr_controller_show_settings_dialog (priv->controller);
-}
-
-static void
-_about_action (GSimpleAction *action,
-               GVariant *parameter,
-               gpointer data)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  frogr_controller_show_about_dialog (priv->controller);
-}
-
-static void
-_help_action (GSimpleAction *action,
-              GVariant *parameter,
-              gpointer data)
-{
-  frogr_util_open_uri ("ghelp:frogr");
-}
-
-static void
-_quit_action (GSimpleAction *action,
-              GVariant *parameter,
-              gpointer data)
-{
-  _quit_application (FROGR_MAIN_VIEW (data));
 }
 
 static GActionEntry app_entries[] = {
