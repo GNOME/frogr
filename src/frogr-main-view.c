@@ -105,15 +105,11 @@ typedef struct _FrogrMainViewPrivate {
   GtkAction *remove_pictures_action;
   GtkAction *upload_pictures_action;
   GtkAction *open_in_external_viewer_action;
-  GtkAction *auth_action;
-  GtkAction *preferences_action;
   GtkAction *add_tags_action;
   GtkAction *edit_details_action;
   GtkAction *add_to_group_action;
   GtkAction *add_to_new_set_action;
   GtkAction *add_to_set_action;
-  GtkAction *help_action;
-  GtkAction *about_action;
   GtkToggleAction *enable_tooltips_action;
   GtkToggleAction *reversed_order_action;
   GtkToggleAction *sort_as_loaded_action;
@@ -133,14 +129,13 @@ enum {
 
 static void _initialize_ui (FrogrMainView *self);
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
-static void _load_project_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _save_project_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _save_project_as_action (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _authorize_action (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _preferences_action (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _about_action (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _help_action (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _quit_action (GSimpleAction *action, GVariant *parameter, gpointer data);
+
+static void _quit_application (FrogrMainView *self);
 
 static void _update_project_path (FrogrMainView *self, const gchar *path);
 static void _update_window_title (FrogrMainView *self, gboolean dirty);
@@ -170,8 +165,6 @@ gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            gpointer data);
 
 void _on_account_menu_item_toggled (GtkWidget *widget, gpointer self);
-
-static void _quit_application (FrogrMainView *self);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
@@ -271,9 +264,6 @@ static void _update_ui (FrogrMainView *self);
 /* Private API */
 
 static GActionEntry app_entries[] = {
-  { "load_project", _load_project_action, NULL, NULL, NULL },
-  { "save_project", _save_project_action, NULL, NULL, NULL },
-  { "save_project_as", _save_project_as_action, NULL, NULL, NULL },
   { "authorize", _authorize_action, NULL, NULL, NULL },
   { "preferences", _preferences_action, NULL, NULL, NULL },
   { "help", _help_action, NULL, NULL, NULL },
@@ -389,10 +379,6 @@ _initialize_ui (FrogrMainView *self)
   priv->open_in_external_viewer_action =
     GTK_ACTION (gtk_builder_get_object (builder,
                                         "open_in_external_viewer_action"));
-  priv->auth_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "auth_action"));
-  priv->preferences_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "preferences_action"));
   priv->add_tags_action =
     GTK_ACTION (gtk_builder_get_object (builder, "add_tags_action"));
   priv->edit_details_action =
@@ -403,10 +389,6 @@ _initialize_ui (FrogrMainView *self)
     GTK_ACTION (gtk_builder_get_object (builder, "add_to_set_action"));
   priv->add_to_new_set_action =
     GTK_ACTION (gtk_builder_get_object (builder, "add_to_new_set_action"));
-  priv->help_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "help_action"));
-  priv->about_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "about_action"));
   priv->enable_tooltips_action =
     GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
                                                "enable_tooltips_action"));
@@ -573,30 +555,6 @@ _maybe_show_auth_dialog_on_idle (FrogrMainView *self)
 }
 
 static void
-_load_project_action (GSimpleAction *action,
-                      GVariant *parameter,
-                      gpointer data)
-{
-  _load_project_dialog (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_save_project_action (GSimpleAction *action,
-                       GVariant *parameter,
-                       gpointer data)
-{
-  _save_current_project (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_save_project_as_action (GSimpleAction *action,
-                         GVariant *parameter,
-                         gpointer data)
-{
-  _save_project_as_dialog (FROGR_MAIN_VIEW (data));
-}
-
-static void
 _authorize_action (GSimpleAction *action,
                    GVariant *parameter,
                    gpointer data)
@@ -640,6 +598,13 @@ _quit_action (GSimpleAction *action,
               gpointer data)
 {
   _quit_application (FROGR_MAIN_VIEW (data));
+}
+
+static void
+_quit_application (FrogrMainView *self)
+{
+  GtkApplication *gtk_app = gtk_window_get_application (GTK_WINDOW (self));
+  g_application_quit (G_APPLICATION (gtk_app));
 }
 
 static void
@@ -1125,13 +1090,6 @@ _on_account_menu_item_toggled (GtkWidget *widget, gpointer self)
       if (frogr_account_equal (active_account, account))
         gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
     }
-}
-
-static void
-_quit_application (FrogrMainView *self)
-{
-  GtkApplication *gtk_app = gtk_window_get_application (GTK_WINDOW (self));
-  g_application_quit (G_APPLICATION (gtk_app));
 }
 
 static gboolean
