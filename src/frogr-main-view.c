@@ -494,7 +494,7 @@ _populate_accounts_submenu (FrogrMainView *self)
       gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
     }
 
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->accounts_menu_item), priv->accounts_menu);
+  /* gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->accounts_menu_item), priv->accounts_menu); */
 
   if (priv->accounts_menu)
     gtk_widget_show_all (priv->accounts_menu);
@@ -1738,7 +1738,7 @@ static void
 _update_sensitiveness (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gboolean has_accounts = FALSE;
+  /* gboolean has_accounts = FALSE; */
   gboolean has_pics = FALSE;
   gint n_selected_pics = 0;
 
@@ -1754,27 +1754,25 @@ _update_sensitiveness (FrogrMainView *self)
       gtk_action_set_sensitive (priv->remove_pictures_action, FALSE);
       gtk_action_set_sensitive (priv->upload_pictures_action, FALSE);
       gtk_action_set_sensitive (priv->open_in_external_viewer_action, FALSE);
-      gtk_action_set_sensitive (priv->auth_action, FALSE);
       gtk_action_set_sensitive (priv->add_tags_action, FALSE);
       gtk_action_set_sensitive (priv->edit_details_action, FALSE);
       gtk_action_set_sensitive (priv->add_to_group_action, FALSE);
       gtk_action_set_sensitive (priv->add_to_set_action, FALSE);
       gtk_action_set_sensitive (priv->add_to_new_set_action, FALSE);
-      gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE);
+      /* gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE); */
       gtk_widget_set_sensitive (priv->add_to_set_menu_item, FALSE);
       break;
 
     case FROGR_STATE_IDLE:
       has_pics = (_n_pictures (self) > 0);
-      has_accounts = (priv->accounts_menu != NULL);
+      /* has_accounts = (priv->accounts_menu != NULL); */
       n_selected_pics = priv->n_selected_pictures;
 
       gtk_action_set_sensitive (priv->load_project_action, TRUE);
       gtk_action_set_sensitive (priv->save_project_action, TRUE);
       gtk_action_set_sensitive (priv->save_project_as_action, TRUE);
       gtk_action_set_sensitive (priv->load_pictures_action, TRUE);
-      gtk_action_set_sensitive (priv->auth_action, TRUE);
-      gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts);
+      /* gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts); */
       gtk_action_set_sensitive (priv->upload_pictures_action, has_pics);
       gtk_action_set_sensitive (priv->remove_pictures_action, n_selected_pics > 0);
       gtk_action_set_sensitive (priv->open_in_external_viewer_action, n_selected_pics > 0);
@@ -2067,9 +2065,9 @@ _frogr_main_view_constructor (GType type,
 
   /* Initialize extra widgets */
 
-  /* Accounts menu */
-  priv->accounts_menu_item =
-    GTK_WIDGET (gtk_builder_get_object (builder, "accounts_menu_item"));
+  /* /\* Accounts menu *\/ */
+  /* priv->accounts_menu_item = */
+  /*   GTK_WIDGET (gtk_builder_get_object (builder, "accounts_menu_item")); */
 
   /* "Add to set" menu needs to be assigned to a var so we control
      its visibility directly because it has no action assigned to it */
