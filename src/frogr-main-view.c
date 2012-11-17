@@ -98,7 +98,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkBuilder *builder;
 
-  GtkAction *load_project_action;
+  GtkAction *open_project_action;
   GtkAction *save_project_action;
   GtkAction *save_project_as_action;
   GtkAction *load_pictures_action;
@@ -183,11 +183,11 @@ static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_pictures (FrogrMainView *self);
 static void _open_pictures_in_external_viewer (FrogrMainView *self);
 
-static void _load_project_dialog_response_cb (GtkDialog *dialog,
+static void _open_project_dialog_response_cb (GtkDialog *dialog,
                                               gint response,
                                               gpointer data);
 
-static void _load_project_dialog (FrogrMainView *self);
+static void _open_project_dialog (FrogrMainView *self);
 
 static void _save_current_project (FrogrMainView *self);
 
@@ -364,8 +364,8 @@ _initialize_ui (FrogrMainView *self)
   priv->status_bar = status_bar;
 
   /* Get actions from GtkBuilder */
-  priv->load_project_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "load_project_action"));
+  priv->open_project_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "open_project_action"));
   priv->save_project_action =
     GTK_ACTION (gtk_builder_get_object (builder, "save_project_action"));
   priv->save_project_as_action =
@@ -751,7 +751,7 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
   accel = gtk_accel_group_new();
   gtk_window_add_accel_group(GTK_WINDOW (self), accel);
 
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_project_menu_item"));
+  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "open_project_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_o,
                              GDK_PRIMARY_MODIFIER, GTK_ACCEL_VISIBLE);
 
@@ -908,8 +908,8 @@ _on_action_activated (GtkAction *action, gpointer data)
   FrogrMainViewPrivate *priv = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  if (action == priv->load_project_action)
-    _load_project_dialog (mainview);
+  if (action == priv->open_project_action)
+    _open_project_dialog (mainview);
   else if (action == priv->save_project_action)
     _save_current_project (mainview);
   else if (action == priv->save_project_as_action)
@@ -1267,7 +1267,7 @@ _n_pictures (FrogrMainView *self)
 }
 
 static void
-_load_project_dialog_response_cb (GtkDialog *dialog,
+_open_project_dialog_response_cb (GtkDialog *dialog,
                                   gint response,
                                   gpointer data)
 {
@@ -1283,7 +1283,7 @@ _load_project_dialog_response_cb (GtkDialog *dialog,
           FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
           /* Load from disk and update project's path */
-          frogr_controller_load_project_from_file (priv->controller, filename);
+          frogr_controller_open_project_from_file (priv->controller, filename);
           _update_project_path (self, filename);
 
           g_free (filename);
@@ -1294,7 +1294,7 @@ _load_project_dialog_response_cb (GtkDialog *dialog,
 }
 
 static void
-_load_project_dialog (FrogrMainView *self)
+_open_project_dialog (FrogrMainView *self)
 {
   GtkWidget *dialog;
   GtkFileFilter *filter;
@@ -1316,7 +1316,7 @@ _load_project_dialog (FrogrMainView *self)
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
   g_signal_connect (G_OBJECT (dialog), "response",
-                    G_CALLBACK (_load_project_dialog_response_cb), self);
+                    G_CALLBACK (_open_project_dialog_response_cb), self);
 
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_widget_show_all (dialog);
@@ -2070,7 +2070,7 @@ _update_sensitiveness (FrogrMainView *self)
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
-      gtk_action_set_sensitive (priv->load_project_action, FALSE);
+      gtk_action_set_sensitive (priv->open_project_action, FALSE);
       gtk_action_set_sensitive (priv->save_project_action, FALSE);
       gtk_action_set_sensitive (priv->save_project_as_action, FALSE);
       gtk_action_set_sensitive (priv->load_pictures_action, FALSE);
@@ -2091,7 +2091,7 @@ _update_sensitiveness (FrogrMainView *self)
       /* has_accounts = (priv->accounts_menu != NULL); */
       n_selected_pics = priv->n_selected_pictures;
 
-      gtk_action_set_sensitive (priv->load_project_action, TRUE);
+      gtk_action_set_sensitive (priv->open_project_action, TRUE);
       gtk_action_set_sensitive (priv->save_project_action, TRUE);
       gtk_action_set_sensitive (priv->save_project_as_action, TRUE);
       gtk_action_set_sensitive (priv->load_pictures_action, TRUE);

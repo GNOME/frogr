@@ -2804,7 +2804,7 @@ frogr_controller_cancel_ongoing_requests (FrogrController *self)
 }
 
 void
-frogr_controller_load_project_from_file (FrogrController *self, const gchar *path)
+frogr_controller_open_project_from_file (FrogrController *self, const gchar *path)
 {
   JsonParser *json_parser = NULL;
   GError *error = NULL;

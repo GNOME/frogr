@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
-  <object class="GtkAction" id="load_project_action">
-    <property name="label" translatable="yes">_Load Project…</property>
+  <object class="GtkAction" id="open_project_action">
+    <property name="label" translatable="yes">_Open Project…</property>
     <property name="stock_id">gtk-open</property>
     <signal name="activate" handler="_on_action_activated" swapped="no"/>
   </object>
@@ -182,11 +182,11 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkToolButton" id="load_project_button">
+          <object class="GtkToolButton" id="open_project_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="related_action">load_project_action</property>
-            <property name="label" translatable="yes">Load Project</property>
+            <property name="related_action">open_project_action</property>
+            <property name="label" translatable="yes">Open Project</property>
             <property name="use_underline">True</property>
           </object>
           <packing>
@@ -317,10 +317,10 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkImageMenuItem" id="load_project_menu_item">
+              <object class="GtkImageMenuItem" id="open_project_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">load_project_action</property>
+                <property name="related_action">open_project_action</property>
                 <property name="use_underline">True</property>
                 <property name="use_stock">True</property>
               </object>
