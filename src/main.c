@@ -54,6 +54,7 @@ main (int argc, char **argv)
 
   controller = frogr_controller_get_instance ();
   status = frogr_controller_run_app (controller, argc, argv);
+  g_object_unref (controller);
 
   /* cleanup libxml2 library */
   xmlCleanupParser();
