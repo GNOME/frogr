@@ -39,19 +39,17 @@ typedef struct _FrogrMainViewClass   FrogrMainViewClass;
 
 struct _FrogrMainViewClass
 {
-  GObjectClass parent_class;
+  GtkApplicationWindowClass parent_class;
 };
 
 struct _FrogrMainView
 {
-  GObject parent;
+  GtkApplicationWindow parent;
 };
 
 GType frogr_main_view_get_type (void) G_GNUC_CONST;
 
 FrogrMainView *frogr_main_view_new (GtkApplication *app);
-
-GtkWindow *frogr_main_view_get_window (FrogrMainView *self);
 
 void frogr_main_view_set_status_text (FrogrMainView *self, const gchar *text);
 

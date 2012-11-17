@@ -305,19 +305,19 @@ _g_application_startup_cb (GApplication *app, gpointer data)
 static void
 _g_application_activate_cb (GApplication *app, gpointer data)
 {
-  FrogrController *self = FROGR_CONTROLLER (data);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  GtkWindow *mainview_window = NULL;
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (data);
 
   DEBUG ("%s", "Application activated!\n");
 
-  mainview_window = frogr_main_view_get_window (priv->mainview);
-  gtk_window_present (mainview_window);
+  /* Show the UI */
+  gtk_widget_show_all (GTK_WIDGET(priv->mainview));
+  gtk_window_present (GTK_WINDOW (priv->mainview));
 }
 
 static void
 _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gchar *hint, gpointer data)
 {
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (data);
   GSList *fileuris = NULL;
   int i = 0;
 
@@ -334,13 +334,16 @@ _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gc
 
   if (fileuris)
     gdk_threads_add_idle (_load_pictures_on_idle, fileuris);
+
+  /* Show the UI */
+  gtk_widget_show_all (GTK_WIDGET(priv->mainview));
+  gtk_window_present (GTK_WINDOW (priv->mainview));
 }
 
 static void
 _g_application_shutdown_cb (GApplication *app, gpointer data)
 {
-  FrogrController *self = FROGR_CONTROLLER (data);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (data);
 
   DEBUG ("%s", "Shutting down application...");
 
@@ -349,8 +352,7 @@ _g_application_shutdown_cb (GApplication *app, gpointer data)
       while (gtk_events_pending ())
         gtk_main_iteration ();
 
-      g_object_unref (priv->mainview);
-
+      gtk_widget_destroy (GTK_WIDGET (priv->mainview));
       priv->app_running = FALSE;
 
       frogr_config_save_all (priv->config);
@@ -504,11 +506,7 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
     }
 
   if (notify_user && error_function)
-    {
-      GtkWindow *window = NULL;
-      window = frogr_main_view_get_window (priv->mainview);
-      error_function (window, msg);
-    }
+    error_function (GTK_WINDOW (priv->mainview), msg);
 
   DEBUG ("%s", msg);
   g_free (msg);
@@ -575,15 +573,13 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   auth_url = fsp_session_get_auth_url_finish (priv->session, res, &error);
   if (auth_url != NULL && error == NULL)
     {
-      GtkWindow *window = NULL;
       gchar *url_with_permissions = NULL;
 
       url_with_permissions = g_strdup_printf ("%s&perms=write", auth_url);
       frogr_util_open_uri (url_with_permissions);
 
       /* Run the auth confirmation dialog */
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_auth_dialog_show (window, CONFIRM_AUTHORIZATION);
+      frogr_auth_dialog_show (GTK_WINDOW (priv->mainview), CONFIRM_AUTHORIZATION);
 
       DEBUG ("Auth URL: %s", url_with_permissions);
 
@@ -702,13 +698,10 @@ _cancel_authorization_on_timeout (gpointer data)
 
   if (priv->fetching_auth_url || priv->fetching_auth_token || priv->fetching_token_replacement)
     {
-      GtkWindow *window = NULL;
-
       frogr_controller_cancel_ongoing_requests (self);
       frogr_main_view_hide_progress (priv->mainview);
 
-      window = frogr_main_view_get_window (priv->mainview);
-      _show_auth_failed_dialog (window, _("Authorization failed (timed out)"), FALSE);
+      _show_auth_failed_dialog (GTK_WINDOW (priv->mainview), _("Authorization failed (timed out)"), FALSE);
     }
 
   return FALSE;
@@ -1925,7 +1918,6 @@ _show_details_dialog_on_idle (GSList *pictures)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
-  GtkWindow *window = NULL;
   GSList *tags_list = NULL;
 
   controller = frogr_controller_get_instance ();
@@ -1942,8 +1934,7 @@ _show_details_dialog_on_idle (GSList *pictures)
   tags_list = frogr_model_get_tags (model);
 
   /* Sets already pre-fetched: show the dialog */
-  window = frogr_main_view_get_window (priv->mainview);
-  frogr_details_dialog_show (window, pictures, tags_list);
+  frogr_details_dialog_show (GTK_WINDOW (priv->mainview), pictures, tags_list);
 
   /* FrogrController's responsibility over this list ends here */
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
@@ -1959,7 +1950,6 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
-  GtkWindow *window = NULL;
   GSList *tags_list = NULL;
 
   controller = frogr_controller_get_instance ();
@@ -1976,8 +1966,7 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   tags_list = frogr_model_get_tags (model);
 
   /* Sets already pre-fetched: show the dialog */
-  window = frogr_main_view_get_window (priv->mainview);
-  frogr_add_tags_dialog_show (window, pictures, tags_list);
+  frogr_add_tags_dialog_show (GTK_WINDOW (priv->mainview), pictures, tags_list);
 
   /* FrogrController's responsibility over this list ends here */
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
@@ -1993,7 +1982,6 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
-  GtkWindow *window = NULL;
   GSList *photosets = NULL;
 
   controller = frogr_controller_get_instance ();
@@ -2009,8 +1997,7 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
   model = frogr_main_view_get_model (priv->mainview);
   photosets = frogr_model_get_photosets (model);
 
-  window = frogr_main_view_get_window (priv->mainview);
-  frogr_create_new_set_dialog_show (window, pictures, photosets);
+  frogr_create_new_set_dialog_show (GTK_WINDOW (priv->mainview), pictures, photosets);
 
   /* FrogrController's responsibility over this list ends here */
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
@@ -2026,7 +2013,6 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
-  GtkWindow *window = NULL;
   GSList *photosets = NULL;
 
   controller = frogr_controller_get_instance ();
@@ -2042,11 +2028,10 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
   model = frogr_main_view_get_model (priv->mainview);
   photosets = frogr_model_get_photosets (model);
 
-  window = frogr_main_view_get_window (priv->mainview);
   if (frogr_model_n_photosets (model) > 0)
-    frogr_add_to_set_dialog_show (window, pictures, photosets);
+    frogr_add_to_set_dialog_show (GTK_WINDOW (priv->mainview), pictures, photosets);
   else if (priv->photosets_fetched)
-    frogr_util_show_info_dialog (window, _("No sets found"));
+    frogr_util_show_info_dialog (GTK_WINDOW (priv->mainview), _("No sets found"));
 
   /* FrogrController's responsibility over this list ends here */
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
@@ -2062,7 +2047,6 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   FrogrControllerPrivate *priv = NULL;
   FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
-  GtkWindow *window = NULL;
   GSList *groups = NULL;
 
   controller = frogr_controller_get_instance ();
@@ -2078,11 +2062,10 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   model = frogr_main_view_get_model (priv->mainview);
   groups = frogr_model_get_groups (model);
 
-  window = frogr_main_view_get_window (priv->mainview);
   if (frogr_model_n_groups (model) > 0)
-    frogr_add_to_group_dialog_show (window, pictures, groups);
+    frogr_add_to_group_dialog_show (GTK_WINDOW (priv->mainview), pictures, groups);
   else if (priv->groups_fetched)
-    frogr_util_show_info_dialog (window, _("No groups found"));
+    frogr_util_show_info_dialog (GTK_WINDOW (priv->mainview), _("No groups found"));
 
   /* FrogrController's responsibility over this list ends here */
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
@@ -2492,22 +2475,18 @@ void
 frogr_controller_show_about_dialog (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
-  GtkWindow *window = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  window = frogr_main_view_get_window (priv->mainview);
-
   /* Run the about dialog */
-  frogr_about_dialog_show (window);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  frogr_about_dialog_show (GTK_WINDOW (priv->mainview));
 }
 
 void
 frogr_controller_show_auth_dialog (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
-  GtkWindow *window = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -2519,23 +2498,19 @@ frogr_controller_show_auth_dialog (FrogrController *self)
     return;
 
   /* Run the auth dialog */
-  window = frogr_main_view_get_window (priv->mainview);
-  frogr_auth_dialog_show (window, REQUEST_AUTHORIZATION);
+  frogr_auth_dialog_show (GTK_WINDOW (priv->mainview), REQUEST_AUTHORIZATION);
 }
 
 void
 frogr_controller_show_settings_dialog (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
-  GtkWindow *window = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  window = frogr_main_view_get_window (priv->mainview);
-
   /* Run the auth dialog */
-  frogr_settings_dialog_show (window);
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  frogr_settings_dialog_show (GTK_WINDOW (priv->mainview));
 }
 
 void
@@ -2765,15 +2740,13 @@ frogr_controller_upload_pictures (FrogrController *self)
   /* Upload pictures */
   if (!frogr_controller_is_authorized (self))
     {
-      GtkWindow *window = NULL;
       gchar *msg = NULL;
 
       msg = g_strdup_printf (_("You need to properly authorize %s before"
                                " uploading any pictures to Flickr.\n"
                                "Please re-authorize it."), APP_SHORTNAME);
 
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_util_show_error_dialog (window, msg);
+      frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
       g_free (msg);
     }
   else

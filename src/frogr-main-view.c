@@ -58,7 +58,7 @@
                                 FROGR_TYPE_MAIN_VIEW,   \
                                 FrogrMainViewPrivate))
 
-G_DEFINE_TYPE (FrogrMainView, frogr_main_view, G_TYPE_OBJECT)
+G_DEFINE_TYPE (FrogrMainView, frogr_main_view, GTK_TYPE_APPLICATION_WINDOW)
 
 /* Private Data */
 
@@ -74,8 +74,6 @@ typedef struct _FrogrMainViewPrivate {
   gboolean tooltips_enabled;
   gint n_selected_pictures;
 
-  GtkApplication *gtk_app;
-  GtkWindow *window;
   gchar *project_name;
   gchar *project_dir;
   gchar *project_filepath;
@@ -124,12 +122,6 @@ typedef struct _FrogrMainViewPrivate {
 } FrogrMainViewPrivate;
 
 
-/* Properties */
-enum  {
-  PROP_0,
-  PROP_GTK_APPLICATION
-};
-
 /* Icon view treeview */
 enum {
   FILEURI_COL,
@@ -139,6 +131,8 @@ enum {
 
 /* Prototypes */
 
+static void _initialize_ui (FrogrMainView *self);
+static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 static void _load_project_action (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _save_project_action (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _save_project_as_action (GSimpleAction *action, GVariant *parameter, gpointer data);
@@ -150,8 +144,6 @@ static void _quit_action (GSimpleAction *action, GVariant *parameter, gpointer d
 
 static void _update_project_path (FrogrMainView *self, const gchar *path);
 static void _update_window_title (FrogrMainView *self, gboolean dirty);
-
-static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
 #ifdef MAC_INTEGRATION
 static gboolean osx_can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data);
@@ -277,6 +269,308 @@ static void _update_ui (FrogrMainView *self);
 
 
 /* Private API */
+
+static GActionEntry app_entries[] = {
+  { "load_project", _load_project_action, NULL, NULL, NULL },
+  { "save_project", _save_project_action, NULL, NULL, NULL },
+  { "save_project_as", _save_project_as_action, NULL, NULL, NULL },
+  { "authorize", _authorize_action, NULL, NULL, NULL },
+  { "preferences", _preferences_action, NULL, NULL, NULL },
+  { "help", _help_action, NULL, NULL, NULL },
+  { "about", _about_action, NULL, NULL, NULL },
+  { "quit", _quit_action, NULL, NULL, NULL },
+};
+
+static void
+_initialize_ui (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  GtkApplication *gtk_app;
+  GtkBuilder *builder;
+  GtkWidget *main_vbox;
+  GtkWidget *icon_view;
+  GtkWidget *status_bar;
+  GtkWidget *progress_dialog;
+  GtkWidget *progress_vbox;
+  GtkWidget *progress_bar;
+  GtkWidget *progress_label;
+  GtkWidget *toolbar;
+  const gchar *icons_path = NULL;
+  gchar *full_path = NULL;
+  GList *icons = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Provide a default icon list in several sizes */
+  icons_path = frogr_util_get_icons_dir ();
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("128x128"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("64x64"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("48x48"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("32x32"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("24x24"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("16x16"), icons_path);
+  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+  g_free (full_path);
+
+  gtk_window_set_default_icon_list (icons);
+  g_list_foreach (icons, (GFunc) g_object_unref, NULL);
+  g_list_free (icons);
+
+  /* Get widgets from GtkBuilder */
+  builder = gtk_builder_new ();
+  priv->builder = builder;
+
+  full_path = g_strdup_printf ("%s/" UI_MAIN_VIEW_FILE, frogr_util_get_app_data_dir ());
+  gtk_builder_add_from_file (builder, full_path, NULL);
+  g_free (full_path);
+
+  main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
+  gtk_container_add (GTK_CONTAINER (self), main_vbox);
+
+  /* Menu bar */
+  priv->menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
+  gtk_widget_show_all (priv->menu_bar);
+
+#ifndef MAC_INTEGRATION
+  gtk_box_pack_start (GTK_BOX (main_vbox), priv->menu_bar, FALSE, FALSE, 0);
+  gtk_box_reorder_child (GTK_BOX (main_vbox), priv->menu_bar, 0);
+#endif
+
+  /* App menu */
+  full_path = g_strdup_printf ("%s/" UI_APP_MENU_FILE, frogr_util_get_app_data_dir ());
+  gtk_builder_add_from_file (builder, full_path, NULL);
+  g_free (full_path);
+
+  gtk_app = gtk_window_get_application (GTK_WINDOW (self));
+  g_action_map_add_action_entries (G_ACTION_MAP (gtk_app),
+                                   app_entries, G_N_ELEMENTS (app_entries),
+                                   self);
+  gtk_application_set_app_menu (GTK_APPLICATION (gtk_app),
+                                G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
+
+  toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "toolbar"));
+  gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
+                               GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
+
+  icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
+  priv->icon_view = icon_view;
+
+  status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
+  priv->status_bar = status_bar;
+
+  /* Get actions from GtkBuilder */
+  priv->load_project_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "load_project_action"));
+  priv->save_project_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "save_project_action"));
+  priv->save_project_as_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "save_project_as_action"));
+  priv->load_pictures_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "load_pictures_action"));
+  priv->remove_pictures_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "remove_pictures_action"));
+  priv->upload_pictures_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "upload_pictures_action"));
+  priv->open_in_external_viewer_action =
+    GTK_ACTION (gtk_builder_get_object (builder,
+                                        "open_in_external_viewer_action"));
+  priv->auth_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "auth_action"));
+  priv->preferences_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "preferences_action"));
+  priv->add_tags_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_tags_action"));
+  priv->edit_details_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "edit_details_action"));
+  priv->add_to_group_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_to_group_action"));
+  priv->add_to_set_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_to_set_action"));
+  priv->add_to_new_set_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "add_to_new_set_action"));
+  priv->help_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "help_action"));
+  priv->about_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "about_action"));
+  priv->enable_tooltips_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "enable_tooltips_action"));
+  priv->sort_by_title_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "sort_by_title_action"));
+  priv->sort_by_date_taken_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "sort_by_date_taken_action"));
+  priv->sort_as_loaded_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "sort_as_loaded_action"));
+  priv->reversed_order_action =
+    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
+                                               "reversed_order_action"));
+  /* Set Keyboard shortcuts */
+  _setup_keyboard_shortcuts (self);
+
+  /* Init main model's state description */
+  _update_state_description (self);
+
+  /* Init the details of the current project */
+  _update_project_path (self, NULL);
+
+  /* Initialize sorting criteria and reverse in the UI */
+  if (priv->sorting_criteria == SORT_BY_TITLE)
+    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_title_action), TRUE);
+  else if (priv->sorting_criteria == SORT_BY_DATE)
+    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_date_taken_action), TRUE);
+  else
+    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_as_loaded_action), TRUE);
+
+  gtk_toggle_action_set_active (priv->reversed_order_action, priv->sorting_reversed);
+
+  /* Initialize 'tooltips enabled' in the UI */
+  gtk_toggle_action_set_active (priv->enable_tooltips_action, priv->tooltips_enabled);
+
+  /* Initialize extra widgets */
+
+  /* /\* Accounts menu *\/ */
+  /* priv->accounts_menu_item = */
+  /*   GTK_WIDGET (gtk_builder_get_object (builder, "accounts_menu_item")); */
+
+  /* "Add to set" menu needs to be assigned to a var so we control
+     its visibility directly because it has no action assigned to it */
+  priv->add_to_set_menu_item =
+    GTK_WIDGET (gtk_builder_get_object (builder, "add_to_set_menu_item"));
+
+  /* populate accounts submenu from model */
+  _populate_accounts_submenu (self);
+
+  /* create contextual menus for right-clicks */
+  priv->pictures_ctxt_menu =
+      GTK_WIDGET (gtk_builder_get_object (builder, "ctxt_menu"));
+
+  /* Initialize drag'n'drop support */
+  _initialize_drag_n_drop (self);
+
+  /* Create and hide progress bar dialog for uploading pictures */
+  progress_dialog = gtk_dialog_new_with_buttons (NULL,
+                                                 GTK_WINDOW (self),
+                                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                 GTK_STOCK_CANCEL,
+                                                 GTK_RESPONSE_CANCEL,
+                                                 NULL);
+  gtk_window_set_title (GTK_WINDOW (progress_dialog), APP_SHORTNAME);
+
+  gtk_dialog_set_response_sensitive (GTK_DIALOG (progress_dialog),
+                                     GTK_RESPONSE_CANCEL, TRUE);
+
+  gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
+  gtk_window_set_default_size (GTK_WINDOW (progress_dialog), 250, -1);
+
+  progress_vbox = gtk_dialog_get_content_area (GTK_DIALOG (progress_dialog));
+
+  progress_label = gtk_label_new (NULL);
+  gtk_box_pack_start (GTK_BOX (progress_vbox), progress_label, FALSE, FALSE, 6);
+
+  progress_bar = gtk_progress_bar_new ();
+  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progress_bar), TRUE);
+
+  gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
+
+  gtk_widget_hide (progress_dialog);
+  priv->progress_dialog = progress_dialog;
+  priv->progress_bar = progress_bar;
+  priv->progress_label = progress_label;
+  priv->progress_is_showing = FALSE;
+  priv->state_description = NULL;
+
+  /* Initialize model */
+  priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
+                                                         G_TYPE_STRING,
+                                                         GDK_TYPE_PIXBUF,
+                                                         G_TYPE_POINTER));
+  gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), priv->tree_model);
+  gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), PIXBUF_COL);
+  gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view),
+                                    GTK_SELECTION_MULTIPLE);
+  gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
+  gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), IV_THUMB_WIDTH + IV_THUMB_PADDING);
+  gtk_icon_view_set_item_padding (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
+  gtk_icon_view_set_column_spacing (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
+  gtk_icon_view_set_row_spacing (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
+  gtk_widget_set_has_tooltip (icon_view, TRUE);
+
+  gtk_window_set_default_size (GTK_WINDOW (self), MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
+
+  /* Init status bar */
+  priv->sb_context_id =
+    gtk_statusbar_get_context_id (GTK_STATUSBAR (priv->status_bar),
+                                  "Status bar messages");
+
+  /* Connect signals */
+  g_signal_connect (G_OBJECT (self), "delete-event",
+                    G_CALLBACK (_on_main_view_delete_event),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->icon_view), "query-tooltip",
+                    G_CALLBACK (_on_icon_view_query_tooltip),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->icon_view), "selection-changed",
+                    G_CALLBACK (_on_icon_view_selection_changed),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->progress_dialog), "response",
+                    G_CALLBACK(_progress_dialog_response),
+                    self);
+
+  g_signal_connect (G_OBJECT (priv->progress_dialog),
+                    "delete-event",
+                    G_CALLBACK(_progress_dialog_delete_event),
+                    self);
+
+  gtk_builder_connect_signals (builder, self);
+
+#ifdef MAC_INTEGRATION
+  _tweak_menu_bar_for_mac (self);
+#endif
+
+  /* Update window title */
+  _update_window_title (self, FALSE);
+
+  /* Update UI */
+  _update_ui (FROGR_MAIN_VIEW (self));
+
+  /* Show the auth dialog, if needed, on idle */
+  g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
+}
+
+static gboolean
+_maybe_show_auth_dialog_on_idle (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  if (!frogr_controller_is_authorized (priv->controller))
+    {
+      /* Show authorization dialog if needed */
+      frogr_controller_show_auth_dialog (priv->controller);
+    }
+
+  return FALSE;
+}
 
 static void
 _load_project_action (GSimpleAction *action,
@@ -422,22 +716,8 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
   window_title = g_strdup_printf ("%s%s", session_string, APP_SHORTNAME);
   g_free (session_string);
 
-  gtk_window_set_title (GTK_WINDOW (priv->window), window_title);
+  gtk_window_set_title (GTK_WINDOW (self), window_title);
   g_free (window_title);
-}
-
-static gboolean
-_maybe_show_auth_dialog_on_idle (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (!frogr_controller_is_authorized (priv->controller))
-    {
-      /* Show authorization dialog if needed */
-      frogr_controller_show_auth_dialog (priv->controller);
-    }
-
-  return FALSE;
 }
 
 #ifdef MAC_INTEGRATION
@@ -504,7 +784,7 @@ _setup_keyboard_shortcuts (FrogrMainView *self)
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   accel = gtk_accel_group_new();
-  gtk_window_add_accel_group(priv->window, accel);
+  gtk_window_add_accel_group(GTK_WINDOW (self), accel);
 
   menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "load_pictures_menu_item"));
   gtk_widget_add_accelerator(menu_item, "activate", accel, GDK_KEY_l,
@@ -850,8 +1130,8 @@ _on_account_menu_item_toggled (GtkWidget *widget, gpointer self)
 static void
 _quit_application (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  g_application_quit (G_APPLICATION (priv->gtk_app));
+  GtkApplication *gtk_app = gtk_window_get_application (GTK_WINDOW (self));
+  g_application_quit (G_APPLICATION (gtk_app));
 }
 
 static gboolean
@@ -1046,12 +1326,11 @@ _load_project_dialog_response_cb (GtkDialog *dialog,
 static void
 _load_project_dialog (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GtkWidget *dialog;
   GtkFileFilter *filter;
 
   dialog = gtk_file_chooser_dialog_new (_("Select File"),
-                                        GTK_WINDOW (priv->window),
+                                        GTK_WINDOW (self),
                                         GTK_FILE_CHOOSER_ACTION_SAVE,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -1119,11 +1398,10 @@ _save_project_as_dialog_response_cb (GtkDialog *dialog, gint response, gpointer 
 static void
 _save_project_as_dialog (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GtkWidget *dialog;
 
   dialog = gtk_file_chooser_dialog_new (_("Select Destination"),
-                                        GTK_WINDOW (priv->window),
+                                        GTK_WINDOW (self),
                                         GTK_FILE_CHOOSER_ACTION_SAVE,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -1162,7 +1440,6 @@ _load_pictures_dialog_response_cb (GtkDialog *dialog, gint response, gpointer da
 static void
 _load_pictures_dialog (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GtkWidget *dialog;
   GtkFileFilter *all_filter;
   GtkFileFilter *image_filter;
@@ -1177,7 +1454,7 @@ _load_pictures_dialog (FrogrMainView *self)
 #endif
 
   dialog = gtk_file_chooser_dialog_new (_("Select a Picture"),
-                                        GTK_WINDOW (priv->window),
+                                        GTK_WINDOW (self),
                                         GTK_FILE_CHOOSER_ACTION_OPEN,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -1243,7 +1520,7 @@ _pictures_selected_required_check (FrogrMainView *self)
 
   if (priv->n_selected_pictures == 0)
     {
-      frogr_util_show_error_dialog (priv->window,
+      frogr_util_show_error_dialog (GTK_WINDOW (self),
                                     _("You need to select some pictures first"));
       return FALSE;
     }
@@ -1879,316 +2156,6 @@ _update_ui (FrogrMainView *self)
 }
 
 static void
-_frogr_main_view_set_property (GObject *object,
-                               guint prop_id,
-                               const GValue *value,
-                               GParamSpec *pspec)
-{
-  FrogrMainView *self = FROGR_MAIN_VIEW (object);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  switch (prop_id)
-    {
-    case PROP_GTK_APPLICATION:
-      priv->gtk_app = GTK_APPLICATION (g_value_get_object (value));
-      break;
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-      break;
-    }
-}
-
-static void
-_frogr_main_view_get_property (GObject *object,
-                               guint prop_id,
-                               GValue *value,
-                               GParamSpec *pspec)
-{
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
-
-  switch (prop_id)
-    {
-    case PROP_GTK_APPLICATION:
-      g_value_set_object (value, priv->gtk_app);
-      break;
-   default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-      break;
-    }
-}
-
-static GActionEntry app_entries[] = {
-  { "load_project", _load_project_action, NULL, NULL, NULL },
-  { "save_project", _save_project_action, NULL, NULL, NULL },
-  { "save_project_as", _save_project_as_action, NULL, NULL, NULL },
-  { "authorize", _authorize_action, NULL, NULL, NULL },
-  { "preferences", _preferences_action, NULL, NULL, NULL },
-  { "help", _help_action, NULL, NULL, NULL },
-  { "about", _about_action, NULL, NULL, NULL },
-  { "quit", _quit_action, NULL, NULL, NULL },
-};
-
-static GObject *
-_frogr_main_view_constructor (GType type,
-                              guint n_construct_properties,
-                              GObjectConstructParam *construct_properties)
-{
-  GObject *object = NULL;
-  FrogrMainView *self = NULL;
-  FrogrMainViewPrivate *priv = NULL;
-  GtkBuilder *builder;
-  GtkWidget *main_vbox;
-  GtkWidget *icon_view;
-  GtkWidget *status_bar;
-  GtkWidget *progress_dialog;
-  GtkWidget *progress_vbox;
-  GtkWidget *progress_bar;
-  GtkWidget *progress_label;
-  GtkWidget *toolbar;
-  gchar *full_path;
-
-  /* Chain up to the parent's constructor first */
-  object =
-    G_OBJECT_CLASS (frogr_main_view_parent_class)->constructor (type,
-                                                                 n_construct_properties,
-                                                                 construct_properties);
-  self = FROGR_MAIN_VIEW (object);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  /* Get widgets from GtkBuilder */
-  builder = gtk_builder_new ();
-  priv->builder = builder;
-
-  full_path = g_strdup_printf ("%s/" UI_MAIN_VIEW_FILE, frogr_util_get_app_data_dir ());
-  gtk_builder_add_from_file (builder, full_path, NULL);
-  g_free (full_path);
-
-  priv->window = GTK_WINDOW (gtk_application_window_new (GTK_APPLICATION (priv->gtk_app)));
-  gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (priv->window), TRUE);
-
-  main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
-  gtk_container_add (GTK_CONTAINER (priv->window), main_vbox);
-
-  /* Menu bar */
-  priv->menu_bar = GTK_WIDGET (gtk_builder_get_object (builder, "menu_bar"));
-  gtk_widget_show_all (priv->menu_bar);
-
-#ifndef MAC_INTEGRATION
-  gtk_box_pack_start (GTK_BOX (main_vbox), priv->menu_bar, FALSE, FALSE, 0);
-  gtk_box_reorder_child (GTK_BOX (main_vbox), priv->menu_bar, 0);
-#endif
-
-  /* App menu */
-  full_path = g_strdup_printf ("%s/" UI_APP_MENU_FILE, frogr_util_get_app_data_dir ());
-  gtk_builder_add_from_file (builder, full_path, NULL);
-  g_free (full_path);
-  g_action_map_add_action_entries (G_ACTION_MAP (priv->gtk_app),
-                                   app_entries, G_N_ELEMENTS (app_entries),
-                                   self);
-  gtk_application_set_app_menu (GTK_APPLICATION (priv->gtk_app),
-                                G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
-
-  toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "toolbar"));
-  gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
-                               GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
-
-  icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
-  priv->icon_view = icon_view;
-
-  status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
-  priv->status_bar = status_bar;
-
-  /* Get actions from GtkBuilder */
-  priv->load_project_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "load_project_action"));
-  priv->save_project_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "save_project_action"));
-  priv->save_project_as_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "save_project_as_action"));
-  priv->load_pictures_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "load_pictures_action"));
-  priv->remove_pictures_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "remove_pictures_action"));
-  priv->upload_pictures_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "upload_pictures_action"));
-  priv->open_in_external_viewer_action =
-    GTK_ACTION (gtk_builder_get_object (builder,
-                                        "open_in_external_viewer_action"));
-  priv->auth_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "auth_action"));
-  priv->preferences_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "preferences_action"));
-  priv->add_tags_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_tags_action"));
-  priv->edit_details_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "edit_details_action"));
-  priv->add_to_group_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_to_group_action"));
-  priv->add_to_set_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_to_set_action"));
-  priv->add_to_new_set_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_to_new_set_action"));
-  priv->help_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "help_action"));
-  priv->about_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "about_action"));
-  priv->enable_tooltips_action =
-    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
-                                               "enable_tooltips_action"));
-  priv->sort_by_title_action =
-    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
-                                               "sort_by_title_action"));
-  priv->sort_by_date_taken_action =
-    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
-                                               "sort_by_date_taken_action"));
-  priv->sort_as_loaded_action =
-    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
-                                               "sort_as_loaded_action"));
-  priv->reversed_order_action =
-    GTK_TOGGLE_ACTION (gtk_builder_get_object (builder,
-                                               "reversed_order_action"));
-  /* Set Keyboard shortcuts */
-  _setup_keyboard_shortcuts (self);
-
-  /* Init main model's state description */
-  _update_state_description (self);
-
-  /* Init the details of the current project */
-  _update_project_path (self, NULL);
-
-  /* Initialize sorting criteria and reverse in the UI */
-  if (priv->sorting_criteria == SORT_BY_TITLE)
-    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_title_action), TRUE);
-  else if (priv->sorting_criteria == SORT_BY_DATE)
-    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_date_taken_action), TRUE);
-  else
-    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_as_loaded_action), TRUE);
-
-  gtk_toggle_action_set_active (priv->reversed_order_action, priv->sorting_reversed);
-
-  /* Initialize 'tooltips enabled' in the UI */
-  gtk_toggle_action_set_active (priv->enable_tooltips_action, priv->tooltips_enabled);
-
-  /* Initialize extra widgets */
-
-  /* /\* Accounts menu *\/ */
-  /* priv->accounts_menu_item = */
-  /*   GTK_WIDGET (gtk_builder_get_object (builder, "accounts_menu_item")); */
-
-  /* "Add to set" menu needs to be assigned to a var so we control
-     its visibility directly because it has no action assigned to it */
-  priv->add_to_set_menu_item =
-    GTK_WIDGET (gtk_builder_get_object (builder, "add_to_set_menu_item"));
-
-  /* populate accounts submenu from model */
-  _populate_accounts_submenu (self);
-
-  /* create contextual menus for right-clicks */
-  priv->pictures_ctxt_menu =
-      GTK_WIDGET (gtk_builder_get_object (builder, "ctxt_menu"));
-
-  /* Initialize drag'n'drop support */
-  _initialize_drag_n_drop (self);
-
-  /* Create and hide progress bar dialog for uploading pictures */
-  progress_dialog = gtk_dialog_new_with_buttons (NULL,
-                                                 priv->window,
-                                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                 GTK_STOCK_CANCEL,
-                                                 GTK_RESPONSE_CANCEL,
-                                                 NULL);
-  gtk_window_set_title (GTK_WINDOW (progress_dialog), APP_SHORTNAME);
-
-  gtk_dialog_set_response_sensitive (GTK_DIALOG (progress_dialog),
-                                     GTK_RESPONSE_CANCEL, TRUE);
-
-  gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
-  gtk_window_set_default_size (GTK_WINDOW (progress_dialog), 250, -1);
-
-  progress_vbox = gtk_dialog_get_content_area (GTK_DIALOG (progress_dialog));
-
-  progress_label = gtk_label_new (NULL);
-  gtk_box_pack_start (GTK_BOX (progress_vbox), progress_label, FALSE, FALSE, 6);
-
-  progress_bar = gtk_progress_bar_new ();
-  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progress_bar), TRUE);
-
-  gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
-
-  gtk_widget_hide (progress_dialog);
-  priv->progress_dialog = progress_dialog;
-  priv->progress_bar = progress_bar;
-  priv->progress_label = progress_label;
-  priv->progress_is_showing = FALSE;
-  priv->state_description = NULL;
-
-  /* Initialize model */
-  priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
-                                                         G_TYPE_STRING,
-                                                         GDK_TYPE_PIXBUF,
-                                                         G_TYPE_POINTER));
-  gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), priv->tree_model);
-  gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), PIXBUF_COL);
-  gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view),
-                                    GTK_SELECTION_MULTIPLE);
-  gtk_icon_view_set_columns (GTK_ICON_VIEW (icon_view), -1);
-  gtk_icon_view_set_item_width (GTK_ICON_VIEW (icon_view), IV_THUMB_WIDTH + IV_THUMB_PADDING);
-  gtk_icon_view_set_item_padding (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
-  gtk_icon_view_set_column_spacing (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
-  gtk_icon_view_set_row_spacing (GTK_ICON_VIEW (icon_view), IV_THUMB_PADDING);
-  gtk_widget_set_has_tooltip (icon_view, TRUE);
-
-  gtk_window_set_default_size (priv->window, MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
-
-  /* Init status bar */
-  priv->sb_context_id =
-    gtk_statusbar_get_context_id (GTK_STATUSBAR (priv->status_bar),
-                                  "Status bar messages");
-
-  /* Connect signals */
-  g_signal_connect (G_OBJECT (priv->window), "delete-event",
-                    G_CALLBACK (_on_main_view_delete_event),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->icon_view), "query-tooltip",
-                    G_CALLBACK (_on_icon_view_query_tooltip),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->icon_view), "selection-changed",
-                    G_CALLBACK (_on_icon_view_selection_changed),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->progress_dialog), "response",
-                    G_CALLBACK(_progress_dialog_response),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->progress_dialog),
-                    "delete-event",
-                    G_CALLBACK(_progress_dialog_delete_event),
-                    self);
-
-  gtk_builder_connect_signals (builder, self);
-
-  /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET(priv->window));
-
-#ifdef MAC_INTEGRATION
-  _tweak_menu_bar_for_mac (self);
-#endif
-
-  /* Update window title */
-  _update_window_title (self, FALSE);
-
-  /* Update UI */
-  _update_ui (FROGR_MAIN_VIEW (self));
-
-  /* Show the auth dialog, if needed, on idle */
-  g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
-
-  return object;
-}
-
-static void
 _frogr_main_view_dispose (GObject *object)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
@@ -2243,7 +2210,6 @@ _frogr_main_view_finalize (GObject *object)
   g_free (priv->project_dir);
   g_free (priv->project_filepath);
   g_free (priv->state_description);
-  gtk_widget_destroy (GTK_WIDGET (priv->window));
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
 }
@@ -2253,19 +2219,8 @@ frogr_main_view_class_init (FrogrMainViewClass *klass)
 {
   GObjectClass *obj_class = (GObjectClass *)klass;
 
-  obj_class->set_property = _frogr_main_view_set_property;
-  obj_class->get_property = _frogr_main_view_get_property;
-  obj_class->constructor = _frogr_main_view_constructor;
   obj_class->dispose = _frogr_main_view_dispose;
   obj_class->finalize = _frogr_main_view_finalize;
-
-  g_object_class_install_property (obj_class,
-                                   PROP_GTK_APPLICATION,
-                                   g_param_spec_object ("gtk-application",
-                                                        "gtk-application",
-                                                        "GtkApplication associated to the main view",
-                                                        GTK_TYPE_APPLICATION,
-                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   g_type_class_add_private (obj_class, sizeof (FrogrMainViewPrivate));
 }
@@ -2274,45 +2229,12 @@ static void
 frogr_main_view_init (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = NULL;
-  const gchar *icons_path = NULL;
-  gchar *full_path = NULL;
-  GList *icons = NULL;
 
-  /* Init model, controller and configuration */
+  /* Initialize internal state NOT related with the UI */
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   priv->model = frogr_model_new ();
   priv->controller = g_object_ref (frogr_controller_get_instance ());
   priv->config = g_object_ref (frogr_config_get_instance ());
-
-  /* Provide a default icon list in several sizes */
-  icons_path = frogr_util_get_icons_dir ();
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("128x128"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("64x64"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("48x48"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("32x32"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("24x24"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("16x16"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  gtk_window_set_default_icon_list (icons);
-  g_list_foreach (icons, (GFunc) g_object_unref, NULL);
-  g_list_free (icons);
 
   /* Initialize sorting criteria and reverse */
   priv->sorted_pictures = NULL;
@@ -2354,21 +2276,15 @@ frogr_main_view_init (FrogrMainView *self)
 FrogrMainView *
 frogr_main_view_new (GtkApplication *app)
 {
-  GObject *new = g_object_new (FROGR_TYPE_MAIN_VIEW,
-                               "gtk-application", app,
-                               NULL);
-  return FROGR_MAIN_VIEW (new);
-}
+  FrogrMainView *mainview =
+    FROGR_MAIN_VIEW (g_object_new (FROGR_TYPE_MAIN_VIEW,
+                                   "application", app,
+                                   "show-menubar", TRUE,
+                                   NULL));
 
-GtkWindow *
-frogr_main_view_get_window (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = NULL;
-
-  g_return_val_if_fail(FROGR_IS_MAIN_VIEW (self), NULL);
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  return priv->window;
+  /* Now initialize all the stuff strictly related to the UI */
+  _initialize_ui (mainview);
+  return mainview;
 }
 
 void

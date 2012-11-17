@@ -757,7 +757,6 @@ _check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture)
 
   if (picture_filesize > max_filesize)
     {
-      GtkWindow *window = NULL;
       gchar *msg = NULL;
 
       /* First %s is the title of the picture (filename of the file by
@@ -768,8 +767,7 @@ _check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture)
                              frogr_picture_get_title (picture),
                              frogr_util_get_datasize_string (max_filesize));
 
-      window = frogr_main_view_get_window (priv->mainview);
-      frogr_util_show_error_dialog (window, msg);
+      frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
       g_free (msg);
 
       keep_going = FALSE;
