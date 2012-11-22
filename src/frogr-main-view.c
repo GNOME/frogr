@@ -1511,6 +1511,21 @@ _load_pictures_dialog (FrogrMainView *self)
 }
 
 static gboolean
+_pictures_loaded_required_check (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  if (!frogr_model_get_pictures (priv->model))
+    {
+      frogr_util_show_error_dialog (GTK_WINDOW (self),
+                                    _("You don't have any picture loaded yet"));
+      return FALSE;
+    }
+
+  return TRUE;
+}
+
+static gboolean
 _pictures_selected_required_check (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
@@ -1639,6 +1654,9 @@ static void
 _upload_pictures (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  if (!_pictures_loaded_required_check (self))
+    return;
 
   gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
   frogr_controller_upload_pictures (priv->controller);
