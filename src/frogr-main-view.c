@@ -54,6 +54,32 @@
 #define UI_APP_MENU_FILE "/gtkbuilder/frogr-app-menu.xml"
 #define UI_MENU_BAR_FILE "/gtkbuilder/frogr-menu-bar.xml"
 
+/* Action names for menu items */
+#define ACTION_AUTHORIZE "authorize"
+#define ACTION_PREFERENCES "preferences"
+#define ACTION_HELP "help"
+#define ACTION_ABOUT "about"
+#define ACTION_QUIT "quit"
+#define ACTION_OPEN_PROJECT "open-project"
+#define ACTION_SAVE_PROJECT "save-project"
+#define ACTION_SAVE_PROJECT_AS "save-project-as"
+#define ACTION_LOAD_PICTURES "load-pictures"
+#define ACTION_REMOVE_PICTURES "remove-pictures"
+#define ACTION_EDIT_DETAILS "edit-details"
+#define ACTION_ADD_TAGS "add-tags"
+#define ACTION_ADD_TO_GROUP "add-to-group"
+#define ACTION_ADD_TO_SET "add-to-set"
+#define ACTION_CREATE_NEW_SET "create-new-set"
+#define ACTION_OPEN_IN_EXTERNAL_VIEWER "open-in-external-viewer"
+#define ACTION_UPLOAD_ALL "upload-all"
+#define ACTION_SORT_BY "sort-by"
+#define ACTION_SORT_BY_TARGET_AS_LOADED "as-loaded"
+#define ACTION_SORT_BY_TARGET_DATE_TAKEN "date-taken"
+#define ACTION_SORT_BY_TARGET_TITLE "title"
+#define ACTION_SORT_IN_REVERSE_ORDER "sort-in-reverse-order"
+#define ACTION_ENABLE_TOOLTIPS "enable-tooltips"
+
+
 #define FROGR_MAIN_VIEW_GET_PRIVATE(object)             \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
                                 FROGR_TYPE_MAIN_VIEW,   \
@@ -123,35 +149,21 @@ enum {
 
 static void _initialize_ui (FrogrMainView *self);
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
-static void _authorize_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _preferences_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _about_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _help_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _quit_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-
-static void _open_project_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _save_project_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _save_project_as_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _load_pictures_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _remove_pictures_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _edit_details_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _add_tags_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _add_to_group_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _add_to_set_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _create_new_set_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _open_in_external_viewer_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _upload_all_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _sort_by_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _change_sort_by_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _sort_in_reverse_order_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _change_sort_in_reverse_order_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _enable_tooltips_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _change_enable_tooltips_action (GSimpleAction *action, GVariant *parameter, gpointer data);
-
-static void _quit_application (FrogrMainView *self);
 
 static void _update_project_path (FrogrMainView *self, const gchar *path);
 static void _update_window_title (FrogrMainView *self, gboolean dirty);
+
+static void _on_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _on_radio_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _on_radio_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _on_toggle_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _on_toggle_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data);
+static void _on_account_menu_item_toggled (GtkWidget *widget, gpointer self);
+
+/* This needs to be non-static because of GtkBuilder UI definition file */
+void _on_gtk_action_activated (GtkAction *action, gpointer data);
+
+static void _quit_application (FrogrMainView *self);
 
 #ifdef MAC_INTEGRATION
 static gboolean osx_can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data);
@@ -174,8 +186,6 @@ gboolean _on_icon_view_key_press_event (GtkWidget *widget,
 gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            GdkEventButton *event,
                                            gpointer data);
-
-void _on_account_menu_item_toggled (GtkWidget *widget, gpointer self);
 
 static gboolean _on_main_view_delete_event (GtkWidget *widget,
                                             GdkEvent *event,
@@ -275,29 +285,29 @@ static void _update_ui (FrogrMainView *self);
 /* Private API */
 
 static GActionEntry app_entries[] = {
-  { "authorize", _authorize_action, NULL, NULL, NULL },
-  { "preferences", _preferences_action, NULL, NULL, NULL },
-  { "help", _help_action, NULL, NULL, NULL },
-  { "about", _about_action, NULL, NULL, NULL },
-  { "quit", _quit_action, NULL, NULL, NULL }
+  { ACTION_AUTHORIZE, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_PREFERENCES, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_HELP, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_ABOUT, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_QUIT, _on_menu_item_activated, NULL, NULL, NULL }
 };
 
 static GActionEntry win_entries[] = {
-  { "open-project", _open_project_action, NULL, NULL, NULL },
-  { "save-project", _save_project_action, NULL, NULL, NULL },
-  { "save-project-as", _save_project_as_action, NULL, NULL, NULL },
-  { "load-pictures", _load_pictures_action, NULL, NULL, NULL },
-  { "remove-pictures", _remove_pictures_action, NULL, NULL, NULL },
-  { "edit-details", _edit_details_action, NULL, NULL, NULL },
-  { "add-tags", _add_tags_action, NULL, NULL, NULL },
-  { "add-to-group", _add_to_group_action, NULL, NULL, NULL },
-  { "add-to-set", _add_to_set_action, NULL, NULL, NULL },
-  { "create-new-set", _create_new_set_action, NULL, NULL, NULL },
-  { "open-in-external-viewer", _open_in_external_viewer_action, NULL, NULL, NULL },
-  { "upload-all", _upload_all_action, NULL, NULL, NULL },
-  { "sort-by", _sort_by_action, "s", "'as-loaded'", _change_sort_by_action },
-  { "sort-in-reverse-order", _sort_in_reverse_order_action, NULL, "false", _change_sort_in_reverse_order_action },
-  { "enable-tooltips", _enable_tooltips_action, NULL, "true", _change_enable_tooltips_action },
+  { ACTION_OPEN_PROJECT, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_SAVE_PROJECT, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_SAVE_PROJECT_AS, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_LOAD_PICTURES, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_REMOVE_PICTURES, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_EDIT_DETAILS, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_ADD_TAGS, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_ADD_TO_GROUP, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_ADD_TO_SET, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_CREATE_NEW_SET, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_OPEN_IN_EXTERNAL_VIEWER, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_UPLOAD_ALL, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_SORT_BY, _on_radio_menu_item_activated, "s", "'" ACTION_SORT_BY_TARGET_AS_LOADED "'", _on_radio_menu_item_changed },
+  { ACTION_SORT_IN_REVERSE_ORDER, _on_toggle_menu_item_activated, NULL, "false", _on_toggle_menu_item_changed },
+  { ACTION_ENABLE_TOOLTIPS, _on_toggle_menu_item_activated, NULL, "true", _on_toggle_menu_item_changed },
 };
 
 static void
@@ -577,175 +587,6 @@ _maybe_show_auth_dialog_on_idle (FrogrMainView *self)
 }
 
 static void
-_authorize_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  frogr_controller_show_auth_dialog (priv->controller);
-}
-
-static void
-_preferences_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  frogr_controller_show_settings_dialog (priv->controller);
-}
-
-static void
-_about_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  frogr_controller_show_about_dialog (priv->controller);
-}
-
-static void
-_help_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  frogr_util_open_uri ("ghelp:frogr");
-}
-
-static void
-_quit_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _quit_application (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_open_project_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _open_project_dialog (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_save_project_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _save_current_project (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_save_project_as_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _save_project_as_dialog (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_load_pictures_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _load_pictures_dialog (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_remove_pictures_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _remove_selected_pictures (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_edit_details_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _edit_selected_pictures (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_add_tags_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _add_tags_to_pictures (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_add_to_group_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _add_pictures_to_group (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_add_to_set_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _add_pictures_to_existing_set (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_create_new_set_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _add_pictures_to_new_set (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_open_in_external_viewer_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _open_pictures_in_external_viewer (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_upload_all_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  _upload_pictures (FROGR_MAIN_VIEW (data));
-}
-
-static void
-_sort_by_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  /* TODO */
-
-  g_action_change_state (G_ACTION (action), parameter);
-}
-
-static void
-_change_sort_by_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  /* TODO */
-
-  g_simple_action_set_state (action, parameter);
-}
-
-static void
-_sort_in_reverse_order_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  /* TODO */
-
-  GVariant *state;
-
-  state = g_action_get_state (G_ACTION (action));
-  g_action_change_state (G_ACTION (action), g_variant_new_boolean (!g_variant_get_boolean (state)));
-  g_variant_unref (state);
-}
-
-static void
-_change_sort_in_reverse_order_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  /* TODO */
-  g_simple_action_set_state (action, parameter);
-}
-
-static void
-_enable_tooltips_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  /* TODO */
-
-  GVariant *state;
-
-  state = g_action_get_state (G_ACTION (action));
-  g_action_change_state (G_ACTION (action), g_variant_new_boolean (!g_variant_get_boolean (state)));
-  g_variant_unref (state);
-}
-
-static void
-_change_enable_tooltips_action (GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-  /* TODO */
-  g_simple_action_set_state (action, parameter);
-}
-
-static void
-_quit_application (FrogrMainView *self)
-{
-  GtkApplication *gtk_app = gtk_window_get_application (GTK_WINDOW (self));
-  g_application_quit (G_APPLICATION (gtk_app));
-}
-
-static void
 _update_project_path (FrogrMainView *self, const gchar *path)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
@@ -821,6 +662,210 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
 
   gtk_window_set_title (GTK_WINDOW (self), window_title);
   g_free (window_title);
+}
+
+static void
+_on_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+  FrogrMainView *self = NULL;
+  FrogrMainViewPrivate *priv = NULL;
+  const gchar *action_name = NULL;
+
+  self = FROGR_MAIN_VIEW (data);
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  action_name = g_action_get_name (G_ACTION (action));
+
+  if (!g_strcmp0 (action_name, ACTION_UPLOAD_ALL))
+    _upload_pictures (self);
+  else if (!g_strcmp0 (action_name, ACTION_EDIT_DETAILS))
+    _edit_selected_pictures (self);
+  else if (!g_strcmp0 (action_name, ACTION_ADD_TAGS))
+    _add_tags_to_pictures (self);
+  else if (!g_strcmp0 (action_name, ACTION_ADD_TO_GROUP))
+    _add_pictures_to_group (self);
+  else if (!g_strcmp0 (action_name, ACTION_ADD_TO_SET))
+    _add_pictures_to_existing_set (self);
+  else if (!g_strcmp0 (action_name, ACTION_CREATE_NEW_SET))
+    _add_pictures_to_new_set (self);
+  else if (!g_strcmp0 (action_name, ACTION_OPEN_IN_EXTERNAL_VIEWER))
+    _open_pictures_in_external_viewer (self);
+  else if (!g_strcmp0 (action_name, ACTION_LOAD_PICTURES))
+    _load_pictures_dialog (self);
+  else if (!g_strcmp0 (action_name, ACTION_REMOVE_PICTURES))
+    _remove_selected_pictures (self);
+  else if (!g_strcmp0 (action_name, ACTION_OPEN_PROJECT))
+    _open_project_dialog (self);
+  else if (!g_strcmp0 (action_name, ACTION_SAVE_PROJECT))
+    _save_current_project (self);
+  else if (!g_strcmp0 (action_name, ACTION_SAVE_PROJECT_AS))
+    _save_project_as_dialog (self);
+  else if (!g_strcmp0 (action_name, ACTION_AUTHORIZE))
+    frogr_controller_show_auth_dialog (priv->controller);
+  else if (!g_strcmp0 (action_name, ACTION_PREFERENCES))
+    frogr_controller_show_settings_dialog (priv->controller);
+  else if (!g_strcmp0 (action_name, ACTION_ABOUT))
+    frogr_controller_show_about_dialog (priv->controller);
+  else if (!g_strcmp0 (action_name, ACTION_HELP))
+    frogr_util_open_uri ("ghelp:frogr");
+  else if (!g_strcmp0 (action_name, ACTION_QUIT))
+    _quit_application (self);
+  else
+    g_assert_not_reached ();
+}
+
+static void
+_on_radio_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+  const gchar *action_name = NULL;
+
+  action_name = g_action_get_name (G_ACTION (action));
+  if (g_strcmp0 (action_name, ACTION_SORT_BY))
+    g_assert_not_reached ();
+
+  g_action_change_state (G_ACTION (action), parameter);
+}
+
+static void
+_on_radio_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  const gchar *action_name = NULL;
+  const gchar *target = NULL;
+  SortingCriteria criteria;
+
+  action_name = g_action_get_name (G_ACTION (action));
+  if (g_strcmp0 (action_name, ACTION_SORT_BY))
+    g_assert_not_reached ();
+
+  target = g_variant_get_string (parameter, NULL);
+  if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_AS_LOADED))
+    criteria = SORT_AS_LOADED;
+  else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_DATE_TAKEN))
+    criteria = SORT_BY_DATE;
+  else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_TITLE))
+    criteria = SORT_BY_TITLE;
+  else
+    g_assert_not_reached ();
+
+  /* Update the UI and save settings */
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  _reorder_pictures (FROGR_MAIN_VIEW (data), criteria, priv->sorting_reversed);
+  frogr_config_set_mainview_sorting_criteria (priv->config, criteria);
+  frogr_config_save_settings (priv->config);
+
+  /* Update the action */
+  g_simple_action_set_state (action, parameter);
+}
+
+static void
+_on_toggle_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+  GVariant *state;
+
+  state = g_action_get_state (G_ACTION (action));
+  g_action_change_state (G_ACTION (action), g_variant_new_boolean (!g_variant_get_boolean (state)));
+  g_variant_unref (state);
+}
+
+static void
+_on_toggle_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  FrogrMainViewPrivate *priv = NULL;
+  const gchar *action_name = NULL;
+  gboolean checked;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  action_name = g_action_get_name (G_ACTION (action));
+  checked = g_variant_get_boolean (parameter);
+
+  if (!g_strcmp0 (action_name, ACTION_ENABLE_TOOLTIPS))
+    {
+      frogr_config_set_mainview_enable_tooltips (priv->config, checked);
+      priv->tooltips_enabled = checked;
+    }
+  else if (!g_strcmp0 (action_name, ACTION_SORT_IN_REVERSE_ORDER))
+    {
+      _reorder_pictures (mainview, priv->sorting_criteria, checked);
+      frogr_config_set_mainview_sorting_reversed (priv->config, checked);
+    }
+  else
+    g_assert_not_reached ();
+
+  /* State for check menu items should be immediately stored */
+  frogr_config_save_settings (priv->config);
+
+  /* Update the action */
+  g_simple_action_set_state (action, parameter);
+}
+
+static void
+_quit_application (FrogrMainView *self)
+{
+  GtkApplication *gtk_app = gtk_window_get_application (GTK_WINDOW (self));
+  g_application_quit (G_APPLICATION (gtk_app));
+}
+
+static void
+_on_account_menu_item_toggled (GtkWidget *widget, gpointer self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  FrogrAccount *account = NULL;
+  gboolean checked = FALSE;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  checked = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
+  account = g_object_get_data (G_OBJECT (widget), "frogr-account");
+
+  /* Only set the account if checked */
+  if (checked && account)
+    {
+      DEBUG ("Selected account %s (%s)",
+             frogr_account_get_id (account),
+             frogr_account_get_username (account));
+
+      frogr_controller_set_active_account (priv->controller, account);
+    }
+  else if (account)
+    {
+      /* If manually unchecked the currently active account, set it again */
+      FrogrAccount *active_account = frogr_controller_get_active_account (priv->controller);
+      if (frogr_account_equal (active_account, account))
+        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
+    }
+}
+
+void
+_on_gtk_action_activated (GtkAction *action, gpointer data)
+{
+  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
+  FrogrMainViewPrivate *priv = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  if (action == priv->upload_pictures_action)
+    _upload_pictures (mainview);
+  else if (action == priv->edit_details_action)
+    _edit_selected_pictures (mainview);
+  else if (action == priv->add_tags_action)
+    _add_tags_to_pictures (mainview);
+  else if (action == priv->add_to_group_action)
+    _add_pictures_to_group (mainview);
+  else if (action == priv->add_to_set_action)
+    _add_pictures_to_existing_set (mainview);
+  else if (action == priv->add_to_new_set_action)
+    _add_pictures_to_new_set (mainview);
+  else if (action == priv->open_in_external_viewer_action)
+    _open_pictures_in_external_viewer (mainview);
+  else if (action == priv->load_pictures_action)
+    _load_pictures_dialog (mainview);
+  else if (action == priv->remove_pictures_action)
+    _remove_selected_pictures (mainview);
+  else if (action == priv->open_project_action)
+    _open_project_dialog (mainview);
+  else if (action == priv->save_project_action)
+    _save_current_project (mainview);
+  else
+    g_assert_not_reached ();
 }
 
 #ifdef MAC_INTEGRATION
@@ -985,78 +1030,6 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   g_strfreev (fileuris_array);
 }
 
-void
-_on_action_activated (GtkAction *action, gpointer data)
-{
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  if (action == priv->open_project_action)
-    _open_project_dialog (mainview);
-  else if (action == priv->save_project_action)
-    _save_current_project (mainview);
-  else if (action == priv->load_pictures_action)
-    _load_pictures_dialog (mainview);
-  else if (action == priv->remove_pictures_action)
-    _remove_selected_pictures (mainview);
-  else if (action == priv->upload_pictures_action)
-    _upload_pictures (mainview);
-  else if (action == priv->open_in_external_viewer_action)
-    _open_pictures_in_external_viewer (mainview);
-  else if (action == priv->add_tags_action)
-    _add_tags_to_pictures (mainview);
-  else if (action == priv->edit_details_action)
-    _edit_selected_pictures (mainview);
-  else if (action == priv->add_to_group_action)
-    _add_pictures_to_group (mainview);
-  else if (action == priv->add_to_set_action)
-    _add_pictures_to_existing_set (mainview);
-  else if (action == priv->add_to_new_set_action)
-    _add_pictures_to_new_set (mainview);
-}
-
-/* TODO */
-/* void */
-/* _on_toggle_action_changed (GtkToggleAction *action, */
-/*                            gpointer data) */
-/* { */
-/*   gboolean checked; */
-/*   FrogrMainView *mainview = FROGR_MAIN_VIEW (data); */
-/*   FrogrMainViewPrivate *priv = NULL; */
-
-/*   priv = FROGR_MAIN_VIEW_GET_PRIVATE (data); */
-
-/*   checked = gtk_toggle_action_get_active (action); */
-/*   if (action == priv->enable_tooltips_action) */
-/*     { */
-/*       frogr_config_set_mainview_enable_tooltips (priv->config, checked); */
-/*       priv->tooltips_enabled = checked; */
-/*     } */
-/*   else if (action == priv->reversed_order_action) */
-/*     { */
-/*       _reorder_pictures (mainview, priv->sorting_criteria, checked); */
-/*       frogr_config_set_mainview_sorting_reversed (priv->config, checked); */
-/*     } */
-/*   else if (checked) */
-/*     { */
-/*       /\* Radio buttons handling here (only care about 'em when checked) *\/ */
-
-/*       SortingCriteria criteria = SORT_AS_LOADED; */
-
-/*       if (action == priv->sort_by_title_action) */
-/*         criteria = SORT_BY_TITLE; */
-/*       else if (action == priv->sort_by_date_taken_action) */
-/*         criteria = SORT_BY_DATE; */
-
-/*       _reorder_pictures (mainview, criteria, priv->sorting_reversed); */
-/*       frogr_config_set_mainview_sorting_criteria (priv->config, criteria); */
-/*     } */
-
-/*   /\* State for check menu items should be immediately stored *\/ */
-/*   frogr_config_save_settings (priv->config); */
-/* } */
-
 gboolean
 _on_icon_view_key_press_event (GtkWidget *widget,
                                GdkEventKey *event,
@@ -1156,35 +1129,6 @@ _on_icon_view_button_press_event (GtkWidget *widget,
     }
 
   return FALSE;
-}
-
-void
-_on_account_menu_item_toggled (GtkWidget *widget, gpointer self)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  FrogrAccount *account = NULL;
-  gboolean checked = FALSE;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  checked = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-  account = g_object_get_data (G_OBJECT (widget), "frogr-account");
-
-  /* Only set the account if checked */
-  if (checked && account)
-    {
-      DEBUG ("Selected account %s (%s)",
-             frogr_account_get_id (account),
-             frogr_account_get_username (account));
-
-      frogr_controller_set_active_account (priv->controller, account);
-    }
-  else if (account)
-    {
-      /* If manually unchecked the currently active account, set it again */
-      FrogrAccount *active_account = frogr_controller_get_active_account (priv->controller);
-      if (frogr_account_equal (active_account, account))
-        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
-    }
 }
 
 static gboolean

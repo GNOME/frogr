@@ -4,51 +4,51 @@
   <object class="GtkAction" id="open_project_action">
     <property name="label" translatable="yes">_Open Project…</property>
     <property name="stock_id">gtk-open</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="save_project_action">
     <property name="label" translatable="yes">_Save Project</property>
     <property name="stock_id">gtk-save</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="load_pictures_action">
     <property name="label" translatable="yes">_Load Pictures…</property>
     <property name="stock_id">gtk-add</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="add_tags_action">
     <property name="label" translatable="yes">Add _Tags…</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="add_to_group_action">
     <property name="label" translatable="yes">Add to _Group…</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="add_to_new_set_action">
     <property name="label" translatable="yes">_Create New Set…</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="add_to_set_action">
     <property name="label" translatable="yes">Add to _Existing Set…</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="edit_details_action">
     <property name="label" translatable="yes">Edit _Details…</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="open_in_external_viewer_action">
     <property name="label" translatable="yes">Open in E_xternal Viewer</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="remove_pictures_action">
     <property name="label" translatable="yes">_Remove Pictures</property>
     <property name="stock_id">gtk-remove</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkAction" id="upload_pictures_action">
     <property name="label" translatable="yes">_Upload All</property>
     <property name="stock_id">gtk-go-up</property>
-    <signal name="activate" handler="_on_action_activated" swapped="no"/>
+    <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
   <object class="GtkMenu" id="ctxt_menu">
     <property name="visible">True</property>
