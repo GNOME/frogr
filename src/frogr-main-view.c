@@ -109,7 +109,6 @@ typedef struct _FrogrMainViewPrivate {
   GtkWidget *status_bar;
   GtkWidget *accounts_menu_item;
   GtkWidget *accounts_menu;
-  GtkWidget *add_to_set_menu_item;
 
   GtkWidget *pictures_ctxt_menu;
 
@@ -459,13 +458,6 @@ _initialize_ui (FrogrMainView *self)
   /* Accounts menu */
   priv->accounts_menu_item =
     GTK_WIDGET (gtk_builder_get_object (builder, "accounts_menu_item"));
-
-  /* "Add to set" menu needs to be assigned to a var so we control */
-  /* its visibility directly because it has no action assigned to it */
-
-  /* TODO */
-  /* priv->add_to_set_menu_item = */
-  /*   GTK_WIDGET (gtk_builder_get_object (builder, "add_to_set_menu_item")); */
 
   /* Populate accounts submenu from model */
   _populate_accounts_submenu (self);
@@ -2130,7 +2122,6 @@ _update_sensitiveness (FrogrMainView *self)
       /* gtk_action_set_sensitive (priv->add_to_set_action, FALSE); */
       /* gtk_action_set_sensitive (priv->add_to_new_set_action, FALSE); */
       /* gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE); */
-      /* gtk_widget_set_sensitive (priv->add_to_set_menu_item, FALSE); */
       break;
 
     case FROGR_STATE_IDLE:
@@ -2151,7 +2142,6 @@ _update_sensitiveness (FrogrMainView *self)
       /* gtk_action_set_sensitive (priv->add_to_group_action, n_selected_pics > 0); */
       /* gtk_action_set_sensitive (priv->add_to_set_action, n_selected_pics > 0); */
       /* gtk_action_set_sensitive (priv->add_to_new_set_action, n_selected_pics > 0); */
-      /* gtk_widget_set_sensitive (priv->add_to_set_menu_item, n_selected_pics > 0); */
       break;
 
     default:
