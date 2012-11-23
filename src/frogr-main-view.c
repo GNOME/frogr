@@ -123,6 +123,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkBuilder *builder;
 
+  /* For the toolbar and the contextual menu */
   GtkAction *open_project_action;
   GtkAction *save_project_action;
   GtkAction *load_pictures_action;
@@ -326,6 +327,8 @@ _initialize_ui (FrogrMainView *self)
   const gchar *icons_path = NULL;
   gchar *full_path = NULL;
   GList *icons = NULL;
+  GAction *action = NULL;
+  GVariant *action_parameter = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
@@ -405,7 +408,7 @@ _initialize_ui (FrogrMainView *self)
   status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
   priv->status_bar = status_bar;
 
-  /* Get actions from GtkBuilder */
+  /* Get actions from GtkBuilder for the toolbar and the context menu */
   priv->open_project_action =
     GTK_ACTION (gtk_builder_get_object (builder, "open_project_action"));
   priv->save_project_action =
@@ -437,21 +440,21 @@ _initialize_ui (FrogrMainView *self)
   _update_project_path (self, NULL);
 
   /* Initialize sorting criteria and reverse in the UI */
+  action = g_action_map_lookup_action (G_ACTION_MAP (self), ACTION_SORT_BY);
+  if (priv->sorting_criteria == SORT_BY_TITLE)
+    action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_TITLE);
+  else if (priv->sorting_criteria == SORT_BY_DATE)
+    action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_DATE_TAKEN);
+  else
+    action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_AS_LOADED);
+  g_action_change_state (G_ACTION (action), action_parameter);
 
-  /* TODO */
-  /* if (priv->sorting_criteria == SORT_BY_TITLE) */
-  /*   gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_title_action), TRUE); */
-  /* else if (priv->sorting_criteria == SORT_BY_DATE) */
-  /*   gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_by_date_taken_action), TRUE); */
-  /* else */
-  /*   gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->sort_as_loaded_action), TRUE); */
-
-  /* gtk_toggle_action_set_active (priv->reversed_order_action, priv->sorting_reversed); */
+  action = g_action_map_lookup_action (G_ACTION_MAP (self), ACTION_SORT_IN_REVERSE_ORDER);
+  g_action_change_state (G_ACTION (action), g_variant_new_boolean (priv->sorting_reversed));
 
   /* Initialize 'tooltips enabled' in the UI */
-
-  /* TODO */
-  /* gtk_toggle_action_set_active (priv->enable_tooltips_action, priv->tooltips_enabled); */
+  action = g_action_map_lookup_action (G_ACTION_MAP (self), ACTION_ENABLE_TOOLTIPS);
+  g_action_change_state (G_ACTION (action), g_variant_new_boolean (priv->tooltips_enabled));
 
   /* Initialize extra widgets */
 
