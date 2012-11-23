@@ -69,7 +69,7 @@
 #define ACTION_ADD_TAGS "add-tags"
 #define ACTION_ADD_TO_GROUP "add-to-group"
 #define ACTION_ADD_TO_SET "add-to-set"
-#define ACTION_CREATE_NEW_SET "create-new-set"
+#define ACTION_ADD_TO_NEW_SET "add-to-new-set"
 #define ACTION_OPEN_IN_EXTERNAL_VIEWER "open-in-external-viewer"
 #define ACTION_UPLOAD_ALL "upload-all"
 #define ACTION_SORT_BY "sort-by"
@@ -302,7 +302,7 @@ static GActionEntry win_entries[] = {
   { ACTION_ADD_TAGS, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_ADD_TO_GROUP, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_ADD_TO_SET, _on_menu_item_activated, NULL, NULL, NULL },
-  { ACTION_CREATE_NEW_SET, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_ADD_TO_NEW_SET, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_OPEN_IN_EXTERNAL_VIEWER, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_UPLOAD_ALL, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_SORT_BY, _on_radio_menu_item_activated, "s", "'" ACTION_SORT_BY_TARGET_AS_LOADED "'", _on_radio_menu_item_changed },
@@ -680,7 +680,7 @@ _on_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer da
     _add_pictures_to_group (self);
   else if (!g_strcmp0 (action_name, ACTION_ADD_TO_SET))
     _add_pictures_to_existing_set (self);
-  else if (!g_strcmp0 (action_name, ACTION_CREATE_NEW_SET))
+  else if (!g_strcmp0 (action_name, ACTION_ADD_TO_NEW_SET))
     _add_pictures_to_new_set (self);
   else if (!g_strcmp0 (action_name, ACTION_OPEN_IN_EXTERNAL_VIEWER))
     _open_pictures_in_external_viewer (self);

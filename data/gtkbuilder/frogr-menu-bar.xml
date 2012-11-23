@@ -67,7 +67,7 @@
             </item>
             <item>
               <attribute name='label' translatable='yes'>_Create New Set…</attribute>
-              <attribute name='action'>win.create-new-set</attribute>
+              <attribute name='action'>win.add-to-new-set</attribute>
               <attribute name='accel'>&lt;Primary&gt;&lt;Shift&gt;p</attribute>
             </item>
           </section>
