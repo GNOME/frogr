@@ -126,6 +126,7 @@ typedef struct _FrogrMainViewPrivate {
   /* For the toolbar and the contextual menu */
   GtkAction *open_project_action;
   GtkAction *save_project_action;
+  GtkAction *save_project_as_action;
   GtkAction *load_pictures_action;
   GtkAction *remove_pictures_action;
   GtkAction *upload_pictures_action;
@@ -417,6 +418,8 @@ _initialize_ui (FrogrMainView *self)
     GTK_ACTION (gtk_builder_get_object (builder, "open_project_action"));
   priv->save_project_action =
     GTK_ACTION (gtk_builder_get_object (builder, "save_project_action"));
+  priv->save_project_as_action =
+    GTK_ACTION (gtk_builder_get_object (builder, "save_project_as_action"));
   priv->load_pictures_action =
     GTK_ACTION (gtk_builder_get_object (builder, "load_pictures_action"));
   priv->remove_pictures_action =
@@ -863,6 +866,8 @@ _on_gtk_action_activated (GtkAction *action, gpointer data)
     _open_project_dialog (mainview);
   else if (action == priv->save_project_action)
     _save_current_project (mainview);
+  else if (action == priv->save_project_as_action)
+    _save_project_as_dialog (mainview);
   else
     g_assert_not_reached ();
 }
@@ -2117,7 +2122,7 @@ _update_sensitiveness (FrogrMainView *self)
     case FROGR_STATE_UPLOADING_PICTURES:
       _update_sensitiveness_for_action (self, ACTION_OPEN_PROJECT, priv->open_project_action, FALSE);
       _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT, priv->save_project_action, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT_AS, NULL, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT_AS, priv->save_project_as_action, FALSE);
       _update_sensitiveness_for_action (self, ACTION_LOAD_PICTURES, priv->load_pictures_action, FALSE);
       _update_sensitiveness_for_action (self, ACTION_REMOVE_PICTURES, priv->remove_pictures_action, FALSE);
       _update_sensitiveness_for_action (self, ACTION_UPLOAD_ALL, priv->upload_pictures_action, FALSE);
