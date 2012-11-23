@@ -278,6 +278,10 @@ static void _update_state_description (FrogrMainView *mainview);
 static gchar *_craft_state_description (FrogrMainView *mainview);
 
 static void _update_sensitiveness (FrogrMainView *self);
+static void _update_sensitiveness_for_action (FrogrMainView *self,
+                                              const gchar *name,
+                                              GtkAction *gtk_action,
+                                              gboolean value);
 
 static void _update_ui (FrogrMainView *self);
 
@@ -2102,54 +2106,65 @@ _update_sensitiveness (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-  /* TODO */
   /* gboolean has_accounts = FALSE; */
-  /* gboolean has_pics = FALSE; */
-  /* gint n_selected_pics = 0; */
+  gboolean has_pics = FALSE;
+  gint n_selected_pics = 0;
 
   /* Set sensitiveness */
   switch (frogr_controller_get_state (priv->controller))
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
-      /* gtk_action_set_sensitive (priv->open_project_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->save_project_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->load_pictures_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->save_project_as_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->remove_pictures_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->upload_pictures_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->open_in_external_viewer_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->add_tags_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->edit_details_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->add_to_group_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->add_to_set_action, FALSE); */
-      /* gtk_action_set_sensitive (priv->add_to_new_set_action, FALSE); */
+      _update_sensitiveness_for_action (self, ACTION_OPEN_PROJECT, priv->open_project_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT, priv->save_project_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT_AS, NULL, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_LOAD_PICTURES, priv->load_pictures_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_REMOVE_PICTURES, priv->remove_pictures_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_UPLOAD_ALL, priv->upload_pictures_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_OPEN_IN_EXTERNAL_VIEWER, priv->open_in_external_viewer_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_ADD_TAGS, priv->add_tags_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_EDIT_DETAILS, priv->edit_details_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_ADD_TO_GROUP, priv->add_to_group_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_ADD_TO_SET, priv->add_to_set_action, FALSE);
+      _update_sensitiveness_for_action (self, ACTION_ADD_TO_NEW_SET, priv->add_to_new_set_action, FALSE);
       /* gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE); */
       break;
 
     case FROGR_STATE_IDLE:
-      /* has_pics = (_n_pictures (self) > 0); */
       /* has_accounts = (priv->accounts_menu != NULL); */
-      /* n_selected_pics = priv->n_selected_pictures; */
+      has_pics = (_n_pictures (self) > 0);
+      n_selected_pics = priv->n_selected_pictures;
 
-      /* gtk_action_set_sensitive (priv->open_project_action, TRUE); */
-      /* gtk_action_set_sensitive (priv->save_project_action, TRUE); */
-      /* gtk_action_set_sensitive (priv->load_pictures_action, TRUE); */
-      /* gtk_action_set_sensitive (priv->save_project_as_action, TRUE); */
+      _update_sensitiveness_for_action (self, ACTION_OPEN_PROJECT, priv->open_project_action, TRUE);
+      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT, priv->save_project_action, TRUE);
+      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT_AS, NULL, TRUE);
+      _update_sensitiveness_for_action (self, ACTION_LOAD_PICTURES, priv->load_pictures_action, TRUE);
+      _update_sensitiveness_for_action (self, ACTION_UPLOAD_ALL, priv->upload_pictures_action, has_pics);
+      _update_sensitiveness_for_action (self, ACTION_REMOVE_PICTURES, priv->remove_pictures_action, n_selected_pics);
+      _update_sensitiveness_for_action (self, ACTION_OPEN_IN_EXTERNAL_VIEWER, priv->open_in_external_viewer_action, n_selected_pics);
+      _update_sensitiveness_for_action (self, ACTION_ADD_TAGS, priv->add_tags_action, n_selected_pics);
+      _update_sensitiveness_for_action (self, ACTION_EDIT_DETAILS, priv->edit_details_action, n_selected_pics);
+      _update_sensitiveness_for_action (self, ACTION_ADD_TO_GROUP, priv->add_to_group_action, n_selected_pics);
+      _update_sensitiveness_for_action (self, ACTION_ADD_TO_SET, priv->add_to_set_action, n_selected_pics);
+      _update_sensitiveness_for_action (self, ACTION_ADD_TO_NEW_SET, priv->add_to_new_set_action, n_selected_pics);
       /* gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts); */
-      /* gtk_action_set_sensitive (priv->upload_pictures_action, has_pics); */
-      /* gtk_action_set_sensitive (priv->remove_pictures_action, n_selected_pics > 0); */
-      /* gtk_action_set_sensitive (priv->open_in_external_viewer_action, n_selected_pics > 0); */
-      /* gtk_action_set_sensitive (priv->add_tags_action, n_selected_pics > 0); */
-      /* gtk_action_set_sensitive (priv->edit_details_action, n_selected_pics > 0); */
-      /* gtk_action_set_sensitive (priv->add_to_group_action, n_selected_pics > 0); */
-      /* gtk_action_set_sensitive (priv->add_to_set_action, n_selected_pics > 0); */
-      /* gtk_action_set_sensitive (priv->add_to_new_set_action, n_selected_pics > 0); */
       break;
 
     default:
       g_warning ("Invalid state reached!!");
     }
+}
+
+static void
+_update_sensitiveness_for_action (FrogrMainView *self, const gchar *name, GtkAction *gtk_action, gboolean value)
+{
+  GAction *action = NULL;
+
+  action = g_action_map_lookup_action (G_ACTION_MAP (self), name);
+  g_simple_action_set_enabled (G_SIMPLE_ACTION (action), value);
+
+  if (gtk_action)
+    gtk_action_set_sensitive (gtk_action, value);
 }
 
 static void
