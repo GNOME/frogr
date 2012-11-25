@@ -2142,7 +2142,7 @@ _update_sensitiveness (FrogrMainView *self)
 
       _update_sensitiveness_for_action (self, ACTION_OPEN_PROJECT, priv->open_project_action, TRUE);
       _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT, priv->save_project_action, TRUE);
-      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT_AS, NULL, TRUE);
+      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT_AS, priv->save_project_action, TRUE);
       _update_sensitiveness_for_action (self, ACTION_LOAD_PICTURES, priv->load_pictures_action, TRUE);
       _update_sensitiveness_for_action (self, ACTION_UPLOAD_ALL, priv->upload_pictures_action, has_pics);
       _update_sensitiveness_for_action (self, ACTION_REMOVE_PICTURES, priv->remove_pictures_action, n_selected_pics);
