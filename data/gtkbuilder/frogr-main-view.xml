@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
-  <object class="GtkAction" id="open_project_action">
+  <object class="GtkAction" id="open-project">
     <property name="label" translatable="yes">_Open Project…</property>
     <property name="stock_id">gtk-open</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="save_project_action">
+  <object class="GtkAction" id="save-project">
     <property name="label" translatable="yes">_Save Project</property>
     <property name="stock_id">gtk-save</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="save_project_as_action">
+  <object class="GtkAction" id="save-project-as">
     <property name="label" translatable="yes">Save Project _As…</property>
     <property name="stock_id">gtk-save-as</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="load_pictures_action">
+  <object class="GtkAction" id="load-pictures">
     <property name="label" translatable="yes">_Load Pictures…</property>
     <property name="stock_id">gtk-add</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="add_tags_action">
+  <object class="GtkAction" id="add-tags">
     <property name="label" translatable="yes">Add _Tags…</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="add_to_group_action">
+  <object class="GtkAction" id="add-to-group">
     <property name="label" translatable="yes">Add to _Group…</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="add_to_new_set_action">
+  <object class="GtkAction" id="add-to-new-set">
     <property name="label" translatable="yes">_Create New Set…</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="add_to_set_action">
+  <object class="GtkAction" id="add-to-set">
     <property name="label" translatable="yes">Add to _Existing Set…</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="edit_details_action">
+  <object class="GtkAction" id="edit-details">
     <property name="label" translatable="yes">Edit _Details…</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="open_in_external_viewer_action">
+  <object class="GtkAction" id="open-in-external-viewer">
     <property name="label" translatable="yes">Open in E_xternal Viewer</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="remove_pictures_action">
+  <object class="GtkAction" id="remove-pictures">
     <property name="label" translatable="yes">_Remove Pictures</property>
     <property name="stock_id">gtk-remove</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
   </object>
-  <object class="GtkAction" id="upload_pictures_action">
+  <object class="GtkAction" id="upload-all">
     <property name="label" translatable="yes">_Upload All</property>
     <property name="stock_id">gtk-go-up</property>
     <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
@@ -62,7 +62,7 @@
       <object class="GtkMenuItem" id="edit_details_ctxt_menu_item">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="related_action">edit_details_action</property>
+        <property name="related_action">edit-details</property>
         <property name="use_underline">True</property>
       </object>
     </child>
@@ -70,7 +70,7 @@
       <object class="GtkMenuItem" id="add_tags_ctxt_menu_item">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="related_action">add_tags_action</property>
+        <property name="related_action">add-tags</property>
         <property name="label" translatable="yes">Add _Tags…</property>
         <property name="use_underline">True</property>
       </object>
@@ -79,7 +79,7 @@
       <object class="GtkMenuItem" id="add_to_group_ctxt_menu_item">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="related_action">add_to_group_action</property>
+        <property name="related_action">add-to-group</property>
         <property name="use_action_appearance">False</property>
         <property name="label" translatable="yes">Add to _Group…</property>
         <property name="use_underline">True</property>
@@ -100,7 +100,7 @@
               <object class="GtkMenuItem" id="create_new_set_ctxt_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">add_to_new_set_action</property>
+                <property name="related_action">add-to-new-set</property>
                 <property name="label" translatable="yes">_Create New Set…</property>
                 <property name="use_underline">True</property>
               </object>
@@ -109,7 +109,7 @@
               <object class="GtkMenuItem" id="add_to_existing_set_ctxt_menu_item">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="related_action">add_to_set_action</property>
+                <property name="related_action">add-to-set</property>
               </object>
             </child>
           </object>
@@ -127,7 +127,7 @@
       <object class="GtkMenuItem" id="open_in_external_viewer_ctxt_menu_item">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="related_action">open_in_external_viewer_action</property>
+        <property name="related_action">open-in-external-viewer</property>
       </object>
     </child>
     <child>
@@ -141,7 +141,7 @@
       <object class="GtkMenuItem" id="remove_pictures_ctxt_menu_item">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="related_action">remove_pictures_action</property>
+        <property name="related_action">remove-pictures</property>
       </object>
     </child>
   </object>
@@ -156,7 +156,7 @@
           <object class="GtkToolButton" id="open_project_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="related_action">open_project_action</property>
+            <property name="related_action">open-project</property>
             <property name="label" translatable="yes">Open Project</property>
             <property name="use_underline">True</property>
           </object>
@@ -169,7 +169,7 @@
           <object class="GtkToolButton" id="save_project_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="related_action">save_project_action</property>
+            <property name="related_action">save-project</property>
             <property name="label" translatable="yes">Save Project</property>
             <property name="use_underline">True</property>
           </object>
@@ -182,7 +182,7 @@
           <object class="GtkToolButton" id="save_project_as_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="related_action">save_project_as_action</property>
+            <property name="related_action">save-project-as</property>
             <property name="label" translatable="yes">Save Project As…</property>
             <property name="use_underline">True</property>
           </object>
@@ -202,7 +202,7 @@
           <object class="GtkToolButton" id="add_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="related_action">load_pictures_action</property>
+            <property name="related_action">load-pictures</property>
             <property name="label" translatable="yes">Add</property>
             <property name="use_underline">True</property>
           </object>
@@ -215,7 +215,7 @@
           <object class="GtkToolButton" id="remove_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="related_action">remove_pictures_action</property>
+            <property name="related_action">remove-pictures</property>
             <property name="label" translatable="yes">Remove</property>
             <property name="use_underline">True</property>
           </object>
@@ -235,7 +235,7 @@
           <object class="GtkToolButton" id="upload_button">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="related_action">upload_pictures_action</property>
+            <property name="related_action">upload-all</property>
             <property name="label" translatable="yes">Upload</property>
             <property name="use_underline">True</property>
           </object>

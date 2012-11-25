@@ -415,30 +415,29 @@ _initialize_ui (FrogrMainView *self)
 
   /* Get actions from GtkBuilder for the toolbar and the context menu */
   priv->open_project_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "open_project_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "open-project"));
   priv->save_project_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "save_project_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "save-project"));
   priv->save_project_as_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "save_project_as_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "save-project-as"));
   priv->load_pictures_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "load_pictures_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "load-pictures"));
   priv->remove_pictures_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "remove_pictures_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "remove-pictures"));
   priv->upload_pictures_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "upload_pictures_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "upload_all"));
   priv->open_in_external_viewer_action =
-    GTK_ACTION (gtk_builder_get_object (builder,
-                                        "open_in_external_viewer_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "open-in-external-viewer"));
   priv->add_tags_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_tags_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "add-tags"));
   priv->edit_details_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "edit_details_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "edit-details"));
   priv->add_to_group_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_to_group_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "add-to-group"));
   priv->add_to_set_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_to_set_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "add-to-set"));
   priv->add_to_new_set_action =
-    GTK_ACTION (gtk_builder_get_object (builder, "add_to_new_set_action"));
+    GTK_ACTION (gtk_builder_get_object (builder, "add-to-new-set"));
 
   /* Init main model's state description */
   _update_state_description (self);
@@ -841,32 +840,32 @@ void
 _on_gtk_action_activated (GtkAction *action, gpointer data)
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = NULL;
+  const gchar *action_name = NULL;
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  if (action == priv->upload_pictures_action)
+  action_name = gtk_action_get_name (action);
+  if (!g_strcmp0 (action_name, ACTION_UPLOAD_ALL))
     _upload_pictures (mainview);
-  else if (action == priv->edit_details_action)
+  else if (!g_strcmp0 (action_name, ACTION_EDIT_DETAILS))
     _edit_selected_pictures (mainview);
-  else if (action == priv->add_tags_action)
+  else if (!g_strcmp0 (action_name, ACTION_ADD_TAGS))
     _add_tags_to_pictures (mainview);
-  else if (action == priv->add_to_group_action)
+  else if (!g_strcmp0 (action_name, ACTION_ADD_TO_GROUP))
     _add_pictures_to_group (mainview);
-  else if (action == priv->add_to_set_action)
+  else if (!g_strcmp0 (action_name, ACTION_ADD_TO_SET))
     _add_pictures_to_existing_set (mainview);
-  else if (action == priv->add_to_new_set_action)
+  else if (!g_strcmp0 (action_name, ACTION_ADD_TO_NEW_SET))
     _add_pictures_to_new_set (mainview);
-  else if (action == priv->open_in_external_viewer_action)
+  else if (!g_strcmp0 (action_name, ACTION_OPEN_IN_EXTERNAL_VIEWER))
     _open_pictures_in_external_viewer (mainview);
-  else if (action == priv->load_pictures_action)
+  else if (!g_strcmp0 (action_name, ACTION_LOAD_PICTURES))
     _load_pictures_dialog (mainview);
-  else if (action == priv->remove_pictures_action)
+  else if (!g_strcmp0 (action_name, ACTION_REMOVE_PICTURES))
     _remove_selected_pictures (mainview);
-  else if (action == priv->open_project_action)
+  else if (!g_strcmp0 (action_name, ACTION_OPEN_PROJECT))
     _open_project_dialog (mainview);
-  else if (action == priv->save_project_action)
+  else if (!g_strcmp0 (action_name, ACTION_SAVE_PROJECT))
     _save_current_project (mainview);
-  else if (action == priv->save_project_as_action)
+  else if (!g_strcmp0 (action_name, ACTION_SAVE_PROJECT_AS))
     _save_project_as_dialog (mainview);
   else
     g_assert_not_reached ();
