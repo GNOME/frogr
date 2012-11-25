@@ -124,9 +124,9 @@ typedef struct _FrogrMainViewPrivate {
   GtkBuilder *builder;
 
   /* For the toolbar and the contextual menu */
-  GtkActionGroup *file_actions;
-  GtkActionGroup *pictures_actions;
-  GtkActionGroup *selection_actions;
+  GtkActionGroup *file_gtkactions;
+  GtkActionGroup *pictures_gtkactions;
+  GtkActionGroup *selection_gtkactions;
 } FrogrMainViewPrivate;
 
 
@@ -404,9 +404,9 @@ _initialize_ui (FrogrMainView *self)
   priv->status_bar = status_bar;
 
   /* Get action groups from GtkBuilder for the toolbar and the context menu */
-  priv->file_actions = GTK_ACTION_GROUP (gtk_builder_get_object (builder, "file-actions"));
-  priv->pictures_actions = GTK_ACTION_GROUP (gtk_builder_get_object (builder, "pictures-actions"));
-  priv->selection_actions = GTK_ACTION_GROUP (gtk_builder_get_object (builder, "selection-actions"));
+  priv->file_gtkactions = GTK_ACTION_GROUP (gtk_builder_get_object (builder, "file-actions"));
+  priv->pictures_gtkactions = GTK_ACTION_GROUP (gtk_builder_get_object (builder, "pictures-actions"));
+  priv->selection_gtkactions = GTK_ACTION_GROUP (gtk_builder_get_object (builder, "selection-actions"));
 
   /* Init main model's state description */
   _update_state_description (self);
@@ -2074,6 +2074,27 @@ _craft_state_description (FrogrMainView *mainview)
   return description;
 }
 
+static gchar *file_actions[] = {
+  ACTION_OPEN_PROJECT,
+  ACTION_SAVE_PROJECT,
+  ACTION_SAVE_PROJECT_AS,
+  ACTION_LOAD_PICTURES
+};
+
+static gchar *selection_actions[] = {
+  ACTION_REMOVE_PICTURES,
+  ACTION_EDIT_DETAILS,
+  ACTION_ADD_TAGS,
+  ACTION_ADD_TO_GROUP,
+  ACTION_ADD_TO_SET,
+  ACTION_ADD_TO_NEW_SET,
+  ACTION_OPEN_IN_EXTERNAL_VIEWER
+};
+
+static gchar *pictures_actions[] = {
+  ACTION_UPLOAD_ALL
+};
+
 static void
 _update_sensitiveness (FrogrMainView *self)
 {
@@ -2082,29 +2103,24 @@ _update_sensitiveness (FrogrMainView *self)
   /* gboolean has_accounts = FALSE; */
   gboolean has_pics = FALSE;
   gint n_selected_pics = 0;
+  gchar **action_names = NULL;
+  gint i = 0;
 
   /* Set sensitiveness */
   switch (frogr_controller_get_state (priv->controller))
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
+      /* Elements from the GMenu */
+      action_names = g_action_group_list_actions (G_ACTION_GROUP (self));
+      for (i = 0; action_names[i]; i++)
+        _update_sensitiveness_for_action (self, action_names[i], FALSE);
+      g_strfreev (action_names);
 
-      gtk_action_group_set_sensitive (priv->file_actions, FALSE);
-      gtk_action_group_set_sensitive (priv->pictures_actions, FALSE);
-      gtk_action_group_set_sensitive (priv->selection_actions, FALSE);
-
-      _update_sensitiveness_for_action (self, ACTION_OPEN_PROJECT, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT_AS, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_LOAD_PICTURES, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_REMOVE_PICTURES, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_UPLOAD_ALL, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_OPEN_IN_EXTERNAL_VIEWER, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_ADD_TAGS, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_EDIT_DETAILS, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_ADD_TO_GROUP, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_ADD_TO_SET, FALSE);
-      _update_sensitiveness_for_action (self, ACTION_ADD_TO_NEW_SET, FALSE);
+      /* Toolbar and contextual menu */
+      gtk_action_group_set_sensitive (priv->file_gtkactions, FALSE);
+      gtk_action_group_set_sensitive (priv->pictures_gtkactions, FALSE);
+      gtk_action_group_set_sensitive (priv->selection_gtkactions, FALSE);
       /* gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE); */
       break;
 
@@ -2113,22 +2129,22 @@ _update_sensitiveness (FrogrMainView *self)
       has_pics = (_n_pictures (self) > 0);
       n_selected_pics = priv->n_selected_pictures;
 
-      gtk_action_group_set_sensitive (priv->file_actions, TRUE);
-      gtk_action_group_set_sensitive (priv->pictures_actions, has_pics);
-      gtk_action_group_set_sensitive (priv->selection_actions, n_selected_pics);
+      /* Elements from the GMenu - file operations */
+      for (i = 0; i < G_N_ELEMENTS (file_actions); i++)
+        _update_sensitiveness_for_action (self, file_actions[i], TRUE);
 
-      _update_sensitiveness_for_action (self, ACTION_OPEN_PROJECT, TRUE);
-      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT, TRUE);
-      _update_sensitiveness_for_action (self, ACTION_SAVE_PROJECT_AS, TRUE);
-      _update_sensitiveness_for_action (self, ACTION_LOAD_PICTURES, TRUE);
-      _update_sensitiveness_for_action (self, ACTION_UPLOAD_ALL, has_pics);
-      _update_sensitiveness_for_action (self, ACTION_REMOVE_PICTURES, n_selected_pics);
-      _update_sensitiveness_for_action (self, ACTION_OPEN_IN_EXTERNAL_VIEWER, n_selected_pics);
-      _update_sensitiveness_for_action (self, ACTION_ADD_TAGS, n_selected_pics);
-      _update_sensitiveness_for_action (self, ACTION_EDIT_DETAILS, n_selected_pics);
-      _update_sensitiveness_for_action (self, ACTION_ADD_TO_GROUP, n_selected_pics);
-      _update_sensitiveness_for_action (self, ACTION_ADD_TO_SET, n_selected_pics);
-      _update_sensitiveness_for_action (self, ACTION_ADD_TO_NEW_SET, n_selected_pics);
+      /* Elements from the GMenu - for selected pictures */
+      for (i = 0; i < G_N_ELEMENTS (selection_actions); i++)
+        _update_sensitiveness_for_action (self, selection_actions[i], n_selected_pics);
+
+      /* Elements from the GMenu - for available pictures */
+      for (i = 0; i < G_N_ELEMENTS (pictures_actions); i++)
+        _update_sensitiveness_for_action (self, pictures_actions[i], has_pics);
+
+      /* Toolbar and contextual menu */
+      gtk_action_group_set_sensitive (priv->file_gtkactions, TRUE);
+      gtk_action_group_set_sensitive (priv->pictures_gtkactions, has_pics);
+      gtk_action_group_set_sensitive (priv->selection_gtkactions, n_selected_pics);
       /* gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts); */
       break;
 
