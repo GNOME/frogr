@@ -56,6 +56,7 @@
 
 /* Action names for menu items */
 #define ACTION_AUTHORIZE "authorize"
+#define ACTION_LOGIN_AS "login-as"
 #define ACTION_PREFERENCES "preferences"
 #define ACTION_HELP "help"
 #define ACTION_ABOUT "about"
@@ -107,8 +108,6 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkWidget *icon_view;
   GtkWidget *status_bar;
-  GtkWidget *accounts_menu_item;
-  GtkWidget *accounts_menu;
 
   GtkWidget *pictures_ctxt_menu;
 
@@ -122,6 +121,7 @@ typedef struct _FrogrMainViewPrivate {
   guint sb_context_id;
 
   GtkBuilder *builder;
+  GMenuModel *app_menu;
 
   /* For the toolbar and the contextual menu */
   GtkActionGroup *file_gtkactions;
@@ -150,7 +150,6 @@ static void _on_radio_menu_item_activated (GSimpleAction *action, GVariant *para
 static void _on_radio_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _on_toggle_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data);
 static void _on_toggle_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data);
-static void _on_account_menu_item_toggled (GtkWidget *widget, gpointer self);
 
 /* This needs to be non-static because of GtkBuilder UI definition file */
 void _on_gtk_action_activated (GtkAction *action, gpointer data);
@@ -263,8 +262,6 @@ static void _model_changed (FrogrController *controller, gpointer data);
 
 static void _model_deserialized (FrogrController *controller, gpointer data);
 
-static void _update_account_menu_items (FrogrMainView *mainview);
-
 static void _update_state_description (FrogrMainView *mainview);
 
 static gchar *_craft_state_description (FrogrMainView *mainview);
@@ -281,6 +278,7 @@ static void _update_ui (FrogrMainView *self);
 
 static GActionEntry app_entries[] = {
   { ACTION_AUTHORIZE, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_LOGIN_AS, _on_radio_menu_item_activated, "s", "''", _on_radio_menu_item_changed },
   { ACTION_PREFERENCES, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_HELP, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_ABOUT, _on_menu_item_activated, NULL, NULL, NULL },
@@ -377,8 +375,8 @@ _initialize_ui (FrogrMainView *self)
   g_action_map_add_action_entries (G_ACTION_MAP (gtk_app),
                                    app_entries, G_N_ELEMENTS (app_entries),
                                    self);
-  gtk_application_set_app_menu (GTK_APPLICATION (gtk_app),
-                                G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
+  priv->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
+  gtk_application_set_app_menu (GTK_APPLICATION (gtk_app), priv->app_menu);
 
   /* Menu bar */
   full_path = g_strdup_printf ("%s/" UI_MENU_BAR_FILE, frogr_util_get_app_data_dir ());
@@ -432,10 +430,6 @@ _initialize_ui (FrogrMainView *self)
   g_action_change_state (G_ACTION (action), g_variant_new_boolean (priv->tooltips_enabled));
 
   /* Initialize extra widgets */
-
-  /* Accounts menu */
-  priv->accounts_menu_item =
-    GTK_WIDGET (gtk_builder_get_object (builder, "accounts_menu_item"));
 
   /* Populate accounts submenu from model */
   _populate_accounts_submenu (self);
@@ -686,12 +680,6 @@ _on_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer da
 static void
 _on_radio_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-  const gchar *action_name = NULL;
-
-  action_name = g_action_get_name (G_ACTION (action));
-  if (g_strcmp0 (action_name, ACTION_SORT_BY))
-    g_assert_not_reached ();
-
   g_action_change_state (G_ACTION (action), parameter);
 }
 
@@ -701,27 +689,36 @@ _on_radio_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointe
   FrogrMainViewPrivate *priv = NULL;
   const gchar *action_name = NULL;
   const gchar *target = NULL;
-  SortingCriteria criteria;
 
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
   action_name = g_action_get_name (G_ACTION (action));
-  if (g_strcmp0 (action_name, ACTION_SORT_BY))
-    g_assert_not_reached ();
-
   target = g_variant_get_string (parameter, NULL);
-  if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_AS_LOADED))
-    criteria = SORT_AS_LOADED;
-  else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_DATE_TAKEN))
-    criteria = SORT_BY_DATE;
-  else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_TITLE))
-    criteria = SORT_BY_TITLE;
+
+  if (!g_strcmp0 (action_name, ACTION_LOGIN_AS))
+    {
+      DEBUG ("Selected account: %s", target);
+      frogr_controller_set_active_account (priv->controller, target);
+    }
+  else if (!g_strcmp0 (action_name, ACTION_SORT_BY))
+    {
+      SortingCriteria criteria;
+
+      if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_AS_LOADED))
+        criteria = SORT_AS_LOADED;
+      else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_DATE_TAKEN))
+        criteria = SORT_BY_DATE;
+      else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_TITLE))
+        criteria = SORT_BY_TITLE;
+      else
+        g_assert_not_reached ();
+
+      /* Update the UI and save settings */
+      _reorder_pictures (FROGR_MAIN_VIEW (data), criteria, priv->sorting_reversed);
+      frogr_config_set_mainview_sorting_criteria (priv->config, criteria);
+      frogr_config_save_settings (priv->config);
+    }
   else
     g_assert_not_reached ();
-
-  /* Update the UI and save settings */
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  _reorder_pictures (FROGR_MAIN_VIEW (data), criteria, priv->sorting_reversed);
-  frogr_config_set_mainview_sorting_criteria (priv->config, criteria);
-  frogr_config_save_settings (priv->config);
 
   /* Update the action */
   g_simple_action_set_state (action, parameter);
@@ -774,35 +771,6 @@ _quit_application (FrogrMainView *self)
 {
   GtkApplication *gtk_app = gtk_window_get_application (GTK_WINDOW (self));
   g_application_quit (G_APPLICATION (gtk_app));
-}
-
-static void
-_on_account_menu_item_toggled (GtkWidget *widget, gpointer self)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  FrogrAccount *account = NULL;
-  gboolean checked = FALSE;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  checked = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-  account = g_object_get_data (G_OBJECT (widget), "frogr-account");
-
-  /* Only set the account if checked */
-  if (checked && account)
-    {
-      DEBUG ("Selected account %s (%s)",
-             frogr_account_get_id (account),
-             frogr_account_get_username (account));
-
-      frogr_controller_set_active_account (priv->controller, account);
-    }
-  else if (account)
-    {
-      /* If manually unchecked the currently active account, set it again */
-      FrogrAccount *active_account = frogr_controller_get_active_account (priv->controller);
-      if (frogr_account_equal (active_account, account))
-        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
-    }
 }
 
 void
@@ -901,18 +869,21 @@ _populate_accounts_submenu (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = NULL;
   FrogrAccount *account = NULL;
-  GtkWidget *menu_item = NULL;
+  GMenuItem *accounts_menu;
+  GMenuItem *menu_item = NULL;
+  GMenuModel *submenu = NULL;
+
   GSList *accounts = NULL;
   GSList *item = NULL;
-  gchar *account_str = NULL;
+  const gchar *username = NULL;
+  gchar *action_str = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  priv->accounts_menu = NULL;
-
   accounts = frogr_controller_get_all_accounts (priv->controller);
-  if (g_slist_length (accounts) > 0)
-    priv->accounts_menu = gtk_menu_new ();
+  if (!g_slist_length (accounts))
+    return;
 
+  submenu = G_MENU_MODEL (g_menu_new ());
   for (item = accounts; item; item = g_slist_next (item))
     {
       account = FROGR_ACCOUNT (item->data);
@@ -920,23 +891,26 @@ _populate_accounts_submenu (FrogrMainView *self)
       /* Do not use the full name here since it could be the same for
          different users, thus wouldn't be useful at all for the
          matter of selecting one account or another. */
-      account_str = g_strdup (frogr_account_get_username (account));
-      menu_item = gtk_check_menu_item_new_with_label (account_str);
-      g_free (account_str);
+      username = frogr_account_get_username (account);
+      action_str = g_strdup_printf ("app.login-as::%s", username);
+      menu_item = g_menu_item_new (username, action_str);;
+      g_menu_append_item (G_MENU (submenu), menu_item);
+      g_free (action_str);
 
-      g_object_set_data (G_OBJECT (menu_item), "frogr-account", account);
+      if (frogr_account_is_active (account))
+        {
+          GtkApplication *gtk_app = NULL;
+          GAction *action = NULL;
 
-      g_signal_connect (G_OBJECT (menu_item), "activate",
-                        G_CALLBACK (_on_account_menu_item_toggled),
-                        self);
-      gtk_menu_shell_append (GTK_MENU_SHELL (priv->accounts_menu), menu_item); 
+          gtk_app = gtk_window_get_application (GTK_WINDOW (self));
+          action = g_action_map_lookup_action (G_ACTION_MAP (gtk_app), ACTION_LOGIN_AS);
+          g_action_activate (action, g_variant_new_string (username));
+        }
+
+
     }
-
-  /* TODO */
-  /* gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->accounts_menu_item), priv->accounts_menu); */
-
-  if (priv->accounts_menu)
-    gtk_widget_show_all (priv->accounts_menu);
+  accounts_menu = g_menu_item_new_submenu (_("Accounts"), submenu);
+  g_menu_insert_item (G_MENU (priv->app_menu), 1, accounts_menu);
 }
 
 static void
@@ -1815,7 +1789,6 @@ _controller_active_account_changed (FrogrController *controller,
 
   mainview = FROGR_MAIN_VIEW (data);
   _update_state_description (mainview);
-  _update_account_menu_items (mainview);
   _update_ui (mainview);
 }
 
@@ -1925,40 +1898,6 @@ _model_deserialized (FrogrController *controller, gpointer data)
 {
   /* Reflect that the current state is not 'dirty' (just loaded) */
   _update_window_title (FROGR_MAIN_VIEW (data), FALSE);
-}
-
-static void
-_update_account_menu_items (FrogrMainView *mainview)
-{
-  FrogrMainViewPrivate *priv = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-  if (priv->accounts_menu && GTK_IS_CONTAINER (priv->accounts_menu))
-    {
-      FrogrAccount *active_account = NULL;
-      FrogrAccount *account = NULL;
-      GList *all_items = NULL;
-      GList *item = NULL;
-      GtkWidget *menu_item = NULL;
-
-      active_account = frogr_controller_get_active_account (priv->controller);
-      all_items = gtk_container_get_children (GTK_CONTAINER (priv->accounts_menu));
-      for (item = all_items; item; item = g_list_next (item))
-        {
-          gboolean value;
-
-          menu_item = GTK_WIDGET (item->data);
-          account = g_object_get_data (G_OBJECT (menu_item), "frogr-account"); 
-
-          if (account == active_account)
-            value = TRUE;
-          else
-            value = FALSE;
-
-          gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), value);
-        }
-      g_list_free (all_items);
-    }
 }
 
 static void
@@ -2121,11 +2060,9 @@ _update_sensitiveness (FrogrMainView *self)
       gtk_action_group_set_sensitive (priv->file_gtkactions, FALSE);
       gtk_action_group_set_sensitive (priv->pictures_gtkactions, FALSE);
       gtk_action_group_set_sensitive (priv->selection_gtkactions, FALSE);
-      /* gtk_widget_set_sensitive (priv->accounts_menu_item, FALSE); */
       break;
 
     case FROGR_STATE_IDLE:
-      /* has_accounts = (priv->accounts_menu != NULL); */
       has_pics = (_n_pictures (self) > 0);
       n_selected_pics = priv->n_selected_pictures;
 
@@ -2145,7 +2082,6 @@ _update_sensitiveness (FrogrMainView *self)
       gtk_action_group_set_sensitive (priv->file_gtkactions, TRUE);
       gtk_action_group_set_sensitive (priv->pictures_gtkactions, has_pics);
       gtk_action_group_set_sensitive (priv->selection_gtkactions, n_selected_pics);
-      /* gtk_widget_set_sensitive (priv->accounts_menu_item, has_accounts); */
       break;
 
     default:
