@@ -151,6 +151,8 @@ static void _g_application_open_files_cb (GApplication *app, GFile **files, gint
 
 static void _g_application_shutdown_cb (GApplication *app, gpointer data);
 
+static void _set_active_account (FrogrController *self, FrogrAccount *account);
+
 static void _set_state (FrogrController *self, FrogrControllerState state);
 
 static GCancellable *_register_new_cancellable (FrogrController *self);
@@ -299,7 +301,7 @@ _g_application_startup_cb (GApplication *app, gpointer data)
   /* Select the right account */
   account = frogr_config_get_active_account (priv->config);
   if (account)
-    frogr_controller_set_active_account (self, account);
+    _set_active_account (self, account);
 }
 
 static void
@@ -357,6 +359,83 @@ _g_application_shutdown_cb (GApplication *app, gpointer data)
 
       frogr_config_save_all (priv->config);
     }
+}
+
+static void
+_set_active_account (FrogrController *self, FrogrAccount *account)
+{
+  FrogrControllerPrivate *priv = NULL;
+  FrogrAccount *new_account = NULL;
+  gboolean accounts_changed = FALSE;
+  const gchar *token = NULL;
+  const gchar *token_secret = NULL;
+  const gchar *account_version = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  new_account = FROGR_IS_ACCOUNT (account) ? g_object_ref (account) : NULL;
+  if (new_account)
+    {
+      const gchar *new_username = NULL;
+
+      new_username = frogr_account_get_username (new_account);
+      if (!frogr_config_set_active_account (priv->config, new_username))
+        {
+          /* Fallback to manually creating a new account */
+          frogr_account_set_is_active (new_account, TRUE);
+          accounts_changed = frogr_config_add_account (priv->config, new_account);
+        }
+
+      /* Get the token for setting it later on */
+      token = frogr_account_get_token (new_account);
+      token_secret = frogr_account_get_token_secret (new_account);
+    }
+  else if (FROGR_IS_ACCOUNT (priv->account))
+    {
+      /* If NULL is passed it means 'delete current account' */
+      const gchar *username = frogr_account_get_username (priv->account);
+      accounts_changed = frogr_config_remove_account (priv->config, username);
+    }
+
+  /* Update internal pointer in the controller */
+  if (priv->account)
+    g_object_unref (priv->account);
+  priv->account = new_account;
+
+  /* Update token in the session */
+  fsp_session_set_token (priv->session, token);
+  fsp_session_set_token_secret (priv->session, token_secret);
+
+  /* Fetch needed info for this account or update tokens stored */
+  account_version = new_account ? frogr_account_get_version (new_account) : NULL;
+  if (account_version && g_strcmp0 (account_version, ACCOUNTS_CURRENT_VERSION))
+    {
+      /* We won't use a cancellable for this request */
+      _clear_cancellable (self);
+
+      priv->fetching_token_replacement = TRUE;
+      fsp_session_exchange_token (priv->session, NULL, _exchange_token_cb, self);
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TOKEN_REPLACEMENT));
+
+      /* Make sure we show proper feedback if connection is too slow */
+      gdk_threads_add_timeout (MAX_AUTH_TIMEOUT, (GSourceFunc) _cancel_authorization_on_timeout, self);
+    }
+  else
+    {
+      /* If a new account has been activated, fetch everything */
+      if (new_account)
+        _fetch_everything (self, TRUE);
+
+      /* Emit proper signals */
+      g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, new_account);
+      if (accounts_changed)
+        g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
+    }
+
+  /* Save new state in configuration */
+  frogr_config_save_accounts (priv->config);
 }
 
 void
@@ -628,7 +707,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
           frogr_account_set_permissions (account, "write");
 
           /* Try to set the active account again */
-          frogr_controller_set_active_account (controller, account);
+          _set_active_account (controller, account);
 
           DEBUG ("%s", "Authorization successfully completed!");
         }
@@ -677,7 +756,7 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
       frogr_account_set_version (priv->account, ACCOUNTS_CURRENT_VERSION);
 
       /* Finally, try to set the active account again */
-      frogr_controller_set_active_account (controller, priv->account);
+      _set_active_account (controller, priv->account);
     }
   else
     {
@@ -2301,81 +2380,19 @@ frogr_controller_get_model (FrogrController *self)
 }
 
 void
-frogr_controller_set_active_account (FrogrController *self,
-                                     FrogrAccount *account)
+frogr_controller_set_active_account (FrogrController *self, const gchar *username)
 {
   FrogrControllerPrivate *priv = NULL;
-  FrogrAccount *new_account = NULL;
-  gboolean accounts_changed = FALSE;
-  const gchar *token = NULL;
-  const gchar *token_secret = NULL;
-  const gchar *account_version = NULL;
+  FrogrAccount *account = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
+  g_return_if_fail(username);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  frogr_config_set_active_account (priv->config, username);
+  account = frogr_config_get_active_account (priv->config);
 
-  new_account = FROGR_IS_ACCOUNT (account) ? g_object_ref (account) : NULL;
-  if (new_account)
-    {
-      const gchar *new_account_id = NULL;
-
-      new_account_id = frogr_account_get_id (new_account);
-      if (!frogr_config_set_active_account (priv->config, new_account_id))
-        {
-          /* Fallback to manually creating a new account */
-          frogr_account_set_is_active (new_account, TRUE);
-          accounts_changed = frogr_config_add_account (priv->config, new_account);
-        }
-
-      /* Get the token for setting it later on */
-      token = frogr_account_get_token (new_account);
-      token_secret = frogr_account_get_token_secret (new_account);
-    }
-  else if (FROGR_IS_ACCOUNT (priv->account))
-    {
-      /* If NULL is passed it means 'delete current account' */
-      const gchar *account_id = frogr_account_get_id (priv->account);
-      accounts_changed = frogr_config_remove_account (priv->config, account_id);
-    }
-
-  /* Update internal pointer in the controller */
-  if (priv->account)
-    g_object_unref (priv->account);
-  priv->account = new_account;
-
-  /* Update token in the session */
-  fsp_session_set_token (priv->session, token);
-  fsp_session_set_token_secret (priv->session, token_secret);
-
-  /* Fetch needed info for this account or update tokens stored */
-  account_version = new_account ? frogr_account_get_version (new_account) : NULL;
-  if (account_version && g_strcmp0 (account_version, ACCOUNTS_CURRENT_VERSION))
-    {
-      /* We won't use a cancellable for this request */
-      _clear_cancellable (self);
-
-      priv->fetching_token_replacement = TRUE;
-      fsp_session_exchange_token (priv->session, NULL, _exchange_token_cb, self);
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TOKEN_REPLACEMENT));
-
-      /* Make sure we show proper feedback if connection is too slow */
-      gdk_threads_add_timeout (MAX_AUTH_TIMEOUT, (GSourceFunc) _cancel_authorization_on_timeout, self);
-    }
-  else
-    {
-      /* If a new account has been activated, fetch everything */
-      if (new_account)
-        _fetch_everything (self, TRUE);
-
-      /* Emit proper signals */
-      g_signal_emit (self, signals[ACTIVE_ACCOUNT_CHANGED], 0, new_account);
-      if (accounts_changed)
-        g_signal_emit (self, signals[ACCOUNTS_CHANGED], 0);
-    }
-
-  /* Save new state in configuration */
-  frogr_config_save_accounts (priv->config);
+  _set_active_account (self, account);
 }
 
 FrogrAccount *
@@ -2694,7 +2711,7 @@ frogr_controller_revoke_authorization (FrogrController *self)
   /* Ensure there's the token/account is no longer active anywhere */
   fsp_session_set_token (priv->session, NULL);
   fsp_session_set_token_secret (priv->session, NULL);
-  frogr_controller_set_active_account (self, NULL);
+  _set_active_account (self, NULL);
 }
 
 void

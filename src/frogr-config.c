@@ -84,7 +84,8 @@ static FrogrConfig *_instance = NULL;
 
 /* Prototypes */
 
-static FrogrAccount *_find_account_by_id (FrogrConfig *self, const gchar *id);
+static FrogrAccount *_find_account_by_username (FrogrConfig *self,
+                                                const gchar *username);
 
 static void _load_settings (FrogrConfig *self);
 
@@ -127,20 +128,20 @@ static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
 /* Private functions */
 
 static FrogrAccount *
-_find_account_by_id (FrogrConfig *self, const gchar *id)
+_find_account_by_username (FrogrConfig *self, const gchar *username)
 {
   FrogrConfigPrivate *priv = NULL;
   FrogrAccount *current = NULL;
   GSList *item = NULL;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
-  g_return_val_if_fail (id != NULL, NULL);
+  g_return_val_if_fail (username != NULL, NULL);
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   for (item = priv->accounts; item; item = g_slist_next (item))
     {
       current = FROGR_ACCOUNT (item->data);
-      if (!g_strcmp0 (id, frogr_account_get_id (current)))
+      if (!g_strcmp0 (username, frogr_account_get_username (current)))
         return current;
     }
 
@@ -1042,7 +1043,7 @@ frogr_config_add_account (FrogrConfig  *self,
 {
   FrogrConfigPrivate *priv = NULL;
   FrogrAccount *found_account = NULL;
-  const gchar *account_id = NULL;
+  const gchar *username = NULL;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
@@ -1050,21 +1051,21 @@ frogr_config_add_account (FrogrConfig  *self,
   priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Only add the account if not already in */
-  account_id = frogr_account_get_id (faccount);
-  found_account = _find_account_by_id (self, account_id);
+  username = frogr_account_get_username (faccount);
+  found_account = _find_account_by_username (self, username);
 
   /* Remove old account if found */
   if (found_account)
     {
-      frogr_config_remove_account (self, account_id);
-      DEBUG ("Account of ID %s already in the configuration system", account_id);
+      frogr_config_remove_account (self, username);
+      DEBUG ("Account %s already in the configuration system", username);
     }
 
   priv->accounts = g_slist_append (priv->accounts, g_object_ref (faccount));
 
   /* Set it as active if needed */
   if (frogr_account_is_active (faccount))
-    frogr_config_set_active_account (self, account_id);
+    frogr_config_set_active_account (self, username);
 
   /* Return TRUE if a new account was actually added */
   return !found_account;
@@ -1082,7 +1083,7 @@ frogr_config_get_accounts (FrogrConfig *self)
 }
 
 gboolean
-frogr_config_set_active_account (FrogrConfig *self, const gchar *id)
+frogr_config_set_active_account (FrogrConfig *self, const gchar *username)
 {
   FrogrConfigPrivate *priv = NULL;
   FrogrAccount *current = NULL;
@@ -1096,7 +1097,7 @@ frogr_config_set_active_account (FrogrConfig *self, const gchar *id)
     {
       current = FROGR_ACCOUNT (item->data);
 
-      if (!g_strcmp0 (id, frogr_account_get_id (current)))
+      if (!g_strcmp0 (username, frogr_account_get_username (current)))
         {
           frogr_account_set_is_active (current, TRUE);
           priv->active_account = current;
@@ -1121,16 +1122,16 @@ frogr_config_get_active_account (FrogrConfig *self)
 }
 
 gboolean
-frogr_config_remove_account (FrogrConfig *self, const gchar *id)
+frogr_config_remove_account (FrogrConfig *self, const gchar *username)
 {
   FrogrConfigPrivate *priv = NULL;
   FrogrAccount *found_account = NULL;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-  g_return_val_if_fail (id != NULL, FALSE);
+  g_return_val_if_fail (username != NULL, FALSE);
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
-  found_account = _find_account_by_id (self, id);
+  found_account = _find_account_by_username (self, username);
 
   if (found_account)
     {

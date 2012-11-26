@@ -79,11 +79,11 @@ gboolean frogr_config_add_account (FrogrConfig  *self,
 
 GSList *frogr_config_get_accounts (FrogrConfig *self);
 
-gboolean frogr_config_set_active_account (FrogrConfig *self, const gchar *id);
+gboolean frogr_config_set_active_account (FrogrConfig *self, const gchar *username);
 
 FrogrAccount *frogr_config_get_active_account (FrogrConfig *self);
 
-gboolean frogr_config_remove_account (FrogrConfig *self, const gchar *id);
+gboolean frogr_config_remove_account (FrogrConfig *self, const gchar *username);
 
 void frogr_config_set_default_public (FrogrConfig *self, gboolean value);
 

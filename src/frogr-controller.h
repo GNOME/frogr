@@ -71,8 +71,7 @@ FrogrMainView *frogr_controller_get_main_view (FrogrController *self);
 
 FrogrModel *frogr_controller_get_model (FrogrController *self);
 
-void frogr_controller_set_active_account (FrogrController *self,
-                                          FrogrAccount *account);
+void frogr_controller_set_active_account (FrogrController *self, const gchar *username);
 
 FrogrAccount *frogr_controller_get_active_account (FrogrController *self);
 
