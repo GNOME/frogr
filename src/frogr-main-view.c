@@ -36,8 +36,7 @@
 #include <gdk/gdk.h>
 #include <glib/gi18n.h>
 
-#ifdef MAC_INTEGRATION
-#include <gtkosxapplication.h>
+#ifdef PLATFORM_MAC
 #define GDK_PRIMARY_MODIFIER GDK_META_MASK
 #else
 #define GDK_PRIMARY_MODIFIER GDK_CONTROL_MASK
@@ -155,11 +154,6 @@ static void _on_toggle_menu_item_changed (GSimpleAction *action, GVariant *param
 void _on_gtk_action_activated (GtkAction *action, gpointer data);
 
 static void _quit_application (FrogrMainView *self);
-
-#ifdef MAC_INTEGRATION
-static gboolean osx_can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data);
-static void _tweak_menu_bar_for_mac (FrogrMainView *self);
-#endif
 
 static void _populate_accounts_submenu (FrogrMainView *self);
 
@@ -520,10 +514,6 @@ _initialize_ui (FrogrMainView *self)
 
   gtk_builder_connect_signals (builder, self);
 
-#ifdef MAC_INTEGRATION
-  _tweak_menu_bar_for_mac (self);
-#endif
-
   /* Update window title */
   _update_window_title (self, FALSE);
 
@@ -807,62 +797,6 @@ _on_gtk_action_activated (GtkAction *action, gpointer data)
   else
     g_assert_not_reached ();
 }
-
-#ifdef MAC_INTEGRATION
-static gboolean
-osx_can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
-{
-  return gtk_widget_is_sensitive(widget);
-}
-
-static void
-_tweak_menu_bar_for_mac (FrogrMainView *self)
-{
-  FrogrMainViewPrivate *priv = NULL;
-  GtkOSXApplication *osx_app = NULL;
-  GtkWidget *menu_item = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  /* TODO: check in the Mac */
-
-  osx_app = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
-  gtk_osxapplication_set_menu_bar (osx_app, GTK_MENU_SHELL(priv->menu_bar));
-
-  /* Relocate the 'about' menu item in the app menu */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "about_menu_item"));
-  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 0);
-  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 1);
-  gtk_widget_show_all (menu_item);
-
-  /* Relocate the 'authorize' menu item in the app menu */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "authorize_menu_item"));
-  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 2);
-  gtk_widget_show_all (menu_item);
-
-  /* Relocate the 'accounts' menu item in the app menu */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "accounts_menu_item"));
-  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 3);
-  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 4);
-  gtk_widget_show_all (menu_item);
-
-  /* Relocate the 'preferences' menu item in the app menu */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "preferences_menu_item"));
-  gtk_osxapplication_insert_app_menu_item (osx_app, menu_item, 5);
-  gtk_osxapplication_insert_app_menu_item (osx_app, gtk_separator_menu_item_new (), 6);
-  gtk_widget_show_all (menu_item);
-
-  /* Hide the traditional application menu that won't be shown in the Mac */
-  menu_item = GTK_WIDGET (gtk_builder_get_object (priv->builder, "frogr_menu_item"));
-  gtk_widget_hide (menu_item);
-
-  /* Make sure accelerators are visible when needed */
-  g_signal_connect(priv->menu_bar, "can-activate-accel",
-                   G_CALLBACK(osx_can_activate_cb), NULL);
-
-  gtk_osxapplication_ready(osx_app);
-}
-#endif
 
 static void
 _populate_accounts_submenu (FrogrMainView *self)
@@ -1389,7 +1323,7 @@ _load_pictures_dialog (FrogrMainView *self)
   GtkFileFilter *video_filter;
   gint i;
 
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
   const gchar * const *supported_images;
   const gchar * const *supported_videos;
 #else
@@ -1408,7 +1342,7 @@ _load_pictures_dialog (FrogrMainView *self)
   image_filter = gtk_file_filter_new ();
   video_filter = gtk_file_filter_new ();
 
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
   /* Workaround for Mac OSX, where GNOME VFS daemon won't be running,
      so we can't check filter by mime type (will be text/plain) */
   supported_images = frogr_util_get_supported_images ();

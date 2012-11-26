@@ -47,7 +47,7 @@ GdkPixbuf *frogr_util_get_pixbuf_from_image_contents (const guchar *contents, gs
 
 gchar *frogr_util_get_datasize_string (gulong datasize);
 
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
 const gchar * const *frogr_util_get_supported_images (void);
 
 const gchar * const *frogr_util_get_supported_videos (void);

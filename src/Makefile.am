@@ -27,7 +27,9 @@ frogr_LDADD = \
 frogr_CFLAGS = $(FROGR_CFLAGS) \
 	-DDATA_DIR=\"$(DATA_DIR)\"
 
-if !HAVE_MAC_INTEGRATION
+if PLATFORM_MAC
+frogr_CFLAGS += -DPLATFORM_MAC
+else
 frogr_LDFLAGS = -export-dynamic
 endif
 

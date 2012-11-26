@@ -58,25 +58,13 @@ else
 fi
 
 # Select target platform to make platform-dependant decisions
-
-if $PKG_CONFIG --exists ige-mac-integration; then
+GTK_CHECK_BACKEND([quartz], [3.0], [osx=yes], [osx=no])
+if test "x$osx" = "xyes"; then
    platform=MacOSX
 else
    platform=GNOME
 fi
-
-if test "x$platform" = "xMacOSX"; then
-   echo "Compiling for Mac OSX..."
-
-   IGE_MAC_INTEGRATION_MIN_VERSION=0.9.7
-   PKG_CHECK_MODULES(IGE_MAC_INTEGRATION, ige-mac-integration >= $IGE_MAC_INTEGRATION_MIN_VERSION)
-   FROGR_CFLAGS="$FROGR_CFLAGS $IGE_MAC_INTEGRATION_CFLAGS"
-   FROGR_LIBS="$FROGR_LIBS $IGE_MAC_INTEGRATION_LIBS"
-else
-   echo "Compiling for GNOME..."
-fi
-
-AM_CONDITIONAL([HAVE_MAC_INTEGRATION],[test "x$platform" = "xMacOSX"])
+AM_CONDITIONAL([PLATFORM_MAC],[test "x$osx" = "xyes"])
 
 # Decide whether to use libsoup or libsoup-gnome (if available)
 

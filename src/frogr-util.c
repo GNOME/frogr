@@ -58,7 +58,7 @@ _spawn_command (const gchar* cmd)
 const gchar *
 _get_data_dir (void)
 {
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
   /* For MacOSX, we return the value of the environment value set by
      the wrapper script running the application */
   static gchar *xdg_data_dir = NULL;
@@ -97,7 +97,7 @@ frogr_util_get_locale_dir (void)
   static const gchar *locale_dir = NULL;
   if (!locale_dir)
     {
-#ifndef MAC_INTEGRATION
+#ifndef PLATFORM_MAC
       /* If not in MacOSX, we trust the defined variable better */
       locale_dir = g_strdup (FROGR_LOCALE_DIR);
 #endif
@@ -151,7 +151,7 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 
       uris = _get_uris_string_from_list (uris_list);
 
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
       /* In MacOSX use 'open' instead of 'gnome-open' */
       command = g_strdup_printf ("open %s", uris);
 #else
@@ -183,7 +183,7 @@ frogr_util_open_uri (const gchar *uri)
   if (!uri)
     return;
 
-#ifndef MAC_INTEGRATION
+#ifndef PLATFORM_MAC
   /* Supported network URIs */
   if (g_str_has_prefix (uri, "http:") || g_str_has_prefix (uri, "https:"))
     app_info = g_app_info_get_default_for_uri_scheme ("http");
@@ -561,7 +561,7 @@ frogr_util_get_datasize_string (gulong datasize)
   return result;
 }
 
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
 const gchar * const *
 frogr_util_get_supported_images (void)
 {
@@ -628,4 +628,4 @@ frogr_util_get_supported_mimetypes (void)
 
   return supported_mimetypes;
 }
-#endif /* MAC_INTEGRATION */
+#endif /* PLATFORM_MAC */

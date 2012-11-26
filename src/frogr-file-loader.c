@@ -188,7 +188,7 @@ _load_current_file (FrogrFileLoader *self)
                                      G_FILE_QUERY_INFO_NONE,
                                      NULL,
                                      NULL);
-#ifndef MAC_INTEGRATION
+#ifndef PLATFORM_MAC
       const gchar *mime_type;
       gint i;
 
@@ -327,7 +327,7 @@ _load_current_file_cb (GObject *object,
     _finish_task_and_self_destruct (self);
 }
 
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
 /* The following functions get_char() and _file_matches_pattern() are
    based in code from GTK+'s gtkfilefilter.c and fnmatch.c, licensed
    as GPL version 2 or later (Copyright (C) 1991, 1992, 1993 Free
@@ -483,12 +483,12 @@ _file_matches_pattern (const char *pattern,
 
   return FALSE;
 }
-#endif /* MAC_INTEGRATION */
+#endif /* PLATFORM_MAC */
 
 static gboolean
 _is_video_file (GFile *file)
 {
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
   const gchar * const *supported_videos = NULL;
   gchar *basename = NULL;
   gint i;
@@ -498,7 +498,7 @@ _is_video_file (GFile *file)
 #endif
   gboolean is_video = FALSE;
 
-#ifdef MAC_INTEGRATION
+#ifdef PLATFORM_MAC
   /* In the Mac we can't use mime types so we match against the list
      of supported file extensions for videos. */
   basename = g_file_get_basename (file);
