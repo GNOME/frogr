@@ -806,7 +806,7 @@ _populate_accounts_submenu (FrogrMainView *self)
   GMenuItem *accounts_menu;
   GMenuItem *menu_item = NULL;
   GMenuModel *submenu = NULL;
-
+  GMenuModel *section = NULL;
   GSList *accounts = NULL;
   GSList *item = NULL;
   const gchar *username = NULL;
@@ -844,7 +844,10 @@ _populate_accounts_submenu (FrogrMainView *self)
 
     }
   accounts_menu = g_menu_item_new_submenu (_("Accounts"), submenu);
-  g_menu_insert_item (G_MENU (priv->app_menu), 1, accounts_menu);
+
+  /* Insert the submenu in the right section */
+  section = g_menu_model_get_item_link (priv->app_menu, 0, G_MENU_LINK_SECTION);
+  g_menu_insert_item (G_MENU (section), 1, accounts_menu);
 }
 
 static void
