@@ -843,6 +843,12 @@ _populate_accounts_submenu (FrogrMainView *self)
   gchar *action_str = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Remove a previous submenu if present (it will be regenerated later) */
+  section = g_menu_model_get_item_link (priv->app_menu, 0, G_MENU_LINK_SECTION);
+  if (g_menu_model_get_n_items (G_MENU_MODEL (section)) > 1)
+    g_menu_remove (G_MENU (section), 1);
+
   accounts = frogr_controller_get_all_accounts (priv->controller);
   if (!g_slist_length (accounts))
     return;
@@ -870,13 +876,10 @@ _populate_accounts_submenu (FrogrMainView *self)
           action = g_action_map_lookup_action (G_ACTION_MAP (gtk_app), ACTION_LOGIN_AS);
           g_action_activate (action, g_variant_new_string (username));
         }
-
-
     }
-  accounts_menu = g_menu_item_new_submenu (_("Accounts"), submenu);
 
-  /* Insert the submenu in the right section */
-  section = g_menu_model_get_item_link (priv->app_menu, 0, G_MENU_LINK_SECTION);
+  /* Create the submenu and insert it in the right section */
+  accounts_menu = g_menu_item_new_submenu (_("Accounts"), submenu);
   g_menu_insert_item (G_MENU (section), 1, accounts_menu);
 }
 
