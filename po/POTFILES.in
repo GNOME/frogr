@@ -12,3 +12,5 @@ src/frogr-file-loader.c
 src/frogr-main-view.c
 src/frogr-settings-dialog.c
 [type: gettext/glade]data/gtkbuilder/frogr-main-view.xml
+[type: gettext/glade]data/gtkbuilder/frogr-app-menu.xml
+[type: gettext/glade]data/gtkbuilder/frogr-menu-bar.xml
