@@ -4,7 +4,7 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkActionGroup" id="file-actions">
     <child>
-      <object class="GtkAction" id="load-pictures">
+      <object class="GtkAction" id="add-pictures">
         <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
       </object>
     </child>
@@ -77,7 +77,7 @@
         <property name="related_action">edit-details</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Edit _Details…</property>
+        <property name="label" translatable="yes">_Edit Details…</property>
         <property name="use_underline">True</property>
       </object>
     </child>
@@ -106,29 +106,29 @@
         <property name="use_action_appearance">False</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Add to _Set</property>
+        <property name="label" translatable="yes">Add to _Photoset</property>
         <property name="use_underline">True</property>
         <child type="submenu">
           <object class="GtkMenu" id="menu8">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkMenuItem" id="create_new_set_ctxt_menu_item">
-                <property name="use_action_appearance">False</property>
-                <property name="related_action">add-to-new-set</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Create New Set…</property>
-                <property name="use_underline">True</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkMenuItem" id="add_to_existing_set_ctxt_menu_item">
                 <property name="use_action_appearance">False</property>
                 <property name="related_action">add-to-set</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Add to _Existing Set…</property>
+                <property name="label" translatable="yes">_Add to Existing Photoset…</property>
+                <property name="use_underline">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="create_new_set_ctxt_menu_item">
+                <property name="use_action_appearance">False</property>
+                <property name="related_action">add-to-new-set</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">_Create New Photoset…</property>
                 <property name="use_underline">True</property>
               </object>
             </child>
@@ -149,7 +149,7 @@
         <property name="related_action">open-in-external-viewer</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Open in E_xternal Viewer</property>
+        <property name="label" translatable="yes">_Open in External Viewer</property>
         <property name="use_underline">True</property>
       </object>
     </child>
@@ -225,7 +225,7 @@
         <child>
           <object class="GtkToolButton" id="add_button">
             <property name="use_action_appearance">False</property>
-            <property name="related_action">load-pictures</property>
+            <property name="related_action">add-pictures</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="has_tooltip">True</property>

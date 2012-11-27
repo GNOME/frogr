@@ -63,7 +63,7 @@
 #define ACTION_OPEN_PROJECT "open-project"
 #define ACTION_SAVE_PROJECT "save-project"
 #define ACTION_SAVE_PROJECT_AS "save-project-as"
-#define ACTION_LOAD_PICTURES "load-pictures"
+#define ACTION_ADD_PICTURES "add-pictures"
 #define ACTION_REMOVE_PICTURES "remove-pictures"
 #define ACTION_EDIT_DETAILS "edit-details"
 #define ACTION_ADD_TAGS "add-tags"
@@ -283,7 +283,7 @@ static GActionEntry win_entries[] = {
   { ACTION_OPEN_PROJECT, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_SAVE_PROJECT, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_SAVE_PROJECT_AS, _on_menu_item_activated, NULL, NULL, NULL },
-  { ACTION_LOAD_PICTURES, _on_menu_item_activated, NULL, NULL, NULL },
+  { ACTION_ADD_PICTURES, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_REMOVE_PICTURES, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_EDIT_DETAILS, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_ADD_TAGS, _on_menu_item_activated, NULL, NULL, NULL },
@@ -643,7 +643,7 @@ _on_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer da
     _add_pictures_to_new_set (self);
   else if (!g_strcmp0 (action_name, ACTION_OPEN_IN_EXTERNAL_VIEWER))
     _open_pictures_in_external_viewer (self);
-  else if (!g_strcmp0 (action_name, ACTION_LOAD_PICTURES))
+  else if (!g_strcmp0 (action_name, ACTION_ADD_PICTURES))
     _load_pictures_dialog (self);
   else if (!g_strcmp0 (action_name, ACTION_REMOVE_PICTURES))
     _remove_selected_pictures (self);
@@ -784,7 +784,7 @@ _on_gtk_action_activated (GtkAction *action, gpointer data)
     _add_pictures_to_new_set (mainview);
   else if (!g_strcmp0 (action_name, ACTION_OPEN_IN_EXTERNAL_VIEWER))
     _open_pictures_in_external_viewer (mainview);
-  else if (!g_strcmp0 (action_name, ACTION_LOAD_PICTURES))
+  else if (!g_strcmp0 (action_name, ACTION_ADD_PICTURES))
     _load_pictures_dialog (mainview);
   else if (!g_strcmp0 (action_name, ACTION_REMOVE_PICTURES))
     _remove_selected_pictures (mainview);
@@ -1398,7 +1398,7 @@ _pictures_loaded_required_check (FrogrMainView *self)
   if (!frogr_model_get_pictures (priv->model))
     {
       frogr_util_show_error_dialog (GTK_WINDOW (self),
-                                    _("You don't have any picture loaded yet"));
+                                    _("You don't have any picture added yet"));
       return FALSE;
     }
 
@@ -1951,7 +1951,7 @@ static gchar *file_actions[] = {
   ACTION_OPEN_PROJECT,
   ACTION_SAVE_PROJECT,
   ACTION_SAVE_PROJECT_AS,
-  ACTION_LOAD_PICTURES
+  ACTION_ADD_PICTURES
 };
 
 static gchar *selection_actions[] = {

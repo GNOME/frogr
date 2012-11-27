@@ -5,37 +5,38 @@
       <attribute name='label' translatable='yes'>_File</attribute>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>_Open Project…</attribute>
+          <attribute name='label' translatable='yes'>_Open…</attribute>
           <attribute name='action'>win.open-project</attribute>
           <attribute name='accel'>&lt;Primary&gt;o</attribute>
         </item>
         <item>
-          <attribute name='label' translatable='yes'>_Save Project</attribute>
+          <attribute name='label' translatable='yes'>_Save</attribute>
           <attribute name='action'>win.save-project</attribute>
           <attribute name='accel'>&lt;Primary&gt;s</attribute>
         </item>
         <item>
-          <attribute name='label' translatable='yes'>_Save Project As…</attribute>
+          <attribute name='label' translatable='yes'>Save _As…</attribute>
           <attribute name='action'>win.save-project-as</attribute>
           <attribute name='accel'>&lt;Primary&gt;&lt;Shift&gt;s</attribute>
         </item>
       </section>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>_Load Pictures…</attribute>
-          <attribute name='action'>win.load-pictures</attribute>
-          <attribute name='accel'>&lt;Primary&gt;l</attribute>
+          <attribute name='label' translatable='yes'>A_dd Pictures…</attribute>
+          <attribute name='action'>win.add-pictures</attribute>
+          <attribute name='accel'>&lt;Primary&gt;a</attribute>
         </item>
         <item>
           <attribute name='label' translatable='yes'>_Remove Pictures</attribute>
           <attribute name='action'>win.remove-pictures</attribute>
+          <attribute name='accel'>Delete</attribute>
         </item>
       </section>
       <section>
         <item>
           <attribute name='label' translatable='yes'>_Upload All</attribute>
           <attribute name='action'>win.upload-all</attribute>
-          <attribute name='accel'>&lt;Primary&gt;&lt;Shift&gt;u</attribute>
+          <attribute name='accel'>&lt;Primary&gt;u</attribute>
         </item>
       </section>
     </submenu>
@@ -43,7 +44,7 @@
       <attribute name='label' translatable='yes'>_Edit</attribute>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>Edit _Details…</attribute>
+          <attribute name='label' translatable='yes'>_Edit Details…</attribute>
           <attribute name='action'>win.edit-details</attribute>
           <attribute name='accel'>&lt;Primary&gt;d</attribute>
         </item>
@@ -58,15 +59,15 @@
           <attribute name='accel'>&lt;Primary&gt;g</attribute>
         </item>
         <submenu>
-          <attribute name='label' translatable='yes'>Add to _Set</attribute>
+          <attribute name='label' translatable='yes'>Add to _Photoset</attribute>
           <section>
             <item>
-              <attribute name='label' translatable='yes'>Add to _Existing Set…</attribute>
+              <attribute name='label' translatable='yes'>_Add to Existing Photoset…</attribute>
               <attribute name='action'>win.add-to-set</attribute>
               <attribute name='accel'>&lt;Primary&gt;p</attribute>
             </item>
             <item>
-              <attribute name='label' translatable='yes'>_Create New Set…</attribute>
+              <attribute name='label' translatable='yes'>_Create New Photoset…</attribute>
               <attribute name='action'>win.add-to-new-set</attribute>
               <attribute name='accel'>&lt;Primary&gt;&lt;Shift&gt;p</attribute>
             </item>
@@ -75,9 +76,9 @@
       </section>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>Open in E_xternal Viewer</attribute>
+          <attribute name='label' translatable='yes'>_Open in External Viewer</attribute>
           <attribute name='action'>win.open-in-external-viewer</attribute>
-          <attribute name='accel'>&lt;Primary&gt;&lt;Shift&gt;v</attribute>
+          <attribute name='accel'>&lt;Primary&gt;v</attribute>
         </item>
       </section>
     </submenu>
