@@ -24,7 +24,7 @@
         <item>
           <attribute name='label' translatable='yes'>A_dd Pictures…</attribute>
           <attribute name='action'>win.add-pictures</attribute>
-          <attribute name='accel'>&lt;Primary&gt;a</attribute>
+          <attribute name='accel'>&lt;Primary&gt;l</attribute>
         </item>
         <item>
           <attribute name='label' translatable='yes'>_Remove Pictures</attribute>
