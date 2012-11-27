@@ -155,6 +155,10 @@ void _on_gtk_action_activated (GtkAction *action, gpointer data);
 
 static void _quit_application (FrogrMainView *self);
 
+#ifdef PLATFORM_MAC
+static void _tweak_app_menu_for_mac (FrogrMainView *self);
+#endif
+
 static void _populate_accounts_submenu (FrogrMainView *self);
 
 static void _initialize_drag_n_drop (FrogrMainView *self);
@@ -514,6 +518,10 @@ _initialize_ui (FrogrMainView *self)
 
   gtk_builder_connect_signals (builder, self);
 
+#ifdef PLATFORM_MAC
+  _tweak_app_menu_for_mac (self);
+#endif
+
   /* Update window title */
   _update_window_title (self, FALSE);
 
@@ -797,6 +805,28 @@ _on_gtk_action_activated (GtkAction *action, gpointer data)
   else
     g_assert_not_reached ();
 }
+
+#ifdef PLATFORM_MAC
+static void
+_tweak_app_menu_for_mac (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  GMenuModel *menu = NULL;
+  /* GtkOSXApplication *osx_app = NULL; */
+  /* GtkWidget *menu_item = NULL; */
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Hide the Section including the 'Help' menu item */
+  g_menu_remove (G_MENU (priv->app_menu), 2);
+
+  /* The section removed contained the 'About' item, so create a new
+     one and place it in at the beginning to make it more OSX-ish */
+  menu = G_MENU_MODEL (g_menu_new ());
+  g_menu_append_item (G_MENU (menu), g_menu_item_new (_("_About"), "app.about"));
+  g_menu_insert_section (G_MENU (priv->app_menu), 0, NULL, menu);
+}
+#endif
 
 static void
 _populate_accounts_submenu (FrogrMainView *self)
