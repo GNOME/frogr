@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-10-19 14:28+0000\n"
-"PO-Revision-Date: 2012-10-20 20:16+0700\n"
+"POT-Creation-Date: 2012-11-27 10:47+0000\n"
+"PO-Revision-Date: 2012-11-27 21:10+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
@@ -20,8 +20,8 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #: ../data/frogr.desktop.in.in.h:1
-msgid "Flickr Remote Organizer"
-msgstr "Pengelola Remote Flickr"
+msgid "Frogr"
+msgstr "Frogr"
 
 #: ../data/frogr.desktop.in.in.h:2
 msgid "Frogr: a Flickr Remote Organizer for GNOME"
@@ -35,39 +35,39 @@ msgstr "Unggah dan kelola foto dalam akun Flickr"
 msgid "A Flickr remote organizer for GNOME\n"
 msgstr "Suatu pengelola remote Flickr bagi GNOME\n"
 
-#: ../src/frogr-about-dialog.c:115
+#: ../src/frogr-about-dialog.c:72
 msgid "translator-credits"
 msgstr "Andika Triwidada <andika@gmail.com>, 2012"
 
-#: ../src/frogr-add-tags-dialog.c:201
+#: ../src/frogr-add-tags-dialog.c:207
 msgid "Enter a spaces separated list of tags:"
 msgstr "Masukkan daftar tag yang dipisah spasi:"
 
-#: ../src/frogr-add-tags-dialog.c:224
+#: ../src/frogr-add-tags-dialog.c:230
 msgid "Add Tags"
 msgstr "Tambah Tag"
 
-#: ../src/frogr-add-to-set-dialog.c:131
+#: ../src/frogr-add-to-set-dialog.c:155
 msgid "Title"
 msgstr "Judul"
 
-#: ../src/frogr-add-to-set-dialog.c:146 ../src/frogr-add-to-group-dialog.c:146
+#: ../src/frogr-add-to-set-dialog.c:170 ../src/frogr-add-to-group-dialog.c:169
 msgid "Elements"
 msgstr "Elemen"
 
-#: ../src/frogr-add-to-set-dialog.c:563
+#: ../src/frogr-add-to-set-dialog.c:602
 msgid "Add to Sets"
 msgstr "Tambah ke Set"
 
-#: ../src/frogr-add-to-group-dialog.c:131
+#: ../src/frogr-add-to-group-dialog.c:154
 msgid "Name"
 msgstr "Nama"
 
-#: ../src/frogr-add-to-group-dialog.c:563
+#: ../src/frogr-add-to-group-dialog.c:601
 msgid "Add to Groups"
 msgstr "Tambah ke Grup"
 
-#: ../src/frogr-auth-dialog.c:32
+#: ../src/frogr-auth-dialog.c:31
 #, c-format
 msgid ""
 "Please press the button to authorize %s and then come back to complete the "
@@ -76,24 +76,24 @@ msgstr ""
 "Harap tekan tombol untuk mengotorisasi %s lalu kembalilah untuk "
 "menyelesaikan proses."
 
-#: ../src/frogr-auth-dialog.c:36
+#: ../src/frogr-auth-dialog.c:35
 msgid "Enter verification code:"
 msgstr "Masukkan kode verifikasi:"
 
-#: ../src/frogr-auth-dialog.c:63 ../src/frogr-auth-dialog.c:147
+#: ../src/frogr-auth-dialog.c:62 ../src/frogr-auth-dialog.c:147
 #, c-format
 msgid "Authorize %s"
 msgstr "Otorisasikan %s"
 
-#: ../src/frogr-auth-dialog.c:214
+#: ../src/frogr-auth-dialog.c:215
 msgid "Invalid verification code"
 msgstr "Kode verifikasi tak valid"
 
-#: ../src/frogr-controller.c:277
+#: ../src/frogr-controller.c:487
 msgid "Process cancelled"
 msgstr "Proses dibatalkan"
 
-#: ../src/frogr-controller.c:282
+#: ../src/frogr-controller.c:492
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -101,7 +101,7 @@ msgstr ""
 "Galat koneksi:\n"
 "Jaringan tak tersedia"
 
-#: ../src/frogr-controller.c:287
+#: ../src/frogr-controller.c:496
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -109,7 +109,7 @@ msgstr ""
 "Galat koneksi:\n"
 "Permintaan buruk"
 
-#: ../src/frogr-controller.c:292
+#: ../src/frogr-controller.c:500
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -117,15 +117,15 @@ msgstr ""
 "Galat koneksi:\n"
 "Galat sisi server"
 
-#: ../src/frogr-controller.c:297
+#: ../src/frogr-controller.c:504
 msgid ""
-"Error uploading picture:\n"
+"Error uploading:\n"
 "File invalid"
 msgstr ""
-"Galat saat mengunggah gambar:\n"
+"Galat saat mengunggah:\n"
 "Berkas tak valid"
 
-#: ../src/frogr-controller.c:302
+#: ../src/frogr-controller.c:508
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -133,7 +133,21 @@ msgstr ""
 "Galat saat mengunggah gambar:\n"
 "Kuota terlampaui"
 
-#: ../src/frogr-controller.c:307
+#: ../src/frogr-controller.c:513
+#, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] "Kuota terlampaui (batas: %d video per bulan)"
+
+#: ../src/frogr-controller.c:517
+msgid ""
+"Error uploading video:\n"
+"You can't upload more videos with this account"
+msgstr ""
+"Galat saat mengunggah video:\n"
+"Anda tak bisa mengunggah video lagi dengan akun ini"
+
+#: ../src/frogr-controller.c:523
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -141,7 +155,7 @@ msgstr ""
 "Galat:\n"
 "Foto tak ditemukan"
 
-#: ../src/frogr-controller.c:312
+#: ../src/frogr-controller.c:527
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -149,7 +163,7 @@ msgstr ""
 "Galat:\n"
 "Foto sudah dalam set foto"
 
-#: ../src/frogr-controller.c:317
+#: ../src/frogr-controller.c:531
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -157,7 +171,7 @@ msgstr ""
 "Galat:\n"
 "Foto sudah dalam grup"
 
-#: ../src/frogr-controller.c:322
+#: ../src/frogr-controller.c:535
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -165,7 +179,7 @@ msgstr ""
 "Galat:\n"
 "Foto sudah berada dalam cacah maksimum grup yang mungkin"
 
-#: ../src/frogr-controller.c:327
+#: ../src/frogr-controller.c:539
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -173,7 +187,7 @@ msgstr ""
 "Galat:\n"
 "Batas grup telah tercapai"
 
-#: ../src/frogr-controller.c:332
+#: ../src/frogr-controller.c:543
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -181,7 +195,7 @@ msgstr ""
 "Galat:\n"
 "Foto ditambahkan ke antrian grup"
 
-#: ../src/frogr-controller.c:337
+#: ../src/frogr-controller.c:547
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -189,7 +203,7 @@ msgstr ""
 "Galat:\n"
 "Foto sudah pernah ditambahkan ke antrian grup"
 
-#: ../src/frogr-controller.c:342
+#: ../src/frogr-controller.c:551
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -197,7 +211,7 @@ msgstr ""
 "Galat:\n"
 "Isi tak diijinkan bagi grup ini"
 
-#: ../src/frogr-controller.c:347
+#: ../src/frogr-controller.c:555
 #, c-format
 msgid ""
 "Authorization failed.\n"
@@ -206,27 +220,27 @@ msgstr ""
 "Otorisasi gagal.\n"
 "Harap coba lagi"
 
-#: ../src/frogr-controller.c:353
+#: ../src/frogr-controller.c:561
 #, c-format
 msgid ""
 "Error\n"
-"%s is not properly authorized to upload pictures to flickr.\n"
+"%s is not properly authorized to upload pictures to Flickr.\n"
 "Please re-authorize it"
 msgstr ""
 "Galat\n"
-"%s tak terotorisasi secara benar untuk mengunggah gambar ke flickr.\n"
+"%s tak terotorisasi secara benar untuk mengunggah gambar ke Flickr.\n"
 "Harap otorisasi ulang"
 
-#: ../src/frogr-controller.c:359
+#: ../src/frogr-controller.c:566
 #, c-format
 msgid ""
-"Unable to authenticate in flickr\n"
+"Unable to authenticate in Flickr\n"
 "Please try again."
 msgstr ""
-"Tak bisa mengotentikasi dalam flickr\n"
+"Tak bisa mengotentikasi dalam Flickr\n"
 "Harap coba lagi."
 
-#: ../src/frogr-controller.c:364
+#: ../src/frogr-controller.c:570
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -235,7 +249,7 @@ msgstr ""
 "Anda belum mengotorisasikan %s dengan benar.\n"
 "Harap coba lagi."
 
-#: ../src/frogr-controller.c:370
+#: ../src/frogr-controller.c:575
 #, c-format
 msgid ""
 "Invalid verification code.\n"
@@ -244,7 +258,7 @@ msgstr ""
 "Kode verifikasi tak valid.\n"
 "Harap coba lagi."
 
-#: ../src/frogr-controller.c:375
+#: ../src/frogr-controller.c:579
 #, c-format
 msgid ""
 "Error:\n"
@@ -254,275 +268,307 @@ msgstr ""
 "Layanan tak tersedia"
 
 #. General error: just dump the raw error description
-#: ../src/frogr-controller.c:381
+#: ../src/frogr-controller.c:584
 #, c-format
 msgid "An error happened: %s."
 msgstr "Terjadi galat: %s."
 
-#: ../src/frogr-controller.c:591
+#: ../src/frogr-controller.c:783
 msgid "Authorization failed (timed out)"
 msgstr "Otorisasi gagal (habis waktu)"
 
-#: ../src/frogr-controller.c:1159
-msgid "Setting license for picture…"
-msgstr "Menata lisensi bagi gambar…"
-
-#: ../src/frogr-controller.c:1180
-msgid "Setting geolocation for picture…"
-msgstr "Menata geolokasi bagi gambar…"
-
-#: ../src/frogr-controller.c:1206
-msgid "Creating new photosets…"
-msgstr "Membuat set foto baru…"
-
-#: ../src/frogr-controller.c:1230
-msgid "Adding picture to photosets…"
-msgstr "Menambah gambar ke set foto…"
-
-#: ../src/frogr-controller.c:1252
-msgid "Adding picture to groups…"
-msgstr "Menambah gambar ke grup…"
-
-#. First %s is the title of the picture (filename of the file by
-#. default). Second %s is the max allowed size for a picture to be
-#. uploaded to flickr (different for free and PRO accounts).
-#: ../src/frogr-controller.c:1292
+#: ../src/frogr-controller.c:824
 #, c-format
-msgid ""
-"Can't load picture %s: size of file is bigger than the maximum allowed for "
-"this account (%s)"
-msgstr ""
-"Tak bisa memuat gambar %s: ukuran berkas lebih dari maksimum yang diijinkan "
-"bagi akun ini (%s)"
+msgid "Retrying Upload (attempt %d/%d)…"
+msgstr "Mencoba Ulang Unggah (percobaan %d/%d)…"
 
-#: ../src/frogr-controller.c:1766
+#: ../src/frogr-controller.c:829
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Mengunggah '%s'…"
+
+#: ../src/frogr-controller.c:1948
 msgid "Updating credentials…"
 msgstr "Memutakhirkan kredensial…"
 
-#: ../src/frogr-controller.c:1771
+#: ../src/frogr-controller.c:1953
 msgid "Retrieving data for authorization…"
 msgstr "Mengambil data untuk otorisasi…"
 
-#: ../src/frogr-controller.c:1776
+#: ../src/frogr-controller.c:1958
 msgid "Finishing authorization…"
 msgstr "Menyelesaikan otorisasi…"
 
-#: ../src/frogr-controller.c:1781
+#: ../src/frogr-controller.c:1963
 msgid "Retrieving list of sets…"
 msgstr "Mengambil daftar set…"
 
-#: ../src/frogr-controller.c:1786
+#: ../src/frogr-controller.c:1968
 msgid "Retrieving list of groups…"
 msgstr "Mengambil daftar grup…"
 
-#: ../src/frogr-controller.c:1791
+#: ../src/frogr-controller.c:1973
 msgid "Retrieving list of tags…"
 msgstr "Mengambil daftar tag…"
 
-#: ../src/frogr-controller.c:1927
+#: ../src/frogr-controller.c:2113
 msgid "No sets found"
 msgstr "Tak ada set yang ditemukan"
 
-#: ../src/frogr-controller.c:1959
+#: ../src/frogr-controller.c:2147
 msgid "No groups found"
 msgstr "Tak ada grup yang ditemukan"
 
-#: ../src/frogr-controller.c:2676
+#: ../src/frogr-controller.c:2762
 #, c-format
 msgid ""
-"You need to properly authorize %s before uploading any pictures to flickr.\n"
+"You need to properly authorize %s before uploading any pictures to Flickr.\n"
 "Please re-authorize it."
 msgstr ""
 "Anda perlu mengotorisasikan %s dengan benar sebelum mengunggah sebarang "
-"gambar ke flickr.\n"
+"gambar ke Flickr.\n"
 "Harap otorisasi ulang."
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:134 ../src/frogr-details-dialog.c:1007
+#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1025
 msgid "Missing data required"
 msgstr "Kurang data yang dibutuhkan"
 
-#: ../src/frogr-create-new-set-dialog.c:321
+#: ../src/frogr-create-new-set-dialog.c:341
 msgid "Title:"
 msgstr "Judul:"
 
-#: ../src/frogr-create-new-set-dialog.c:334
+#: ../src/frogr-create-new-set-dialog.c:354
 msgid "Description:"
 msgstr "Deskripsi:"
 
-#: ../src/frogr-create-new-set-dialog.c:357
+#: ../src/frogr-create-new-set-dialog.c:377
 msgid "Fill Pictures Details with Title and Description"
 msgstr "Isi Rincian Gambar dengan Judul dan Deskripsi"
 
-#: ../src/frogr-create-new-set-dialog.c:378
+#: ../src/frogr-create-new-set-dialog.c:400
 msgid "Create New Set"
 msgstr "Buat Set Baru"
 
-#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:105
-msgid "Default (as specified in flickr)"
-msgstr "Baku (seperti dinyatakan dalam flickr)"
+#: ../src/frogr-details-dialog.c:90 ../src/frogr-settings-dialog.c:100
+msgid "Default (as specified in Flickr)"
+msgstr "Baku (seperti dinyatakan dalam Flickr)"
 
-#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:106
+#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:101
 msgid "All rights reserved"
 msgstr "Semua hak dilindungi"
 
-#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:107
+#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:102
 msgid "CC Attribution-NonCommercial-ShareAlike"
 msgstr "CC Attribution-NonCommercial-ShareAlike"
 
-#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:108
+#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:103
 msgid "CC Attribution-NonCommercial"
 msgstr "CC Attribution-NonCommercial"
 
-#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:109
+#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:104
 msgid "CC Attribution-NonCommercial-NoDerivs"
 msgstr "CC Attribution-NonCommercial-NoDerivs"
 
-#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:110
+#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:105
 msgid "CC Attribution"
 msgstr "CC Attribution"
 
-#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:111
+#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:106
 msgid "CC Attribution-ShareAlike"
 msgstr "CC Attribution-ShareAlike"
 
-#: ../src/frogr-details-dialog.c:98 ../src/frogr-settings-dialog.c:112
+#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:107
 msgid "CC Attribution-NoDerivs"
 msgstr "CC Attribution-NoDerivs"
 
-#: ../src/frogr-details-dialog.c:166
+#: ../src/frogr-details-dialog.c:177
 msgid "Open with image viewer"
 msgstr "Buka dengan penampil gambar"
 
-#: ../src/frogr-details-dialog.c:189
+#: ../src/frogr-details-dialog.c:202
 msgid "Visibility"
 msgstr "Kenampakan"
 
-#: ../src/frogr-details-dialog.c:200 ../src/frogr-settings-dialog.c:204
+#: ../src/frogr-details-dialog.c:214 ../src/frogr-settings-dialog.c:202
 msgid "_Private"
 msgstr "_Pribadi"
 
-#: ../src/frogr-details-dialog.c:204 ../src/frogr-settings-dialog.c:206
+#: ../src/frogr-details-dialog.c:218 ../src/frogr-settings-dialog.c:204
 msgid "P_ublic"
 msgstr "P_ublik"
 
-#: ../src/frogr-details-dialog.c:212 ../src/frogr-settings-dialog.c:213
+#: ../src/frogr-details-dialog.c:227 ../src/frogr-settings-dialog.c:212
 msgid "Visible to _Family"
 msgstr "Dapat Dilihat oleh _Keluarga"
 
-#: ../src/frogr-details-dialog.c:216 ../src/frogr-settings-dialog.c:215
+#: ../src/frogr-details-dialog.c:231 ../src/frogr-settings-dialog.c:214
 msgid "Visible to F_riends"
 msgstr "Dapat Dilihat oleh _Teman"
 
-#: ../src/frogr-details-dialog.c:238
+#: ../src/frogr-details-dialog.c:257
 msgid "Content Type"
 msgstr "Tipe Isi"
 
-#: ../src/frogr-details-dialog.c:247 ../src/frogr-settings-dialog.c:240
+#: ../src/frogr-details-dialog.c:266 ../src/frogr-settings-dialog.c:241
 msgid "P_hoto"
 msgstr "_Foto"
 
-#: ../src/frogr-details-dialog.c:251 ../src/frogr-settings-dialog.c:242
+#: ../src/frogr-details-dialog.c:270 ../src/frogr-settings-dialog.c:243
 msgid "Scree_nshot"
 msgstr "Cuplika_n Layar"
 
-#: ../src/frogr-details-dialog.c:255 ../src/frogr-settings-dialog.c:244
+#: ../src/frogr-details-dialog.c:274 ../src/frogr-settings-dialog.c:245
 msgid "Oth_er"
 msgstr "_Lainnya"
 
-#: ../src/frogr-details-dialog.c:269
+#: ../src/frogr-details-dialog.c:290
 msgid "Safety Level"
 msgstr "Tingkat Keamanan"
 
-#: ../src/frogr-details-dialog.c:278 ../src/frogr-settings-dialog.c:264
+#: ../src/frogr-details-dialog.c:299 ../src/frogr-settings-dialog.c:266
 msgid "S_afe"
 msgstr "_Aman"
 
-#: ../src/frogr-details-dialog.c:282 ../src/frogr-settings-dialog.c:266
+#: ../src/frogr-details-dialog.c:303 ../src/frogr-settings-dialog.c:268
 msgid "_Moderate"
 msgstr "_Sedang"
 
-#: ../src/frogr-details-dialog.c:286 ../src/frogr-settings-dialog.c:268
+#: ../src/frogr-details-dialog.c:307 ../src/frogr-settings-dialog.c:270
 msgid "Restr_icted"
 msgstr "_Terbatas"
 
-#: ../src/frogr-details-dialog.c:299
+#: ../src/frogr-details-dialog.c:321
 msgid "License Type"
 msgstr "Tipe Lisensi"
 
-#: ../src/frogr-details-dialog.c:322
+#: ../src/frogr-details-dialog.c:345
 msgid "Other Properties"
 msgstr "Properti Lain"
 
-#: ../src/frogr-details-dialog.c:331
+#: ../src/frogr-details-dialog.c:354
 msgid "Set Geo_location Information"
 msgstr "Tata Informasi Geo_lokasi"
 
-#: ../src/frogr-details-dialog.c:335
+#: ../src/frogr-details-dialog.c:358
 msgid "_Show Up in Global Search Results"
 msgstr "Munculkan di Ha_sil Pencarian Global"
 
-#: ../src/frogr-details-dialog.c:347
+#: ../src/frogr-details-dialog.c:370
 msgid "_Title:"
 msgstr "_Judul:"
 
-#: ../src/frogr-details-dialog.c:359
+#: ../src/frogr-details-dialog.c:382
 msgid "_Description:"
 msgstr "_Deskripsi:"
 
-#: ../src/frogr-details-dialog.c:385
+#: ../src/frogr-details-dialog.c:408
 msgid "Ta_gs:"
 msgstr "Ta_g:"
 
 #. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:482
+#: ../src/frogr-details-dialog.c:505
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
 msgstr[0] "(%d Gambar)"
 
-#: ../src/frogr-details-dialog.c:560
+#: ../src/frogr-details-dialog.c:579
 msgid "An error happened trying to load the picture"
 msgstr "Terjadi galat saat mencoba memuat gambar"
 
-#: ../src/frogr-details-dialog.c:1227
+#: ../src/frogr-details-dialog.c:1228
 msgid "Edit Picture Details"
 msgstr "Sunting Rincian Gambar"
 
+#: ../src/frogr-file-loader.c:138
+#, c-format
+msgid "Loading files %d / %d"
+msgstr "Memuat berkas %d / %d"
+
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: ../src/frogr-file-loader.c:765
+#, c-format
+msgid ""
+"Can't load file %s: size of file is bigger than the maximum allowed for this "
+"account (%s)"
+msgstr ""
+"Tak bisa memuat berkas %s: ukuran berkas lebih dari maksimum yang diijinkan "
+"bagi akun ini (%s)"
+
+#: ../src/frogr-main-view.c:826
+msgid "_About"
+msgstr "Tent_ang"
+
+#. Create the submenu and insert it in the right section
+#: ../src/frogr-main-view.c:882
+msgid "Accounts"
+msgstr "Akun"
+
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:753
+#: ../src/frogr-main-view.c:1116
 #, c-format
 msgid "Taken: %s"
 msgstr "Diambil: %s"
 
-#: ../src/frogr-main-view.c:758
+#: ../src/frogr-main-view.c:1121
 #, c-format
 msgid "File size: %s"
 msgstr "Ukuran berkas: %s"
 
-#: ../src/frogr-main-view.c:946
+#: ../src/frogr-main-view.c:1245
+msgid "Select File"
+msgstr "Pilih Berkas"
+
+#: ../src/frogr-main-view.c:1258
+msgid "Text Files"
+msgstr "Berkas Teks"
+
+#: ../src/frogr-main-view.c:1316
+msgid "Select Destination"
+msgstr "Pilih Tujuan"
+
+#: ../src/frogr-main-view.c:1323
+msgid "Untitled Project"
+msgstr "Projek Tanpa Judul"
+
+#: ../src/frogr-main-view.c:1369
 msgid "Select a Picture"
 msgstr "Pilih Gambar"
 
-#: ../src/frogr-main-view.c:972
-msgid "images"
-msgstr "gambar"
+#: ../src/frogr-main-view.c:1410
+msgid "All Files"
+msgstr "Semua Berkas"
 
-#: ../src/frogr-main-view.c:993
+#: ../src/frogr-main-view.c:1413
+msgid "Image Files"
+msgstr "Berkas Gambar"
+
+#: ../src/frogr-main-view.c:1416
+msgid "Video Files"
+msgstr "Berkas Video"
+
+#: ../src/frogr-main-view.c:1437
+msgid "You don't have any picture added yet"
+msgstr "Anda belum memiliki gambar apapun"
+
+#: ../src/frogr-main-view.c:1452
 msgid "You need to select some pictures first"
 msgstr "Anda perlu memilih beberapa gambar terlebih dahulu"
 
-#: ../src/frogr-main-view.c:1334
-msgid "Not connected to flickr"
-msgstr "Tak tersambung ke flickr"
+#: ../src/frogr-main-view.c:1906
+msgid "Not connected to Flickr"
+msgstr "Tak tersambung ke Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:1344
+#: ../src/frogr-main-view.c:1916
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Tersambung sebagai %s%s"
 
-#: ../src/frogr-main-view.c:1345
+#: ../src/frogr-main-view.c:1917
 msgid " (PRO account)"
 msgstr " (akun PRO)"
 
@@ -531,33 +577,21 @@ msgstr " (akun PRO)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:1369
+#: ../src/frogr-main-view.c:1941
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - %s / %s tersisa"
 
-#: ../src/frogr-main-view.c:1396
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: ../src/frogr-main-view.c:1967
 #, c-format
-msgid " - %d pictures to upload (%s)"
-msgstr " - %d gambar untuk diunggah (%s)"
+msgid " - %d file to upload (%s)"
+msgid_plural " - %d files to upload (%s)"
+msgstr[0] " - %d berkas untuk diunggah (%s)"
 
-#: ../src/frogr-main-view.c:1397
-#, c-format
-msgid " - %d picture to upload (%s)"
-msgstr " - %d gambar untuk diunggah (%s)"
-
-#: ../src/frogr-picture-loader.c:122
-#, c-format
-msgid "Loading pictures %d / %d"
-msgstr "Memuat gambar %d / %d"
-
-#. Update progress
-#: ../src/frogr-picture-uploader.c:84
-#, c-format
-msgid "Uploading '%s'…"
-msgstr "Mengunggah '%s'…"
-
-#: ../src/frogr-settings-dialog.c:193
+#: ../src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
 msgstr "Kenampakan Baku"
 
@@ -565,207 +599,163 @@ msgstr "Kenampakan Baku"
 msgid "Default Content Type"
 msgstr "Tipe Isi Baku"
 
-#: ../src/frogr-settings-dialog.c:253
+#: ../src/frogr-settings-dialog.c:254
 msgid "Default Safety Level"
 msgstr "Tingkat Keamanan Baku"
 
-#: ../src/frogr-settings-dialog.c:277
+#: ../src/frogr-settings-dialog.c:279
 msgid "Default License"
 msgstr "Lisensi Baku"
 
-#: ../src/frogr-settings-dialog.c:301
+#: ../src/frogr-settings-dialog.c:303
 msgid "Other Defaults"
 msgstr "Baku Lainnya"
 
-#: ../src/frogr-settings-dialog.c:312
+#: ../src/frogr-settings-dialog.c:315
 msgid "Set Geo_location Information for Pictures"
 msgstr "Tata Informasi Geo_lokasi bagi Gambar"
 
-#: ../src/frogr-settings-dialog.c:315
+#: ../src/frogr-settings-dialog.c:318
 msgid "_Show Pictures in Global Search Results"
 msgstr "Munculkan Gambar dalam Ha_sil Pencarian Global"
 
-#: ../src/frogr-settings-dialog.c:321
+#: ../src/frogr-settings-dialog.c:324
 msgid "_General"
 msgstr "_Umum"
 
-#: ../src/frogr-settings-dialog.c:345
+#: ../src/frogr-settings-dialog.c:349
 msgid "Proxy Settings"
 msgstr "Pengaturan Proksi"
 
 #. Enable proxy
-#: ../src/frogr-settings-dialog.c:355
+#: ../src/frogr-settings-dialog.c:359
 msgid "_Enable HTTP Proxy"
 msgstr "_Fungsikan Proksi HTTP"
 
-#: ../src/frogr-settings-dialog.c:365
+#: ../src/frogr-settings-dialog.c:369
 msgid "_Host:"
 msgstr "_Host:"
 
 #. Proxy port
-#: ../src/frogr-settings-dialog.c:383
+#: ../src/frogr-settings-dialog.c:387
 msgid "_Port:"
 msgstr "_Porta:"
 
 #. Proxy username
-#: ../src/frogr-settings-dialog.c:401
+#: ../src/frogr-settings-dialog.c:405
 msgid "U_sername:"
 msgstr "Nama _Pengguna:"
 
 #. Proxy password
-#: ../src/frogr-settings-dialog.c:419
+#: ../src/frogr-settings-dialog.c:423
 msgid "Pass_word:"
 msgstr "Sa_ndi:"
 
 #. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:440
+#: ../src/frogr-settings-dialog.c:444
 msgid "_Use GNOME General Proxy Settings"
 msgstr "G_unakan Pengaturan Proksi Umum GNOME"
 
-#: ../src/frogr-settings-dialog.c:466
+#: ../src/frogr-settings-dialog.c:470
 msgid "Connec_tion"
 msgstr "Konek_si:"
 
-#: ../src/frogr-settings-dialog.c:488
+#: ../src/frogr-settings-dialog.c:493
 msgid "Other options"
 msgstr "Opsi lain"
 
-#: ../src/frogr-settings-dialog.c:499
+#: ../src/frogr-settings-dialog.c:505
 msgid "Ena_ble Tags Auto-Completion"
 msgstr "_Fungsikan Pelengkapan Otomatis Tag"
 
-#: ../src/frogr-settings-dialog.c:502
+#: ../src/frogr-settings-dialog.c:508
 msgid "_Import Tags from Pictures Metadata"
 msgstr "_Impor Tag dari Metadata Gambar"
 
-#: ../src/frogr-settings-dialog.c:507
+#: ../src/frogr-settings-dialog.c:512
 msgid "Use _Dark GTK Theme"
 msgstr "Gunakan Tema GTK _Gelap"
 
-#: ../src/frogr-settings-dialog.c:512
+#: ../src/frogr-settings-dialog.c:516
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr "Pertahankan E_kstensi Berkas dalam Judul ketika Memuat"
 
-#: ../src/frogr-settings-dialog.c:518
+#: ../src/frogr-settings-dialog.c:522
 msgid "_Misc"
 msgstr "_Rupa-rupa"
 
-#: ../src/frogr-settings-dialog.c:1068
+#: ../src/frogr-settings-dialog.c:1058
 msgid "Preferences"
 msgstr "Preferensi"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:1
-msgid "_About"
-msgstr "Tent_ang"
+msgid "_Edit Details…"
+msgstr "Sunting _Rincian…"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:2
-msgid "_Load Pictures…"
-msgstr "_Muat Gambar…"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:3
 msgid "Add _Tags…"
 msgstr "_Tambah Tag…"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:4
+#: ../data/gtkbuilder/frogr-main-view.xml.h:3
 msgid "Add to _Group…"
 msgstr "Tambah ke _Grup…"
 
+#: ../data/gtkbuilder/frogr-main-view.xml.h:4
+msgid "Add to _Photoset"
+msgstr "Tambah ke _Set Foto"
+
 #: ../data/gtkbuilder/frogr-main-view.xml.h:5
-msgid "_Create New Set…"
-msgstr "_Buat Set Baru…"
+msgid "_Add to Existing Photoset…"
+msgstr "T_ambah ke Set Foto Yang Ada…"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:6
-msgid "Add to _Existing Set…"
-msgstr "Tambah ke S_et Yang Ada…"
+msgid "_Create New Photoset…"
+msgstr "_Buat Set Foto Baru…"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:7
-msgid "Aut_horize Account…"
-msgstr "_Otorisasikan Akun…"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:8
-msgid "Enable _Tooltips"
-msgstr "Fungsikan _Tooltip"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:9
-msgid "Edit _Details…"
-msgstr "Sunting _Rincian…"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:10
-msgid "_Help"
-msgstr "Ba_ntuan"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:11
-msgid "Open in E_xternal Viewer"
+msgid "_Open in External Viewer"
 msgstr "Buka di Penampil E_ksternal"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:12
-msgid "_Preferences…"
-msgstr "_Preferensi…"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:13
-msgid "_Quit"
-msgstr "_Keluar"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:14
+#: ../data/gtkbuilder/frogr-main-view.xml.h:8
 msgid "_Remove Pictures"
 msgstr "Hapus Gamba_r"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:15
-msgid "_Reversed Order"
-msgstr "U_rutan Terbalik"
+#: ../data/gtkbuilder/frogr-main-view.xml.h:9
+msgid "Open Existing Project"
+msgstr "Buka Projek Yang Ada"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:16
-msgid "As _Loaded"
-msgstr "Seperti _Dimuat"
+#: ../data/gtkbuilder/frogr-main-view.xml.h:10
+msgid "Open"
+msgstr "Buka"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:17
-msgid "By _Date Taken"
-msgstr "Berdasarkan Tanggal _Diambil"
+#: ../data/gtkbuilder/frogr-main-view.xml.h:11
+msgid "Save Current Project"
+msgstr "Simpan Projek Kini"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:18
-msgid "By _Title"
-msgstr "Berdasarkan _Judul"
+#: ../data/gtkbuilder/frogr-main-view.xml.h:12
+msgid "Save"
+msgstr "Simpan"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:19
-msgid "_Upload All"
-msgstr "_Unggah Semua"
+#: ../data/gtkbuilder/frogr-main-view.xml.h:13
+msgid "Add Pictures"
+msgstr "Tambah Gambar"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:20
-msgid "Add to _Set"
-msgstr "Tambah ke _Set"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:21
-msgid "frogr"
-msgstr "frogr"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:22
+#: ../data/gtkbuilder/frogr-main-view.xml.h:14
 msgid "Add"
 msgstr "Tambah"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:23
+#: ../data/gtkbuilder/frogr-main-view.xml.h:15
+msgid "Remove Pictures"
+msgstr "Hapus Gambar"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:16
 msgid "Remove"
 msgstr "Hapus"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:24
+#: ../data/gtkbuilder/frogr-main-view.xml.h:17
+msgid "Upload All"
+msgstr "Unggah Semua"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:18
 msgid "Upload"
 msgstr "Unggah"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:25
-msgid "_Frogr"
-msgstr "_Frogr"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:26
-msgid "Accou_nts"
-msgstr "Aku_n"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:27
-msgid "A_ctions"
-msgstr "A_ksi"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:28
-msgid "_View"
-msgstr "_Tampilan"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:29
-msgid "_Sort Pictures"
-msgstr "_Urutkan Gambar"
