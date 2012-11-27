@@ -4,12 +4,7 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkActionGroup" id="file-actions">
     <child>
-      <object class="GtkAction" id="open-project">
-        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="save-project">
+      <object class="GtkAction" id="load-pictures">
         <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
       </object>
     </child>
@@ -19,7 +14,12 @@
       </object>
     </child>
     <child>
-      <object class="GtkAction" id="load-pictures">
+      <object class="GtkAction" id="save-project">
+        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="open-project">
         <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
       </object>
     </child>
@@ -33,27 +33,7 @@
   </object>
   <object class="GtkActionGroup" id="selection-actions">
     <child>
-      <object class="GtkAction" id="add-tags">
-        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="add-to-group">
-        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="add-to-new-set">
-        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="add-to-set">
-        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkAction" id="edit-details">
+      <object class="GtkAction" id="remove-pictures">
         <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
       </object>
     </child>
@@ -63,7 +43,27 @@
       </object>
     </child>
     <child>
-      <object class="GtkAction" id="remove-pictures">
+      <object class="GtkAction" id="edit-details">
+        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="add-to-set">
+        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="add-to-new-set">
+        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="add-to-group">
+        <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="add-tags">
         <signal name="activate" handler="_on_gtk_action_activated" swapped="no"/>
       </object>
     </child>
@@ -184,7 +184,9 @@
             <property name="related_action">open-project</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Open Project</property>
+            <property name="has_tooltip">True</property>
+            <property name="tooltip_text" translatable="yes">Open Existing Project</property>
+            <property name="label" translatable="yes">Open</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-open</property>
           </object>
@@ -199,24 +201,11 @@
             <property name="related_action">save-project</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Save Project</property>
+            <property name="has_tooltip">True</property>
+            <property name="tooltip_text" translatable="yes">Save Current Project</property>
+            <property name="label" translatable="yes">Save</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-save</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="homogeneous">True</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkToolButton" id="save_project_as_button">
-            <property name="use_action_appearance">False</property>
-            <property name="related_action">save-project-as</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Save Project As…</property>
-            <property name="use_underline">True</property>
-            <property name="stock_id">gtk-save-as</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -239,7 +228,9 @@
             <property name="related_action">load-pictures</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Load Pictures</property>
+            <property name="has_tooltip">True</property>
+            <property name="tooltip_text" translatable="yes">Add Pictures</property>
+            <property name="label" translatable="yes">Add</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-add</property>
           </object>
@@ -254,7 +245,9 @@
             <property name="related_action">remove-pictures</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Remove Pictures</property>
+            <property name="has_tooltip">True</property>
+            <property name="tooltip_text" translatable="yes">Remove Pictures</property>
+            <property name="label" translatable="yes">Remove</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-remove</property>
           </object>
@@ -279,7 +272,9 @@
             <property name="related_action">upload-all</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Upload All</property>
+            <property name="has_tooltip">True</property>
+            <property name="tooltip_text" translatable="yes">Upload All</property>
+            <property name="label" translatable="yes">Upload</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-go-up</property>
           </object>
