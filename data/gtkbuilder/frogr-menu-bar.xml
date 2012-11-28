@@ -2,120 +2,120 @@
 <interface>
   <menu id="menu-bar">
     <submenu>
-      <attribute name='label' translatable='yes'>_File</attribute>
+      <attribute name="label" translatable="yes">_File</attribute>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>_Open…</attribute>
-          <attribute name='action'>win.open-project</attribute>
-          <attribute name='accel'>&lt;Primary&gt;o</attribute>
+          <attribute name="label" translatable="yes">_Open…</attribute>
+          <attribute name="action">win.open-project</attribute>
+          <attribute name="accel">&lt;Primary&gt;o</attribute>
         </item>
         <item>
-          <attribute name='label' translatable='yes'>_Save</attribute>
-          <attribute name='action'>win.save-project</attribute>
-          <attribute name='accel'>&lt;Primary&gt;s</attribute>
+          <attribute name="label" translatable="yes">_Save</attribute>
+          <attribute name="action">win.save-project</attribute>
+          <attribute name="accel">&lt;Primary&gt;s</attribute>
         </item>
         <item>
-          <attribute name='label' translatable='yes'>Save _As…</attribute>
-          <attribute name='action'>win.save-project-as</attribute>
-          <attribute name='accel'>&lt;Primary&gt;&lt;Shift&gt;s</attribute>
+          <attribute name="label" translatable="yes">Save _As…</attribute>
+          <attribute name="action">win.save-project-as</attribute>
+          <attribute name="accel">&lt;Primary&gt;&lt;Shift&gt;s</attribute>
         </item>
       </section>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>A_dd Pictures…</attribute>
-          <attribute name='action'>win.add-pictures</attribute>
-          <attribute name='accel'>&lt;Primary&gt;l</attribute>
+          <attribute name="label" translatable="yes">A_dd Pictures…</attribute>
+          <attribute name="action">win.add-pictures</attribute>
+          <attribute name="accel">&lt;Primary&gt;l</attribute>
         </item>
         <item>
-          <attribute name='label' translatable='yes'>_Remove Pictures</attribute>
-          <attribute name='action'>win.remove-pictures</attribute>
-          <attribute name='accel'>Delete</attribute>
+          <attribute name="label" translatable="yes">_Remove Pictures</attribute>
+          <attribute name="action">win.remove-pictures</attribute>
+          <attribute name="accel">Delete</attribute>
         </item>
       </section>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>_Upload All</attribute>
-          <attribute name='action'>win.upload-all</attribute>
-          <attribute name='accel'>&lt;Primary&gt;u</attribute>
+          <attribute name="label" translatable="yes">_Upload All</attribute>
+          <attribute name="action">win.upload-all</attribute>
+          <attribute name="accel">&lt;Primary&gt;u</attribute>
         </item>
       </section>
     </submenu>
     <submenu>
-      <attribute name='label' translatable='yes'>_Edit</attribute>
+      <attribute name="label" translatable="yes">_Edit</attribute>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>_Edit Details…</attribute>
-          <attribute name='action'>win.edit-details</attribute>
-          <attribute name='accel'>&lt;Primary&gt;d</attribute>
+          <attribute name="label" translatable="yes">_Edit Details…</attribute>
+          <attribute name="action">win.edit-details</attribute>
+          <attribute name="accel">&lt;Primary&gt;d</attribute>
         </item>
         <item>
-          <attribute name='label' translatable='yes'>Add _Tags…</attribute>
-          <attribute name='action'>win.add-tags</attribute>
-          <attribute name='accel'>&lt;Primary&gt;t</attribute>
+          <attribute name="label" translatable="yes">Add _Tags…</attribute>
+          <attribute name="action">win.add-tags</attribute>
+          <attribute name="accel">&lt;Primary&gt;t</attribute>
         </item>
         <item>
-          <attribute name='label' translatable='yes'>Add to _Group…</attribute>
-          <attribute name='action'>win.add-to-group</attribute>
-          <attribute name='accel'>&lt;Primary&gt;g</attribute>
+          <attribute name="label" translatable="yes">Add to _Group…</attribute>
+          <attribute name="action">win.add-to-group</attribute>
+          <attribute name="accel">&lt;Primary&gt;g</attribute>
         </item>
         <submenu>
-          <attribute name='label' translatable='yes'>Add to _Photoset</attribute>
+          <attribute name="label" translatable="yes">Add to _Photoset</attribute>
           <section>
             <item>
-              <attribute name='label' translatable='yes'>_Add to Existing Photoset…</attribute>
-              <attribute name='action'>win.add-to-set</attribute>
-              <attribute name='accel'>&lt;Primary&gt;p</attribute>
+              <attribute name="label" translatable="yes">_Add to Existing Photoset…</attribute>
+              <attribute name="action">win.add-to-set</attribute>
+              <attribute name="accel">&lt;Primary&gt;p</attribute>
             </item>
             <item>
-              <attribute name='label' translatable='yes'>_Create New Photoset…</attribute>
-              <attribute name='action'>win.add-to-new-set</attribute>
-              <attribute name='accel'>&lt;Primary&gt;&lt;Shift&gt;p</attribute>
+              <attribute name="label" translatable="yes">_Create New Photoset…</attribute>
+              <attribute name="action">win.add-to-new-set</attribute>
+              <attribute name="accel">&lt;Primary&gt;&lt;Shift&gt;p</attribute>
             </item>
           </section>
         </submenu>
       </section>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>_Open in External Viewer</attribute>
-          <attribute name='action'>win.open-in-external-viewer</attribute>
-          <attribute name='accel'>&lt;Primary&gt;v</attribute>
+          <attribute name="label" translatable="yes">_Open in External Viewer</attribute>
+          <attribute name="action">win.open-in-external-viewer</attribute>
+          <attribute name="accel">&lt;Primary&gt;v</attribute>
         </item>
       </section>
     </submenu>
     <submenu>
-      <attribute name='label' translatable='yes'>_View</attribute>
+      <attribute name="label" translatable="yes">_View</attribute>
       <section>
         <submenu>
-          <attribute name='label' translatable='yes'>_Sort Pictures</attribute>
+          <attribute name="label" translatable="yes">_Sort Pictures</attribute>
           <section>
             <item>
-              <attribute name='label' translatable='yes'>As _Loaded</attribute>
-              <attribute name='action'>win.sort-by</attribute>
-              <attribute name='target'>as-loaded</attribute>
+              <attribute name="label" translatable="yes">As _Loaded</attribute>
+              <attribute name="action">win.sort-by</attribute>
+              <attribute name="target">as-loaded</attribute>
             </item>
             <item>
-              <attribute name='label' translatable='yes'>By _Date Taken</attribute>
-              <attribute name='action'>win.sort-by</attribute>
-              <attribute name='target'>date-taken</attribute>
+              <attribute name="label" translatable="yes">By _Date Taken</attribute>
+              <attribute name="action">win.sort-by</attribute>
+              <attribute name="target">date-taken</attribute>
             </item>
             <item>
-              <attribute name='label' translatable='yes'>By _Title</attribute>
-              <attribute name='action'>win.sort-by</attribute>
-              <attribute name='target'>title</attribute>
+              <attribute name="label" translatable="yes">By _Title</attribute>
+              <attribute name="action">win.sort-by</attribute>
+              <attribute name="target">title</attribute>
             </item>
           </section>
           <section>
             <item>
-              <attribute name='label' translatable='yes'>_Reversed Order</attribute>
-              <attribute name='action'>win.sort-in-reverse-order</attribute>
+              <attribute name="label" translatable="yes">_Reversed Order</attribute>
+              <attribute name="action">win.sort-in-reverse-order</attribute>
             </item>
           </section>
         </submenu>
       </section>
       <section>
         <item>
-          <attribute name='label' translatable='yes'>Enable _Tooltips</attribute>
-          <attribute name='action'>win.enable-tooltips</attribute>
+          <attribute name="label" translatable="yes">Enable _Tooltips</attribute>
+          <attribute name="action">win.enable-tooltips</attribute>
         </item>
       </section>
     </submenu>
