@@ -2004,6 +2004,12 @@ static gchar *pictures_actions[] = {
   ACTION_UPLOAD_ALL
 };
 
+static gchar *iconview_actions[] = {
+  ACTION_SORT_BY,
+  ACTION_SORT_IN_REVERSE_ORDER,
+  ACTION_ENABLE_TOOLTIPS
+};
+
 static void
 _update_sensitiveness (FrogrMainView *self)
 {
@@ -2047,6 +2053,10 @@ _update_sensitiveness (FrogrMainView *self)
       /* Elements from the GMenu - for available pictures */
       for (i = 0; i < G_N_ELEMENTS (pictures_actions); i++)
         _update_sensitiveness_for_action (self, pictures_actions[i], has_pics);
+
+      /* Elements from the GMenu - for available pictures */
+      for (i = 0; i < G_N_ELEMENTS (iconview_actions); i++)
+        _update_sensitiveness_for_action (self, iconview_actions[i], TRUE);
 
       /* Toolbar and contextual menu */
       gtk_action_group_set_sensitive (priv->file_gtkactions, TRUE);
