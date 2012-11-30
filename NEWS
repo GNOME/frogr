@@ -15,9 +15,8 @@
   * Updated menu item accelerators and shortcuts.
   * Raised glib minimum version up to 2.32.
   * Raised gtk+ minimum version up to 3.4.
-  * New build dependency: json-glib (> 0.12) (for the 'projects' feature).
   * New build dependency: gstreamer 0.10 (for video upload support).
-  * New run-time dependency: gstreamer-ffmpeg 0.10 (for video upload support).
+  * New build dependency: json-glib (> 0.12) (for the 'projects' feature).
   * Stop using gtk-mac-integration, now we have migrated to GMenu.
   * As usual, other minor improvements, bug fixes and cleanups.
 

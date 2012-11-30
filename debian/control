@@ -8,7 +8,8 @@ Homepage: http://live.gnome.org/Frogr
 
 Package: frogr
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, desktop-file-utils, gstreamer0.10-ffmpeg, gvfs
+Depends: ${shlibs:Depends}, ${misc:Depends}, desktop-file-utils, gvfs
+Recommends: gstreamer0.10-ffmpeg
 Description: Flickr Remote Organizer for GNOME
  Frogr is a small application for the GNOME desktop that allows users
  to manage their accounts in the Flickr image hosting website.

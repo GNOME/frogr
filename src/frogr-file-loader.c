@@ -242,8 +242,8 @@ _load_current_file (FrogrFileLoader *self)
 
 static void
 _load_current_file_cb (GObject *object,
-                    GAsyncResult *res,
-                    gpointer data)
+                       GAsyncResult *res,
+                       gpointer data)
 {
   FrogrFileLoader *self = NULL;
   FrogrFileLoaderPrivate *priv = NULL;
@@ -266,11 +266,29 @@ _load_current_file_cb (GObject *object,
       /* Load the pixbuf for the video or the image */
       is_video = _is_video_file (file);
       if (is_video)
-        pixbuf = frogr_util_get_pixbuf_for_video_file (file, IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
+        {
+          pixbuf = frogr_util_get_pixbuf_for_video_file (file, IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
+          if (!pixbuf)
+            {
+              /* FIXME: We should integrate with gstreamer's codec
+                 installer instead of just showing an error message to
+                 the user, but this is "good enough" for now. */
+              gchar *file_name = NULL;
+              gchar *msg = NULL;
+
+              file_name = g_file_get_basename (file);
+              msg = g_strdup_printf (_("Unable to load video %s\n"
+                                       "Please check that you have the right codec installed"), file_name);
+              g_free (file_name);
+
+              frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
+              g_free (msg);
+            }
+        }
       else
         pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
                                                             IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
-      if (!error)
+      if (pixbuf)
         {
           if (priv->loading_mode == LOADING_MODE_FROM_PICTURES)
             {
@@ -286,7 +304,7 @@ _load_current_file_cb (GObject *object,
 
           g_object_unref (pixbuf);
         }
-      else
+      else if (error)
         {
           g_warning ("Not able to read pixbuf: %s", error->message);
           g_error_free (error);
@@ -311,14 +329,19 @@ _load_current_file_cb (GObject *object,
 
   /* Update status and progress */
   _update_status_and_progress (self);
-  g_signal_emit (self, signals[FILE_LOADED], 0, picture);
 
-  /* Check if we must interrupt the process */
-  keep_going = _check_filesize_limits (self, picture);
+  /* We might not have a file loaded (e.g. unsupported format) */
+  if (picture)
+    {
+      /* Check if we must interrupt the process */
+      keep_going = _check_filesize_limits (self, picture);
+      if (keep_going)
+        g_signal_emit (self, signals[FILE_LOADED], 0, picture);
 
-  /* We only unref the picture if it was created here */
-  if (picture != NULL && priv->loading_mode != LOADING_MODE_FROM_PICTURES)
-    g_object_unref (picture);
+      /* We only unref the picture if it was created here */
+      if (priv->loading_mode != LOADING_MODE_FROM_PICTURES)
+        g_object_unref (picture);
+    }
 
   /* Go for the next file, if needed */
   if (keep_going)

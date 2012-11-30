@@ -21,10 +21,6 @@ BuildRequires:	libexif-devel > 0.6.14
 BuildRequires:	libgcrypt-devel
 BuildRequires:	desktop-file-utils
 
-#Frogr needs the gstreamer-ffmpeg plugin to generate thumbnails for
-#video files that might be loaded into the UI's icon view.
-Requires:       gstreamer-ffmpeg > 0.10
-
 #Explicitly Requires: gvfs since we need to be able to open a web
 #browser when associating frogr with a flickr account (this is how
 #application/flickr pairing works, through flickr.com)
