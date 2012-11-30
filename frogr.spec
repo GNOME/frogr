@@ -71,7 +71,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/gnome/help/frogr/*
 %{_mandir}/man1/frogr.1.*
-%doc README NEWS COPYING AUTHORS THANKS TODO MAINTAINERS TRANSLATORS
+%doc README NEWS COPYING AUTHORS THANKS MAINTAINERS TRANSLATORS
 
 
 %changelog
