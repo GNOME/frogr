@@ -11,13 +11,20 @@ Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.7/%{name}-%{version}.t
 BuildRequires:	intltool
 BuildRequires:	gettext
 BuildRequires:	gnome-doc-utils
-BuildRequires:	gtk3-devel
-BuildRequires:	glib2-devel > 2.22
+BuildRequires:	gtk3-devel > 3.4
+BuildRequires:	glib2-devel > 2.32
+BuildRequires:	gstreamer-devel > 0.10
+BuildRequires:	json-glib-devel > 0.12
 BuildRequires:	libsoup-devel > 2.26
 BuildRequires:	libxml2-devel > 2.6.8
 BuildRequires:	libexif-devel > 0.6.14
 BuildRequires:	libgcrypt-devel
 BuildRequires:	desktop-file-utils
+
+#Frogr needs the gstreamer-ffmpeg plugin to generate thumbnails for
+#video files that might be loaded into the UI's icon view.
+Requires:       gstreamer-ffmpeg > 0.10
+
 #Explicitly Requires: gvfs since we need to be able to open a web
 #browser when associating frogr with a flickr account (this is how
 #application/flickr pairing works, through flickr.com)

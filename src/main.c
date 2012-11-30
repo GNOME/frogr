@@ -39,7 +39,6 @@ main (int argc, char **argv)
   gst_init_check (&argc, &argv, &error);
   if (error)
     {
-      /* TODO: Disable video support when this happens */
       DEBUG ("Gstreamer could not be initialized: %s", error->message);
       g_error_free (error);
     }
