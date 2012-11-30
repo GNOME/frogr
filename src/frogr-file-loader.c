@@ -112,7 +112,7 @@ static gboolean get_gps_coordinate (ExifData *exif,
                                     ExifTag   reftag,
                                     gdouble  *coordinate);
 static FrogrLocation *get_location_from_exif (ExifData *exif_data);
-static FrogrPicture* _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf);
+static FrogrPicture* _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboolean is_video);
 static void _update_picture_with_exif_data (FrogrFileLoader *self,
                                             const gchar *contents,
                                             gsize length,
@@ -280,7 +280,7 @@ _load_current_file_cb (GObject *object,
             }
           else
             {
-              picture = _create_new_picture (self, file, pixbuf);
+              picture = _create_new_picture (self, file, pixbuf, is_video);
               _update_picture_with_exif_data (self, contents, length, picture);
             }
 
@@ -610,7 +610,7 @@ get_location_from_exif (ExifData *exif_data)
 }
 
 static FrogrPicture*
-_create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf)
+_create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboolean is_video)
 {
   FrogrFileLoaderPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
@@ -618,7 +618,6 @@ _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf)
   gchar *file_name = NULL;
   gchar *file_uri = NULL;
   guint64 filesize = 0;
-  gboolean is_video = FALSE;
   GError *error = NULL;
 
   /* Gather needed information */
