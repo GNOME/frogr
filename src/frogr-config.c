@@ -425,6 +425,8 @@ _load_mainview_options_xml (FrogrConfig *self,
             priv->mainview_sorting_criteria = SORT_BY_TITLE;
           else if (!xmlStrcmp (content, (const xmlChar*) "2"))
             priv->mainview_sorting_criteria = SORT_BY_DATE;
+          else if (!xmlStrcmp (content, (const xmlChar*) "3"))
+            priv->mainview_sorting_criteria = SORT_BY_SIZE;
           else
             priv->mainview_sorting_criteria = SORT_AS_LOADED;
         }

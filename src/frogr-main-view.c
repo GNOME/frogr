@@ -76,6 +76,7 @@
 #define ACTION_SORT_BY_TARGET_AS_LOADED "as-loaded"
 #define ACTION_SORT_BY_TARGET_DATE_TAKEN "date-taken"
 #define ACTION_SORT_BY_TARGET_TITLE "title"
+#define ACTION_SORT_BY_TARGET_SIZE "size"
 #define ACTION_SORT_IN_REVERSE_ORDER "sort-in-reverse-order"
 #define ACTION_ENABLE_TOOLTIPS "enable-tooltips"
 
@@ -416,6 +417,8 @@ _initialize_ui (FrogrMainView *self)
     action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_TITLE);
   else if (priv->sorting_criteria == SORT_BY_DATE)
     action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_DATE_TAKEN);
+  else if (priv->sorting_criteria == SORT_BY_SIZE)
+    action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_SIZE);
   else
     action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_AS_LOADED);
   g_action_change_state (G_ACTION (action), action_parameter);
@@ -707,6 +710,8 @@ _on_radio_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointe
         criteria = SORT_BY_DATE;
       else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_TITLE))
         criteria = SORT_BY_TITLE;
+      else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_SIZE))
+        criteria = SORT_BY_SIZE;
       else
         g_assert_not_reached ();
 
@@ -1612,6 +1617,10 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
       property_name = g_strdup ("datetime");
       break;
 
+    case SORT_BY_SIZE:
+      property_name = g_strdup ("filesize");
+      break;
+
     default:
       g_assert_not_reached ();
     }
@@ -1684,6 +1693,8 @@ _compare_pictures_by_property (FrogrPicture *p1, FrogrPicture *p2,
     result = g_value_get_boolean (&value1) - g_value_get_boolean (&value2);
   else if (G_VALUE_HOLDS_INT (&value1))
     result = g_value_get_int (&value1) - g_value_get_int (&value2);
+  else if (G_VALUE_HOLDS_UINT (&value1))
+    result = g_value_get_uint (&value1) - g_value_get_uint (&value2);
   else if (G_VALUE_HOLDS_LONG (&value1))
     result = g_value_get_long (&value1) - g_value_get_long (&value2);
   else if (G_VALUE_HOLDS_STRING (&value1))

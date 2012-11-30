@@ -103,6 +103,11 @@
               <attribute name="action">win.sort-by</attribute>
               <attribute name="target">title</attribute>
             </item>
+            <item>
+              <attribute name="label" translatable="yes">By _Size</attribute>
+              <attribute name="action">win.sort-by</attribute>
+              <attribute name="target">size</attribute>
+            </item>
           </section>
           <section>
             <item>

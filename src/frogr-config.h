@@ -63,7 +63,8 @@ GType frogr_config_get_type (void) G_GNUC_CONST;
 typedef enum {
   SORT_AS_LOADED,
   SORT_BY_TITLE,
-  SORT_BY_DATE
+  SORT_BY_DATE,
+  SORT_BY_SIZE
 } SortingCriteria;
 
 FrogrConfig* frogr_config_get_instance (void);

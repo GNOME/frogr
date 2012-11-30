@@ -6,6 +6,7 @@
   * Added support for saving and loading 'projects'.
   * Added new items to the toolbar ('Open' and 'Save' for projects).
   * Ported to GtkApplication and GMenu (both the app menu and menu bar).
+  * Allow sorting elements in the icon view by size.
   * Don't give up on upload too early and retry some times when possible.
   * Report errors better, and more often (no more mysterious failures).
   * Make after-upload operations cancellable, repeatable and parallelizable.
