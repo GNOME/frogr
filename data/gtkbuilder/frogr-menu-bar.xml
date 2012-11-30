@@ -22,12 +22,12 @@
       </section>
       <section>
         <item>
-          <attribute name="label" translatable="yes">A_dd Pictures…</attribute>
+          <attribute name="label" translatable="yes">A_dd Elements…</attribute>
           <attribute name="action">win.add-pictures</attribute>
           <attribute name="accel">&lt;Primary&gt;l</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">_Remove Pictures</attribute>
+          <attribute name="label" translatable="yes">_Remove Elements</attribute>
           <attribute name="action">win.remove-pictures</attribute>
           <attribute name="accel">Delete</attribute>
         </item>
@@ -86,7 +86,7 @@
       <attribute name="label" translatable="yes">_View</attribute>
       <section>
         <submenu>
-          <attribute name="label" translatable="yes">_Sort Pictures</attribute>
+          <attribute name="label" translatable="yes">_Sort Elements</attribute>
           <section>
             <item>
               <attribute name="label" translatable="yes">As _Loaded</attribute>
