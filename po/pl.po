@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-27 15:51+0100\n"
-"PO-Revision-Date: 2012-11-27 15:52+0100\n"
+"POT-Creation-Date: 2012-12-01 02:47+0100\n"
+"PO-Revision-Date: 2012-12-01 02:48+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -500,10 +500,19 @@ msgstr "Modyfikowanie szczegółów obrazu"
 msgid "Loading files %d / %d"
 msgstr "Wczytywanie obrazów %d/%d"
 
+#: ../src/frogr-file-loader.c:280
+#, c-format
+msgid ""
+"Unable to load video %s\n"
+"Please check that you have the right codec installed"
+msgstr ""
+"Nie można wczytać wideo %s\n"
+"Proszę sprawdzić, czy zainstalowano właściwy kodek"
+
 #. First %s is the title of the picture (filename of the file by
 #. default). Second %s is the max allowed size for a picture to be
 #. uploaded to flickr (different for free and PRO accounts).
-#: ../src/frogr-file-loader.c:765
+#: ../src/frogr-file-loader.c:787
 #, c-format
 msgid ""
 "Can't load file %s: size of file is bigger than the maximum allowed for this "
@@ -512,77 +521,77 @@ msgstr ""
 "Nie można wczytać pliku %s: rozmiar pliku przekracza dozwolone maksimum dla "
 "tego konta (%s)"
 
-#: ../src/frogr-main-view.c:826
+#: ../src/frogr-main-view.c:831 ../data/gtkbuilder/frogr-app-menu.xml.h:4
 msgid "_About"
 msgstr "_O programie"
 
 #. Create the submenu and insert it in the right section
-#: ../src/frogr-main-view.c:882
+#: ../src/frogr-main-view.c:887
 msgid "Accounts"
 msgstr "Konta"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:1116
+#: ../src/frogr-main-view.c:1121
 #, c-format
 msgid "Taken: %s"
 msgstr "Utworzono: %s"
 
-#: ../src/frogr-main-view.c:1121
+#: ../src/frogr-main-view.c:1126
 #, c-format
 msgid "File size: %s"
 msgstr "Rozmiar pliku: %s"
 
-#: ../src/frogr-main-view.c:1245
+#: ../src/frogr-main-view.c:1250
 msgid "Select File"
 msgstr "Wybór pliku"
 
-#: ../src/frogr-main-view.c:1258
+#: ../src/frogr-main-view.c:1263
 msgid "Text Files"
 msgstr "Pliki tekstowe"
 
-#: ../src/frogr-main-view.c:1316
+#: ../src/frogr-main-view.c:1321
 msgid "Select Destination"
 msgstr "Wybór miejsca docelowego"
 
-#: ../src/frogr-main-view.c:1323
+#: ../src/frogr-main-view.c:1328
 msgid "Untitled Project"
 msgstr "Projekt bez tytułu"
 
-#: ../src/frogr-main-view.c:1369
+#: ../src/frogr-main-view.c:1374
 msgid "Select a Picture"
 msgstr "Wybór obrazów"
 
-#: ../src/frogr-main-view.c:1410
+#: ../src/frogr-main-view.c:1415
 msgid "All Files"
 msgstr "Wszystkie pliki"
 
-#: ../src/frogr-main-view.c:1413
+#: ../src/frogr-main-view.c:1418
 msgid "Image Files"
 msgstr "Pliki obrazów"
 
-#: ../src/frogr-main-view.c:1416
+#: ../src/frogr-main-view.c:1421
 msgid "Video Files"
 msgstr "Pliki wideo"
 
-#: ../src/frogr-main-view.c:1437
+#: ../src/frogr-main-view.c:1442
 msgid "You don't have any picture added yet"
 msgstr "Nie dodano jeszcze żadnych zdjęć"
 
-#: ../src/frogr-main-view.c:1452
+#: ../src/frogr-main-view.c:1457
 msgid "You need to select some pictures first"
 msgstr "Należy najpierw wybrać jakieś obrazy"
 
-#: ../src/frogr-main-view.c:1906
+#: ../src/frogr-main-view.c:1917
 msgid "Not connected to Flickr"
 msgstr "Nie połączono z serwisem Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:1916
+#: ../src/frogr-main-view.c:1927
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Połączono jako %s%s"
 
-#: ../src/frogr-main-view.c:1917
+#: ../src/frogr-main-view.c:1928
 msgid " (PRO account)"
 msgstr " (konto typu PRO)"
 
@@ -591,7 +600,7 @@ msgstr " (konto typu PRO)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:1941
+#: ../src/frogr-main-view.c:1952
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - pozostało %s/%s"
@@ -599,7 +608,7 @@ msgstr " - pozostało %s/%s"
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
 #. sizes for every picture loaded in the application
-#: ../src/frogr-main-view.c:1967
+#: ../src/frogr-main-view.c:1978
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
@@ -705,36 +714,44 @@ msgid "Preferences"
 msgstr "Preferencje"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:1
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
 msgid "_Edit Details…"
 msgstr "Modyfikuj _szczegóły…"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:2
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
 msgid "Add _Tags…"
 msgstr "Dodaj _etykiety…"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:3
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:11
 msgid "Add to _Group…"
 msgstr "Dodaj do gr_upy…"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:4
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:12
 msgid "Add to _Photoset"
 msgstr "Dodaj do ze_stawu zdjęć"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:5
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:13
 msgid "_Add to Existing Photoset…"
 msgstr "_Dodaj do istniejącego zestawu zdjęć…"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:6
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:14
 msgid "_Create New Photoset…"
 msgstr "_Utwórz nowy zestaw zdjęć…"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:7
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:15
 msgid "_Open in External Viewer"
 msgstr "Otwórz w _zewnętrznej przeglądarce"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:8
-msgid "_Remove Pictures"
-msgstr "_Usuń obrazy"
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
+msgid "_Remove Elements"
+msgstr "_Usuń elementy"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:9
 msgid "Open Existing Project"
@@ -753,16 +770,16 @@ msgid "Save"
 msgstr "Zapisz"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:13
-msgid "Add Pictures"
-msgstr "Dodanie obrazów"
+msgid "Add Elements"
+msgstr "Dodanie elementów"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:14
 msgid "Add"
 msgstr "Dodaj"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:15
-msgid "Remove Pictures"
-msgstr "Usunięcie obrazów"
+msgid "Remove Elements"
+msgstr "Usunięcie elementów"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:16
 msgid "Remove"
@@ -775,3 +792,79 @@ msgstr "Wysłanie wszystkiego"
 #: ../data/gtkbuilder/frogr-main-view.xml.h:18
 msgid "Upload"
 msgstr "Wyślij"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:1
+msgid "Aut_horize Account…"
+msgstr "_Upoważnij konto…"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:2
+msgid "_Preferences…"
+msgstr "_Preferencje…"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:3
+msgid "_Help"
+msgstr "Pomo_c"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:5
+msgid "_Quit"
+msgstr "Za_kończ"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:1
+msgid "_File"
+msgstr "_Plik"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:2
+msgid "_Open…"
+msgstr "_Otwórz…"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:3
+msgid "_Save"
+msgstr "_Zapisz…"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:4
+msgid "Save _As…"
+msgstr "Z_apisz jako…"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:5
+msgid "A_dd Elements…"
+msgstr "_Dodaj elementy…"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:7
+msgid "_Upload All"
+msgstr "_Wyślij wszystko"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:8
+msgid "_Edit"
+msgstr "_Edycja"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:16
+msgid "_View"
+msgstr "_Widok"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:17
+msgid "_Sort Elements"
+msgstr "Up_orządkuj elementy"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:18
+msgid "As _Loaded"
+msgstr "Tak, jak _wczytano"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:19
+msgid "By _Date Taken"
+msgstr "Według _daty utworzenia"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:20
+msgid "By _Title"
+msgstr "Według _tytułu"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:21
+msgid "By _Size"
+msgstr "Według _rozmiaru"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:22
+msgid "_Reversed Order"
+msgstr "_Odwrócona kolejność"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:23
+msgid "Enable _Tooltips"
+msgstr "Włączenie p_odpowiedzi"
