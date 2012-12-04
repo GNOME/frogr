@@ -306,7 +306,16 @@ _load_current_file_cb (GObject *object,
         }
       else if (error)
         {
-          g_warning ("Not able to read pixbuf: %s", error->message);
+          gchar *file_name = NULL;
+          gchar *msg = NULL;
+
+          file_name = g_file_get_basename (file);
+          msg = g_strdup_printf (_("Unable to load picture %s:\n%s"), file_name, error->message);
+          g_free (file_name);
+
+          frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
+          g_free (msg);
+
           g_error_free (error);
         }
     }
