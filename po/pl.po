@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-01 02:47+0100\n"
-"PO-Revision-Date: 2012-12-01 02:48+0100\n"
+"POT-Creation-Date: 2012-12-04 02:04+0100\n"
+"PO-Revision-Date: 2012-12-04 02:05+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -509,17 +509,26 @@ msgstr ""
 "Nie można wczytać wideo %s\n"
 "Proszę sprawdzić, czy zainstalowano właściwy kodek"
 
+#: ../src/frogr-file-loader.c:313
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
+msgstr ""
+"Nie można wczytać obrazu %s:\n"
+"%s"
+
 #. First %s is the title of the picture (filename of the file by
 #. default). Second %s is the max allowed size for a picture to be
 #. uploaded to flickr (different for free and PRO accounts).
-#: ../src/frogr-file-loader.c:787
+#: ../src/frogr-file-loader.c:796
 #, c-format
 msgid ""
-"Can't load file %s: size of file is bigger than the maximum allowed for this "
-"account (%s)"
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
 msgstr ""
-"Nie można wczytać pliku %s: rozmiar pliku przekracza dozwolone maksimum dla "
-"tego konta (%s)"
+"Nie można wczytać pliku %s:\n"
+"Rozmiar pliku przekracza dozwolone maksimum dla tego konta (%s)"
 
 #: ../src/frogr-main-view.c:831 ../data/gtkbuilder/frogr-app-menu.xml.h:4
 msgid "_About"
