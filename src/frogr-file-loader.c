@@ -793,7 +793,7 @@ _check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture)
       /* First %s is the title of the picture (filename of the file by
          default). Second %s is the max allowed size for a picture to be
          uploaded to flickr (different for free and PRO accounts). */
-      msg = g_strdup_printf (_("Can't load file %s: size of file is bigger "
+      msg = g_strdup_printf (_("Can't load file %s:\nSize of file is bigger "
                                "than the maximum allowed for this account (%s)"),
                              frogr_picture_get_title (picture),
                              frogr_util_get_datasize_string (max_filesize));
