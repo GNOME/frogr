@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: frogr.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-11-30 12:41+0000\n"
-"PO-Revision-Date: 2012-12-02 19:23+0100\n"
+"POT-Creation-Date: 2012-12-04 00:33+0000\n"
+"PO-Revision-Date: 2012-12-04 11:08+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -500,17 +500,30 @@ msgstr ""
 "No se pudo cargar el vídeo %s\n"
 "Compruebe que tiene instalado el «códec» correcto"
 
+#: ../src/frogr-file-loader.c:313
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
+msgstr ""
+"No se pudo cargar la imagen %s:\n"
+"%s"
+
 #. First %s is the title of the picture (filename of the file by
 #. default). Second %s is the max allowed size for a picture to be
 #. uploaded to flickr (different for free and PRO accounts).
-#: ../src/frogr-file-loader.c:787
+#: ../src/frogr-file-loader.c:796
 #, c-format
+#| msgid ""
+#| "Can't load file %s: size of file is bigger than the maximum allowed for "
+#| "this account (%s)"
 msgid ""
-"Can't load file %s: size of file is bigger than the maximum allowed for this "
-"account (%s)"
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
 msgstr ""
-"No se puede cargar el archivo %s: el tamaño del archivo es superior al "
-"tamaño máximo permitido para esta cuenta (%s)"
+"No se puede cargar el archivo %s:\n"
+"El tamaño del archivo es superior al tamaño máximo permitido para esta "
+"cuenta (%s)"
 
 #: ../src/frogr-main-view.c:831 ../data/gtkbuilder/frogr-app-menu.xml.h:4
 msgid "_About"
@@ -740,7 +753,6 @@ msgstr "Abrir en visor e_xterno"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:8
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
-#| msgid "Elements"
 msgid "_Remove Elements"
 msgstr "_Quitar elementos"
 
@@ -761,7 +773,6 @@ msgid "Save"
 msgstr "Guardar"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:13
-#| msgid "Elements"
 msgid "Add Elements"
 msgstr "Añadir elementos"
 
@@ -770,7 +781,6 @@ msgid "Add"
 msgstr "Añadir"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:15
-#| msgid "Elements"
 msgid "Remove Elements"
 msgstr "Quitar elementos"
 
@@ -819,7 +829,6 @@ msgid "Save _As…"
 msgstr "Guardar _como…"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:5
-#| msgid "Elements"
 msgid "A_dd Elements…"
 msgstr "Aña_dir elementos…"
 
@@ -836,7 +845,6 @@ msgid "_View"
 msgstr "_Ver"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:17
-#| msgid "Elements"
 msgid "_Sort Elements"
 msgstr "_Ordenar elementos"
 
@@ -853,7 +861,6 @@ msgid "By _Title"
 msgstr "Por _título"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:21
-#| msgid "By _Title"
 msgid "By _Size"
 msgstr "Por _tamaño"
 
