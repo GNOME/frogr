@@ -6,14 +6,14 @@
   <info>
     <link type="guide" xref="organize"/>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
-    <desc>Group Pictures</desc>
+    <desc>Group Elements</desc>
   </info>
 
-  <title>Group Pictures</title>
-  <p>You may add pictures to an already defined group.</p>
+  <title>Add to Groups</title>
+  <p>You may add pictures and videos to an already defined group.</p>
   <figure>
-    <title>Adding pictures to groups</title>
-    <desc>Adding pictures to groups</desc>
+    <title>Adding elements to groups</title>
+    <desc>Adding elements to groups</desc>
     <media type="image" src="figures/add-to-groups.png" mime="image/png" style="right">
     </media>
   </figure>

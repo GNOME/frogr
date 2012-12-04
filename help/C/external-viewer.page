@@ -6,10 +6,10 @@
   <info>
     <link type="guide" xref="index#pictures"/>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
-    <desc>Open some picture in external application</desc>
+    <desc>Open element in external application</desc>
   </info>
 
   <title>External viewer</title>
-  <p> You can display some picture in any application. Right-click on some picture then choose <gui>Open in external viewer</gui>. </p>
+  <p> You can display pictures or videos in external applications. Right-click on some picture then choose <gui>Open in external viewer</gui>. </p>
 
 </page>

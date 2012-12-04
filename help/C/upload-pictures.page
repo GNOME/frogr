@@ -6,10 +6,10 @@
   <info>
     <link type="guide" xref="pictures"/>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
-    <desc>Upload Pictures</desc>
+    <desc>Upload Elements</desc>
   </info>
 
-  <title>Upload Pictures</title>
-  <p>You can upload a picture using the toolbar <gui>arrow</gui> button. Or, you can use the menu <guiseq><gui>Actions</gui><gui>Upload All</gui></guiseq>. The uploaded pictures will disappear from the list. You may remove some pictures before to upload all the remaining ones.</p>
+  <title>Upload Elements</title>
+  <p>You can upload pictures and videos using the toolbar <gui>arrow</gui> button. Or, you can use the menu <guiseq><gui>File</gui><gui>Upload All</gui></guiseq>. The uploaded pictures will disappear from the list. You may remove some pictures before to upload all the remaining ones.</p>
 
 </page>

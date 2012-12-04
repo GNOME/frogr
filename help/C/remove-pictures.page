@@ -6,10 +6,10 @@
   <info>
     <link type="guide" xref="pictures"/>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
-    <desc>Remove Pictures</desc>
+    <desc>Remove Elements</desc>
   </info>
 
-  <title>Remove Pictures</title>
-  <p>You can remove a picture using the toolbar <gui>Minus</gui> button. Or, you can use the menu <guiseq><gui>Actions</gui><gui>Remove Pictures</gui></guiseq>.</p>
+  <title>Remove Elements</title>
+  <p>You can remove a picture or a video using the toolbar <gui>Minus</gui> button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove Elements</gui></guiseq>.</p>
 
 </page>

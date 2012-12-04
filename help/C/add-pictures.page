@@ -6,10 +6,10 @@
   <info>
     <link type="guide" xref="pictures"/>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
-    <desc>Load Pictures</desc>
+    <desc>Add Elements</desc>
   </info>
 
-  <title>Load Pictures</title>
-  <p>You can load a picture using the toolbar <gui>Plus</gui> button. Or, you can use the menu <guiseq><gui>Actions</gui><gui>Load Pictures</gui></guiseq>. The loaded pictures will be displayed and available for transfer to Flickr.</p>
+  <title>Add Elements</title>
+  <p>You can add a picture or a video using the toolbar <gui>Plus</gui> button. Or, you can use the menu <guiseq><gui>File</gui><gui>Add Elements</gui></guiseq>. The loaded elements will be displayed and available for transfer to Flickr.</p>
 
 </page>

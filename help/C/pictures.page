@@ -6,10 +6,10 @@
   <info>
     <link type="guide" xref="index#pictures"/>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
-    <desc>Load, remove and upload pictures</desc>
+    <desc>Add, remove and upload pictures and videos</desc>
   </info>
 
-  <title>Transfer Pictures</title>
-  <p>You first have to load pictures into frogr before being able to upload them.</p>
+  <title>Transfer Elements</title>
+  <p>You first have to add elements (pictures or videos) into frogr before being able to upload them.</p>
 
 </page>
