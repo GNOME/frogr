@@ -103,10 +103,19 @@ static void _update_status_and_progress (FrogrFileLoader *self);
 static void _advance_to_next_file (FrogrFileLoader *self);
 static void _load_current_file (FrogrFileLoader *self);
 static void _load_current_file_cb (GObject *object,
-                                GAsyncResult *res,
-                                gpointer data);
+				   GAsyncResult *res,
+				   gpointer data);
 
 static gboolean _is_video_file (GFile *file);
+static GdkPixbuf *_try_get_pixbuf_for_image (FrogrFileLoader *self,
+					     GFile *file,
+					     const gchar *contents,
+					     gsize length);
+static GdkPixbuf *_try_get_pixbuf_for_video (FrogrFileLoader *self,
+					     GFile *file,
+					     const gchar *contents,
+					     gsize length);
+
 static gboolean get_gps_coordinate (ExifData *exif,
                                     ExifTag   tag,
                                     ExifTag   reftag,
@@ -266,58 +275,26 @@ _load_current_file_cb (GObject *object,
       /* Load the pixbuf for the video or the image */
       is_video = _is_video_file (file);
       if (is_video)
-        {
-          pixbuf = frogr_util_get_pixbuf_for_video_file (file, IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
-          if (!pixbuf)
-            {
-              /* FIXME: We should integrate with gstreamer's codec
-                 installer instead of just showing an error message to
-                 the user, but this is "good enough" for now. */
-              gchar *file_name = NULL;
-              gchar *msg = NULL;
-
-              file_name = g_file_get_basename (file);
-              msg = g_strdup_printf (_("Unable to load video %s\n"
-                                       "Please check that you have the right codec installed"), file_name);
-              g_free (file_name);
-
-              frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
-              g_free (msg);
-            }
-        }
+	pixbuf = _try_get_pixbuf_for_video (self, file, contents, length);
       else
-        pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
-                                                            IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
+	pixbuf = _try_get_pixbuf_for_image (self, file, contents, length);
+
       if (pixbuf)
-        {
-          if (priv->loading_mode == LOADING_MODE_FROM_PICTURES)
-            {
-              /* Just update the picture if we are not loading from URIs */
-              picture = FROGR_PICTURE (priv->current_picture->data);
-              frogr_picture_set_pixbuf (picture, pixbuf);
-            }
-          else
-            {
-              picture = _create_new_picture (self, file, pixbuf, is_video);
-              _update_picture_with_exif_data (self, contents, length, picture);
-            }
+	{
+	  if (priv->loading_mode == LOADING_MODE_FROM_PICTURES)
+	    {
+	      /* Just update the picture if we are not loading from URIs */
+	      picture = FROGR_PICTURE (priv->current_picture->data);
+	      frogr_picture_set_pixbuf (picture, pixbuf);
+	    }
+	  else
+	    {
+	      picture = _create_new_picture (self, file, pixbuf, is_video);
+	      _update_picture_with_exif_data (self, contents, length, picture);
+	    }
 
-          g_object_unref (pixbuf);
-        }
-      else if (error)
-        {
-          gchar *file_name = NULL;
-          gchar *msg = NULL;
-
-          file_name = g_file_get_basename (file);
-          msg = g_strdup_printf (_("Unable to load picture %s:\n%s"), file_name, error->message);
-          g_free (file_name);
-
-          frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
-          g_free (msg);
-
-          g_error_free (error);
-        }
+	  g_object_unref (pixbuf);
+	}
     }
   else
     {
@@ -565,6 +542,67 @@ _is_video_file (GFile *file)
 #endif
 
   return is_video;
+}
+
+static GdkPixbuf *
+_try_get_pixbuf_for_image (FrogrFileLoader *self,
+			   GFile *file,
+			   const gchar *contents,
+			   gsize length)
+{
+  GdkPixbuf *pixbuf = NULL;
+  GError *error = NULL;
+
+  pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
+						      IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
+  if (error)
+    {
+      gchar *file_name = NULL;
+      gchar *msg = NULL;
+
+      file_name = g_file_get_basename (file);
+      msg = g_strdup_printf (_("Unable to load picture %s:\n%s"), file_name, error->message);
+      g_free (file_name);
+
+      frogr_util_show_error_dialog (GTK_WINDOW (FROGR_FILE_LOADER_GET_PRIVATE (self)->mainview), msg);
+      g_free (msg);
+
+      g_error_free (error);
+    }
+
+  return pixbuf;
+}
+
+static GdkPixbuf *
+_try_get_pixbuf_for_video (FrogrFileLoader *self,
+			   GFile *file,
+			   const gchar *contents,
+			   gsize length)
+{
+  GdkPixbuf *pixbuf = NULL;
+  GError *error = NULL;
+
+  pixbuf = frogr_util_get_pixbuf_for_video_file (file, IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
+  if (error)
+    {
+      gchar *file_name = NULL;
+      gchar *msg = NULL;
+
+      /* FIXME: We should integrate with gstreamer's codec
+	 installer instead of just showing an error message to
+	 the user, but this is "good enough" for now. */
+      file_name = g_file_get_basename (file);
+      msg = g_strdup_printf (_("Unable to load video %s\n"
+			       "Please check that you have the right codec installed"), file_name);
+      g_free (file_name);
+
+      frogr_util_show_error_dialog (GTK_WINDOW (FROGR_FILE_LOADER_GET_PRIVATE (self)->mainview), msg);
+      g_free (msg);
+
+      g_error_free (error);
+    }
+
+  return pixbuf;
 }
 
 /* This function was taken from tracker, licensed under the GNU Lesser
