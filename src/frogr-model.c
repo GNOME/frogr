@@ -813,7 +813,6 @@ frogr_model_serialize (FrogrModel *self)
 void
 frogr_model_deserialize (FrogrModel *self, JsonNode *json_node)
 {
-  FrogrFileLoader *loader = NULL;
   JsonObject *root_object = NULL;
   JsonArray *array_member = NULL;
   GSList *pictures = NULL;
@@ -849,19 +848,28 @@ frogr_model_deserialize (FrogrModel *self, JsonNode *json_node)
   if (array_member)
     pictures = _deserialize_list_from_json_array (array_member, FROGR_TYPE_PICTURE);
 
-  /* Now we take the list of pictures and carefully add them into the
-     model as long as the associated thumbnails are being loaded */
-  loader = frogr_file_loader_new_from_pictures (pictures);
+  if (pictures)
+    {
+      FrogrFileLoader *loader = NULL;
 
-  g_signal_connect (G_OBJECT (loader), "file-loaded",
-                    G_CALLBACK (_on_file_loaded),
-                    self);
+      /* Now we take the list of pictures and add them into the
+         model as the associated thumbnails are being loaded */
+      loader = frogr_file_loader_new_from_pictures (pictures);
 
-  g_signal_connect (G_OBJECT (loader), "files-loaded",
-                    G_CALLBACK (_on_files_loaded),
-                    self);
+      g_signal_connect (G_OBJECT (loader), "file-loaded",
+                        G_CALLBACK (_on_file_loaded),
+                        self);
 
-  /* Load the pictures! */
-  _remove_pictures (self);
-  frogr_file_loader_load (loader);
+      g_signal_connect (G_OBJECT (loader), "files-loaded",
+                        G_CALLBACK (_on_files_loaded),
+                        self);
+      /* Load the pictures! */
+      _remove_pictures (self);
+      frogr_file_loader_load (loader);
+    }
+  else
+    {
+      /* We are done deserializing already now if there are no pictures */
+      g_signal_emit (self, signals[MODEL_DESERIALIZED], 0);
+    }
 }

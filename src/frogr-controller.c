@@ -281,6 +281,7 @@ _g_application_startup_cb (GApplication *app, gpointer data)
 {
   FrogrController *self = FROGR_CONTROLLER (data);
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  FrogrModel *model = NULL;
   FrogrAccount *account = NULL;
   gboolean use_dark_theme;
 
@@ -290,6 +291,11 @@ _g_application_startup_cb (GApplication *app, gpointer data)
   priv->mainview = frogr_main_view_new (GTK_APPLICATION (app));
   g_object_add_weak_pointer (G_OBJECT (priv->mainview),
                              (gpointer) & priv->mainview);
+  /* Connect to signals */
+  model = frogr_main_view_get_model (priv->mainview);
+  g_signal_connect (G_OBJECT (model), "model-deserialized",
+                    G_CALLBACK (_on_model_deserialized),
+                    self);
 
   /* Start on idle state */
   _set_state (self, FROGR_STATE_IDLE);
@@ -2844,8 +2850,6 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
       FrogrModel *model = NULL;
       JsonNode *json_root = NULL;
 
-      _set_state (self, FROGR_STATE_LOADING_PICTURES);
-
       /* Make sure we are not fetching any data from the network at
          this moment, or cancel otherwise, so the model is ready */
       priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -2853,13 +2857,11 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
         frogr_controller_cancel_ongoing_requests (self);
 
       /* Deserialize from the JSON data and update the model */
+      _set_state (self, FROGR_STATE_LOADING_PICTURES);
+
       model = frogr_main_view_get_model (priv->mainview);
       json_root = json_parser_get_root (json_parser);
       frogr_model_deserialize (model, json_root);
-
-      g_signal_connect (G_OBJECT (model), "model-deserialized",
-                        G_CALLBACK (_on_model_deserialized),
-                        self);
     }
 
   g_object_unref (json_parser);
