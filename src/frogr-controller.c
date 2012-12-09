@@ -2826,15 +2826,16 @@ frogr_controller_cancel_ongoing_requests (FrogrController *self)
   priv->cancellable = NULL;
 }
 
-void
+gboolean
 frogr_controller_open_project_from_file (FrogrController *self, const gchar *path)
 {
   FrogrControllerPrivate *priv = NULL;
   JsonParser *json_parser = NULL;
   GError *error = NULL;
+  gboolean result = FALSE;
 
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-  g_return_if_fail(path);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
+  g_return_val_if_fail(path, FALSE);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2868,18 +2869,20 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
       _set_state (self, FROGR_STATE_LOADING_PICTURES);
 
       model = frogr_main_view_get_model (priv->mainview);
-      root_node = json_parser_get_root (json_parser);
 
+      root_node = json_parser_get_root (json_parser);
       root_object = json_node_get_object (root_node);
       data_object = json_object_get_object_member (root_object, "data");
 
       frogr_model_deserialize (model, data_object);
+      result = TRUE;
     }
-
   g_object_unref (json_parser);
+
+  return result;
 }
 
-void
+gboolean
 frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
 {
   FrogrControllerPrivate *priv = NULL;
@@ -2888,19 +2891,27 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   JsonNode *root_node = NULL;
   JsonObject *root_object = NULL;
   JsonObject *serialized_model = NULL;
+  gint n_pictures;
+  gint n_photosets;
+  gint n_groups;
   GError *error = NULL;
 
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
+  g_return_val_if_fail(path, FALSE);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   model = frogr_main_view_get_model (priv->mainview);
 
+  n_pictures = frogr_model_n_pictures (model);
+  n_photosets = frogr_model_n_photosets (model);
+  n_groups = frogr_model_n_groups (model);
+
   root_node = json_node_new (JSON_NODE_OBJECT);
   root_object = json_object_new ();
   json_object_set_string_member (root_object, "frogr-version", APP_VERSION);
-  json_object_set_int_member (root_object, "n_pictures", frogr_model_n_pictures (model));
-  json_object_set_int_member (root_object, "n_photosets", frogr_model_n_photosets (model));
-  json_object_set_int_member (root_object, "n_groups", frogr_model_n_groups (model));
+  json_object_set_int_member (root_object, "n_pictures", n_pictures);
+  json_object_set_int_member (root_object, "n_photosets", n_photosets);
+  json_object_set_int_member (root_object, "n_groups", n_groups);
 
   serialized_model = frogr_model_serialize (model);
   json_object_set_object_member (root_object, "data", serialized_model);
@@ -2914,13 +2925,18 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
 
   /* Save to disk */
   json_generator_to_file (json_gen, path, &error);
+  g_object_unref (json_gen);
+
   if (error)
     {
       DEBUG ("Error serializing current state to %s: %s",
              path, error->message);
       g_error_free (error);
+
+      return FALSE;
     }
-  g_object_unref (json_gen);
+
+  return TRUE;
 }
 
 void

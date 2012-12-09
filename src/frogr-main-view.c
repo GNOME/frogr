@@ -1231,9 +1231,8 @@ _open_project_dialog_response_cb (GtkDialog *dialog,
           FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
           /* Load from disk and update project's path */
-          frogr_controller_open_project_from_file (priv->controller, filename);
-          _update_project_path (self, filename);
-
+          if (frogr_controller_open_project_from_file (priv->controller, filename))
+            _update_project_path (self, filename);
           g_free (filename);
         }
     }
@@ -1287,11 +1286,13 @@ _save_project_to_file (FrogrMainView *self, const gchar *filepath)
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Save to disk and update project's path */
-  frogr_controller_save_project_to_file (priv->controller, filepath);
-  _update_project_path (self, filepath);
+  if (frogr_controller_save_project_to_file (priv->controller, filepath))
+    {
+      _update_project_path (self, filepath);
 
-  /* Update title marking it as non-dirty (just saved) */
-  _update_window_title (self, FALSE);
+      /* Update title marking it as non-dirty (just saved) */
+      _update_window_title (self, FALSE);
+    }
 }
 
 static void
