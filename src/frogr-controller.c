@@ -2829,24 +2829,31 @@ frogr_controller_cancel_ongoing_requests (FrogrController *self)
 void
 frogr_controller_open_project_from_file (FrogrController *self, const gchar *path)
 {
+  FrogrControllerPrivate *priv = NULL;
   JsonParser *json_parser = NULL;
   GError *error = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
   g_return_if_fail(path);
 
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
   /* Load from disk */
   json_parser = json_parser_new ();
   json_parser_load_from_file (json_parser, path, &error);
   if (error)
     {
-      DEBUG ("Error loading project file from %s: %s",
-             path, error->message);
+      gchar *msg = NULL;
+
+      msg = g_strdup_printf (_("Error opening project file"));
+      frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
+      g_free (msg);
+
+      DEBUG ("Error loading project file: %s", error->message);
       g_error_free (error);
     }
   else
     {
-      FrogrControllerPrivate *priv = NULL;
       FrogrModel *model = NULL;
       JsonNode *root_node = NULL;
       JsonObject *root_object = NULL;
@@ -2854,7 +2861,6 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
 
       /* Make sure we are not fetching any data from the network at
          this moment, or cancel otherwise, so the model is ready */
-      priv = FROGR_CONTROLLER_GET_PRIVATE (self);
       if (priv->fetching_photosets || priv->fetching_groups || priv->fetching_tags)
         frogr_controller_cancel_ongoing_requests (self);
 
