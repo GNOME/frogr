@@ -2874,6 +2874,15 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
       root_object = json_node_get_object (root_node);
       data_object = json_object_get_object_member (root_object, "data");
 
+      DEBUG ("Opening project file %s:\n"
+             "\tNumber of pictures: %ld\n"
+             "\tNumber of photosets: %ld\n"
+             "\tNumber of groups: %ld\n",
+             path,
+             json_object_get_int_member (root_object, "n_pictures"),
+             json_object_get_int_member (root_object, "n_photosets"),
+             json_object_get_int_member (root_object, "n_groups"));
+
       frogr_model_deserialize (model, data_object);
       result = TRUE;
     }
@@ -2912,6 +2921,12 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   json_object_set_int_member (root_object, "n_pictures", n_pictures);
   json_object_set_int_member (root_object, "n_photosets", n_photosets);
   json_object_set_int_member (root_object, "n_groups", n_groups);
+
+  DEBUG ("Saving project to file %s:\n"
+         "\tNumber of pictures: %d\n"
+         "\tNumber of photosets: %d\n"
+         "\tNumber of groups: %d\n",
+         path, n_pictures, n_photosets, n_groups);
 
   serialized_model = frogr_model_serialize (model);
   json_object_set_object_member (root_object, "data", serialized_model);
