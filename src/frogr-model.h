@@ -109,9 +109,9 @@ GSList *frogr_model_get_tags (FrogrModel *self);
 
 /* Serialization */
 
-JsonNode *frogr_model_serialize (FrogrModel *self);
+JsonObject *frogr_model_serialize (FrogrModel *self);
 
-void frogr_model_deserialize (FrogrModel *self, JsonNode *json_node);
+void frogr_model_deserialize (FrogrModel *self, JsonObject *root_object);
 
 G_END_DECLS
 

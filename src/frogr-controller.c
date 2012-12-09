@@ -2848,7 +2848,9 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
     {
       FrogrControllerPrivate *priv = NULL;
       FrogrModel *model = NULL;
-      JsonNode *json_root = NULL;
+      JsonNode *root_node = NULL;
+      JsonObject *root_object = NULL;
+      JsonObject *data_object = NULL;
 
       /* Make sure we are not fetching any data from the network at
          this moment, or cancel otherwise, so the model is ready */
@@ -2860,8 +2862,12 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
       _set_state (self, FROGR_STATE_LOADING_PICTURES);
 
       model = frogr_main_view_get_model (priv->mainview);
-      json_root = json_parser_get_root (json_parser);
-      frogr_model_deserialize (model, json_root);
+      root_node = json_parser_get_root (json_parser);
+
+      root_object = json_node_get_object (root_node);
+      data_object = json_object_get_object_member (root_object, "data");
+
+      frogr_model_deserialize (model, data_object);
     }
 
   g_object_unref (json_parser);
@@ -2873,7 +2879,9 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   FrogrControllerPrivate *priv = NULL;
   FrogrModel *model = NULL;
   JsonGenerator *json_gen = NULL;
-  JsonNode *serialized_model = NULL;
+  JsonNode *root_node = NULL;
+  JsonObject *root_object = NULL;
+  JsonObject *serialized_model = NULL;
   GError *error = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
@@ -2881,12 +2889,22 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   model = frogr_main_view_get_model (priv->mainview);
 
+  root_node = json_node_new (JSON_NODE_OBJECT);
+  root_object = json_object_new ();
+  json_object_set_string_member (root_object, "frogr-version", APP_VERSION);
+  json_object_set_int_member (root_object, "n_pictures", frogr_model_n_pictures (model));
+  json_object_set_int_member (root_object, "n_photosets", frogr_model_n_photosets (model));
+  json_object_set_int_member (root_object, "n_groups", frogr_model_n_groups (model));
+
   serialized_model = frogr_model_serialize (model);
+  json_object_set_object_member (root_object, "data", serialized_model);
+  json_node_set_object (root_node, root_object);
+  json_object_unref (root_object);
 
   /* Create a JsonGenerator using the JsonNode as root */
   json_gen = json_generator_new ();
-  json_generator_set_root (json_gen, serialized_model);
-  json_node_free (serialized_model);
+  json_generator_set_root (json_gen, root_node);
+  json_node_free (root_node);
 
   /* Save to disk */
   json_generator_to_file (json_gen, path, &error);

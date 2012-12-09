@@ -776,11 +776,10 @@ frogr_model_get_tags (FrogrModel *self)
   return priv->all_tags;
 }
 
-JsonNode *
+JsonObject *
 frogr_model_serialize (FrogrModel *self)
 {
   JsonArray *json_array = NULL;
-  JsonNode *root_node = NULL;
   JsonObject *root_object = NULL;
   GSList *data_list = NULL;
 
@@ -804,16 +803,12 @@ frogr_model_serialize (FrogrModel *self)
   json_array = _serialize_list_to_json_array (data_list, G_TYPE_STRING);
   json_object_set_array_member (root_object, "tags", json_array);
 
-  root_node = json_node_new (JSON_NODE_OBJECT);
-  json_node_set_object (root_node, root_object);
-
-  return root_node;
+  return root_object;
 }
 
 void
-frogr_model_deserialize (FrogrModel *self, JsonNode *json_node)
+frogr_model_deserialize (FrogrModel *self, JsonObject *root_object)
 {
-  JsonObject *root_object = NULL;
   JsonArray *array_member = NULL;
   GSList *pictures = NULL;
   GSList *sets = NULL;
@@ -823,8 +818,6 @@ frogr_model_deserialize (FrogrModel *self, JsonNode *json_node)
   g_return_if_fail(FROGR_IS_MODEL (self));
 
   /* First we get the different lists with data for sets, groups and tags */
-  root_object = json_node_get_object (json_node);
-
   array_member = json_object_get_array_member (root_object, "photosets");
   if (array_member)
     sets = _deserialize_list_from_json_array (array_member, FROGR_TYPE_PHOTOSET);
