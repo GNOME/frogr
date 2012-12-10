@@ -329,7 +329,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 {
   FrogrSettingsDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
-  GtkWidget *table = NULL;
+  GtkWidget *grid = NULL;
   GtkWidget *align = NULL;
   GtkWidget *cbutton = NULL;
   GtkWidget *label = NULL;
@@ -364,77 +364,59 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   /* Proxy host */
 
-  table = gtk_table_new (2, 4, FALSE);
+  grid = gtk_grid_new ();
+  gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
 
   label = gtk_label_new_with_mnemonic (_("_Host:"));
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_table_attach (GTK_TABLE (table), align, 0, 1, 0, 1,
-                    GTK_FILL, 0, 6, 6);
+  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
   priv->proxy_host_label = label;
 
   entry = gtk_entry_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
-
-  align = gtk_alignment_new (1, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), entry);
-  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 0, 1,
-                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  gtk_widget_set_hexpand (GTK_WIDGET (entry), TRUE);
+  gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
   priv->proxy_host_entry = entry;
 
   /* Proxy port */
 
   label = gtk_label_new_with_mnemonic (_("_Port:"));
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_table_attach (GTK_TABLE (table), align, 0, 1, 1, 2,
-                    GTK_FILL, 0, 6, 6);
+  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
   priv->proxy_port_label = label;
 
   entry = gtk_entry_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
-
-  align = gtk_alignment_new (1, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), entry);
-  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 1, 2,
-                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  gtk_widget_set_hexpand (GTK_WIDGET (entry), TRUE);
+  gtk_grid_attach (GTK_GRID (grid), entry, 1, 1, 1, 1);
   priv->proxy_port_entry = entry;
 
   /* Proxy username */
 
   label = gtk_label_new_with_mnemonic (_("U_sername:"));
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_table_attach (GTK_TABLE (table), align, 0, 1, 2, 3,
-                    GTK_FILL, 0, 6, 6);
+  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
   priv->proxy_username_label = label;
 
   entry = gtk_entry_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
-
-  align = gtk_alignment_new (1, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), entry);
-  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 2, 3,
-                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  gtk_widget_set_hexpand (GTK_WIDGET (entry), TRUE);
+  gtk_grid_attach (GTK_GRID (grid), entry, 1, 2, 1, 1);
   priv->proxy_username_entry = entry;
 
   /* Proxy password */
 
   label = gtk_label_new_with_mnemonic (_("Pass_word:"));
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_table_attach (GTK_TABLE (table), align, 0, 1, 3, 4,
-                    GTK_FILL, 0, 6, 6);
+  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
   priv->proxy_password_label = label;
 
   entry = gtk_entry_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
-
   gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
-  align = gtk_alignment_new (1, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), entry);
-  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 3, 4,
-                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  gtk_widget_set_hexpand (GTK_WIDGET (entry), TRUE);
+  gtk_grid_attach (GTK_GRID (grid), entry, 1, 3, 1, 1);
   priv->proxy_password_entry = entry;
 
 #ifdef HAVE_LIBSOUP_GNOME
@@ -442,14 +424,12 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   /* Use GNOME General Proxy Settings */
 
   cbutton = gtk_check_button_new_with_mnemonic (_("_Use GNOME General Proxy Settings"));
-  align = gtk_alignment_new (1, 0, 1, 0);
-  gtk_container_add (GTK_CONTAINER (align), cbutton);
-  gtk_table_attach (GTK_TABLE (table), align, 1, 2, 4, 5,
-                    GTK_EXPAND | GTK_FILL, 0, 6, 6);
+  gtk_widget_set_hexpand (GTK_WIDGET (cbutton), TRUE);
+  gtk_grid_attach (GTK_GRID (grid), cbutton, 1, 4, 1, 1);
   priv->use_gnome_proxy_cb = cbutton;
 #endif
 
-  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (priv->use_proxy_cb), "toggled",
