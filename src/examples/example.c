@@ -724,10 +724,6 @@ main                                    (int    argc,
 {
   GMainLoop *mainloop;
 
-#if !GLIB_CHECK_VERSION(2,36,0)
-  g_type_init ();
-#endif
-
   g_print ("Running flicksoup example...\n\n");
 
   /* Find full path to the testing photo */
