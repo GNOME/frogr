@@ -1222,7 +1222,7 @@ _create_photoset_for_picture (FrogrController *self, UploadOnePictureData *uop_d
                                frogr_photoset_get_title (set),
                                frogr_photoset_get_description (set),
                                frogr_picture_get_id (picture),
-                               NULL,
+                               priv->cancellable,
                                _create_photoset_cb,
                                uop_data);
 
