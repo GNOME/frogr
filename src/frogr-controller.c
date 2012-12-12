@@ -2870,11 +2870,13 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
       DEBUG ("Opening project file %s:\n"
              "\tNumber of pictures: %ld\n"
              "\tNumber of photosets: %ld\n"
-             "\tNumber of groups: %ld\n",
+             "\tNumber of groups: %ld\n"
+             "\tNumber of tags: %ld\n",
              path,
              json_object_get_int_member (root_object, "n_pictures"),
              json_object_get_int_member (root_object, "n_photosets"),
-             json_object_get_int_member (root_object, "n_groups"));
+             json_object_get_int_member (root_object, "n_groups"),
+             json_object_get_int_member (root_object, "n_tags"));
 
       frogr_model_deserialize (model, data_object);
       result = TRUE;
@@ -2896,6 +2898,7 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   gint n_pictures;
   gint n_photosets;
   gint n_groups;
+  gint n_tags;
   GError *error = NULL;
 
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
@@ -2907,6 +2910,7 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   n_pictures = frogr_model_n_pictures (model);
   n_photosets = frogr_model_n_photosets (model);
   n_groups = frogr_model_n_groups (model);
+  n_tags = frogr_model_n_tags (model);
 
   root_node = json_node_new (JSON_NODE_OBJECT);
   root_object = json_object_new ();
@@ -2914,12 +2918,14 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   json_object_set_int_member (root_object, "n_pictures", n_pictures);
   json_object_set_int_member (root_object, "n_photosets", n_photosets);
   json_object_set_int_member (root_object, "n_groups", n_groups);
+  json_object_set_int_member (root_object, "n_tags", n_tags);
 
   DEBUG ("Saving project to file %s:\n"
          "\tNumber of pictures: %d\n"
          "\tNumber of photosets: %d\n"
-         "\tNumber of groups: %d\n",
-         path, n_pictures, n_photosets, n_groups);
+         "\tNumber of groups: %d\n"
+         "\tNumber of tags: %d\n",
+         path, n_pictures, n_photosets, n_groups, n_tags);
 
   serialized_model = frogr_model_serialize (model);
   json_object_set_object_member (root_object, "data", serialized_model);

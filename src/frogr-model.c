@@ -776,6 +776,14 @@ frogr_model_get_tags (FrogrModel *self)
   return priv->all_tags;
 }
 
+guint
+frogr_model_n_tags (FrogrModel *self)
+{
+  g_return_val_if_fail(FROGR_IS_MODEL (self), 0);
+  return g_slist_length (frogr_model_get_tags (self));
+}
+
+
 JsonObject *
 frogr_model_serialize (FrogrModel *self)
 {
