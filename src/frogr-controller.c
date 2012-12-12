@@ -2752,11 +2752,12 @@ frogr_controller_load_pictures (FrogrController *self,
 }
 
 void
-frogr_controller_upload_pictures (FrogrController *self)
+frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
 {
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
+  g_return_if_fail(pictures);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
@@ -2774,27 +2775,19 @@ frogr_controller_upload_pictures (FrogrController *self)
     }
   else
     {
-      FrogrModel *model = NULL;
-      GSList *pictures = NULL;
+      UploadPicturesData *up_data = g_slice_new0 (UploadPicturesData);
+      up_data->pictures = g_slist_copy (pictures);
+      up_data->current = up_data->pictures;
+      up_data->index = 0;
+      up_data->n_pictures = g_slist_length (pictures);
 
-      model = frogr_main_view_get_model (priv->mainview);
-      pictures = frogr_model_get_pictures (model);
-      if (pictures)
-        {
-          UploadPicturesData *up_data = g_slice_new0 (UploadPicturesData);
-          up_data->pictures = g_slist_copy (pictures);
-          up_data->current = up_data->pictures;
-          up_data->index = 0;
-          up_data->n_pictures = g_slist_length (pictures);
+      /* Add references */
+      g_slist_foreach (up_data->pictures, (GFunc)g_object_ref, NULL);
 
-          /* Add references */
-          g_slist_foreach (up_data->pictures, (GFunc)g_object_ref, NULL);
-
-          /* Load the pictures! */
-          _set_state (self, FROGR_STATE_UPLOADING_PICTURES);
-          frogr_main_view_show_progress (priv->mainview, NULL);
-          _upload_next_picture (self, up_data);
-        }
+      /* Load the pictures! */
+      _set_state (self, FROGR_STATE_UPLOADING_PICTURES);
+      frogr_main_view_show_progress (priv->mainview, NULL);
+      _upload_next_picture (self, up_data);
     }
 }
 

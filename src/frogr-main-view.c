@@ -1581,7 +1581,7 @@ _upload_pictures (FrogrMainView *self)
     return;
 
   gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
-  frogr_controller_upload_pictures (priv->controller);
+  frogr_controller_upload_pictures (priv->controller, priv->sorted_pictures);
 }
 
 static void
