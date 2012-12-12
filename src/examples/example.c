@@ -29,11 +29,13 @@
 
 #define TEST_PHOTO "testphoto.png"
 
+#define BUFFER_SIZE 64
+
 static gchar *uploaded_photo_id = NULL;
 static gchar *created_photoset_id = NULL;
 static gchar *first_group_id = NULL;
 static gchar *test_photo_path = NULL;
-static char buffer[64];
+static char buffer[BUFFER_SIZE];
 
 /* Prototypes */
 
@@ -679,7 +681,7 @@ get_auth_url_cb                         (GObject      *object,
 
       /* Make a pause before continuing */
       g_print ("\nEnter the verification code and press ENTER to continue: ");
-      if (gets(buffer))
+      if (fgets(buffer, BUFFER_SIZE, stdin))
         {
           gchar *verifier = NULL;
 
