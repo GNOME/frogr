@@ -491,6 +491,7 @@ _initialize_ui (FrogrMainView *self)
   gtk_widget_set_has_tooltip (icon_view, TRUE);
 
   gtk_window_set_default_size (GTK_WINDOW (self), MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
+  gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (self), TRUE);
 
   /* Init status bar */
   priv->sb_context_id =
