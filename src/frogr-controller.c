@@ -2720,6 +2720,22 @@ frogr_controller_revoke_authorization (FrogrController *self)
   _set_active_account (self, NULL);
 }
 
+gboolean
+frogr_controller_is_connected (FrogrController *self)
+{
+  FrogrControllerPrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
+
+  /* We can't be sure 100% about having connected to flickr until we
+     received the extra information for the current account */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  if (priv->account)
+    return frogr_account_has_extra_info (priv->account);
+
+  return FALSE;
+}
+
 void
 frogr_controller_load_pictures (FrogrController *self,
                                 GSList *fileuris)

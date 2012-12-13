@@ -115,6 +115,8 @@ gboolean frogr_controller_is_authorized (FrogrController *self);
 
 void frogr_controller_revoke_authorization (FrogrController *self);
 
+gboolean frogr_controller_is_connected (FrogrController *self);
+
 void frogr_controller_load_pictures (FrogrController *self, GSList *fileuris);
 
 void frogr_controller_upload_pictures (FrogrController *self, GSList *pictures);
