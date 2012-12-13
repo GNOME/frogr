@@ -1570,7 +1570,7 @@ _fetch_photosets (FrogrController *self)
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  if (!frogr_controller_is_authorized (self))
+  if (!frogr_controller_is_connected (self))
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -1652,7 +1652,7 @@ _fetch_groups (FrogrController *self)
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  if (!frogr_controller_is_authorized (self))
+  if (!frogr_controller_is_connected (self))
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -1874,7 +1874,7 @@ _fetch_tags (FrogrController *self)
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  if (!frogr_controller_is_authorized (self))
+  if (!frogr_controller_is_connected (self))
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -2781,11 +2781,18 @@ frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
   if (!frogr_controller_is_authorized (self))
     {
       gchar *msg = NULL;
-
       msg = g_strdup_printf (_("You need to properly authorize %s before"
                                " uploading any pictures to Flickr.\n"
                                "Please re-authorize it."), APP_SHORTNAME);
 
+      frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
+      g_free (msg);
+    }
+  else if (!frogr_controller_is_connected (self))
+    {
+      gchar *msg = NULL;
+      msg = g_strdup_printf (_("You need to be connected before"
+                               " uploading any pictures to Flickr."));
       frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
       g_free (msg);
     }
