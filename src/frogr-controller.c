@@ -110,6 +110,11 @@ typedef enum {
 } AfterUploadOp;
 
 typedef struct {
+  gboolean retrieve_everything;
+  gboolean force_extra_data;
+} FetchAccountInfoData;
+
+typedef struct {
   GSList *pictures;
   GSList *current;
   guint index;
@@ -225,7 +230,21 @@ static void _on_files_loaded (FrogrFileLoader *loader, FrogrController *self);
 
 static void _on_model_deserialized (FrogrModel *model, FrogrController *self);
 
-static void _fetch_everything (FrogrController *self, gboolean force_fetch);
+static void _fetch_everything (FrogrController *self, gboolean force_extra_data);
+
+static void _fetch_account_info (FrogrController *self);
+
+static void _fetch_account_info_finish (FrogrController *self, FetchAccountInfoData *data);
+
+static void _fetch_account_basic_info (FrogrController *self, FetchAccountInfoData *data);
+
+static void _fetch_account_basic_info_cb (GObject *object, GAsyncResult *res, FetchAccountInfoData *data);
+
+static void _fetch_account_upload_status (FrogrController *self, FetchAccountInfoData *data);
+
+static void _fetch_account_upload_status_cb (GObject *object, GAsyncResult *res, FetchAccountInfoData *data);
+
+static void _fetch_extra_data (FrogrController *self, gboolean force);
 
 static void _fetch_photosets (FrogrController *self);
 
@@ -234,14 +253,6 @@ static void _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer da
 static void _fetch_groups (FrogrController *self);
 
 static void _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data);
-
-static void _fetch_account_info (FrogrController *self);
-
-static void _fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data);
-
-static void _fetch_account_extra_info (FrogrController *self);
-
-static void _fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static void _fetch_tags (FrogrController *self);
 
@@ -1499,7 +1510,7 @@ _complete_picture_upload_on_idle (gpointer data)
   }
 
   /* Re-check account info to make sure we have up-to-date info */
-  _fetch_account_extra_info (controller);
+  _fetch_account_info (controller);
 
   _finish_upload_one_picture_process (controller, uop_data);
   _upload_next_picture (controller, up_data);
@@ -1537,29 +1548,228 @@ _on_model_deserialized (FrogrModel *model, FrogrController *self)
 }
 
 static void
-_fetch_everything (FrogrController *self, gboolean force_fetch)
+_fetch_everything (FrogrController *self, gboolean force_extra_data)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  if (!frogr_controller_is_authorized (self))
+    return;
+
+  FetchAccountInfoData *data = g_slice_new0 (FetchAccountInfoData);
+  data->retrieve_everything = TRUE;
+  data->force_extra_data = force_extra_data;
+
+  _fetch_account_basic_info (self, data);
+}
+
+static void
+_fetch_account_info (FrogrController *self)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  if (!frogr_controller_is_authorized (self))
+    return;
+
+  FetchAccountInfoData *data = g_slice_new0 (FetchAccountInfoData);
+  data->retrieve_everything = FALSE;
+  data->force_extra_data = FALSE;
+
+  _fetch_account_basic_info (self, data);
+}
+
+static void
+_fetch_account_info_finish (FrogrController *self, FetchAccountInfoData *data)
+{
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+  if (data)
+    g_slice_free (FetchAccountInfoData, data);
+}
+
+static void
+_fetch_account_basic_info (FrogrController *self, FetchAccountInfoData *data)
 {
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
+    {
+      _fetch_account_info_finish (self, data);
+      return;
+    }
+
+  /* We won't use a cancellable for this request */
+  _clear_cancellable (self);
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  fsp_session_check_auth_info (priv->session, NULL,
+                               (GAsyncReadyCallback)_fetch_account_basic_info_cb,
+                               data);
+}
+
+static void
+_fetch_account_basic_info_cb (GObject *object, GAsyncResult *res, FetchAccountInfoData *data)
+{
+  FspSession *session = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FspDataAuthToken *auth_token = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  controller = frogr_controller_get_instance ();
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  auth_token = fsp_session_check_auth_info_finish (session, res, &error);
+  if (auth_token && priv->account)
+    {
+      const gchar *old_username = NULL;
+      const gchar *old_fullname = NULL;
+      gboolean username_changed = FALSE;
+
+      /* Check for changes (only for fields that it makes sense) */
+      old_username = frogr_account_get_username (priv->account);
+      old_fullname = frogr_account_get_fullname (priv->account);
+      if (g_strcmp0 (old_username, auth_token->username)
+          || g_strcmp0 (old_fullname, auth_token->fullname))
+        {
+          username_changed = TRUE;
+        }
+
+      frogr_account_set_username (priv->account, auth_token->username);
+      frogr_account_set_fullname (priv->account, auth_token->fullname);
+
+      if (username_changed)
+        {
+          /* Save to disk and emit signal if basic info changed */
+          frogr_config_save_accounts (priv->config);
+          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
+        }
+
+      /* Now fetch the remaining bits of information */
+      _fetch_account_upload_status (controller, data);
+    }
+  else
+    {
+      if (error != NULL)
+        {
+          DEBUG ("Fetching basic info from the account: %s", error->message);
+          _handle_flicksoup_error (controller, error, FALSE);
+          g_error_free (error);
+        }
+      _fetch_account_info_finish (controller, data);
+    }
+
+  fsp_data_free (FSP_DATA (auth_token));
+}
+
+static void _fetch_account_upload_status (FrogrController *self, FetchAccountInfoData *data)
+{
+  FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  if (!frogr_controller_is_authorized (self))
+    {
+      _fetch_account_info_finish (self, data);
+      return;
+    }
+
+  /* We won't use a cancellable for this request */
+  _clear_cancellable (self);
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  fsp_session_get_upload_status (priv->session, NULL,
+                                 (GAsyncReadyCallback)_fetch_account_upload_status_cb,
+                                 data);
+}
+
+static void
+_fetch_account_upload_status_cb (GObject *object, GAsyncResult *res, FetchAccountInfoData *data)
+{
+  FspSession *session = NULL;
+  FrogrController *controller = NULL;
+  FrogrControllerPrivate *priv = NULL;
+  FspDataUploadStatus *upload_status = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  controller = frogr_controller_get_instance ();
+  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
+  upload_status = fsp_session_get_upload_status_finish (session, res, &error);
+  if (upload_status && priv->account)
+    {
+      gulong old_remaining_bw;
+      gulong old_max_bw;
+      gboolean old_is_pro;
+
+      /* Check for changes */
+      old_remaining_bw = frogr_account_get_remaining_bandwidth (priv->account);
+      old_max_bw = frogr_account_get_max_bandwidth (priv->account);
+      old_is_pro = frogr_account_is_pro (priv->account);
+
+      frogr_account_set_remaining_bandwidth (priv->account, upload_status->bw_remaining_kb);
+      frogr_account_set_max_bandwidth (priv->account, upload_status->bw_max_kb);
+      frogr_account_set_max_picture_filesize (priv->account, upload_status->picture_fs_max_kb);
+
+      frogr_account_set_remaining_videos (priv->account, upload_status->bw_remaining_videos);
+      frogr_account_set_current_videos (priv->account, upload_status->bw_used_videos);
+      frogr_account_set_max_video_filesize (priv->account, upload_status->video_fs_max_kb);
+
+      frogr_account_set_is_pro (priv->account, upload_status->pro_user);
+
+      /* Mark that we received this extra info for the user */
+      frogr_account_set_has_extra_info (priv->account, TRUE);
+
+      if (old_remaining_bw != upload_status->bw_remaining_kb
+          || old_max_bw != upload_status->bw_max_kb
+          || old_is_pro != upload_status->pro_user)
+        {
+          /* Emit signal if extra info changed */
+          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
+        }
+
+      /* Chain with the continuation function if any */
+      if (data->retrieve_everything)
+        _fetch_extra_data (controller, data->force_extra_data);
+    }
+  else if (error != NULL)
+    {
+      DEBUG ("Fetching upload status for the account: %s", error->message);
+      _handle_flicksoup_error (controller, error, FALSE);
+      g_error_free (error);
+    }
+
+  fsp_data_free (FSP_DATA (upload_status));
+  _fetch_account_info_finish (controller, data);
+}
+
+static void
+_fetch_extra_data (FrogrController *self, gboolean force)
+{
+  FrogrControllerPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_CONTROLLER (self));
+
+  if (!frogr_controller_is_connected (self))
     return;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  /* Account information are cheap requests so we always retrieve that
-     info to ensure it's always up to date (regadless 'force_fetch') */
-  _fetch_account_info (self);
-  _fetch_account_extra_info (self);
+  /* If we are forcing the retrieval of photosets, groups and tags,
+     make sure we are not fetching any data from the network at this
+     moment, or cancel otherwise, so the model is ready.*/
+  if (force && (priv->fetching_photosets || priv->fetching_groups || priv->fetching_tags))
+    frogr_controller_cancel_ongoing_requests (self);
 
-  /* Sets, groups and tags can take much longer to retrieve, so we
-     only retrieve that if actually needed (or asked to) */
-  if (force_fetch || !priv->photosets_fetched)
+  /* Sets, groups and tags can take much longer to retrieve,
+     so we only retrieve that if actually needed */
+  if (force || !priv->photosets_fetched)
     _fetch_photosets (self);
-  if (force_fetch || !priv->groups_fetched)
+  if (force || !priv->groups_fetched)
     _fetch_groups (self);
-  if (force_fetch || !priv->tags_fetched)
+  if (force || !priv->tags_fetched)
     _fetch_tags (self);
 }
 
@@ -1724,147 +1934,6 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   priv->fetching_groups = FALSE;
-}
-
-static void _fetch_account_info (FrogrController *self)
-{
-  FrogrControllerPrivate *priv = NULL;
-
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  if (!frogr_controller_is_authorized (self))
-    return;
-
-  /* We won't use a cancellable for this request */
-  _clear_cancellable (self);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  fsp_session_check_auth_info (priv->session, NULL,
-                               _fetch_account_info_cb, self);
-}
-
-static void
-_fetch_account_info_cb (GObject *object, GAsyncResult *res, gpointer data)
-{
-  FspSession *session = NULL;
-  FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
-  FspDataAuthToken *auth_token = NULL;
-  GError *error = NULL;
-
-  session = FSP_SESSION (object);
-  controller = FROGR_CONTROLLER (data);
-
-  auth_token = fsp_session_check_auth_info_finish (session, res, &error);
-  if (error != NULL)
-    {
-      DEBUG ("Fetching basic info from the account: %s", error->message);
-      _handle_flicksoup_error (controller, error, FALSE);
-      g_error_free (error);
-    }
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if (auth_token && priv->account)
-    {
-      const gchar *old_username = NULL;
-      const gchar *old_fullname = NULL;
-      gboolean username_changed = FALSE;
-
-      /* Check for changes (only for fields that it makes sense) */
-      old_username = frogr_account_get_username (priv->account);
-      old_fullname = frogr_account_get_fullname (priv->account);
-      if (g_strcmp0 (old_username, auth_token->username)
-          || g_strcmp0 (old_fullname, auth_token->fullname))
-        {
-          username_changed = TRUE;
-        }
-
-      frogr_account_set_username (priv->account, auth_token->username);
-      frogr_account_set_fullname (priv->account, auth_token->fullname);
-
-      if (username_changed)
-        {
-          /* Save to disk and emit signal if basic info changed */
-          frogr_config_save_accounts (priv->config);
-          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
-        }
-    }
-
-  fsp_data_free (FSP_DATA (auth_token));
-}
-
-static void _fetch_account_extra_info (FrogrController *self)
-{
-  FrogrControllerPrivate *priv = NULL;
-
-  g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  if (!frogr_controller_is_authorized (self))
-    return;
-
-  /* We won't use a cancellable for this request */
-  _clear_cancellable (self);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  fsp_session_get_upload_status (priv->session, NULL,
-                                 _fetch_account_extra_info_cb, self);
-}
-
-static void
-_fetch_account_extra_info_cb (GObject *object, GAsyncResult *res, gpointer data)
-{
-  FspSession *session = NULL;
-  FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
-  FspDataUploadStatus *upload_status = NULL;
-  GError *error = NULL;
-
-  session = FSP_SESSION (object);
-  controller = FROGR_CONTROLLER (data);
-
-  upload_status = fsp_session_get_upload_status_finish (session, res, &error);
-  if (error != NULL)
-    {
-      DEBUG ("Fetching extra info from the account: %s", error->message);
-      _handle_flicksoup_error (controller, error, FALSE);
-      g_error_free (error);
-    }
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if (upload_status && priv->account)
-    {
-      gulong old_remaining_bw;
-      gulong old_max_bw;
-      gboolean old_is_pro;
-
-      /* Check for changes */
-      old_remaining_bw = frogr_account_get_remaining_bandwidth (priv->account);
-      old_max_bw = frogr_account_get_max_bandwidth (priv->account);
-      old_is_pro = frogr_account_is_pro (priv->account);
-
-      frogr_account_set_remaining_bandwidth (priv->account, upload_status->bw_remaining_kb);
-      frogr_account_set_max_bandwidth (priv->account, upload_status->bw_max_kb);
-      frogr_account_set_max_picture_filesize (priv->account, upload_status->picture_fs_max_kb);
-
-      frogr_account_set_remaining_videos (priv->account, upload_status->bw_remaining_videos);
-      frogr_account_set_current_videos (priv->account, upload_status->bw_used_videos);
-      frogr_account_set_max_video_filesize (priv->account, upload_status->video_fs_max_kb);
-
-      frogr_account_set_is_pro (priv->account, upload_status->pro_user);
-
-      /* Mark that we received this extra info for the user */
-      frogr_account_set_has_extra_info (priv->account, TRUE);
-
-      if (old_remaining_bw != upload_status->bw_remaining_kb
-          || old_max_bw != upload_status->bw_max_kb
-          || old_is_pro != upload_status->pro_user)
-        {
-          /* Emit signal if extra info changed */
-          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
-        }
-    }
-
-  fsp_data_free (FSP_DATA (upload_status));
 }
 
 static void
