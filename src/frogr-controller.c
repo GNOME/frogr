@@ -87,6 +87,13 @@ struct _FrogrControllerPrivate
   gboolean photosets_fetched;
   gboolean groups_fetched;
   gboolean tags_fetched;
+
+  /* Event sources IDs for dialogs to be shown on idle */
+  guint show_details_dialog_source_id;
+  guint show_add_tags_dialog_source_id;
+  guint show_create_new_set_dialog_source_id;
+  guint show_add_to_set_dialog_source_id;
+  guint show_add_to_group_dialog_source_id;
 };
 
 /* Signals */
@@ -257,6 +264,8 @@ static void _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 static void _fetch_tags (FrogrController *self);
 
 static void _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _dispose_slist_of_objects (GSList *objects);
 
 static gboolean _show_progress_on_idle (gpointer data);
 
@@ -2004,6 +2013,17 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   priv->fetching_tags = FALSE;
 }
 
+static void
+_dispose_slist_of_objects (GSList *objects)
+{
+  if (!objects)
+    return;
+
+  /* FrogrController's responsibility over this list ends here */
+  g_slist_foreach (objects, (GFunc) g_object_unref, NULL);
+  g_slist_free (objects);
+}
+
 static gboolean
 _show_progress_on_idle (gpointer data)
 {
@@ -2088,10 +2108,7 @@ _show_details_dialog_on_idle (GSList *pictures)
   /* Sets already pre-fetched: show the dialog */
   frogr_details_dialog_show (GTK_WINDOW (priv->mainview), pictures, tags_list);
 
-  /* FrogrController's responsibility over this list ends here */
-  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
-  g_slist_free (pictures);
-
+  priv->show_details_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2116,10 +2133,7 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   /* Sets already pre-fetched: show the dialog */
   frogr_add_tags_dialog_show (GTK_WINDOW (priv->mainview), pictures, tags_list);
 
-  /* FrogrController's responsibility over this list ends here */
-  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
-  g_slist_free (pictures);
-
+  priv->show_add_tags_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2143,10 +2157,7 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
 
   frogr_create_new_set_dialog_show (GTK_WINDOW (priv->mainview), pictures, photosets);
 
-  /* FrogrController's responsibility over this list ends here */
-  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
-  g_slist_free (pictures);
-
+  priv->show_create_new_set_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2173,10 +2184,7 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
   else if (priv->photosets_fetched)
     frogr_util_show_info_dialog (GTK_WINDOW (priv->mainview), _("No sets found"));
 
-  /* FrogrController's responsibility over this list ends here */
-  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
-  g_slist_free (pictures);
-
+  priv->show_add_to_set_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2203,10 +2211,7 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   else if (priv->groups_fetched)
     frogr_util_show_info_dialog (GTK_WINDOW (priv->mainview), _("No groups found"));
 
-  /* FrogrController's responsibility over this list ends here */
-  g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
-  g_slist_free (pictures);
-
+  priv->show_add_to_group_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2332,6 +2337,11 @@ frogr_controller_init (FrogrController *self)
   priv->photosets_fetched = FALSE;
   priv->groups_fetched = FALSE;
   priv->tags_fetched = FALSE;
+  priv->show_details_dialog_source_id = 0;
+  priv->show_add_tags_dialog_source_id = 0;
+  priv->show_create_new_set_dialog_source_id = 0;
+  priv->show_add_to_set_dialog_source_id = 0;
+  priv->show_add_to_group_dialog_source_id = 0;
 
   /* Get account, if any */
   priv->account = frogr_config_get_active_account (priv->config);
@@ -2607,7 +2617,10 @@ frogr_controller_show_details_dialog (FrogrController *self,
 
   /* Show the dialog when possible */
   g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
-  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_details_dialog_on_idle, pictures);
+  priv->show_details_dialog_source_id =
+    gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
+                                  (GSourceFunc) _show_details_dialog_on_idle, pictures,
+                                  (GDestroyNotify) _dispose_slist_of_objects);
 }
 
 void
@@ -2630,7 +2643,10 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
 
   /* Show the dialog when possible */
   g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
-  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_tags_dialog_on_idle, pictures);
+  priv->show_add_tags_dialog_source_id =
+    gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
+                                  (GSourceFunc) _show_add_tags_dialog_on_idle, pictures,
+                                  (GDestroyNotify) _dispose_slist_of_objects);
 }
 
 void
@@ -2653,7 +2669,10 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
 
   /* Show the dialog when possible */
   g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
-  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_create_new_set_dialog_on_idle, pictures);
+  priv->show_create_new_set_dialog_source_id =
+    gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
+                                  (GSourceFunc) _show_create_new_set_dialog_on_idle, pictures,
+                                  (GDestroyNotify) _dispose_slist_of_objects);
 }
 
 void
@@ -2676,7 +2695,10 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
 
   /* Show the dialog when possible */
   g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
-  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_set_dialog_on_idle, pictures);
+  priv->show_add_to_set_dialog_source_id =
+    gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
+                                  (GSourceFunc) _show_add_to_set_dialog_on_idle, pictures,
+                                  (GDestroyNotify) _dispose_slist_of_objects);
 }
 
 void
@@ -2699,7 +2721,10 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
 
   /* Show the dialog when possible */
   g_slist_foreach (pictures, (GFunc) g_object_ref, NULL);
-  gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_add_to_group_dialog_on_idle, pictures);
+  priv->show_add_to_group_dialog_source_id =
+    gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
+                                  (GSourceFunc) _show_add_to_group_dialog_on_idle, pictures,
+                                  (GDestroyNotify) _dispose_slist_of_objects);
 }
 
 void
