@@ -2053,16 +2053,18 @@ _show_progress_on_idle (gpointer data)
       text = NULL;
     }
 
-  /* Actually show the dialog and keep the source */
+  /* Pulse and show/hide the progress dialog as needed */
+  frogr_main_view_pulse_progress (priv->mainview);
   if (show_dialog)
     {
       frogr_main_view_show_progress (priv->mainview, text);
-      frogr_main_view_pulse_progress (priv->mainview);
-
       return G_SOURCE_CONTINUE;
     }
-
-  return G_SOURCE_REMOVE;
+  else
+    {
+      frogr_main_view_hide_progress (priv->mainview);
+      return G_SOURCE_REMOVE;
+    }
 }
 
 static gboolean
@@ -2070,19 +2072,15 @@ _show_details_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
   GSList *tags_list = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
     return G_SOURCE_CONTINUE;
-
-  frogr_main_view_hide_progress (mainview);
 
   model = frogr_main_view_get_model (priv->mainview);
   tags_list = frogr_model_get_tags (model);
@@ -2102,19 +2100,15 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
   GSList *tags_list = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
       return G_SOURCE_CONTINUE;
-
-  frogr_main_view_hide_progress (mainview);
 
   model = frogr_main_view_get_model (priv->mainview);
   tags_list = frogr_model_get_tags (model);
@@ -2134,19 +2128,15 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
   GSList *photosets = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_photosets)
       return G_SOURCE_CONTINUE;
-
-  frogr_main_view_hide_progress (mainview);
 
   model = frogr_main_view_get_model (priv->mainview);
   photosets = frogr_model_get_photosets (model);
@@ -2165,19 +2155,15 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
   GSList *photosets = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_photosets)
       return G_SOURCE_CONTINUE;
-
-  frogr_main_view_hide_progress (mainview);
 
   model = frogr_main_view_get_model (priv->mainview);
   photosets = frogr_model_get_photosets (model);
@@ -2199,19 +2185,15 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
-  FrogrMainView *mainview = NULL;
   FrogrModel *model = NULL;
   GSList *groups = NULL;
 
   controller = frogr_controller_get_instance ();
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  mainview = priv->mainview;
 
   /* Keep the source while internally busy */
   if (priv->fetching_groups)
       return G_SOURCE_CONTINUE;
-
-  frogr_main_view_hide_progress (mainview);
 
   model = frogr_main_view_get_model (priv->mainview);
   groups = frogr_model_get_groups (model);
