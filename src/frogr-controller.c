@@ -2604,8 +2604,11 @@ frogr_controller_show_details_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Don't show the dialog if one is to be shown already */
+  if (priv->show_details_dialog_source_id)
+    return;
 
   /* Fetch the tags list first if needed */
   if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
@@ -2630,8 +2633,11 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Don't show the dialog if one is to be shown already */
+  if (priv->show_add_tags_dialog_source_id)
+    return;
 
   /* Fetch the tags list first if needed */
   if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
@@ -2656,8 +2662,11 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Don't show the dialog if one is to be shown already */
+  if (priv->show_create_new_set_dialog_source_id)
+    return;
 
   /* Fetch the sets first if needed */
   if (!priv->photosets_fetched)
@@ -2682,8 +2691,11 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Don't show the dialog if one is to be shown already */
+  if (priv->show_add_to_set_dialog_source_id)
+    return;
 
   /* Fetch the sets first if needed */
   if (!priv->photosets_fetched)
@@ -2708,8 +2720,11 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Don't show the dialog if one is to be shown already */
+  if (priv->show_add_to_group_dialog_source_id)
+    return;
 
   /* Fetch the groups first if needed */
   if (!priv->groups_fetched)
