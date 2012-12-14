@@ -6,21 +6,21 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-06-02 21:08+0000\n"
-"PO-Revision-Date: 2011-06-03 15:48+0400\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=frogr&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-12-13 17:36+0000\n"
+"PO-Revision-Date: 2012-12-14 23:21+0300\n"
 "Last-Translator: Yuri Myasoedov <omerta13@yandex.ru>\n"
 "Language-Team: русский <gnome-cyr@gnome.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bits\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: ../data/frogr.desktop.in.in.h:1
-msgid "Flickr Remote Organizer"
-msgstr "Инструмент удалённого управления Flickr"
+#| msgid "frogr"
+msgid "Frogr"
+msgstr "Frogr"
 
 #: ../data/frogr.desktop.in.in.h:2
 msgid "Frogr: a Flickr Remote Organizer for GNOME"
@@ -34,63 +34,70 @@ msgstr "Загружайте и управляйте фотоснимками в
 msgid "A Flickr remote organizer for GNOME\n"
 msgstr "Инструмент удалённого управления Flickr для GNOME\n"
 
-#: ../src/frogr-about-dialog.c:115
+#: ../src/frogr-about-dialog.c:72
 msgid "translator-credits"
 msgstr ""
 "Yuri Myasoedov <omerta13@yandex.ru>, 2011\n"
 "Urmas <davian818@gmail.com>, 2011"
 
-#: ../src/frogr-add-tags-dialog.c:337
+#: ../src/frogr-add-tags-dialog.c:207
 msgid "Enter a spaces separated list of tags:"
 msgstr "Введите список меток, разделённых пробелами:"
 
-#: ../src/frogr-add-tags-dialog.c:381
+#: ../src/frogr-add-tags-dialog.c:230
 msgid "Add Tags"
 msgstr "Добавить метки"
 
-#: ../src/frogr-add-to-set-dialog.c:131
+#: ../src/frogr-add-to-set-dialog.c:155
 msgid "Title"
 msgstr "Название"
 
-#: ../src/frogr-add-to-set-dialog.c:146 ../src/frogr-add-to-group-dialog.c:146
+#: ../src/frogr-add-to-set-dialog.c:170
+#: ../src/frogr-add-to-group-dialog.c:169
 msgid "Elements"
 msgstr "Элементы"
 
-#: ../src/frogr-add-to-set-dialog.c:568
+#: ../src/frogr-add-to-set-dialog.c:602
 msgid "Add to Sets"
 msgstr "Добавить в альбомы"
 
-#: ../src/frogr-add-to-group-dialog.c:131
+#: ../src/frogr-add-to-group-dialog.c:154
 msgid "Name"
 msgstr "Название"
 
-#: ../src/frogr-add-to-group-dialog.c:568
+#: ../src/frogr-add-to-group-dialog.c:601
 msgid "Add to Groups"
 msgstr "Добавить в группы"
 
-#: ../src/frogr-auth-dialog.c:30
+#: ../src/frogr-auth-dialog.c:31
+#, fuzzy, c-format
+#| msgid ""
+#| "Please press the button to authorize %s and then come back to this screen "
+#| "to complete the process."
+msgid "Please press the button to authorize %s and then come back to complete the process."
+msgstr "Нажмите кнопку, чтобы авторизовать %s, затем вернитесь к этому экрану, чтобы завершить процесс."
+
+#: ../src/frogr-auth-dialog.c:35
+msgid "Enter verification code:"
+msgstr "Введите код подтверждения:"
+
+#: ../src/frogr-auth-dialog.c:62
+#: ../src/frogr-auth-dialog.c:147
 #, c-format
-msgid ""
-"Please press the button to authorize %s and then come back to this screen to "
-"complete the process."
-msgstr ""
-"Нажмите кнопку, чтобы авторизовать %s, затем вернитесь к этому экрану, чтобы "
-"завершить процесс."
+#| msgid "Authorize _frogr"
+msgid "Authorize %s"
+msgstr "Авторизовать %s"
 
-#: ../src/frogr-auth-dialog.c:34
-#, c-format
-msgid ""
-"Press the button to start using %s once you've authorized it in your flickr "
-"account."
-msgstr ""
-"Нажмите кнопку, что начать использование %s сразу после авторизации вашей "
-"учётной записи."
+#: ../src/frogr-auth-dialog.c:215
+msgid "Invalid verification code"
+msgstr "Неверный код подтверждения"
 
-#: ../src/frogr-controller.c:248
-msgid "Process cancelled by the user"
-msgstr "Процесс прерван пользователем"
+#: ../src/frogr-controller.c:493
+#| msgid "Process cancelled by the user"
+msgid "Process cancelled"
+msgstr "Процесс отменён"
 
-#: ../src/frogr-controller.c:253
+#: ../src/frogr-controller.c:498
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -98,7 +105,7 @@ msgstr ""
 "Ошибка соединения:\n"
 "сеть недоступна"
 
-#: ../src/frogr-controller.c:258
+#: ../src/frogr-controller.c:502
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -106,7 +113,7 @@ msgstr ""
 "Ошибка соединения:\n"
 "неверный запрос"
 
-#: ../src/frogr-controller.c:263
+#: ../src/frogr-controller.c:506
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -114,15 +121,18 @@ msgstr ""
 "Ошибка соединения:\n"
 "ошибка на стороне сервера"
 
-#: ../src/frogr-controller.c:268
+#: ../src/frogr-controller.c:510
+#| msgid ""
+#| "Error uploading picture:\n"
+#| "File invalid"
 msgid ""
-"Error uploading picture:\n"
+"Error uploading:\n"
 "File invalid"
 msgstr ""
-"Ошибка загрузки изображения:\n"
+"Ошибка загрузки:\n"
 "неверный файл"
 
-#: ../src/frogr-controller.c:273
+#: ../src/frogr-controller.c:514
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -130,7 +140,23 @@ msgstr ""
 "Ошибка загрузки изображения:\n"
 "превышение квоты"
 
-#: ../src/frogr-controller.c:278
+#: ../src/frogr-controller.c:519
+#, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: ../src/frogr-controller.c:523
+msgid ""
+"Error uploading video:\n"
+"You can't upload more videos with this account"
+msgstr ""
+"Ошибка выгрузки видео:\n"
+"для этой учётной записи нельзя больше выгружать видео"
+
+#: ../src/frogr-controller.c:529
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -138,7 +164,7 @@ msgstr ""
 "Ошибка:\n"
 "фотоснимок не найден"
 
-#: ../src/frogr-controller.c:283
+#: ../src/frogr-controller.c:533
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -146,7 +172,7 @@ msgstr ""
 "Ошибка:\n"
 "фотоснимок уже есть в альбоме"
 
-#: ../src/frogr-controller.c:288
+#: ../src/frogr-controller.c:537
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -154,7 +180,7 @@ msgstr ""
 "Ошибка:\n"
 "фотоснимок уже есть в группе"
 
-#: ../src/frogr-controller.c:293
+#: ../src/frogr-controller.c:541
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -162,7 +188,7 @@ msgstr ""
 "Ошибка:\n"
 "фотоснимок находится уже в максимально возможном количестве групп"
 
-#: ../src/frogr-controller.c:298
+#: ../src/frogr-controller.c:545
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -170,7 +196,7 @@ msgstr ""
 "Ошибка:\n"
 "предел для групп уже превышен"
 
-#: ../src/frogr-controller.c:303
+#: ../src/frogr-controller.c:549
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -178,7 +204,7 @@ msgstr ""
 "Ошибка:\n"
 "фотоснимок добавлен в очередь группы"
 
-#: ../src/frogr-controller.c:308
+#: ../src/frogr-controller.c:553
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -186,7 +212,7 @@ msgstr ""
 "Ошибка:\n"
 "фотоснимок уже добавлен в очередь группы"
 
-#: ../src/frogr-controller.c:313
+#: ../src/frogr-controller.c:557
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -194,7 +220,7 @@ msgstr ""
 "Ошибка:\n"
 "содержимое запрещено для этой группы"
 
-#: ../src/frogr-controller.c:318
+#: ../src/frogr-controller.c:561
 #, c-format
 msgid ""
 "Authorization failed.\n"
@@ -203,18 +229,59 @@ msgstr ""
 "Сбой авторизации.\n"
 "Повторите попытку"
 
-#: ../src/frogr-controller.c:324
-#, c-format
+#: ../src/frogr-controller.c:567
+#, fuzzy, c-format
+#| msgid ""
+#| "Error\n"
+#| "%s is not properly authorized to upload pictures to flickr.\n"
+#| "Please re-authorize it"
 msgid ""
 "Error\n"
-"%s is not properly authorized to upload pictures to flickr.\n"
+"%s is not properly authorized to upload pictures to Flickr.\n"
 "Please re-authorize it"
 msgstr ""
 "Ошибка\n"
 "Пользовать %s не авторизован и не может загружать изображения во flickr.\n"
 "Выполните повторную авторизацию"
 
-#: ../src/frogr-controller.c:330
+#: ../src/frogr-controller.c:572
+#, fuzzy, c-format
+#| msgid ""
+#| "Authorization failed.\n"
+#| "Please try again"
+msgid ""
+"Unable to authenticate in Flickr\n"
+"Please try again."
+msgstr ""
+"Сбой авторизации.\n"
+"Повторите попытку"
+
+#: ../src/frogr-controller.c:576
+#, fuzzy, c-format
+#| msgid ""
+#| "You need to properly authorize %s before uploading any pictures to "
+#| "flickr.\n"
+#| "Please re-authorize it."
+msgid ""
+"You have not properly authorized %s yet.\n"
+"Please try again."
+msgstr ""
+"Перед загрузкой каких-либо изображений нужно авторизовать %s.\n"
+"Выполните авторизацию ещё раз."
+
+#: ../src/frogr-controller.c:581
+#, c-format
+#| msgid ""
+#| "Authorization failed.\n"
+#| "Please try again"
+msgid ""
+"Invalid verification code.\n"
+"Please try again."
+msgstr ""
+"Неверный проверочный код.\n"
+"Попробуйте ещё раз."
+
+#: ../src/frogr-controller.c:585
 #, c-format
 msgid ""
 "Error:\n"
@@ -224,143 +291,258 @@ msgstr ""
 "служба недоступна"
 
 #. General error: just dump the raw error description
-#: ../src/frogr-controller.c:336
+#: ../src/frogr-controller.c:590
 #, c-format
-msgid "An error happened while uploading a picture: %s."
-msgstr "При загрузке изображения возникла ошибка: %s."
+#| msgid "An error happened while uploading a picture: %s."
+msgid "An error happened: %s."
+msgstr "Произошла ошибка: %s."
 
-#: ../src/frogr-controller.c:906
-msgid "Creating new photosets…"
-msgstr "Создание новых альбомов…"
+#: ../src/frogr-controller.c:789
+#| msgid ""
+#| "Authorization failed.\n"
+#| "Please try again"
+msgid "Authorization failed (timed out)"
+msgstr "Сбой авторизации (превышен лимит времени)"
 
-#: ../src/frogr-controller.c:930
-msgid "Adding picture to photosets…"
-msgstr "Добавление изображения в альбомы…"
+#: ../src/frogr-controller.c:830
+#, c-format
+msgid "Retrying Upload (attempt %d/%d)…"
+msgstr "Повторная попытка выгрузки (попытка %d/%d)..."
 
-#: ../src/frogr-controller.c:952
-msgid "Adding picture to groups…"
-msgstr "Добавление изображения в группы…"
+#: ../src/frogr-controller.c:835
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Загрузка «%s»…"
 
-#: ../src/frogr-controller.c:1445
+#: ../src/frogr-controller.c:1954
+msgid "Updating credentials…"
+msgstr ""
+
+#: ../src/frogr-controller.c:1959
+#| msgid "Retrieving list of tags…"
+msgid "Retrieving data for authorization…"
+msgstr "Получение данных для авторизации…"
+
+#: ../src/frogr-controller.c:1964
+msgid "Finishing authorization…"
+msgstr "Завершение авторизации..."
+
+#: ../src/frogr-controller.c:1969
 msgid "Retrieving list of sets…"
 msgstr "Получение списка альбомов…"
 
-#: ../src/frogr-controller.c:1450
+#: ../src/frogr-controller.c:1974
 msgid "Retrieving list of groups…"
 msgstr "Получение списка групп…"
 
-#: ../src/frogr-controller.c:1455
+#: ../src/frogr-controller.c:1979
 msgid "Retrieving list of tags…"
 msgstr "Получение списка меток…"
 
-#: ../src/frogr-controller.c:1594
+#: ../src/frogr-controller.c:2119
 msgid "No sets found"
 msgstr "Альбомы не найдены"
 
-#: ../src/frogr-controller.c:1628
+#: ../src/frogr-controller.c:2153
 msgid "No groups found"
 msgstr "Группы не найдены"
 
-#: ../src/frogr-controller.c:2286
-#, c-format
+#: ../src/frogr-controller.c:2784
+#, fuzzy, c-format
+#| msgid ""
+#| "You need to properly authorize %s before uploading any pictures to "
+#| "flickr.\n"
+#| "Please re-authorize it."
 msgid ""
-"You need to properly authorize %s before uploading any pictures to flickr.\n"
+"You need to properly authorize %s before uploading any pictures to Flickr.\n"
 "Please re-authorize it."
 msgstr ""
 "Перед загрузкой каких-либо изображений нужно авторизовать %s.\n"
 "Выполните авторизацию ещё раз."
 
+#: ../src/frogr-controller.c:2794
+#, fuzzy, c-format
+#| msgid ""
+#| "You need to properly authorize %s before uploading any pictures to "
+#| "flickr.\n"
+#| "Please re-authorize it."
+msgid "You need to be connected before uploading any pictures to Flickr."
+msgstr ""
+"Перед загрузкой каких-либо изображений нужно авторизовать %s.\n"
+"Выполните авторизацию ещё раз."
+
+#: ../src/frogr-controller.c:2865
+#, c-format
+msgid "Error opening project file"
+msgstr "Ошибка при открытии файла проекта"
+
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:134 ../src/frogr-details-dialog.c:915
+#: ../src/frogr-create-new-set-dialog.c:156
+#: ../src/frogr-details-dialog.c:1020
 msgid "Missing data required"
 msgstr "Отсутствуют необходимые данные"
 
-#: ../src/frogr-create-new-set-dialog.c:321
-msgid "Set's title:"
-msgstr "Название альбома:"
+#: ../src/frogr-create-new-set-dialog.c:342
+#| msgid "_Title:"
+msgid "Title:"
+msgstr "Название:"
 
-#: ../src/frogr-create-new-set-dialog.c:334
-msgid "Set's description:"
-msgstr "Описание альбома:"
+#: ../src/frogr-create-new-set-dialog.c:351
+#| msgid "_Description:"
+msgid "Description:"
+msgstr "Описание:"
 
-#: ../src/frogr-create-new-set-dialog.c:357
-msgid "Fill pictures details with title and description"
-msgstr "Введите название и описание изображений"
+#: ../src/frogr-create-new-set-dialog.c:372
+#| msgid "Fill pictures details with title and description"
+msgid "Fill Pictures Details with Title and Description"
+msgstr "Укажите название и описание"
 
-#: ../src/frogr-create-new-set-dialog.c:378
-msgid "Create new Set"
+#: ../src/frogr-create-new-set-dialog.c:393
+#| msgid "Create new Set"
+msgid "Create New Set"
 msgstr "Создать новый альбом"
 
-#: ../src/frogr-details-dialog.c:164
+#: ../src/frogr-details-dialog.c:90
+#: ../src/frogr-settings-dialog.c:100
+msgid "Default (as specified in Flickr)"
+msgstr "По умолчанию (как указано в Flickr)"
+
+#: ../src/frogr-details-dialog.c:91
+#: ../src/frogr-settings-dialog.c:101
+msgid "All rights reserved"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:92
+#: ../src/frogr-settings-dialog.c:102
+msgid "CC Attribution-NonCommercial-ShareAlike"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:93
+#: ../src/frogr-settings-dialog.c:103
+msgid "CC Attribution-NonCommercial"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:94
+#: ../src/frogr-settings-dialog.c:104
+msgid "CC Attribution-NonCommercial-NoDerivs"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:95
+#: ../src/frogr-settings-dialog.c:105
+msgid "CC Attribution"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:96
+#: ../src/frogr-settings-dialog.c:106
+msgid "CC Attribution-ShareAlike"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:97
+#: ../src/frogr-settings-dialog.c:107
+msgid "CC Attribution-NoDerivs"
+msgstr ""
+
+#: ../src/frogr-details-dialog.c:176
+msgid "Open with image viewer"
+msgstr "Открыть с помощью просмотрщика"
+
+#: ../src/frogr-details-dialog.c:201
 msgid "Visibility"
 msgstr "Доступность"
 
-#: ../src/frogr-details-dialog.c:175 ../src/frogr-settings-dialog.c:170
+#: ../src/frogr-details-dialog.c:213
+#: ../src/frogr-settings-dialog.c:202
 msgid "_Private"
 msgstr "_Личное"
 
-#: ../src/frogr-details-dialog.c:179 ../src/frogr-settings-dialog.c:172
+#: ../src/frogr-details-dialog.c:217
+#: ../src/frogr-settings-dialog.c:204
 msgid "P_ublic"
 msgstr "_Общедоступное"
 
-#: ../src/frogr-details-dialog.c:187 ../src/frogr-settings-dialog.c:179
+#: ../src/frogr-details-dialog.c:226
+#: ../src/frogr-settings-dialog.c:212
 msgid "Visible to _Family"
 msgstr "Доступно для _членов семьи"
 
-#: ../src/frogr-details-dialog.c:191 ../src/frogr-settings-dialog.c:181
+#: ../src/frogr-details-dialog.c:230
+#: ../src/frogr-settings-dialog.c:214
 msgid "Visible to F_riends"
 msgstr "Доступно для _друзей"
 
-#: ../src/frogr-details-dialog.c:204 ../src/frogr-settings-dialog.c:188
-msgid "_Show up in Global Search Results"
-msgstr "_Показывать в результатах поиска"
-
-#: ../src/frogr-details-dialog.c:217
-msgid "Content type"
+#: ../src/frogr-details-dialog.c:256
+#| msgid "Content type"
+msgid "Content Type"
 msgstr "Тип содержимого"
 
-#: ../src/frogr-details-dialog.c:226 ../src/frogr-settings-dialog.c:209
+#: ../src/frogr-details-dialog.c:265
+#: ../src/frogr-settings-dialog.c:241
 msgid "P_hoto"
 msgstr "_Фотоснимок"
 
-#: ../src/frogr-details-dialog.c:230 ../src/frogr-settings-dialog.c:211
+#: ../src/frogr-details-dialog.c:269
+#: ../src/frogr-settings-dialog.c:243
 msgid "Scree_nshot"
 msgstr "_Снимок экрана"
 
-#: ../src/frogr-details-dialog.c:234 ../src/frogr-settings-dialog.c:213
+#: ../src/frogr-details-dialog.c:273
+#: ../src/frogr-settings-dialog.c:245
 msgid "Oth_er"
 msgstr "_Другое"
 
-#: ../src/frogr-details-dialog.c:248
-msgid "Safety level"
+#: ../src/frogr-details-dialog.c:289
+#| msgid "Safety level"
+msgid "Safety Level"
 msgstr "Уровень безопасности"
 
-#: ../src/frogr-details-dialog.c:257 ../src/frogr-settings-dialog.c:233
+#: ../src/frogr-details-dialog.c:298
+#: ../src/frogr-settings-dialog.c:266
 msgid "S_afe"
 msgstr "_Безопасный"
 
-#: ../src/frogr-details-dialog.c:261 ../src/frogr-settings-dialog.c:235
+#: ../src/frogr-details-dialog.c:302
+#: ../src/frogr-settings-dialog.c:268
 msgid "_Moderate"
 msgstr "_Умеренный"
 
-#: ../src/frogr-details-dialog.c:265 ../src/frogr-settings-dialog.c:237
+#: ../src/frogr-details-dialog.c:306
+#: ../src/frogr-settings-dialog.c:270
 msgid "Restr_icted"
 msgstr "_Конфиденциальный"
 
-#: ../src/frogr-details-dialog.c:279
+#: ../src/frogr-details-dialog.c:320
+msgid "License Type"
+msgstr "Тип лицензии"
+
+#: ../src/frogr-details-dialog.c:344
+#| msgid "Other options"
+msgid "Other Properties"
+msgstr "Другие свойства"
+
+#: ../src/frogr-details-dialog.c:353
+msgid "Set Geo_location Information"
+msgstr "Установить данные о _геолокации"
+
+#: ../src/frogr-details-dialog.c:357
+#, fuzzy
+#| msgid "_Show up in Global Search Results"
+msgid "_Show Up in Global Search Results"
+msgstr "_Показывать в результатах поиска"
+
+#: ../src/frogr-details-dialog.c:371
 msgid "_Title:"
 msgstr "_Название:"
 
-#: ../src/frogr-details-dialog.c:291
+#: ../src/frogr-details-dialog.c:381
 msgid "_Description:"
 msgstr "_Описание:"
 
-#: ../src/frogr-details-dialog.c:317
+#: ../src/frogr-details-dialog.c:405
 msgid "Ta_gs:"
 msgstr "_Метки:"
 
 #. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:758
+#: ../src/frogr-details-dialog.c:500
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
@@ -368,163 +550,128 @@ msgstr[0] "(%d изображение)"
 msgstr[1] "(%d изображения)"
 msgstr[2] "(%d изображений)"
 
-#: ../src/frogr-details-dialog.c:1098
+#: ../src/frogr-details-dialog.c:574
+#, fuzzy
+#| msgid "An error happened while uploading a picture: %s."
+msgid "An error happened trying to load the picture"
+msgstr "При загрузке изображения возникла ошибка: %s."
+
+#: ../src/frogr-details-dialog.c:1223
 msgid "Edit Picture Details"
 msgstr "Изменить данные об изображении"
 
-#. File menu
-#: ../src/frogr-main-view.c:281
-msgid "_File"
-msgstr "_Файл"
+#: ../src/frogr-file-loader.c:147
+#, c-format
+#| msgid "Loading pictures %d / %d"
+msgid "Loading files %d / %d"
+msgstr "Загрузка файлов %d / %d"
 
-#: ../src/frogr-main-view.c:283
-msgid "_Add Pictures"
-msgstr "_Добавить изображения"
+#: ../src/frogr-file-loader.c:564
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
+msgstr ""
+"Не удалось загрузить изображение %s:\n"
+"%s"
 
-#. Remove
-#: ../src/frogr-main-view.c:284 ../src/frogr-main-view.c:510
-msgid "_Remove Pictures"
-msgstr "_Удалить изображения"
+#: ../src/frogr-file-loader.c:595
+#, c-format
+msgid ""
+"Unable to load video %s\n"
+"Please check that you have the right codec installed"
+msgstr ""
+"Не удалось загрузить видео %s\n"
+"Проверьте, установлен ли нужный кодек"
 
-#. Accounts menu item and submenu
-#: ../src/frogr-main-view.c:289
-msgid "Accou_nts"
-msgstr "_Учётные записи"
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: ../src/frogr-file-loader.c:834
+#, c-format
+msgid ""
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
+msgstr ""
+"Не удалось загрузить файл %s:\n"
+"размер файла больше максимально допустимого размера для этой учётной записи (%s)"
 
-#: ../src/frogr-main-view.c:294
-msgid "Authorize _frogr"
-msgstr "Авторизовать _frogr"
-
-#. Preferences menu item (platform dependent)
-#: ../src/frogr-main-view.c:297
-msgid "_Preferences…"
-msgstr "_Настройки…"
-
-#: ../src/frogr-main-view.c:315
-msgid "_Quit"
-msgstr "_Закончить"
-
-#. Actions menu
-#: ../src/frogr-main-view.c:319
-msgid "A_ctions"
-msgstr "_Действия"
-
-#. Edit details
-#: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:463
-msgid "Edit _Details…"
-msgstr "Изменить _данные…"
-
-#. Add Tags
-#: ../src/frogr-main-view.c:322 ../src/frogr-main-view.c:471
-msgid "Add _Tags…"
-msgstr "Добавить _метки…"
-
-#. Add to group
-#: ../src/frogr-main-view.c:323 ../src/frogr-main-view.c:479
-msgid "Add to _Group…"
-msgstr "Добавить в _группу…"
-
-#. Add to set
-#: ../src/frogr-main-view.c:325 ../src/frogr-main-view.c:487
-msgid "Add to _Set"
-msgstr "Добавить в _альбом"
-
-#: ../src/frogr-main-view.c:328 ../src/frogr-main-view.c:493
-msgid "_Create New Set…"
-msgstr "_Создать новый альбом…"
-
-#: ../src/frogr-main-view.c:330 ../src/frogr-main-view.c:500
-msgid "Add to _Existing Set…"
-msgstr "Добавить в существующий _альбом…"
-
-#: ../src/frogr-main-view.c:335
-msgid "_Upload All"
-msgstr "_Загрузить все"
-
-#. View menu
-#: ../src/frogr-main-view.c:338
-msgid "_View"
-msgstr "_Вид"
-
-#: ../src/frogr-main-view.c:340
-msgid "_Sort Pictures"
-msgstr "_Упорядочить изображения"
-
-#: ../src/frogr-main-view.c:345
-msgid "As _Loaded"
-msgstr "По _загрузке"
-
-#: ../src/frogr-main-view.c:348
-msgid "By _Title"
-msgstr "По _названию"
-
-#: ../src/frogr-main-view.c:351
-msgid "By _Date Taken"
-msgstr "По _дате"
-
-#: ../src/frogr-main-view.c:362
-msgid "_Reversed Order"
-msgstr "_В обратном порядке"
-
-#: ../src/frogr-main-view.c:370
-msgid "Disable _Tooltips"
-msgstr "Отключить _всплывающие подсказки"
-
-#: ../src/frogr-main-view.c:379
-msgid "_Help"
-msgstr "_Справка"
-
-#: ../src/frogr-main-view.c:382
-msgid "_Contents"
-msgstr "Со_держимое"
-
-#: ../src/frogr-main-view.c:389
+#: ../src/frogr-main-view.c:831
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:4
 msgid "_About"
 msgstr "_О программе"
 
+#. Create the submenu and insert it in the right section
+#: ../src/frogr-main-view.c:887
+#| msgid "Accou_nts"
+msgid "Accounts"
+msgstr "Учётные записи"
+
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:958
+#: ../src/frogr-main-view.c:1121
 #, c-format
 msgid "Taken: %s"
 msgstr "Дата съёмки: %s"
 
-#: ../src/frogr-main-view.c:963
+#: ../src/frogr-main-view.c:1126
 #, c-format
 msgid "File size: %s"
 msgstr "Размер файла: %s"
 
-#: ../src/frogr-main-view.c:1145
+#: ../src/frogr-main-view.c:1249
+#| msgid "Select a Picture"
+msgid "Select File"
+msgstr "Выберите файл"
+
+#: ../src/frogr-main-view.c:1262
+msgid "Text Files"
+msgstr "Текстовые файлы"
+
+#: ../src/frogr-main-view.c:1322
+#| msgid "Set's description:"
+msgid "Select Destination"
+msgstr "Выберите назначение"
+
+#: ../src/frogr-main-view.c:1329
+msgid "Untitled Project"
+msgstr "Безымянный проект"
+
+#: ../src/frogr-main-view.c:1375
 msgid "Select a Picture"
 msgstr "Выберите изображение"
 
-#: ../src/frogr-main-view.c:1171
-msgid "images"
-msgstr "изображения"
+#: ../src/frogr-main-view.c:1416
+msgid "All Files"
+msgstr "Все файлы"
 
-#: ../src/frogr-main-view.c:1192
+#: ../src/frogr-main-view.c:1419
+msgid "Image Files"
+msgstr "Изображения"
+
+#: ../src/frogr-main-view.c:1422
+msgid "Video Files"
+msgstr "Видео"
+
+#: ../src/frogr-main-view.c:1443
+msgid "You don't have any picture added yet"
+msgstr ""
+
+#: ../src/frogr-main-view.c:1458
 msgid "You need to select some pictures first"
 msgstr "Сначала необходимо выбрать изображения"
 
-#: ../src/frogr-main-view.c:1320
-#, c-format
-msgid ""
-"Could not display help for Frogr:\n"
-"%s"
-msgstr ""
-"Не удалось открыть справку Frogr:\n"
-"%s"
-
-#: ../src/frogr-main-view.c:1541
-msgid "Not connected to flickr"
-msgstr "Не подключено к flickr"
+#: ../src/frogr-main-view.c:1918
+#| msgid "Not connected to flickr"
+msgid "Not connected to Flickr"
+msgstr "Не подключено к Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:1551
+#: ../src/frogr-main-view.c:1928
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Подключён как %s%s"
 
-#: ../src/frogr-main-view.c:1552
+#: ../src/frogr-main-view.c:1929
 msgid " (PRO account)"
 msgstr " (учётная запись PRO)"
 
@@ -533,112 +680,338 @@ msgstr " (учётная запись PRO)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:1576
-#, c-format
-msgid " - %s / %s remaining for the current month"
+#: ../src/frogr-main-view.c:1953
+#, fuzzy, c-format
+#| msgid " - %s / %s remaining for the current month"
+msgid " - %s / %s remaining"
 msgstr " — в текущем месяце осталось %s / %s"
 
-#. Will show in the status bar the amount of data (in KB, MB or
-#. GB) that would be uploaded as the sum of the sizes for every
-#. picture currently loadad in the application
-#: ../src/frogr-main-view.c:1601
-#, c-format
-msgid " - %s to be uploaded"
-msgstr " — будет загружено %s"
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: ../src/frogr-main-view.c:1979
+#, fuzzy, c-format
+#| msgid " - %s to be uploaded"
+msgid " - %d file to upload (%s)"
+msgid_plural " - %d files to upload (%s)"
+msgstr[0] " — будет загружено %s"
+msgstr[1] " — будет загружено %s"
+msgstr[2] " — будет загружено %s"
 
-#: ../src/frogr-picture-loader.c:107
-#, c-format
-msgid "Loading pictures %d / %d"
-msgstr "Загрузка изображений %d / %d"
-
-#. Update progress
-#: ../src/frogr-picture-uploader.c:83
-#, c-format
-msgid "Uploading '%s'…"
-msgstr "Загрузка «%s»…"
-
-#: ../src/frogr-settings-dialog.c:159
+#: ../src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
 msgstr "Доступность по умолчанию"
 
-#: ../src/frogr-settings-dialog.c:198
+#: ../src/frogr-settings-dialog.c:229
 msgid "Default Content Type"
 msgstr "Тип содержимого по умолчанию"
 
-#: ../src/frogr-settings-dialog.c:222
+#: ../src/frogr-settings-dialog.c:254
 msgid "Default Safety Level"
 msgstr "Уровень безопасности по умолчанию"
 
-#: ../src/frogr-settings-dialog.c:246
-msgid "Other options"
-msgstr "Другие параметры"
+#: ../src/frogr-settings-dialog.c:279
+#| msgid "Default Content Type"
+msgid "Default License"
+msgstr "Лицензия по умолчанию"
 
-#: ../src/frogr-settings-dialog.c:257
-msgid "Disa_ble Tags Auto-Completion"
-msgstr "Отключить _автодополнение меток"
+#: ../src/frogr-settings-dialog.c:303
+msgid "Other Defaults"
+msgstr ""
 
-#: ../src/frogr-settings-dialog.c:260
-msgid "_Keep File Extensions in Titles when Loading Pictures"
-msgstr "_Не удалять расширение файлов из заголовков при загрузке изображений"
+#: ../src/frogr-settings-dialog.c:315
+msgid "Set Geo_location Information for Pictures"
+msgstr ""
 
-#: ../src/frogr-settings-dialog.c:266
+#: ../src/frogr-settings-dialog.c:318
+#| msgid "_Show up in Global Search Results"
+msgid "_Show Pictures in Global Search Results"
+msgstr "_Показывать в общих результатах поиска"
+
+#: ../src/frogr-settings-dialog.c:324
 msgid "_General"
 msgstr "_Основное"
 
-#: ../src/frogr-settings-dialog.c:289
+#: ../src/frogr-settings-dialog.c:349
 msgid "Proxy Settings"
 msgstr "Параметры прокси"
 
 #. Enable proxy
-#: ../src/frogr-settings-dialog.c:299
+#: ../src/frogr-settings-dialog.c:359
 msgid "_Enable HTTP Proxy"
 msgstr "_Использовать HTTP-прокси"
 
-#: ../src/frogr-settings-dialog.c:309
+#: ../src/frogr-settings-dialog.c:371
 msgid "_Host:"
 msgstr "_Узел:"
 
 #. Proxy port
-#: ../src/frogr-settings-dialog.c:327
+#: ../src/frogr-settings-dialog.c:384
 msgid "_Port:"
 msgstr "_Порт:"
 
 #. Proxy username
-#: ../src/frogr-settings-dialog.c:345
+#: ../src/frogr-settings-dialog.c:397
 msgid "U_sername:"
 msgstr "И_мя пользователя:"
 
 #. Proxy password
-#: ../src/frogr-settings-dialog.c:363
+#: ../src/frogr-settings-dialog.c:410
 msgid "Pass_word:"
 msgstr "Па_роль:"
 
 #. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:386
+#: ../src/frogr-settings-dialog.c:426
 msgid "_Use GNOME General Proxy Settings"
 msgstr "_Использовать основные параметры прокси GNOME"
 
-#: ../src/frogr-settings-dialog.c:409
+#: ../src/frogr-settings-dialog.c:450
 msgid "Connec_tion"
 msgstr "_Соединение"
 
-#: ../src/frogr-settings-dialog.c:881
+#: ../src/frogr-settings-dialog.c:473
+msgid "Other options"
+msgstr "Другие параметры"
+
+#: ../src/frogr-settings-dialog.c:485
+#, fuzzy
+#| msgid "Disa_ble Tags Auto-Completion"
+msgid "Ena_ble Tags Auto-Completion"
+msgstr "Отключить _автодополнение меток"
+
+#: ../src/frogr-settings-dialog.c:488
+msgid "_Import Tags from Pictures Metadata"
+msgstr "_Импортировать тэги из метаданных"
+
+#: ../src/frogr-settings-dialog.c:492
+msgid "Use _Dark GTK Theme"
+msgstr "Использовать _тёмную тему GTK"
+
+#: ../src/frogr-settings-dialog.c:496
+#| msgid "_Keep File Extensions in Titles when Loading Pictures"
+msgid "_Keep File Extensions in Titles when Loading"
+msgstr "_Не удалять расширение файлов из заголовков при загрузке"
+
+#: ../src/frogr-settings-dialog.c:502
+msgid "_Misc"
+msgstr ""
+
+#: ../src/frogr-settings-dialog.c:1038
 msgid "Preferences"
 msgstr "Настройки"
 
 #: ../data/gtkbuilder/frogr-main-view.xml.h:1
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
+#, fuzzy
+#| msgid "Edit _Details…"
+msgid "_Edit Details…"
+msgstr "Изменить _данные…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:2
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
+msgid "Add _Tags…"
+msgstr "Добавить _метки…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:3
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:11
+msgid "Add to _Group…"
+msgstr "Добавить в _группу…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:4
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:12
+#| msgid "Add to _Set"
+msgid "Add to _Photoset"
+msgstr "Добавить в _альбом"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:5
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:13
+#| msgid "Add to _Existing Set…"
+msgid "_Add to Existing Photoset…"
+msgstr "Добавить в существующий _альбом…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:6
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:14
+#| msgid "_Create New Set…"
+msgid "_Create New Photoset…"
+msgstr "_Создать новый альбом…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:7
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:15
+msgid "_Open in External Viewer"
+msgstr "_Открыть внешним приложением"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:8
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
+#| msgid "Elements"
+msgid "_Remove Elements"
+msgstr "_Удалить элементы"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:9
+msgid "Open Existing Project"
+msgstr "Открыть существующий проект"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:10
+msgid "Open"
+msgstr "Открыть"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:11
+msgid "Save Current Project"
+msgstr "Сохранить текущий проект"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:12
+msgid "Save"
+msgstr "Сохранить"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:13
+#| msgid "Elements"
+msgid "Add Elements"
+msgstr "Добавить элементы"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:14
 msgid "Add"
 msgstr "Добавить"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:2
+#: ../data/gtkbuilder/frogr-main-view.xml.h:15
+#| msgid "Elements"
+msgid "Remove Elements"
+msgstr "Удалить элементы"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:16
 msgid "Remove"
 msgstr "Удалить"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:3
+#: ../data/gtkbuilder/frogr-main-view.xml.h:17
+#| msgid "_Upload All"
+msgid "Upload All"
+msgstr "Выгрузить всё"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:18
 msgid "Upload"
 msgstr "Загрузить"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:4
-msgid "frogr"
-msgstr "frogr"
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:1
+msgid "Aut_horize Account…"
+msgstr ""
 
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:2
+msgid "_Preferences…"
+msgstr "_Настройки…"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:3
+msgid "_Help"
+msgstr "_Справка"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:5
+msgid "_Quit"
+msgstr "_Закончить"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:1
+msgid "_File"
+msgstr "_Файл"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:2
+msgid "_Open…"
+msgstr "_Открыть..."
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:3
+msgid "_Save"
+msgstr "_Сохранить"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:4
+msgid "Save _As…"
+msgstr "Сохранить _как..."
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:5
+#| msgid "Elements"
+msgid "A_dd Elements…"
+msgstr "_Добавить элементы..."
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:7
+msgid "_Upload All"
+msgstr "_Загрузить все"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:8
+msgid "_Edit"
+msgstr "_Правка"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:16
+msgid "_View"
+msgstr "_Вид"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:17
+#| msgid "Elements"
+msgid "_Sort Elements"
+msgstr "_Упорядочить элементы"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:18
+msgid "As _Loaded"
+msgstr "По _загрузке"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:19
+msgid "By _Date Taken"
+msgstr "По _дате"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:20
+msgid "By _Title"
+msgstr "По _названию"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:21
+#| msgid "By _Title"
+msgid "By _Size"
+msgstr "По _размеру"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:22
+msgid "_Reversed Order"
+msgstr "_В обратном порядке"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:23
+#| msgid "Disable _Tooltips"
+msgid "Enable _Tooltips"
+msgstr "Разрешить _всплывающие подсказки"
+
+#~ msgid "Flickr Remote Organizer"
+#~ msgstr "Инструмент удалённого управления Flickr"
+
+#~ msgid ""
+#~ "Press the button to start using %s once you've authorized it in your "
+#~ "flickr account."
+#~ msgstr ""
+#~ "Нажмите кнопку, что начать использование %s сразу после авторизации вашей "
+#~ "учётной записи."
+
+#~ msgid "Creating new photosets…"
+#~ msgstr "Создание новых альбомов…"
+
+#~ msgid "Adding picture to photosets…"
+#~ msgstr "Добавление изображения в альбомы…"
+
+#~ msgid "Adding picture to groups…"
+#~ msgstr "Добавление изображения в группы…"
+
+#~ msgid "Set's title:"
+#~ msgstr "Название альбома:"
+
+#~ msgid "_Add Pictures"
+#~ msgstr "_Добавить изображения"
+
+#~ msgid "_Remove Pictures"
+#~ msgstr "_Удалить изображения"
+
+#~ msgid "A_ctions"
+#~ msgstr "_Действия"
+
+#~ msgid "_Sort Pictures"
+#~ msgstr "_Упорядочить изображения"
+
+#~ msgid "_Contents"
+#~ msgstr "Со_держимое"
+
+#~ msgid "images"
+#~ msgstr "изображения"
+
+#~ msgid ""
+#~ "Could not display help for Frogr:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Не удалось открыть справку Frogr:\n"
+#~ "%s"
