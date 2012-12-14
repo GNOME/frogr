@@ -284,7 +284,7 @@ _load_pictures_on_idle (gpointer data)
   fileuris = (GSList *)data;
 
   frogr_controller_load_pictures (fcontroller, fileuris);
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static void
@@ -800,7 +800,7 @@ _cancel_authorization_on_timeout (gpointer data)
       _show_auth_failed_dialog (GTK_WINDOW (priv->mainview), _("Authorization failed (timed out)"), FALSE);
     }
 
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -1494,7 +1494,7 @@ _complete_picture_upload_on_idle (gpointer data)
     {
       frogr_main_view_pulse_progress (priv->mainview);
       _update_upload_progress (controller, up_data);
-      return TRUE;
+      return G_SOURCE_CONTINUE;
     }
   picture = uop_data->picture;
 
@@ -1515,7 +1515,7 @@ _complete_picture_upload_on_idle (gpointer data)
   _finish_upload_one_picture_process (controller, uop_data);
   _upload_next_picture (controller, up_data);
 
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static void
@@ -2059,10 +2059,10 @@ _show_progress_on_idle (gpointer data)
       frogr_main_view_show_progress (priv->mainview, text);
       frogr_main_view_pulse_progress (priv->mainview);
 
-      return TRUE;
+      return G_SOURCE_CONTINUE;
     }
 
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -2080,7 +2080,7 @@ _show_details_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
-    return TRUE;
+    return G_SOURCE_CONTINUE;
 
   frogr_main_view_hide_progress (mainview);
 
@@ -2094,7 +2094,7 @@ _show_details_dialog_on_idle (GSList *pictures)
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
   g_slist_free (pictures);
 
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -2112,7 +2112,7 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
-      return TRUE;
+      return G_SOURCE_CONTINUE;
 
   frogr_main_view_hide_progress (mainview);
 
@@ -2126,7 +2126,7 @@ _show_add_tags_dialog_on_idle (GSList *pictures)
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
   g_slist_free (pictures);
 
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -2144,7 +2144,7 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_photosets)
-      return TRUE;
+      return G_SOURCE_CONTINUE;
 
   frogr_main_view_hide_progress (mainview);
 
@@ -2157,7 +2157,7 @@ _show_create_new_set_dialog_on_idle (GSList *pictures)
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
   g_slist_free (pictures);
 
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -2175,7 +2175,7 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_photosets)
-      return TRUE;
+      return G_SOURCE_CONTINUE;
 
   frogr_main_view_hide_progress (mainview);
 
@@ -2191,7 +2191,7 @@ _show_add_to_set_dialog_on_idle (GSList *pictures)
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
   g_slist_free (pictures);
 
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -2209,7 +2209,7 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
 
   /* Keep the source while internally busy */
   if (priv->fetching_groups)
-      return TRUE;
+      return G_SOURCE_CONTINUE;
 
   frogr_main_view_hide_progress (mainview);
 
@@ -2225,7 +2225,7 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   g_slist_foreach (pictures, (GFunc) g_object_unref, NULL);
   g_slist_free (pictures);
 
-  return FALSE;
+  return G_SOURCE_REMOVE;
 }
 
 static GObject *
