@@ -279,6 +279,8 @@ static gboolean _show_add_to_set_dialog_on_idle (GSList *pictures);
 
 static gboolean _show_add_to_group_dialog_on_idle (GSList *pictures);
 
+static gboolean _is_modal_dialog_about_to_be_shown  (FrogrController *self);
+
 /* Private functions */
 
 static gboolean
@@ -2215,6 +2217,22 @@ _show_add_to_group_dialog_on_idle (GSList *pictures)
   return G_SOURCE_REMOVE;
 }
 
+static gboolean
+_is_modal_dialog_about_to_be_shown  (FrogrController *self)
+{
+  FrogrControllerPrivate *priv = NULL;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  if (priv->show_details_dialog_source_id
+      || priv->show_add_tags_dialog_source_id
+      || priv->show_create_new_set_dialog_source_id
+      || priv->show_add_to_set_dialog_source_id
+      || priv->show_add_to_group_dialog_source_id)
+    return TRUE;
+
+  return FALSE;
+}
+
 static GObject *
 _frogr_controller_constructor (GType type,
                                guint n_construct_properties,
@@ -2604,13 +2622,13 @@ frogr_controller_show_details_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Don't show the dialog if one is to be shown already */
-  if (priv->show_details_dialog_source_id)
+  if (_is_modal_dialog_about_to_be_shown (self))
     return;
 
   /* Fetch the tags list first if needed */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TAGS));
@@ -2633,13 +2651,13 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Don't show the dialog if one is to be shown already */
-  if (priv->show_add_tags_dialog_source_id)
+  if (_is_modal_dialog_about_to_be_shown (self))
     return;
 
   /* Fetch the tags list first if needed */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TAGS));
@@ -2662,13 +2680,13 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Don't show the dialog if one is to be shown already */
-  if (priv->show_create_new_set_dialog_source_id)
+  if (_is_modal_dialog_about_to_be_shown (self))
     return;
 
   /* Fetch the sets first if needed */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   if (!priv->photosets_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_PHOTOSETS));
@@ -2691,13 +2709,13 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Don't show the dialog if one is to be shown already */
-  if (priv->show_add_to_set_dialog_source_id)
+  if (_is_modal_dialog_about_to_be_shown (self))
     return;
 
   /* Fetch the sets first if needed */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   if (!priv->photosets_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_PHOTOSETS));
@@ -2720,14 +2738,15 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
   FrogrControllerPrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Don't show the dialog if one is to be shown already */
-  if (priv->show_add_to_group_dialog_source_id)
+  if (_is_modal_dialog_about_to_be_shown (self))
     return;
 
   /* Fetch the groups first if needed */
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   if (!priv->groups_fetched)
+
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_GROUPS));
       if (!priv->fetching_groups)
