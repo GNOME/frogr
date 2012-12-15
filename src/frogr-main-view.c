@@ -1257,10 +1257,10 @@ _open_project_dialog (FrogrMainView *self)
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
   gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
 
-  /* Let's allow text files only */
+  /* Let's allow 'Frogr project files' (*.frogr) files only */
   filter = gtk_file_filter_new ();
-  gtk_file_filter_add_mime_type (filter, "text/*");
-  gtk_file_filter_set_name (filter, _("Text Files"));
+  gtk_file_filter_add_pattern (filter, "*.[fF][rR][oO][gG][rR]");
+  gtk_file_filter_set_name (filter, _("Frogr Project Files"));
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
   g_signal_connect (G_OBJECT (dialog), "response",
@@ -1327,7 +1327,7 @@ _save_project_as_dialog (FrogrMainView *self)
                                         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
                                         NULL);
 
-  gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled Project"));
+  gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled Project.frogr"));
   gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
   gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
