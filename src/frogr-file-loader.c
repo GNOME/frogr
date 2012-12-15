@@ -583,7 +583,7 @@ _try_get_pixbuf_for_video (FrogrFileLoader *self,
   GError *error = NULL;
 
   pixbuf = frogr_util_get_pixbuf_for_video_file (file, IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
-  if (error)
+  if (!pixbuf)
     {
       gchar *file_name = NULL;
       gchar *msg = NULL;
@@ -599,7 +599,8 @@ _try_get_pixbuf_for_video (FrogrFileLoader *self,
       frogr_util_show_error_dialog (GTK_WINDOW (FROGR_FILE_LOADER_GET_PRIVATE (self)->mainview), msg);
       g_free (msg);
 
-      g_error_free (error);
+      if (error)
+        g_error_free (error);
     }
 
   return pixbuf;
