@@ -531,8 +531,8 @@ msgid "Select Destination"
 msgstr "Pilih Tujuan"
 
 #: ../src/frogr-main-view.c:1323
-msgid "Untitled Project"
-msgstr "Projek Tanpa Judul"
+msgid "Untitled Project.frogr"
+msgstr "Projek Tanpa Judul.frogr"
 
 #: ../src/frogr-main-view.c:1369
 msgid "Select a Picture"

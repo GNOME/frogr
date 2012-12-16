@@ -529,8 +529,8 @@ msgid "Select Destination"
 msgstr "Seleccionar o destino"
 
 #: ../src/frogr-main-view.c:1323
-msgid "Untitled Project"
-msgstr "Proxecto sen título"
+msgid "Untitled Project.frogr"
+msgstr "Proxecto sen título.frogr"
 
 #: ../src/frogr-main-view.c:1369
 msgid "Select a Picture"

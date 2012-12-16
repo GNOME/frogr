@@ -566,8 +566,8 @@ msgid "Select Destination"
 msgstr "Izbor cilja"
 
 #: ../src/frogr-main-view.c:1329
-msgid "Untitled Project"
-msgstr "Neimenovan projekt"
+msgid "Untitled Project.frogr"
+msgstr "Neimenovan projekt.frogr"
 
 #: ../src/frogr-main-view.c:1375
 msgid "Select a Picture"

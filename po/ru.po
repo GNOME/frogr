@@ -633,8 +633,8 @@ msgid "Select Destination"
 msgstr "Выберите назначение"
 
 #: ../src/frogr-main-view.c:1329
-msgid "Untitled Project"
-msgstr "Безымянный проект"
+msgid "Untitled Project.frogr"
+msgstr "Безымянный проект.frogr"
 
 #: ../src/frogr-main-view.c:1375
 msgid "Select a Picture"
