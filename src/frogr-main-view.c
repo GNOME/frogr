@@ -1307,9 +1307,18 @@ _save_project_as_dialog_response_cb (GtkDialog *dialog, gint response, gpointer 
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
       if (filename != NULL)
-        _save_project_to_file (self, filename);
+        {
+          gchar *actual_filename = NULL;
 
-      g_free (filename);
+          /* Add the '.frogr' extension if not present */
+          actual_filename = g_str_has_suffix (filename, ".frogr")
+            ? g_strdup (filename)
+            : g_strdup_printf ("%s.frogr", filename);
+          g_free (filename);
+
+          _save_project_to_file (self, actual_filename);
+          g_free (actual_filename);
+        }
     }
 
   gtk_widget_destroy (GTK_WIDGET (dialog));
