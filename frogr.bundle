@@ -53,6 +53,10 @@
   <data>
     ${prefix}/share/themes/Mac
   </data>
+  <data>
+    ${prefix}/share/icons/Cheser
+  </data>
+
 
   <!-- GSettings schemas -->
   <data>
