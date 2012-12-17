@@ -26,6 +26,10 @@ BuildRequires:	desktop-file-utils
 #application/flickr pairing works, through flickr.com)
 Requires:	gvfs
 
+#Explicitly Requires: shared-mime-info since we need it to be able
+#to properly check file types by their mime type.
+Requires:	shared-mime-info
+
 %description
 Frogr is a small application for the GNOME desktop that allows users
 to manage their accounts in the Flickr image hosting website. It
