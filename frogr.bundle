@@ -41,7 +41,6 @@
     ${prefix}/share/locale
   </translations>
 
-  <!-- Other data to copy in, usually Glade/UI files, images, sounds files... -->
   <data>
     ${prefix}/share/frogr
   </data>
@@ -57,10 +56,19 @@
     ${prefix}/share/icons/Cheser
   </data>
 
-
   <!-- GSettings schemas -->
   <data>
     ${prefix}/share/glib-2.0/schemas
+  </data>
+
+  <!-- MIME types database information -->
+  <data>
+    ${prefix}/share/mime
+  </data>
+
+  <!-- Other data to copy in, usually Glade/UI files, images, sounds files... -->
+  <data>
+    ${prefix}/share/frogr
   </data>
 
   <!-- Copy icons. -->

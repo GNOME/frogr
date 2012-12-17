@@ -561,47 +561,6 @@ frogr_util_get_datasize_string (gulong datasize)
   return result;
 }
 
-#ifdef PLATFORM_MAC
-const gchar * const *
-frogr_util_get_supported_images (void)
-{
-  static const gchar *supported_images[] = {
-    "*.[jJ][pP][gG]",
-    "*.[jJ][pP][eE][gG]",
-    "*.[pP][nN][gG]",
-    "*.[bB][mM][pP]",
-    "*.[gG][iI][fF]",
-    NULL
-  };
-
-  return supported_images;
-}
-
-const gchar * const *
-frogr_util_get_supported_videos (void)
-{
-  static const gchar *supported_videos[] = {
-    "*.[mM][pP]4",
-    "*.[mM]4[vV]",
-    "*.[mM][oO][vV]",
-    "*.[qQ][tT]",
-    "*.[mM][pP][eE]",
-    "*.[mM][pP][eE][gG]",
-    "*.[mM][pP][gG]",
-    "*.[aA][vV][iI]",
-    "*.[wW][mM][vV]",
-    "*.[oO][gG][vV]",
-    "*.[oO][gG][gG]",
-    "*.[mM]2[tT][sS]",
-    "*.3[gG][pP]",
-    NULL
-  };
-
-  return supported_videos;
-}
-
-#else
-
 const gchar * const *
 frogr_util_get_supported_mimetypes (void)
 {
@@ -628,4 +587,3 @@ frogr_util_get_supported_mimetypes (void)
 
   return supported_mimetypes;
 }
-#endif /* PLATFORM_MAC */

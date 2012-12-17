@@ -1375,12 +1375,7 @@ _load_pictures_dialog (FrogrMainView *self)
   GtkFileFilter *video_filter;
   gint i;
 
-#ifdef PLATFORM_MAC
-  const gchar * const *supported_images;
-  const gchar * const *supported_videos;
-#else
   const gchar * const *supported_mimetypes;
-#endif
 
   dialog = gtk_file_chooser_dialog_new (_("Select a Picture"),
                                         GTK_WINDOW (self),
@@ -1394,23 +1389,6 @@ _load_pictures_dialog (FrogrMainView *self)
   image_filter = gtk_file_filter_new ();
   video_filter = gtk_file_filter_new ();
 
-#ifdef PLATFORM_MAC
-  /* Workaround for Mac OSX, where GNOME VFS daemon won't be running,
-     so we can't check filter by mime type (will be text/plain) */
-  supported_images = frogr_util_get_supported_images ();
-  for (i = 0; supported_images[i]; i++)
-    {
-      gtk_file_filter_add_pattern (image_filter, supported_images[i]);
-      gtk_file_filter_add_pattern (all_filter, supported_images[i]);
-    }
-
-  supported_videos = frogr_util_get_supported_videos ();
-  for (i = 0; supported_videos[i]; i++)
-    {
-      gtk_file_filter_add_pattern (video_filter, supported_videos[i]);
-      gtk_file_filter_add_pattern (all_filter, supported_videos[i]);
-    }
-#else
   supported_mimetypes = frogr_util_get_supported_mimetypes ();
   for (i = 0; supported_mimetypes[i]; i++)
     {
@@ -1421,7 +1399,6 @@ _load_pictures_dialog (FrogrMainView *self)
 
       gtk_file_filter_add_mime_type (all_filter, supported_mimetypes[i]);
     }
-#endif
 
   gtk_file_filter_set_name (all_filter, _("All Files"));
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), all_filter);
