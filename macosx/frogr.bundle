@@ -3,13 +3,12 @@
 
   <meta>
     <prefix name="default">${env:JHBUILD_PREFIX}</prefix>
-    <destination overwrite="yes">${env:HOME}/Desktop</destination>
     <run-install-name-tool/>
-    <launcher-script>${project}/macosx/launcher.sh</launcher-script>
+    <launcher-script>${project}/launcher.sh</launcher-script>
     <gtk>gtk+-3.0</gtk>
   </meta>
 
-  <plist>${project}/macosx/Info-frogr.plist</plist>
+  <plist>${project}/Info-frogr.plist</plist>
   <main-binary>${prefix}/bin/frogr</main-binary>
 
   <!-- Copy in GTK+ theme engines -->
@@ -59,7 +58,7 @@
     ${prefix}/share/themes/Mac
   </data>
   <data dest="${bundle}/Contents/Resources/share/icons">
-    ${project}/macosx/icons
+    ${project}/icons
   </data>
 
   <!-- GSettings schemas -->
@@ -79,12 +78,12 @@
 
   <!-- Copy icons. -->
   <data dest="${bundle}/Contents/Resources">
-    ${project}/macosx/frogr.icns
+    ${project}/frogr.icns
   </data>
 
   <!-- This is where GTK3 specific settings go. -->
   <data dest="${bundle}/Contents/Resources/etc/${gtkdir}/settings.ini">
-     ${project}/macosx/settings.ini
+     ${project}/settings.ini
   </data>
 
 </app-bundle>
