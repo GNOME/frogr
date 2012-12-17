@@ -41,10 +41,6 @@
     ${prefix}/share/locale
   </translations>
 
-  <data>
-    ${prefix}/share/frogr
-  </data>
-
   <!-- Copy in the themes data -->
   <data>
     ${prefix}/share/themes/Adwaita
