@@ -48,8 +48,8 @@
   <data>
     ${prefix}/share/themes/Mac
   </data>
-  <data>
-    ${prefix}/share/icons/Cheser
+  <data dest="${bundle}/Contents/Resources/share/icons">
+    ${project}/macosx/icons
   </data>
 
   <!-- GSettings schemas -->
