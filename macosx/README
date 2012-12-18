@@ -1,0 +1,96 @@
+This is a guide to building frogr on OS X, and it's based in a similar
+one for GEdit [1], the GNOME Text Editor.
+
+This guide assumes that you are already familiar with building gtk+
+software on OS X (natively) using jhbuild. Please make sure to read
+https://live.gnome.org/GTK%2B/OSX/Building before proceeding.
+
+Note: Terminal commands are preceded by dollar signs.
+
+1) Building frogr for OS X
+=============================================================================
+
+Get and install the gtk-osx-build-setup.sh from:
+http://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
+
+  $ curl -O http://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
+  $ sh gtk-osx-build-setup.sh
+
+Some of the newer releases of gnome software are only providing .xz packages.
+To be able to extract the contents of these packages, you will need to install
+xz utils. The easiest way to install is to use a dmg package available on:
+
+  http://macpkg.sourceforge.net/
+
+Make sure to include /usr/local/bin in your PATH and alsothat you are not
+conflicting anything from fink/macports. If you are using fink/macports, you
+can add the following to your ~/.bashrc to remove any PATHS related to 
+fink/macports when using jhbuild:
+
+    # Add /usr/local/bin
+    export PATH="$PATH:/usr/local/bin"
+
+    # Remove fink/macports path from PATH and store in local var origpath
+    origpath=$(echo $PATH | sed -E -e 's;:?/opt/local/bin;;' -e 's;:?/opt/local/sbin;;')
+
+    # Alias jhbuild
+    alias jhbuild="PATH=$origpath:$HOME/.local/bin jhbuild"
+
+For frogr we need to modify some configuration for jhbuild. A special
+jhbuildrc is provided in the frogr source (macosx/jhbuild/jhbuildrc-frogr).
+
+Copy this file to your home:
+
+  $ curl -o ~/.jhbuildrc-frogr http://git.gnome.org/browse/frogr/plain/macosx/jhbuild/jhbuildrc-frogr
+
+frogr provides a custom moduleset for jhbuild that you can use to built frogr.
+This moduleset is specified in jhbuildrc-frogr (together with some other
+configurations for jhbuild specific for frogr).
+
+To use the special frogr jhbuild configuration you will have to set the
+environment variable JHB=frogr.
+
+Finally we are ready to built frogr:
+
+  $ JHB=frogr jhbuild bootstrap --ignore-system
+  $ JHB=frogr jhbuild build frogr
+
+Note that it's perfectly possible that something might fail during the built,
+as the OS X (quartz) port of frogr, gtk+, glib etc. is under development.
+Please feel free to drop by on IRC or send an e-mail to the frogr mailing list
+(or gtk-osx-users mailing list) if you are not able to make things work.
+
+Packages will be downloaded in ~/frogr/pkgs. Sources are extracted in ~/frogr/source
+and installation of the binaries is in ~/frogr/inst.
+
+2) Making a frogr bundle
+=============================================================================
+
+First of all, you need gtk-mac-bundler utility, so grab it now:
+
+  $ git clone git://git.gnome.org/gtk-mac-bundler
+
+Now install it in your local bindir (normally $(HOME)/.local/bin):
+
+  $ cd gtk-mac-bundler
+  $ make install
+
+You can make now a frogr bundle (i.e. a frogr.app) with a script provided by
+frogr. Note that you have to execute script from within the jhbuild shell:
+
+  $ JHB=frogr jhbuild shell
+
+Then, go to the macosx/ directory in the frogr source and execute:
+
+  $ sh makebundle.sh
+
+If succeeded, you will now have a frogr.app bundle in the osx directory.
+Similarly, if you want to built the final dmg image, you can use the script
+makedmg.sh for that purpose:
+
+  $ sh makedmg.sh
+
+That's all!
+
+--
+[1] http://git.gnome.org/browse/gedit/plain/osx/README
