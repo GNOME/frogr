@@ -37,11 +37,11 @@ fink/macports when using jhbuild:
     alias jhbuild="PATH=$origpath:$HOME/.local/bin jhbuild"
 
 For frogr we need to modify some configuration for jhbuild. A special
-jhbuildrc is provided in the frogr source (macosx/jhbuild/jhbuildrc-frogr).
+jhbuildrc is provided in the frogr source (osx/jhbuild/jhbuildrc-frogr).
 
 Copy this file to your home:
 
-  $ curl -o ~/.jhbuildrc-frogr http://git.gnome.org/browse/frogr/plain/macosx/jhbuild/jhbuildrc-frogr
+  $ curl -o ~/.jhbuildrc-frogr http://git.gnome.org/browse/frogr/plain/osx/jhbuild/jhbuildrc-frogr
 
 frogr provides a custom moduleset for jhbuild that you can use to built frogr.
 This moduleset is specified in jhbuildrc-frogr (together with some other
@@ -80,7 +80,7 @@ frogr. Note that you have to execute script from within the jhbuild shell:
 
   $ JHB=frogr jhbuild shell
 
-Then, go to the macosx/ directory in the frogr source and execute:
+Then, go to the osx/ directory in the frogr source and execute:
 
   $ sh makebundle.sh
 

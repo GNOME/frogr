@@ -320,7 +320,7 @@
   <autotools id="gstreamer" autogen-sh="configure">
     <branch module="gstreamer/gstreamer-0.10.35.tar.gz" version="0.10.35"
 	    repo="gstreamer">
-      <patch file="http://git.gnome.org/browse/frogr/plain/macosx/jhbuild/patches/gstreamer-configure-flex.patch" strip="1"/>
+      <patch file="http://git.gnome.org/browse/frogr/plain/osx/jhbuild/patches/gstreamer-configure-flex.patch" strip="1"/>
     </branch>
     <dependencies>
       <dep package="orc"/>
