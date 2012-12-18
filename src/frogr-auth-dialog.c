@@ -27,13 +27,6 @@
 #include <config.h>
 #include <glib/gi18n.h>
 
-static gchar *unauth_txt =
-  N_("Please press the button to authorize %s "
-     "and then come back to complete the process.");
-
-static gchar *auth_txt =
-  N_("Enter verification code:");
-
 /* Prototypes */
 
 static void _ask_for_authorization (GtkWindow *parent);
@@ -56,7 +49,8 @@ _ask_for_authorization (GtkWindow *parent)
                                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_INFO,
                                    GTK_BUTTONS_CLOSE,
-                                   _(unauth_txt),
+                                   _("Please press the button to authorize %s "
+                                     "and then come back to complete the process."),
                                    APP_SHORTNAME);
 
   title = g_strdup_printf (_("Authorize %s"), APP_SHORTNAME);
@@ -161,7 +155,7 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
 
   /* Description label */
-  label = gtk_label_new (auth_txt);
+  label = gtk_label_new (_("Enter verification code:"));
   gtk_misc_set_padding (GTK_MISC (label), 12, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 6);
 
