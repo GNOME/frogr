@@ -1,0 +1,10 @@
+# -*- mode: python -*-
+
+import sys
+
+checkoutroot = os.path.expanduser("~/frogr/source")
+prefix = os.path.expanduser("~/frogr/inst")
+tarballdir = os.path.expanduser("~/frogr/pkgs")
+
+# Main module set
+moduleset = "http://git.gnome.org/browse/frogr/plain/macosx/jhbuild/frogr.modules"
