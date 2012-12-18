@@ -37,8 +37,6 @@ cp -r $DMG_APP $MOUNT_POINT
 echo "Detaching from disk image..."
 hdiutil detach $MOUNT_POINT -quiet
 
-rm -rf $DMG_APP
-
 echo "Converting to final image..."
 hdiutil convert -quiet -format UDBZ -o $DMG_FILE tmp.dmg
 rm tmp.dmg
