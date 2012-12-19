@@ -1076,13 +1076,13 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
   FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (dialog);
 
   /* Try to save data if response is OK */
-  if (response == GTK_RESPONSE_OK && _save_data (self) == FALSE)
+  if (response == GTK_RESPONSE_ACCEPT && _save_data (self) == FALSE)
     return;
 
   gtk_widget_destroy (GTK_WIDGET (self));
 
   /* Ensure pictures are reordered on OK */
-  if (response == GTK_RESPONSE_OK)
+  if (response == GTK_RESPONSE_ACCEPT)
     frogr_controller_reorder_pictures (frogr_controller_get_instance ());
 }
 
@@ -1191,7 +1191,7 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
 
   gtk_dialog_add_buttons (GTK_DIALOG (self),
                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                          GTK_STOCK_OK, GTK_RESPONSE_OK,
+                          GTK_STOCK_EDIT, GTK_RESPONSE_ACCEPT,
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
@@ -1199,7 +1199,7 @@ frogr_details_dialog_init (FrogrDetailsDialog *self)
                     G_CALLBACK (_dialog_response_cb), NULL);
 
   gtk_dialog_set_default_response (GTK_DIALOG (self),
-                                   GTK_RESPONSE_OK);
+                                   GTK_RESPONSE_ACCEPT);
 }
 
 

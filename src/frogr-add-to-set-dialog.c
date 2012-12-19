@@ -422,7 +422,7 @@ _update_pictures (FrogrAddToSetDialog *self)
 static void
 _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
-  if (response == GTK_RESPONSE_OK)
+  if (response == GTK_RESPONSE_ACCEPT)
     {
       FrogrAddToSetDialog *self = NULL;
 
@@ -548,10 +548,10 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
-                          GTK_STOCK_OK,
-                          GTK_RESPONSE_OK,
                           GTK_STOCK_CANCEL,
                           GTK_RESPONSE_CANCEL,
+                          GTK_STOCK_ADD,
+                          GTK_RESPONSE_ACCEPT,
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 

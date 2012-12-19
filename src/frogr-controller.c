@@ -627,7 +627,7 @@ _show_auth_failed_dialog (GtkWindow *parent, const gchar *message, gboolean auto
   dialog = gtk_message_dialog_new (parent,
                                    GTK_DIALOG_MODAL,
                                    GTK_MESSAGE_ERROR,
-                                   GTK_BUTTONS_OK,
+                                   GTK_BUTTONS_CLOSE,
                                    "%s", message);
   gtk_window_set_title (GTK_WINDOW (dialog), APP_SHORTNAME);
 
@@ -660,7 +660,7 @@ static void
 _auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
   gboolean auto_retry = (gboolean)GPOINTER_TO_INT (data);
-  if (auto_retry && response == GTK_RESPONSE_OK)
+  if (auto_retry && response == GTK_RESPONSE_CLOSE)
     {
       frogr_controller_show_auth_dialog (frogr_controller_get_instance ());
       DEBUG ("%s", "Showing the authorization dialog once again...");

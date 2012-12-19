@@ -69,7 +69,7 @@ _set_pictures (FrogrAddTagsDialog *self, const GSList *pictures)
 static void
 _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
-  if (response == GTK_RESPONSE_OK)
+  if (response == GTK_RESPONSE_ACCEPT)
     {
       FrogrAddTagsDialog *self = NULL;
       FrogrAddTagsDialogPrivate *priv = NULL;
@@ -195,10 +195,10 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
-                          GTK_STOCK_OK,
-                          GTK_RESPONSE_OK,
                           GTK_STOCK_CANCEL,
                           GTK_RESPONSE_CANCEL,
+                          GTK_STOCK_ADD,
+                          GTK_RESPONSE_ACCEPT,
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 

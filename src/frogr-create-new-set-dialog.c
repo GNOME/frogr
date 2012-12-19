@@ -208,7 +208,7 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
 
   /* Try to save data if response is OK */
   self = FROGR_CREATE_NEW_SET_DIALOG (dialog);
-  if (response == GTK_RESPONSE_OK && _save_data (self) == FALSE)
+  if (response == GTK_RESPONSE_ACCEPT && _save_data (self) == FALSE)
     return;
 
   /* Destroy the dialog */
@@ -325,10 +325,10 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
-                          GTK_STOCK_OK,
-                          GTK_RESPONSE_OK,
                           GTK_STOCK_CANCEL,
                           GTK_RESPONSE_CANCEL,
+                          GTK_STOCK_ADD,
+                          GTK_RESPONSE_ACCEPT,
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 

@@ -864,7 +864,7 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
   FrogrSettingsDialog *self = FROGR_SETTINGS_DIALOG (dialog);
   FrogrSettingsDialogPrivate *priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
-  if (response == GTK_RESPONSE_OK)
+  if (response == GTK_RESPONSE_CLOSE)
     {
       /* Try to save data if response is OK */
       if (!_save_data (self))
@@ -992,10 +992,10 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
-                          GTK_STOCK_OK,
-                          GTK_RESPONSE_OK,
                           GTK_STOCK_CANCEL,
                           GTK_RESPONSE_CANCEL,
+                          GTK_STOCK_CLOSE,
+                          GTK_RESPONSE_CLOSE,
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
@@ -1018,7 +1018,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
                     NULL);
 
   gtk_dialog_set_default_response (GTK_DIALOG (self),
-                                   GTK_RESPONSE_OK);
+                                   GTK_RESPONSE_CLOSE);
 }
 
 

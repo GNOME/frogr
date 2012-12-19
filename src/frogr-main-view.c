@@ -1333,7 +1333,7 @@ _save_project_as_dialog (FrogrMainView *self)
                                         GTK_WINDOW (self),
                                         GTK_FILE_CHOOSER_ACTION_SAVE,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                        GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
                                         NULL);
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled Project.frogr"));

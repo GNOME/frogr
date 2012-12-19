@@ -55,7 +55,7 @@ _ask_for_authorization (GtkWindow *parent)
   dialog = gtk_message_dialog_new (parent,
                                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_INFO,
-                                   GTK_BUTTONS_OK,
+                                   GTK_BUTTONS_CLOSE,
                                    _(unauth_txt),
                                    APP_SHORTNAME);
 
@@ -72,7 +72,7 @@ _ask_for_authorization (GtkWindow *parent)
 static void
 _ask_for_authorization_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
-  if (response == GTK_RESPONSE_OK)
+  if (response == GTK_RESPONSE_CLOSE)
     {
       FrogrController *controller = frogr_controller_get_instance();
       frogr_controller_open_auth_url (controller);
@@ -148,8 +148,8 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   dialog = gtk_dialog_new_with_buttons (title,
                                         parent,
                                         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                        GTK_STOCK_OK,
-                                        GTK_RESPONSE_OK,
+                                        GTK_STOCK_CLOSE,
+                                        GTK_RESPONSE_CLOSE,
                                         NULL);
   g_free (title);
 
@@ -192,7 +192,7 @@ _ask_for_auth_confirmation_response_cb (GtkDialog *dialog, gint response, gpoint
 {
   gboolean valid = FALSE;
 
-  if (response == GTK_RESPONSE_OK)
+  if (response == GTK_RESPONSE_CLOSE)
     {
       const gchar *vercode_part1 = NULL;
       const gchar *vercode_part2 = NULL;
