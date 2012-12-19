@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# This scripts generates the SOURCE file used to describe the exact
+# source code for frogr and all its dependencies (patches included)
+# used to build the DMG file to distribute the app for Mac OS X
+#
+app_name="frogr"
+JHB="$app_name"
+jhb_cmd="$HOME/.local/bin/jhbuild"
+frogr_moduleset="jhbuild/frogr.modules"
+output_file="SOURCES.new"
+
+echo "Extracting information for modules..."
+modules_list=$($jhb_cmd list $app_name)
+
+# Names for all the modules but the meta modules and the app itself
+modules_names=(
+    $($jhb_cmd info $modules_list \
+        | grep -e "Name" | grep -v "meta" | grep -v $app_name \
+        | cut -d " " -f 2)
+)
+
+# All the URLs for each of those modules
+modules_urls=(
+    $($jhb_cmd info $modules_list \
+        | grep -e "URL" \
+        | cut -d " " -f 2)
+)
+
+# Sanity check: one URL per module name found
+if [ ${#modules_names[*]} != ${#modules_urls[*]} ]; then
+    echo "Number of package names and URLs don't match: ${#modules_names[*]} / ${#modules_urls[*]}"
+    exit 1;
+fi
+
+# Build the name of the DMG file
+app_version=$(cat ../configure.ac | grep AC_INIT | cut -d "[" -f 3 | cut -d "]" -f 1)
+if [ "x$app_version" = "x" ]; then
+    echo "No package version for $app_name was found"
+    exit 1;
+fi
+dmg_filename="$app_name-$app_version.macosx.intel.dmg"
+
+# Some extra information to dump in the file
+osx_name=$(sw_vers | grep ProductName | awk '{print $2}')
+osx_version=$(sw_vers | grep ProductVersion | awk '{print $2}')
+osx_build=$(sw_vers | grep BuildVersion | awk '{print $2}')
+commit_id=$(git show HEAD | head -n 1 | awk '{print $2}')
+
+# Append the header to the output file
+printf "===============================\n" > $output_file
+printf "  frogr - Binary for Mac OS X\n" >> $output_file
+printf "===============================\n\n" >> $output_file
+printf "To build the binaries available in this folder, please see the instructions at:\n\n" >> $output_file
+printf "  http://git.gnome.org/browse/frogr/plain/osx/README\n\n" >> $output_file
+printf "The file $dmg_filename has been generated in $osx_name $osx_version (build $osx_build)\n" >> $output_file
+printf "with the following source code:\n\n" >> $output_file
+printf "http://git.gnome.org/browse/frogr/commit/?id=$commit_id\n\n" >> $output_file
+printf "Source code used (and patches) for each of $app_name's dependencies are as follows:\n\n" >> $output_file
+
+# Now append the list of modules used, URLs and applied patches
+
+printf "\n-------------------------------\n" >> $output_file
+printf " Built dependencies for frogr" >> $output_file
+printf "\n-------------------------------\n\n" >> $output_file
+for index in ${!modules_names[*]}
+do
+    printf " Package Name: ${modules_names[$index]}\n" >> $output_file
+    printf "   Source URL: ${modules_urls[$index]}\n" >> $output_file
+
+    # Check whether there are patches applied for this module
+    module_patches=$(cat $frogr_moduleset \
+        | grep -e "file=" -e "\.patch\"" | grep ${modules_names[$index]} \
+        | cut -d "\"" -f 2)
+
+    if [ "x$module_patches" != "x" ]; then
+        printf "      Patches:\n" >> $output_file
+        for patch in $module_patches; do
+            printf "        + $patch\n" >> $output_file
+        done
+    fi
+    echo >> $output_file
+done
+
+printf "Done! Now check $output_file\n"
