@@ -2,7 +2,7 @@
 <!DOCTYPE moduleset SYSTEM "moduleset.dtd">
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
-  <include href="https://raw.github.com/jralls/gtk-osx-build/master/modulesets-stable/gtk-osx.modules"/>
+  <include href="https://raw.github.com/mariospr/gtk-osx-build/master/modulesets-stable/gtk-osx.modules"/>
   <repository type="tarball" name="ftp.gnome.org" default="yes"
               href="http://ftp.gnome.org/pub/GNOME/sources/"/>
   <repository type="git" name="git.gnome.org" href="git://git.gnome.org/"/>
