@@ -146,7 +146,6 @@ AC_CONFIG_FILES([
         src/examples/Makefile
         po/Makefile.in
         help/Makefile
-        osx/Info-frogr.plist
 ])
 AC_OUTPUT
 
