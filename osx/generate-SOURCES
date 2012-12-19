@@ -70,7 +70,7 @@ do
 
     # Check whether there are patches applied for this module
     module_patches=$(cat $frogr_moduleset \
-        | grep -e "file=" -e "\.patch\"" | grep ${modules_names[$index]} \
+        | grep -e "file=" | grep ${modules_names[$index]} | grep -e "\.patch\"" \
         | cut -d "\"" -f 2)
 
     if [ "x$module_patches" != "x" ]; then
