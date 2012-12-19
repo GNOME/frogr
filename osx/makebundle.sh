@@ -34,6 +34,14 @@ if [ -d $BUNDLE_APP ] && $FORCE_REMOVAL; then
 fi
 
 if [ ! -d $BUNDLE_APP ]; then
+    echo "Generating Info-frogr.plist..."
+    app_version=$(cat ../configure.ac | grep AC_INIT | cut -d "[" -f 3 | cut -d "]" -f 1)
+    if [ "x$app_version" = "x" ]; then
+        echo "No package version for $app_name was found"
+        exit 1;
+    fi
+    sed -e "s,@VERSION\@,$app_version,g" Info-frogr.plist.in > Info-frogr.plist
+
     echo "Creating new $BUNDLE_APP bundle..."
     gtk-mac-bundler frogr.bundle
 elif $STRIP_DEBUG; then
