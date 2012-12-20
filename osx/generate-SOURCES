@@ -4,11 +4,13 @@
 # source code for frogr and all its dependencies (patches included)
 # used to build the DMG file to distribute the app for Mac OS X
 #
-app_name="frogr"
-JHB="$app_name"
+
+export JHB="frogr"
+
 jhb_cmd="$HOME/.local/bin/jhbuild"
 frogr_moduleset="jhbuild/frogr.modules"
 output_file="SOURCES.new"
+app_name="frogr"
 
 echo "Extracting information for modules..."
 modules_list=$($jhb_cmd list $app_name)
@@ -70,7 +72,7 @@ do
 
     # Check whether there are patches applied for this module
     module_patches=$(cat $frogr_moduleset \
-        | grep -e "file=" | grep ${modules_names[$index]} | grep -e "\.patch\"" \
+        | grep -e "file=" | grep -e "patches/${modules_names[$index]}-" | grep -e "\.patch\"" \
         | cut -d "\"" -f 2)
 
     if [ "x$module_patches" != "x" ]; then
