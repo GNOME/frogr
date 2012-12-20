@@ -14,6 +14,8 @@ export JHB="frogr"
 
 jhb_cmd="$HOME/.local/bin/jhbuild"
 frogr_moduleset="jhbuild/frogr.modules"
+configure_file="../configure.ac"
+icons_README_file="icons/Cheser/README"
 output_file="SOURCES.new"
 app_name="frogr"
 
@@ -41,7 +43,7 @@ if [ ${#modules_names[*]} != ${#modules_urls[*]} ]; then
 fi
 
 # Build the name of the DMG file
-app_version=$(cat ../configure.ac | grep AC_INIT | cut -d "[" -f 3 | cut -d "]" -f 1)
+app_version=$(cat $configure_file | grep AC_INIT | cut -d "[" -f 3 | cut -d "]" -f 1)
 if [ "x$app_version" = "x" ]; then
     echo "No package version for $app_name was found"
     exit 1;
@@ -88,5 +90,12 @@ do
     fi
     echo >> $output_file
 done
+
+# Last, append information about the icons theme used (Cheser)
+
+printf "\n-------------------------------\n" >> $output_file
+printf "     Artwork (icons theme)" >> $output_file
+printf "\n-------------------------------\n\n" >> $output_file
+cat $icons_README_file >> $output_file
 
 printf "Done! Now check $output_file\n"
