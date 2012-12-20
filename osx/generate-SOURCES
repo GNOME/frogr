@@ -5,6 +5,11 @@
 # used to build the DMG file to distribute the app for Mac OS X
 #
 
+if [ "x$JHBUILD_PREFIX" != "x" ]; then
+    echo "Can't run this script inside a JHBuild session. Please exit first"
+    exit 1;
+fi
+
 export JHB="frogr"
 
 jhb_cmd="$HOME/.local/bin/jhbuild"
