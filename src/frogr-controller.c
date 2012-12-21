@@ -1811,6 +1811,7 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
   GSList *data_sets_list = NULL;
   GSList *sets_list = NULL;
   GError *error = NULL;
+  gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
@@ -1825,7 +1826,7 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       /* If no photosets are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
-        priv->photosets_fetched = TRUE;
+        valid = TRUE;
 
       g_error_free (error);
     }
@@ -1836,10 +1837,14 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
           GSList *item = NULL;
           FspDataPhotoSet *current_data_set = NULL;
           FrogrPhotoSet *current_set = NULL;
+
+          /* Consider the received result valid if no previous one has arrived first */
+          valid = !priv->photosets_fetched;
+
           for (item = data_sets_list; item; item = g_slist_next (item))
             {
               current_data_set = FSP_DATA_PHOTO_SET (item->data);
-              if (!priv->photosets_fetched)
+              if (valid)
                 {
                   current_set = frogr_photoset_new (current_data_set->id,
                                                     current_data_set->title,
@@ -1854,16 +1859,16 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
 
           g_slist_free (data_sets_list);
         }
+    }
 
-      if (!priv->photosets_fetched)
-        {
-          FrogrModel *model = frogr_main_view_get_model (priv->mainview);
-          frogr_model_set_remote_photosets (model, sets_list);
-        }
-      priv->photosets_fetched = TRUE;
+  if (valid)
+    {
+      FrogrModel *model = frogr_main_view_get_model (priv->mainview);
+      frogr_model_set_remote_photosets (model, sets_list);
     }
 
   priv->fetching_photosets = FALSE;
+  priv->photosets_fetched = valid;
 }
 
 static void
@@ -1893,6 +1898,7 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   GSList *data_groups_list = NULL;
   GSList *groups_list = NULL;
   GError *error = NULL;
+  gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
@@ -1907,7 +1913,7 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       /* If no groups are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
-        priv->groups_fetched = TRUE;
+        valid = TRUE;
 
       g_error_free (error);
     }
@@ -1918,10 +1924,14 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
           GSList *item = NULL;
           FspDataGroup *data_group = NULL;
           FrogrGroup *current_group = NULL;
+
+          /* Consider the received result valid if no previous one has arrived first */
+          valid = !priv->groups_fetched;
+
           for (item = data_groups_list; item; item = g_slist_next (item))
             {
               data_group = FSP_DATA_GROUP (item->data);
-              if (!priv->groups_fetched)
+              if (valid)
                 {
                   current_group = frogr_group_new (data_group->id,
                                                    data_group->name,
@@ -1935,16 +1945,16 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 
           g_slist_free (data_groups_list);
         }
+    }
 
-      if (!priv->groups_fetched)
-        {
-          FrogrModel *model = frogr_main_view_get_model (priv->mainview);
-          frogr_model_set_groups (model, groups_list);
-        }
-      priv->groups_fetched = TRUE;
+  if (valid)
+    {
+      FrogrModel *model = frogr_main_view_get_model (priv->mainview);
+      frogr_model_set_groups (model, groups_list);
     }
 
   priv->fetching_groups = FALSE;
+  priv->groups_fetched = valid;
 }
 
 static void
@@ -1977,6 +1987,7 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrControllerPrivate *priv = NULL;
   GSList *tags_list = NULL;
   GError *error = NULL;
+  gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
@@ -1991,7 +2002,7 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 
       /* If no tags are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
-        priv->tags_fetched = TRUE;
+        valid = TRUE;
 
       tags_list = NULL;
 
@@ -1999,20 +2010,23 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
   else
     {
-      if (priv->tags_fetched)
+      /* Consider the received result valid if no previous one has arrived first */
+      valid = !priv->tags_fetched;
+      if (!valid)
         {
           g_slist_foreach (tags_list, (GFunc)g_free, NULL);
           g_slist_free (tags_list);
         }
-      else
-        {
-          FrogrModel *model = frogr_main_view_get_model (priv->mainview);
-          frogr_model_set_remote_tags (model, tags_list);
-        }
-      priv->tags_fetched = TRUE;
+    }
+
+  if (valid)
+    {
+      FrogrModel *model = frogr_main_view_get_model (priv->mainview);
+      frogr_model_set_remote_tags (model, tags_list);
     }
 
   priv->fetching_tags = FALSE;
+  priv->tags_fetched = valid;
 }
 
 static void
