@@ -3057,7 +3057,7 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   n_pictures = frogr_model_n_pictures (model);
   n_photosets = frogr_model_n_photosets (model);
   n_groups = frogr_model_n_groups (model);
-  n_tags = frogr_model_n_tags (model);
+  n_tags = frogr_model_n_local_tags (model);
 
   root_node = json_node_new (JSON_NODE_OBJECT);
   root_object = json_object_new ();

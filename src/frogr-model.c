@@ -249,6 +249,19 @@ _remove_all_tags (FrogrModel *self)
   _remove_local_tags (self);
 }
 
+static void
+_set_local_tags (FrogrModel *self, GSList *tags_list)
+{
+  FrogrModelPrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_MODEL (self));
+
+  _remove_local_tags (self);
+
+  priv = FROGR_MODEL_GET_PRIVATE (self);
+  priv->local_tags = tags_list;
+}
+
 static JsonArray *
 _serialize_list_to_json_array (GSList *list, GType g_type)
 {
@@ -783,6 +796,12 @@ frogr_model_n_tags (FrogrModel *self)
   return g_slist_length (frogr_model_get_tags (self));
 }
 
+guint
+frogr_model_n_local_tags (FrogrModel *self)
+{
+  g_return_val_if_fail(FROGR_IS_MODEL (self), 0);
+  return g_slist_length (FROGR_MODEL_GET_PRIVATE (self)->local_tags);
+}
 
 JsonObject *
 frogr_model_serialize (FrogrModel *self)
@@ -807,8 +826,9 @@ frogr_model_serialize (FrogrModel *self)
   json_array = _serialize_list_to_json_array (data_list, G_TYPE_OBJECT);
   json_object_set_array_member (root_object, "groups", json_array);
 
-  data_list = frogr_model_get_tags (self);
-  json_array = _serialize_list_to_json_array (data_list, G_TYPE_STRING);
+  /* Only serialize the local tags, not to bloat the project file too much */
+  json_array = _serialize_list_to_json_array (FROGR_MODEL_GET_PRIVATE (self)->local_tags,
+                                              G_TYPE_STRING);
   json_object_set_array_member (root_object, "tags", json_array);
 
   return root_object;
@@ -838,10 +858,12 @@ frogr_model_deserialize (FrogrModel *self, JsonObject *root_object)
   if (array_member)
     tags = _deserialize_list_from_json_array (array_member, G_TYPE_STRING);
 
-  /* We set the sets, groups and tags */
+  /* We set the sets and groups */
   frogr_model_set_photosets (self, sets);
   frogr_model_set_groups (self, groups);
-  frogr_model_set_remote_tags (self, tags);
+
+  /* We only serialized local tags */
+  _set_local_tags (self, tags);
 
   /* Pictures must be deserialized at the end, since they will hold
      references to sets and groups previously imported in the model */

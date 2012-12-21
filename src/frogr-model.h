@@ -109,6 +109,8 @@ GSList *frogr_model_get_tags (FrogrModel *self);
 
 guint frogr_model_n_tags (FrogrModel *self);
 
+guint frogr_model_n_local_tags (FrogrModel *self);
+
 /* Serialization */
 
 JsonObject *frogr_model_serialize (FrogrModel *self);
