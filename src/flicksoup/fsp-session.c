@@ -1689,6 +1689,7 @@ fsp_session_set_http_proxy              (FspSession *self,
           soup_uri_set_port (proxy_uri, actual_port);
           soup_uri_set_user (proxy_uri, actual_user);
           soup_uri_set_password (proxy_uri, actual_password);
+          soup_uri_set_path (proxy_uri, "");
         }
     }
 
