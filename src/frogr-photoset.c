@@ -191,11 +191,11 @@ _frogr_photoset_finalize (GObject* object)
   FrogrPhotoSetPrivate *priv = FROGR_PHOTOSET_GET_PRIVATE (object);
 
   /* free strings */
-  g_free (priv->title);
-  g_free (priv->description);
-  g_free (priv->id);
-  g_free (priv->local_id);
-  g_free (priv->primary_photo_id);
+  g_clear_pointer (&priv->title, g_free);
+  g_clear_pointer (&priv->description, g_free);
+  g_clear_pointer (&priv->id, g_free);
+  g_clear_pointer (&priv->local_id, g_free);
+  g_clear_pointer (&priv->primary_photo_id, g_free);
 
   /* call super class */
   G_OBJECT_CLASS (frogr_photoset_parent_class)->finalize(object);

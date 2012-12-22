@@ -2326,35 +2326,11 @@ _frogr_controller_dispose (GObject* object)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (object);
 
-  if (priv->mainview)
-    {
-      g_object_unref (priv->mainview);
-      priv->mainview = NULL;
-    }
-
-  if (priv->config)
-    {
-      g_object_unref (priv->config);
-      priv->config = NULL;
-    }
-
-  if (priv->account)
-    {
-      g_object_unref (priv->account);
-      priv->account = NULL;
-    }
-
-  if (priv->session)
-    {
-      g_object_unref (priv->session);
-      priv->session = NULL;
-    }
-
-  if (priv->cancellable)
-    {
-      g_object_unref (priv->cancellable);
-      priv->cancellable = NULL;
-    }
+  g_clear_object (&priv->mainview);
+  g_clear_object (&priv->config);
+  g_clear_object (&priv->account);
+  g_clear_object (&priv->session);
+  g_clear_object (&priv->cancellable);
 
   G_OBJECT_CLASS (frogr_controller_parent_class)->dispose (object);
 }

@@ -759,17 +759,8 @@ _frogr_file_loader_dispose (GObject* object)
   FrogrFileLoaderPrivate *priv =
     FROGR_FILE_LOADER_GET_PRIVATE (object);
 
-  if (priv->mainview)
-    {
-      g_object_unref (priv->mainview);
-      priv->mainview = NULL;
-    }
-
-  if (priv->controller)
-    {
-      g_object_unref (priv->controller);
-      priv->controller = NULL;
-    }
+  g_clear_object (&priv->mainview);
+  g_clear_object (&priv->controller);
 
   G_OBJECT_CLASS (frogr_file_loader_parent_class)->dispose(object);
 }
@@ -782,7 +773,7 @@ _frogr_file_loader_finalize (GObject* object)
 
   /* Free */
   g_slist_foreach (priv->file_uris, (GFunc)g_free, NULL);
-  g_slist_free (priv->file_uris);
+  g_clear_pointer (&priv->file_uris, g_slist_free);
 
   G_OBJECT_CLASS (frogr_file_loader_parent_class)->finalize(object);
 }

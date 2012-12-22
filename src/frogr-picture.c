@@ -554,30 +554,19 @@ _frogr_picture_dispose (GObject* object)
 {
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
 
-  if (priv->pixbuf)
-    {
-      g_object_unref (priv->pixbuf);
-      priv->pixbuf = NULL;
-    }
-
-  if (priv->location)
-    {
-      g_object_unref (priv->location);
-      priv->location = NULL;
-    }
+  g_clear_object (&priv->pixbuf);
+  g_clear_object (&priv->location);
 
   if (priv->photosets)
     {
       g_slist_foreach (priv->photosets, (GFunc) g_object_unref, NULL);
-      g_slist_free (priv->photosets);
-      priv->photosets = NULL;
+      g_clear_pointer (&priv->photosets, g_slist_free);
     }
 
   if (priv->groups)
     {
       g_slist_foreach (priv->groups, (GFunc) g_object_unref, NULL);
-      g_slist_free (priv->groups);
-      priv->groups = NULL;
+      g_clear_pointer (&priv->groups, g_slist_free);
     }
 
   /* call super class */
@@ -590,16 +579,16 @@ _frogr_picture_finalize (GObject* object)
   FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
 
   /* free strings */
-  g_free (priv->id);
-  g_free (priv->fileuri);
-  g_free (priv->title);
-  g_free (priv->description);
-  g_free (priv->tags_string);
-  g_free (priv->datetime);
+  g_clear_pointer (&priv->id, g_free);
+  g_clear_pointer (&priv->fileuri, g_free);
+  g_clear_pointer (&priv->title, g_free);
+  g_clear_pointer (&priv->description, g_free);
+  g_clear_pointer (&priv->tags_string, g_free);
+  g_clear_pointer (&priv->datetime, g_free);
 
   /* free GSList of tags */
   g_slist_foreach (priv->tags_list, (GFunc) g_free, NULL);
-  g_slist_free (priv->tags_list);
+  g_clear_pointer (&priv->tags_list, g_slist_free);
 
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class)->finalize(object);

@@ -113,8 +113,8 @@ _frogr_group_finalize (GObject* object)
   FrogrGroupPrivate *priv = FROGR_GROUP_GET_PRIVATE (object);
 
   /* free strings */
-  g_free (priv->id);
-  g_free (priv->name);
+  g_clear_pointer (&priv->id, g_free);
+  g_clear_pointer (&priv->name, g_free);
 
   /* call super class */
   G_OBJECT_CLASS (frogr_group_parent_class)->finalize(object);
