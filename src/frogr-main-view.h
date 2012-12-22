@@ -51,6 +51,8 @@ GType frogr_main_view_get_type (void) G_GNUC_CONST;
 
 FrogrMainView *frogr_main_view_new (GtkApplication *app);
 
+void frogr_main_view_update_project_path (FrogrMainView *self, const gchar *path);
+
 void frogr_main_view_set_status_text (FrogrMainView *self, const gchar *text);
 
 void frogr_main_view_show_progress (FrogrMainView *self, const gchar *text);

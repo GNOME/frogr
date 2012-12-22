@@ -3078,6 +3078,7 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
              json_object_get_int_member (root_object, "n_groups"),
              json_object_get_int_member (root_object, "n_tags"));
 
+      frogr_main_view_update_project_path (priv->mainview, path);
       frogr_model_deserialize (model, data_object);
       result = TRUE;
     }
@@ -3150,6 +3151,7 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
       return FALSE;
     }
 
+  frogr_main_view_update_project_path (priv->mainview, path);
   return TRUE;
 }
 

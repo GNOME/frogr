@@ -1229,7 +1229,7 @@ _open_project_dialog_response_cb (GtkDialog *dialog,
 
           /* Load from disk and update project's path */
           if (frogr_controller_open_project_from_file (priv->controller, filename))
-            _update_project_path (self, filename);
+            _update_window_title (self, FALSE);
           g_free (filename);
         }
     }
@@ -1284,12 +1284,7 @@ _save_project_to_file (FrogrMainView *self, const gchar *filepath)
 
   /* Save to disk and update project's path */
   if (frogr_controller_save_project_to_file (priv->controller, filepath))
-    {
-      _update_project_path (self, filepath);
-
-      /* Update title marking it as non-dirty (just saved) */
-      _update_window_title (self, FALSE);
-    }
+    _update_window_title (self, FALSE);
 }
 
 static void
@@ -2215,6 +2210,13 @@ frogr_main_view_new (GtkApplication *app)
   /* Now initialize all the stuff strictly related to the UI */
   _initialize_ui (mainview);
   return mainview;
+}
+
+void
+frogr_main_view_update_project_path (FrogrMainView *self, const gchar *path)
+{
+  g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
+  _update_project_path (self, path);
 }
 
 void
