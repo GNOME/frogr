@@ -293,7 +293,7 @@ _deserialize_list_from_json_array (JsonArray *array, GType g_type)
 {
   JsonNode *json_node = NULL;
   GSList *result_list = NULL;
-  gpointer element;
+  gpointer element = NULL;
   guint n_elements = 0;
   guint i = 0;
 

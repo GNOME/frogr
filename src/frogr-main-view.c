@@ -703,18 +703,14 @@ _on_radio_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointe
     }
   else if (!g_strcmp0 (action_name, ACTION_SORT_BY))
     {
-      SortingCriteria criteria;
+      SortingCriteria criteria = SORT_AS_LOADED;
 
-      if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_AS_LOADED))
-        criteria = SORT_AS_LOADED;
-      else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_DATE_TAKEN))
+      if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_DATE_TAKEN))
         criteria = SORT_BY_DATE;
       else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_TITLE))
         criteria = SORT_BY_TITLE;
       else if (!g_strcmp0 (target, ACTION_SORT_BY_TARGET_SIZE))
         criteria = SORT_BY_SIZE;
-      else
-        g_assert_not_reached ();
 
       /* Update the UI and save settings */
       _reorder_pictures (FROGR_MAIN_VIEW (data), criteria, priv->sorting_reversed);
