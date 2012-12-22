@@ -203,7 +203,7 @@ _load_current_file (FrogrFileLoader *self)
       /* This can be NULL (e.g wrong parameter in the command line) */
       if (file_info)
         {
-          /* Check mimetype (only when not in Mac OSX) */
+          /* Check mimetype */
           mime_type = g_file_info_get_content_type (file_info);
           valid_mime = FALSE;
 

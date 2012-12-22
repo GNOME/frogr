@@ -155,6 +155,8 @@ typedef enum {
 
 static gboolean _load_pictures_on_idle (gpointer data);
 
+static gboolean _load_project_file_on_idle (gpointer data);
+
 static void _g_application_startup_cb (GApplication *app, gpointer data);
 
 static void _g_application_activate_cb (GApplication *app, gpointer data);
@@ -298,6 +300,23 @@ _load_pictures_on_idle (gpointer data)
   return G_SOURCE_REMOVE;
 }
 
+static gboolean
+_load_project_file_on_idle (gpointer data)
+{
+  FrogrController *fcontroller = NULL;
+  gchar *filepath = NULL;
+
+  g_return_val_if_fail (data, FALSE);
+
+  fcontroller = frogr_controller_get_instance ();
+  filepath = (gchar *)data;
+
+  frogr_controller_open_project_from_file (fcontroller, filepath);
+  g_free (filepath);
+
+  return G_SOURCE_REMOVE;
+}
+
 static void
 _g_application_startup_cb (GApplication *app, gpointer data)
 {
@@ -348,22 +367,56 @@ static void
 _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gchar *hint, gpointer data)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (data);
-  GSList *fileuris = NULL;
-  int i = 0;
+  GFileInfo *file_info = NULL;
+  gboolean is_project_file = FALSE;
 
   DEBUG ("Trying to open %d files\n", n_files);
 
-  for (i = 0; i < n_files; i++)
+  /* Check the first file's MIME type to check whether we are loading
+     media files (pictures, videos) or project files (text files). */
+  file_info = g_file_query_info (files[0],
+                                 G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                 G_FILE_QUERY_INFO_NONE,
+                                 NULL,
+                                 NULL);
+  if (file_info)
     {
-      gchar *fileuri = NULL;
+      const gchar *mime_type = NULL;
 
-      fileuri = g_strdup (g_file_get_uri (files[i]));
-      if (fileuri)
-        fileuris = g_slist_append (fileuris, fileuri);
+      /* Thus, if the file being opened is a text file, we will assume
+         is a project file, since the other kind of files frogr can
+         handle two type of files: media files (pictures and videos),
+         normally with MIME types 'image' and 'video' */
+      mime_type = g_file_info_get_content_type (file_info);
+      is_project_file = g_str_has_prefix (mime_type, "text");
+      g_object_unref (file_info);
     }
 
-  if (fileuris)
-    gdk_threads_add_idle (_load_pictures_on_idle, fileuris);
+  if (is_project_file)
+    {
+      gchar *filepath = NULL;
+
+      /* Assume the first file is a project file and ignore the rest */
+      filepath = g_strdup (g_file_get_path (files[0]));
+      gdk_threads_add_idle (_load_project_file_on_idle, filepath);
+    }
+  else
+    {
+      GSList *fileuris = NULL;
+      gchar *fileuri = NULL;
+      int i = 0;
+
+      /* Load media files otherwise */
+      for (i = 0; i < n_files; i++)
+        {
+          fileuri = g_strdup (g_file_get_uri (files[i]));
+          if (fileuri)
+            fileuris = g_slist_append (fileuris, fileuri);
+        }
+
+      if (fileuris)
+        gdk_threads_add_idle (_load_pictures_on_idle, fileuris);
+    }
 
   /* Show the UI */
   gtk_widget_show_all (GTK_WIDGET(priv->mainview));
