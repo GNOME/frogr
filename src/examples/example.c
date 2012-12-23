@@ -29,13 +29,10 @@
 
 #define TEST_PHOTO "testphoto.png"
 
-#define BUFFER_SIZE 64
-
 static gchar *uploaded_photo_id = NULL;
 static gchar *created_photoset_id = NULL;
 static gchar *first_group_id = NULL;
 static gchar *test_photo_path = NULL;
-static char buffer[BUFFER_SIZE];
 
 /* Prototypes */
 
@@ -313,7 +310,7 @@ get_photosets_cb                        (GObject      *object,
       getchar ();
 
       /* Continue creating a new photoset */
-      g_print ("Creatine a new photoset...\n");
+      g_print ("Creating a new photoset...\n");
       fsp_session_create_photoset (session,
                                    "Photoset's title",
                                    "Photoset's description\nasdasda",
@@ -676,12 +673,14 @@ get_auth_url_cb                         (GObject      *object,
     }
   else
     {
+      char buffer[12];
+
       g_print ("[get_auth_url_cb]::Result: %s&perms=write\n\n",
                auth_url ? auth_url : "No URL got");
 
       /* Make a pause before continuing */
       g_print ("\nEnter the verification code and press ENTER to continue: ");
-      if (fgets(buffer, BUFFER_SIZE, stdin))
+      if (fgets(buffer, 12, stdin))
         {
           gchar *verifier = NULL;
 
