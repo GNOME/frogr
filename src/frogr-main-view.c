@@ -36,12 +36,6 @@
 #include <gdk/gdk.h>
 #include <glib/gi18n.h>
 
-#ifdef PLATFORM_MAC
-#define GDK_PRIMARY_MODIFIER GDK_META_MASK
-#else
-#define GDK_PRIMARY_MODIFIER GDK_CONTROL_MASK
-#endif
-
 /* Paths relative to the icons dir */
 #define MAIN_VIEW_ICON(_s) "/hicolor/" _s "/apps/frogr.png"
 
