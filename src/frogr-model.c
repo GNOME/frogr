@@ -153,7 +153,8 @@ _remove_pictures (FrogrModel *self)
       g_object_unref (picture);
     }
 
-  g_clear_pointer (&priv->pictures, g_slist_free);
+  g_slist_free (priv->pictures);
+  priv->pictures = NULL;
 
   g_signal_emit (self, signals[MODEL_CHANGED], 0);
 }
@@ -166,7 +167,11 @@ _remove_all_photosets (FrogrModel *self)
   g_return_if_fail(FROGR_IS_MODEL (self));
 
   priv = FROGR_MODEL_GET_PRIVATE (self);
-  g_clear_pointer (&priv->all_sets, g_slist_free);
+  if (priv->all_sets)
+    {
+      g_slist_free (priv->all_sets);
+      priv->all_sets = NULL;
+    }
 
   _remove_remote_photosets (self);
   _remove_local_photosets (self);
@@ -186,7 +191,8 @@ _remove_groups (FrogrModel *self)
   if (priv->groups)
     {
       g_slist_foreach (priv->groups, (GFunc)g_object_unref, NULL);
-      g_clear_pointer (&priv->groups, g_slist_free);
+      g_slist_free (priv->groups);
+      priv->groups = NULL;
     }
 
   if (priv->groups_table)
@@ -205,7 +211,8 @@ _remove_remote_tags (FrogrModel *self)
     return;
 
   g_slist_foreach (priv->remote_tags, (GFunc)g_free, NULL);
-  g_clear_pointer (&priv->remote_tags, g_slist_free);
+  g_slist_free (priv->remote_tags);
+  priv->remote_tags = NULL;
 }
 
 static void
@@ -220,7 +227,8 @@ _remove_local_tags (FrogrModel *self)
     return;
 
   g_slist_foreach (priv->local_tags, (GFunc)g_free, NULL);
-  g_clear_pointer (&priv->local_tags, g_slist_free);
+  g_slist_free (priv->local_tags);
+  priv->local_tags = NULL;
 }
 
 static void
@@ -231,7 +239,11 @@ _remove_all_tags (FrogrModel *self)
   g_return_if_fail(FROGR_IS_MODEL (self));
 
   priv = FROGR_MODEL_GET_PRIVATE (self);
-  g_clear_pointer (&priv->all_tags, g_slist_free);
+  if (priv->all_tags)
+    {
+      g_slist_free (priv->all_tags);
+      priv->all_tags = NULL;
+    }
 
   _remove_remote_tags (self);
   _remove_local_tags (self);
@@ -328,8 +340,17 @@ _frogr_model_dispose (GObject* object)
   _remove_groups (self);
   _remove_all_tags (self);
 
-  g_clear_pointer (&priv->sets_table, g_hash_table_destroy);
-  g_clear_pointer (&priv->groups_table, g_hash_table_destroy);
+  if (priv->sets_table)
+    {
+      g_hash_table_destroy (priv->sets_table);
+      priv->sets_table = NULL;
+    }
+
+  if (priv->groups_table)
+    {
+      g_hash_table_destroy (priv->groups_table);
+      priv->groups_table = NULL;
+    }
 
   G_OBJECT_CLASS (frogr_model_parent_class)->dispose (object);
 }

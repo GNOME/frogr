@@ -773,7 +773,7 @@ _frogr_file_loader_finalize (GObject* object)
 
   /* Free */
   g_slist_foreach (priv->file_uris, (GFunc)g_free, NULL);
-  g_clear_pointer (&priv->file_uris, g_slist_free);
+  g_slist_free (priv->file_uris);
 
   G_OBJECT_CLASS (frogr_file_loader_parent_class)->finalize(object);
 }
