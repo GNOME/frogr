@@ -11,7 +11,7 @@
 
   <title>Tag Elements</title>
   <p>You can assign several tags to any element. Flickr allows you to define your own tags. It allows you to easily find any element you did upload.</p>
-  <p>Right-click on a element, and choose <gui>Add tags</gui>. Or click on the menu <gui>Actions</gui>, and choose <gui>Add tags</gui>. Or, when you're editing element's detail, you can see and edit the tags</p>
+  <p>Right-click on a element, and choose <gui>Add tags</gui>. Or click on the menu <gui>Edit</gui>, and choose <gui>Add tags</gui>. Or, when you're editing element's detail, you can see and edit the tags</p>
   <figure>
     <title>Adding tags to elements</title>
     <desc>Adding tags to elements</desc>
