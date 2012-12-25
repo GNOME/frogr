@@ -1918,10 +1918,10 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       FrogrModel *model = frogr_main_view_get_model (priv->mainview);
       frogr_model_set_remote_photosets (model, sets_list);
+      priv->photosets_fetched = TRUE;
     }
 
   priv->fetching_photosets = FALSE;
-  priv->photosets_fetched = valid;
 }
 
 static void
@@ -2004,10 +2004,10 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       FrogrModel *model = frogr_main_view_get_model (priv->mainview);
       frogr_model_set_groups (model, groups_list);
+      priv->groups_fetched = TRUE;
     }
 
   priv->fetching_groups = FALSE;
-  priv->groups_fetched = valid;
 }
 
 static void
@@ -2076,10 +2076,10 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
     {
       FrogrModel *model = frogr_main_view_get_model (priv->mainview);
       frogr_model_set_remote_tags (model, tags_list);
+      priv->tags_fetched = TRUE;
     }
 
   priv->fetching_tags = FALSE;
-  priv->tags_fetched = valid;
 }
 
 static void
