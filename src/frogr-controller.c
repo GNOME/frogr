@@ -349,6 +349,18 @@ _g_application_startup_cb (GApplication *app, gpointer data)
   account = frogr_config_get_active_account (priv->config);
   if (account)
     _set_active_account (self, account);
+
+  /* Set HTTP proxy if needed */
+  if (frogr_config_get_use_proxy (priv->config))
+    {
+      const gboolean use_gnome_proxy = frogr_config_get_use_gnome_proxy (priv->config);
+      const gchar *host = frogr_config_get_proxy_host (priv->config);
+      const gchar *port = frogr_config_get_proxy_port (priv->config);
+      const gchar *username = frogr_config_get_proxy_username (priv->config);
+      const gchar *password = frogr_config_get_proxy_password (priv->config);
+      frogr_controller_set_proxy (self, use_gnome_proxy,
+                                  host, port, username, password);
+    }
 }
 
 static void
@@ -2403,36 +2415,6 @@ frogr_controller_init (FrogrController *self)
   priv->show_create_new_set_dialog_source_id = 0;
   priv->show_add_to_set_dialog_source_id = 0;
   priv->show_add_to_group_dialog_source_id = 0;
-
-  /* Get account, if any */
-  priv->account = frogr_config_get_active_account (priv->config);
-  if (priv->account)
-    {
-      const gchar *token = NULL;
-      const gchar *token_secret = NULL;
-
-      g_object_ref (priv->account);
-
-      /* If available, set token */
-      token = frogr_account_get_token (priv->account);
-      fsp_session_set_token (priv->session, token);
-
-      /* If available, set token secret */
-      token_secret = frogr_account_get_token_secret (priv->account);
-      fsp_session_set_token_secret (priv->session, token_secret);
-    }
-
-  /* Set HTTP proxy if needed */
-  if (frogr_config_get_use_proxy (priv->config))
-    {
-      const gboolean use_gnome_proxy = frogr_config_get_use_gnome_proxy (priv->config);
-      const gchar *host = frogr_config_get_proxy_host (priv->config);
-      const gchar *port = frogr_config_get_proxy_port (priv->config);
-      const gchar *username = frogr_config_get_proxy_username (priv->config);
-      const gchar *password = frogr_config_get_proxy_password (priv->config);
-      frogr_controller_set_proxy (self, use_gnome_proxy,
-                                  host, port, username, password);
-    }
 }
 
 
