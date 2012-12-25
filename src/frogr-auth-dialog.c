@@ -48,7 +48,7 @@ _ask_for_authorization (GtkWindow *parent)
   dialog = gtk_message_dialog_new (parent,
                                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_INFO,
-                                   GTK_BUTTONS_CLOSE,
+                                   GTK_BUTTONS_OK,
                                    _("Please press the button to authorize %s "
                                      "and then come back to complete the process."),
                                    APP_SHORTNAME);
