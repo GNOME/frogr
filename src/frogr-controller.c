@@ -3025,17 +3025,6 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
       root_object = json_node_get_object (root_node);
       data_object = json_object_get_object_member (root_object, "data");
 
-      DEBUG ("Opening project file %s:\n"
-             "\tNumber of pictures: %ld\n"
-             "\tNumber of photosets: %ld\n"
-             "\tNumber of groups: %ld\n"
-             "\tNumber of tags: %ld\n",
-             path,
-             json_object_get_int_member (root_object, "n_pictures"),
-             json_object_get_int_member (root_object, "n_photosets"),
-             json_object_get_int_member (root_object, "n_groups"),
-             json_object_get_int_member (root_object, "n_tags"));
-
       frogr_main_view_update_project_path (priv->mainview, path);
       frogr_model_deserialize (model, data_object);
       result = TRUE;
