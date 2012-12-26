@@ -5,7 +5,6 @@
       <item>
         <attribute name="label" translatable="yes">Aut_horize Account…</attribute>
         <attribute name="action">app.authorize</attribute>
-        <attribute name="accel">&lt;Primary&gt;&lt;Shift&gt;a</attribute>
       </item>
     </section>
     <section>
