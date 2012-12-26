@@ -66,7 +66,7 @@ _ask_for_authorization (GtkWindow *parent)
 static void
 _ask_for_authorization_response_cb (GtkDialog *dialog, gint response, gpointer data)
 {
-  if (response == GTK_RESPONSE_CLOSE)
+  if (response == GTK_RESPONSE_OK)
     {
       FrogrController *controller = frogr_controller_get_instance();
       frogr_controller_open_auth_url (controller);
