@@ -816,11 +816,15 @@ _tweak_app_menu_for_mac (FrogrMainView *self)
   /* Hide the Section including the 'Help' menu item */
   g_menu_remove (G_MENU (priv->app_menu), 2);
 
-  /* The section removed contained the 'About' item, so create a new
-     one and place it in at the beginning to make it more OSX-ish */
+  /* The section removed contained the 'About' and 'Quit' items, so
+     create new ones and place them in their right places */
   menu = G_MENU_MODEL (g_menu_new ());
   g_menu_append_item (G_MENU (menu), g_menu_item_new (_("_About"), "app.about"));
   g_menu_insert_section (G_MENU (priv->app_menu), 0, NULL, menu);
+
+  menu = G_MENU_MODEL (g_menu_new ());
+  g_menu_append_item (G_MENU (menu), g_menu_item_new (_("_Quit"), "app.quit"));
+  g_menu_insert_section (G_MENU (priv->app_menu), 3, NULL, menu);
 }
 #endif
 
