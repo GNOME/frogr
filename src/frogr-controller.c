@@ -69,7 +69,7 @@ struct _FrogrControllerPrivate
   FrogrAccount *account;
 
   FspSession *session;
-  GCancellable *cancellable;
+  GList *cancellables;
 
   /* We use this booleans as flags */
   gboolean app_running;
@@ -136,8 +136,14 @@ typedef struct {
   GSList *photosets;
   GSList *groups;
   gint after_upload_attempts[N_AFTER_UPLOAD_OPS];
+  GCancellable *cancellable;
   UploadPicturesData *up_data;
 } UploadOnePictureData;
+
+typedef struct {
+  FrogrController *controller;
+  GCancellable *cancellable;
+} CancellableOperationData;
 
 typedef enum {
   FETCHING_NOTHING,
@@ -171,7 +177,7 @@ static void _set_state (FrogrController *self, FrogrControllerState state);
 
 static GCancellable *_register_new_cancellable (FrogrController *self);
 
-static void _clear_cancellable (FrogrController *self);
+static void _clear_cancellable (FrogrController *self, GCancellable *cancellable);
 
 static void _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_user);
 
@@ -505,9 +511,6 @@ _set_active_account (FrogrController *self, FrogrAccount *account)
   account_version = new_account ? frogr_account_get_version (new_account) : NULL;
   if (account_version && g_strcmp0 (account_version, ACCOUNTS_CURRENT_VERSION))
     {
-      /* We won't use a cancellable for this request */
-      _clear_cancellable (self);
-
       priv->fetching_token_replacement = TRUE;
       fsp_session_exchange_token (priv->session, NULL, _exchange_token_cb, self);
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TOKEN_REPLACEMENT));
@@ -544,24 +547,28 @@ static GCancellable *
 _register_new_cancellable (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
+  GCancellable *cancellable = NULL;
 
-  _clear_cancellable (self);
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->cancellable = g_cancellable_new();
+  cancellable = g_cancellable_new();
+  priv->cancellables = g_list_prepend (priv->cancellables, cancellable);
 
-  return priv->cancellable;
+  return cancellable;
 }
 
 static void
-_clear_cancellable (FrogrController *self)
+_clear_cancellable (FrogrController *self, GCancellable *cancellable)
 {
   FrogrControllerPrivate *priv = NULL;
+  GList *item = NULL;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (priv->cancellable)
-    g_object_unref (priv->cancellable);
-
-  priv->cancellable = NULL;
+  item = g_list_find (priv->cancellables, cancellable);
+  if (item)
+    {
+      g_object_unref (G_OBJECT (item->data));
+      priv->cancellables = g_list_delete_link (priv->cancellables, item);
+    }
 }
 
 static void
@@ -737,12 +744,19 @@ _auth_failed_dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 static void
 _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
 {
-  FrogrController *self = FROGR_CONTROLLER(data);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  FspSession *session = NULL;
+  CancellableOperationData *co_data = NULL;
+  FrogrController *self = NULL;
+  FrogrControllerPrivate *priv = NULL;
   GError *error = NULL;
   gchar *auth_url = NULL;
 
-  auth_url = fsp_session_get_auth_url_finish (priv->session, res, &error);
+  session = FSP_SESSION (obj);
+  co_data = (CancellableOperationData*) data;
+  self = co_data->controller;
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  auth_url = fsp_session_get_auth_url_finish (session, res, &error);
   if (auth_url != NULL && error == NULL)
     {
       gchar *url_with_permissions = NULL;
@@ -767,6 +781,10 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
     }
 
   frogr_main_view_hide_progress (priv->mainview);
+
+  _clear_cancellable (self, co_data->cancellable);
+  g_slice_free (CancellableOperationData, co_data);
+
   priv->fetching_auth_url = FALSE;
 }
 
@@ -774,13 +792,15 @@ static void
 _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
 {
   FspSession *session = NULL;
+  CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   FspDataAuthToken *auth_token = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
-  controller = FROGR_CONTROLLER (data);
+  co_data = (CancellableOperationData*) data;
+  controller = co_data->controller;
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   auth_token = fsp_session_complete_auth_finish (session, result, &error);
@@ -816,6 +836,10 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
     }
 
   frogr_main_view_hide_progress (priv->mainview);
+
+  _clear_cancellable (controller, co_data->cancellable);
+  g_slice_free (CancellableOperationData, co_data);
+
   priv->fetching_auth_token = FALSE;
 }
 
@@ -980,6 +1004,7 @@ _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesDat
   uop_data->picture = picture;
   uop_data->photosets = NULL;
   uop_data->groups = NULL;
+  uop_data->cancellable = _register_new_cancellable (self);
   uop_data->up_data = up_data;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -1008,7 +1033,7 @@ _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesDat
                       safety_level,
                       content_type,
                       search_scope,
-                      _register_new_cancellable (self),
+                      uop_data->cancellable,
                       _upload_picture_cb, uop_data);
 }
 
@@ -1073,6 +1098,7 @@ static void
 _finish_upload_one_picture_process (FrogrController *self, UploadOnePictureData *uop_data)
 {
   g_object_unref (uop_data->picture);
+  _clear_cancellable (self, uop_data->cancellable);
   g_slice_free (UploadOnePictureData, uop_data);
 }
 
@@ -1186,7 +1212,7 @@ _set_license_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
   fsp_session_set_license (priv->session,
                            frogr_picture_get_id (picture),
                            frogr_picture_get_license (picture),
-                           priv->cancellable,
+                           uop_data->cancellable,
                            _set_license_cb,
                            uop_data);
 
@@ -1254,7 +1280,7 @@ _set_location_for_picture (FrogrController *self, UploadOnePictureData *uop_data
   fsp_session_set_location (priv->session,
                             frogr_picture_get_id (picture),
                             data_location,
-                            priv->cancellable,
+                            uop_data->cancellable,
                             _set_location_cb,
                             uop_data);
 
@@ -1309,7 +1335,7 @@ _create_photoset_for_picture (FrogrController *self, UploadOnePictureData *uop_d
                                frogr_photoset_get_title (set),
                                frogr_photoset_get_description (set),
                                frogr_picture_get_id (picture),
-                               priv->cancellable,
+                               uop_data->cancellable,
                                _create_photoset_cb,
                                uop_data);
 
@@ -1393,7 +1419,7 @@ _add_picture_to_photoset (FrogrController *self, UploadOnePictureData *uop_data)
   fsp_session_add_to_photoset (priv->session,
                                frogr_picture_get_id (picture),
                                frogr_photoset_get_id (set),
-                               priv->cancellable,
+                               uop_data->cancellable,
                                _add_to_photoset_cb,
                                uop_data);
 
@@ -1488,7 +1514,7 @@ _add_picture_to_group (FrogrController *self, UploadOnePictureData *uop_data)
   fsp_session_add_to_group (priv->session,
                             frogr_picture_get_id (picture),
                             frogr_group_get_id (group),
-                            priv->cancellable,
+                            uop_data->cancellable,
                             _add_to_group_cb,
                             uop_data);
 
@@ -1674,9 +1700,6 @@ _fetch_account_basic_info (FrogrController *self, FetchAccountInfoData *data)
       return;
     }
 
-  /* We won't use a cancellable for this request */
-  _clear_cancellable (self);
-
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   fsp_session_check_auth_info (priv->session, NULL,
                                (GAsyncReadyCallback)_fetch_account_basic_info_cb,
@@ -1750,9 +1773,6 @@ static void _fetch_account_upload_status (FrogrController *self, FetchAccountInf
       _fetch_account_info_finish (self, data);
       return;
     }
-
-  /* We won't use a cancellable for this request */
-  _clear_cancellable (self);
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   fsp_session_get_upload_status (priv->session, NULL,
@@ -1853,6 +1873,7 @@ static void
 _fetch_photosets (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
+  CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -1863,14 +1884,18 @@ _fetch_photosets (FrogrController *self)
   priv->photosets_fetched = FALSE;
   priv->fetching_photosets = TRUE;
 
-  fsp_session_get_photosets (priv->session, _register_new_cancellable (self),
-                             _fetch_photosets_cb, self);
+  co_data = g_slice_new0 (CancellableOperationData);
+  co_data->controller = self;
+  co_data->cancellable = _register_new_cancellable (self);
+  fsp_session_get_photosets (priv->session, co_data->cancellable,
+                             _fetch_photosets_cb, co_data);
 }
 
 static void
 _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
+  CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   GSList *data_sets_list = NULL;
@@ -1879,7 +1904,8 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
   gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
-  controller = FROGR_CONTROLLER (data);
+  co_data = (CancellableOperationData*) data;
+  controller = co_data->controller;
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   data_sets_list = fsp_session_get_photosets_finish (session, res, &error);
@@ -1933,6 +1959,9 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
       priv->photosets_fetched = TRUE;
     }
 
+  _clear_cancellable (controller, co_data->cancellable);
+  g_slice_free (CancellableOperationData, co_data);
+
   priv->fetching_photosets = FALSE;
 }
 
@@ -1940,6 +1969,7 @@ static void
 _fetch_groups (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
+  CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -1950,14 +1980,18 @@ _fetch_groups (FrogrController *self)
   priv->groups_fetched = FALSE;
   priv->fetching_groups = TRUE;
 
-  fsp_session_get_groups (priv->session, _register_new_cancellable (self),
-                          _fetch_groups_cb, self);
+  co_data = g_slice_new0 (CancellableOperationData);
+  co_data->controller = self;
+  co_data->cancellable = _register_new_cancellable (self);
+  fsp_session_get_groups (priv->session, co_data->cancellable,
+                          _fetch_groups_cb, co_data);
 }
 
 static void
 _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
+  CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   GSList *data_groups_list = NULL;
@@ -1966,7 +2000,8 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
-  controller = FROGR_CONTROLLER (data);
+  co_data = (CancellableOperationData*) data;
+  controller = co_data->controller;
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   data_groups_list = fsp_session_get_groups_finish (session, res, &error);
@@ -2019,6 +2054,9 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
       priv->groups_fetched = TRUE;
     }
 
+  _clear_cancellable (controller, co_data->cancellable);
+  g_slice_free (CancellableOperationData, co_data);
+
   priv->fetching_groups = FALSE;
 }
 
@@ -2026,6 +2064,7 @@ static void
 _fetch_tags (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
+  CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
@@ -2038,16 +2077,20 @@ _fetch_tags (FrogrController *self)
   /* Do not actually fetch tags if the autocompletion is off */
   if (!frogr_config_get_tags_autocompletion (priv->config))
     return;
-
   priv->fetching_tags = TRUE;
-  fsp_session_get_tags_list (priv->session, _register_new_cancellable (self),
-                             _fetch_tags_cb, self);
+
+  co_data = g_slice_new0 (CancellableOperationData);
+  co_data->controller = self;
+  co_data->cancellable = _register_new_cancellable (self);
+  fsp_session_get_tags_list (priv->session, co_data->cancellable,
+                             _fetch_tags_cb, co_data);
 }
 
 static void
 _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 {
   FspSession *session = NULL;
+  CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
   FrogrControllerPrivate *priv = NULL;
   GSList *tags_list = NULL;
@@ -2055,7 +2098,8 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
-  controller = FROGR_CONTROLLER (data);
+  co_data = (CancellableOperationData*) data;
+  controller = co_data->controller;
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   tags_list = fsp_session_get_tags_list_finish (session, res, &error);
@@ -2090,6 +2134,9 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
       frogr_model_set_remote_tags (model, tags_list);
       priv->tags_fetched = TRUE;
     }
+
+  _clear_cancellable (controller, co_data->cancellable);
+  g_slice_free (CancellableOperationData, co_data);
 
   priv->fetching_tags = FALSE;
 }
@@ -2342,7 +2389,13 @@ _frogr_controller_dispose (GObject* object)
   g_clear_object (&priv->config);
   g_clear_object (&priv->account);
   g_clear_object (&priv->session);
-  g_clear_object (&priv->cancellable);
+
+  if (priv->cancellables)
+    {
+      g_list_foreach (priv->cancellables, (GFunc)g_object_unref, NULL);
+      g_list_free (priv->cancellables);
+      priv->cancellables = NULL;
+    }
 
   G_OBJECT_CLASS (frogr_controller_parent_class)->dispose (object);
 }
@@ -2395,7 +2448,7 @@ frogr_controller_init (FrogrController *self)
   g_object_ref (priv->config);
 
   priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
-  priv->cancellable = NULL;
+  priv->cancellables = NULL;
   priv->app_running = FALSE;
   priv->fetching_token_replacement = FALSE;
   priv->fetching_auth_url = FALSE;
@@ -2790,12 +2843,17 @@ void
 frogr_controller_open_auth_url (FrogrController *self)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv->fetching_auth_url = TRUE;
-  fsp_session_get_auth_url (priv->session, _register_new_cancellable (self),
-                            _get_auth_url_cb, self);
+
+  co_data = g_slice_new0 (CancellableOperationData);
+  co_data->controller = self;
+  co_data->cancellable = _register_new_cancellable (self);
+  fsp_session_get_auth_url (priv->session, co_data->cancellable,
+                            _get_auth_url_cb, co_data);
 
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_URL));
 
@@ -2807,13 +2865,17 @@ void
 frogr_controller_complete_auth (FrogrController *self, const gchar *verification_code)
 {
   FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv->fetching_auth_token = TRUE;
-  fsp_session_complete_auth (priv->session, verification_code,
-                             _register_new_cancellable (self),
-                             _complete_auth_cb, self);
+
+  co_data = g_slice_new0 (CancellableOperationData);
+  co_data->controller = self;
+  co_data->cancellable = _register_new_cancellable (self);
+  fsp_session_complete_auth (priv->session, verification_code, co_data->cancellable,
+                             _complete_auth_cb, co_data);
 
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_TOKEN));
 
@@ -2964,17 +3026,18 @@ void
 frogr_controller_cancel_ongoing_requests (FrogrController *self)
 {
   FrogrControllerPrivate *priv = NULL;
+  GCancellable *cancellable = NULL;
+  GList *item = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (G_IS_CANCELLABLE (priv->cancellable)
-      && !g_cancellable_is_cancelled (priv->cancellable))
+  for (item = priv->cancellables; item; item = g_list_next (item))
     {
-      g_cancellable_cancel (priv->cancellable);
+      cancellable = G_CANCELLABLE (item->data);
+      if (!g_cancellable_is_cancelled (cancellable))
+        g_cancellable_cancel (cancellable);
     }
-
-  priv->cancellable = NULL;
 }
 
 gboolean
