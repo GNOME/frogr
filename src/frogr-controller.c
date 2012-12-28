@@ -137,6 +137,8 @@ typedef struct {
   GSList *groups;
   gint after_upload_attempts[N_AFTER_UPLOAD_OPS];
   GCancellable *cancellable;
+  gulong cancellable_id;
+  gboolean is_cancelled;
   UploadPicturesData *up_data;
 } UploadOnePictureData;
 
@@ -206,6 +208,8 @@ static void _upload_next_picture (FrogrController *self, UploadPicturesData *up_
 static void _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesData *up_data);
 
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _upload_picture_cancelled_cb (GCancellable *cancellable, gpointer data);
 
 static void _finish_upload_one_picture_process (FrogrController *self, UploadOnePictureData *uop_data);
 
@@ -1005,6 +1009,10 @@ _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesDat
   uop_data->photosets = NULL;
   uop_data->groups = NULL;
   uop_data->cancellable = _register_new_cancellable (self);
+  uop_data->cancellable_id = g_cancellable_connect (uop_data->cancellable,
+                                                    G_CALLBACK (_upload_picture_cancelled_cb),
+                                                    uop_data, NULL);
+  uop_data->is_cancelled = FALSE;
   uop_data->up_data = up_data;
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
@@ -1097,10 +1105,23 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 }
 
 static void
+_upload_picture_cancelled_cb (GCancellable *cancellable, gpointer data)
+{
+  UploadOnePictureData *uop_data = NULL;
+
+  uop_data = (UploadOnePictureData*) data;
+  uop_data->is_cancelled = TRUE;
+}
+
+static void
 _finish_upload_one_picture_process (FrogrController *self, UploadOnePictureData *uop_data)
 {
   g_object_unref (uop_data->picture);
-  _clear_cancellable (self, uop_data->cancellable);
+  if (uop_data->cancellable)
+    {
+      g_cancellable_disconnect (uop_data->cancellable, uop_data->cancellable_id);
+      _clear_cancellable (self, uop_data->cancellable);
+    }
   g_slice_free (UploadOnePictureData, uop_data);
 }
 
@@ -1612,7 +1633,7 @@ _complete_picture_upload_on_idle (gpointer data)
     }
   picture = uop_data->picture;
 
-  if (!up_data->error)
+  if (!uop_data->is_cancelled)
     {
       /* Remove it from the model if no error happened */
       FrogrModel *model = NULL;
