@@ -1085,11 +1085,13 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
       if (!error)
         _perform_after_upload_operations (controller, uop_data);
       else
-        DEBUG ("Error uploading picture %s: %s",
-               frogr_picture_get_title (picture), error->message);
+        {
+          DEBUG ("Error uploading picture %s: %s",
+                 frogr_picture_get_title (picture), error->message);
+          uop_data->up_data->error = error;
+        }
 
       /* Complete the upload process when possible */
-      uop_data->up_data->error = error;
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, _complete_picture_upload_on_idle, uop_data);
     }
 }
@@ -1191,9 +1193,11 @@ _set_license_cb (GObject *object, GAsyncResult *res, gpointer data)
   else
     {
       if (error)
-        DEBUG ("Error setting license for picture: %s", error->message);
+        {
+          DEBUG ("Error setting license for picture: %s", error->message);
+          uop_data->up_data->error = error;
+        }
 
-      uop_data->up_data->error = error;
       FROGR_CONTROLLER_GET_PRIVATE (controller)->setting_license = FALSE;
     }
 }
@@ -1252,9 +1256,11 @@ _set_location_cb (GObject *object, GAsyncResult *res, gpointer data)
   else
     {
       if (error)
-        DEBUG ("Error setting location for picture: %s", error->message);
+        {
+          DEBUG ("Error setting location for picture: %s", error->message);
+          uop_data->up_data->error = error;
+        }
 
-      uop_data->up_data->error = error;
       FROGR_CONTROLLER_GET_PRIVATE (controller)->setting_location = FALSE;
     }
 }
@@ -1395,9 +1401,11 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
           keep_going = _add_picture_to_photosets_or_create (controller, uop_data);
         }
       else
-        DEBUG ("Error creating set: %s", error->message);
+        {
+          DEBUG ("Error creating set: %s", error->message);
+          uop_data->up_data->error = error;
+        }
 
-      uop_data->up_data->error = error;
       if (!keep_going)
         FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_set = FALSE;
     }
@@ -1474,9 +1482,11 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
           keep_going = _add_picture_to_photosets_or_create (controller, uop_data);
         }
       else
-        DEBUG ("Error adding picture to set: %s", error->message);
+        {
+          DEBUG ("Error adding picture to set: %s", error->message);
+          uop_data->up_data->error = error;
+        }
 
-      uop_data->up_data->error = error;
       if (!keep_going)
         FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_set = FALSE;
     }
@@ -1569,9 +1579,11 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
           keep_going = _add_picture_to_groups (controller, uop_data);
         }
       else
-        DEBUG ("Error adding picture to group: %s", error->message);
+        {
+          DEBUG ("Error adding picture to group: %s", error->message);
+          uop_data->up_data->error = error;
+        }
 
-      uop_data->up_data->error = error;
       if (!keep_going)
         FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_group = FALSE;
     }
