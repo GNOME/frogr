@@ -68,6 +68,9 @@ struct _FspSessionPrivate
   gchar *token;
   gchar *token_secret;
 
+  gchar *tmp_token;
+  gchar *tmp_token_secret;
+
   gboolean using_gnome_proxy;
   SoupURI *proxy_uri;
   SoupSession *soup_session;
@@ -105,6 +108,11 @@ typedef struct
   GCancellable        *cancellable;
   gulong               cancellable_id;
 } GCancellableData;
+
+typedef enum {
+  TOKEN_TYPE_PERMANENT,
+  TOKEN_TYPE_TEMPORARY,
+} TokenType;
 
 typedef enum {
   AUTHORIZATION_METHOD_ORIGINAL,
@@ -241,11 +249,12 @@ static gchar *
 _get_signed_url                       (FspSession          *self,
                                        const gchar         *url,
                                        AuthorizationMethod  auth_method,
+                                       TokenType            token_type,
                                        const gchar         *first_param,
                                        ... );
 
 static void
-_clear_token_information              (FspSession *self);
+_clear_temporary_token                (FspSession *self);
 
 static void
 _perform_async_request                  (SoupSession         *soup_session,
@@ -425,6 +434,8 @@ fsp_session_finalize                    (GObject* object)
   g_free (self->priv->secret);
   g_free (self->priv->token);
   g_free (self->priv->token_secret);
+  g_free (self->priv->tmp_token);
+  g_free (self->priv->tmp_token_secret);
 
   /* Call superclass */
   G_OBJECT_CLASS (fsp_session_parent_class)->finalize(object);
@@ -481,6 +492,8 @@ fsp_session_init                        (FspSession *self)
   self->priv->secret = NULL;
   self->priv->token = NULL;
   self->priv->token_secret = NULL;
+  self->priv->tmp_token = NULL;
+  self->priv->tmp_token_secret = NULL;
 
   self->priv->using_gnome_proxy = FALSE;
   self->priv->proxy_uri = NULL;
@@ -1184,6 +1197,7 @@ static gchar *
 _get_signed_url                       (FspSession          *self,
                                        const gchar         *url,
                                        AuthorizationMethod  auth_method,
+                                       TokenType            token_type,
                                        const gchar         *first_param,
                                        ... )
 {
@@ -1194,6 +1208,8 @@ _get_signed_url                       (FspSession          *self,
   gchar *signed_query = NULL;
   gchar *api_sig = NULL;
   gchar *retval = NULL;
+  const gchar *token = NULL;
+  const gchar *token_secret = NULL;
 
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
   g_return_val_if_fail (url != NULL, NULL);
@@ -1202,20 +1218,31 @@ _get_signed_url                       (FspSession          *self,
   priv = self->priv;
   va_start (args, first_param);
 
+  if (token_type == TOKEN_TYPE_PERMANENT)
+    {
+      token = priv->token;
+      token_secret = priv->token_secret;
+    }
+  else
+    {
+      token = priv->tmp_token;
+      token_secret = priv->tmp_token_secret;
+    }
+
   /* Get the hash table for the params */
   table = _get_params_table_from_valist (first_param, args);
 
   /* Fill the table with mandatory parameters */
   if (auth_method == AUTHORIZATION_METHOD_OAUTH_1)
     {
-      _fill_hash_table_with_oauth_params (table, priv->api_key, priv->token);
-      signing_key = g_strdup_printf ("%s&%s", priv->secret, priv->token_secret ? priv->token_secret : "");
+      _fill_hash_table_with_oauth_params (table, priv->api_key, token);
+      signing_key = g_strdup_printf ("%s&%s", priv->secret, token_secret ? token_secret : "");
     }
   else
     {
       g_hash_table_insert (table, g_strdup ("api_key"), g_strdup (priv->api_key));
-      if (priv->token)
-        g_hash_table_insert (table, g_strdup ("auth_token"), g_strdup (priv->token));
+      if (token)
+        g_hash_table_insert (table, g_strdup ("auth_token"), g_strdup (token));
       signing_key = g_strdup (priv->secret);
     }
 
@@ -1238,23 +1265,23 @@ _get_signed_url                       (FspSession          *self,
 }
 
 static void
-_clear_token_information              (FspSession *self)
+_clear_temporary_token                (FspSession *self)
 {
   FspSessionPrivate *priv = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
   priv = self->priv;
-  if (priv->token)
+  if (priv->tmp_token)
     {
-      g_free (priv->token);
-      priv->token = NULL;
+      g_free (priv->tmp_token);
+      priv->tmp_token = NULL;
     }
 
-  if (priv->token_secret)
+  if (priv->tmp_token_secret)
     {
-      g_free (priv->token_secret);
-      priv->token_secret = NULL; 
+      g_free (priv->tmp_token_secret);
+      priv->tmp_token_secret = NULL;
     }
 }
 
@@ -1786,13 +1813,14 @@ fsp_session_get_auth_url                (FspSession          *self,
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
-  /* If we're here, we're no longer interested in former tokens */
-  _clear_token_information (self);
+  /* Make sure there's no previous temporary data */
+  _clear_temporary_token (self);
 
   /* Build the signed url */
   url = _get_signed_url (self,
                          FLICKR_REQUEST_TOKEN_OAUTH_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_TEMPORARY,
                          "oauth_callback", OAUTH_CALLBACK_URL,
                          NULL);
 
@@ -1822,9 +1850,9 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
   /* Build the auth URL from the request token */
   if (auth_token != NULL)
     {
-      /* Save the data */
-      fsp_session_set_token (self, auth_token->token);
-      fsp_session_set_token_secret (self, auth_token->token_secret);
+      /* Save the temporaty data */
+      self->priv->tmp_token = g_strdup (auth_token->token);
+      self->priv->tmp_token_secret = g_strdup (auth_token->token_secret);
 
       /* Build the authorization url */
       auth_url = g_strdup_printf ("http://www.flickr.com/services/oauth/authorize"
@@ -1851,7 +1879,7 @@ fsp_session_complete_auth               (FspSession          *self,
   g_return_if_fail (cb != NULL);
 
   priv = self->priv;
-  if (priv->token != NULL && priv->token_secret != NULL)
+  if (priv->tmp_token != NULL && priv->tmp_token_secret != NULL)
     {
       gchar *url = NULL;
 
@@ -1859,6 +1887,7 @@ fsp_session_complete_auth               (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_ACCESS_TOKEN_OAUTH_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
+                             TOKEN_TYPE_TEMPORARY,
                              "oauth_verifier", code,
                              NULL);
 
@@ -1877,8 +1906,6 @@ fsp_session_complete_auth               (FspSession          *self,
       err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET, "Not authorized yet");
       g_simple_async_report_gerror_in_idle (G_OBJECT (self),
                                             cb, data, err);
-      /* Ensure we clean things up */
-      _clear_token_information (self);
     }
 }
 
@@ -1904,6 +1931,9 @@ fsp_session_complete_auth_finish        (FspSession    *self,
       fsp_session_set_token_secret (self, auth_token->token_secret);
     }
 
+  /* Ensure we clean things up */
+  _clear_temporary_token (self);
+
   return auth_token;
 }
 
@@ -1927,6 +1957,7 @@ fsp_session_exchange_token              (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_ORIGINAL,
+                             TOKEN_TYPE_PERMANENT,
                              "method", "flickr.auth.oauth.getAccessToken",
                              NULL);
 
@@ -1945,8 +1976,6 @@ fsp_session_exchange_token              (FspSession          *self,
       err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET, "Not authorized yet");
       g_simple_async_report_gerror_in_idle (G_OBJECT (self),
                                             cb, data, err);
-      /* Ensure we clean things up */
-      _clear_token_information (self);
     }
 }
 
@@ -1992,6 +2021,7 @@ fsp_session_check_auth_info             (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
+                             TOKEN_TYPE_PERMANENT,
                              "method", "flickr.auth.oauth.checkToken",
                              NULL);
 
@@ -2050,6 +2080,7 @@ fsp_session_get_upload_status           (FspSession          *self,
       url = _get_signed_url (self,
                              FLICKR_API_BASE_URL,
                              AUTHORIZATION_METHOD_OAUTH_1,
+                             TOKEN_TYPE_PERMANENT,
                              "method", "flickr.people.getUploadStatus",
                              NULL);
 
@@ -2197,6 +2228,7 @@ fsp_session_get_info                    (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.photos.getInfo",
                          "photo_id", photo_id,
                          NULL);
@@ -2242,6 +2274,7 @@ fsp_session_get_photosets               (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.photosets.getList",
                          NULL);
 
@@ -2286,6 +2319,7 @@ fsp_session_add_to_photoset             (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.photosets.addPhoto",
                          "photo_id", photo_id,
                          "photoset_id", photoset_id,
@@ -2336,6 +2370,7 @@ fsp_session_create_photoset             (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.photosets.create",
                          "title", title,
                          "description", description ? description : "",
@@ -2383,6 +2418,7 @@ fsp_session_get_groups                  (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.groups.pools.getGroups",
                          NULL);
 
@@ -2427,6 +2463,7 @@ fsp_session_add_to_group                (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.groups.pools.add",
                          "photo_id", photo_id,
                          "group_id", group_id,
@@ -2472,6 +2509,7 @@ fsp_session_get_tags_list               (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.tags.getListUser",
                          NULL);
 
@@ -2516,6 +2554,7 @@ fsp_session_set_license                 (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.photos.licenses.setLicense",
                          "photo_id", photo_id,
                          "license_id", license_str,
@@ -2578,6 +2617,7 @@ fsp_session_set_location                 (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.photos.geo.setLocation",
                          "photo_id", photo_id,
                          "lat", lat_str,
@@ -2629,6 +2669,7 @@ fsp_session_get_location                 (FspSession          *self,
   url = _get_signed_url (self,
                          FLICKR_API_BASE_URL,
                          AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
                          "method", "flickr.photos.geo.getLocation",
                          "photo_id", photo_id,
                          NULL);
