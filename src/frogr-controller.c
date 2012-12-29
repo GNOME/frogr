@@ -2217,7 +2217,7 @@ _show_progress_on_idle (gpointer data)
 
     case FETCHING_PHOTOSETS:
       text = _("Retrieving list of sets…");
-      show_dialog = priv->fetching_tags;
+      show_dialog = priv->fetching_photosets;
       break;
 
     case FETCHING_GROUPS:
