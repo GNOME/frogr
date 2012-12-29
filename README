@@ -10,11 +10,13 @@ To get the source, please checkout the git repository at gnome.org:
 
 To work properly, frogr needs some libraries to be installed first:
 
- - glib (version 2.22 or higher)
- - gtk+ (version 2.16 or higher)
- - libxml (version 2.6.8 or higher)
- - libsoup (version 2.26 or higher)
+ - glib (version 2.32 or higher)
+ - gstreamer (version 0.10.x)
+ - gtk+ (version 3.4 or higher)
+ - json-glib (version 0.12 or higher)
  - libexif (version 0.6.14 or higher)
+ - libsoup (version 2.26 or higher)
+ - libxml (version 2.6.8 or higher)
  - libgcrypt
 
 -------------------------------------------
@@ -27,7 +29,7 @@ Mailing list: http://mail.gnome.org/mailman/listinfo/frogr-list
 
 -------------------------------------------
 
-Frogr is Copyright (c) 2009-2011 Mario Sanchez Prada
+Frogr is Copyright (c) 2009-2012 Mario Sanchez Prada
 
 http://live.gnome.org/Frogr
 
@@ -46,7 +48,7 @@ See the COPYING file for more details.
 -------------------------------------------
 
 Frogr's Flickr API implementation (we call it "flicksoup", located
-under src/flicksoup) is Copyright (c) 2010-2011 Mario Sanchez Prada
+under src/flicksoup) is Copyright (c) 2010-2012 Mario Sanchez Prada
 
 Flicksoup is Free Software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 3 as
@@ -70,11 +72,6 @@ keep it as part of the project for the time being.
 Implementation of the get_gps_coordinate () function inside of the
 FrogrPictureLoader taken from tracker, licensed under the GNU Lesser
 General Public License Version 2.1 (Copyright 2009, Nokia Corp.)
-
-The specific theme customizations for the Mac OS X version of
-frogr through a gtkrc file were taken from the Banshee project
-(http://banshee.fm), written by Aaron Bockover <abockover@novell.com>
-and released under the MIT/X11 license (Copyright 2010 Novell, Inc.)
 
 -------------------------------------------
 
