@@ -9,6 +9,7 @@ Joe Hansen <joedalton2@yahoo.dk>
 de (German)
 -----------
 Mario Blättermann <mariobl@gnome.org>
+Christian Kirbach <christian.kirbach@gmail.com>
 
 el (Greek)
 ----------
@@ -37,9 +38,19 @@ gl (Galician)
 -------------
 Fran Diéguez <frandieguez@ubuntu.com>
 
+id (Indonesian)
+---------------
+Andika Triwidada <andika@gmail.com>
+
 it (Italian)
 ------------
 Cristian Marchi <cri.penta@gmail.com>
+
+lv (Latvian)
+------------
+Arvis Lācis <arvis.lacis@gmail.com>
+Anita Reitere <nitalynx@gmail.com>
+Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>
 
 nb (Norwegian bokmål)
 ---------------------
@@ -53,12 +64,15 @@ pl (Polish)
 -----------
 Aviary.pl <gnomepl@aviary.pl>
 Łukasz Jernaś <deejay1@srem.org>
+Piotr Drąg <piotrdrag@gmail.com>
+Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>
 
 pt_BR (Brazilian Portuguese)
 ----------------------------
 Mateus Zenaide <matzenh@gmail.com>
 Djavan Fagundes <djavan@comum.org>
 Gabriel F. Vilar <cogumm@gmail.com>
+Rafael Ferreira <rafael.f.f1@gmail.com>
 
 ru (Russian)
 ------------
@@ -69,6 +83,14 @@ sl (Slovenian)
 Matej Urbančič <mateju@svn.gnome.org>
 Saša Batistič <sasa.batistic@gmail.com>
 Andrej Žnidaršič <andrej.znidarsic@gmail.com>
+
+sr (Serbian)
+------------
+Мирослав Николић <miroslavnikolic@rocketmail.com>
+
+sr@latin (Serbian)
+------------------
+Miroslav Nikolić <miroslavnikolic@rocketmail.com>
 
 sv (Swedish)
 ------------
@@ -86,3 +108,4 @@ Daniel Korostil <ted.korostiled@gmail.com>
 zh_CN (Chinese)
 ---------------
 Yinghua Wang <wantinghard@gmail.com>
+tuhaihe <wangdianjin@linuxdeepin.com>
