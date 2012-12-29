@@ -1646,16 +1646,17 @@ _complete_picture_upload_on_idle (gpointer data)
     }
   picture = uop_data->picture;
 
-  if (!uop_data->is_cancelled)
+  if (uop_data->is_cancelled || up_data->error)
+    {
+      up_data->current = NULL;
+    }
+  else
     {
       /* Remove it from the model if no error happened */
       FrogrModel *model = NULL;
       model = frogr_main_view_get_model (priv->mainview);
       frogr_model_remove_picture (model, picture);
     }
-  else {
-    up_data->current = NULL;
-  }
 
   /* Re-check account info to make sure we have up-to-date info */
   _fetch_account_info (controller);
