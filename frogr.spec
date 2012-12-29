@@ -82,31 +82,31 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
-* Fri May 22 2012 Mario Sanchez Prada <msanchez at, igalia.com> 0.7-0
+* Tue May 22 2012 Mario Sanchez Prada <msanchez at, gnome.org> 0.7-0
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
 
-* Fri Aug 19 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.6.1-0
+* Fri Aug 19 2011 Mario Sanchez Prada <msanchez at, gnome.org> 0.6.1-0
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
 
-* Fri Aug 13 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.6-0
+* Sat Aug 13 2011 Mario Sanchez Prada <msanchez at, gnome.org> 0.6-0
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
 
-* Fri May 27 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.5-1
+* Fri May 27 2011 Mario Sanchez Prada <msanchez at, gnome.org> 0.5-1
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
 
-* Sat Feb 05 2011 Mario Sanchez Prada <msanchez at, igalia.com> 0.4-1
+* Sat Feb 05 2011 Mario Sanchez Prada <msanchez at, gnome.org> 0.4-1
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
 
-* Wed Dec 22 2010 Mario Sanchez Prada <msanchez at, igalia.com> 0.3-1
+* Wed Dec 22 2010 Mario Sanchez Prada <msanchez at, gnome.org> 0.3-1
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
 
-* Mon Oct 12 2009 Mario Sanchez Prada <msanchez at, igalia.com> 0.2-1
+* Mon Oct 12 2009 Mario Sanchez Prada <msanchez at, gnome.org> 0.2-1
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
 
