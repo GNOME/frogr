@@ -1,5 +1,5 @@
-0.8 (??)
-========
+0.8 (29 Dec 2012)
+=================
 
   * Added support for uploading videos (formats supported by Flickr only).
   * Added new 'All' and 'Video' filters to the file chooser dialog.
