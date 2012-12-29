@@ -201,6 +201,8 @@ static gboolean _cancel_authorization_on_timeout (gpointer data);
 
 static gboolean _should_retry_operation (GError *error, gint attempts);
 
+static void _invalidate_extra_data (FrogrController *self);
+
 static void _update_upload_progress (FrogrController *self, UploadPicturesData *up_data);
 
 static void _upload_next_picture (FrogrController *self, UploadPicturesData *up_data);
@@ -924,6 +926,17 @@ _should_retry_operation (GError *error, gint attempts)
     }
 
   return attempts < MAX_ATTEMPTS;
+}
+
+static void
+_invalidate_extra_data (FrogrController *self)
+{
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+
+  /* Just reset the flags */
+  priv->photosets_fetched = FALSE;
+  priv->groups_fetched = FALSE;
+  priv->tags_fetched = FALSE;
 }
 
 static void
@@ -1690,6 +1703,11 @@ _fetch_everything (FrogrController *self, gboolean force_extra_data)
   if (!frogr_controller_is_authorized (self))
     return;
 
+  /* Invalidate all fetched data as soon as possible if we already
+     know upfront we will force fetching it again later. */
+  if (force_extra_data)
+    _invalidate_extra_data (self);
+
   FetchAccountInfoData *data = g_slice_new0 (FetchAccountInfoData);
   data->retrieve_everything = TRUE;
   data->force_extra_data = force_extra_data;
@@ -1886,11 +1904,9 @@ _fetch_extra_data (FrogrController *self, gboolean force)
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  /* If we are forcing the retrieval of photosets, groups and tags,
-     make sure we are not fetching any data from the network at this
-     moment, or cancel otherwise, so the model is ready.*/
-  if (force && (priv->fetching_photosets || priv->fetching_groups || priv->fetching_tags))
-    frogr_controller_cancel_ongoing_requests (self);
+  /* Invalidate all fetched data. */
+  if (force)
+    _invalidate_extra_data (self);
 
   /* Sets, groups and tags can take much longer to retrieve,
      so we only retrieve that if actually needed */
