@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-17 15:51+0100\n"
-"PO-Revision-Date: 2013-02-17 15:52+0100\n"
+"POT-Creation-Date: 2013-05-12 23:12+0200\n"
+"PO-Revision-Date: 2013-05-12 23:13+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -36,6 +36,11 @@ msgstr "Frogr: zdalny organizator zdjęć w serwisie Flickr dla środowiska GNOM
 #: ../data/frogr.desktop.in.in.h:3
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Organizowanie i przesyłanie zdjęć w serwisie Flickr"
+
+#: ../data/frogr.desktop.in.in.h:4
+msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
+msgstr ""
+"Flickr;Obraz;Obrazek;Zdjęcie;Film;Filmik;Wideo;Video;Wysyłanie;Przesyłanie;"
 
 #: ../src/frogr-about-dialog.c:43
 msgid "A Flickr remote organizer for GNOME\n"
