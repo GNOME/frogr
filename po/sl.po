@@ -10,15 +10,16 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-01-04 21:39+0000\n"
-"PO-Revision-Date: 2013-01-10 21:25+0100\n"
+"POT-Creation-Date: 2013-05-14 09:34+0000\n"
+"PO-Revision-Date: 2013-06-03 21:55+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 1.5.4\n"
 
@@ -33,6 +34,10 @@ msgstr "Frogr: oddaljeni organizator slik za GNOME Flickr"
 #: ../data/frogr.desktop.in.in.h:3
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Pošiljanje in organiziranje slik na računih Flickr"
+
+#: ../data/frogr.desktop.in.in.h:4
+msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
+msgstr "Flickr;slika;fotografija;foto;video;pošiljalnik;"
 
 #: ../src/frogr-about-dialog.c:43
 msgid "A Flickr remote organizer for GNOME\n"
