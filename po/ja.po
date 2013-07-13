@@ -1,0 +1,874 @@
+# Japanese translation for frogr.
+# Copyright (C) 2013 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=frogr&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-05-14 09:34+0000\n"
+"PO-Revision-Date: 2013-04-19 20:54+0000\n"
+"Last-Translator: Jiro Matsuzawa <jmatsuzawa@gnome.org>\n"
+"Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../data/frogr.desktop.in.in.h:1
+msgid "Frogr"
+msgstr "Frogr"
+
+#: ../data/frogr.desktop.in.in.h:2
+msgid "Frogr: a Flickr Remote Organizer for GNOME"
+msgstr "Frogr: GNOME 向け Flickr リモートオーガナイザー"
+
+#: ../data/frogr.desktop.in.in.h:3
+msgid "Upload and organize photos in Flickr accounts"
+msgstr "Flickr へ画像のアップロードやオーガナイズを行います"
+
+#: ../data/frogr.desktop.in.in.h:4
+msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
+msgstr "Flickr;Image;Picture;Photo;Video;Uploader;画像;ピクチャ;写真;フォト;動画;ビデオ;アップローダー;"
+
+#: ../src/frogr-about-dialog.c:43
+msgid "A Flickr remote organizer for GNOME\n"
+msgstr "GNOME 向け Flickr リモートオーガナイザー\n"
+
+#: ../src/frogr-about-dialog.c:72
+msgid "translator-credits"
+msgstr "松澤 二郎 <jmatsuzawa@gnome.org>"
+
+#: ../src/frogr-add-tags-dialog.c:207
+msgid "Enter a spaces separated list of tags:"
+msgstr "タグのリストをスペース区切りで入力してください:"
+
+#: ../src/frogr-add-tags-dialog.c:230
+msgid "Add Tags"
+msgstr "タグの追加"
+
+#: ../src/frogr-add-to-set-dialog.c:155
+msgid "Title"
+msgstr "タイトル"
+
+#: ../src/frogr-add-to-set-dialog.c:170 ../src/frogr-add-to-group-dialog.c:169
+msgid "Elements"
+msgstr "アイテム数"
+
+#: ../src/frogr-add-to-set-dialog.c:602
+msgid "Add to Sets"
+msgstr "セットに追加"
+
+#: ../src/frogr-add-to-group-dialog.c:154
+msgid "Name"
+msgstr "名前"
+
+#: ../src/frogr-add-to-group-dialog.c:601
+msgid "Add to Groups"
+msgstr "グループに追加"
+
+#: ../src/frogr-auth-dialog.c:52
+#, c-format
+msgid "Please press the button to authorize %s and then come back to complete the process."
+msgstr "ボタンを押して %s によるアクセスを許可してください。そのあとアプリケーションに戻り、アクセス許可処理を完了させてください。"
+
+#: ../src/frogr-auth-dialog.c:56 ../src/frogr-auth-dialog.c:141
+#, c-format
+msgid "Authorize %s"
+msgstr "%s のアクセス許可"
+
+#. Description label
+#: ../src/frogr-auth-dialog.c:158
+msgid "Enter verification code:"
+msgstr "認証コードを入力:"
+
+#: ../src/frogr-auth-dialog.c:209
+msgid "Invalid verification code"
+msgstr "不正な認証コード"
+
+#: ../src/frogr-controller.c:593
+msgid "Process cancelled"
+msgstr "処理をキャンセルしました"
+
+#: ../src/frogr-controller.c:598
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+"接続エラー:\n"
+"ネットワーク利用不可"
+
+#: ../src/frogr-controller.c:602
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+"接続エラー:\n"
+"不正なリクエスト"
+
+#: ../src/frogr-controller.c:606
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+"接続エラー:\n"
+"サーバーサイドエラー"
+
+#: ../src/frogr-controller.c:610
+msgid ""
+"Error uploading:\n"
+"File invalid"
+msgstr ""
+"アップロード時にエラー:\n"
+"不正なファイル"
+
+#: ../src/frogr-controller.c:614
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+"画像アップロード時にエラー:\n"
+"割り当て量超過"
+
+#: ../src/frogr-controller.c:619
+#, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] "割り当て量超過 (限度: 毎月 %d 件の動画)"
+
+#: ../src/frogr-controller.c:623
+msgid ""
+"Error uploading video:\n"
+"You can't upload more videos with this account"
+msgstr ""
+"動画アップロード時にエラー:\n"
+"このアカウントではこれ以上動画をアップロードできません"
+
+#: ../src/frogr-controller.c:629
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+"エラー:\n"
+"画像が見つかりません"
+
+#: ../src/frogr-controller.c:633
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+"エラー:\n"
+"既に画像がフォトセットに存在します"
+
+#: ../src/frogr-controller.c:637
+msgid ""
+"Error:\n"
+"Photo already in group"
+msgstr ""
+"エラー:\n"
+"既に画像がグループに存在します"
+
+#: ../src/frogr-controller.c:641
+msgid ""
+"Error:\n"
+"Photo already in the maximum number of groups possible"
+msgstr ""
+"エラー:\n"
+"既に利用可能な最大グループに達しています。"
+
+#: ../src/frogr-controller.c:645
+msgid ""
+"Error:\n"
+"Group limit already reached"
+msgstr ""
+"エラー:\n"
+"既にグループの制限値に達しています"
+
+#: ../src/frogr-controller.c:649
+msgid ""
+"Error:\n"
+"Photo added to group's queue"
+msgstr ""
+"エラー:\n"
+"画像がグループのキューに追加されました"
+
+#: ../src/frogr-controller.c:653
+msgid ""
+"Error:\n"
+"Photo already added to group's queue"
+msgstr ""
+"エラー:\n"
+"既に画像がグループのキューに追加されています"
+
+#: ../src/frogr-controller.c:657
+msgid ""
+"Error:\n"
+"Content not allowed for this group"
+msgstr ""
+"エラー:\n"
+"このグループで許可されていないコンテンツです"
+
+#: ../src/frogr-controller.c:661
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"アクセス許可に失敗しました。\n"
+"もう一度行ってください。"
+
+#: ../src/frogr-controller.c:667
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to Flickr.\n"
+"Please re-authorize it"
+msgstr ""
+"エラー\n"
+"%s は、Flickr への画像アップロードを適切に許可されていません\n"
+"アクセス許可処理をもう一度行ってください。"
+
+#: ../src/frogr-controller.c:672
+#, c-format
+msgid ""
+"Unable to authenticate in Flickr\n"
+"Please try again."
+msgstr ""
+"Flickr での認証に失敗しました。\n"
+"もう一度行ってください。"
+
+#: ../src/frogr-controller.c:676
+#, c-format
+msgid ""
+"You have not properly authorized %s yet.\n"
+"Please try again."
+msgstr ""
+"まだ %s のアクセス許可処理が適切に行われていません。\n"
+"もう一度行ってください。"
+
+#: ../src/frogr-controller.c:681
+#, c-format
+msgid ""
+"Invalid verification code.\n"
+"Please try again."
+msgstr ""
+"不正な認証コードです。\n"
+"もう一度行ってください。"
+
+#: ../src/frogr-controller.c:685
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"エラー:\n"
+"サービス利用不可"
+
+#. General error: just dump the raw error description
+#: ../src/frogr-controller.c:690
+#, c-format
+msgid "An error happened: %s."
+msgstr "エラー発生: %s"
+
+#: ../src/frogr-controller.c:906
+msgid "Authorization failed (timed out)"
+msgstr "アクセス許可失敗 (タイムアウト)"
+
+#: ../src/frogr-controller.c:958
+#, c-format
+msgid "Retrying Upload (attempt %d/%d)…"
+msgstr "アップロードをリトライしています (回数 %d/%d)…"
+
+#: ../src/frogr-controller.c:963
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "'%s' をアップロードしています…"
+
+#: ../src/frogr-controller.c:2221
+msgid "Updating credentials…"
+msgstr "クレデンシャルを更新しています…"
+
+#: ../src/frogr-controller.c:2226
+msgid "Retrieving data for authorization…"
+msgstr "アクセス許可用のデータを取得しています…"
+
+#: ../src/frogr-controller.c:2231
+msgid "Finishing authorization…"
+msgstr "アクセス許可処理を終了しています…"
+
+#: ../src/frogr-controller.c:2236
+msgid "Retrieving list of sets…"
+msgstr "セットのリストを取得しています…"
+
+#: ../src/frogr-controller.c:2241
+msgid "Retrieving list of groups…"
+msgstr "グループのリストを取得しています…"
+
+#: ../src/frogr-controller.c:2246
+msgid "Retrieving list of tags…"
+msgstr "タグのリストを取得しています…"
+
+#: ../src/frogr-controller.c:2363
+msgid "No sets found"
+msgstr "セットが見つかりません"
+
+#: ../src/frogr-controller.c:2390
+msgid "No groups found"
+msgstr "グループが見つかりません"
+
+#: ../src/frogr-controller.c:3031
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to Flickr.\n"
+"Please re-authorize it."
+msgstr ""
+"Flickr に画像をアップロードするには、%s のアクセス許可を適切に行う必要があります。\n"
+"あらためてアクセス許可処理を行なってください。"
+
+#: ../src/frogr-controller.c:3041
+#, c-format
+msgid "You need to be connected before uploading any pictures to Flickr."
+msgstr "画像をアップロードするには、Flickr に接続する必要があります。"
+
+#: ../src/frogr-controller.c:3113
+#, c-format
+msgid "Error opening project file"
+msgstr "プロジェクトファイルを開く際にエラー"
+
+#. This shows a dialog notifying the problem to the user
+#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1020
+msgid "Missing data required"
+msgstr "必須項目が入力されていません"
+
+#: ../src/frogr-create-new-set-dialog.c:342
+msgid "Title:"
+msgstr "タイトル:"
+
+#: ../src/frogr-create-new-set-dialog.c:351
+msgid "Description:"
+msgstr "説明:"
+
+#: ../src/frogr-create-new-set-dialog.c:372
+msgid "Fill Pictures Details with Title and Description"
+msgstr "画像の詳細情報にタイトルと説明を付与する"
+
+#: ../src/frogr-create-new-set-dialog.c:393
+msgid "Create New Set"
+msgstr "新規セットの作成"
+
+#: ../src/frogr-details-dialog.c:90 ../src/frogr-settings-dialog.c:100
+msgid "Default (as specified in Flickr)"
+msgstr "デフォルト (Flickr で指定)"
+
+#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:101
+msgid "All rights reserved"
+msgstr "All rights reserved"
+
+#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:102
+msgid "CC Attribution-NonCommercial-ShareAlike"
+msgstr "CC Attribution-NonCommercial-ShareAlike"
+
+#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:103
+msgid "CC Attribution-NonCommercial"
+msgstr "CC Attribution-NonCommercial"
+
+#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:104
+msgid "CC Attribution-NonCommercial-NoDerivs"
+msgstr "CC Attribution-NonCommercial-NoDerivs"
+
+#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:105
+msgid "CC Attribution"
+msgstr "CC Attribution"
+
+#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:106
+msgid "CC Attribution-ShareAlike"
+msgstr "CC Attribution-ShareAlike"
+
+#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:107
+msgid "CC Attribution-NoDerivs"
+msgstr "CC Attribution-NoDerivs"
+
+#: ../src/frogr-details-dialog.c:176
+msgid "Open with image viewer"
+msgstr "画像ビューアーで開きます"
+
+#: ../src/frogr-details-dialog.c:201
+msgid "Visibility"
+msgstr "公開範囲"
+
+#: ../src/frogr-details-dialog.c:213 ../src/frogr-settings-dialog.c:202
+msgid "_Private"
+msgstr "プライベート(_P)"
+
+#: ../src/frogr-details-dialog.c:217 ../src/frogr-settings-dialog.c:204
+msgid "P_ublic"
+msgstr "一般公開(_U)"
+
+#: ../src/frogr-details-dialog.c:226 ../src/frogr-settings-dialog.c:212
+msgid "Visible to _Family"
+msgstr "家族に見せる(_F)"
+
+#: ../src/frogr-details-dialog.c:230 ../src/frogr-settings-dialog.c:214
+msgid "Visible to F_riends"
+msgstr "友達に見せる(_R)"
+
+#: ../src/frogr-details-dialog.c:256
+msgid "Content Type"
+msgstr "コンテンツタイプ"
+
+#: ../src/frogr-details-dialog.c:265 ../src/frogr-settings-dialog.c:241
+msgid "P_hoto"
+msgstr "写真(_H)"
+
+#: ../src/frogr-details-dialog.c:269 ../src/frogr-settings-dialog.c:243
+msgid "Scree_nshot"
+msgstr "スクリーンショット(_N)"
+
+#: ../src/frogr-details-dialog.c:273 ../src/frogr-settings-dialog.c:245
+msgid "Oth_er"
+msgstr "その他(_E)"
+
+#: ../src/frogr-details-dialog.c:289
+msgid "Safety Level"
+msgstr "セーフティレベル"
+
+# TODO: 良い訳語が思いつかないのでとりあえず原文のままとする
+#: ../src/frogr-details-dialog.c:298 ../src/frogr-settings-dialog.c:266
+msgid "S_afe"
+msgstr "Safe(_A)"
+
+# TODO: 良い訳語が思いつかないのでとりあえず原文のままとする
+#: ../src/frogr-details-dialog.c:302 ../src/frogr-settings-dialog.c:268
+msgid "_Moderate"
+msgstr "Moderate(_M)"
+
+# TODO: 良い訳語が思いつかないのでとりあえず原文のままとする
+#: ../src/frogr-details-dialog.c:306 ../src/frogr-settings-dialog.c:270
+msgid "Restr_icted"
+msgstr "Restricted(_I)"
+
+#: ../src/frogr-details-dialog.c:320
+msgid "License Type"
+msgstr "ライセンスの種類"
+
+#: ../src/frogr-details-dialog.c:344
+msgid "Other Properties"
+msgstr "その他のプロパティ"
+
+#: ../src/frogr-details-dialog.c:353
+msgid "Set Geo_location Information"
+msgstr "地理位置情報を設定する(_L)"
+
+#: ../src/frogr-details-dialog.c:357
+msgid "_Show Up in Global Search Results"
+msgstr "グローバル検索結果に表示させる(_S)"
+
+#: ../src/frogr-details-dialog.c:371
+msgid "_Title:"
+msgstr "タイトル(_T):"
+
+#: ../src/frogr-details-dialog.c:381
+msgid "_Description:"
+msgstr "詳細(_D):"
+
+#: ../src/frogr-details-dialog.c:405
+msgid "Ta_gs:"
+msgstr "タグ(_G):"
+
+#. Visually indicate how many pictures are being edited
+#: ../src/frogr-details-dialog.c:500
+#, c-format
+msgid "(%d Picture)"
+msgid_plural "(%d Pictures)"
+msgstr[0] "(%d 件の画像)"
+
+#: ../src/frogr-details-dialog.c:574
+msgid "An error happened trying to load the picture"
+msgstr "画像の読み込み時にエラーが発生しました"
+
+#: ../src/frogr-details-dialog.c:1223
+msgid "Edit Picture Details"
+msgstr "画像の詳細情報の編集"
+
+#: ../src/frogr-file-loader.c:147
+#, c-format
+msgid "Loading files %d / %d"
+msgstr "ファイルを読み込んでいます %d / %d"
+
+#: ../src/frogr-file-loader.c:381
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
+msgstr ""
+"画像 %s を読み込めません:\n"
+"%s"
+
+#: ../src/frogr-file-loader.c:412
+#, c-format
+msgid ""
+"Unable to load video %s\n"
+"Please check that you have the right codec installed"
+msgstr ""
+"動画 %s を読み込めません\n"
+"適切なコーデックがインストールされているか確認してください"
+
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: ../src/frogr-file-loader.c:652
+#, c-format
+msgid ""
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
+msgstr ""
+"ファイル %s を読み込めません:\n"
+"このアカウントでアップロード可能な最大ファイルサイズ (%s) を超えています"
+
+#: ../src/frogr-main-view.c:822 ../data/gtkbuilder/frogr-app-menu.xml.h:4
+msgid "_About"
+msgstr "このアプリケーションについて(_A)"
+
+#: ../src/frogr-main-view.c:826 ../data/gtkbuilder/frogr-app-menu.xml.h:5
+msgid "_Quit"
+msgstr "終了(_Q)"
+
+#. Create the submenu and insert it in the right section
+#: ../src/frogr-main-view.c:882
+msgid "Accounts"
+msgstr "アカウント"
+
+#. String showind the date and time a picture was taken
+#: ../src/frogr-main-view.c:1116
+#, c-format
+msgid "Taken: %s"
+msgstr "撮影日時: %s"
+
+#: ../src/frogr-main-view.c:1121
+#, c-format
+msgid "File size: %s"
+msgstr "ファイルサイズ: %s"
+
+#: ../src/frogr-main-view.c:1244
+msgid "Select File"
+msgstr "ファイルの選択"
+
+#: ../src/frogr-main-view.c:1257
+msgid "Frogr Project Files"
+msgstr "Frogr プロジェクトファイル"
+
+#: ../src/frogr-main-view.c:1321
+msgid "Select Destination"
+msgstr "保存先の選択"
+
+#: ../src/frogr-main-view.c:1328
+msgid "Untitled Project.frogr"
+msgstr "無題のプロジェクト.frogr"
+
+#: ../src/frogr-main-view.c:1369
+msgid "Select a Picture"
+msgstr "画像の選択"
+
+#: ../src/frogr-main-view.c:1392
+msgid "All Files"
+msgstr "すべてのファイル"
+
+#: ../src/frogr-main-view.c:1395
+msgid "Image Files"
+msgstr "画像ファイル"
+
+#: ../src/frogr-main-view.c:1398
+msgid "Video Files"
+msgstr "動画ファイル"
+
+#: ../src/frogr-main-view.c:1419
+msgid "You don't have any picture added yet"
+msgstr "まだ画像を追加していません"
+
+#: ../src/frogr-main-view.c:1434
+msgid "You need to select some pictures first"
+msgstr "まず画像を選択する必要があります"
+
+#: ../src/frogr-main-view.c:1894
+msgid "Not connected to Flickr"
+msgstr "Flickr に接続していません"
+
+#. Login string, showing the user is PRO (second '%s') if so.
+#: ../src/frogr-main-view.c:1904
+#, c-format
+msgid "Connected as %s%s"
+msgstr "%s%s として接続済み"
+
+#: ../src/frogr-main-view.c:1905
+msgid " (PRO account)"
+msgstr " (PRO アカウント)"
+
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: ../src/frogr-main-view.c:1929
+#, c-format
+msgid " - %s / %s remaining"
+msgstr " - %s / %s の空き容量"
+
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: ../src/frogr-main-view.c:1955
+#, c-format
+msgid " - %d file to upload (%s)"
+msgid_plural " - %d files to upload (%s)"
+msgstr[0] " - アップロード対象 %d ファイル (%s)"
+
+#: ../src/frogr-settings-dialog.c:189
+msgid "Default Visibility"
+msgstr "デフォルトの公開範囲"
+
+#: ../src/frogr-settings-dialog.c:229
+msgid "Default Content Type"
+msgstr "デフォルトのコンテンツタイプ"
+
+#: ../src/frogr-settings-dialog.c:254
+msgid "Default Safety Level"
+msgstr "デフォルトのセーフティレベル"
+
+#: ../src/frogr-settings-dialog.c:279
+msgid "Default License"
+msgstr "デフォルトのライセンス"
+
+#: ../src/frogr-settings-dialog.c:303
+msgid "Other Defaults"
+msgstr "その他のデフォルト設定"
+
+#: ../src/frogr-settings-dialog.c:315
+msgid "Set Geo_location Information for Pictures"
+msgstr "画像に地理位置情報を設定する(_L)"
+
+#: ../src/frogr-settings-dialog.c:318
+msgid "_Show Pictures in Global Search Results"
+msgstr "画像をグローバル検索結果に表示させる(_S)"
+
+#: ../src/frogr-settings-dialog.c:324
+msgid "_General"
+msgstr "一般(_G)"
+
+#: ../src/frogr-settings-dialog.c:349
+msgid "Proxy Settings"
+msgstr "プロキシ設定"
+
+#. Enable proxy
+#: ../src/frogr-settings-dialog.c:359
+msgid "_Enable HTTP Proxy"
+msgstr "HTTP プロキシを有効にする(_E)"
+
+#: ../src/frogr-settings-dialog.c:371
+msgid "_Host:"
+msgstr "ホスト(_H):"
+
+#. Proxy port
+#: ../src/frogr-settings-dialog.c:384
+msgid "_Port:"
+msgstr "ポート(_P):"
+
+#. Proxy username
+#: ../src/frogr-settings-dialog.c:397
+msgid "U_sername:"
+msgstr "ユーザー名(_S):"
+
+#. Proxy password
+#: ../src/frogr-settings-dialog.c:410
+msgid "Pass_word:"
+msgstr "パスワード(_W):"
+
+#. Use GNOME General Proxy Settings
+#: ../src/frogr-settings-dialog.c:426
+msgid "_Use GNOME General Proxy Settings"
+msgstr "GNOME 全体のプロキシ設定を使用する(_U)"
+
+#: ../src/frogr-settings-dialog.c:450
+msgid "Connec_tion"
+msgstr "接続(_T)"
+
+#: ../src/frogr-settings-dialog.c:473
+msgid "Other options"
+msgstr "その他のオプション"
+
+#: ../src/frogr-settings-dialog.c:485
+msgid "Ena_ble Tags Auto-Completion"
+msgstr "タグの自動補完を有効にする(_B)"
+
+#: ../src/frogr-settings-dialog.c:488
+msgid "_Import Tags from Pictures Metadata"
+msgstr "画像のメタデータからタグを取り込む(_I)"
+
+#: ../src/frogr-settings-dialog.c:492
+msgid "Use _Dark GTK Theme"
+msgstr "GTK のダークテーマを使用する(_D)"
+
+#: ../src/frogr-settings-dialog.c:496
+msgid "_Keep File Extensions in Titles when Loading"
+msgstr "ファイル読み込み時に拡張子をタイトルに含める(_K)"
+
+#: ../src/frogr-settings-dialog.c:502
+msgid "_Misc"
+msgstr "その他(_M)"
+
+#: ../src/frogr-settings-dialog.c:1038
+msgid "Preferences"
+msgstr "設定"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:1
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
+msgid "_Edit Details…"
+msgstr "詳細情報を編集(_E)…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:2
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
+msgid "Add _Tags…"
+msgstr "タグを追加(_T)…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:3
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:11
+msgid "Add to _Group…"
+msgstr "グループに追加(_G)…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:4
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:12
+msgid "Add to _Photoset"
+msgstr "フォトセットに追加(_P)"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:5
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:13
+msgid "_Add to Existing Photoset…"
+msgstr "既存のフォトセットに追加(_A)…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:6
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:14
+msgid "_Create New Photoset…"
+msgstr "新しいフォトセットを作成(_C)…"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:7
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:15
+msgid "_Open in External Viewer"
+msgstr "外部ビューアーで開く(_O)"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:8
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
+msgid "_Remove Elements"
+msgstr "アイテムを削除する(_R)"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:9
+msgid "Open Existing Project"
+msgstr "既存のプロジェクトを開く"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:10
+msgid "Open"
+msgstr "開く"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:11
+msgid "Save Current Project"
+msgstr "現在のプロジェクトを保存する"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:12
+msgid "Save"
+msgstr "保存する"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:13
+msgid "Add Elements"
+msgstr "アイテムを追加する"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:14
+msgid "Add"
+msgstr "追加"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:15
+msgid "Remove Elements"
+msgstr "アイテムを削除する"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:16
+msgid "Remove"
+msgstr "削除"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:17
+msgid "Upload All"
+msgstr "すべてアップロードする"
+
+#: ../data/gtkbuilder/frogr-main-view.xml.h:18
+msgid "Upload"
+msgstr "アップロード"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:1
+msgid "Aut_horize Account…"
+msgstr "アカウントへのアクセス許可(_H)…"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:2
+msgid "_Preferences…"
+msgstr "設定(_P)…"
+
+#: ../data/gtkbuilder/frogr-app-menu.xml.h:3
+msgid "_Help"
+msgstr "ヘルプ(_H)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:1
+msgid "_File"
+msgstr "ファイル(_F)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:2
+msgid "_Open…"
+msgstr "開く(_O)…"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:3
+msgid "_Save"
+msgstr "保存(_S)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:4
+msgid "Save _As…"
+msgstr "名前を付けて保存(_A)…"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:5
+msgid "A_dd Elements…"
+msgstr "アイテムを追加する(_D)…"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:7
+msgid "_Upload All"
+msgstr "すべてアップロード(_U)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:8
+msgid "_Edit"
+msgstr "編集(_E)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:16
+msgid "_View"
+msgstr "表示(_V)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:17
+msgid "_Sort Elements"
+msgstr "アイテムを並べ替える(_S)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:18
+msgid "As _Loaded"
+msgstr "読み込み順(_L)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:19
+msgid "By _Date Taken"
+msgstr "撮影日時順(_D)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:20
+msgid "By _Title"
+msgstr "タイトル順(_T)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:21
+msgid "By _Size"
+msgstr "サイズ順(_S)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:22
+msgid "_Reversed Order"
+msgstr "逆順にする(_R)"
+
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:23
+msgid "Enable _Tooltips"
+msgstr "ツールチップを有効にする(_T)"
