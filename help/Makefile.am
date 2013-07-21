@@ -10,10 +10,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 
-include $(top_srcdir)/gnome-doc-utils.make
+@YELP_HELP_RULES@
 
-DOC_ID = frogr
-DOC_FIGURES = \
+HELP_ID = frogr
+HELP_MEDIA = \
 	figures/add-tags-dialog.png \
 	figures/add-to-groups.png \
 	figures/add-to-sets.png \
@@ -26,7 +26,7 @@ DOC_FIGURES = \
 	figures/preferences-general.png \
 	figures/preferences-misc.png
 
-DOC_PAGES = \
+HELP_FILES = \
 	add-pictures.page \
 	group-pictures.page \
 	preferences.page \
@@ -43,5 +43,4 @@ DOC_PAGES = \
 	pictures.page \
 	upload-pictures.page
 
-DOC_LINGUAS = cs es de en_GB fr gl ru sl
-dist-hook: doc-dist-hook
+HELP_LINGUAS = cs es de en_GB fr gl ru sl

@@ -4,7 +4,7 @@ AC_PROG_CC
 AC_PROG_RANLIB
 AC_CONFIG_HEADERS([config.h])
 IT_PROG_INTLTOOL([0.35.0])
-GNOME_DOC_INIT([0.10.13])
+YELP_HELP_INIT([3.1.1])
 
 # Support silent build rules, requires at least automake-1.11. Disable
 # by either passing --disable-silent-rules to configure or passing V=1

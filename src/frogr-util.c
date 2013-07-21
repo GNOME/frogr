@@ -191,8 +191,8 @@ frogr_util_open_uri (const gchar *uri)
     app_info = g_app_info_get_default_for_uri_scheme ("http");
 
   /* Supported help URIs */
-  if (g_str_has_prefix (uri, "ghelp:"))
-    app_info = g_app_info_get_default_for_uri_scheme ("ghelp");
+  if (g_str_has_prefix (uri, "help:"))
+    app_info = g_app_info_get_default_for_uri_scheme ("help");
 #endif
 
   uris_list = g_list_append (uris_list, g_strdup (uri));

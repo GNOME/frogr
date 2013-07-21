@@ -7,7 +7,6 @@ mkdir -p m4
 aclocal
 autoconf --force
 autoheader --force
-gnome-doc-prepare --force
 automake --add-missing --copy --force-missing --foreign
 glib-gettextize --force --copy
 intltoolize --copy --force --automake

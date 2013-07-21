@@ -666,7 +666,7 @@ _on_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer da
   else if (!g_strcmp0 (action_name, ACTION_ABOUT))
     frogr_controller_show_about_dialog (priv->controller);
   else if (!g_strcmp0 (action_name, ACTION_HELP))
-    frogr_util_open_uri ("ghelp:frogr");
+    frogr_util_open_uri ("help:frogr");
   else if (!g_strcmp0 (action_name, ACTION_QUIT))
     _quit_application (self);
   else
