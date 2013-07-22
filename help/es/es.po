@@ -1,652 +1,53 @@
 # Spanish translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2012-12-25 08:10+0000\n"
-"PO-Revision-Date: 2012-12-25 12:30+0100\n"
+"POT-Creation-Date: 2013-07-21 22:44+0000\n"
+"PO-Revision-Date: 2013-07-22 14:39+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
+"Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Gtranslator 2.91.5\n"
 
-#: C/upload-pictures.page:9(desc) C/upload-pictures.page:12(title)
-msgid "Upload Elements"
-msgstr "Subir elementos"
+#. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
+#| msgid "translator-credits"
+msgctxt "_"
+msgid "translator-credits"
+msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011 - 2013"
 
-#: C/upload-pictures.page:13(p)
-msgid ""
-"You can upload pictures and videos using the toolbar <gui>arrow</gui> "
-"button. Or, you can use the menu <guiseq><gui>File</gui><gui>Upload All</"
-"gui></guiseq>. The uploaded pictures will disappear from the list. You may "
-"remove some pictures before to upload all the remaining ones."
-msgstr ""
-"Puede subir imágenes y vídeos usando el botón <gui>flecha</gui> de la barra "
-"de herramientas. O puede usar el menú <guiseq><gui>Archivo</gui><gui>Subir "
-"todo</gui></guiseq>. Las imágenes subidas desaparecerán de la lista. Puede "
-"quitar algunas imágenes antes de subir todas para conservar el resto."
-
-#: C/pictures.page:9(desc)
-msgid "Add, remove and upload pictures and videos"
-msgstr "Añadir, quitar y subir imágenes y vídeos"
-
-#: C/pictures.page:12(title)
-msgid "Transfer Elements"
-msgstr "Transferir elementos"
-
-#: C/pictures.page:13(p)
-msgid ""
-"You first have to add elements (pictures or videos) into frogr before being "
-"able to upload them."
-msgstr ""
-"Antes de poder subir elementos (imágenes o vídeos), debe añadirlos a frogr."
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/tag.page:18(None)
-#| msgid ""
-#| "@@image: 'figures/add-tags-dialog.png'; "
-#| "md5=2fb50069a5f9d23864100a2daf0544e4"
-msgid ""
-"@@image: 'figures/add-tags-dialog.png'; md5=2acd93f87d50657a70b2f0de1afd9c6b"
-msgstr ""
-"@@image: 'figures/add-tags-dialog.png'; md5=2acd93f87d50657a70b2f0de1afd9c6b"
-
-#: C/tag.page:9(desc) C/tag.page:12(title)
-msgid "Tag Elements"
-msgstr "Etiquetar elementos"
-
-#: C/tag.page:13(p)
-msgid ""
-"You can assign several tags to any element. Flickr allows you to define your "
-"own tags. It allows you to easily find any element you did upload."
-msgstr ""
-"Puede asignar varias etiquetas a un elemento. Flickr le permite definir sus "
-"propias etiquetas. Esto le permite encontrar fácilmente una imagen subida."
-
-#: C/tag.page:14(p)
-#| msgid ""
-#| "Right-click on a element, and choose <gui>Add tags</gui>. Or click on the "
-#| "menu <gui>Actions</gui>, and choose <gui>Add tags</gui>. Or, when you're "
-#| "editing element's detail, you can see and edit the tags"
-msgid ""
-"Right-click on a element, and choose <gui>Add tags</gui>. Or click on the "
-"menu <gui>Edit</gui>, and choose <gui>Add tags</gui>. Or, when you're "
-"editing element's detail, you can see and edit the tags"
-msgstr ""
-"Pulse con el botón derecho sobre un elemento y elija <gui>Añadir etiquetas</"
-"gui>. O pulse en el menú <gui>Editar</gui>, y elija <gui>Añadir etiquetas</"
-"gui>. También puede ver y editar las etiquetas cuando edite los detalles de "
-"la imagen."
-
-#: C/tag.page:16(title) C/tag.page:17(desc)
-msgid "Adding tags to elements"
-msgstr "Añadir etiquetas a los elementos"
-
-#: C/organize.page:8(desc) C/organize.page:11(title)
-msgid "Organize"
-msgstr "Organizar"
-
-#: C/display.page:9(desc)
-msgid "Amending view"
-msgstr "Vista corregida"
-
-#: C/display.page:12(title)
-msgid "Sort Elements"
-msgstr "Ordenar elementos"
-
-#: C/display.page:13(p)
-msgid ""
-"You can sort elements by title, by date, by size or as loaded. Click on the "
-"menu <gui>View</gui> and select the proper way to sort. You may also use "
-"reversed ordering."
-msgstr ""
-"Puede ordenar los elementos por título, por fecha o por carga. Pulse en el "
-"menú <gui>Ver</gui> y seleccione la forma de ordenación adecuada. También "
-"puede invertir el orden."
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/set-pictures.page:18(None)
-#| msgid ""
-#| "@@image: 'figures/add-to-groups.png'; md5=8afe23df54ab15e0e76deea82cf3ed77"
-msgid ""
-"@@image: 'figures/add-to-sets.png'; md5=439ad531a12544c0d06ef1e3dc477735"
-msgstr ""
-"@@image: 'figures/add-to-sets.png'; md5=439ad531a12544c0d06ef1e3dc477735"
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/set-pictures.page:25(None)
-#| msgid ""
-#| "@@image: 'figures/create-new-set.png'; "
-#| "md5=ca6b1733aed1e41984b1b2f673d6882f"
-msgid ""
-"@@image: 'figures/create-new-set.png'; md5=3428f8175cdcd4a4bc21233c1a596a3c"
-msgstr ""
-"@@image: 'figures/create-new-set.png'; md5=3428f8175cdcd4a4bc21233c1a596a3c"
-
-#: C/set-pictures.page:9(desc) C/set-pictures.page:12(title)
-msgid "Adding Elements to Sets"
-msgstr "Añadir etiquetas a álbumes"
-
-#: C/set-pictures.page:13(p)
-msgid ""
-"You can add pictures and videos to sets in Flickr. A set is a category. Set "
-"do not imply hierarchical view."
-msgstr ""
-"Puede añadir imágenes y vídeos a un álbum de Flickr. Un álbum es una "
-"categoría, pero no implica una vista jerárquica."
-
-#: C/set-pictures.page:14(p)
-msgid ""
-"Right-click on one or more elements and choose <gui>Add to set</gui>. You "
-"may choose to add to an already existing set or create a new one."
-msgstr ""
-"Pulse con el botón derecho en uno o más elementos y elija <gui>Añadir al "
-"álbum</gui>. Debe elegir entre añadirlo a un álbum existente o crear uno "
-"nuevo."
-
-#: C/set-pictures.page:16(title) C/set-pictures.page:17(desc)
-msgid "Adding elements to existing sets"
-msgstr "Añadir elementos a álbumes existentes"
-
-#: C/set-pictures.page:23(title)
-msgid "Creating new sets to add elements to"
-msgstr "Crear álbumes nuevos a los que añadir elementos"
-
-#: C/set-pictures.page:24(desc)
-msgid ""
-"Creating new sets to add elements to. You can use the set's title and "
-"description for every selected element too"
-msgstr ""
-"Crear álbumes nuevos a los que añadir elementos. También puede usar el "
-"título del álbum y su descripción para cada elemento seleccionado."
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/introduction.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/frogr-remote-organizer.png'; "
-#| "md5=cd9eadcb6249af468861b5eafdff1196"
-msgid ""
-"@@image: 'figures/frogr-remote-organizer.png'; "
-"md5=b2bc87e003e4129b1b5d34d4339cb919"
-msgstr ""
-"@@image: 'figures/frogr-remote-organizer.png'; "
-"md5=b2bc87e003e4129b1b5d34d4339cb919"
-
-#: C/introduction.page:8(desc)
-msgid "Introduction to the <app>Frogr</app> Remote Organizer."
-msgstr "Introducción al organizador remoto <app>Frogr</app>."
-
-#: C/introduction.page:12(title)
-msgid "Frogr Introduction"
-msgstr "Introducción a Frogr"
-
-#: C/introduction.page:13(p)
-msgid ""
-"<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
-"Remote Organizer. <app>Frogr</app> is a small application for the GNOME "
-"desktop that allows users to manage their accounts in the Flickr image "
-"hosting website."
-msgstr ""
-"<app>Frogr</app> es un organizador remoto para <link href=\"http://www."
-"flickr.com/\">Flickr</link>. <app>Frogr</app> es una pequeña aplicación para "
-"el escritorio GNOME que permite a los usuarios gestionar sus cuentas en la "
-"página web del almacenamiento de imágenes Flickr."
-
-#: C/introduction.page:15(title)
-msgid "<gui>Frogr</gui> window"
-msgstr "Ventana de <gui>Frogr</gui>"
-
-#: C/introduction.page:16(desc)
-msgid "<app>Frogr</app> main window"
-msgstr "Ventana principal de <app>Frogr</app>"
-
-#: C/introduction.page:18(p) C/preferences.page:34(p)
-msgid "<app>Frogr</app> main window."
-msgstr "Ventana principal de <app>Frogr</app>."
-
-#: C/introduction.page:22(title)
-msgid "Flickr"
-msgstr "Flickr"
-
-#: C/introduction.page:23(p)
-msgid ""
-"<link href=\"http://www.flickr.com/\">Flickr</link> is a website allowing "
-"hosting of both images and videos."
-msgstr ""
-"<link href=\"http://www.flickr.com/\">Flickr</link>es una página web que "
-"permite almacenar imágenes y vídeos."
-
-#: C/introduction.page:26(title)
-msgid "Main Features"
-msgstr "Características principales"
-
-#: C/introduction.page:28(p)
-msgid "Allow to upload pictures and videos to Flickr"
-msgstr "Permitir subir imágenes y vídeos a Flickr"
-
-#: C/introduction.page:29(p)
-msgid "Allow uploading pictures located in remote machines"
-msgstr "Permite subir imágenes ubicadas en máquinas remotas"
-
-#: C/introduction.page:30(p)
-msgid "Allow adding tags to pictures"
-msgstr "Permite añadir etiquetas a las imágenes"
-
-#: C/introduction.page:31(p)
-msgid ""
-"Allow specifying sets and group pools for the pictures to be added to after "
-"the upload process."
-msgstr ""
-"Permite especificar álbumes y grupos para las imágenes que añadir después de "
-"subirlas."
-
-#: C/introduction.page:32(p)
-msgid "Support for handling multiple Flickr accounts."
-msgstr "Soporte para manejar varias cuentas de Flickr."
-
-#: C/introduction.page:33(p)
-msgid "Support for saving and loading projects."
-msgstr "Soporte para guardar y cargar proyectos."
-
-#: C/introduction.page:37(title)
-msgid "About"
-msgstr "Acerca de"
-
-#: C/introduction.page:38(p)
-msgid ""
-"You can have more information about <app>Frogr</app> using the menu "
-"<guiseq><gui>Frogr</gui><gui>About</gui></guiseq>."
-msgstr ""
-"Puede obtener más información sobre <app>Frogr</app> usando el menú "
-"<guiseq><gui>Ayuda</gui><gui>Acerca de</gui></guiseq>."
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/create-account.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/auth-dialog-step1.png'; "
-#| "md5=74c140d6355f27ee20c9699e37ca5c02"
-msgid ""
-"@@image: 'figures/auth-dialog-step1.png'; "
-"md5=ab6aa5794b7209b3186951cd8d364e5f"
-msgstr ""
-"@@image: 'figures/auth-dialog-step1.png'; "
-"md5=ab6aa5794b7209b3186951cd8d364e5f"
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/create-account.page:25(None)
-#| msgid ""
-#| "@@image: 'figures/auth-dialog-step2.png'; "
-#| "md5=1ae16dc20fdb1f72a40ed4bfaa4660e7"
-msgid ""
-"@@image: 'figures/auth-dialog-step2.png'; "
-"md5=f5b1ac061b08e5e1b417755d45e9a85f"
-msgstr ""
-"@@image: 'figures/auth-dialog-step2.png'; "
-"md5=f5b1ac061b08e5e1b417755d45e9a85f"
-
-#: C/create-account.page:8(desc) C/create-account.page:11(title)
-msgid "How to create your Account"
-msgstr "Cómo crear una cuenta"
-
-#: C/create-account.page:12(p)
-msgid "First create an Account"
-msgstr "Primero cree una cuenta"
-
-#: C/create-account.page:13(p)
-msgid ""
-"When you first run <app>Frogr</app>, it displays a window explaining you'll "
-"have to create an account."
-msgstr ""
-"Cuando ejecuta <app>Frogr</app> por primera vez, se muestra una ventana que "
-"explica que tendrá que crear una cuenta."
-
-#: C/create-account.page:15(title) C/create-account.page:23(title)
-msgid "Authorizing frogr"
-msgstr "Autorizar a frogr"
-
-#: C/create-account.page:16(desc)
-msgid "Authorizing frogr. Requesting a verification code"
-msgstr "Autorizar a frogr. Solicitar un código de verificación"
-
-#: C/create-account.page:20(p)
-msgid ""
-"Click Ok, it will run your default web browser. On your default web browser, "
-"either create a Flickr account or log in to an existing account."
-msgstr ""
-"Pulse «Aceptar», y se ejecutará en su navegador favorito. En su navegador "
-"predeterminado, cree una cuenta en Flickr o inicie sesión con una cuenta ya "
-"existente."
-
-#: C/create-account.page:21(p)
-msgid ""
-"Then, authorize <app>Frogr</app> to access to this account. You may now go "
-"back to <app>Frogr</app> window, enter the verification code and use the "
-"application to upload any picture!"
-msgstr ""
-"Entonces, autorice a <app>Frogr</app> a acceder a esta cuenta. Ahora puede "
-"regresar a la ventana de <app>Frogr</app>, introducir el código de "
-"verificación y usar la aplicación para subir cualquier imagen."
-
-#: C/create-account.page:24(desc)
-msgid "Authorizing frogr. Finishing the process"
-msgstr "Autorizar a frogr. Finalizar el proceso"
-
-#: C/remove-pictures.page:9(desc) C/remove-pictures.page:12(title)
-msgid "Remove Elements"
-msgstr "Quitar elementos"
-
-#: C/remove-pictures.page:13(p)
-msgid ""
-"You can remove a picture or a video using the toolbar <gui>Minus</gui> "
-"button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove "
-"Elements</gui></guiseq>."
-msgstr ""
-"Puede quitar una imagen o un vídeo usando el botón <gui>Menos</gui> de la "
-"barra de herramientas. O puede usar el menú <guiseq><gui>Archivo</"
-"gui><gui>Quitar elementos</gui></guiseq>."
-
-#: C/index.page:8(title)
+#: C/index.page:8(page/title)
 msgid "Frogr Help"
 msgstr "Ayuda de Frogr"
 
-#: C/index.page:11(title)
+#: C/index.page:11(section/title)
 msgid "Managing Your Flickr Account"
 msgstr "Gestionar su cuenta de Flickr"
 
-#: C/index.page:15(title)
+#: C/index.page:15(section/title)
 msgid "Managing Your Pictures"
 msgstr "Gestionar sus imágenes"
 
-#: C/index.page:19(title)
+#: C/index.page:19(section/title)
 msgid "Organize and Sort Your Pictures"
 msgstr "Organizar y ordenar sus imágenes"
 
-#: C/index.page:23(title)
+#: C/index.page:23(section/title)
 msgid "Set Up Frogr"
 msgstr "Configurar Frogr"
 
-#: C/external-viewer.page:9(desc)
-msgid "Open element in external application"
-msgstr "Abrir un elemento con una aplicación externa"
-
-#: C/external-viewer.page:12(title)
-msgid "External viewer"
-msgstr "Visor externo"
-
-#: C/external-viewer.page:13(p)
-msgid ""
-"You can display pictures or videos in external applications. Right-click on "
-"some picture then choose <gui>Open in external viewer</gui>."
-msgstr ""
-"Puede mostrar una imagen o un vídeo en una aplicación externa. Pulse con el "
-"botón derecho sobre una imagen y elija <gui>Abrir en visor externo</gui>."
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/edit-pictures.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/edit-picture-details.png'; "
-#| "md5=54f76888df9e06aa6d36c4bc2e0684b3"
-msgid ""
-"@@image: 'figures/edit-picture-details.png'; "
-"md5=97deea971988d7e9f58c804fef52124b"
-msgstr ""
-"@@image: 'figures/edit-picture-details.png'; "
-"md5=97deea971988d7e9f58c804fef52124b"
-
-#: C/edit-pictures.page:9(desc)
-msgid "Amend pictures"
-msgstr "Corregir imágenes"
-
-#: C/edit-pictures.page:12(title)
-msgid "Edit Details"
-msgstr "Editar los detalles"
-
-#: C/edit-pictures.page:13(p)
-msgid ""
-"To edit the details of a picture or a video, right-click on an element and "
-"choose <gui>Edit Details</gui>.Until you edit the details, these will use "
-"the default details."
-msgstr ""
-"Para editar los detalles de una imagen o de un vídeo, pulse con el botón "
-"derecho y elija <gui>Editar Detalles</gui>. Hasta que no edite los detalles, "
-"se usarán los valores predeterminados."
-
-#: C/edit-pictures.page:15(title)
-msgid "Edit picture details"
-msgstr "Editar los detalles de la imagen"
-
-#: C/edit-pictures.page:16(desc)
-msgid "Amend the details of the picture."
-msgstr "Corregir los detalles de la imagen."
-
-#: C/edit-pictures.page:22(title)
-msgid "Title"
-msgstr "Título"
-
-#: C/edit-pictures.page:22(p)
-msgid "Use this box to amend the title"
-msgstr "Use esta caja para corregir el título"
-
-#: C/edit-pictures.page:23(title)
-msgid "Description"
-msgstr "Descripción"
-
-#: C/edit-pictures.page:23(p)
-msgid "Add some description the element"
-msgstr "Añadir una descripción al elemento"
-
-#: C/edit-pictures.page:24(title)
-msgid "Tags"
-msgstr "Etiquetas"
-
-#: C/edit-pictures.page:24(p)
-msgid "Add some tags to better categorize the element"
-msgstr "Añadir etiquetas para mejorar la clasificación del elemento"
-
-#: C/edit-pictures.page:25(title)
-msgid "Visibility"
-msgstr "Visibilidad"
-
-#: C/edit-pictures.page:25(p)
-msgid "Choose whether the element is public or private."
-msgstr "Elegir si el elemento es público o privado"
-
-#: C/edit-pictures.page:26(title)
-msgid "Content Type"
-msgstr "Tipo de contenido"
-
-#: C/edit-pictures.page:26(p)
-msgid ""
-"You can specify whether the element is a photo, a screenshot or something "
-"else"
-msgstr ""
-"Puede especificar si el elemento es una foto, una captura de pantalla o "
-"cualquier otra cosa"
-
-#: C/edit-pictures.page:27(title)
-msgid "Safety Level"
-msgstr "Nivel de seguridad"
-
-#: C/edit-pictures.page:27(p)
-msgid "You can rate the kind of element you're uploading"
-msgstr "Puede valorar el tipo de elemento que está subiendo"
-
-#: C/edit-pictures.page:28(title)
-msgid "License"
-msgstr "Licencia"
-
-#: C/edit-pictures.page:28(p)
-msgid "You can change the license, or just use the default one set on Flickr"
-msgstr ""
-"Puede cambiar la licencia o simplemente usar la que Flickr establece de "
-"manera predeterminada"
-
-#: C/edit-pictures.page:29(title)
-msgid "Geolocation data"
-msgstr "Datos de geolocalización"
-
-#: C/edit-pictures.page:29(p)
-msgid ""
-"You can let frogr set the geolocation information for a picture on Flickr "
-"based on its EXIF information"
-msgstr ""
-"Puede dejar que frogr establezca la información de geolocalización para una "
-"imagen en Flickr basándose en su información Exif"
-
-#: C/edit-pictures.page:30(title)
-msgid "Show in Global Search Results"
-msgstr "Mostrar en los resultados de búsqueda globales"
-
-#: C/edit-pictures.page:30(p)
-msgid ""
-"You can specify whether it should be possible to find your picture or video "
-"using Flickr's search engine"
-msgstr ""
-"Puede especificar si debe ser posible encontrar su imagen o vídeo usando el "
-"motor de búsqueda de Flickr"
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/preferences.page:21(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-general.png'; "
-#| "md5=da6a7c358a0e81df431fe9e3e91ca875"
-msgid ""
-"@@image: 'figures/preferences-general.png'; "
-"md5=f0f2954cdd4600c32f0fb584cf051bfb"
-msgstr ""
-"@@image: 'figures/preferences-general.png'; "
-"md5=f0f2954cdd4600c32f0fb584cf051bfb"
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/preferences.page:33(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-connection.png'; "
-#| "md5=0ffe62069a2d649ce45d729e76c78a11"
-msgid ""
-"@@image: 'figures/preferences-connection.png'; "
-"md5=3cabf2831deb865045f6c6d25599dad3"
-msgstr ""
-"@@image: 'figures/preferences-connection.png'; "
-"md5=3cabf2831deb865045f6c6d25599dad3"
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/preferences.page:44(None)
-#| msgid ""
-#| "@@image: 'figures/preferences-misc.png'; "
-#| "md5=679b3d09b469bb1e63dc2614df62f437"
-msgid ""
-"@@image: 'figures/preferences-misc.png'; md5=6dcd4d88c8cd1f6546b5101f51c169fa"
-msgstr ""
-"@@image: 'figures/preferences-misc.png'; md5=6dcd4d88c8cd1f6546b5101f51c169fa"
-
-#: C/preferences.page:9(desc) C/preferences.page:12(title)
-msgid "Preferences"
-msgstr "Preferencias"
-
-#: C/preferences.page:14(p)
-msgid ""
-"Go to Preferences using menu <guiseq><gui>Frogr</gui><gui>Preferences</gui></"
-"guiseq>."
-msgstr ""
-"Vaya a las preferencias usando el menú <guiseq><gui>Frogr</"
-"gui><gui>Preferencias</gui></guiseq>."
-
-#: C/preferences.page:17(title)
-msgid "General Preferences"
-msgstr "Preferencias generales"
-
-#: C/preferences.page:19(title)
-msgid "<gui>Frogr</gui> general preferences"
-msgstr "Preferencias generales de <gui>Frogr</gui>"
-
-#: C/preferences.page:20(desc)
-msgid "<app>Frogr</app> general preferences"
-msgstr "Preferencias generales de <app>Frogr</app>"
-
-#: C/preferences.page:22(p)
-msgid "<app>Frogr</app> general preferences."
-msgstr "Preferencias generales de <app>Frogr</app>."
-
-#: C/preferences.page:28(title)
-msgid "Connection Preferences"
-msgstr "Preferencias de la conexión"
-
-#: C/preferences.page:29(p)
-msgid "This tab allows you to set up a proxy."
-msgstr "Esta pestaña le permite configurar un proxy."
-
-#: C/preferences.page:31(title)
-msgid "<gui>Frogr </gui> connection preferences"
-msgstr "Preferencias de la conexión de <gui>Frogr </gui>"
-
-#: C/preferences.page:32(desc)
-msgid "<app>Frogr</app> connection preferences"
-msgstr "Preferencias de conexión de <app>Frogr</app>"
-
-#: C/preferences.page:40(title)
-msgid "Miscelleanous Preferences"
-msgstr "Preferencias varias"
-
-#: C/preferences.page:42(title)
-msgid "<gui>Frogr </gui> misc preferences window"
-msgstr "Ventana de preferencias varias de <gui>Frogr</gui>"
-
-#: C/preferences.page:43(desc)
-msgid "<app>Frogr</app> misc preferences window"
-msgstr "Ventana de preferencias varias de <app>Frogr</app>"
-
-#: C/preferences.page:45(p)
-msgid "<app>Frogr</app> misc preferences window."
-msgstr "Ventana de preferencias varias de <app>Frogr</app>."
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/group-pictures.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/add-to-groups.png'; md5=8afe23df54ab15e0e76deea82cf3ed77"
-msgid ""
-"@@image: 'figures/add-to-groups.png'; md5=5279d2bee8e703c298cdba0d152a50f1"
-msgstr ""
-"@@image: 'figures/add-to-groups.png'; md5=5279d2bee8e703c298cdba0d152a50f1"
-
-#: C/group-pictures.page:9(desc)
-msgid "Group Elements"
-msgstr "Agrupar elementos"
-
-#: C/group-pictures.page:12(title)
-msgid "Add to Groups"
-msgstr "Añadir a grupos"
-
-#: C/group-pictures.page:13(p)
-msgid "You may add pictures and videos to an already defined group."
-msgstr "Puede añadir imágenes y vídeos a un grupo ya definido."
-
-#: C/group-pictures.page:15(title) C/group-pictures.page:16(desc)
-msgid "Adding elements to groups"
-msgstr "Añadir elementos a grupos"
-
-#: C/add-pictures.page:9(desc) C/add-pictures.page:12(title)
+#: C/add-pictures.page:9(info/desc) C/add-pictures.page:12(page/title)
 msgid "Add Elements"
 msgstr "Añadir elementos"
 
-#: C/add-pictures.page:13(p)
+#: C/add-pictures.page:13(page/p)
 msgid ""
 "You can add a picture or a video using the toolbar <gui>Plus</gui> button. "
 "Or, you can use the menu <guiseq><gui>File</gui><gui>Add Elements</gui></"
@@ -658,10 +59,649 @@ msgstr ""
 "gui><gui>Añadir elementos</gui></guiseq>. Los elementos añadidos se "
 "mostrarán y estarán disponibles para subirlos a Flickr."
 
-#. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
-#: C/index.page:0(None)
-msgid "translator-credits"
-msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011 - 2012"
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/group-pictures.page:17(media)
+#| msgid ""
+#| "@@image: 'figures/add-to-groups.png'; md5=5279d2bee8e703c298cdba0d152a50f1"
+msgctxt "_"
+msgid ""
+"external ref='figures/add-to-groups.png' "
+"md5='5279d2bee8e703c298cdba0d152a50f1'"
+msgstr ""
+"external ref='figures/add-to-groups.png' "
+"md5='5279d2bee8e703c298cdba0d152a50f1'"
+
+#: C/group-pictures.page:9(info/desc)
+msgid "Group Elements"
+msgstr "Agrupar elementos"
+
+#: C/group-pictures.page:12(page/title)
+msgid "Add to Groups"
+msgstr "Añadir a grupos"
+
+#: C/group-pictures.page:13(page/p)
+msgid "You may add pictures and videos to an already defined group."
+msgstr "Puede añadir imágenes y vídeos a un grupo ya definido."
+
+#: C/group-pictures.page:15(figure/title)
+#: C/group-pictures.page:16(figure/desc)
+msgid "Adding elements to groups"
+msgstr "Añadir elementos a grupos"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/preferences.page:21(media)
+#| msgid ""
+#| "@@image: 'figures/preferences-general.png'; "
+#| "md5=f0f2954cdd4600c32f0fb584cf051bfb"
+msgctxt "_"
+msgid ""
+"external ref='figures/preferences-general.png' "
+"md5='f0f2954cdd4600c32f0fb584cf051bfb'"
+msgstr ""
+"external ref='figures/preferences-general.png' "
+"md5='f0f2954cdd4600c32f0fb584cf051bfb'"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/preferences.page:33(media)
+#| msgid ""
+#| "@@image: 'figures/preferences-connection.png'; "
+#| "md5=3cabf2831deb865045f6c6d25599dad3"
+msgctxt "_"
+msgid ""
+"external ref='figures/preferences-connection.png' "
+"md5='3cabf2831deb865045f6c6d25599dad3'"
+msgstr ""
+"external ref='figures/preferences-connection.png' "
+"md5='3cabf2831deb865045f6c6d25599dad3'"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/preferences.page:44(media)
+#| msgid ""
+#| "@@image: 'figures/preferences-misc.png'; "
+#| "md5=6dcd4d88c8cd1f6546b5101f51c169fa"
+msgctxt "_"
+msgid ""
+"external ref='figures/preferences-misc.png' "
+"md5='6dcd4d88c8cd1f6546b5101f51c169fa'"
+msgstr ""
+"external ref='figures/preferences-misc.png' "
+"md5='6dcd4d88c8cd1f6546b5101f51c169fa'"
+
+#: C/preferences.page:9(info/desc) C/preferences.page:12(page/title)
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: C/preferences.page:14(page/p)
+msgid ""
+"Go to Preferences using menu <guiseq><gui>Frogr</gui><gui>Preferences</gui></"
+"guiseq>."
+msgstr ""
+"Vaya a las preferencias usando el menú <guiseq><gui>Frogr</"
+"gui><gui>Preferencias</gui></guiseq>."
+
+#: C/preferences.page:17(section/title)
+msgid "General Preferences"
+msgstr "Preferencias generales"
+
+#: C/preferences.page:19(figure/title)
+msgid "<gui>Frogr</gui> general preferences"
+msgstr "Preferencias generales de <gui>Frogr</gui>"
+
+#: C/preferences.page:20(figure/desc)
+msgid "<app>Frogr</app> general preferences"
+msgstr "Preferencias generales de <app>Frogr</app>"
+
+#: C/preferences.page:22(media/p)
+msgid "<app>Frogr</app> general preferences."
+msgstr "Preferencias generales de <app>Frogr</app>."
+
+#: C/preferences.page:28(section/title)
+msgid "Connection Preferences"
+msgstr "Preferencias de la conexión"
+
+#: C/preferences.page:29(section/p)
+msgid "This tab allows you to set up a proxy."
+msgstr "Esta pestaña le permite configurar un proxy."
+
+#: C/preferences.page:31(figure/title)
+msgid "<gui>Frogr </gui> connection preferences"
+msgstr "Preferencias de la conexión de <gui>Frogr </gui>"
+
+#: C/preferences.page:32(figure/desc)
+msgid "<app>Frogr</app> connection preferences"
+msgstr "Preferencias de conexión de <app>Frogr</app>"
+
+#: C/preferences.page:34(media/p) C/introduction.page:18(media/p)
+msgid "<app>Frogr</app> main window."
+msgstr "Ventana principal de <app>Frogr</app>."
+
+#: C/preferences.page:40(section/title)
+msgid "Miscelleanous Preferences"
+msgstr "Preferencias varias"
+
+#: C/preferences.page:42(figure/title)
+msgid "<gui>Frogr </gui> misc preferences window"
+msgstr "Ventana de preferencias varias de <gui>Frogr</gui>"
+
+#: C/preferences.page:43(figure/desc)
+msgid "<app>Frogr</app> misc preferences window"
+msgstr "Ventana de preferencias varias de <app>Frogr</app>"
+
+#: C/preferences.page:45(media/p)
+msgid "<app>Frogr</app> misc preferences window."
+msgstr "Ventana de preferencias varias de <app>Frogr</app>."
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/edit-pictures.page:17(media)
+#| msgid ""
+#| "@@image: 'figures/edit-picture-details.png'; "
+#| "md5=97deea971988d7e9f58c804fef52124b"
+msgctxt "_"
+msgid ""
+"external ref='figures/edit-picture-details.png' "
+"md5='97deea971988d7e9f58c804fef52124b'"
+msgstr ""
+"external ref='figures/edit-picture-details.png' "
+"md5='97deea971988d7e9f58c804fef52124b'"
+
+#: C/edit-pictures.page:9(info/desc)
+msgid "Amend pictures"
+msgstr "Corregir imágenes"
+
+#: C/edit-pictures.page:12(page/title)
+msgid "Edit Details"
+msgstr "Editar los detalles"
+
+#: C/edit-pictures.page:13(page/p)
+msgid ""
+"To edit the details of a picture or a video, right-click on an element and "
+"choose <gui>Edit Details</gui>.Until you edit the details, these will use "
+"the default details."
+msgstr ""
+"Para editar los detalles de una imagen o de un vídeo, pulse con el botón "
+"derecho y elija <gui>Editar Detalles</gui>. Hasta que no edite los detalles, "
+"se usarán los valores predeterminados."
+
+#: C/edit-pictures.page:15(figure/title)
+msgid "Edit picture details"
+msgstr "Editar los detalles de la imagen"
+
+#: C/edit-pictures.page:16(figure/desc)
+msgid "Amend the details of the picture."
+msgstr "Corregir los detalles de la imagen."
+
+#: C/edit-pictures.page:22(item/title)
+msgid "Title"
+msgstr "Título"
+
+#: C/edit-pictures.page:22(item/p)
+msgid "Use this box to amend the title"
+msgstr "Use esta caja para corregir el título"
+
+#: C/edit-pictures.page:23(item/title)
+msgid "Description"
+msgstr "Descripción"
+
+#: C/edit-pictures.page:23(item/p)
+msgid "Add some description the element"
+msgstr "Añadir una descripción al elemento"
+
+#: C/edit-pictures.page:24(item/title)
+msgid "Tags"
+msgstr "Etiquetas"
+
+#: C/edit-pictures.page:24(item/p)
+msgid "Add some tags to better categorize the element"
+msgstr "Añadir etiquetas para mejorar la clasificación del elemento"
+
+#: C/edit-pictures.page:25(item/title)
+msgid "Visibility"
+msgstr "Visibilidad"
+
+#: C/edit-pictures.page:25(item/p)
+msgid "Choose whether the element is public or private."
+msgstr "Elegir si el elemento es público o privado"
+
+#: C/edit-pictures.page:26(item/title)
+msgid "Content Type"
+msgstr "Tipo de contenido"
+
+#: C/edit-pictures.page:26(item/p)
+msgid ""
+"You can specify whether the element is a photo, a screenshot or something "
+"else"
+msgstr ""
+"Puede especificar si el elemento es una foto, una captura de pantalla o "
+"cualquier otra cosa"
+
+#: C/edit-pictures.page:27(item/title)
+msgid "Safety Level"
+msgstr "Nivel de seguridad"
+
+#: C/edit-pictures.page:27(item/p)
+msgid "You can rate the kind of element you're uploading"
+msgstr "Puede valorar el tipo de elemento que está subiendo"
+
+#: C/edit-pictures.page:28(item/title)
+msgid "License"
+msgstr "Licencia"
+
+#: C/edit-pictures.page:28(item/p)
+msgid "You can change the license, or just use the default one set on Flickr"
+msgstr ""
+"Puede cambiar la licencia o simplemente usar la que Flickr establece de "
+"manera predeterminada"
+
+#: C/edit-pictures.page:29(item/title)
+msgid "Geolocation data"
+msgstr "Datos de geolocalización"
+
+#: C/edit-pictures.page:29(item/p)
+msgid ""
+"You can let frogr set the geolocation information for a picture on Flickr "
+"based on its EXIF information"
+msgstr ""
+"Puede dejar que frogr establezca la información de geolocalización para una "
+"imagen en Flickr basándose en su información Exif"
+
+#: C/edit-pictures.page:30(item/title)
+msgid "Show in Global Search Results"
+msgstr "Mostrar en los resultados de búsqueda globales"
+
+#: C/edit-pictures.page:30(item/p)
+msgid ""
+"You can specify whether it should be possible to find your picture or video "
+"using Flickr's search engine"
+msgstr ""
+"Puede especificar si debe ser posible encontrar su imagen o vídeo usando el "
+"motor de búsqueda de Flickr"
+
+#: C/external-viewer.page:9(info/desc)
+msgid "Open element in external application"
+msgstr "Abrir un elemento con una aplicación externa"
+
+#: C/external-viewer.page:12(page/title)
+msgid "External viewer"
+msgstr "Visor externo"
+
+#: C/external-viewer.page:13(page/p)
+msgid ""
+"You can display pictures or videos in external applications. Right-click on "
+"some picture then choose <gui>Open in external viewer</gui>."
+msgstr ""
+"Puede mostrar una imagen o un vídeo en una aplicación externa. Pulse con el "
+"botón derecho sobre una imagen y elija <gui>Abrir en visor externo</gui>."
+
+#: C/remove-pictures.page:9(info/desc) C/remove-pictures.page:12(page/title)
+msgid "Remove Elements"
+msgstr "Quitar elementos"
+
+#: C/remove-pictures.page:13(page/p)
+msgid ""
+"You can remove a picture or a video using the toolbar <gui>Minus</gui> "
+"button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove "
+"Elements</gui></guiseq>."
+msgstr ""
+"Puede quitar una imagen o un vídeo usando el botón <gui>Menos</gui> de la "
+"barra de herramientas. O puede usar el menú <guiseq><gui>Archivo</"
+"gui><gui>Quitar elementos</gui></guiseq>."
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/create-account.page:17(media)
+#| msgid ""
+#| "@@image: 'figures/auth-dialog-step1.png'; "
+#| "md5=ab6aa5794b7209b3186951cd8d364e5f"
+msgctxt "_"
+msgid ""
+"external ref='figures/auth-dialog-step1.png' "
+"md5='ab6aa5794b7209b3186951cd8d364e5f'"
+msgstr ""
+"external ref='figures/auth-dialog-step1.png' "
+"md5='ab6aa5794b7209b3186951cd8d364e5f'"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/create-account.page:25(media)
+#| msgid ""
+#| "@@image: 'figures/auth-dialog-step2.png'; "
+#| "md5=f5b1ac061b08e5e1b417755d45e9a85f"
+msgctxt "_"
+msgid ""
+"external ref='figures/auth-dialog-step2.png' "
+"md5='f5b1ac061b08e5e1b417755d45e9a85f'"
+msgstr ""
+"external ref='figures/auth-dialog-step2.png' "
+"md5='f5b1ac061b08e5e1b417755d45e9a85f'"
+
+#: C/create-account.page:8(info/desc) C/create-account.page:11(page/title)
+msgid "How to create your Account"
+msgstr "Cómo crear una cuenta"
+
+#: C/create-account.page:12(page/p)
+msgid "First create an Account"
+msgstr "Primero cree una cuenta"
+
+#: C/create-account.page:13(page/p)
+msgid ""
+"When you first run <app>Frogr</app>, it displays a window explaining you'll "
+"have to create an account."
+msgstr ""
+"Cuando ejecuta <app>Frogr</app> por primera vez, se muestra una ventana que "
+"explica que tendrá que crear una cuenta."
+
+#: C/create-account.page:15(figure/title)
+#: C/create-account.page:23(figure/title)
+msgid "Authorizing frogr"
+msgstr "Autorizar a frogr"
+
+#: C/create-account.page:16(figure/desc)
+msgid "Authorizing frogr. Requesting a verification code"
+msgstr "Autorizar a frogr. Solicitar un código de verificación"
+
+#: C/create-account.page:20(page/p)
+msgid ""
+"Click Ok, it will run your default web browser. On your default web browser, "
+"either create a Flickr account or log in to an existing account."
+msgstr ""
+"Pulse «Aceptar», y se ejecutará en su navegador favorito. En su navegador "
+"predeterminado, cree una cuenta en Flickr o inicie sesión con una cuenta ya "
+"existente."
+
+#: C/create-account.page:21(page/p)
+msgid ""
+"Then, authorize <app>Frogr</app> to access to this account. You may now go "
+"back to <app>Frogr</app> window, enter the verification code and use the "
+"application to upload any picture!"
+msgstr ""
+"Entonces, autorice a <app>Frogr</app> a acceder a esta cuenta. Ahora puede "
+"regresar a la ventana de <app>Frogr</app>, introducir el código de "
+"verificación y usar la aplicación para subir cualquier imagen."
+
+#: C/create-account.page:24(figure/desc)
+msgid "Authorizing frogr. Finishing the process"
+msgstr "Autorizar a frogr. Finalizar el proceso"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/introduction.page:17(media)
+#| msgid ""
+#| "@@image: 'figures/frogr-remote-organizer.png'; "
+#| "md5=b2bc87e003e4129b1b5d34d4339cb919"
+msgctxt "_"
+msgid ""
+"external ref='figures/frogr-remote-organizer.png' "
+"md5='b2bc87e003e4129b1b5d34d4339cb919'"
+msgstr ""
+"external ref='figures/frogr-remote-organizer.png' "
+"md5='b2bc87e003e4129b1b5d34d4339cb919'"
+
+#: C/introduction.page:8(info/desc)
+msgid "Introduction to the <app>Frogr</app> Remote Organizer."
+msgstr "Introducción al organizador remoto <app>Frogr</app>."
+
+#: C/introduction.page:12(page/title)
+msgid "Frogr Introduction"
+msgstr "Introducción a Frogr"
+
+#: C/introduction.page:13(page/p)
+msgid ""
+"<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
+"Remote Organizer. <app>Frogr</app> is a small application for the GNOME "
+"desktop that allows users to manage their accounts in the Flickr image "
+"hosting website."
+msgstr ""
+"<app>Frogr</app> es un organizador remoto para <link href=\"http://www."
+"flickr.com/\">Flickr</link>. <app>Frogr</app> es una pequeña aplicación para "
+"el escritorio GNOME que permite a los usuarios gestionar sus cuentas en la "
+"página web del almacenamiento de imágenes Flickr."
+
+#: C/introduction.page:15(figure/title)
+msgid "<gui>Frogr</gui> window"
+msgstr "Ventana de <gui>Frogr</gui>"
+
+#: C/introduction.page:16(figure/desc)
+msgid "<app>Frogr</app> main window"
+msgstr "Ventana principal de <app>Frogr</app>"
+
+#: C/introduction.page:22(section/title)
+msgid "Flickr"
+msgstr "Flickr"
+
+#: C/introduction.page:23(section/p)
+msgid ""
+"<link href=\"http://www.flickr.com/\">Flickr</link> is a website allowing "
+"hosting of both images and videos."
+msgstr ""
+"<link href=\"http://www.flickr.com/\">Flickr</link>es una página web que "
+"permite almacenar imágenes y vídeos."
+
+#: C/introduction.page:26(section/title)
+msgid "Main Features"
+msgstr "Características principales"
+
+#: C/introduction.page:28(item/p)
+msgid "Allow to upload pictures and videos to Flickr"
+msgstr "Permitir subir imágenes y vídeos a Flickr"
+
+#: C/introduction.page:29(item/p)
+msgid "Allow uploading pictures located in remote machines"
+msgstr "Permite subir imágenes ubicadas en máquinas remotas"
+
+#: C/introduction.page:30(item/p)
+msgid "Allow adding tags to pictures"
+msgstr "Permite añadir etiquetas a las imágenes"
+
+#: C/introduction.page:31(item/p)
+msgid ""
+"Allow specifying sets and group pools for the pictures to be added to after "
+"the upload process."
+msgstr ""
+"Permite especificar álbumes y grupos para las imágenes que añadir después de "
+"subirlas."
+
+#: C/introduction.page:32(item/p)
+msgid "Support for handling multiple Flickr accounts."
+msgstr "Soporte para manejar varias cuentas de Flickr."
+
+#: C/introduction.page:33(item/p)
+msgid "Support for saving and loading projects."
+msgstr "Soporte para guardar y cargar proyectos."
+
+#: C/introduction.page:37(section/title)
+msgid "About"
+msgstr "Acerca de"
+
+#: C/introduction.page:38(section/p)
+msgid ""
+"You can have more information about <app>Frogr</app> using the menu "
+"<guiseq><gui>Frogr</gui><gui>About</gui></guiseq>."
+msgstr ""
+"Puede obtener más información sobre <app>Frogr</app> usando el menú "
+"<guiseq><gui>Ayuda</gui><gui>Acerca de</gui></guiseq>."
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/set-pictures.page:18(media)
+#| msgid ""
+#| "@@image: 'figures/add-to-sets.png'; md5=439ad531a12544c0d06ef1e3dc477735"
+msgctxt "_"
+msgid ""
+"external ref='figures/add-to-sets.png' md5='439ad531a12544c0d06ef1e3dc477735'"
+msgstr ""
+"external ref='figures/add-to-sets.png' md5='439ad531a12544c0d06ef1e3dc477735'"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/set-pictures.page:25(media)
+#| msgid ""
+#| "@@image: 'figures/create-new-set.png'; "
+#| "md5=3428f8175cdcd4a4bc21233c1a596a3c"
+msgctxt "_"
+msgid ""
+"external ref='figures/create-new-set.png' "
+"md5='3428f8175cdcd4a4bc21233c1a596a3c'"
+msgstr ""
+"external ref='figures/create-new-set.png' "
+"md5='3428f8175cdcd4a4bc21233c1a596a3c'"
+
+#: C/set-pictures.page:9(info/desc) C/set-pictures.page:12(page/title)
+msgid "Adding Elements to Sets"
+msgstr "Añadir etiquetas a álbumes"
+
+#: C/set-pictures.page:13(page/p)
+msgid ""
+"You can add pictures and videos to sets in Flickr. A set is a category. Set "
+"do not imply hierarchical view."
+msgstr ""
+"Puede añadir imágenes y vídeos a un álbum de Flickr. Un álbum es una "
+"categoría, pero no implica una vista jerárquica."
+
+#: C/set-pictures.page:14(page/p)
+msgid ""
+"Right-click on one or more elements and choose <gui>Add to set</gui>. You "
+"may choose to add to an already existing set or create a new one."
+msgstr ""
+"Pulse con el botón derecho en uno o más elementos y elija <gui>Añadir al "
+"álbum</gui>. Debe elegir entre añadirlo a un álbum existente o crear uno "
+"nuevo."
+
+#: C/set-pictures.page:16(figure/title) C/set-pictures.page:17(figure/desc)
+msgid "Adding elements to existing sets"
+msgstr "Añadir elementos a álbumes existentes"
+
+#: C/set-pictures.page:23(figure/title)
+msgid "Creating new sets to add elements to"
+msgstr "Crear álbumes nuevos a los que añadir elementos"
+
+#: C/set-pictures.page:24(figure/desc)
+msgid ""
+"Creating new sets to add elements to. You can use the set's title and "
+"description for every selected element too"
+msgstr ""
+"Crear álbumes nuevos a los que añadir elementos. También puede usar el "
+"título del álbum y su descripción para cada elemento seleccionado."
+
+#: C/display.page:9(info/desc)
+msgid "Amending view"
+msgstr "Vista corregida"
+
+#: C/display.page:12(page/title)
+msgid "Sort Elements"
+msgstr "Ordenar elementos"
+
+#: C/display.page:13(page/p)
+msgid ""
+"You can sort elements by title, by date, by size or as loaded. Click on the "
+"menu <gui>View</gui> and select the proper way to sort. You may also use "
+"reversed ordering."
+msgstr ""
+"Puede ordenar los elementos por título, por fecha o por carga. Pulse en el "
+"menú <gui>Ver</gui> y seleccione la forma de ordenación adecuada. También "
+"puede invertir el orden."
+
+#: C/organize.page:8(info/desc) C/organize.page:11(page/title)
+msgid "Organize"
+msgstr "Organizar"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/tag.page:18(media)
+#| msgid ""
+#| "@@image: 'figures/add-tags-dialog.png'; "
+#| "md5=2acd93f87d50657a70b2f0de1afd9c6b"
+msgctxt "_"
+msgid ""
+"external ref='figures/add-tags-dialog.png' "
+"md5='2acd93f87d50657a70b2f0de1afd9c6b'"
+msgstr ""
+"external ref='figures/add-tags-dialog.png' "
+"md5='2acd93f87d50657a70b2f0de1afd9c6b'"
+
+#: C/tag.page:9(info/desc) C/tag.page:12(page/title)
+msgid "Tag Elements"
+msgstr "Etiquetar elementos"
+
+#: C/tag.page:13(page/p)
+msgid ""
+"You can assign several tags to any element. Flickr allows you to define your "
+"own tags. It allows you to easily find any element you did upload."
+msgstr ""
+"Puede asignar varias etiquetas a un elemento. Flickr le permite definir sus "
+"propias etiquetas. Esto le permite encontrar fácilmente una imagen subida."
+
+#: C/tag.page:14(page/p)
+msgid ""
+"Right-click on a element, and choose <gui>Add tags</gui>. Or click on the "
+"menu <gui>Edit</gui>, and choose <gui>Add tags</gui>. Or, when you're "
+"editing element's detail, you can see and edit the tags"
+msgstr ""
+"Pulse con el botón derecho sobre un elemento y elija <gui>Añadir etiquetas</"
+"gui>. O pulse en el menú <gui>Editar</gui>, y elija <gui>Añadir etiquetas</"
+"gui>. También puede ver y editar las etiquetas cuando edite los detalles de "
+"la imagen."
+
+#: C/tag.page:16(figure/title) C/tag.page:17(figure/desc)
+msgid "Adding tags to elements"
+msgstr "Añadir etiquetas a los elementos"
+
+#: C/pictures.page:9(info/desc)
+msgid "Add, remove and upload pictures and videos"
+msgstr "Añadir, quitar y subir imágenes y vídeos"
+
+#: C/pictures.page:12(page/title)
+msgid "Transfer Elements"
+msgstr "Transferir elementos"
+
+#: C/pictures.page:13(page/p)
+msgid ""
+"You first have to add elements (pictures or videos) into frogr before being "
+"able to upload them."
+msgstr ""
+"Antes de poder subir elementos (imágenes o vídeos), debe añadirlos a frogr."
+
+#: C/upload-pictures.page:9(info/desc) C/upload-pictures.page:12(page/title)
+msgid "Upload Elements"
+msgstr "Subir elementos"
+
+#: C/upload-pictures.page:13(page/p)
+msgid ""
+"You can upload pictures and videos using the toolbar <gui>arrow</gui> "
+"button. Or, you can use the menu <guiseq><gui>File</gui><gui>Upload All</"
+"gui></guiseq>. The uploaded pictures will disappear from the list. You may "
+"remove some pictures before to upload all the remaining ones."
+msgstr ""
+"Puede subir imágenes y vídeos usando el botón <gui>flecha</gui> de la barra "
+"de herramientas. O puede usar el menú <guiseq><gui>Archivo</gui><gui>Subir "
+"todo</gui></guiseq>. Las imágenes subidas desaparecerán de la lista. Puede "
+"quitar algunas imágenes antes de subir todas para conservar el resto."
 
 #~ msgid ""
 #~ "@@image: 'figures/add-to-sets.png'; md5=4271e55d0c04feebbe4bbd5fe9d3712c"
