@@ -10,7 +10,7 @@ Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.7/%{name}-%{version}.t
 
 BuildRequires:	intltool
 BuildRequires:	gettext
-BuildRequires:	gnome-doc-utils
+BuildRequires:	yelp-tools
 BuildRequires:	gtk3-devel > 3.4
 BuildRequires:	glib2-devel > 2.32
 BuildRequires:	gstreamer-devel > 0.10
