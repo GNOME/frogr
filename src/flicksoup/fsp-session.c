@@ -1677,7 +1677,7 @@ fsp_session_set_http_proxy              (FspSession *self,
 
       /* Add or remove the feature */
       soup_feature_func (self->priv->soup_session,
-                         SOUP_TYPE_PROXY_RESOLVER_GNOME);
+                         SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
     }
   self->priv->using_gnome_proxy = use_gnome_proxy;
 #else

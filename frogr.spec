@@ -15,7 +15,7 @@ BuildRequires:	gtk3-devel > 3.4
 BuildRequires:	glib2-devel > 2.32
 BuildRequires:	gstreamer-devel > 0.10
 BuildRequires:	json-glib-devel > 0.12
-BuildRequires:	libsoup-devel > 2.26
+BuildRequires:	libsoup-devel > 2.34
 BuildRequires:	libxml2-devel > 2.6.8
 BuildRequires:	libexif-devel > 0.6.14
 BuildRequires:	libgcrypt-devel

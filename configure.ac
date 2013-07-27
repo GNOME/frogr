@@ -68,7 +68,7 @@ AM_CONDITIONAL([PLATFORM_MAC],[test "x$osx" = "xyes"])
 
 # Decide whether to use libsoup or libsoup-gnome (if available)
 
-LIBSOUP_MIN_VERSION=2.26
+LIBSOUP_MIN_VERSION=2.34
 
 if test "x$platform" = "xGNOME"; then
    # For the GNOME platform allow using libsoup-gnome, if available
