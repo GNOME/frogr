@@ -909,7 +909,6 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   FrogrMainViewPrivate *priv = NULL;
   GdkAtom target;
   GSList *fileuris_list = NULL;
-  const guchar *files_string = NULL;
   gchar **fileuris_array = NULL;
   gint i;
 
@@ -921,14 +920,10 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
     return;
 
   target = gtk_selection_data_get_target (selection_data);
-
   if (!gtk_targets_include_uri (&target, 1))
     return;
 
-  /* Get GSList with the list of files */
-  files_string = gtk_selection_data_get_data (selection_data);
-
-  fileuris_array = g_strsplit ((const gchar*)files_string, "\r\n", -1);
+  fileuris_array = gtk_selection_data_get_uris (selection_data);;
   for (i = 0;  fileuris_array[i]; i++)
     {
       if (fileuris_array[i] && fileuris_array[i][0] != '\0')
