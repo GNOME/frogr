@@ -36,8 +36,8 @@
 /* Path relative to the application data dir */
 #define MPICTURES_IMAGE "/images/mpictures.png"
 
-#define DIALOG_MIN_WIDTH 740
-#define DIALOG_MIN_HEIGHT 400
+#define DIALOG_MIN_WIDTH 640
+#define DIALOG_MIN_HEIGHT 480
 
 #define PICTURE_WIDTH 180
 #define PICTURE_HEIGHT 180
@@ -150,7 +150,7 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *section_vbox = NULL;
   GtkWidget *internal_hbox = NULL;
   GtkWidget *visibility_vbox = NULL;
-  GtkWidget *private_vbox = NULL;
+  GtkWidget *private_hbox = NULL;
   GtkWidget *content_type_hbox = NULL;
   GtkWidget *safety_level_hbox = NULL;
   GtkWidget *align = NULL;
@@ -172,13 +172,18 @@ _create_widgets (FrogrDetailsDialog *self)
 
   /* Left side (image, radio buttons, checkboxes...) */
 
+  grid = gtk_grid_new ();
+  gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
+
   widget = gtk_button_new ();
   gtk_widget_set_tooltip_text (widget, _("Open with image viewer"));
   gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
   priv->picture_button = widget;
 
-  align = gtk_alignment_new (0.5, 0, 0, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
+  align = gtk_alignment_new (0.6, 0, 0, 0);
+  gtk_grid_attach (GTK_GRID (grid), align, 1, 0, 1, 1);
+  //gtk_box_pack_start (GTK_BOX (grid), align, FALSE, FALSE, 0);
   priv->picture_container = align;
 
   widget = gtk_image_new ();
@@ -186,11 +191,64 @@ _create_widgets (FrogrDetailsDialog *self)
   priv->picture_img = widget;
 
   widget = gtk_label_new (NULL);
-  gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 0);
+  gtk_grid_attach (GTK_GRID (grid), widget, 1, 1, 1, 1);
+  //gtk_box_pack_start (GTK_BOX (grid), widget, FALSE, FALSE, 0);
   priv->mpictures_label = widget;
   priv->mpictures_pixbuf = NULL;
 
+  label = gtk_label_new_with_mnemonic (_("_Title:"));
+  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
+
+  widget = gtk_entry_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
+  gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
+  gtk_grid_attach (GTK_GRID (grid), widget, 1, 2, 1, 1);
+  priv->title_entry = widget;
+
+  label = gtk_label_new_with_mnemonic (_("_Description:"));
+  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
+  gtk_widget_set_valign (GTK_WIDGET (label), GTK_ALIGN_START);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
+
+  widget = gtk_text_view_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
+  gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (widget), FALSE);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (widget), GTK_WRAP_WORD);
+
+  scroller = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroller),
+                                       GTK_SHADOW_ETCHED_IN);
+  gtk_container_add (GTK_CONTAINER (scroller), widget);
+
+  gtk_widget_set_hexpand (GTK_WIDGET (scroller), TRUE);
+  gtk_widget_set_vexpand (GTK_WIDGET (scroller), TRUE);
+  gtk_grid_attach (GTK_GRID (grid), scroller, 1, 3, 1, 1);
+  priv->desc_tview = widget;
+  priv->text_buffer =
+    gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
+
+  label = gtk_label_new_with_mnemonic (_("Ta_gs:"));
+  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 4, 1, 1);
+
+  widget = frogr_live_entry_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
+  gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
+  gtk_grid_attach (GTK_GRID (grid), widget, 1, 4, 1, 1);
+  priv->tags_entry = widget;
+
+  gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 6);
+
+  gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
+
+  /* Right side (text fields) */
+
   /* Visibility */
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
@@ -220,21 +278,21 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (visibility_vbox), internal_hbox, FALSE, FALSE, 0);
 
-  private_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (private_vbox), FALSE);
+  private_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (private_hbox), FALSE);
 
-  widget = gtk_check_button_new_with_mnemonic (_("Visible to _Family"));
-  gtk_box_pack_start (GTK_BOX (private_vbox), widget, FALSE, FALSE, 0);
+  widget = gtk_check_button_new_with_mnemonic (_("_Family"));
+  gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
   priv->family_cb = widget;
 
-  widget = gtk_check_button_new_with_mnemonic (_("Visible to F_riends"));
-  gtk_box_pack_start (GTK_BOX (private_vbox), widget, FALSE, FALSE, 0);
+  widget = gtk_check_button_new_with_mnemonic (_("F_riends"));
+  gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
   priv->friend_cb = widget;
 
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
 
-  gtk_box_pack_start (GTK_BOX (internal_hbox), private_vbox, FALSE, FALSE, 12);
+  gtk_box_pack_start (GTK_BOX (internal_hbox), private_hbox, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (visibility_vbox), internal_hbox, FALSE, FALSE, 0);
 
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
@@ -309,7 +367,7 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (section_vbox), safety_level_hbox, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
   /* License type */
 
@@ -360,59 +418,7 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
-  gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 6);
-
-  /* Right side (text fields) */
-
-  grid = gtk_grid_new ();
-  gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
-  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
-
-  label = gtk_label_new_with_mnemonic (_("_Title:"));
-  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-
-  widget = gtk_entry_new ();
-  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
-  gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
-  gtk_grid_attach (GTK_GRID (grid), widget, 1, 0, 1, 1);
-  priv->title_entry = widget;
-
-  label = gtk_label_new_with_mnemonic (_("_Description:"));
-  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
-  gtk_widget_set_valign (GTK_WIDGET (label), GTK_ALIGN_START);
-  gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
-
-  widget = gtk_text_view_new ();
-  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
-  gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (widget), FALSE);
-  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (widget), GTK_WRAP_WORD);
-
-  scroller = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
-                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroller),
-                                       GTK_SHADOW_ETCHED_IN);
-  gtk_container_add (GTK_CONTAINER (scroller), widget);
-
-  gtk_widget_set_hexpand (GTK_WIDGET (scroller), TRUE);
-  gtk_widget_set_vexpand (GTK_WIDGET (scroller), TRUE);
-  gtk_grid_attach (GTK_GRID (grid), scroller, 1, 1, 1, 1);
-  priv->desc_tview = widget;
-  priv->text_buffer =
-    gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
-
-  label = gtk_label_new_with_mnemonic (_("Ta_gs:"));
-  gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
-
-  widget = frogr_live_entry_new ();
-  gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
-  gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
-  gtk_grid_attach (GTK_GRID (grid), widget, 1, 2, 1, 1);
-  priv->tags_entry = widget;
-
-  gtk_box_pack_start (GTK_BOX (hbox), grid, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, FALSE, 6);
 
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, TRUE, TRUE, 6);
 
