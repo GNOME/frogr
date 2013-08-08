@@ -183,7 +183,6 @@ _create_widgets (FrogrDetailsDialog *self)
 
   align = gtk_alignment_new (0.6, 0, 0, 0);
   gtk_grid_attach (GTK_GRID (grid), align, 1, 0, 1, 1);
-  //gtk_box_pack_start (GTK_BOX (grid), align, FALSE, FALSE, 0);
   priv->picture_container = align;
 
   widget = gtk_image_new ();
@@ -192,7 +191,6 @@ _create_widgets (FrogrDetailsDialog *self)
 
   widget = gtk_label_new (NULL);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 1, 1, 1);
-  //gtk_box_pack_start (GTK_BOX (grid), widget, FALSE, FALSE, 0);
   priv->mpictures_label = widget;
   priv->mpictures_pixbuf = NULL;
 
@@ -242,7 +240,7 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 6);
 
-  gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 6);
 
   /* Right side (text fields) */
 
