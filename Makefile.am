@@ -90,6 +90,7 @@ DISTCLEANFILES = \
 EXTRA_DIST = \
 	MAINTAINERS \
 	TRANSLATORS \
+	autogen.sh \
 	src/flicksoup/COPYING \
 	data/frogr.desktop.in.in \
 	$(pixmap_DATA) \
