@@ -21,7 +21,7 @@ To work properly, frogr needs some libraries to be installed first:
 
 -------------------------------------------
 
-Website: http://live.gnome.org/Frogr
+Website: http://live.gnome.org/Apps/Frogr
 
 Source: git://git.gnome.org/frogr
 
@@ -31,7 +31,7 @@ Mailing list: http://mail.gnome.org/mailman/listinfo/frogr-list
 
 Frogr is Copyright (c) 2009-2012 Mario Sanchez Prada
 
-http://live.gnome.org/Frogr
+http://live.gnome.org/Apps/Frogr
 
 See AUTHORS file for details on authors
 

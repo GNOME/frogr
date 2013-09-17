@@ -5,7 +5,7 @@ Release:	0
 
 Group:		Applications/Internet
 License:	GPLv3
-URL:		http://live.gnome.org/Frogr
+URL:		http://live.gnome.org/Apps/Frogr
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.7/%{name}-%{version}.tar.xz
 
 BuildRequires:	intltool

@@ -8,7 +8,7 @@
   <shortname>frogr</shortname>
   <shortdesc xml:lang="en">Flickr Remote Organizer for GNOME</shortdesc>
   <description>A Flickr Remote Organizer for GNOME</description>
-  <homepage rdf:resource="http://live.gnome.org/Frogr" />
+  <homepage rdf:resource="http://live.gnome.org/Apps/Frogr" />
 
   <maintainer>
     <foaf:Person>
