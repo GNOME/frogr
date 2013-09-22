@@ -61,6 +61,8 @@ icon128dir = $(datadir)/icons/hicolor/128x128/apps
 icon128_DATA = data/icons/hicolor/128x128/apps/frogr.png
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
 iconscalable_DATA = data/icons/hicolor/scalable/apps/frogr.svg
+highcontrasticondir = $(datadir)/icons/HighContrast/scalable/apps
+highcontrasticon_DATA = data/icons/HighContrast/scalable/apps/frogr.svg
 
 imagesdir = $(datadir)/frogr/images
 images_DATA = data/images/mpictures.png
