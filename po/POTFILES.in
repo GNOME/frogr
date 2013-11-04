@@ -1,4 +1,5 @@
 # List of source files containing translatable strings.
+data/frogr.appdata.xml.in
 data/frogr.desktop.in.in
 src/frogr-about-dialog.c
 src/frogr-add-tags-dialog.c
