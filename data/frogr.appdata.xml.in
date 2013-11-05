@@ -21,7 +21,7 @@
  </description>
  <screenshots>
      <screenshot type="default" width="377" height="236">
-         http://wiki.gnome.org/Apps/Frogr?action=AttachFile&do=get&target=frogr-0_8-screenshot-thumb.png
+         http://wiki.gnome.org/Apps/Frogr?action=AttachFile&amp;do=get&amp;target=frogr-0_8-screenshot-thumb.png
      </screenshot>
  </screenshots>
  <url type="homepage">http://wiki.gnome.org/Apps/Frogr</url>
