@@ -112,6 +112,7 @@ typedef struct _FrogrMainViewPrivate {
   gchar* state_description;
 
   GtkTreeModel *tree_model;
+  GtkTreePath *reference_picture;
   guint sb_context_id;
 
   GtkBuilder *builder;
@@ -167,6 +168,14 @@ static void _on_icon_view_drag_data_received (GtkWidget *widget,
 gboolean _on_icon_view_key_press_event (GtkWidget *widget,
                                         GdkEventKey *event,
                                         gpointer data);
+
+static void _clear_reference_picture (FrogrMainView *self);
+static void _update_reference_picture (FrogrMainView *self,
+                                       GtkTreePath *new_path);
+static void _handle_selection_for_button_event_and_path (FrogrMainView *self,
+                                                         GdkEventButton *event,
+                                                         GtkTreePath *path);
+
 gboolean _on_icon_view_button_press_event (GtkWidget *widget,
                                            GdkEventButton *event,
                                            gpointer data);
@@ -184,6 +193,7 @@ static gboolean _on_icon_view_query_tooltip (GtkWidget *icon_view,
 static void _on_icon_view_selection_changed (GtkWidget *icon_view,
                                              gpointer data);
 
+static void _deselect_all_pictures (FrogrMainView *self);
 static GSList *_get_selected_pictures (FrogrMainView *self);
 static gint _n_pictures (FrogrMainView *self);
 static void _open_pictures_in_external_viewer (FrogrMainView *self);
@@ -973,6 +983,132 @@ _on_icon_view_key_press_event (GtkWidget *widget,
   return FALSE;
 }
 
+static void
+_clear_reference_picture (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  if (priv->reference_picture)
+    {
+      gtk_tree_path_free (priv->reference_picture);
+      priv->reference_picture = NULL;
+    }
+}
+
+static void
+_update_reference_picture (FrogrMainView *self, GtkTreePath *new_path)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  _clear_reference_picture (self);
+  if (new_path)
+    priv->reference_picture = gtk_tree_path_copy (new_path);
+}
+
+static void
+_handle_selection_for_button_event_and_path (FrogrMainView *mainview,
+                                             GdkEventButton *event,
+                                             GtkTreePath *path)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
+  gboolean using_control_key = event->state & GDK_CONTROL_MASK;
+  gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
+  gboolean is_single_click = event->type == GDK_BUTTON_PRESS;
+  gboolean is_primary_btn = event->button == 1;
+  gboolean path_selected = gtk_icon_view_path_is_selected (GTK_ICON_VIEW (priv->icon_view), path);
+
+  /* Clicking with the secondary button in a selected element means
+     we just want to open the contextual menu, so do nothing */
+  if (path_selected && !is_primary_btn)
+    return;
+
+  /* Handle simple cases (no modifiers) */
+  if (!using_control_key && !using_shift_key)
+    {
+      gint n_selected_pictures = priv->n_selected_pictures;
+
+      _deselect_all_pictures (mainview);
+
+      /* We will just select the pointed element if it's not selected yet
+         or if it is, but it belongs to a multiple selection previously done */
+      if (!path_selected || n_selected_pictures > 1)
+        {
+          gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
+          _update_reference_picture (mainview, path);
+        }
+
+      /* Already handled */
+      return;
+    }
+
+  /* Handle special cases with Control */
+  if (using_control_key)
+    {
+      /* Ignore double and triple clicks with Control (treat them as separate clicks) */
+      if (!is_single_click)
+        return;
+
+      /* When combined with Shift and clicking in a not previously selected
+         item, we will just extend the selection through the 'Shift' code path. */
+      if (!using_shift_key || path_selected)
+        {
+          if (!using_shift_key)
+            _clear_reference_picture (mainview);
+
+          if (path_selected)
+            gtk_icon_view_unselect_path (GTK_ICON_VIEW (priv->icon_view), path);
+          else
+            {
+              gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
+              _update_reference_picture (mainview, path);
+            }
+
+          /* Already handled */
+          return;
+        }
+    }
+
+  /* Finally, handle special cases with Shift */
+  if (priv->reference_picture)
+    {
+      GtkTreeIter start_iter;
+      if (gtk_tree_model_get_iter (priv->tree_model, &start_iter, priv->reference_picture))
+        {
+          GtkTreePath *start_path = priv->reference_picture;
+          GtkTreePath *end_path = path;
+          GtkTreePath *current_path = NULL;
+
+          /* Swap paths if needed */
+          if (gtk_tree_path_compare (start_path, end_path) > 0)
+            {
+              GtkTreePath *tmp_path = start_path;
+              start_path = end_path;
+              end_path = tmp_path;
+            }
+
+          /* If not using Control (otherwise we would keep the current selection)
+             we first unselect everything and then start selecting, but keeping
+             the reference icon anyway, since we will just extend from there */
+          if (!using_control_key)
+            gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
+
+          current_path = gtk_tree_path_copy (start_path);
+          while (gtk_tree_path_compare (current_path, end_path) <= 0)
+            {
+              gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), current_path);
+              gtk_tree_path_next(current_path);
+            }
+          gtk_tree_path_free (current_path);
+        }
+
+      /* Already handled */
+      return;
+    }
+
+  /* If nothing was previously selected when using Shift, treat it as a normal click */
+  gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
+  _update_reference_picture (mainview, path);
+}
+
 gboolean
 _on_icon_view_button_press_event (GtkWidget *widget,
                                   GdkEventButton *event,
@@ -980,10 +1116,19 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  GtkTreePath *path;
+  gboolean using_control_key = event->state & GDK_CONTROL_MASK;
+  gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
+  GtkTreePath *new_path = NULL;
+
+  /* Grab the focus, as we will be handling events manually */
+  gtk_widget_grab_focus(widget);
 
   /* Actions are only allowed in IDLE state */
   if (frogr_controller_get_state (priv->controller) != FROGR_STATE_IDLE)
+    return TRUE;
+
+  /* Only left and right clicks are supported */
+  if (event->button != 1 && event->button != 3)
     return TRUE;
 
   /* Do nothing if there's no picture loaded yet */
@@ -992,54 +1137,40 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 
   /* Check if we clicked on top of an item */
   if (gtk_icon_view_get_item_at_pos (GTK_ICON_VIEW (priv->icon_view),
-                                     event->x,
-                                     event->y,
-                                     &path,
-                                     NULL))
+                                     event->x, event->y, &new_path, NULL))
     {
-      gboolean path_selected =
-        gtk_icon_view_path_is_selected (GTK_ICON_VIEW (priv->icon_view), path);
+      gboolean is_primary_btn = event->button == 1;
+      gboolean is_single_click = event->type == GDK_BUTTON_PRESS;
+      gboolean is_double_click = event->type == GDK_2BUTTON_PRESS;
 
-      /* Check whether it's needed to keep this item as the only selection */
-      if (((event->button == 1) && path_selected)
-          || ((event->button == 3) && !path_selected))
-        {
-          if (!(event->state & GDK_SHIFT_MASK)
-              && !(event->state & GDK_CONTROL_MASK))
-            {
-              /* Deselect all items if not pressing Ctrl or shift */
-              gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
-            }
-
-          /* Now select the item */
-          gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
-
-        }
+      /* Decide whether we need to change the selection and how */
+      _handle_selection_for_button_event_and_path (mainview, event, new_path);
 
       /* Perform the right action: edit picture or show ctxt menu */
-      if ((event->button == 1)                   /* left button */
-          && (event->type == GDK_2BUTTON_PRESS ) /* doubleclick */
-          && !(event->state & GDK_SHIFT_MASK)    /*  not shift  */
-          && !(event->state & GDK_CONTROL_MASK)) /*  not Ctrl */
+      if (is_primary_btn && is_double_click && !using_control_key)
         {
           /* edit selected item */
           _edit_selected_pictures (mainview);
         }
-      else if ((event->button == 3)                  /* right button */
-               && (event->type == GDK_BUTTON_PRESS)) /* single click */
+      else if (!is_primary_btn && is_single_click)
         {
           /* Show contextual menu */
           gtk_menu_popup (GTK_MENU (priv->pictures_ctxt_menu),
-                          NULL, NULL, NULL, NULL,
-                          event->button,
-                          gtk_get_current_event_time ());
+              NULL, NULL, NULL, NULL,
+              event->button,
+              gtk_get_current_event_time ());
         }
 
       /* Free */
-      gtk_tree_path_free (path);
+      gtk_tree_path_free (new_path);
+      return TRUE;
     }
 
-  return FALSE;
+  /* Make sure we reset everything if simply clicking outside of any picture*/
+  if (!using_control_key && !using_shift_key)
+    _deselect_all_pictures (mainview);
+
+  return TRUE;
 }
 
 static gboolean
@@ -1158,6 +1289,15 @@ _on_icon_view_selection_changed (GtkWidget *icon_view, gpointer data)
 
   /* Update sensitiveness for actions */
   _update_sensitiveness (self);
+}
+
+static void
+_deselect_all_pictures (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
+  _clear_reference_picture (self);
 }
 
 static GSList *
@@ -1551,7 +1691,7 @@ _upload_pictures (FrogrMainView *self)
   if (!_pictures_loaded_required_check (self))
     return;
 
-  gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
+  _deselect_all_pictures (self);
   frogr_controller_upload_pictures (priv->controller, priv->sorted_pictures);
 }
 
@@ -2128,6 +2268,7 @@ _frogr_main_view_finalize (GObject *object)
   g_free (priv->project_dir);
   g_free (priv->project_filepath);
   g_free (priv->state_description);
+  gtk_tree_path_free (priv->reference_picture);
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
 }
