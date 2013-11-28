@@ -184,10 +184,7 @@ _create_widgets (FrogrDetailsDialog *self)
   align = gtk_alignment_new (0.6, 0, 0, 0);
   gtk_grid_attach (GTK_GRID (grid), align, 1, 0, 1, 1);
   priv->picture_container = align;
-
-  widget = gtk_image_new ();
-  gtk_widget_set_size_request (widget, PICTURE_WIDTH, -1);
-  priv->picture_img = widget;
+  priv->picture_img = gtk_image_new ();;
 
   widget = gtk_label_new (NULL);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 1, 1, 1);
