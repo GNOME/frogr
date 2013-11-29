@@ -13,7 +13,7 @@ Note: Terminal commands are preceded by dollar signs.
 Get and install the gtk-osx-build-setup.sh from:
 http://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
 
-  $ curl -O http://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
+  $ curl -O https://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
   $ sh gtk-osx-build-setup.sh
 
 Some of the newer releases of gnome software are only providing .xz packages.
@@ -24,7 +24,7 @@ xz utils. The easiest way to install is to use a dmg package available on:
 
 Make sure to include /usr/local/bin in your PATH and alsothat you are not
 conflicting anything from fink/macports. If you are using fink/macports, you
-can add the following to your ~/.bashrc to remove any PATHS related to 
+can add the following to your ~/.bashrc to remove any PATHS related to
 fink/macports when using jhbuild:
 
     # Add /usr/local/bin
@@ -52,7 +52,7 @@ environment variable JHB=frogr.
 
 Finally we are ready to built frogr:
 
-  $ JHB=frogr jhbuild bootstrap --ignore-system
+  $ JHB=frogr jhbuild bootstrap
   $ JHB=frogr jhbuild build frogr
 
 Note that it's perfectly possible that something might fail during the built,
