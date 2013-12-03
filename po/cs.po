@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-08-08 22:02+0000\n"
-"PO-Revision-Date: 2013-08-09 15:39+0200\n"
+"POT-Creation-Date: 2013-11-05 23:14+0000\n"
+"PO-Revision-Date: 2013-12-03 22:57+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -19,13 +19,29 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
+#: ../data/frogr.appdata.xml.in.h:1 ../data/frogr.desktop.in.in.h:2
+msgid "Frogr: a Flickr Remote Organizer for GNOME"
+msgstr "Frogr: Vzdálený organizátor Flickr pro GNOME"
+
+#: ../data/frogr.appdata.xml.in.h:2
+msgid ""
+"Frogr is a small application for the GNOME desktop that allows users to "
+"manage their accounts in the Flickr image hosting website."
+msgstr ""
+"Frogr je malá aplikace pro pracovní prostředí GNOME, pomocí které mohou "
+"uživatelé spravovat své účty u služby pro hostování obrázků Flickr."
+
+#: ../data/frogr.appdata.xml.in.h:3
+msgid ""
+"It supports all the basic Flickr features, including uploading pictures, "
+"adding descriptions, setting tags and managing sets and groups pools."
+msgstr ""
+"Podporuje všechny základní funkce služby Flickr, včetně nahrávání obrázků, "
+"přidávání popisů, nastavování štítků a správy nastavení a skupin."
+
 #: ../data/frogr.desktop.in.in.h:1
 msgid "Frogr"
 msgstr "Frogr"
-
-#: ../data/frogr.desktop.in.in.h:2
-msgid "Frogr: a Flickr Remote Organizer for GNOME"
-msgstr "Frogr: Vzdálený organizátor Flickr pro GNOME"
 
 #: ../data/frogr.desktop.in.in.h:3
 msgid "Upload and organize photos in Flickr accounts"
@@ -347,7 +363,7 @@ msgid "Error opening project file"
 msgstr "Chyba při otevírání projektového souboru"
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1026
+#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1024
 msgid "Missing data required"
 msgstr "Schází požadovaná data"
 
@@ -403,88 +419,88 @@ msgstr "CC Attribution-NoDerivs"
 msgid "Open with image viewer"
 msgstr "Otevřít v prohlížeči obrázků"
 
-#: ../src/frogr-details-dialog.c:199
+#: ../src/frogr-details-dialog.c:197
 msgid "_Title:"
 msgstr "Náze_v:"
 
-#: ../src/frogr-details-dialog.c:209
+#: ../src/frogr-details-dialog.c:207
 msgid "_Description:"
 msgstr "Popi_s:"
 
-#: ../src/frogr-details-dialog.c:233
+#: ../src/frogr-details-dialog.c:231
 msgid "Ta_gs:"
 msgstr "Š_títky:"
 
-#: ../src/frogr-details-dialog.c:259
+#: ../src/frogr-details-dialog.c:257
 msgid "Visibility"
 msgstr "Viditelnost"
 
-#: ../src/frogr-details-dialog.c:271 ../src/frogr-settings-dialog.c:203
+#: ../src/frogr-details-dialog.c:269 ../src/frogr-settings-dialog.c:203
 msgid "P_ublic"
 msgstr "_Veřejné"
 
-#: ../src/frogr-details-dialog.c:280 ../src/frogr-settings-dialog.c:209
+#: ../src/frogr-details-dialog.c:278 ../src/frogr-settings-dialog.c:209
 msgid "_Private"
 msgstr "_Soukromé"
 
-#: ../src/frogr-details-dialog.c:284 ../src/frogr-settings-dialog.c:212
+#: ../src/frogr-details-dialog.c:282 ../src/frogr-settings-dialog.c:212
 msgid "_Family"
 msgstr "_Rodina"
 
-#: ../src/frogr-details-dialog.c:288 ../src/frogr-settings-dialog.c:214
+#: ../src/frogr-details-dialog.c:286 ../src/frogr-settings-dialog.c:214
 msgid "F_riends"
 msgstr "Přáte_lé"
 
-#: ../src/frogr-details-dialog.c:314
+#: ../src/frogr-details-dialog.c:312
 msgid "Content Type"
 msgstr "Typ obsahu"
 
-#: ../src/frogr-details-dialog.c:323 ../src/frogr-settings-dialog.c:238
+#: ../src/frogr-details-dialog.c:321 ../src/frogr-settings-dialog.c:238
 msgid "P_hoto"
 msgstr "_Fotka"
 
-#: ../src/frogr-details-dialog.c:327 ../src/frogr-settings-dialog.c:240
+#: ../src/frogr-details-dialog.c:325 ../src/frogr-settings-dialog.c:240
 msgid "Scree_nshot"
 msgstr "S_nímek obrazovky"
 
-#: ../src/frogr-details-dialog.c:331 ../src/frogr-settings-dialog.c:242
+#: ../src/frogr-details-dialog.c:329 ../src/frogr-settings-dialog.c:242
 msgid "Oth_er"
 msgstr "_Jiný"
 
-#: ../src/frogr-details-dialog.c:347
+#: ../src/frogr-details-dialog.c:345
 msgid "Safety Level"
 msgstr "Úroveň zabezpečení"
 
-#: ../src/frogr-details-dialog.c:356 ../src/frogr-settings-dialog.c:263
+#: ../src/frogr-details-dialog.c:354 ../src/frogr-settings-dialog.c:263
 msgid "S_afe"
 msgstr "_Bezpečné"
 
-#: ../src/frogr-details-dialog.c:360 ../src/frogr-settings-dialog.c:265
+#: ../src/frogr-details-dialog.c:358 ../src/frogr-settings-dialog.c:265
 msgid "_Moderate"
 msgstr "S_třední"
 
-#: ../src/frogr-details-dialog.c:364 ../src/frogr-settings-dialog.c:267
+#: ../src/frogr-details-dialog.c:362 ../src/frogr-settings-dialog.c:267
 msgid "Restr_icted"
 msgstr "O_mezeno"
 
-#: ../src/frogr-details-dialog.c:378
+#: ../src/frogr-details-dialog.c:376
 msgid "License Type"
 msgstr "Typ licence "
 
-#: ../src/frogr-details-dialog.c:402
+#: ../src/frogr-details-dialog.c:400
 msgid "Other Properties"
 msgstr "Ostatní vlastnosti"
 
-#: ../src/frogr-details-dialog.c:411
+#: ../src/frogr-details-dialog.c:409
 msgid "Set Geo_location Information"
 msgstr "Nastavit zeměpisnou polohu obrázku"
 
-#: ../src/frogr-details-dialog.c:415
+#: ../src/frogr-details-dialog.c:413
 msgid "_Show Up in Global Search Results"
 msgstr "Zobrazovat v globálních vý_sledcích hledání"
 
 #. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:506
+#: ../src/frogr-details-dialog.c:504
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
@@ -492,11 +508,11 @@ msgstr[0] "(%d obrázek)"
 msgstr[1] "(%d obrázky)"
 msgstr[2] "(%d obrázků)"
 
-#: ../src/frogr-details-dialog.c:580
+#: ../src/frogr-details-dialog.c:578
 msgid "An error happened trying to load the picture"
 msgstr "Vyskytla se chyba při načítání obrázku"
 
-#: ../src/frogr-details-dialog.c:1229
+#: ../src/frogr-details-dialog.c:1227
 msgid "Edit Picture Details"
 msgstr "Úprava podrobností obrázku"
 
