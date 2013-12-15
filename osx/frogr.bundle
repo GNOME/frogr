@@ -31,14 +31,6 @@
     ${prefix}/lib/gdk-pixbuf-2.0/${pkg:gdk-pixbuf-2.0:gdk_pixbuf_binary_version}/loaders/*.so
   </binary>
 
-  <!-- Gstreamer plugins and scanner -->
-  <binary>
-    ${prefix}/lib/gstreamer-0.10/*.so
-  </binary>
-  <binary>
-    ${prefix}/libexec/gstreamer-0.10/gst-plugin-scanner
-  </binary>
-
   <!-- Translation filenames, one for each program or library -->
   <translations name="gtk30">
     ${prefix}/share/locale

@@ -27,8 +27,10 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#ifdef HAVE_GSTREAMER
 #include <gst/gst.h>
 #include <gst/base/gstbasesink.h>
+#endif
 #include <libexif/exif-byte-order.h>
 #include <libexif/exif-data.h>
 #include <libexif/exif-entry.h>
@@ -36,8 +38,10 @@
 #include <libexif/exif-loader.h>
 #include <libexif/exif-tag.h>
 
+#ifdef HAVE_GSTREAMER
 #define CAPS "video/x-raw,format=RGB,width=160,pixel-aspect-ratio=1/1"
 #define PREROLL_TIMEOUT (5*GST_SECOND)
+#endif
 
 static gboolean
 _spawn_command (const gchar* cmd)
@@ -370,6 +374,7 @@ _get_pixbuf_from_image_contents (const guchar *contents, gsize length, GError **
 static GdkPixbuf *
 _get_pixbuf_from_video_file (GFile *file, GError **out_error)
 {
+#ifdef HAVE_GSTREAMER
   GdkPixbuf *pixbuf = NULL;
   GstElement *pipeline, *sink;
   GstStateChangeReturn ret, sret;
@@ -446,6 +451,9 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
   gst_object_unref (pipeline);
 
   return pixbuf;
+#else
+  return NULL;
+#endif
 }
 
 GdkPixbuf *
@@ -534,6 +542,7 @@ frogr_util_get_supported_mimetypes (void)
     "image/png",
     "image/bmp",
     "image/gif",
+#ifdef HAVE_GSTREAMER
     "video/mpeg",
     "video/mp4",
     "video/quicktime",
@@ -546,6 +555,7 @@ frogr_util_get_supported_mimetypes (void)
     "video/mp2t",
     "video/vnd.dlna.mpeg-tts",
     "application/ogg",
+#endif
     NULL
   };
 

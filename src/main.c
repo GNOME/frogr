@@ -25,7 +25,9 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
+#ifdef HAVE_GSTREAMER
 #include <gst/gst.h>
+#endif
 #include <libxml/parser.h>
 
 int
@@ -35,6 +37,7 @@ main (int argc, char **argv)
   GError *error = NULL;
   int status;
 
+#ifdef HAVE_GSTREAMER
   /* Initialize gstreamer before using any other GLib function */
   gst_init_check (&argc, &argv, &error);
   if (error)
@@ -42,6 +45,7 @@ main (int argc, char **argv)
       DEBUG ("Gstreamer could not be initialized: %s", error->message);
       g_error_free (error);
     }
+#endif
 
   /* Initialize libxml2 library */
   xmlInitParser ();

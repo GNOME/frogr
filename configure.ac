@@ -37,11 +37,6 @@ PKG_CHECK_MODULES(LIBXML2, libxml-2.0 >= $LIBXML2_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBXML2_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $LIBXML2_LIBS"
 
-GSTREAMER_MIN_VERSION=1.0
-PKG_CHECK_MODULES(GSTREAMER, gstreamer-1.0 >= $GSTREAMER_MIN_VERSION)
-FROGR_CFLAGS="$FROGR_CFLAGS $GSTREAMER_CFLAGS"
-FROGR_LIBS="$FROGR_LIBS $GSTREAMER_LIBS"
-
 JSON_GLIB_MIN_VERSION=0.12
 PKG_CHECK_MODULES(JSON_GLIB, json-glib-1.0 >= $JSON-GLIB_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $JSON_GLIB_CFLAGS"
@@ -64,6 +59,18 @@ else
    platform=GNOME
 fi
 AM_CONDITIONAL([PLATFORM_MAC],[test "x$osx" = "xyes"])
+
+# Decide whether to use gstreamer or not
+with_gstreamer=no
+if test "x$platform" = "xGNOME"; then
+   GSTREAMER_MIN_VERSION=1.0
+   PKG_CHECK_MODULES(GSTREAMER, gstreamer-1.0 >= $GSTREAMER_MIN_VERSION)
+   FROGR_CFLAGS="$FROGR_CFLAGS $GSTREAMER_CFLAGS"
+   FROGR_LIBS="$FROGR_LIBS $GSTREAMER_LIBS"
+
+   AC_DEFINE(HAVE_GSTREAMER, 1, [Have GStreamer available])
+   with_gstreamer=yes
+fi
 
 # Decide whether to use libsoup or libsoup-gnome (if available)
 
@@ -157,6 +164,7 @@ echo "*************************************"
 echo ""
 echo "Platform              : $platform"
 echo "Using libsoup variant : $with_libsoup"
+echo "Using gstreamer       : $with_gstreamer"
 echo "Enable debug          : $enable_debug"
 echo ""
 echo ""
