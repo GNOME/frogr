@@ -2,19 +2,13 @@
 <!DOCTYPE moduleset SYSTEM "moduleset.dtd">
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
-  <include href="https://raw.github.com/mariospr/gtk-osx-build/master/modulesets-stable/gtk-osx.modules"/>
-  <repository type="tarball" name="ftp.gnome.org" default="yes"
-              href="http://ftp.gnome.org/pub/GNOME/sources/"/>
+  <include href="https://raw.github.com/mariospr/gtk-osx-build/gtk-3-8/modulesets-stable/gtk-osx.modules"/>
+  <repository type="tarball" name="ftp.gnome.org" default="yes" href="http://ftp.gnome.org/pub/GNOME/sources/"/>
   <repository type="git" name="git.gnome.org" href="git://git.gnome.org/"/>
-  <repository type="tarball" name="gstreamer" href="http://gstreamer.freedesktop.org/src/"/>
-  <repository type="tarball" name="liboil" href="http://liboil.freedesktop.org/download/"/>
-  <repository type="tarball" name="ftp.gnupg.org" href="ftp://ftp.gnupg.org/" />
-  <repository type="tarball" name="ftp.gnu.org" href="ftp://ftp.gnu.org/pub/gnu/"/>
   <repository type="tarball" name="sourceware.org" href="ftp://sourceware.org/pub/"/>
   <repository type="tarball" name="sourceforge.net" href="http://sourceforge.net/projects/"/>
   <repository type="tarball" name="dbus.freedesktop.org" href="http://dbus.freedesktop.org/releases/"/>
-  <repository type="tarball" name="xiph.org" href="http://downloads.xiph.org/releases/"/>
-  <repository type="tarball" name="code.entropywave.com" href="http://code.entropywave.com/download/"/>
+  <repository type="tarball" name="itstool.org" href="http://files.itstool.org/itstool/"/>
 
   <autotools id="libexif" autogen-sh='configure'>
     <branch module="libexif/files/libexif/0.6.21/libexif-0.6.21.tar.gz" version="0.6.21"
@@ -48,9 +42,9 @@
   </autotools>
 
   <autotools id="gsettings-desktop-schemas">
-    <branch module="gsettings-desktop-schemas/3.6/gsettings-desktop-schemas-3.6.1.tar.xz"
-            version="3.6.1"
-            hash="sha256:d9a877d209e668845d6cafcd62663b0f6e6154df5a96f581ff36f999050e67e6">
+    <branch module="gsettings-desktop-schemas/3.8/gsettings-desktop-schemas-3.8.2.tar.xz"
+            version="3.8.2"
+            hash="sha256:86070b2a4e1ab5a28f81b8fd413434eadc1f8505cbf14886d150eb925f93c827">
     </branch>
     <dependencies>
       <dep package="meta-gtk-osx-bootstrap"/>
@@ -70,9 +64,9 @@
   </autotools>
 
   <autotools id="gnome-themes-standard" autogenargs="--disable-gtk2-engine">
-    <branch module="gnome-themes-standard/3.6/gnome-themes-standard-3.6.2.tar.xz"
-            version="3.6.2"
-            hash="sha256:c41503d0e18e17188c4fd1be5f6a7e90b08564e2a19d9a318b145a56d4455352">
+    <branch module="gnome-themes-standard/3.8/gnome-themes-standard-3.8.2.tar.xz"
+            version="3.8.2"
+            hash="sha256:7e89f92c214b560e59edcbfac2263e49dccf201600871aa3d806ff1c562dff38">
     </branch>
     <dependencies>
       <dep package="meta-gtk-osx-bootstrap"/>
@@ -82,9 +76,9 @@
   </autotools>
 
   <autotools id="gnome-icon-theme">
-    <branch module="gnome-icon-theme/3.6/gnome-icon-theme-3.6.2.tar.xz"
-            version="3.6.2"
-            hash="sha256:314d5535c12af5d62ba0e51addd3457e39140fb149efb9769eacbcc0449f1045">
+    <branch module="gnome-icon-theme/3.8/gnome-icon-theme-3.8.2.tar.xz"
+            version="3.8.2"
+            hash="sha256:1a7c518f9d824242389d456259c64c31cd3f15cc495042b022b513321e2de108">
     </branch>
     <dependencies>
       <dep package="meta-gtk-osx-bootstrap"/>
@@ -100,7 +94,7 @@
     <dependencies>
       <dep package="libxml2"/>
       <dep package="glib"/>
-      <dep package="gdk-pixbuf-gtk3"/>
+      <dep package="gdk-pixbuf"/>
       <dep package="libcroco"/>
     </dependencies>
   </autotools>
@@ -116,119 +110,62 @@
     </after>
   </autotools>
 
-  <autotools id="gtk+-3.0" autogen-sh="configure"
-             autogenargs="--enable-quartz-backend  --enable-quartz-relocation --disable-introspection">
-    <branch module="gtk+/3.6/gtk+-3.6.2.tar.xz" version="3.6.2"
-            hash="sha256:aaccf2e1576338acf37816290578e8f19888935f381665b3847076be25fe513c">
+  <autotools id="gtk+-3.0" autogen-sh="autogen.sh"
+             autogenargs="--enable-quartz-backend --enable-quartz-relocation --disable-introspection">
+    <branch module="gtk+/3.8/gtk+-3.8.2.tar.xz" version="3.8.2"
+            hash="sha256:1ca80c9c15a1df95d74cefb8c2afe4682ba272a4b489106f04877be2a7aff297">
+      <patch file='http://git.gnome.org/browse/gtk-osx/plain/patches/0001-Bug-667759-gtkdnd-quartz.c-is-missing-annotations-fo.patch' strip='1'/>
     </branch>
     <dependencies>
       <dep package="glib"/>
       <dep package="pango"/>
       <dep package="atk"/>
-      <dep package="gdk-pixbuf-gtk3"/>
+      <dep package="gdk-pixbuf"/>
     </dependencies>
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
   </autotools>
 
-  <autotools id="libogg">
-    <branch module="ogg/libogg-1.3.0.tar.gz" version="1.3.0"
-	    repo="xiph.org">
-    </branch>
+  <autotools id="itstool">
+    <branch repo="itstool.org"
+            module="itstool-1.2.0.tar.bz2"
+            version="1.2.0"
+            hash="46fed63fb89c72dbfc03097b4477084ff05ad6f171212d8f1f1546ea543978aa"
+            size="82479"/>
   </autotools>
 
-  <autotools id="libtheora">
-    <branch module="theora/libtheora-1.1.1.tar.bz2" version="1.1.1"
-	    repo="xiph.org">
-    </branch>
-  </autotools>
-
-  <autotools id="libvorbis">
-    <branch module="vorbis/libvorbis-1.3.3.tar.gz" version="1.3.3"
-	    repo="xiph.org">
-    </branch>
-  </autotools>
-
-  <autotools id="orc">
-    <branch module="orc/orc-0.4.16.tar.gz" version="0.6.16"
-	    repo="code.entropywave.com">
-    </branch>
-  </autotools>
-
-  <autotools id="gstreamer" autogen-sh="configure">
-    <branch module="gstreamer/gstreamer-0.10.35.tar.gz" version="0.10.35"
-	    repo="gstreamer">
-      <patch file="http://git.gnome.org/browse/frogr/plain/osx/jhbuild/patches/gstreamer-configure-flex.patch" strip="1"/>
+  <autotools id="yelp-xsl">
+    <branch module="yelp-xsl/3.8/yelp-xsl-3.8.1.tar.xz" version="3.8.1"
+	    repo="ftp.gnome.org">
     </branch>
     <dependencies>
-      <dep package="orc"/>
-    </dependencies>
-    <after>
-      <dep package="glib"/>
-    </after>
-  </autotools>
-
-  <autotools id="gst-plugins-base" autogen-sh="configure">
-    <branch module="gst-plugins-base/gst-plugins-base-0.10.35.tar.gz" version="0.10.35"
-	    repo="gstreamer">
-    </branch>
-    <dependencies>
-      <dep package="libogg"/>
-      <dep package="libvorbis"/>
-      <dep package="libtheora"/>
-      <dep package="gstreamer"/>
-      <dep package="liboil"/>
+      <dep package="libxslt"/>
+      <dep package="libxml2"/>
+      <dep package="itstool"/>
     </dependencies>
   </autotools>
 
-  <autotools id="gst-plugins-good" autogen-sh="configure">
-    <branch module="gst-plugins-good/gst-plugins-good-0.10.30.tar.gz" version="0.10.30"
-	    repo="gstreamer">
+  <autotools id="yelp-tools">
+    <branch module="yelp-tools/3.6/yelp-tools-3.6.1.tar.xz" version="3.6.1"
+	    repo="ftp.gnome.org">
     </branch>
     <dependencies>
-      <dep package="gstreamer"/>
-      <dep package="gst-plugins-base"/>
-      <dep package="libmpeg2"/>
+      <dep package="libxslt"/>
+      <dep package="libxml2"/>
+      <dep package="yelp-xsl"/>
     </dependencies>
   </autotools>
 
-  <autotools id="gst-plugins-bad" autogen-sh="configure">
-    <branch module="gst-plugins-bad/gst-plugins-bad-0.10.22.tar.gz" version="0.10.22"
-	    repo="gstreamer">
+  <autotools id="yelp-xsl">
+    <branch module="yelp-xsl/3.8/yelp-xsl-3.8.1.tar.xz" version="3.8.1"
+	    repo="ftp.gnome.org">
     </branch>
     <dependencies>
-      <dep package="gstreamer"/>
-      <dep package="gst-plugins-base"/>
-      <dep package="gst-plugins-good"/>
+      <dep package="libxslt"/>
+      <dep package="libxml2"/>
     </dependencies>
   </autotools>
-
-  <autotools id="gst-plugins-ugly" autogen-sh="configure">
-    <branch module="gst-plugins-ugly/gst-plugins-ugly-0.10.18.tar.gz" version="0.10.18"
-	    repo="gstreamer">
-    </branch>
-    <dependencies>
-      <dep package="gstreamer"/>
-      <dep package="gst-plugins-base"/>
-      <dep package="gst-plugins-bad"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="gst-ffmpeg" autogen-sh="configure">
-    <branch module="gst-ffmpeg/gst-ffmpeg-0.10.13.tar.gz" version="0.10.13"
-	    repo="gstreamer">
-    </branch>
-    <dependencies>
-      <dep package="gstreamer"/>
-      <dep package="gst-plugins-base"/>
-      <dep package="gst-plugins-good"/>
-    </dependencies>
-  </autotools>
-
-  <tarball id="libmpeg2" version="0.5.1">
-    <source href="http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz"/>
-  </tarball>
 
   <autotools id="frogr">
     <branch repo="git.gnome.org" module="frogr"/>
@@ -247,6 +184,7 @@
       <dep package="glib"/>
       <dep package="pixman"/>
       <dep package="cairo"/>
+      <dep package="gdk-pixbuf"/>
       <dep package="gtk+-3.0"/>
       <dep package="gnutls"/>
       <dep package="glib-networking"/>
@@ -257,17 +195,9 @@
       <dep package="libcroco"/>
       <dep package="librsvg"/>
       <dep package="pango"/>
-      <dep package="gstreamer"/>
-      <dep package="libogg"/>
-      <dep package="libvorbis"/>
-      <dep package="libtheora"/>
-      <dep package="gst-plugins-base"/>
-      <dep package="orc"/>
-      <dep package="libmpeg2"/>
-      <dep package="gst-plugins-good"/>
-      <dep package="gst-ffmpeg"/>
-      <dep package="gst-plugins-bad"/>
-      <dep package="gst-plugins-ugly"/>
+      <dep package="itstool"/>
+      <dep package="yelp-xsl"/>
+      <dep package="yelp-tools"/>
       <dep package="shared-mime-info"/>
     </dependencies>
   </autotools>
