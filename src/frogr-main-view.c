@@ -75,6 +75,12 @@
 #define ACTION_SORT_IN_REVERSE_ORDER "sort-in-reverse-order"
 #define ACTION_ENABLE_TOOLTIPS "enable-tooltips"
 
+/* This should map to Control in X11 and to Command in OS X */
+#ifdef PLATFORM_MAC
+#define GDK_PRIMARY_MASK GDK_MOD2_MASK
+#else
+#define GDK_PRIMARY_MASK GDK_CONTROL_MASK
+#endif
 
 #define FROGR_MAIN_VIEW_GET_PRIVATE(object)             \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
@@ -999,7 +1005,7 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
                                              GtkTreePath *path)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-  gboolean using_control_key = event->state & GDK_CONTROL_MASK;
+  gboolean using_primary_key = event->state & GDK_PRIMARY_MASK;
   gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
   gboolean is_single_click = event->type == GDK_BUTTON_PRESS;
   gboolean is_primary_btn = event->button == 1;
@@ -1011,7 +1017,7 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
     return;
 
   /* Handle simple cases (no modifiers) */
-  if (!using_control_key && !using_shift_key)
+  if (!using_primary_key && !using_shift_key)
     {
       gint n_selected_pictures = priv->n_selected_pictures;
 
@@ -1029,10 +1035,10 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
       return;
     }
 
-  /* Handle special cases with Control */
-  if (using_control_key)
+  /* Handle special cases with Control/Command */
+  if (using_primary_key)
     {
-      /* Ignore double and triple clicks with Control (treat them as separate clicks) */
+      /* Ignore double and triple clicks with Control/Command (treat them as separate clicks) */
       if (!is_single_click)
         return;
 
@@ -1074,10 +1080,10 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
               end_path = tmp_path;
             }
 
-          /* If not using Control (otherwise we would keep the current selection)
+          /* If not using Control/Command (otherwise we would keep the current selection)
              we first unselect everything and then start selecting, but keeping
              the reference icon anyway, since we will just extend from there */
-          if (!using_control_key)
+          if (!using_primary_key)
             gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
 
           current_path = gtk_tree_path_copy (start_path);
@@ -1105,7 +1111,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 {
   FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
-  gboolean using_control_key = event->state & GDK_CONTROL_MASK;
+  gboolean using_primary_key = event->state & GDK_PRIMARY_MASK;
   gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
   GtkTreePath *new_path = NULL;
 
@@ -1136,7 +1142,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
       _handle_selection_for_button_event_and_path (mainview, event, new_path);
 
       /* Perform the right action: edit picture or show ctxt menu */
-      if (is_primary_btn && is_double_click && !using_control_key)
+      if (is_primary_btn && is_double_click && !using_primary_key)
         {
           /* edit selected item */
           _edit_selected_pictures (mainview);
@@ -1156,7 +1162,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
     }
 
   /* Make sure we reset everything if simply clicking outside of any picture*/
-  if (!using_control_key && !using_shift_key)
+  if (!using_primary_key && !using_shift_key)
     _deselect_all_pictures (mainview);
 
   return TRUE;
