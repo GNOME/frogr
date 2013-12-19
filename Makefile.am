@@ -71,6 +71,7 @@ gtkbuilderdir = $(datadir)/frogr/gtkbuilder
 gtkbuilder_DATA = \
 	data/gtkbuilder/frogr-main-view.xml \
 	data/gtkbuilder/frogr-app-menu.xml \
+	data/gtkbuilder/frogr-context-menu.xml \
 	data/gtkbuilder/frogr-menu-bar.xml
 
 desktopentrydir = $(datadir)/applications

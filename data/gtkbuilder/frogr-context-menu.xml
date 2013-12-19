@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="context-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Edit Details…</attribute>
+        <attribute name="action">win.edit-details</attribute>
+        <attribute name="accel">&lt;Primary&gt;d</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Add _Tags…</attribute>
+        <attribute name="action">win.add-tags</attribute>
+        <attribute name="accel">&lt;Primary&gt;t</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Add to _Group…</attribute>
+        <attribute name="action">win.add-to-group</attribute>
+        <attribute name="accel">&lt;Primary&gt;g</attribute>
+      </item>
+      <submenu>
+        <attribute name="label" translatable="yes">Add to _Photoset</attribute>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">_Add to Existing Photoset…</attribute>
+            <attribute name="action">win.add-to-set</attribute>
+            <attribute name="accel">&lt;Primary&gt;p</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">_Create New Photoset…</attribute>
+            <attribute name="action">win.add-to-new-set</attribute>
+            <attribute name="accel">&lt;Primary&gt;&lt;Shift&gt;p</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open in External Viewer</attribute>
+        <attribute name="action">win.open-in-external-viewer</attribute>
+        <attribute name="accel">&lt;Primary&gt;v</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Remove Elements</attribute>
+        <attribute name="action">win.remove-pictures</attribute>
+        <attribute name="accel">Delete</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
