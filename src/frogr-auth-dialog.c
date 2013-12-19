@@ -142,7 +142,7 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   dialog = gtk_dialog_new_with_buttons (title,
                                         parent,
                                         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                        GTK_STOCK_CLOSE,
+                                        _("_Close"),
                                         GTK_RESPONSE_CLOSE,
                                         NULL);
   g_free (title);

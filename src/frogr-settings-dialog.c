@@ -989,9 +989,9 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
-                          GTK_STOCK_CANCEL,
+                          _("_Cancel"),
                           GTK_RESPONSE_CANCEL,
-                          GTK_STOCK_CLOSE,
+                          _("_Close"),
                           GTK_RESPONSE_CLOSE,
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);

@@ -450,7 +450,7 @@ _initialize_ui (FrogrMainView *self)
   progress_dialog = gtk_dialog_new_with_buttons (NULL,
                                                  GTK_WINDOW (self),
                                                  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                 GTK_STOCK_CANCEL,
+                                                 _("_Cancel"),
                                                  GTK_RESPONSE_CANCEL,
                                                  NULL);
   gtk_window_set_title (GTK_WINDOW (progress_dialog), APP_SHORTNAME);
@@ -1379,8 +1379,8 @@ _open_project_dialog (FrogrMainView *self)
   dialog = gtk_file_chooser_dialog_new (_("Select File"),
                                         GTK_WINDOW (self),
                                         GTK_FILE_CHOOSER_ACTION_SAVE,
-                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                        _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                        _("_Open"), GTK_RESPONSE_ACCEPT,
                                         NULL);
 
   gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
@@ -1456,8 +1456,8 @@ _save_project_as_dialog (FrogrMainView *self)
   dialog = gtk_file_chooser_dialog_new (_("Select Destination"),
                                         GTK_WINDOW (self),
                                         GTK_FILE_CHOOSER_ACTION_SAVE,
-                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+                                        _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                        _("_Save"), GTK_RESPONSE_ACCEPT,
                                         NULL);
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled Project.frogr"));
@@ -1506,8 +1506,8 @@ _load_pictures_dialog (FrogrMainView *self)
   dialog = gtk_file_chooser_dialog_new (_("Select a Picture"),
                                         GTK_WINDOW (self),
                                         GTK_FILE_CHOOSER_ACTION_OPEN,
-                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                        _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                        _("_Open"), GTK_RESPONSE_ACCEPT,
                                         NULL);
 
   /* Set images filter */
