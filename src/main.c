@@ -34,10 +34,10 @@ int
 main (int argc, char **argv)
 {
   FrogrController *controller = NULL;
-  GError *error = NULL;
   int status;
-
 #ifdef HAVE_GSTREAMER
+  GError *error = NULL;
+
   /* Initialize gstreamer before using any other GLib function */
   gst_init_check (&argc, &argv, &error);
   if (error)
