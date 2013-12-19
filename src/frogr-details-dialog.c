@@ -263,7 +263,11 @@ _create_widgets (FrogrDetailsDialog *self)
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
 
-  widget = gtk_radio_button_new_with_mnemonic (NULL, _("P_ublic"));
+  widget = gtk_radio_button_new_with_mnemonic (NULL, _("_Private"));
+  gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
+  priv->private_rb = widget;
+
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->private_rb), _("P_ublic"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
   priv->public_rb = widget;
 
@@ -271,10 +275,6 @@ _create_widgets (FrogrDetailsDialog *self)
 
   private_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (private_hbox), FALSE);
-
-  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->public_rb), _("_Private"));
-  gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
-  priv->private_rb = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("_Family"));
   gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
@@ -287,7 +287,7 @@ _create_widgets (FrogrDetailsDialog *self)
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
 
-  gtk_box_pack_start (GTK_BOX (internal_hbox), private_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (internal_hbox), private_hbox, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (visibility_vbox), internal_hbox, FALSE, FALSE, 0);
 
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
