@@ -15,3 +15,4 @@ src/frogr-settings-dialog.c
 [type: gettext/glade]data/gtkbuilder/frogr-main-view.xml
 [type: gettext/glade]data/gtkbuilder/frogr-app-menu.xml
 [type: gettext/glade]data/gtkbuilder/frogr-menu-bar.xml
+[type: gettext/glade]data/gtkbuilder/frogr-context-menu.xml

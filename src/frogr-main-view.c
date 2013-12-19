@@ -46,6 +46,7 @@
 #define UI_MAIN_VIEW_FILE "/gtkbuilder/frogr-main-view.xml"
 #define UI_APP_MENU_FILE "/gtkbuilder/frogr-app-menu.xml"
 #define UI_MENU_BAR_FILE "/gtkbuilder/frogr-menu-bar.xml"
+#define UI_CONTEXT_MENU_FILE "/gtkbuilder/frogr-context-menu.xml"
 
 /* Action names for menu items */
 #define ACTION_AUTHORIZE "authorize"
@@ -314,6 +315,7 @@ _initialize_ui (FrogrMainView *self)
   GtkWidget *progress_label;
   GtkWidget *toolbar;
   GtkToolItem *toolbar_item;
+  GMenuModel *ctxt_menu_model;
   const gchar *icons_path = NULL;
   gchar *full_path = NULL;
   GList *icons = NULL;
@@ -443,10 +445,13 @@ _initialize_ui (FrogrMainView *self)
   /* Populate accounts submenu from model */
   _populate_accounts_submenu (self);
 
-  /* TODO: Create contextual menus for right-clicks */
-  /* priv->pictures_ctxt_menu = */
-  /*     GTK_WIDGET (gtk_builder_get_object (builder, "ctxt_menu")); */
-  priv->pictures_ctxt_menu = NULL;
+  /* Create contextual menus for right-clicks */
+  full_path = g_strdup_printf ("%s/" UI_CONTEXT_MENU_FILE, frogr_util_get_app_data_dir ());
+  gtk_builder_add_from_file (builder, full_path, NULL);
+  g_free (full_path);
+  ctxt_menu_model = G_MENU_MODEL (gtk_builder_get_object (builder, "context-menu"));
+  priv->pictures_ctxt_menu = gtk_menu_new_from_model (ctxt_menu_model);
+  gtk_menu_attach_to_widget (GTK_MENU (priv->pictures_ctxt_menu), GTK_WIDGET (self), NULL);
 
   /* Initialize drag'n'drop support */
   _initialize_drag_n_drop (self);
@@ -955,14 +960,14 @@ _on_icon_view_key_press_event (GtkWidget *widget,
   if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_KEY_Delete))
     _remove_selected_pictures (mainview);
 
-  /* TODO: Show contextual menu if pressed the 'Menu' key */
-  /* if (event->type == GDK_KEY_PRESS && event->keyval == GDK_KEY_Menu */
-  /*     && priv->n_selected_pictures > 0) */
-  /*   { */
-  /*     GtkMenu *menu = GTK_MENU (priv->pictures_ctxt_menu); */
-  /*     gtk_menu_popup (menu, NULL, NULL, NULL, NULL, */
-  /*                     0, gtk_get_current_event_time ()); */
-  /*   } */
+  /* Show contextual menu if pressed the 'Menu' key */
+  if (event->type == GDK_KEY_PRESS && event->keyval == GDK_KEY_Menu
+      && priv->n_selected_pictures > 0)
+    {
+      GtkMenu *menu = GTK_MENU (priv->pictures_ctxt_menu);
+      gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
+                      0, gtk_get_current_event_time ());
+    }
 
   return FALSE;
 }
@@ -1124,7 +1129,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
                                      event->x, event->y, &new_path, NULL))
     {
       gboolean is_primary_btn = event->button == 1;
-      /* gboolean is_single_click = event->type == GDK_BUTTON_PRESS; */
+      gboolean is_single_click = event->type == GDK_BUTTON_PRESS;
       gboolean is_double_click = event->type == GDK_2BUTTON_PRESS;
 
       /* Decide whether we need to change the selection and how */
@@ -1136,15 +1141,14 @@ _on_icon_view_button_press_event (GtkWidget *widget,
           /* edit selected item */
           _edit_selected_pictures (mainview);
         }
-      /* TODO: Show contextual menu if clicked with the secondary button */
-      /* else if (!is_primary_btn && is_single_click) */
-      /*   { */
-      /*     /\* Show contextual menu *\/ */
-      /*     gtk_menu_popup (GTK_MENU (priv->pictures_ctxt_menu), */
-      /*         NULL, NULL, NULL, NULL, */
-      /*         event->button, */
-      /*         gtk_get_current_event_time ()); */
-      /*   } */
+      else if (!is_primary_btn && is_single_click)
+        {
+          /* Show contextual menu */
+          gtk_menu_popup (GTK_MENU (priv->pictures_ctxt_menu),
+              NULL, NULL, NULL, NULL,
+              event->button,
+              gtk_get_current_event_time ());
+        }
 
       /* Free */
       gtk_tree_path_free (new_path);
@@ -2147,10 +2151,6 @@ _update_sensitiveness (FrogrMainView *self)
       for (i = 0; action_names[i]; i++)
         _update_sensitiveness_for_action (self, action_names[i], FALSE);
       g_strfreev (action_names);
-
-      /* TODO: Toolbar and contextual menu */
-      /* gtk_action_group_set_sensitive (priv->pictures_gtkactions, FALSE); */
-      /* gtk_action_group_set_sensitive (priv->selection_gtkactions, FALSE); */
       break;
 
     case FROGR_STATE_IDLE:
@@ -2172,10 +2172,6 @@ _update_sensitiveness (FrogrMainView *self)
       /* Elements from the GMenu - for available pictures */
       for (i = 0; i < G_N_ELEMENTS (iconview_actions); i++)
         _update_sensitiveness_for_action (self, iconview_actions[i], TRUE);
-
-      /* TODO: Toolbar and contextual menu */
-      /* gtk_action_group_set_sensitive (priv->pictures_gtkactions, has_pics); */
-      /* gtk_action_group_set_sensitive (priv->selection_gtkactions, n_selected_pics); */
       break;
 
     default:
