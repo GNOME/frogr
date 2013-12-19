@@ -1165,7 +1165,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
   if (!using_primary_key && !using_shift_key)
     _deselect_all_pictures (mainview);
 
-  return TRUE;
+  return FALSE;
 }
 
 static gboolean
