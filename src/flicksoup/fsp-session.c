@@ -721,7 +721,7 @@ _get_soup_message_for_upload            (GFile       *file,
     }
 
   /* Append the content of the file */
-  buffer = soup_buffer_new (SOUP_MEMORY_TAKE, contents, length);
+  buffer = soup_buffer_new (SOUP_MEMORY_TEMPORARY, contents, length);
   soup_multipart_append_form_file (mpart, "photo", fileuri,
                                    mime_type, buffer);
 
@@ -734,6 +734,7 @@ _get_soup_message_for_upload            (GFile       *file,
 
   /* Free */
   soup_multipart_free (mpart);
+  soup_buffer_free (buffer);
   g_free (fileuri);
   g_free (mime_type);
 
@@ -751,7 +752,7 @@ _load_file_contents_cb                  (GObject      *object,
   GHashTable *extra_params = NULL;
   GFile *file = NULL;
   GError *error = NULL;
-  gchar *contents;
+  gchar *contents = NULL;
   gsize length;
 
   g_return_if_fail (G_IS_FILE (object));
@@ -811,6 +812,7 @@ _load_file_contents_cb                  (GObject      *object,
       error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file for upload");
       _build_async_result_and_complete (ard_clos, NULL, error);
     }
+  g_free (contents);
 }
 
 static void
