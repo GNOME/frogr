@@ -498,7 +498,7 @@ _initialize_ui (FrogrMainView *self)
   priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
                                                          G_TYPE_STRING,
                                                          GDK_TYPE_PIXBUF,
-                                                         G_TYPE_POINTER));
+                                                         G_TYPE_OBJECT));
   gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), priv->tree_model);
   gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), PIXBUF_COL);
   gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view),
@@ -1251,6 +1251,7 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
 
       /* Free memory */
       gtk_tree_path_free (path);
+      g_object_unref (picture);
       g_free (tooltip_str);
       g_free (filesize);
       g_free (filesize_str);
@@ -1321,7 +1322,7 @@ _get_selected_pictures (FrogrMainView *self)
                           -1);
 
       /* Add the picture to the list */
-      pictures = g_slist_prepend (pictures, g_object_ref (picture));
+      pictures = g_slist_prepend (pictures, picture);
       gtk_tree_path_free (path);
     }
 
@@ -1651,6 +1652,7 @@ _open_pictures_in_external_viewer (FrogrMainView *self)
 
   pictures = _get_selected_pictures (self);
   frogr_util_open_pictures_in_viewer (pictures);
+  g_slist_foreach (pictures, (GFunc)g_object_unref, NULL);
   g_slist_free (pictures);
 }
 
@@ -1676,6 +1678,7 @@ _remove_selected_pictures (FrogrMainView *self)
   _update_ui (self);
 
   /* Free */
+  g_slist_foreach (selected_pictures, (GFunc)g_object_unref, NULL);
   g_slist_free (selected_pictures);
 }
 
@@ -1953,6 +1956,7 @@ _model_picture_removed (FrogrController *controller,
   if (gtk_tree_model_get_iter_first (tree_model, &iter))
     {
       /* Look for the picture and remove it */
+      gboolean found = FALSE;
       do
         {
           FrogrPicture *picture_from_ui;
@@ -1972,10 +1976,11 @@ _model_picture_removed (FrogrController *controller,
               priv->sorted_pictures = g_slist_remove (priv->sorted_pictures, picture);
               g_object_unref (picture);
 
-              break;
+              found = TRUE;
             }
+          g_object_unref (picture_from_ui);
         }
-      while (gtk_tree_model_iter_next (tree_model, &iter));
+      while (!found && gtk_tree_model_iter_next (tree_model, &iter));
     }
 
   /* Update upload size in state description */
@@ -2239,6 +2244,7 @@ _frogr_main_view_dispose (GObject *object)
 
   if (priv->tree_model)
     {
+      gtk_list_store_clear (GTK_LIST_STORE (priv->tree_model));
       g_object_unref (priv->tree_model);
       priv->tree_model = NULL;
     }
