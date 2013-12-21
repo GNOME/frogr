@@ -322,6 +322,7 @@ _fill_dialog_with_data (FrogrAddToSetDialog *self)
               break;
             }
         }
+      g_object_unref (set);
 
       gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
                           CHECKBOX_COL, do_check, -1);
@@ -497,6 +498,7 @@ _frogr_add_to_set_dialog_dispose (GObject *object)
 
   if (priv->treemodel)
     {
+      gtk_list_store_clear (GTK_LIST_STORE (priv->treemodel));
       g_object_unref (priv->treemodel);
       priv->treemodel = NULL;
     }
@@ -571,7 +573,7 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
   priv->treemodel =
     GTK_TREE_MODEL (gtk_list_store_new (4, G_TYPE_BOOLEAN,
                                         G_TYPE_STRING, G_TYPE_STRING,
-                                        G_TYPE_POINTER));
+                                        G_TYPE_OBJECT));
   gtk_tree_view_set_model (GTK_TREE_VIEW (priv->treeview), priv->treemodel);
 
   /* Sorting function for the number of elements column */
