@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-22 20:34+0100\n"
-"PO-Revision-Date: 2013-12-22 20:35+0100\n"
+"POT-Creation-Date: 2013-12-22 20:37+0100\n"
+"PO-Revision-Date: 2013-12-22 20:38+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -130,7 +130,7 @@ msgstr "Upoważnij %s"
 
 #: ../src/frogr-auth-dialog.c:145 ../src/frogr-settings-dialog.c:994
 msgid "_Close"
-msgstr ""
+msgstr "Za_mknij"
 
 #. Description label
 #: ../src/frogr-auth-dialog.c:158
