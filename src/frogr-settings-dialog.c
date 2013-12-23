@@ -170,6 +170,7 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *box1 = NULL;
   GtkWidget *box2 = NULL;
   GtkWidget *box3 = NULL;
+  GtkWidget *box4 = NULL;
   GtkWidget *align = NULL;
   GtkWidget *label = NULL;
   GtkWidget *combo = NULL;
@@ -199,20 +200,29 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   box2 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
   gtk_box_set_homogeneous (GTK_BOX (box2), FALSE);
 
-  _add_toggleable_item (self, GTK_BOX (box2), NULL,
-                        TRUE, _("P_ublic"), &priv->public_rb);
+  box3 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (box3), FALSE);
+
+  _add_toggleable_item (self, GTK_BOX (box3), NULL,
+                        TRUE, _("_Private"), &priv->private_rb);
+
+  _add_toggleable_item (self, GTK_BOX (box3), GTK_RADIO_BUTTON (priv->private_rb),
+                        FALSE, _("P_ublic"), &priv->public_rb);
+
+  gtk_box_pack_start (GTK_BOX (box2), box3, FALSE, FALSE, 0);
 
   box3 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (box3), FALSE);
 
-  _add_toggleable_item (self, GTK_BOX (box3), GTK_RADIO_BUTTON (priv->public_rb),
-                        FALSE, _("_Private"), &priv->private_rb);
+  box4 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_box_set_homogeneous (GTK_BOX (box4), FALSE);
 
-  _add_toggleable_item (self, GTK_BOX (box3), NULL, FALSE,
+  _add_toggleable_item (self, GTK_BOX (box4), NULL, FALSE,
                         _("_Family"), &priv->family_cb);
-  _add_toggleable_item (self, GTK_BOX (box3), NULL, FALSE,
+  _add_toggleable_item (self, GTK_BOX (box4), NULL, FALSE,
                         _("F_riends"), &priv->friend_cb);
 
+  gtk_box_pack_start (GTK_BOX (box3), box4, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (box2), box3, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 0);
 

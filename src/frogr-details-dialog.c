@@ -40,7 +40,7 @@
 #define DIALOG_MIN_HEIGHT 480
 
 #define PICTURE_WIDTH 180
-#define PICTURE_HEIGHT 120
+#define PICTURE_HEIGHT 140
 
 #define FROGR_DETAILS_DIALOG_GET_PRIVATE(object)                \
   (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
