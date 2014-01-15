@@ -22,6 +22,7 @@ MAINTAINERCLEANFILES = \
 	config.h.in~ \
 	config.sub \
 	configure \
+	data/frogr.appdata.xml.in \
 	data/frogr.desktop \
 	data/frogr.desktop.in \
 	debian/files \
@@ -87,6 +88,7 @@ data/frogr.desktop.in: data/frogr.desktop.in.in
 	$(edit) $(srcdir)/data/frogr.desktop.in.in > $(builddir)/data/frogr.desktop.in
 
 DISTCLEANFILES = \
+	$(builddir)/data/frogr.appdata.xml.in \
 	$(builddir)/data/frogr.desktop \
 	$(builddir)/data/frogr.desktop.in
 
@@ -95,7 +97,9 @@ EXTRA_DIST = \
 	TRANSLATORS \
 	autogen.sh \
 	src/flicksoup/COPYING \
+	data/frogr.appdata.xml.in \
 	data/frogr.desktop.in.in \
+	m4 \
 	$(pixmap_DATA) \
 	$(icon16_DATA) \
 	$(icon24_DATA) \
@@ -104,6 +108,7 @@ EXTRA_DIST = \
 	$(icon64_DATA) \
 	$(icon128_DATA) \
 	$(iconscalable_DATA) \
+	$(highcontrasticon_DATA) \
 	$(gtkbuilder_DATA) \
 	$(images_DATA) \
 	$(man1_MANS)
