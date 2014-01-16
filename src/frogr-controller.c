@@ -2991,8 +2991,11 @@ frogr_controller_load_pictures (FrogrController *self,
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  max_picture_filesize = frogr_account_get_max_picture_filesize (priv->account);
-  max_video_filesize = frogr_account_get_max_video_filesize (priv->account);
+  if (priv->account)
+    {
+      max_picture_filesize = frogr_account_get_max_picture_filesize (priv->account);
+      max_video_filesize = frogr_account_get_max_video_filesize (priv->account);
+    }
 
   loader = frogr_file_loader_new_from_uris (fileuris, max_picture_filesize, max_video_filesize);
 
