@@ -29,7 +29,9 @@
 #include <gtk/gtk.h>
 #ifdef HAVE_GSTREAMER
 #include <gst/gst.h>
+#ifdef HAVE_GSTREAMER_1_0
 #include <gst/base/gstbasesink.h>
+#endif
 #endif
 #include <libexif/exif-byte-order.h>
 #include <libexif/exif-data.h>
@@ -39,8 +41,12 @@
 #include <libexif/exif-tag.h>
 
 #ifdef HAVE_GSTREAMER
+#ifdef HAVE_GSTREAMER_1_0
 #define CAPS "video/x-raw,format=RGB,width=160,pixel-aspect-ratio=1/1"
 #define PREROLL_TIMEOUT (5*GST_SECOND)
+#else
+#define CAPS "video/x-raw-rgb,width=160,pixel-aspect-ratio=1/1,bpp=(int)24,depth=(int)24,endianness=(int)4321,red_mask=(int)0xff0000, green_mask=(int)0x00ff00, blue_mask=(int)0x0000ff"
+#endif
 #endif
 
 static gboolean
@@ -377,7 +383,15 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
 #ifdef HAVE_GSTREAMER
   GdkPixbuf *pixbuf = NULL;
   GstElement *pipeline, *sink;
-  GstStateChangeReturn ret, sret;
+  GstStateChangeReturn ret;
+#ifdef HAVE_GSTREAMER_1_0
+  GstStateChangeReturn sret;
+#else
+  GstBuffer *buffer;
+  GstFormat format;
+  gint width, height;
+  gboolean res;
+#endif
   gchar *file_uri;
   gchar *descr;
   gint64 duration, position;
@@ -385,8 +399,14 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
 
   /* create a new pipeline */
   file_uri = g_file_get_uri (file);
+#ifdef HAVE_GSTREAMER_1_0
   descr = g_strdup_printf ("uridecodebin uri=%s ! videoconvert ! videoscale "
                            " ! " CAPS " ! gdkpixbufsink name=sink", file_uri);
+#else
+  descr = g_strdup_printf ("uridecodebin uri=%s ! ffmpegcolorspace ! videoscale ! "
+                           " appsink name=sink caps=\"" CAPS "\"", file_uri);
+#endif
+
   g_free (file_uri);
 
   pipeline = gst_parse_launch (descr, &error);
@@ -426,7 +446,12 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
   }
 
   /* get the duration */
+#ifdef HAVE_GSTREAMER_1_0
   gst_element_query_duration (pipeline, GST_FORMAT_TIME, &duration);
+#else
+  format = GST_FORMAT_TIME;
+  gst_element_query_duration (pipeline, &format, &duration);
+#endif
 
   if (duration != -1)
     /* we have a duration, seek to 50% */
@@ -441,10 +466,51 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
   gst_element_seek_simple (pipeline, GST_FORMAT_TIME,
       GST_SEEK_FLAG_KEY_UNIT | GST_SEEK_FLAG_FLUSH, position);
 
-
+#ifdef HAVE_GSTREAMER_1_0
   sret = gst_element_get_state (pipeline, NULL, NULL, PREROLL_TIMEOUT);
   if (sret == GST_STATE_CHANGE_SUCCESS)
       g_object_get (sink, "last-pixbuf", &pixbuf, NULL);
+#else
+  /* get the preroll buffer from appsink, this block untils appsink really prerolls */
+  g_signal_emit_by_name (sink, "pull-preroll", &buffer, NULL);
+
+  /* if we have a buffer now, convert it to a pixbuf. It's possible that we
+   * don't have a buffer because we went EOS right away or had an error. */
+  if (buffer)
+    {
+      GstCaps *caps;
+      GstStructure *s;
+
+      /* get the snapshot buffer format now. We set the caps on the appsink so
+       * that it can only be an rgb buffer. The only thing we have not specified
+       * on the caps is the height, which is dependant on the pixel-aspect-ratio
+       * of the source material */
+      caps = GST_BUFFER_CAPS (buffer);
+      if (!caps)
+        {
+          DEBUG ("could not get snapshot format\n");
+          return NULL;
+        }
+      s = gst_caps_get_structure (caps, 0);
+
+      /* we need to get the final caps on the buffer to get the size */
+      res = gst_structure_get_int (s, "width", &width);
+      res |= gst_structure_get_int (s, "height", &height);
+      if (!res)
+        {
+          DEBUG ("could not get snapshot dimension\n");
+          return NULL;
+        }
+
+      /* create pixmap from buffer and save, gstreamer video buffers have a stride
+       * that is rounded up to the nearest multiple of 4 */
+      pixbuf = gdk_pixbuf_new_from_data (GST_BUFFER_DATA (buffer),
+                                         GDK_COLORSPACE_RGB, FALSE, 8, width, height,
+                                         GST_ROUND_UP_4 (width * 3), NULL, NULL);
+    }
+  else
+    DEBUG ("could not make snapshot\n");
+#endif
 
   /* cleanup and exit */
   gst_element_set_state (pipeline, GST_STATE_NULL);
