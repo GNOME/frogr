@@ -1,5 +1,5 @@
-0.9 (??)
-========
+0.9 (17 January 2014)
+=====================
 
   * Ported to GStreamer 1.0 (0.10 still supported).
   * Provided a high contrast icon.

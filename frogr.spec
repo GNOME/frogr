@@ -83,6 +83,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Fri Jan 17 2014 Mario Sanchez Prada <msanchez at, gnome.org> 0.9-0
+- New upstream release (see NEWS file for details).
+- Package manually generated out of any distro.
+
 * Sat Dec 29 2012 Mario Sanchez Prada <msanchez at, gnome.org> 0.8-0
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.
