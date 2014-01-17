@@ -1,6 +1,51 @@
 0.9 (??)
 ========
 
+  * Ported to GStreamer 1.0 (0.10 still supported).
+  * Provided a high contrast icon.
+  * Switched to yelp-tools from gnome-doc-utils.
+  * Redesign of the "Edit details" and "Settings" dialogs.
+  * Added keywords to .desktop file.
+  * Added an appdata.xml file for the GNOME Software Center.
+  * Removed deprecated uses of GTK_STOCK_*.
+  * Removed deprecated uses of GtkAction and GtkActionGroup.
+  * Fixed with drag-and-drop behavior, failing with pcmanfm.
+  * Fixed selection of multiple pictures with Ctrl and/or Shift.
+  * Fixed problem with ref counting for pictures, sets and groups.
+  * Fixed memory leak in flicksoup (SoupBuffer was never freed).
+  * Raised libsoup minimum version up to 2.34.
+  * As usual, other minor improvements, bug fixes and cleanups.
+
+Bug fixes:
+
+  * #693230: Port to GStreamer 1.0
+  * #697456: should install a high contrast app icon
+  * #700005: Don't disable deprecated API by default
+  * #703544: drag-and-drop doesn't work from some filers
+  * #704628: Switch to yelp-tools from gnome-doc-utils
+  * #706725: Ctrl-Shift-click does not work to select multiple ranges of photos
+  * #708231: Provide an AppData file to integrate with GNOME Software Center
+  * #720156: Excessive memory consumption
+
+New and updated translations:
+
+  * ca (Gil Forcada)
+  * cs (Marek Černocký)
+  * da (Joe Hansen)
+  * el (Dimitris Spingos (Δημήτρης Σπίγγος))
+  * es (Daniel Mustieles)
+  * gl (Fran Dieguez)
+  * hu (Balázs Úr)
+  * ja (Jiro Matsuzawa)
+  * lv (Rūdolfs Mazurs)
+  * pl (Piotr Drąg)
+  * pt_BR (Rafael Ferreira)
+  * sl (Matej Urbančič)
+  * sr (Мирослав Николић)
+  * sr@latin (Miroslav Nikolić)
+  * te (Veeven)
+  * zh_CN (Wylmer Wang)
+
 
 0.8 (29 Dec 2012)
 =================
