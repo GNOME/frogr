@@ -1,3 +1,7 @@
+ca (Catalan)
+------------
+Gil Forcada <gforcada@gnome.org>
+
 cs (Czech translation)
 ----------------------
 Marek Černocký <marek@manet.cz>
@@ -14,6 +18,7 @@ Christian Kirbach <christian.kirbach@gmail.com>
 el (Greek)
 ----------
 Mel Argyropoulou <bunnydee93@gmail.com>
+Dimitris Spingos <dmtrs32@gmail.com>
 
 en_GB (British English)
 -----------------------
@@ -38,6 +43,10 @@ gl (Galician)
 -------------
 Fran Diéguez <frandieguez@ubuntu.com>
 
+hu (Hungarian)
+--------------
+Balázs Úr <urbalazs@src.gnome.org>
+
 id (Indonesian)
 ---------------
 Andika Triwidada <andika@gmail.com>
@@ -45,6 +54,10 @@ Andika Triwidada <andika@gmail.com>
 it (Italian)
 ------------
 Cristian Marchi <cri.penta@gmail.com>
+
+ja (Japanese)
+-------------
+Jiro Matsuzawa <jmatsuzawa@gnome.org>
 
 lv (Latvian)
 ------------
@@ -73,6 +86,7 @@ Mateus Zenaide <matzenh@gmail.com>
 Djavan Fagundes <djavan@comum.org>
 Gabriel F. Vilar <cogumm@gmail.com>
 Rafael Ferreira <rafael.f.f1@gmail.com>
+Enrico Nicoletto <liverig@gmail.com>
 
 ru (Russian)
 ------------
@@ -96,6 +110,10 @@ sv (Swedish)
 ------------
 Daniel Nylander <po@danielnylander.se>
 
+te (Telugu)
+-----------
+Veeven <veeven@gmail.com>
+
 tr (Turkish)
 ------------
 Muhammet Kara <muhammet.k@gmail.com>
@@ -109,3 +127,4 @@ zh_CN (Chinese)
 ---------------
 Yinghua Wang <wantinghard@gmail.com>
 tuhaihe <wangdianjin@linuxdeepin.com>
+Wylmer Wang <wantinghard@gmail.com>
