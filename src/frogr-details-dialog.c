@@ -1,7 +1,7 @@
 /*
  * frogr-details-dialog.c -- Picture details dialog
  *
- * Copyright (C) 2009-2012 Mario Sanchez Prada
+ * Copyright (C) 2009-2014 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>
  *
  * This program is free software; you can redistribute it and/or
