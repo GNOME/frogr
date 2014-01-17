@@ -29,6 +29,14 @@
 
   <release>
     <Version>
+      <revision>0.9</revision>
+      <created>2014-01-17</created>
+      <file-release rdf:resource="http://ftp.gnome.org/pub/GNOME/sources/frogr/0.9/frogr-0.9.tar.xz"/>
+    </Version>
+  </release>
+
+  <release>
+    <Version>
       <revision>0.8</revision>
       <created>2012-12-29</created>
       <file-release rdf:resource="http://ftp.gnome.org/pub/GNOME/sources/frogr/0.8/frogr-0.8.tar.xz"/>
