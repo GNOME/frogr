@@ -8,7 +8,10 @@
   <shortname>frogr</shortname>
   <shortdesc xml:lang="en">Flickr Remote Organizer for GNOME</shortdesc>
   <description>A Flickr Remote Organizer for GNOME</description>
-  <homepage rdf:resource="http://live.gnome.org/Apps/Frogr" />
+  <homepage rdf:resource="https://wiki.gnome.org/Apps/Frogr" />
+  <mailing-list rdf:resource="http://mail.gnome.org/mailman/listinfo/frogr-list" />
+  <download-page rdf:resource="http://download.gnome.org/sources/frogr/" />
+  <bug-database rdf:resource="https://bugzilla.gnome.org/browse.cgi?product=frogr" />
 
   <maintainer>
     <foaf:Person>
