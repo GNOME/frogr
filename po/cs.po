@@ -45,7 +45,7 @@ msgstr "Frogr"
 
 #: ../data/frogr.desktop.in.in.h:3
 msgid "Upload and organize photos in Flickr accounts"
-msgstr "Nahrávat a organizovat fotky pod účty na službě Flickr"
+msgstr "Nahrávejte a uspořádavejte si fotky v účtech na službě Flickr"
 
 #: ../data/frogr.desktop.in.in.h:4
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
