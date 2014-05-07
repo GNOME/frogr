@@ -37,10 +37,11 @@
 #include <stdarg.h>
 #include <string.h>
 
-#define FLICKR_API_BASE_URL   "http://api.flickr.com/services/rest"
-#define FLICKR_API_UPLOAD_URL "http://api.flickr.com/services/upload"
-#define FLICKR_REQUEST_TOKEN_OAUTH_URL "http://www.flickr.com/services/oauth/request_token"
-#define FLICKR_ACCESS_TOKEN_OAUTH_URL "http://www.flickr.com/services/oauth/access_token"
+#define FLICKR_API_BASE_URL   "https://api.flickr.com/services/rest"
+#define FLICKR_API_UPLOAD_URL "https://up.flickr.com/services/upload"
+#define FLICKR_REQUEST_TOKEN_OAUTH_URL "https://www.flickr.com/services/oauth/request_token"
+#define FLICKR_ACCESS_TOKEN_OAUTH_URL "https://www.flickr.com/services/oauth/access_token"
+#define FLICKR_AUTHORIZE_OAUTH_URL "https://www.flickr.com/services/oauth/authorize"
 
 #define OAUTH_CALLBACK_URL "oob"
 #define OAUTH_SIGNATURE_METHOD "HMAC-SHA1"
@@ -1857,8 +1858,9 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
       self->priv->tmp_token_secret = g_strdup (auth_token->token_secret);
 
       /* Build the authorization url */
-      auth_url = g_strdup_printf ("http://www.flickr.com/services/oauth/authorize"
-                                  "?oauth_token=%s", auth_token->token);
+      auth_url = g_strdup_printf ("%s?oauth_token=%s",
+                                  FLICKR_AUTHORIZE_OAUTH_URL,
+                                  auth_token->token);
 
       fsp_data_free (FSP_DATA (auth_token));
     }
