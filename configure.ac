@@ -99,15 +99,6 @@ fi
 FROGR_CFLAGS="$FROGR_CFLAGS $LIBSOUP_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $LIBSOUP_LIBS"
 
-# Translations
-FROGR_LOCALE_DIR='${localedir}'
-AM_GLIB_DEFINE_LOCALEDIR([FROGR_LOCALE_DIR])
-AM_GLIB_GNU_GETTEXT
-
-GETTEXT_PACKAGE=frogr
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
-
 # Debug mode
 AC_MSG_CHECKING([Checking whether to enable debug output])
 AC_ARG_ENABLE(debug,
@@ -132,8 +123,8 @@ AC_ARG_ENABLE(video,
               [video_feature="$enableval"],[video_feature="yes"])
 AC_MSG_RESULT([$video_feature])
 
-with_gstreamer="no"
 if test "x$video_feature" = "xyes"; then
+   with_gstreamer="no"
    PKG_CHECK_MODULES(GSTREAMER_1_0, gstreamer-1.0 >= 1.0,
                      [with_gstreamer="1.0"], [with_gstreamer="no"])
 
@@ -149,8 +140,18 @@ if test "x$video_feature" = "xyes"; then
       with_gstreamer="0.10"
    fi
 
+   video_feature="yes (using GStreamer $with_gstreamer)"
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have GStreamer available])
 fi
+
+# Translations
+FROGR_LOCALE_DIR='${localedir}'
+AM_GLIB_DEFINE_LOCALEDIR([FROGR_LOCALE_DIR])
+AM_GLIB_GNU_GETTEXT
+
+GETTEXT_PACKAGE=frogr
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 
 # Substitute
 
@@ -176,10 +177,13 @@ echo "*************************************"
 echo "*** frogr is ready to be compiled ***"
 echo "*************************************"
 echo ""
-echo "Platform              : $platform"
-echo "Using libsoup variant : $with_libsoup"
-echo "Using gstreamer       : $with_gstreamer"
-echo "Enable debug          : $enable_debug"
+echo "Build configuration:"
+echo "  Platform              : $platform"
+echo "  Debug symbols         : $enable_debug"
+echo "  Using libsoup variant : $with_libsoup"
+echo ""
+echo "Optional features:"
+echo "  Enable video uploads  : $video_feature"
 echo ""
 echo ""
 echo "Configure successful. Type 'make' to compile"
