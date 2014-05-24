@@ -493,7 +493,12 @@ fsp_session_init                        (FspSession *self)
   self->priv->using_gnome_proxy = FALSE;
   self->priv->proxy_uri = NULL;
 
+#ifdef SOUP_VERSION_2_42
+  /* soup_session_async_new() deprecated in lisoup 2.42 */
+  self->priv->soup_session = soup_session_new ();
+#else
   self->priv->soup_session = soup_session_async_new ();
+#endif
 }
 
 static SoupSession *
