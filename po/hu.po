@@ -787,11 +787,6 @@ msgstr "_Felhasználónév:"
 msgid "Pass_word:"
 msgstr "_Jelszó:"
 
-#. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:433
-msgid "_Use GNOME General Proxy Settings"
-msgstr "A GNOME általános proxy beállításainak használata"
-
 #: ../src/frogr-settings-dialog.c:457
 msgid "Connec_tion"
 msgstr "_Kapcsolódás"

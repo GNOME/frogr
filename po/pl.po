@@ -796,11 +796,6 @@ msgstr "Nazwa _użytkownika:"
 msgid "Pass_word:"
 msgstr "_Hasło:"
 
-#. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:423
-msgid "_Use GNOME General Proxy Settings"
-msgstr "_Używanie ogólnych ustawień pośrednika GNOME"
-
 #: ../src/frogr-settings-dialog.c:447
 msgid "Connec_tion"
 msgstr "Połą_czenie"

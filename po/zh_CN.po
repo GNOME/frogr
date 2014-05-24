@@ -776,11 +776,6 @@ msgstr "用户名(_S)："
 msgid "Pass_word:"
 msgstr "密码(_W)："
 
-#. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:433
-msgid "_Use GNOME General Proxy Settings"
-msgstr "使用 GNOME 通用代理设置(_U)"
-
 #: ../src/frogr-settings-dialog.c:457
 msgid "Connec_tion"
 msgstr "连接(_T)"

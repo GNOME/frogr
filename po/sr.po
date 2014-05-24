@@ -788,11 +788,6 @@ msgstr "Корисничко _име:"
 msgid "Pass_word:"
 msgstr "_Лозинка:"
 
-#. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:423
-msgid "_Use GNOME General Proxy Settings"
-msgstr "Користи _Гномова општа подешавања посредника"
-
 #: ../src/frogr-settings-dialog.c:447
 msgid "Connec_tion"
 msgstr "_Веза"

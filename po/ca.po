@@ -638,11 +638,6 @@ msgstr "_Nom d'usuari:"
 msgid "Pass_word:"
 msgstr "Contrasen_ya:"
 
-#. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:426
-msgid "_Use GNOME General Proxy Settings"
-msgstr ""
-
 #: ../src/frogr-settings-dialog.c:450
 msgid "Connec_tion"
 msgstr "_Connexió"

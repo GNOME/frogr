@@ -580,11 +580,6 @@ msgstr "Br_ukernavn:"
 msgid "Pass_word:"
 msgstr "Pass_ord:"
 
-#. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:440
-msgid "_Use GNOME General Proxy Settings"
-msgstr ""
-
 #: ../src/frogr-settings-dialog.c:466
 msgid "Connec_tion"
 msgstr "_Tilkobling"

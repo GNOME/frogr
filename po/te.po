@@ -645,11 +645,6 @@ msgstr "వాడుకరి పేరు (_s):"
 msgid "Pass_word:"
 msgstr "సంకేతపదం (_w):"
 
-#. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:423
-msgid "_Use GNOME General Proxy Settings"
-msgstr ""
-
 #: ../src/frogr-settings-dialog.c:447
 msgid "Connec_tion"
 msgstr ""

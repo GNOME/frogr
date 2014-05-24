@@ -793,11 +793,6 @@ msgstr "Ό_νομα χρήστη:"
 msgid "Pass_word:"
 msgstr "Κ_ωδικός πρόσβασης:"
 
-#. Use GNOME General Proxy Settings
-#: ../src/frogr-settings-dialog.c:423
-msgid "_Use GNOME General Proxy Settings"
-msgstr "_Χρήση ρυθμίσεων γενικού μεσολαβητή GNOME"
-
 #: ../src/frogr-settings-dialog.c:447
 msgid "Connec_tion"
 msgstr "Σύνδεσ_η"
