@@ -60,31 +60,8 @@ else
 fi
 AM_CONDITIONAL([PLATFORM_MAC],[test "x$osx" = "xyes"])
 
-# Decide whether to use gstreamer or not
-with_gstreamer="no"
-if test "x$platform" = "xGNOME"; then
-   PKG_CHECK_MODULES(GSTREAMER_1_0, gstreamer-1.0 >= 1.0,
-                     [with_gstreamer="1.0"], [with_gstreamer="no"])
-
-   # Fallback to gstreamer 0.10 if 1.0 is not found
-   if test "x$with_gstreamer" = "x1.0"; then
-      FROGR_CFLAGS="$FROGR_CFLAGS $GSTREAMER_1_0_CFLAGS"
-      FROGR_LIBS="$FROGR_LIBS $GSTREAMER_1_0_LIBS"
-      AC_DEFINE(HAVE_GSTREAMER_1_0, 1, [Have GStreamer 1.0 available])
-   else
-      PKG_CHECK_MODULES(GSTREAMER_0_10, gstreamer-0.10 >= 0.10)
-      FROGR_CFLAGS="$FROGR_CFLAGS $GSTREAMER_0_10_CFLAGS"
-      FROGR_LIBS="$FROGR_LIBS $GSTREAMER_0_10_LIBS"
-      with_gstreamer="0.10"
-   fi
-
-   AC_DEFINE(HAVE_GSTREAMER, 1, [Have GStreamer available])
-fi
-
 # Decide whether to use libsoup or libsoup-gnome (if available)
-
 LIBSOUP_MIN_VERSION=2.34
-
 if test "x$platform" = "xGNOME"; then
    # For the GNOME platform allow using libsoup-gnome, if available
    AC_ARG_WITH([libsoup],
@@ -145,6 +122,34 @@ if test "x$enable_debug" = "xyes"; then
    CFLAGS="$CFLAGS -DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED"
 else
    CFLAGS="$CFLAGS -DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS"
+fi
+
+# Enable video uploads (requires GStreamer)
+AC_MSG_CHECKING([Checking whether to enable video uploads])
+AC_ARG_ENABLE(video,
+              AC_HELP_STRING([--enable-video],
+                             [Enable video uploads [default=yes]]),
+              [video_feature="$enableval"],[video_feature="yes"])
+AC_MSG_RESULT([$video_feature])
+
+with_gstreamer="no"
+if test "x$video_feature" = "xyes"; then
+   PKG_CHECK_MODULES(GSTREAMER_1_0, gstreamer-1.0 >= 1.0,
+                     [with_gstreamer="1.0"], [with_gstreamer="no"])
+
+   # Fallback to gstreamer 0.10 if 1.0 is not found
+   if test "x$with_gstreamer" = "x1.0"; then
+      FROGR_CFLAGS="$FROGR_CFLAGS $GSTREAMER_1_0_CFLAGS"
+      FROGR_LIBS="$FROGR_LIBS $GSTREAMER_1_0_LIBS"
+      AC_DEFINE(HAVE_GSTREAMER_1_0, 1, [Have GStreamer 1.0 available])
+   else
+      PKG_CHECK_MODULES(GSTREAMER_0_10, gstreamer-0.10 >= 0.10)
+      FROGR_CFLAGS="$FROGR_CFLAGS $GSTREAMER_0_10_CFLAGS"
+      FROGR_LIBS="$FROGR_LIBS $GSTREAMER_0_10_LIBS"
+      with_gstreamer="0.10"
+   fi
+
+   AC_DEFINE(HAVE_GSTREAMER, 1, [Have GStreamer available])
 fi
 
 # Substitute
