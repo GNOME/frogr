@@ -27,13 +27,7 @@
 
 #include <config.h>
 #include <gcrypt.h>
-
-#ifdef HAVE_LIBSOUP_GNOME
-#include <libsoup/soup-gnome.h>
-#else
 #include <libsoup/soup.h>
-#endif
-
 #include <stdarg.h>
 #include <string.h>
 
@@ -1659,14 +1653,10 @@ fsp_session_set_http_proxy              (FspSession *self,
                                          const char *username, const char *password)
 {
   SoupURI *proxy_uri = NULL;
-
-#ifdef HAVE_LIBSOUP_GNOME
   gboolean using_gnome_proxy_before = FALSE;
-#endif
 
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
 
-#ifdef HAVE_LIBSOUP_GNOME
   /* We're gonna need this to make a good decision later */
   using_gnome_proxy_before = self->priv->using_gnome_proxy;
 
@@ -1683,10 +1673,6 @@ fsp_session_set_http_proxy              (FspSession *self,
                          SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
     }
   self->priv->using_gnome_proxy = use_gnome_proxy;
-#else
-  /* Just ignore the using_gnome_proxy parameter in this case */
-  self->priv->using_gnome_proxy = FALSE;
-#endif
 
   if (!self->priv->using_gnome_proxy)
     {
@@ -1744,12 +1730,7 @@ fsp_session_set_http_proxy              (FspSession *self,
       return TRUE;
     }
 
-#ifdef HAVE_LIBSOUP_GNOME
   return using_gnome_proxy_before != use_gnome_proxy;
-#else
-  /* Proxy configuration has not changed */
-  return FALSE;
-#endif
 }
 
 const gchar *

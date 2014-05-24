@@ -373,6 +373,8 @@ _g_application_startup_cb (GApplication *app, gpointer data)
       frogr_controller_set_proxy (self, use_gnome_proxy,
                                   host, port, username, password);
     }
+  else
+      frogr_controller_set_proxy (self, FALSE, NULL, NULL, NULL, NULL);
 }
 
 static void

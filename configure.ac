@@ -27,6 +27,11 @@ PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= $GTK3_MIN_VERSION)
 FROGR_CFLAGS=$GTK3_CFLAGS
 FROGR_LIBS=$GTK3_LIBS
 
+LIBSOUP_MIN_VERSION=2.34
+PKG_CHECK_MODULES(LIBSOUP, [libsoup-2.4 >= $LIBSOUP_MIN_VERSION])
+FROGR_CFLAGS="$FROGR_CFLAGS $LIBSOUP_CFLAGS"
+FROGR_LIBS="$FROGR_LIBS $LIBSOUP_LIBS"
+
 EXIF_MIN_VERSION=0.6.14
 PKG_CHECK_MODULES(EXIF, libexif >= $EXIF_MIN_VERSION)
 FROGR_CFLAGS="$FROGR_CFLAGS $EXIF_CFLAGS"
@@ -59,45 +64,6 @@ else
    platform=GNOME
 fi
 AM_CONDITIONAL([PLATFORM_MAC],[test "x$osx" = "xyes"])
-
-# Decide whether to use libsoup or libsoup-gnome (if available)
-LIBSOUP_MIN_VERSION=2.34
-if test "x$platform" = "xGNOME"; then
-   # For the GNOME platform allow using libsoup-gnome, if available
-   AC_ARG_WITH([libsoup],
-           [AS_HELP_STRING([--with-libsoup=plain|gnome], [libsoup variant to use (default: gnome)])],
-           [case "$with_libsoup" in
-           plain|gnome) ;;
-           *) AC_MSG_ERROR([Wrong libsoup variant]) ;;
-           esac],
-           [with_libsoup=gnome])
-else
-   # Other non-GNOME platforms (e.g. MacOSX) to support plain libsoup only
-   with_libsoup=plain
-fi
-
-if test "x$with_libsoup" = "xgnome"; then
-   AC_MSG_CHECKING([libsoup variant to use])
-   PKG_CHECK_MODULES(LIBSOUP_GNOME,
-                     [libsoup-gnome-2.4 >= $LIBSOUP_MIN_VERSION],
-                     [have_libsoup_gnome="yes"], [have_libsoup_gnome="no"])
-
-   if test "x$have_libsoup_gnome" = "xyes"; then
-      LIBSOUP_CFLAGS="$LIBSOUP_GNOME_CFLAGS"
-      LIBSOUP_LIBS="$LIBSOUP_GNOME_LIBS"
-
-      AC_DEFINE(HAVE_LIBSOUP_GNOME, 1, [Have libsoup-gnome])
-   else
-      with_libsoup=plain
-   fi
-fi
-
-if test "x$with_libsoup" = "xplain"; then
-   PKG_CHECK_MODULES(LIBSOUP, [libsoup-2.4 >= $LIBSOUP_MIN_VERSION])
-fi
-
-FROGR_CFLAGS="$FROGR_CFLAGS $LIBSOUP_CFLAGS"
-FROGR_LIBS="$FROGR_LIBS $LIBSOUP_LIBS"
 
 # Debug mode
 AC_MSG_CHECKING([Checking whether to enable debug output])
@@ -180,7 +146,6 @@ echo ""
 echo "Build configuration:"
 echo "  Platform              : $platform"
 echo "  Debug symbols         : $enable_debug"
-echo "  Using libsoup variant : $with_libsoup"
 echo ""
 echo "Optional features:"
 echo "  Enable video uploads  : $video_feature"
