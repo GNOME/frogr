@@ -71,7 +71,6 @@ struct _FrogrConfigPrivate
   gboolean use_dark_theme;
 
   gboolean use_proxy;
-  gboolean use_gnome_proxy;
   gchar *proxy_host;
   gchar *proxy_port;
   gchar *proxy_username;
@@ -508,12 +507,6 @@ _load_proxy_data_xml (FrogrConfig *self,
             g_strstrip (priv->proxy_password);
         }
 
-      if (!xmlStrcmp (node->name, (const xmlChar*) "use-gnome-proxy"))
-        {
-          content = xmlNodeGetContent (node);
-          priv->use_gnome_proxy = !xmlStrcmp (content, (const xmlChar*) "1");
-        }
-
       if (content)
         xmlFree (content);
     }
@@ -727,7 +720,6 @@ _save_settings (FrogrConfig *self)
   _xml_add_string_child (node, "proxy-port", priv->proxy_port);
   _xml_add_string_child (node, "proxy-username", priv->proxy_username);
   _xml_add_string_child (node, "proxy-password", priv->proxy_password);
-  _xml_add_bool_child (node, "use-gnome-proxy", priv->use_gnome_proxy);
   xmlAddChild (root, node);
 
   xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
@@ -990,7 +982,6 @@ frogr_config_init (FrogrConfig *self)
   priv->mainview_enable_tooltips = TRUE;
   priv->use_dark_theme = TRUE;
   priv->use_proxy = FALSE;
-  priv->use_gnome_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
   priv->proxy_username = NULL;
@@ -1515,28 +1506,6 @@ frogr_config_get_use_proxy (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->use_proxy;
-}
-
-void
-frogr_config_set_use_gnome_proxy (FrogrConfig *self, gboolean value)
-{
-  FrogrConfigPrivate * priv = NULL;
-
-  g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->use_gnome_proxy = value;
-}
-
-gboolean
-frogr_config_get_use_gnome_proxy (FrogrConfig *self)
-{
-  FrogrConfigPrivate *priv = NULL;
-
-  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->use_gnome_proxy;
 }
 
 void

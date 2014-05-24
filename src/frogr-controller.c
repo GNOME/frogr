@@ -365,16 +365,12 @@ _g_application_startup_cb (GApplication *app, gpointer data)
   /* Set HTTP proxy if needed */
   if (frogr_config_get_use_proxy (priv->config))
     {
-      const gboolean use_gnome_proxy = frogr_config_get_use_gnome_proxy (priv->config);
       const gchar *host = frogr_config_get_proxy_host (priv->config);
       const gchar *port = frogr_config_get_proxy_port (priv->config);
       const gchar *username = frogr_config_get_proxy_username (priv->config);
       const gchar *password = frogr_config_get_proxy_password (priv->config);
-      frogr_controller_set_proxy (self, use_gnome_proxy,
-                                  host, port, username, password);
+      frogr_controller_set_proxy (self, FALSE, host, port, username, password);
     }
-  else
-      frogr_controller_set_proxy (self, FALSE, NULL, NULL, NULL, NULL);
 }
 
 static void
@@ -2645,7 +2641,7 @@ frogr_controller_get_state (FrogrController *self)
 
 void
 frogr_controller_set_proxy (FrogrController *self,
-                            gboolean use_gnome_proxy,
+                            gboolean use_default_proxy,
                             const char *host, const char *port,
                             const char *username, const char *password)
 {
@@ -2656,34 +2652,38 @@ frogr_controller_set_proxy (FrogrController *self,
 
   priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
+  if (use_default_proxy)
+    {
+      DEBUG ("Using default proxy settings");
+      fsp_session_set_default_proxy (priv->session, TRUE);
+
+      if (!priv->photosets_fetched || !priv->groups_fetched || !priv->tags_fetched)
+        _fetch_everything (self, FALSE);
+
+      return;
+    }
+
   /* The host is mandatory to set up a proxy */
-  if (!use_gnome_proxy && (host == NULL || *host == '\0')) {
-    proxy_changed = fsp_session_set_http_proxy (priv->session, FALSE,
-                                                NULL, NULL, NULL, NULL);
+  if (host == NULL || *host == '\0') {
+    proxy_changed = fsp_session_set_custom_proxy (priv->session, NULL, NULL, NULL, NULL);
     DEBUG ("%s", "Not enabling the HTTP proxy");
   } else {
-    if (!use_gnome_proxy)
-      {
-        gchar *auth_part = NULL;
-        gboolean has_username = FALSE;
-        gboolean has_password = FALSE;
+    gchar *auth_part = NULL;
+    gboolean has_username = FALSE;
+    gboolean has_password = FALSE;
 
-        has_username = (username != NULL && *username != '\0');
-        has_password = (password != NULL && *password != '\0');
+    has_username = (username != NULL && *username != '\0');
+    has_password = (password != NULL && *password != '\0');
 
-        if (has_username && has_password)
-          auth_part = g_strdup_printf ("%s:%s@", username, password);
+    if (has_username && has_password)
+      auth_part = g_strdup_printf ("%s:%s@", username, password);
 
-        DEBUG ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
-        g_free (auth_part);
-      }
-    else
-      DEBUG ("Using GNOME general proxy settings");
+    DEBUG ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
+    g_free (auth_part);
 
-    proxy_changed = fsp_session_set_http_proxy (priv->session,
-                                                use_gnome_proxy,
-                                                host, port,
-                                                username, password);
+    proxy_changed = fsp_session_set_custom_proxy (priv->session,
+                                                  host, port,
+                                                  username, password);
   }
 
   /* Re-fetch information if needed after changing proxy configuration */

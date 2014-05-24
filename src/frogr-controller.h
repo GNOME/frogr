@@ -80,7 +80,7 @@ GSList *frogr_controller_get_all_accounts (FrogrController *self);
 FrogrControllerState frogr_controller_get_state (FrogrController *self);
 
 void frogr_controller_set_proxy (FrogrController *self,
-                                 gboolean use_gnome_proxy,
+                                 gboolean use_default_proxy,
                                  const char *host, const char *port,
                                  const char *username, const char *password);
 

@@ -63,7 +63,6 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *proxy_username_entry;
   GtkWidget *proxy_password_label;
   GtkWidget *proxy_password_entry;
-  GtkWidget *use_gnome_proxy_cb;
 
   GtkWidget *enable_tags_autocompletion_cb;
   GtkWidget *keep_file_extensions_cb;
@@ -85,8 +84,6 @@ typedef struct _FrogrSettingsDialogPrivate {
   FspContentType content_type;
 
   gboolean use_proxy;
-  gboolean use_gnome_proxy;
-
   gchar *proxy_host;
   gchar *proxy_port;
   gchar *proxy_username;
@@ -426,21 +423,10 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_grid_attach (GTK_GRID (grid), entry, 1, 3, 1, 1);
   priv->proxy_password_entry = entry;
 
-  /* Use GNOME General Proxy Settings */
-
-  cbutton = gtk_check_button_new_with_mnemonic (_("_Use GNOME General Proxy Settings"));
-  gtk_widget_set_hexpand (GTK_WIDGET (cbutton), TRUE);
-  gtk_grid_attach (GTK_GRID (grid), cbutton, 1, 4, 1, 1);
-  priv->use_gnome_proxy_cb = cbutton;
-
   gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (priv->use_proxy_cb), "toggled",
-                    G_CALLBACK (_on_button_toggled),
-                    self);
-
-  g_signal_connect (G_OBJECT (priv->use_gnome_proxy_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
 
@@ -524,7 +510,6 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->import_tags = frogr_config_get_import_tags_from_metadata (priv->config);
   priv->use_dark_theme = frogr_config_get_use_dark_theme (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
-  priv->use_gnome_proxy = frogr_config_get_use_gnome_proxy (priv->config);
 
   g_free (priv->proxy_host);
   priv->proxy_host = g_strdup (frogr_config_get_proxy_host (priv->config));
@@ -590,8 +575,6 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
                                 priv->use_dark_theme);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_gnome_proxy_cb),
-                                priv->use_gnome_proxy);
 
   if (priv->proxy_host)
     gtk_entry_set_text (GTK_ENTRY (priv->proxy_host_entry), priv->proxy_host);
@@ -632,7 +615,6 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_use_dark_theme (priv->config, priv->use_dark_theme);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
-  frogr_config_set_use_gnome_proxy (priv->config, priv->use_gnome_proxy);
 
   g_free (priv->proxy_host);
   priv->proxy_host = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->proxy_host_entry)));
@@ -669,7 +651,6 @@ static void
 _update_ui (FrogrSettingsDialog *self)
 {
   FrogrSettingsDialogPrivate *priv = NULL;
-  gboolean using_manual_proxy = FALSE;
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
@@ -680,16 +661,14 @@ _update_ui (FrogrSettingsDialog *self)
 
   /* Sensititveness of proxy settings related widgets */
 
-  using_manual_proxy = priv->use_proxy && !priv->use_gnome_proxy;
-  gtk_widget_set_sensitive (priv->use_gnome_proxy_cb, priv->use_proxy);
-  gtk_widget_set_sensitive (priv->proxy_host_label, using_manual_proxy);
-  gtk_widget_set_sensitive (priv->proxy_host_entry, using_manual_proxy);
-  gtk_widget_set_sensitive (priv->proxy_port_label, using_manual_proxy);
-  gtk_widget_set_sensitive (priv->proxy_port_entry, using_manual_proxy);
-  gtk_widget_set_sensitive (priv->proxy_username_label, using_manual_proxy);
-  gtk_widget_set_sensitive (priv->proxy_username_entry, using_manual_proxy);
-  gtk_widget_set_sensitive (priv->proxy_password_label, using_manual_proxy);
-  gtk_widget_set_sensitive (priv->proxy_password_entry, using_manual_proxy);
+  gtk_widget_set_sensitive (priv->proxy_host_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_host_entry, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_port_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_port_entry, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_username_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_username_entry, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_password_label, priv->use_proxy);
+  gtk_widget_set_sensitive (priv->proxy_password_entry, priv->use_proxy);
 }
 
 static void
@@ -799,12 +778,6 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("Enable HTTP Proxy: %s", active ? "YES" : "NO");
     }
 
-  if (GTK_WIDGET (button) == priv->use_gnome_proxy_cb)
-    {
-      priv->use_gnome_proxy = active;
-      DEBUG ("Use GNOME General Proxy Settings: %s", active ? "YES" : "NO");
-    }
-
   _update_ui (self);
 }
 
@@ -868,11 +841,11 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
       /* Update proxy status */
       if (priv->use_proxy)
         frogr_controller_set_proxy (priv->controller,
-                                    priv->use_gnome_proxy,
+                                    FALSE,
                                     priv->proxy_host, priv->proxy_port,
                                     priv->proxy_username, priv->proxy_password);
       else
-        frogr_controller_set_proxy (priv->controller, FALSE, NULL, NULL, NULL, NULL);
+        frogr_controller_set_proxy (priv->controller, TRUE, NULL, NULL, NULL, NULL);
 
       /* Update dark theme related stuff */
       frogr_controller_set_use_dark_theme (priv->controller, priv->use_dark_theme);
@@ -953,7 +926,6 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->import_tags_cb = NULL;
   priv->use_dark_theme_cb = NULL;
   priv->use_proxy_cb = NULL;
-  priv->use_gnome_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
   priv->proxy_port_label = NULL;
@@ -975,7 +947,6 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->import_tags = TRUE;
   priv->use_dark_theme = TRUE;
   priv->use_proxy = FALSE;
-  priv->use_gnome_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
   priv->proxy_username = NULL;
