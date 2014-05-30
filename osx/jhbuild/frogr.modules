@@ -7,6 +7,9 @@
   <repository type="git" name="git.gnome.org" href="git://git.gnome.org/"/>
   <repository type="tarball" name="sourceforge.net" href="http://sourceforge.net/projects/"/>
   <repository type="tarball" name="itstool.org" href="http://files.itstool.org/itstool/"/>
+  <repository type="tarball" name="xiph.org" href="http://downloads.xiph.org/releases/"/>
+  <repository type="tarball" name="gstreamer" href="http://gstreamer.freedesktop.org/src/"/>
+  <repository type="tarball" name="liboil" href="http://liboil.freedesktop.org/download/"/>
 
   <autotools id="libexif" autogen-sh='configure'>
     <branch module="libexif/files/libexif/0.6.21/libexif-0.6.21.tar.gz" version="0.6.21"
@@ -69,6 +72,90 @@
     </dependencies>
   </autotools>
 
+  <autotools id="gstreamer" autogenargs="--disable-tests --disable-introspection" supports-non-srcdir-builds="no"
+    makeargs="ERROR_CFLAGS=" autogen-sh="configure">
+    <branch module="gstreamer/0.10/gstreamer-0.10.35.tar.bz2" version="0.10.35"
+            hash="sha256:817bfea2cd46e2487b97e2ed9218f0299b32a3de1e5e80b4c7868d17e9089786">
+      <patch file="http://git.gnome.org/browse/frogr/plain/osx/jhbuild/patches/gstreamer-configure-flex.patch" strip="1"/>
+      <patch file="http://git.gnome.org/browse/frogr/plain/osx/jhbuild/patches/gstreamer-fix-includes-in-gstdatetime.patch" strip="1"/>
+    </branch>
+    <after>
+      <dep package="glib"/>
+    </after>
+  </autotools>
+
+  <autotools id="libogg">
+    <branch module="ogg/libogg-1.3.0.tar.gz" version="1.3.0"
+            repo="xiph.org">
+    </branch>
+  </autotools>
+
+  <autotools id="libtheora">
+    <branch module="theora/libtheora-1.1.1.tar.bz2" version="1.1.1"
+            repo="xiph.org">
+      <patch file="http://git.gnome.org/browse/frogr/plain/osx/jhbuild/patches/libtheora-use-ac-config-headers-macro.patch" strip="1"/>
+      <patch file="http://git.gnome.org/browse/frogr/plain/osx/jhbuild/patches/libtheora-dont-use-fforce-addr-cflag.patch" strip="1"/>
+    </branch>
+  </autotools>
+
+  <autotools id="libvorbis">
+    <branch module="vorbis/libvorbis-1.3.3.tar.gz" version="1.3.3"
+            repo="xiph.org">
+    </branch>
+  </autotools>
+
+  <autotools id="liboil" autogen-template="autoreconf -fis &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s"
+	     makeargs=' CFLAGS="$CFLAGS -DHAVE_SYMBOL_UNDERSCORE"'>
+    <branch repo="liboil" module="liboil-0.3.17.tar.gz" version="0.3.17">
+      <patch file="http://git.gnome.org/browse/frogr/plain/osx/jhbuild/patches/liboil-use-ac-config-headers-macro.patch" strip="1"/>
+    </branch>
+  </autotools>
+
+  <autotools id="gst-plugins-base" autogenargs="-- --disable-tests --disable-x --disable-xvideo --disable-introspection" supports-non-srcdir-builds="no"
+    makeargs="ERROR_CFLAGS=" autogen-sh="configure">
+    <branch module="gst-plugins-base/0.10/gst-plugins-base-0.10.35.tar.bz2"
+            version="0.10.15" hash="sha256:cd24f01bb5258a1f400bc4f2c212bb7cee9ee23c9ffb80d537a24ef366d17103"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="liboil"/>
+    </dependencies>
+    <after>
+    </after>
+  </autotools>
+
+  <autotools id="gst-ffmpeg" autogen-sh="configure">
+    <branch module="gst-ffmpeg/gst-ffmpeg-0.10.13.tar.gz" version="0.10.13"
+            repo="gstreamer">
+    </branch>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="gst-plugins-good"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-plugins-bad" autogen-sh="configure">
+    <branch module="gst-plugins-bad/gst-plugins-bad-0.10.22.tar.gz" version="0.10.22"
+            repo="gstreamer">
+    </branch>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="gst-plugins-good"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gst-plugins-ugly" autogen-sh="configure">
+    <branch module="gst-plugins-ugly/gst-plugins-ugly-0.10.18.tar.gz" version="0.10.18"
+            repo="gstreamer">
+    </branch>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="gst-plugins-bad"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="frogr">
     <branch repo="git.gnome.org" module="frogr"/>
     <dependencies>
@@ -101,6 +188,16 @@
       <dep package="yelp-xsl"/>
       <dep package="yelp-tools"/>
       <dep package="shared-mime-info"/>
+      <dep package="gstreamer"/>
+      <dep package="libogg"/>
+      <dep package="libvorbis"/>
+      <dep package="libtheora"/>
+      <dep package="liborc"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="gst-plugins-good"/>
+      <dep package="gst-ffmpeg"/>
+      <dep package="gst-plugins-bad"/>
+      <dep package="gst-plugins-ugly"/>
     </dependencies>
   </autotools>
 
