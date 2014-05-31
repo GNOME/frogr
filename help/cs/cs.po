@@ -1,13 +1,13 @@
 # Czech translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Marek Černocký <marek@manet.cz>, 2011, 2012, 2013.
+# Marek Černocký <marek@manet.cz>, 2011, 2012, 2013, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2013-12-24 20:28+0000\n"
-"PO-Revision-Date: 2013-12-25 08:46+0100\n"
+"POT-Creation-Date: 2014-05-25 16:16+0000\n"
+"PO-Revision-Date: 2014-05-31 09:58+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -22,31 +22,14 @@ msgctxt "_"
 msgid "translator-credits"
 msgstr "Marek Černocký <marek@manet.cz>, 2011, 2012, 2013"
 
-#: C/index.page:8(page/title)
-msgid "Frogr Help"
-msgstr "Nápověda aplikace Frogr"
-
-#: C/index.page:11(section/title)
-msgid "Managing Your Flickr Account"
-msgstr "Správa vašeho účtu Flickr"
-
-#: C/index.page:15(section/title)
-msgid "Managing Your Pictures"
-msgstr "Správa vašich obrázků"
-
-#: C/index.page:19(section/title)
-msgid "Organize and Sort Your Pictures"
-msgstr "Organizování a řazení vašich obrázků"
-
-#: C/index.page:23(section/title)
-msgid "Set Up Frogr"
-msgstr "Nastavení aplikace Frogr"
-
-#: C/add-pictures.page:9(info/desc) C/add-pictures.page:12(page/title)
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/add-pictures.page:9 C/add-pictures.page:12
 msgid "Add Elements"
 msgstr "Přidat objekty"
 
-#: C/add-pictures.page:13(page/p)
+#. (itstool) path: page/p
+#: C/add-pictures.page:13
 msgid ""
 "You can add a picture or a video using the toolbar <gui>Plus</gui> button. "
 "Or, you can use the menu <guiseq><gui>File</gui><gui>Add Elements</gui></"
@@ -58,11 +41,12 @@ msgstr ""
 "gui><gui>Přidat objekty</gui></guiseq>. Přidané objekty budou zobrazeny a "
 "připraveny k přenosu do služby Flickr."
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/group-pictures.page:17(media)
+#: C/group-pictures.page:17
 msgctxt "_"
 msgid ""
 "external ref='figures/add-to-groups.png' "
@@ -71,28 +55,33 @@ msgstr ""
 "external ref='figures/add-to-groups.png' "
 "md5='29b7992f2aceddaaf2f474cbf618fb49'"
 
-#: C/group-pictures.page:9(info/desc)
+#. (itstool) path: info/desc
+#: C/group-pictures.page:9
 msgid "Group Elements"
 msgstr "Seskupujte objekty"
 
-#: C/group-pictures.page:12(page/title)
+#. (itstool) path: page/title
+#: C/group-pictures.page:12
 msgid "Add to Groups"
 msgstr "Přidání do skupin"
 
-#: C/group-pictures.page:13(page/p)
+#. (itstool) path: page/p
+#: C/group-pictures.page:13
 msgid "You may add pictures and videos to an already defined group."
 msgstr "Obrázky a videa můžete přidat do již existující skupiny."
 
-#: C/group-pictures.page:15(figure/title)
-#: C/group-pictures.page:16(figure/desc)
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/group-pictures.page:15 C/group-pictures.page:16
 msgid "Adding elements to groups"
 msgstr "Přidání objektů do skupin"
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/preferences.page:21(media)
+#: C/preferences.page:21
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-general.png' "
@@ -101,24 +90,26 @@ msgstr ""
 "external ref='figures/preferences-general.png' "
 "md5='8d162b86a0a4d707974113eb822e0796'"
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/preferences.page:33(media)
+#: C/preferences.page:33
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-connection.png' "
-"md5='f298cb79cd0ea9bfacd16cb153a22a45'"
+"md5='94a57d8bb4307783b862d7daf88383e3'"
 msgstr ""
 "external ref='figures/preferences-connection.png' "
-"md5='f298cb79cd0ea9bfacd16cb153a22a45'"
+"md5='94a57d8bb4307783b862d7daf88383e3'"
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/preferences.page:44(media)
+#: C/preferences.page:44
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-misc.png' "
@@ -127,11 +118,14 @@ msgstr ""
 "external ref='figures/preferences-misc.png' "
 "md5='1fac74a18600440c855cfd0c29e87ae9'"
 
-#: C/preferences.page:9(info/desc) C/preferences.page:12(page/title)
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/preferences.page:9 C/preferences.page:12
 msgid "Preferences"
 msgstr "Předvolby"
 
-#: C/preferences.page:14(page/p)
+#. (itstool) path: page/p
+#: C/preferences.page:14
 msgid ""
 "Go to Preferences using menu <guiseq><gui>Frogr</gui><gui>Preferences</gui></"
 "guiseq>."
@@ -139,63 +133,77 @@ msgstr ""
 "Přejděte do předvoleb pomocí nabídky <guiseq><gui>Frogr</gui><gui>Předvolby</"
 "gui></guiseq>."
 
-#: C/preferences.page:17(section/title)
+#. (itstool) path: section/title
+#: C/preferences.page:17
 msgid "General Preferences"
 msgstr "Obecné předvolby"
 
-#: C/preferences.page:19(figure/title)
+#. (itstool) path: figure/title
+#: C/preferences.page:19
 msgid "<gui>Frogr</gui> general preferences"
 msgstr "Obecné předvolby <gui>Frogr</gui>"
 
-#: C/preferences.page:20(figure/desc)
+#. (itstool) path: figure/desc
+#: C/preferences.page:20
 msgid "<app>Frogr</app> general preferences"
 msgstr "Obecné předvolby aplikace <app>Frogr</app>"
 
-#: C/preferences.page:22(media/p)
+#. (itstool) path: media/p
+#: C/preferences.page:22
 msgid "<app>Frogr</app> general preferences."
 msgstr "Obecné předvolby aplikace <app>Frogr</app>."
 
-#: C/preferences.page:28(section/title)
+#. (itstool) path: section/title
+#: C/preferences.page:28
 msgid "Connection Preferences"
 msgstr "Předvolby připojení"
 
-#: C/preferences.page:29(section/p)
+#. (itstool) path: section/p
+#: C/preferences.page:29
 msgid "This tab allows you to set up a proxy."
 msgstr "Na této kartě můžete nastavit proxy."
 
-#: C/preferences.page:31(figure/title)
+#. (itstool) path: figure/title
+#: C/preferences.page:31
 msgid "<gui>Frogr </gui> connection preferences"
 msgstr "Obecné připojení <gui>Frogr</gui>"
 
-#: C/preferences.page:32(figure/desc)
+#. (itstool) path: figure/desc
+#: C/preferences.page:32
 msgid "<app>Frogr</app> connection preferences"
 msgstr "Obecné připojení aplikace <app>Frogr</app>"
 
-#: C/preferences.page:34(media/p) C/introduction.page:18(media/p)
+#. (itstool) path: media/p
+#: C/preferences.page:34 C/introduction.page:18
 msgid "<app>Frogr</app> main window."
 msgstr "Hlavní okno aplikace <app>Frogr</app>."
 
-#: C/preferences.page:40(section/title)
+#. (itstool) path: section/title
+#: C/preferences.page:40
 msgid "Miscelleanous Preferences"
 msgstr "Různé předvolby"
 
-#: C/preferences.page:42(figure/title)
+#. (itstool) path: figure/title
+#: C/preferences.page:42
 msgid "<gui>Frogr </gui> misc preferences window"
 msgstr "Různé předvolby <gui>Frogr</gui>"
 
-#: C/preferences.page:43(figure/desc)
+#. (itstool) path: figure/desc
+#: C/preferences.page:43
 msgid "<app>Frogr</app> misc preferences window"
 msgstr "Různé předvolby aplikace <app>Frogr</app>"
 
-#: C/preferences.page:45(media/p)
+#. (itstool) path: media/p
+#: C/preferences.page:45
 msgid "<app>Frogr</app> misc preferences window."
 msgstr "Různé předvolby aplikace <app>Frogr</app>."
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/edit-pictures.page:17(media)
+#: C/edit-pictures.page:17
 msgctxt "_"
 msgid ""
 "external ref='figures/edit-picture-details.png' "
@@ -204,15 +212,18 @@ msgstr ""
 "external ref='figures/edit-picture-details.png' "
 "md5='61b5d97d77e1251b69c634a3b1718e32'"
 
-#: C/edit-pictures.page:9(info/desc)
+#. (itstool) path: info/desc
+#: C/edit-pictures.page:9
 msgid "Amend pictures"
 msgstr "Měňte obrázky"
 
-#: C/edit-pictures.page:12(page/title)
+#. (itstool) path: page/title
+#: C/edit-pictures.page:12
 msgid "Edit Details"
 msgstr "Úprava podrobností"
 
-#: C/edit-pictures.page:13(page/p)
+#. (itstool) path: page/p
+#: C/edit-pictures.page:13
 msgid ""
 "To edit the details of a picture or a video, right-click on an element and "
 "choose <gui>Edit Details</gui>.Until you edit the details, these will use "
@@ -222,80 +233,98 @@ msgstr ""
 "tlačítkem a zvolte <gui>Upravit podrobnosti</gui>. Dokud je nijak "
 "neupravíte, používají se výchozí podrobnosti."
 
-#: C/edit-pictures.page:15(figure/title)
+#. (itstool) path: figure/title
+#: C/edit-pictures.page:15
 msgid "Edit picture details"
 msgstr "Úprava podrobností obrázku"
 
-#: C/edit-pictures.page:16(figure/desc)
+#. (itstool) path: figure/desc
+#: C/edit-pictures.page:16
 msgid "Amend the details of the picture."
 msgstr "Změna podrobností obrázku."
 
-#: C/edit-pictures.page:22(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:22
 msgid "Title"
 msgstr "Název"
 
-#: C/edit-pictures.page:22(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:22
 msgid "Use this box to amend the title"
 msgstr "Toto pole použijte ke změně názvu."
 
-#: C/edit-pictures.page:23(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:23
 msgid "Description"
 msgstr "Popis"
 
-#: C/edit-pictures.page:23(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:23
 msgid "Add some description the element"
 msgstr "Přidejte objektu nějaký popis"
 
-#: C/edit-pictures.page:24(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:24
 msgid "Tags"
 msgstr "Štítky"
 
-#: C/edit-pictures.page:24(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:24
 msgid "Add some tags to better categorize the element"
 msgstr "Přidejte nějaké štítky pro lepší zatřídění objektů"
 
-#: C/edit-pictures.page:25(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:25
 msgid "Visibility"
 msgstr "Viditelnost"
 
-#: C/edit-pictures.page:25(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:25
 msgid "Choose whether the element is public or private."
 msgstr "Zvolte, zda je objekt veřejný nebo soukromý."
 
-#: C/edit-pictures.page:26(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:26
 msgid "Content Type"
 msgstr "Typ obsahu"
 
-#: C/edit-pictures.page:26(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:26
 msgid ""
 "You can specify whether the element is a photo, a screenshot or something "
 "else"
 msgstr ""
 "Můžete určit, zda je objekt fotografií, snímkem obrazovky nebo něčím jiný"
 
-#: C/edit-pictures.page:27(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:27
 msgid "Safety Level"
 msgstr "Úroveň zabezpečení"
 
-#: C/edit-pictures.page:27(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:27
 msgid "You can rate the kind of element you're uploading"
 msgstr "Můžete ohodnotit druh objektu, který nahráváte"
 
-#: C/edit-pictures.page:28(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:28
 msgid "License"
 msgstr "Licence"
 
-#: C/edit-pictures.page:28(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:28
 msgid "You can change the license, or just use the default one set on Flickr"
 msgstr ""
 "Můžete změnit licenci nebo jen prostě použít výchozí, která je nastavena na "
 "serveru Flickr"
 
-#: C/edit-pictures.page:29(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:29
 msgid "Geolocation data"
 msgstr "Údaje o zeměpisné poloze"
 
-#: C/edit-pictures.page:29(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:29
 msgid ""
 "You can let frogr set the geolocation information for a picture on Flickr "
 "based on its EXIF information"
@@ -303,11 +332,13 @@ msgstr ""
 "Můžete nechat Frogr, aby nastavil informace o zeměpisné poloze pro obrázky "
 "na službě Filckr na základě informací EXIF"
 
-#: C/edit-pictures.page:30(item/title)
+#. (itstool) path: item/title
+#: C/edit-pictures.page:30
 msgid "Show in Global Search Results"
 msgstr "Zobrazovat v globálních výsledcích hledání"
 
-#: C/edit-pictures.page:30(item/p)
+#. (itstool) path: item/p
+#: C/edit-pictures.page:30
 msgid ""
 "You can specify whether it should be possible to find your picture or video "
 "using Flickr's search engine"
@@ -315,15 +346,18 @@ msgstr ""
 "Můžete určit, zda má být možné najít vaše obrázky a videa pomocí "
 "vyhledávacího stroje služby Flickr"
 
-#: C/external-viewer.page:9(info/desc)
+#. (itstool) path: info/desc
+#: C/external-viewer.page:9
 msgid "Open element in external application"
 msgstr "Otevírejte objekty v externí aplikaci"
 
-#: C/external-viewer.page:12(page/title)
+#. (itstool) path: page/title
+#: C/external-viewer.page:12
 msgid "External viewer"
 msgstr "Externí prohlížeč"
 
-#: C/external-viewer.page:13(page/p)
+#. (itstool) path: page/p
+#: C/external-viewer.page:13
 msgid ""
 "You can display pictures or videos in external applications. Right-click on "
 "some picture then choose <gui>Open in external viewer</gui>."
@@ -331,11 +365,39 @@ msgstr ""
 "Obrázky a videa si můžete zobrazit v libovolné externí aplikaci. Klikněte na "
 "obrázek pravým tlačítkem a zvolte <gui>Otevřít v externím prohlížeči</gui>."
 
-#: C/remove-pictures.page:9(info/desc) C/remove-pictures.page:12(page/title)
+#. (itstool) path: page/title
+#: C/index.page:8
+msgid "Frogr Help"
+msgstr "Nápověda aplikace Frogr"
+
+#. (itstool) path: section/title
+#: C/index.page:11
+msgid "Managing Your Flickr Account"
+msgstr "Správa vašeho účtu Flickr"
+
+#. (itstool) path: section/title
+#: C/index.page:15
+msgid "Managing Your Pictures"
+msgstr "Správa vašich obrázků"
+
+#. (itstool) path: section/title
+#: C/index.page:19
+msgid "Organize and Sort Your Pictures"
+msgstr "Organizování a řazení vašich obrázků"
+
+#. (itstool) path: section/title
+#: C/index.page:23
+msgid "Set Up Frogr"
+msgstr "Nastavení aplikace Frogr"
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/remove-pictures.page:9 C/remove-pictures.page:12
 msgid "Remove Elements"
 msgstr "Odebírejte objekty"
 
-#: C/remove-pictures.page:13(page/p)
+#. (itstool) path: page/p
+#: C/remove-pictures.page:13
 msgid ""
 "You can remove a picture or a video using the toolbar <gui>Minus</gui> "
 "button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove "
@@ -345,11 +407,12 @@ msgstr ""
 "na liště nástrojů. Nebo můžete použít nabídku <guiseq><gui>Soubor</"
 "gui><gui>Odebrat obrázky</gui></guiseq>."
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/create-account.page:17(media)
+#: C/create-account.page:17
 msgctxt "_"
 msgid ""
 "external ref='figures/auth-dialog-step1.png' "
@@ -358,11 +421,12 @@ msgstr ""
 "external ref='figures/auth-dialog-step1.png' "
 "md5='0bee821ca7fdd16842a4e2536e2bb17e'"
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/create-account.page:25(media)
+#: C/create-account.page:25
 msgctxt "_"
 msgid ""
 "external ref='figures/auth-dialog-step2.png' "
@@ -371,15 +435,19 @@ msgstr ""
 "external ref='figures/auth-dialog-step2.png' "
 "md5='c9b217898c3f1516cdae9a5c19439176'"
 
-#: C/create-account.page:8(info/desc) C/create-account.page:11(page/title)
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/create-account.page:8 C/create-account.page:11
 msgid "How to create your Account"
 msgstr "Jak vytvořit svůj účet"
 
-#: C/create-account.page:12(page/p)
+#. (itstool) path: page/p
+#: C/create-account.page:12
 msgid "First create an Account"
 msgstr "Nejprve si vytvořte účet"
 
-#: C/create-account.page:13(page/p)
+#. (itstool) path: page/p
+#: C/create-account.page:13
 msgid ""
 "When you first run <app>Frogr</app>, it displays a window explaining you'll "
 "have to create an account."
@@ -387,16 +455,18 @@ msgstr ""
 "Když poprvé spustíte <app>Frogr</app>, zobrazí okno vysvětlující, že budete "
 "muset vytvořit účet."
 
-#: C/create-account.page:15(figure/title)
-#: C/create-account.page:23(figure/title)
+#. (itstool) path: figure/title
+#: C/create-account.page:15 C/create-account.page:23
 msgid "Authorizing frogr"
 msgstr "Autorizace Frogr"
 
-#: C/create-account.page:16(figure/desc)
+#. (itstool) path: figure/desc
+#: C/create-account.page:16
 msgid "Authorizing frogr. Requesting a verification code"
 msgstr "Autorizace Frogr. Požadavek na ověřovací kód"
 
-#: C/create-account.page:20(page/p)
+#. (itstool) path: page/p
+#: C/create-account.page:20
 msgid ""
 "Click Ok, it will run your default web browser. On your default web browser, "
 "either create a Flickr account or log in to an existing account."
@@ -404,7 +474,8 @@ msgstr ""
 "Klikněte na OK, tím se spustí váš výchozí webový prohlížeč. V něm buď "
 "vytvořte účet Flickr nebo se přihlaste k existujícímu."
 
-#: C/create-account.page:21(page/p)
+#. (itstool) path: page/p
+#: C/create-account.page:21
 msgid ""
 "Then, authorize <app>Frogr</app> to access to this account. You may now go "
 "back to <app>Frogr</app> window, enter the verification code and use the "
@@ -414,15 +485,17 @@ msgstr ""
 "vrátit zpět do okna <app>Frogr</app>, zadat ověřovací kód a použít aplikaci "
 "k nahrávání libovolných obrázků."
 
-#: C/create-account.page:24(figure/desc)
+#. (itstool) path: figure/desc
+#: C/create-account.page:24
 msgid "Authorizing frogr. Finishing the process"
 msgstr "Autorizace Frogr. Dokončení procesu"
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/introduction.page:17(media)
+#: C/introduction.page:17
 msgctxt "_"
 msgid ""
 "external ref='figures/frogr-remote-organizer.png' "
@@ -431,15 +504,18 @@ msgstr ""
 "external ref='figures/frogr-remote-organizer.png' "
 "md5='cb4f8098adc7b429e874c7d72d490b8e'"
 
-#: C/introduction.page:8(info/desc)
+#. (itstool) path: info/desc
+#: C/introduction.page:8
 msgid "Introduction to the <app>Frogr</app> Remote Organizer."
 msgstr "Úvod do vzdáleného organizátoru <app>Frogr</app>"
 
-#: C/introduction.page:12(page/title)
+#. (itstool) path: page/title
+#: C/introduction.page:12
 msgid "Frogr Introduction"
 msgstr "Úvod do aplikace Frogr"
 
-#: C/introduction.page:13(page/p)
+#. (itstool) path: page/p
+#: C/introduction.page:13
 msgid ""
 "<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
 "Remote Organizer. <app>Frogr</app> is a small application for the GNOME "
@@ -451,19 +527,23 @@ msgstr ""
 "prostředí GNOME, která uživateli umožňuje spravovat svůj účet na webové "
 "službě Flickr, která slouží k hostování obrázků."
 
-#: C/introduction.page:15(figure/title)
+#. (itstool) path: figure/title
+#: C/introduction.page:15
 msgid "<gui>Frogr</gui> window"
 msgstr "Okno <gui>Frogr</gui>"
 
-#: C/introduction.page:16(figure/desc)
+#. (itstool) path: figure/desc
+#: C/introduction.page:16
 msgid "<app>Frogr</app> main window"
 msgstr "Hlavní okno <app>Frogr</app>"
 
-#: C/introduction.page:22(section/title)
+#. (itstool) path: section/title
+#: C/introduction.page:22
 msgid "Flickr"
 msgstr "Flickr"
 
-#: C/introduction.page:23(section/p)
+#. (itstool) path: section/p
+#: C/introduction.page:23
 msgid ""
 "<link href=\"http://www.flickr.com/\">Flickr</link> is a website allowing "
 "hosting of both images and videos."
@@ -471,23 +551,28 @@ msgstr ""
 "<link href=\"http://www.flickr.com/\">Flickr</link> je webová služba, která "
 "umožňuje hostovat obrázky a videa."
 
-#: C/introduction.page:26(section/title)
+#. (itstool) path: section/title
+#: C/introduction.page:26
 msgid "Main Features"
 msgstr "Hlavní rysy"
 
-#: C/introduction.page:28(item/p)
+#. (itstool) path: item/p
+#: C/introduction.page:28
 msgid "Allow to upload pictures and videos to Flickr"
 msgstr "Umožňuje nahrávat obrázky a videa do služby Flickr"
 
-#: C/introduction.page:29(item/p)
+#. (itstool) path: item/p
+#: C/introduction.page:29
 msgid "Allow uploading pictures located in remote machines"
 msgstr "Umožňuje nahrávat obrázky umístěné na vzdálených strojích"
 
-#: C/introduction.page:30(item/p)
+#. (itstool) path: item/p
+#: C/introduction.page:30
 msgid "Allow adding tags to pictures"
 msgstr "Umožňuje přidávat k obrázkům štítky"
 
-#: C/introduction.page:31(item/p)
+#. (itstool) path: item/p
+#: C/introduction.page:31
 msgid ""
 "Allow specifying sets and group pools for the pictures to be added to after "
 "the upload process."
@@ -495,19 +580,23 @@ msgstr ""
 "Umožňuje pro obrázky specifikovat sady a skupiny, do kterých mohou být "
 "obrázky po načtení přidány"
 
-#: C/introduction.page:32(item/p)
+#. (itstool) path: item/p
+#: C/introduction.page:32
 msgid "Support for handling multiple Flickr accounts."
 msgstr "Podporuje práci s více účty Flickr"
 
-#: C/introduction.page:33(item/p)
+#. (itstool) path: item/p
+#: C/introduction.page:33
 msgid "Support for saving and loading projects."
 msgstr "Podporuje ukládání a načítání projektů"
 
-#: C/introduction.page:37(section/title)
+#. (itstool) path: section/title
+#: C/introduction.page:37
 msgid "About"
 msgstr "O aplikaci"
 
-#: C/introduction.page:38(section/p)
+#. (itstool) path: section/p
+#: C/introduction.page:38
 msgid ""
 "You can have more information about <app>Frogr</app> using the menu "
 "<guiseq><gui>Frogr</gui><gui>About</gui></guiseq>."
@@ -515,22 +604,24 @@ msgstr ""
 "Více informací o aplikaci <app>Frogr</app> získáte použitím nabídky "
 "<guiseq><gui>Frogr</gui><gui>O aplikaci</gui></guiseq>."
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/set-pictures.page:18(media)
+#: C/set-pictures.page:18
 msgctxt "_"
 msgid ""
 "external ref='figures/add-to-sets.png' md5='7b5f33cb2f29b7f939c746b1dacba908'"
 msgstr ""
 "external ref='figures/add-to-sets.png' md5='7b5f33cb2f29b7f939c746b1dacba908'"
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/set-pictures.page:25(media)
+#: C/set-pictures.page:25
 msgctxt "_"
 msgid ""
 "external ref='figures/create-new-set.png' "
@@ -539,11 +630,14 @@ msgstr ""
 "external ref='figures/create-new-set.png' "
 "md5='dcb532384b0d30df70fa72b2b6db628f'"
 
-#: C/set-pictures.page:9(info/desc) C/set-pictures.page:12(page/title)
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/set-pictures.page:9 C/set-pictures.page:12
 msgid "Adding Elements to Sets"
 msgstr "Přidávání objektů do sad"
 
-#: C/set-pictures.page:13(page/p)
+#. (itstool) path: page/p
+#: C/set-pictures.page:13
 msgid ""
 "You can add pictures and videos to sets in Flickr. A set is a category. Set "
 "do not imply hierarchical view."
@@ -551,7 +645,8 @@ msgstr ""
 "Libovolné obrázky a videa můžete přidávat do sad. Sada je v podstatě "
 "kategorie. Sady nepředstavují hierarchickou strukturu."
 
-#: C/set-pictures.page:14(page/p)
+#. (itstool) path: page/p
+#: C/set-pictures.page:14
 msgid ""
 "Right-click on one or more elements and choose <gui>Add to set</gui>. You "
 "may choose to add to an already existing set or create a new one."
@@ -560,15 +655,19 @@ msgstr ""
 "<gui>Přidat do sady</gui>. Můžete si zvolit, zda se má přidávat do již "
 "existující sady nebo můžete vytvořit novou."
 
-#: C/set-pictures.page:16(figure/title) C/set-pictures.page:17(figure/desc)
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/set-pictures.page:16 C/set-pictures.page:17
 msgid "Adding elements to existing sets"
 msgstr "Přidávání objektů do existujících sad"
 
-#: C/set-pictures.page:23(figure/title)
+#. (itstool) path: figure/title
+#: C/set-pictures.page:23
 msgid "Creating new sets to add elements to"
 msgstr "Vytváření nové sady pro přidání objektů"
 
-#: C/set-pictures.page:24(figure/desc)
+#. (itstool) path: figure/desc
+#: C/set-pictures.page:24
 msgid ""
 "Creating new sets to add elements to. You can use the set's title and "
 "description for every selected element too"
@@ -576,15 +675,18 @@ msgstr ""
 "Vytváření nové sady pro přidání objektů. Název a popis sady můžete použít "
 "také pro každý vybraný objekt"
 
-#: C/display.page:9(info/desc)
+#. (itstool) path: info/desc
+#: C/display.page:9
 msgid "Amending view"
 msgstr "Vylepšete zobrazování"
 
-#: C/display.page:12(page/title)
+#. (itstool) path: page/title
+#: C/display.page:12
 msgid "Sort Elements"
 msgstr "Řazení objektů"
 
-#: C/display.page:13(page/p)
+#. (itstool) path: page/p
+#: C/display.page:13
 msgid ""
 "You can sort elements by title, by date, by size or as loaded. Click on the "
 "menu <gui>View</gui> and select the proper way to sort. You may also use "
@@ -594,15 +696,18 @@ msgstr ""
 "nabídku <gui>Zobrazit</gui> a vyberte odpovídající způsob řazení. Můžete "
 "také zadat, že se má řadit v opačném pořadí."
 
-#: C/organize.page:8(info/desc) C/organize.page:11(page/title)
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/organize.page:8 C/organize.page:11
 msgid "Organize"
 msgstr "Organizujte"
 
+#. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/tag.page:18(media)
+#: C/tag.page:18
 msgctxt "_"
 msgid ""
 "external ref='figures/add-tags-dialog.png' "
@@ -611,11 +716,14 @@ msgstr ""
 "external ref='figures/add-tags-dialog.png' "
 "md5='27e60f1fb9c62f58c82559069c17c913'"
 
-#: C/tag.page:9(info/desc) C/tag.page:12(page/title)
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/tag.page:9 C/tag.page:12
 msgid "Tag Elements"
 msgstr "Štítkování objektů"
 
-#: C/tag.page:13(page/p)
+#. (itstool) path: page/p
+#: C/tag.page:13
 msgid ""
 "You can assign several tags to any element. Flickr allows you to define your "
 "own tags. It allows you to easily find any element you did upload."
@@ -624,7 +732,8 @@ msgstr ""
 "definovat si své vlastní štítky. Tak můžete v objektech, které jste nahráli, "
 "snadno hledat."
 
-#: C/tag.page:14(page/p)
+#. (itstool) path: page/p
+#: C/tag.page:14
 msgid ""
 "Right-click on a element, and choose <gui>Add tags</gui>. Or click on the "
 "menu <gui>Edit</gui>, and choose <gui>Add tags</gui>. Or, when you're "
@@ -634,19 +743,24 @@ msgstr ""
 "klikněte na nabídku <gui>Upravit</gui> a zvolte <gui>Přidat štítky</gui>. A "
 "nebo štítky můžete vidět a upravovat při úpravě podrobností objektu."
 
-#: C/tag.page:16(figure/title) C/tag.page:17(figure/desc)
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/tag.page:16 C/tag.page:17
 msgid "Adding tags to elements"
 msgstr "Přidávání štítků k objektům"
 
-#: C/pictures.page:9(info/desc)
+#. (itstool) path: info/desc
+#: C/pictures.page:9
 msgid "Add, remove and upload pictures and videos"
 msgstr "Přidávejte, odebírejte a nahrávejte obrázky a videa"
 
-#: C/pictures.page:12(page/title)
+#. (itstool) path: page/title
+#: C/pictures.page:12
 msgid "Transfer Elements"
 msgstr "Přenos objektů"
 
-#: C/pictures.page:13(page/p)
+#. (itstool) path: page/p
+#: C/pictures.page:13
 msgid ""
 "You first have to add elements (pictures or videos) into frogr before being "
 "able to upload them."
@@ -654,11 +768,14 @@ msgstr ""
 "Než můžete objekty (obrázky a videa) nahrávat, musíte je nejprve do aplikace "
 "Frogr přidat."
 
-#: C/upload-pictures.page:9(info/desc) C/upload-pictures.page:12(page/title)
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/upload-pictures.page:9 C/upload-pictures.page:12
 msgid "Upload Elements"
 msgstr "Nahrávejte objekty"
 
-#: C/upload-pictures.page:13(page/p)
+#. (itstool) path: page/p
+#: C/upload-pictures.page:13
 msgid ""
 "You can upload pictures and videos using the toolbar <gui>arrow</gui> "
 "button. Or, you can use the menu <guiseq><gui>File</gui><gui>Upload All</"
@@ -669,11 +786,3 @@ msgstr ""
 "liště nástrojů. Nebo můžete použít nabídku <guiseq><gui>Soubor</"
 "gui><gui>Nahrát vše</gui></guiseq>. Obrázky, které se nahrají, zmizí ze "
 "seznamu. Než zbývající obrázky nahrajete, můžete některé z nich odebrat."
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/add-to-sets.png' "
-#~ "md5='439ad531a12544c0d06ef1e3dc477735'"
-#~ msgstr ""
-#~ "external ref='figures/add-to-sets.png' "
-#~ "md5='439ad531a12544c0d06ef1e3dc477735'"
