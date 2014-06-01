@@ -1654,7 +1654,7 @@ void
 fsp_session_set_default_proxy           (FspSession *self,
                                          gboolean enabled)
 {
-  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_if_fail (FSP_IS_SESSION (self));
 
   /* Ensure we clean the URI of a custom proxy, if present */
   if (self->priv->proxy_uri)
