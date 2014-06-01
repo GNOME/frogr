@@ -9,5 +9,11 @@ tarballdir = os.path.expanduser("~/frogr/pkgs")
 # Main module set
 moduleset = "http://git.gnome.org/browse/frogr/plain/osx/jhbuild/frogr.modules"
 
-# We know in advance that we don't need this module
-skip.append("gtk-mac-integration")
+# We know in advance that we don't need these modules
+skip = [
+    "cups",
+    "gettext-runtime",
+    "gnome-icon-theme-symbolic",
+    "gnome-doc-utils",
+    "gtk-mac-integration"
+]

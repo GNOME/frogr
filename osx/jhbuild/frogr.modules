@@ -2,12 +2,10 @@
 <!DOCTYPE moduleset SYSTEM "moduleset.dtd">
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
-  <include href="https://raw.github.com/mariospr/gtk-osx-build/gtk-3-8/modulesets-stable/gtk-osx.modules"/>
+  <include href="https://raw.github.com/mariospr/gtk-osx-build/master/modulesets-stable/gtk-osx.modules"/>
   <repository type="tarball" name="ftp.gnome.org" default="yes" href="http://ftp.gnome.org/pub/GNOME/sources/"/>
   <repository type="git" name="git.gnome.org" href="git://git.gnome.org/"/>
-  <repository type="tarball" name="sourceware.org" href="ftp://sourceware.org/pub/"/>
   <repository type="tarball" name="sourceforge.net" href="http://sourceforge.net/projects/"/>
-  <repository type="tarball" name="dbus.freedesktop.org" href="http://dbus.freedesktop.org/releases/"/>
   <repository type="tarball" name="itstool.org" href="http://files.itstool.org/itstool/"/>
 
   <autotools id="libexif" autogen-sh='configure'>
@@ -19,32 +17,10 @@
     </after>
   </autotools>
 
-  <autotools id="libffi" autogenargs="--disable-builddir">
-    <branch module="libffi/libffi-3.0.11.tar.gz" repo="sourceware.org"
-            version="3.0.11">
-    </branch>
-  </autotools>
-
-  <autotools id="pango"  autogen-sh="configure"
-             autogenargs="--without-x --with-included-modules"
-             makeargs="-k -C modules; make">
-    <branch version="1.32.1" module="pango/1.32/pango-1.32.1.tar.xz"
-            hash="sha256:484babf7e1ac4bf959a0babe8168f180acb516932d70e2985de5f6e2961fcd82">
-    </branch>
-    <dependencies>
-      <dep package="cairo"/>
-      <dep package="fontconfig"/>
-      <dep package="glib"/>
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-bootstrap"/>
-    </after>
-  </autotools>
-
   <autotools id="gsettings-desktop-schemas">
-    <branch module="gsettings-desktop-schemas/3.8/gsettings-desktop-schemas-3.8.2.tar.xz"
-            version="3.8.2"
-            hash="sha256:86070b2a4e1ab5a28f81b8fd413434eadc1f8505cbf14886d150eb925f93c827">
+    <branch module="gsettings-desktop-schemas/3.10/gsettings-desktop-schemas-3.10.1.tar.xz"
+            version="3.10.1"
+            hash="sha256:452378c4960a145747ec69f8c6a874e5b7715454df3e2452d1ff1a0a82e76811">
     </branch>
     <dependencies>
       <dep package="meta-gtk-osx-bootstrap"/>
@@ -61,70 +37,6 @@
       <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="glib"/>
     </dependencies>
-  </autotools>
-
-  <autotools id="gnome-themes-standard" autogenargs="--disable-gtk2-engine">
-    <branch module="gnome-themes-standard/3.8/gnome-themes-standard-3.8.2.tar.xz"
-            version="3.8.2"
-            hash="sha256:7e89f92c214b560e59edcbfac2263e49dccf201600871aa3d806ff1c562dff38">
-    </branch>
-    <dependencies>
-      <dep package="meta-gtk-osx-bootstrap"/>
-      <dep package="meta-gtk-osx-gtk3"/>
-      <dep package="librsvg"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="gnome-icon-theme">
-    <branch module="gnome-icon-theme/3.8/gnome-icon-theme-3.8.2.tar.xz"
-            version="3.8.2"
-            hash="sha256:1a7c518f9d824242389d456259c64c31cd3f15cc495042b022b513321e2de108">
-    </branch>
-    <dependencies>
-      <dep package="meta-gtk-osx-bootstrap"/>
-      <dep package="glib"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="librsvg" supports-non-srcdir-builds="no"
-             autogenargs="--disable-Bsymbolic --disable-introspection">
-    <branch module="librsvg/2.36/librsvg-2.36.4.tar.xz"
-            version="2.36.4"
-            hash="sha256:1021935204798f4f0ad3004a09b583668ea94a48593461b147fdcff68a18e6c2"/>
-    <dependencies>
-      <dep package="libxml2"/>
-      <dep package="glib"/>
-      <dep package="gdk-pixbuf"/>
-      <dep package="libcroco"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="dbus" autogen-sh='configure'
-             autogenargs="--disable-selinux --without-x --disable-launchd
-                          --with-session-socket-dir=/var/tmp">
-    <branch module="dbus/dbus-1.6.8.tar.gz" version="1.6.8"
-	    repo="dbus.freedesktop.org">
-    </branch>
-    <after>
-      <dep package="gtk+-3.0"/>
-    </after>
-  </autotools>
-
-  <autotools id="gtk+-3.0" autogen-sh="autogen.sh"
-             autogenargs="--enable-quartz-backend --enable-quartz-relocation --disable-introspection">
-    <branch module="gtk+/3.8/gtk+-3.8.2.tar.xz" version="3.8.2"
-            hash="sha256:1ca80c9c15a1df95d74cefb8c2afe4682ba272a4b489106f04877be2a7aff297">
-      <patch file='http://git.gnome.org/browse/gtk-osx/plain/patches/0001-Bug-667759-gtkdnd-quartz.c-is-missing-annotations-fo.patch' strip='1'/>
-    </branch>
-    <dependencies>
-      <dep package="glib"/>
-      <dep package="pango"/>
-      <dep package="atk"/>
-      <dep package="gdk-pixbuf"/>
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-bootstrap"/>
-    </after>
   </autotools>
 
   <autotools id="itstool">
@@ -157,16 +69,6 @@
     </dependencies>
   </autotools>
 
-  <autotools id="yelp-xsl">
-    <branch module="yelp-xsl/3.8/yelp-xsl-3.8.1.tar.xz" version="3.8.1"
-	    repo="ftp.gnome.org">
-    </branch>
-    <dependencies>
-      <dep package="libxslt"/>
-      <dep package="libxml2"/>
-    </dependencies>
-  </autotools>
-
   <autotools id="frogr">
     <branch repo="git.gnome.org" module="frogr"/>
     <dependencies>
@@ -174,7 +76,6 @@
       <dep package="meta-gtk-osx-gtk3"/>
       <dep package="libexif"/>
       <dep package="libgpg-error"/>
-      <dep package="libgcrypt"/>
       <dep package="libtasn1" />
       <dep package="libffi"/>
       <dep package="json-glib"/>
@@ -185,6 +86,7 @@
       <dep package="pixman"/>
       <dep package="cairo"/>
       <dep package="gdk-pixbuf"/>
+      <dep package="gobject-introspection"/>
       <dep package="gtk+-3.0"/>
       <dep package="gnutls"/>
       <dep package="glib-networking"/>
