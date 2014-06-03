@@ -137,6 +137,8 @@ enum {
 /* Prototypes */
 
 static void _initialize_ui (FrogrMainView *self);
+static gboolean _initialize_app_menu_on_idle (FrogrMainView *self);
+
 static GtkToolItem *_create_toolbar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text);
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
@@ -383,6 +385,10 @@ _initialize_ui (FrogrMainView *self)
   priv->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
   gtk_application_set_app_menu (GTK_APPLICATION (gtk_app), priv->app_menu);
 
+  /* We initialize the app menu (update parts that can be variable) on
+     a new iteration of the main loop to avoid race conditions on OS X */
+  g_idle_add ((GSourceFunc) _initialize_app_menu_on_idle, self);
+
   /* Menu bar */
   full_path = g_strdup_printf ("%s/" UI_MENU_BAR_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (builder, full_path, NULL);
@@ -447,9 +453,6 @@ _initialize_ui (FrogrMainView *self)
   g_action_change_state (G_ACTION (action), g_variant_new_boolean (priv->tooltips_enabled));
 
   /* Initialize extra widgets */
-
-  /* Populate accounts submenu from model */
-  _populate_accounts_submenu (self);
 
   /* Create contextual menus for right-clicks */
   full_path = g_strdup_printf ("%s/" UI_CONTEXT_MENU_FILE, frogr_util_get_app_data_dir ());
@@ -542,10 +545,6 @@ _initialize_ui (FrogrMainView *self)
 
   gtk_builder_connect_signals (builder, self);
 
-#ifdef PLATFORM_MAC
-  _tweak_app_menu_for_mac (self);
-#endif
-
   /* Update window title */
   _update_window_title (self, FALSE);
 
@@ -556,6 +555,18 @@ _initialize_ui (FrogrMainView *self)
   g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
 
   gtk_widget_show_all (GTK_WIDGET (self));
+}
+
+static gboolean
+_initialize_app_menu_on_idle (FrogrMainView *self)
+{
+  _populate_accounts_submenu (self);
+
+#ifdef PLATFORM_MAC
+  _tweak_app_menu_for_mac (self);
+#endif
+
+  return FALSE;
 }
 
 static GtkToolItem *
