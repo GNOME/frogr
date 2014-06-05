@@ -1,7 +1,7 @@
 /*
  * frogr-config.c -- Configuration system for Frogr.
  *
- * Copyright (C) 2009-2012 Mario Sanchez Prada
+ * Copyright (C) 2009-2014 Mario Sanchez Prada
  *           (C) 2009 Adrian Perez
  * Authors:
  *   Adrian Perez <aperez@igalia.com>
