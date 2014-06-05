@@ -385,10 +385,6 @@ _initialize_ui (FrogrMainView *self)
   priv->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
   gtk_application_set_app_menu (GTK_APPLICATION (gtk_app), priv->app_menu);
 
-  /* We initialize the app menu (update parts that can be variable) on
-     a new iteration of the main loop to avoid race conditions on OS X */
-  g_idle_add ((GSourceFunc) _initialize_app_menu_on_idle, self);
-
   /* Menu bar */
   full_path = g_strdup_printf ("%s/" UI_MENU_BAR_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (builder, full_path, NULL);
@@ -551,8 +547,12 @@ _initialize_ui (FrogrMainView *self)
   /* Update UI */
   _update_ui (FROGR_MAIN_VIEW (self));
 
+  /* We initialize the app menu (update parts that can be variable) on
+     a new iteration of the main loop to avoid race conditions on OS X */
+  gdk_threads_add_idle ((GSourceFunc) _initialize_app_menu_on_idle, self);
+
   /* Show the auth dialog, if needed, on idle */
-  g_idle_add ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
+  gdk_threads_add_idle ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
 
   gtk_widget_show_all (GTK_WIDGET (self));
 }
