@@ -23,7 +23,7 @@
 
   <repository>
     <GitRepository>
-      <browse rdf:resource="http://git.gnome.org/cgit/frogr/"/>
+      <browse rdf:resource="https://git.gnome.org/browse/frogr/"/>
       <location rdf:resource="git://git.gnome.org/frogr"/>
     </GitRepository>
   </repository>

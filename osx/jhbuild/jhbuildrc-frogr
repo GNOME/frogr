@@ -7,7 +7,7 @@ prefix = os.path.expanduser("~/frogr/inst")
 tarballdir = os.path.expanduser("~/frogr/pkgs")
 
 # Main module set
-moduleset = "http://git.gnome.org/browse/frogr/plain/osx/jhbuild/frogr.modules"
+moduleset = "https://git.gnome.org/browse/frogr/plain/osx/jhbuild/frogr.modules"
 
 # We know in advance that we don't need these modules
 skip = [

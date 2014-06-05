@@ -61,10 +61,10 @@ printf "===============================\n" > $output_file
 printf "  frogr - Binary for Mac OS X\n" >> $output_file
 printf "===============================\n\n" >> $output_file
 printf "To build the binaries available in this folder, please see the instructions at:\n\n" >> $output_file
-printf "  http://git.gnome.org/browse/frogr/plain/osx/README\n\n" >> $output_file
+printf "  https://git.gnome.org/browse/frogr/plain/osx/README\n\n" >> $output_file
 printf "The file $dmg_filename has been generated in $osx_name $osx_version (build $osx_build)\n" >> $output_file
 printf "with the following source code:\n\n" >> $output_file
-printf "http://git.gnome.org/browse/frogr/commit/?id=$commit_id\n\n" >> $output_file
+printf "https://git.gnome.org/browse/frogr/commit/?id=$commit_id\n\n" >> $output_file
 printf "Source code used (and patches) for each of $app_name's dependencies are as follows:\n\n" >> $output_file
 
 # Now append the list of modules used, URLs and applied patches

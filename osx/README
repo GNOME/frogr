@@ -3,7 +3,7 @@ one for GEdit [1], the GNOME Text Editor.
 
 This guide assumes that you are already familiar with building gtk+
 software on OS X (natively) using jhbuild. Please make sure to read
-https://live.gnome.org/GTK%2B/OSX/Building before proceeding.
+https://wiki.gnome.org/Projects/GTK%2B/OSX/Building before proceeding.
 
 Note: Terminal commands are preceded by dollar signs.
 
@@ -11,7 +11,7 @@ Note: Terminal commands are preceded by dollar signs.
 =============================================================================
 
 Get and install the gtk-osx-build-setup.sh from:
-http://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
+https://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
 
   $ curl -O https://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
   $ sh gtk-osx-build-setup.sh
@@ -41,7 +41,7 @@ jhbuildrc is provided in the frogr source (osx/jhbuild/jhbuildrc-frogr).
 
 Copy this file to your home:
 
-  $ curl -o ~/.jhbuildrc-frogr http://git.gnome.org/browse/frogr/plain/osx/jhbuild/jhbuildrc-frogr
+  $ curl -o ~/.jhbuildrc-frogr https://git.gnome.org/browse/frogr/plain/osx/jhbuild/jhbuildrc-frogr
 
 frogr provides a custom moduleset for jhbuild that you can use to built frogr.
 This moduleset is specified in jhbuildrc-frogr (together with some other
@@ -93,4 +93,4 @@ makedmg.sh for that purpose:
 That's all!
 
 --
-[1] http://git.gnome.org/browse/gedit/plain/osx/README
+[1] https://git.gnome.org/browse/gedit/plain/osx/README
