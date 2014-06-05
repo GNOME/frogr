@@ -44,6 +44,12 @@ if [ ! -d $BUNDLE_APP ]; then
 
     echo "Creating new $BUNDLE_APP bundle..."
     gtk-mac-bundler frogr.bundle
+
+    echo "Fixing issues with the GTK+ style..."
+    adwaita_css_path="$BUNDLE_APP/Contents/Resources/share/themes/Adwaita/gtk-3.0"
+    appended_style=".button { padding: 2px; }"
+    echo "$appended_style" >> "$adwaita_css_path/gtk.css"
+    echo "$appended_style" >> "$adwaita_css_path/gtk-dark.css"
 elif $STRIP_DEBUG; then
     echo "Note $BUNDLE_APP bundle already exists, only stripping it..."
 else
