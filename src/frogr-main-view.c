@@ -283,7 +283,7 @@ static void _update_ui (FrogrMainView *self);
 /* Private API */
 
 static  const gchar *icon_sizes[] = {
-  "128x128", "64X64", "48x48", "32x32", "24x24", "16x16"
+  "128x128", "64x64", "48x48", "32x32", "24x24", "16x16"
 };
 
 static GActionEntry app_entries[] = {
