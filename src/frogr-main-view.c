@@ -137,6 +137,7 @@ enum {
 /* Prototypes */
 
 static void _initialize_ui (FrogrMainView *self);
+static void _initialize_toolbar (GtkWidget *toolbar);
 static gboolean _initialize_app_menu_on_idle (FrogrMainView *self);
 
 static GtkToolItem *_create_toolbar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text);
@@ -322,7 +323,6 @@ _initialize_ui (FrogrMainView *self)
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
   GtkWidget *toolbar;
-  GtkToolItem *toolbar_item;
   GMenuModel *ctxt_menu_model;
   const gchar *icons_path = NULL;
   gchar *full_path = NULL;
@@ -400,22 +400,7 @@ _initialize_ui (FrogrMainView *self)
 
   /* Toolbar */
   toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "toolbar"));
-  toolbar_item = _create_toolbar_item ("win.open-project", "gtk-open", _("Open"), _("Open Existing Project"));
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item, 0);
-  toolbar_item = _create_toolbar_item ("win.save-project", "gtk-save", _("Save"), _("Save Current Project"));
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item, 1);
-  toolbar_item = gtk_separator_tool_item_new ();
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item, 2);
-  toolbar_item = _create_toolbar_item ("win.add-pictures", "gtk-add", _("Add"), _("Add Elements"));
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item, 3);
-  toolbar_item = _create_toolbar_item ("win.remove-pictures", "gtk-remove", _("Remove"), _("Remove Elements"));
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item, 4);
-  toolbar_item = gtk_separator_tool_item_new ();
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item, 5);
-  toolbar_item = _create_toolbar_item ("win.upload-all", "gtk-go-up", _("Upload"), _("Upload All"));
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item, 6);
-  gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
-                               GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
+  _initialize_toolbar (toolbar);
 
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
   priv->icon_view = icon_view;
@@ -554,7 +539,27 @@ _initialize_ui (FrogrMainView *self)
   /* Show the auth dialog, if needed, on idle */
   gdk_threads_add_idle ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
 
-  gtk_widget_show_all (GTK_WIDGET (self));
+  gtk_widget_show (GTK_WIDGET (self));
+}
+
+static void _initialize_toolbar (GtkWidget *toolbar)
+{
+  GtkToolItem *toolbar_item[7];
+  gint i;
+
+  toolbar_item[0] = _create_toolbar_item ("win.open-project", "gtk-open", _("Open"), _("Open Existing Project"));
+  toolbar_item[1] = _create_toolbar_item ("win.save-project", "gtk-save", _("Save"), _("Save Current Project"));
+  toolbar_item[2] = gtk_separator_tool_item_new ();
+  toolbar_item[3] = _create_toolbar_item ("win.add-pictures", "gtk-add", _("Add"), _("Add Elements"));
+  toolbar_item[4] = _create_toolbar_item ("win.remove-pictures", "gtk-remove", _("Remove"), _("Remove Elements"));
+  toolbar_item[5] = gtk_separator_tool_item_new ();
+  toolbar_item[6] = _create_toolbar_item ("win.upload-all", "gtk-go-up", _("Upload"), _("Upload All"));
+
+  for (i = 0; i < 7; ++i)
+    gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item[i], i);
+
+  gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
+                               GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 }
 
 static gboolean
@@ -576,9 +581,12 @@ _create_toolbar_item (const gchar *action_name, const gchar *icon_name, const gc
   GtkToolItem *item = NULL;
 
   widget = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_widget_show (widget);
+
   item = gtk_tool_button_new (widget, label);
   gtk_tool_item_set_tooltip_text (item, tooltip_text);
   gtk_actionable_set_action_name (GTK_ACTIONABLE (item), action_name);
+  gtk_widget_show (GTK_WIDGET (item));
 
   return item;
 }

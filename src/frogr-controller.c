@@ -381,7 +381,7 @@ _g_application_activate_cb (GApplication *app, gpointer data)
   DEBUG ("%s", "Application activated!\n");
 
   /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET(priv->mainview));
+  gtk_widget_show (GTK_WIDGET(priv->mainview));
   gtk_window_present (GTK_WINDOW (priv->mainview));
 }
 
@@ -441,7 +441,7 @@ _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gc
     }
 
   /* Show the UI */
-  gtk_widget_show_all (GTK_WIDGET(priv->mainview));
+  gtk_widget_show (GTK_WIDGET(priv->mainview));
   gtk_window_present (GTK_WINDOW (priv->mainview));
 }
 
