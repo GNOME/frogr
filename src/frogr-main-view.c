@@ -138,7 +138,7 @@ enum {
 
 static void _initialize_ui (FrogrMainView *self);
 static void _initialize_toolbar (GtkWidget *toolbar);
-static gboolean _initialize_app_menu_on_idle (FrogrMainView *self);
+static gboolean _initialize_app_menu (FrogrMainView *self);
 
 static GtkToolItem *_create_toolbar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text);
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
@@ -532,12 +532,17 @@ _initialize_ui (FrogrMainView *self)
   /* Update UI */
   _update_ui (FROGR_MAIN_VIEW (self));
 
-  /* We initialize the app menu (update parts that can be variable) on
-     a new iteration of the main loop to avoid race conditions on OS X */
-  gdk_threads_add_idle ((GSourceFunc) _initialize_app_menu_on_idle, self);
-
   /* Show the auth dialog, if needed, on idle */
   gdk_threads_add_idle ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
+
+#ifdef PLATFORM_MAC
+  /* FIXME: This is an UGLY hack that helps avoiding the race condition
+     but probably does not prevent it completely. Needs to check it more
+     carefully and fix it properly in the future when I have more time. */
+  gdk_threads_add_timeout (1000, (GSourceFunc) _initialize_app_menu, self);
+#else
+  _initialize_app_menu (self);
+#endif
 
   gtk_widget_show (GTK_WIDGET (self));
 }
@@ -563,7 +568,7 @@ static void _initialize_toolbar (GtkWidget *toolbar)
 }
 
 static gboolean
-_initialize_app_menu_on_idle (FrogrMainView *self)
+_initialize_app_menu (FrogrMainView *self)
 {
   _populate_accounts_submenu (self);
 
