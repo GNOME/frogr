@@ -283,7 +283,7 @@ static void _update_ui (FrogrMainView *self);
 /* Private API */
 
 static  const gchar *icon_sizes[] = {
-  "128x128", "64X64", "48x48", "32x32", "24x24", "16x16", NULL
+  "128x128", "64X64", "48x48", "32x32", "24x24", "16x16"
 };
 
 static GActionEntry app_entries[] = {
@@ -340,7 +340,7 @@ _initialize_ui (FrogrMainView *self)
   /* Provide a default icon list in several sizes */
 
   icons_path = frogr_util_get_icons_dir ();
-  for (i = 0; icon_sizes[i]; ++i)
+  for (i = 0; i < G_N_ELEMENTS (icon_sizes); ++i)
     {
       full_path = g_strdup_printf (ICON_PATH_FORMAT_STRING, icons_path, icon_sizes[i]);
       icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
@@ -538,19 +538,19 @@ _initialize_ui (FrogrMainView *self)
 
 static void _initialize_toolbar (GtkWidget *toolbar)
 {
-  GtkToolItem *toolbar_item[7];
+  GtkToolItem *toolbar_items[7];
   gint i;
 
-  toolbar_item[0] = _create_toolbar_item ("win.open-project", "gtk-open", _("Open"), _("Open Existing Project"));
-  toolbar_item[1] = _create_toolbar_item ("win.save-project", "gtk-save", _("Save"), _("Save Current Project"));
-  toolbar_item[2] = gtk_separator_tool_item_new ();
-  toolbar_item[3] = _create_toolbar_item ("win.add-pictures", "gtk-add", _("Add"), _("Add Elements"));
-  toolbar_item[4] = _create_toolbar_item ("win.remove-pictures", "gtk-remove", _("Remove"), _("Remove Elements"));
-  toolbar_item[5] = gtk_separator_tool_item_new ();
-  toolbar_item[6] = _create_toolbar_item ("win.upload-all", "gtk-go-up", _("Upload"), _("Upload All"));
+  toolbar_items[0] = _create_toolbar_item ("win.open-project", "gtk-open", _("Open"), _("Open Existing Project"));
+  toolbar_items[1] = _create_toolbar_item ("win.save-project", "gtk-save", _("Save"), _("Save Current Project"));
+  toolbar_items[2] = gtk_separator_tool_item_new ();
+  toolbar_items[3] = _create_toolbar_item ("win.add-pictures", "gtk-add", _("Add"), _("Add Elements"));
+  toolbar_items[4] = _create_toolbar_item ("win.remove-pictures", "gtk-remove", _("Remove"), _("Remove Elements"));
+  toolbar_items[5] = gtk_separator_tool_item_new ();
+  toolbar_items[6] = _create_toolbar_item ("win.upload-all", "gtk-go-up", _("Upload"), _("Upload All"));
 
-  for (i = 0; i < 7; ++i)
-    gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_item[i], i);
+  for (i = 0; i < G_N_ELEMENTS (toolbar_items); ++i)
+    gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_items[i], i);
 
   gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
                                GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
