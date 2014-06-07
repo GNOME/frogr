@@ -37,7 +37,7 @@
 #include <glib/gi18n.h>
 
 /* Paths relative to the icons dir */
-#define MAIN_VIEW_ICON(_s) "/hicolor/" _s "/apps/frogr.png"
+#define ICON_PATH_FORMAT_STRING "%s/hicolor/%s/apps/frogr.png"
 
 #define MINIMUM_WINDOW_WIDTH 840
 #define MINIMUM_WINDOW_HEIGHT 600
@@ -282,6 +282,10 @@ static void _update_ui (FrogrMainView *self);
 
 /* Private API */
 
+static  const gchar *icon_sizes[] = {
+  "128x128", "64X64", "48x48", "32x32", "24x24", "16x16", NULL
+};
+
 static GActionEntry app_entries[] = {
   { ACTION_AUTHORIZE, _on_menu_item_activated, NULL, NULL, NULL },
   { ACTION_LOGIN_AS, _on_radio_menu_item_activated, "s", "''", _on_radio_menu_item_changed },
@@ -329,34 +333,19 @@ _initialize_ui (FrogrMainView *self)
   GList *icons = NULL;
   GAction *action = NULL;
   GVariant *action_parameter = NULL;
+  gint i = 0;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Provide a default icon list in several sizes */
+
   icons_path = frogr_util_get_icons_dir ();
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("128x128"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("64x64"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("48x48"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("32x32"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("24x24"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
-
-  full_path = g_strdup_printf ("%s/" MAIN_VIEW_ICON("16x16"), icons_path);
-  icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
-  g_free (full_path);
+  for (i = 0; icon_sizes[i]; ++i)
+    {
+      full_path = g_strdup_printf (ICON_PATH_FORMAT_STRING, icons_path, icon_sizes[i]);
+      icons = g_list_prepend (icons, gdk_pixbuf_new_from_file (full_path, NULL));
+      g_free (full_path);
+    }
 
   gtk_window_set_default_icon_list (icons);
   g_list_foreach (icons, (GFunc) g_object_unref, NULL);
