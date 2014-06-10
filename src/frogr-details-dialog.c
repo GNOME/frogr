@@ -413,7 +413,7 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
 
-  gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 6);
 
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, TRUE, TRUE, 6);
 
