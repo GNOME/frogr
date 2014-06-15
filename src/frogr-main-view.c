@@ -1021,6 +1021,7 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
   gboolean using_primary_key = event->state & GDK_PRIMARY_MASK;
   gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
   gboolean is_single_click = event->type == GDK_BUTTON_PRESS;
+  gboolean is_double_click = event->type == GDK_2BUTTON_PRESS;
   gboolean is_primary_btn = event->button == 1;
   gboolean path_selected = gtk_icon_view_path_is_selected (GTK_ICON_VIEW (priv->icon_view), path);
 
@@ -1034,7 +1035,8 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
     {
       gint n_selected_pictures = priv->n_selected_pictures;
 
-      _deselect_all_pictures (mainview);
+      if (!is_double_click)
+        _deselect_all_pictures (mainview);
 
       /* We will just select the pointed element if it's not selected yet
          or if it is, but it belongs to a multiple selection previously done */
