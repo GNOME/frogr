@@ -6,14 +6,14 @@ Release:	0
 Group:		Applications/Internet
 License:	GPLv3
 URL:		https://wiki.gnome.org/Apps/Frogr
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.7/%{name}-%{version}.tar.xz
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.10/%{name}-%{version}.tar.xz
 
 BuildRequires:	intltool
 BuildRequires:	gettext
 BuildRequires:	yelp-tools
 BuildRequires:	gtk3-devel > 3.4
 BuildRequires:	glib2-devel > 2.32
-BuildRequires:	gstreamer-devel > 0.10
+BuildRequires:	gstreamer1-devel > 1.0
 BuildRequires:	json-glib-devel > 0.12
 BuildRequires:	libsoup-devel > 2.34
 BuildRequires:	libxml2-devel > 2.6.8
@@ -84,6 +84,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Fri Jun 17 2014 Mario Sanchez Prada <msanchez at, gnome.org> 0.10-0
+- New upstream release (see NEWS file for details).
+- Package manually generated out of any distro.
+
 * Fri Jan 17 2014 Mario Sanchez Prada <msanchez at, gnome.org> 0.9-0
 - New upstream release (see NEWS file for details).
 - Package manually generated out of any distro.

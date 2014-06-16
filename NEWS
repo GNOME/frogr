@@ -1,8 +1,8 @@
-0.10 (??)
-=========
+0.10 (17 June 2014)
+===================
 
   * Use SSL endpoints for the Flickr API (non-SSL API calls deprecated).
-  * Updated AppData file: fixed format and installation in data dir.
+  * Fixed issues with AppData file: fixed format and installation in data dir.
   * Enable video uploads by default, but make it configurable.
   * Remove unsupported option from YELP_HELP_INIT.
   * Remove dependency on libsoup-gnome (finally!).
