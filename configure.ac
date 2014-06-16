@@ -129,6 +129,7 @@ AC_SUBST(FROGR_LIBS)
 
 AC_CONFIG_FILES([
         Makefile
+        data/Makefile
         src/Makefile
         src/flicksoup/Makefile
         src/examples/Makefile

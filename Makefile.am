@@ -22,7 +22,7 @@ MAINTAINERCLEANFILES = \
 	config.h.in~ \
 	config.sub \
 	configure \
-	data/frogr.appdata.xml.in \
+	data/frogr.appdata.xml \
 	data/frogr.desktop \
 	data/frogr.desktop.in \
 	debian/files \
@@ -38,7 +38,7 @@ MAINTAINERCLEANFILES = \
 	missing \
 	mkinstalldirs
 
-SUBDIRS = src po
+SUBDIRS = src data po
 
 if !PLATFORM_MAC
 SUBDIRS += help
@@ -75,30 +75,13 @@ gtkbuilder_DATA = \
 	data/gtkbuilder/frogr-context-menu.xml \
 	data/gtkbuilder/frogr-menu-bar.xml
 
-desktopentrydir = $(datadir)/applications
-desktopentry_DATA = $(builddir)/data/frogr.desktop
-@INTLTOOL_DESKTOP_RULE@
-
 man1_MANS = data/manpages/frogr.1
-
-edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
-
-data/frogr.desktop.in: data/frogr.desktop.in.in
-	mkdir -p $(builddir)/data
-	$(edit) $(srcdir)/data/frogr.desktop.in.in > $(builddir)/data/frogr.desktop.in
-
-DISTCLEANFILES = \
-	$(builddir)/data/frogr.appdata.xml.in \
-	$(builddir)/data/frogr.desktop \
-	$(builddir)/data/frogr.desktop.in
 
 EXTRA_DIST = \
 	MAINTAINERS \
 	TRANSLATORS \
 	autogen.sh \
 	src/flicksoup/COPYING \
-	data/frogr.appdata.xml.in \
-	data/frogr.desktop.in.in \
 	m4 \
 	$(pixmap_DATA) \
 	$(icon16_DATA) \
