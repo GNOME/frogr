@@ -72,6 +72,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %defattr(-,root,root,-)
 %{_bindir}/%{name}
 %{_datadir}/%{name}/*
+%{_datadir}/appdata/%{name}.appdata.xml
 %{_datadir}/pixmaps/%{name}.xpm
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
