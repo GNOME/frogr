@@ -1,12 +1,12 @@
 Name:		frogr
-Version:	0.10
+Version:	0.11
 Summary:	Flickr Remote Organizer for GNOME
 Release:	0
 
 Group:		Applications/Internet
 License:	GPLv3
 URL:		https://wiki.gnome.org/Apps/Frogr
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.10/%{name}-%{version}.tar.xz
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.11/%{name}-%{version}.tar.xz
 
 BuildRequires:	intltool
 BuildRequires:	gettext
