@@ -688,9 +688,11 @@ remove_spaces_from_keyword (const gchar *keyword)
 static gchar *
 import_tags_from_xmp_keywords (const char *buffer, size_t len)
 {
-  gchar *comparison_substr = NULL;
-  gchar *keywords_start = NULL;
-  gchar *keywords_end = NULL;
+  const gchar *keywords_start = NULL;
+  const gchar *keywords_end = NULL;
+  gchar *keywords_string = NULL;
+  gchar *start = NULL;
+  gchar *end = NULL;
   gchar *result = NULL;
   int i;
 
@@ -698,50 +700,49 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
      present, that is, the keywords (aka the 'tags') */
   for (i = 0; i < len && !keywords_start; i++)
     {
-      comparison_substr = g_strndup (&buffer[i], 11);
-      if (g_str_has_prefix (comparison_substr, "<dc:subject"))
-        keywords_start = g_strdup(&buffer[i]);
-      g_free (comparison_substr);
+      if (buffer[i] != '<')
+        continue;
+
+      if (!strncmp (&buffer[i], "<dc:subject", 11))
+        keywords_start = &buffer[i];
     }
 
   /* Find the end of the interesting XMP data, if found */
-  if (keywords_start)
-    keywords_end = g_strrstr (keywords_start, "</dc:subject>");
+  if (!keywords_start)
+    return NULL;
 
-  if (keywords_end)
+  keywords_end = g_strrstr (keywords_start, "</dc:subject>");
+  if (!keywords_end)
+    return NULL;
+
+  keywords_string = g_strndup (keywords_start, keywords_end - keywords_start);
+
+  /* Remove extra not-needed stuff in the string */
+  start = g_strstr_len (keywords_string, -1, "<rdf:li");
+  end = g_strrstr (keywords_string, "</rdf:li>");
+  if (start && end)
     {
-      gchar *start = NULL;
-      gchar *end = NULL;
+      gchar **keywords = NULL;
+      gchar *keyword = NULL;
 
-      keywords_end[0] = '\0';
+      /* Get an array of strings with all the keywords */
+      end[0] = '\0';
+      keywords = g_regex_split_simple ("<.?rdf:li(!>)*>", start,
+                                       G_REGEX_DOTALL | G_REGEX_RAW, 0);
 
-      /* Remove extra not-needed stuff in the string */
-      start = g_strstr_len (keywords_start, -1, "<rdf:li");
-      end = g_strrstr (keywords_start, "</rdf:li>");
-      if (start && end)
+      /* Remove spaces to normalize to flickr tags */
+      for (i = 0; keywords[i]; i++)
         {
-          gchar **keywords = NULL;
-          gchar *keyword = NULL;
-
-          /* Get an array of strings with all the keywords */
-          end[0] = '\0';
-          keywords = g_regex_split_simple ("<.?rdf:li(!>)*>", start,
-                                           G_REGEX_DOTALL | G_REGEX_RAW, 0);
-
-          /* Remove spaces to normalize to flickr tags */
-          for (i = 0; keywords[i]; i++)
-            {
-              keyword = keywords[i];
-              keywords[i] = remove_spaces_from_keyword (keyword);
-              g_free (keyword);
-            }
-
-          result = g_strjoinv (" ", keywords);
-          g_strfreev (keywords);
+          keyword = keywords[i];
+          keywords[i] = remove_spaces_from_keyword (keyword);
+          g_free (keyword);
         }
+
+      result = g_strjoinv (" ", keywords);
+      g_strfreev (keywords);
     }
 
-  g_free (keywords_start);
+  g_free (keywords_string);
 
   return result;
 }
