@@ -53,6 +53,8 @@ environment variable JHB=frogr.
 Finally we are ready to built frogr:
 
   $ JHB=frogr jhbuild bootstrap
+  $ JHB=frogr jhbuild build meta-gtk-osx-bootstrap
+  $ JHB=frogr jhbuild build meta-gtk-osx-core
   $ JHB=frogr jhbuild build frogr
 
 Note that it's perfectly possible that something might fail during the built,
