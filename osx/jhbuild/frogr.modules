@@ -114,6 +114,15 @@
     </dependencies>
   </autotools>
 
+  <autotools id="libcroco" autogenargs="--disable-Bsymbolic"
+	     autogen-sh="configure">
+    <branch module="libcroco/0.6/libcroco-0.6.8.tar.xz" version="0.6.8"
+	    hash="sha256:ea6e1b858c55219cefd7109756bff5bc1a774ba7a55f7d3ccd734d6b871b8570"/>
+    <dependencies>
+      <dep package="libxml2"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="gstreamer" autogenargs="--disable-tests --disable-introspection" supports-non-srcdir-builds="no"
     makeargs="ERROR_CFLAGS=" autogen-sh="configure">
     <branch module="gstreamer/0.10/gstreamer-0.10.35.tar.bz2" version="0.10.35"
@@ -203,6 +212,7 @@
     <dependencies>
       <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="meta-gtk-osx-gtk3"/>
+      <dep package="libxml2"/>
       <dep package="libexif"/>
       <dep package="libgpg-error"/>
       <dep package="libtasn1" />
