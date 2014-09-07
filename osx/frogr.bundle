@@ -26,6 +26,11 @@
     ${prefix}/lib/${gtkdir}/${pkg:${gtk}:gtk_binary_version}/immodules/*.so
   </binary>
 
+  <!-- Copy in GIO modules -->
+  <binary>
+    ${prefix}/lib/gio/modules/*.so
+  </binary>
+
   <!-- Starting with 2.24, gdk-pixbuf installs into its own directory. -->
   <binary>
     ${prefix}/lib/gdk-pixbuf-2.0/${pkg:gdk-pixbuf-2.0:gdk_pixbuf_binary_version}/loaders/*.so

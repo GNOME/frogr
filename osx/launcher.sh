@@ -38,6 +38,8 @@ export PANGO_RC_FILE="$bundle_etc/pango/pangorc"
 export GST_PLUGIN_SYSTEM_PATH="$bundle_res"
 export GST_PLUGIN_SCANNER="$bundle_res/libexec/gstreamer-0.10/gst-plugin-scanner"
 
+export GIO_EXTRA_MODULES="$bundle_lib/gio/modules"
+
 # Localization settings. It's better to do this inside your program
 # using NSLocale if possible.
 
