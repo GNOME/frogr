@@ -26,10 +26,15 @@
 #include "fsp-session.h"
 
 #include <config.h>
+#include <errno.h>
 #include <gcrypt.h>
 #include <libsoup/soup.h>
+#include <pthread.h>
 #include <stdarg.h>
 #include <string.h>
+
+/* We need this macro defined to properly initialize gcrypt */
+GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 #define FLICKR_API_BASE_URL   "https://api.flickr.com/services/rest"
 #define FLICKR_API_UPLOAD_URL "https://up.flickr.com/services/upload"
@@ -491,6 +496,16 @@ fsp_session_init                        (FspSession *self)
   self->priv->tmp_token_secret = NULL;
   self->priv->using_default_proxy = TRUE;
   self->priv->proxy_uri = NULL;
+
+  /* Apparently, we need to initialize gcrypt not to get a crash:
+     http://lists.gnupg.org/pipermail/gcrypt-devel/2003-August/000458.html */
+  if (!gcry_control (GCRYCTL_ANY_INITIALIZATION_P))
+    {
+      gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+      gcry_check_version (NULL);
+      gcry_control (GCRYCTL_INIT_SECMEM, 32768);
+      gcry_control (GCRYCTL_INITIALIZATION_FINISHED);
+    }
 
 #ifdef SOUP_VERSION_2_42
   /* soup_session_async_new() deprecated in lisoup 2.42 */
