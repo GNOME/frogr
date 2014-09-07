@@ -106,6 +106,14 @@
     </after>
   </autotools>
 
+  <autotools id="librsvg" autogenargs="--disable-Bsymbolic --disable-introspection">
+    <branch module="librsvg/2.36/librsvg-2.36.4.tar.xz" version="2.36.4"
+	    hash="sha256:1021935204798f4f0ad3004a09b583668ea94a48593461b147fdcff68a18e6c2"/>
+    <dependencies>
+      <dep package="libcroco"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="gstreamer" autogenargs="--disable-tests --disable-introspection" supports-non-srcdir-builds="no"
     makeargs="ERROR_CFLAGS=" autogen-sh="configure">
     <branch module="gstreamer/0.10/gstreamer-0.10.35.tar.bz2" version="0.10.35"
