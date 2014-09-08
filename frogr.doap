@@ -8,6 +8,9 @@
   <shortname>frogr</shortname>
   <shortdesc xml:lang="en">Flickr Remote Organizer for GNOME</shortdesc>
   <description>A Flickr Remote Organizer for GNOME</description>
+  <category rdf:resource="http://api.gnome.org/doap-extensions#apps" />
+  <programming-language>C</programming-language>
+
   <homepage rdf:resource="https://wiki.gnome.org/Apps/Frogr" />
   <mailing-list rdf:resource="http://mail.gnome.org/mailman/listinfo/frogr-list" />
   <download-page rdf:resource="http://download.gnome.org/sources/frogr/" />
