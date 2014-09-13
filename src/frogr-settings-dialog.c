@@ -46,6 +46,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *family_cb;
   GtkWidget *show_in_search_cb;
   GtkWidget *send_geolocation_data_cb;
+  GtkWidget *date_taken_as_posted_cb;
   GtkWidget *license_cb;
   GtkWidget *photo_content_rb;
   GtkWidget *sshot_content_rb;
@@ -68,17 +69,16 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *keep_file_extensions_cb;
   GtkWidget *import_tags_cb;
   GtkWidget *use_dark_theme_cb;
-  GtkWidget *date_taken_as_posted_cb;
 
   gboolean public_visibility;
   gboolean family_visibility;
   gboolean friend_visibility;
   gboolean show_in_search;
   gboolean send_geolocation_data;
+  gboolean date_taken_as_posted;
   gboolean enable_tags_autocompletion;
   gboolean keep_file_extensions;
   gboolean import_tags;
-  gboolean date_taken_as_posted;
   gboolean use_dark_theme;
 
   FspLicense license;
@@ -318,11 +318,14 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
 
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
+                        _("_Show Pictures in Global Search Results"),
+                        &priv->show_in_search_cb);
+  _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
                         _("Set Geo_location Information for Pictures"),
                         &priv->send_geolocation_data_cb);
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
-                        _("_Show Pictures in Global Search Results"),
-                        &priv->show_in_search_cb);
+                        _("Set 'Taken Date' as 'Posted Date' for Pictures"),
+                        &priv->date_taken_as_posted_cb);
 
   gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
 
@@ -486,10 +489,6 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                         _("_Keep File Extensions in Titles when Loading"),
                         &priv->keep_file_extensions_cb);
 
-  _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
-                        _("Set '_Taken Date' as 'Posted Date' when Uploading"),
-                        &priv->date_taken_as_posted_cb);
-
   gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
@@ -506,8 +505,9 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->public_visibility = frogr_config_get_default_public (priv->config);
   priv->family_visibility = frogr_config_get_default_family (priv->config);
   priv->friend_visibility = frogr_config_get_default_friend (priv->config);
-  priv->send_geolocation_data = frogr_config_get_default_send_geolocation_data (priv->config);
   priv->show_in_search = frogr_config_get_default_show_in_search (priv->config);
+  priv->send_geolocation_data = frogr_config_get_default_send_geolocation_data (priv->config);
+  priv->date_taken_as_posted = frogr_config_get_default_date_taken_as_posted (priv->config);
   priv->license = frogr_config_get_default_license (priv->config);
   priv->content_type = frogr_config_get_default_content_type (priv->config);
   priv->safety_level = frogr_config_get_default_safety_level (priv->config);
@@ -515,7 +515,6 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (priv->config);
   priv->import_tags = frogr_config_get_import_tags_from_metadata (priv->config);
   priv->use_dark_theme = frogr_config_get_use_dark_theme (priv->config);
-  priv->date_taken_as_posted = frogr_config_get_date_taken_as_posted (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
   g_free (priv->proxy_host);
@@ -548,10 +547,12 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
                                 priv->family_visibility);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb),
                                 priv->friend_visibility);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->send_geolocation_data_cb),
-                                priv->send_geolocation_data);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
                                 priv->show_in_search);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->send_geolocation_data_cb),
+                                priv->send_geolocation_data);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->date_taken_as_posted_cb),
+                                priv->date_taken_as_posted);
 
   if (priv->license >= FSP_LICENSE_NONE && priv->license < FSP_LICENSE_LAST)
     gtk_combo_box_set_active (GTK_COMBO_BOX (priv->license_cb), priv->license + 1);
@@ -580,8 +581,6 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
                                 priv->import_tags);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_dark_theme_cb),
                                 priv->use_dark_theme);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->date_taken_as_posted_cb),
-                                priv->date_taken_as_posted);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
 
@@ -611,8 +610,9 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_default_public (priv->config, priv->public_visibility);
   frogr_config_set_default_family (priv->config, priv->family_visibility);
   frogr_config_set_default_friend (priv->config, priv->friend_visibility);
-  frogr_config_set_default_send_geolocation_data (priv->config, priv->send_geolocation_data);
   frogr_config_set_default_show_in_search (priv->config, priv->show_in_search);
+  frogr_config_set_default_send_geolocation_data (priv->config, priv->send_geolocation_data);
+  frogr_config_set_default_date_taken_as_posted (priv->config, priv->date_taken_as_posted);
 
   frogr_config_set_default_license (priv->config, priv->license);
   frogr_config_set_default_content_type (priv->config, priv->content_type);
@@ -622,7 +622,6 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_keep_file_extensions (priv->config, priv->keep_file_extensions);
   frogr_config_set_import_tags_from_metadata (priv->config, priv->import_tags);
   frogr_config_set_use_dark_theme (priv->config, priv->use_dark_theme);
-  frogr_config_set_date_taken_as_posted (priv->config, priv->date_taken_as_posted);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 
@@ -710,16 +709,22 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("friend visibility set to %s", active ? "TRUE" : "FALSE");
     }
 
+  if (GTK_WIDGET (button) == priv->show_in_search_cb)
+    {
+      priv->show_in_search = active;
+      DEBUG ("Show up in global search results set to %s", active ? "TRUE" : "FALSE");
+    }
+
   if (GTK_WIDGET (button) == priv->send_geolocation_data_cb)
     {
       priv->send_geolocation_data = active;
       DEBUG ("Send geolocation data set to %s", active ? "TRUE" : "FALSE");
     }
 
-  if (GTK_WIDGET (button) == priv->show_in_search_cb)
+  if (GTK_WIDGET (button) == priv->date_taken_as_posted_cb)
     {
-      priv->show_in_search = active;
-      DEBUG ("Show up in global search results set to %s", active ? "TRUE" : "FALSE");
+      priv->date_taken_as_posted = active;
+      DEBUG ("Set '_Taken Date' as 'Posted Date' set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (active && GTK_WIDGET (button) == priv->photo_content_rb)
@@ -780,12 +785,6 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
     {
       priv->use_dark_theme = active;
       DEBUG ("Use Dark Theme set to %s", active ? "TRUE" : "FALSE");
-    }
-
-  if (GTK_WIDGET (button) == priv->date_taken_as_posted_cb)
-    {
-      priv->date_taken_as_posted = active;
-      DEBUG ("Set '_Taken Date' as 'Posted Date' set to %s", active ? "TRUE" : "FALSE");
     }
 
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
@@ -928,8 +927,9 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->private_rb = NULL;
   priv->friend_cb = NULL;
   priv->family_cb = NULL;
-  priv->send_geolocation_data_cb = NULL;
   priv->show_in_search_cb = NULL;
+  priv->send_geolocation_data_cb = NULL;
+  priv->date_taken_as_posted_cb = NULL;
   priv->license_cb = NULL;
   priv->photo_content_rb = NULL;
   priv->sshot_content_rb = NULL;
@@ -941,7 +941,6 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->keep_file_extensions_cb = NULL;
   priv->import_tags_cb = NULL;
   priv->use_dark_theme_cb = NULL;
-  priv->date_taken_as_posted_cb = NULL;
   priv->use_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
@@ -954,8 +953,9 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->public_visibility = FALSE;
   priv->family_visibility = FALSE;
   priv->friend_visibility = FALSE;
-  priv->send_geolocation_data = FALSE;
   priv->show_in_search = FALSE;
+  priv->send_geolocation_data = FALSE;
+  priv->date_taken_as_posted = TRUE;
   priv->license = FSP_LICENSE_NONE;
   priv->safety_level = FSP_SAFETY_LEVEL_NONE;
   priv->content_type = FSP_CONTENT_TYPE_NONE;
@@ -963,7 +963,6 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->keep_file_extensions = FALSE;
   priv->import_tags = TRUE;
   priv->use_dark_theme = TRUE;
-  priv->date_taken_as_posted = TRUE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;

@@ -1175,8 +1175,6 @@ _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_d
 static void
 _perform_after_upload_operations (FrogrController *controller, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-
   if (frogr_picture_get_license (uop_data->picture) != FSP_LICENSE_NONE)
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE] = 0;
@@ -1190,7 +1188,7 @@ _perform_after_upload_operations (FrogrController *controller, UploadOnePictureD
       _set_location_for_picture (controller, uop_data);
     }
 
-  if (frogr_config_get_date_taken_as_posted (priv->config))
+  if (frogr_picture_date_taken_as_posted (uop_data->picture))
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_DATE_TAKEN_AS_POSTED] = 0;
       _set_date_taken_as_posted_for_picture (controller, uop_data);

@@ -59,6 +59,7 @@ struct _FrogrPicturePrivate
   FrogrLocation *location;
   gboolean show_in_search;
   gboolean send_location;
+  gboolean date_taken_as_posted;
 
   gboolean is_video;
 
@@ -88,6 +89,7 @@ enum  {
   PROP_LOCATION,
   PROP_SHOW_IN_SEARCH,
   PROP_SEND_LOCATION,
+  PROP_DATE_TAKEN_AS_POSTED,
   PROP_IS_VIDEO,
   PROP_FILESIZE,
   PROP_DATETIME,
@@ -455,6 +457,9 @@ _frogr_picture_set_property (GObject *object,
     case PROP_SEND_LOCATION:
       frogr_picture_set_send_location (self, g_value_get_boolean (value));
       break;
+    case PROP_DATE_TAKEN_AS_POSTED:
+      frogr_picture_set_date_taken_as_posted (self, g_value_get_boolean (value));
+      break;
     case PROP_IS_VIDEO:
       priv->is_video = g_value_get_boolean (value);
       break;
@@ -527,6 +532,9 @@ _frogr_picture_get_property (GObject *object,
       break;
     case PROP_SEND_LOCATION:
       g_value_set_boolean (value, priv->send_location);
+      break;
+    case PROP_DATE_TAKEN_AS_POSTED:
+      g_value_set_boolean (value, priv->date_taken_as_posted);
       break;
     case PROP_IS_VIDEO:
       g_value_set_boolean (value, priv->is_video);
@@ -726,6 +734,14 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                          FALSE,
                                                          G_PARAM_READWRITE));
   g_object_class_install_property (obj_class,
+                                   PROP_DATE_TAKEN_AS_POSTED,
+                                   g_param_spec_boolean ("date-taken-as-posted",
+                                                         "date-taken-as-posted",
+                                                         "Whether to set the 'taken data' as"
+                                                         "'posted date', after uploading",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE));
+  g_object_class_install_property (obj_class,
                                    PROP_FILESIZE,
                                    g_param_spec_uint ("filesize",
                                                       "filesize",
@@ -788,6 +804,7 @@ frogr_picture_init (FrogrPicture *self)
 
   priv->show_in_search = TRUE;
   priv->send_location = FALSE;
+  priv->date_taken_as_posted = FALSE;
 
   priv->is_video = FALSE;
 
@@ -1130,6 +1147,29 @@ frogr_picture_set_location (FrogrPicture *self, FrogrLocation *location)
 }
 
 gboolean
+frogr_picture_show_in_search (FrogrPicture *self)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  return priv->show_in_search;
+}
+
+void
+frogr_picture_set_show_in_search (FrogrPicture *self,
+                                  gboolean show_in_search)
+{
+  FrogrPicturePrivate *priv = NULL;
+
+  g_return_if_fail(FROGR_IS_PICTURE(self));
+
+  priv = FROGR_PICTURE_GET_PRIVATE (self);
+  priv->show_in_search = show_in_search;
+}
+
+gboolean
 frogr_picture_send_location (FrogrPicture *self)
 {
   FrogrPicturePrivate *priv = NULL;
@@ -1152,26 +1192,25 @@ frogr_picture_set_send_location (FrogrPicture *self, gboolean send_location)
 }
 
 gboolean
-frogr_picture_show_in_search (FrogrPicture *self)
+frogr_picture_date_taken_as_posted (FrogrPicture *self)
 {
   FrogrPicturePrivate *priv = NULL;
 
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->show_in_search;
+  return priv->date_taken_as_posted;
 }
 
 void
-frogr_picture_set_show_in_search (FrogrPicture *self,
-                                  gboolean show_in_search)
+frogr_picture_set_date_taken_as_posted (FrogrPicture *self, gboolean date_taken_as_posted)
 {
   FrogrPicturePrivate *priv = NULL;
 
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
   priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->show_in_search = show_in_search;
+  priv->date_taken_as_posted = date_taken_as_posted;
 }
 
 GdkPixbuf *
