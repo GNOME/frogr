@@ -69,6 +69,7 @@ struct _FrogrConfigPrivate
   gboolean mainview_sorting_reversed;
   gboolean mainview_enable_tooltips;
   gboolean use_dark_theme;
+  gboolean date_taken_as_posted;
 
   gboolean use_proxy;
   gchar *proxy_host;
@@ -303,6 +304,16 @@ _load_settings (FrogrConfig *self)
 
               content = xmlNodeGetContent (node);
               priv->use_dark_theme = !xmlStrcmp (content, (const xmlChar*) "1");
+
+              xmlFree (content);
+            }
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "date-taken-as-posted"))
+            {
+              xmlChar *content = NULL;
+
+              content = xmlNodeGetContent (node);
+              priv->date_taken_as_posted = !xmlStrcmp (content, (const xmlChar*) "1");
 
               xmlFree (content);
             }
@@ -706,6 +717,7 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (root, "keep-file-extensions", priv->keep_file_extensions);
   _xml_add_bool_child (root, "import-tags-from-metadata", priv->import_tags_from_metadata);
   _xml_add_bool_child (root, "use-dark-theme", priv->use_dark_theme);
+  _xml_add_bool_child (root, "date-taken-as-posted", priv->date_taken_as_posted);
   node = xmlNewNode (NULL, (const xmlChar*) "mainview-options");
   _xml_add_bool_child (node, "enable-tooltips", priv->mainview_enable_tooltips);
   _xml_add_int_child (node, "sorting-criteria", priv->mainview_sorting_criteria);
@@ -981,6 +993,7 @@ frogr_config_init (FrogrConfig *self)
   priv->mainview_sorting_reversed = FALSE;
   priv->mainview_enable_tooltips = TRUE;
   priv->use_dark_theme = TRUE;
+  priv->date_taken_as_posted = FALSE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;
@@ -1439,6 +1452,28 @@ frogr_config_get_use_dark_theme (FrogrConfig *self)
 
   priv = FROGR_CONFIG_GET_PRIVATE (self);
   return priv->use_dark_theme;
+}
+
+void
+frogr_config_set_date_taken_as_posted (FrogrConfig *self, gboolean value)
+{
+  FrogrConfigPrivate * priv = NULL;
+
+  g_return_if_fail (FROGR_IS_CONFIG (self));
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  priv->date_taken_as_posted = value;
+}
+
+gboolean
+frogr_config_get_date_taken_as_posted (FrogrConfig *self)
+{
+  FrogrConfigPrivate *priv = NULL;
+
+  g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
+
+  priv = FROGR_CONFIG_GET_PRIVATE (self);
+  return priv->date_taken_as_posted;
 }
 
 void

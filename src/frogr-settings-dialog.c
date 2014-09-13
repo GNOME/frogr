@@ -68,6 +68,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   GtkWidget *keep_file_extensions_cb;
   GtkWidget *import_tags_cb;
   GtkWidget *use_dark_theme_cb;
+  GtkWidget *date_taken_as_posted_cb;
 
   gboolean public_visibility;
   gboolean family_visibility;
@@ -77,6 +78,7 @@ typedef struct _FrogrSettingsDialogPrivate {
   gboolean enable_tags_autocompletion;
   gboolean keep_file_extensions;
   gboolean import_tags;
+  gboolean date_taken_as_posted;
   gboolean use_dark_theme;
 
   FspLicense license;
@@ -484,6 +486,10 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                         _("_Keep File Extensions in Titles when Loading"),
                         &priv->keep_file_extensions_cb);
 
+  _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
+                        _("Set '_Taken Date' as 'Posted Date' when Uploading"),
+                        &priv->date_taken_as_posted_cb);
+
   gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
@@ -509,6 +515,7 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
   priv->keep_file_extensions = frogr_config_get_keep_file_extensions (priv->config);
   priv->import_tags = frogr_config_get_import_tags_from_metadata (priv->config);
   priv->use_dark_theme = frogr_config_get_use_dark_theme (priv->config);
+  priv->date_taken_as_posted = frogr_config_get_date_taken_as_posted (priv->config);
   priv->use_proxy = frogr_config_get_use_proxy (priv->config);
 
   g_free (priv->proxy_host);
@@ -573,6 +580,8 @@ _fill_dialog_with_data (FrogrSettingsDialog *self)
                                 priv->import_tags);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_dark_theme_cb),
                                 priv->use_dark_theme);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->date_taken_as_posted_cb),
+                                priv->date_taken_as_posted);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->use_proxy_cb),
                                 priv->use_proxy);
 
@@ -613,6 +622,7 @@ _save_data (FrogrSettingsDialog *self)
   frogr_config_set_keep_file_extensions (priv->config, priv->keep_file_extensions);
   frogr_config_set_import_tags_from_metadata (priv->config, priv->import_tags);
   frogr_config_set_use_dark_theme (priv->config, priv->use_dark_theme);
+  frogr_config_set_date_taken_as_posted (priv->config, priv->date_taken_as_posted);
 
   frogr_config_set_use_proxy (priv->config, priv->use_proxy);
 
@@ -772,6 +782,12 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
       DEBUG ("Use Dark Theme set to %s", active ? "TRUE" : "FALSE");
     }
 
+  if (GTK_WIDGET (button) == priv->date_taken_as_posted_cb)
+    {
+      priv->date_taken_as_posted = active;
+      DEBUG ("Set '_Taken Date' as 'Posted Date' set to %s", active ? "TRUE" : "FALSE");
+    }
+
   if (GTK_WIDGET (button) == priv->use_proxy_cb)
     {
       priv->use_proxy = active;
@@ -925,6 +941,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->keep_file_extensions_cb = NULL;
   priv->import_tags_cb = NULL;
   priv->use_dark_theme_cb = NULL;
+  priv->date_taken_as_posted_cb = NULL;
   priv->use_proxy_cb = NULL;
   priv->proxy_host_label = NULL;
   priv->proxy_host_entry = NULL;
@@ -946,6 +963,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   priv->keep_file_extensions = FALSE;
   priv->import_tags = TRUE;
   priv->use_dark_theme = TRUE;
+  priv->date_taken_as_posted = TRUE;
   priv->use_proxy = FALSE;
   priv->proxy_host = NULL;
   priv->proxy_port = NULL;

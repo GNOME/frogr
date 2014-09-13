@@ -141,6 +141,10 @@ void frogr_config_set_use_dark_theme (FrogrConfig *self, gboolean value);
 
 gboolean frogr_config_get_use_dark_theme (FrogrConfig *self);
 
+void frogr_config_set_date_taken_as_posted (FrogrConfig *self, gboolean value);
+
+gboolean frogr_config_get_date_taken_as_posted (FrogrConfig *self);
+
 void frogr_config_set_mainview_sorting_criteria (FrogrConfig *self,
                                                  SortingCriteria criteria);
 
