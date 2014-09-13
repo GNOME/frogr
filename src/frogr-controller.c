@@ -1414,8 +1414,14 @@ _set_date_taken_as_posted_for_picture (FrogrController *self, UploadOnePictureDa
   if (!g_time_val_from_iso8601 (date_iso8601, &picture_timeval))
     return;
 
-  /* FIXME: it's not correct to just do this because the date extracted from
-     the EXIF information might not have been stored in UTC */
+  /* It's not correct to just do this because the date extracted from the EXIF information might
+     not have been stored in UTC. However, it seems there's no a much better solution since many
+     cameras don't use the TimeZoneOffset EXIF tag, so we can't rely on that either. And even if
+     it exists, I could not find any picture with that field in the EXIF information so I guess
+     that, all in all, using the 'date taken' as 'posted' as if it was UTC (regardless of whether
+     it's actually UTC) is probably fine anyway. After all, it's not supposed to be shown in
+     flickr and would serve most of the times just to have the photostream sorted by 'date
+     taken', and for that, using the date as UTC would be good enough .*/
   picture_date = g_date_time_new_from_timeval_utc (&picture_timeval);
   if (!picture_date)
     return;
