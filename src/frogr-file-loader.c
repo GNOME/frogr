@@ -588,7 +588,7 @@ _update_picture_with_exif_data (FrogrFileLoader *self,
       ExifEntry *exif_entry = NULL;
 
       /* Date and time for picture taken */
-      exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME);
+      exif_entry = exif_data_get_entry (exif_data, EXIF_TAG_DATE_TIME_ORIGINAL);
       if (exif_entry)
         {
           if (exif_entry->format == EXIF_FORMAT_ASCII)
