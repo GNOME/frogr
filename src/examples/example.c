@@ -44,6 +44,7 @@ void added_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photo_get_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
+void set_posted_date_cb (GObject *object, GAsyncResult *res, gpointer user_data);
 void get_location_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void set_location_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void set_license_cb (GObject *object, GAsyncResult *res, gpointer unused);
@@ -373,6 +374,37 @@ photo_get_info_cb                       (GObject      *object,
 }
 
 void
+set_posted_date_cb                      (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      user_data)
+{
+  FspSession *session = FSP_SESSION (object);
+  GError *error = NULL;
+  gboolean result = FALSE;
+
+  result = fsp_session_set_posted_date_finish (session, res, &error);
+  if (error != NULL)
+    {
+      g_print ("Error setting the posted date: %s\n", error->message);
+      g_error_free (error);
+    }
+  else
+    {
+      g_print ("[set_posted_date_cb]::Success! (%s)\n\n",
+               result ? "OK" : "FAIL");
+
+      /* Make a pause before continuing */
+      g_print ("Press ENTER to continue...\n\n");
+      getchar ();
+
+      /* Continue getting info about the picture */
+      g_print ("Getting info for photo %s...\n", uploaded_photo_id);
+      fsp_session_get_info (session, uploaded_photo_id, NULL,
+                            photo_get_info_cb, NULL);
+    }
+}
+
+void
 get_location_cb                         (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
@@ -389,6 +421,10 @@ get_location_cb                         (GObject      *object,
     }
   else
     {
+      GDateTime *date_now = NULL;
+      GDateTime *date = NULL;
+      gchar* date_str = NULL;
+
       g_print ("[get_location_cb]::Success! Location got:\n");
       g_print ("[get_location_cb]::\tLatitude: %g\n", location->latitude);
       g_print ("[get_location_cb]::\tLongitude: %g\n", location->longitude);
@@ -398,14 +434,22 @@ get_location_cb                         (GObject      *object,
       g_print ("Press ENTER to continue...\n\n");
       getchar ();
 
-      /* Continue getting info about the picture */
-      g_print ("Getting info for photo %s...\n", uploaded_photo_id);
-      fsp_session_get_info (session, uploaded_photo_id, NULL,
-                            photo_get_info_cb, NULL);
+      /* Continue setting the posted date to one year ago */
+      date_now = g_date_time_new_now_local ();
+      date = g_date_time_add_years (date_now, -1);
+      date_str = g_date_time_format (date, "%Y-%m-%d %H:%M:%S");
+      g_print ("Setting posted date for photo %s to %s...\n", uploaded_photo_id, date_str);
+      fsp_session_set_posted_date (session, uploaded_photo_id, date, NULL,
+                                   set_posted_date_cb, NULL);
+
+      g_free (date_str);
+      g_date_time_unref (date);
+      g_date_time_unref (date_now);
 
       fsp_data_free (FSP_DATA (location));
     }
 }
+
 
 void
 set_location_cb                         (GObject      *object,

@@ -341,6 +341,11 @@ _get_location_soup_session_cb            (SoupSession *session,
                                           SoupMessage *msg,
                                           gpointer     data);
 
+static void
+_set_dates_soup_session_cb              (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data);
+
 /* Private API */
 
 static void
@@ -1648,6 +1653,20 @@ _get_location_soup_session_cb            (SoupSession *session,
                          data);
 }
 
+static void
+_set_dates_soup_session_cb              (SoupSession *session,
+                                         SoupMessage *msg,
+                                         gpointer     data)
+{
+  g_assert (SOUP_IS_MESSAGE (msg));
+  g_assert (data != NULL);
+
+  /* Handle message with the right parser */
+  _handle_soup_response (msg,
+                         (FspParserFunc) fsp_parser_set_dates,
+                         data);
+}
+
 /* Public API */
 
 FspSession *
@@ -2704,4 +2723,59 @@ fsp_session_get_location_finish          (FspSession    *self,
                                               fsp_session_get_location,
                                               error));
   return location;
+}
+
+void
+fsp_session_set_posted_date             (FspSession          *self,
+                                         const gchar         *photo_id,
+                                         GDateTime           *date,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data)
+{
+  SoupSession *soup_session = NULL;
+  gchar* date_str;
+  gchar *url = NULL;
+
+  g_return_if_fail (FSP_IS_SESSION (self));
+  g_return_if_fail (photo_id != NULL);
+  g_return_if_fail (date != NULL);
+
+  /* The flickr API expects a UTC Unix timestamp for 'date_posted' */
+  date_str = g_date_time_format (date, "%s");
+
+  /* Build the signed url */
+  url = _get_signed_url (self,
+                         FLICKR_API_BASE_URL,
+                         AUTHORIZATION_METHOD_OAUTH_1,
+                         TOKEN_TYPE_PERMANENT,
+                         "method", "flickr.photos.setDates",
+                         "photo_id", photo_id,
+                         "date_posted", date_str,
+                         NULL);
+
+  /* Perform the async request */
+  soup_session = _get_soup_session (self);
+  _perform_async_request (soup_session, url,
+                          _set_dates_soup_session_cb, G_OBJECT (self),
+                          cancellable, callback, fsp_session_set_posted_date, data);
+
+  g_free (date_str);
+  g_free (url);
+}
+
+gboolean
+fsp_session_set_posted_date_finish      (FspSession    *self,
+                                         GAsyncResult  *res,
+                                         GError       **error)
+{
+  gpointer result = NULL;
+
+  g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
+  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+
+  result = _finish_async_request (G_OBJECT (self), res,
+                                  fsp_session_set_posted_date, error);
+
+  return result ? TRUE : FALSE;
 }

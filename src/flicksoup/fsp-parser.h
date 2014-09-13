@@ -162,6 +162,13 @@ fsp_parser_get_location                  (FspParser   *self,
                                           const gchar *buffer,
                                           gulong       buf_size,
                                           GError     **error);
+
+gpointer
+fsp_parser_set_dates                     (FspParser   *self,
+                                          const gchar *buffer,
+                                          gulong       buf_size,
+                                          GError     **error);
+
 G_END_DECLS
 
 #endif

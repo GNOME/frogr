@@ -282,6 +282,20 @@ FspDataLocation *
 fsp_session_get_location_finish          (FspSession    *self,
                                           GAsyncResult  *res,
                                           GError       **error);
+
+void
+fsp_session_set_posted_date             (FspSession          *self,
+                                         const gchar         *photo_id,
+                                         GDateTime           *date,
+                                         GCancellable        *cancellable,
+                                         GAsyncReadyCallback  callback,
+                                         gpointer             data);
+
+gboolean
+fsp_session_set_posted_date_finish      (FspSession    *self,
+                                         GAsyncResult  *res,
+                                         GError       **error);
+
 G_END_DECLS
 
 #endif
