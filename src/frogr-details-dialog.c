@@ -818,16 +818,17 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->private_rb)))
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->private_rb), !is_public_val);
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb),
-                                is_friend_val);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb),
-                                is_family_val);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
-                                show_in_search_val);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->send_location_cb),
-                                send_location_val);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->date_taken_as_posted_cb),
-                                date_taken_as_posted_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->friend_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb), is_friend_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb), is_family_val);
+
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb), show_in_search_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->send_location_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->send_location_cb), send_location_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->date_taken_as_posted_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->date_taken_as_posted_cb), date_taken_as_posted_val);
 
   if (license_inconsistent)
     gtk_combo_box_set_active (GTK_COMBO_BOX (priv->license_cb), FSP_LICENSE_LAST + 1);
