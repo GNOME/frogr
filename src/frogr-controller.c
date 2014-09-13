@@ -81,6 +81,7 @@ struct _FrogrControllerPrivate
   gboolean fetching_tags;
   gboolean setting_license;
   gboolean setting_location;
+  gboolean setting_date_taken_as_posted;
   gboolean adding_to_set;
   gboolean adding_to_group;
 
@@ -111,6 +112,7 @@ static FrogrController *_instance = NULL;
 typedef enum {
   AFTER_UPLOAD_OP_SETTING_LICENSE,
   AFTER_UPLOAD_OP_SETTING_LOCATION,
+  AFTER_UPLOAD_OP_SETTING_DATE_TAKEN_AS_POSTED,
   AFTER_UPLOAD_OP_ADDING_TO_SET,
   AFTER_UPLOAD_OP_ADDING_TO_GROUP,
   N_AFTER_UPLOAD_OPS
@@ -226,6 +228,10 @@ static void _set_license_for_picture (FrogrController *self, UploadOnePictureDat
 static void _set_location_cb (GObject *object, GAsyncResult *res, gpointer data);
 
 static void _set_location_for_picture (FrogrController *self, UploadOnePictureData *uop_data);
+
+static void _set_date_taken_as_posted_cb (GObject *object, GAsyncResult *res, gpointer data);
+
+static void _set_date_taken_as_posted_for_picture (FrogrController *self, UploadOnePictureData *uop_data);
 
 static gboolean _add_picture_to_photosets_or_create (FrogrController *self, UploadOnePictureData *uop_data);
 
@@ -1169,6 +1175,8 @@ _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_d
 static void
 _perform_after_upload_operations (FrogrController *controller, UploadOnePictureData *uop_data)
 {
+  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
+
   if (frogr_picture_get_license (uop_data->picture) != FSP_LICENSE_NONE)
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LICENSE] = 0;
@@ -1180,6 +1188,12 @@ _perform_after_upload_operations (FrogrController *controller, UploadOnePictureD
     {
       uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_LOCATION] = 0;
       _set_location_for_picture (controller, uop_data);
+    }
+
+  if (frogr_config_get_date_taken_as_posted (priv->config))
+    {
+      uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_DATE_TAKEN_AS_POSTED] = 0;
+      _set_date_taken_as_posted_for_picture (controller, uop_data);
     }
 
   if (frogr_picture_get_photosets (uop_data->picture))
@@ -1331,6 +1345,97 @@ _set_location_for_picture (FrogrController *self, UploadOnePictureData *uop_data
   g_free (debug_msg);
 
   fsp_data_free (FSP_DATA (data_location));
+}
+
+static void
+_set_date_taken_as_posted_cb (GObject *object, GAsyncResult *res, gpointer data)
+{
+  FspSession *session = NULL;
+  UploadOnePictureData *uop_data = NULL;
+  FrogrController *controller = NULL;
+  GError *error = NULL;
+
+  session = FSP_SESSION (object);
+  uop_data = (UploadOnePictureData*) data;
+  controller = uop_data->controller;
+
+  fsp_session_set_posted_date_finish (session, res, &error);
+  if (error && _should_retry_operation (error, uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_DATE_TAKEN_AS_POSTED]))
+    {
+      uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_DATE_TAKEN_AS_POSTED]++;
+
+      DEBUG("Error setting 'date taken' as 'posted' for picture %s: %s. Retrying... (attempt %d / %d)",
+            frogr_picture_get_title (uop_data->picture),
+            error->message,
+            uop_data->after_upload_attempts[AFTER_UPLOAD_OP_SETTING_DATE_TAKEN_AS_POSTED],
+            MAX_ATTEMPTS);
+      g_error_free (error);
+
+      _set_date_taken_as_posted_for_picture (controller, uop_data);
+    }
+  else
+    {
+      if (error)
+        {
+          DEBUG ("Error setting 'date taken' as 'posted' for picture: %s", error->message);
+          uop_data->up_data->error = error;
+        }
+
+      FROGR_CONTROLLER_GET_PRIVATE (controller)->setting_date_taken_as_posted = FALSE;
+    }
+}
+
+static void
+_set_date_taken_as_posted_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
+{
+  FrogrControllerPrivate *priv = NULL;
+  FrogrPicture *picture = NULL;
+  GDateTime *picture_date = NULL;
+  GTimeVal picture_timeval;
+  const gchar *picture_date_str = NULL;
+  gchar *debug_msg = NULL;
+  gchar date_iso8601[20];
+
+  picture = uop_data->picture;
+  picture_date_str = frogr_picture_get_datetime (picture);
+  if (!picture_date_str)
+    return;
+
+  if (g_strlcpy (date_iso8601, picture_date_str, 20) < 19)
+    return;
+
+  /* Exif's date time values stored in FrogrPicture are in the format
+     '%Y:%m:%d %H:%M:%S', while iso8601 uses format '%Y-%m-%dT%H:%M:%S' */
+  date_iso8601[10] = 'T';
+  date_iso8601[4] = '-';
+  date_iso8601[7] = '-';
+  date_iso8601[20] = '\0';
+
+  if (!g_time_val_from_iso8601 (date_iso8601, &picture_timeval))
+    return;
+
+  /* FIXME: it's not correct to just do this because the date extracted from
+     the EXIF information might not have been stored in UTC */
+  picture_date = g_date_time_new_from_timeval_utc (&picture_timeval);
+  if (!picture_date)
+    return;
+
+  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
+  priv->setting_date_taken_as_posted = TRUE;
+
+  fsp_session_set_posted_date (priv->session,
+                               frogr_picture_get_id (picture),
+                               picture_date,
+                               uop_data->cancellable,
+                               _set_date_taken_as_posted_cb,
+                               uop_data);
+
+  debug_msg = g_strdup_printf ("Setting 'date taken' as 'posted' (%s) for picture %s…",
+                               date_iso8601, frogr_picture_get_title (picture));
+  DEBUG ("%s", debug_msg);
+  g_free (debug_msg);
+
+  g_date_time_unref (picture_date);
 }
 
 static gboolean
@@ -1636,7 +1741,8 @@ _complete_picture_upload_on_idle (gpointer data)
 
   /* Keep the source while busy */
   priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if (priv->setting_license || priv->setting_location || priv->adding_to_set || priv->adding_to_group)
+  if (priv->setting_license || priv->setting_location || priv->setting_date_taken_as_posted
+      || priv->adding_to_set || priv->adding_to_group)
     {
       frogr_main_view_pulse_progress (priv->mainview);
       _update_upload_progress (controller, up_data);
@@ -2506,6 +2612,7 @@ frogr_controller_init (FrogrController *self)
   priv->fetching_tags = FALSE;
   priv->setting_license = FALSE;
   priv->setting_location = FALSE;
+  priv->setting_date_taken_as_posted = FALSE;
   priv->adding_to_set = FALSE;
   priv->adding_to_group = FALSE;
   priv->photosets_fetched = FALSE;
