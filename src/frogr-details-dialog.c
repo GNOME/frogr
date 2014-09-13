@@ -412,7 +412,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
   priv->send_location_cb = widget;
 
-  widget = gtk_check_button_new_with_mnemonic (_("Set 'Taken Date' as 'Posted Date' for Pictures"));
+  widget = gtk_check_button_new_with_mnemonic (_("Set 'Taken Date' as 'Posted Date'"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
   priv->date_taken_as_posted_cb = widget;
 
