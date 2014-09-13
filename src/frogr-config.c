@@ -172,6 +172,7 @@ _load_settings (FrogrConfig *self)
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "settings"))
     {
       xmlChar *version = NULL;
+      xmlChar *content = NULL;
 
       /* Check version of the settings file first */
       version = xmlGetProp (node, (const xmlChar *) "version");
@@ -181,36 +182,23 @@ _load_settings (FrogrConfig *self)
       if (version)
         xmlFree (version);
 
-      /* Iterate over children nodes and extract accounts. */
+      /* Iterate over children nodes and extract configuration options. */
       for (node = node->children; node != NULL; node = node->next)
         {
           if (node->type != XML_ELEMENT_NODE)
             continue;
 
-          if (!xmlStrcmp (node->name, (const xmlChar*) "default-license"))
-            {
-              xmlChar *content = NULL;
+          /* We must initialize this always at the beginning of the loop */
+          content = NULL;
 
-              content = xmlNodeGetContent (node);
-              if (content)
-                {
-                  gint code = 0;
+          if (!xmlStrcmp (node->name, (const xmlChar*) "mainview-options"))
+            _load_mainview_options_xml (self, xml, node);
 
-                  code = (gint) g_ascii_strtoll ((gchar *) content, NULL, 10);
-
-                  if (code < FSP_LICENSE_NONE || code >= FSP_LICENSE_LAST)
-                    priv->license = FSP_LICENSE_NONE;
-                  else
-                    priv->license = (FspLicense) code;
-
-                  xmlFree (content);
-                }
-            }
+          if (!xmlStrcmp (node->name, (const xmlChar*) "default-visibility"))
+            _load_visibility_xml (self, xml, node);
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "default-content-type"))
             {
-              xmlChar *content = NULL;
-
               content = xmlNodeGetContent (node);
               if (content)
                 {
@@ -228,15 +216,11 @@ _load_settings (FrogrConfig *self)
                     default:
                       priv->content_type = FSP_CONTENT_TYPE_PHOTO;
                     }
-
-                  xmlFree (content);
                 }
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "default-safety-level"))
             {
-              xmlChar *content = NULL;
-
               content = xmlNodeGetContent (node);
               if (content)
                 {
@@ -254,69 +238,76 @@ _load_settings (FrogrConfig *self)
                     default:
                       priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
                     }
-
-                  xmlFree (content);
                 }
             }
 
-          if (!xmlStrcmp (node->name, (const xmlChar*) "tags-autocompletion"))
+          if (!xmlStrcmp (node->name, (const xmlChar*) "default-license"))
             {
-              xmlChar *content = NULL;
-
               content = xmlNodeGetContent (node);
-              priv->tags_autocompletion = !xmlStrcmp (content, (const xmlChar*) "1");
+              if (content)
+                {
+                  gint code = 0;
 
-              xmlFree (content);
+                  code = (gint) g_ascii_strtoll ((gchar *) content, NULL, 10);
+
+                  if (code < FSP_LICENSE_NONE || code >= FSP_LICENSE_LAST)
+                    priv->license = FSP_LICENSE_NONE;
+                  else
+                    priv->license = (FspLicense) code;
+                }
             }
 
-          if (!xmlStrcmp (node->name, (const xmlChar*) "keep-file-extensions"))
+          /* By mistake, the following information was saved in the wrong place in version '1' */
+          if (g_strcmp0 (priv->settings_version, "1"))
             {
-              xmlChar *content = NULL;
+              if (!xmlStrcmp (node->name, (const xmlChar*) "default-send-geolocation-data"))
+                {
+                  content = xmlNodeGetContent (node);
+                  priv->send_geolocation_data = !xmlStrcmp (content, (const xmlChar*) "1");
+                }
 
-              content = xmlNodeGetContent (node);
-              priv->keep_file_extensions = !xmlStrcmp (content, (const xmlChar*) "1");
-
-              xmlFree (content);
+              if (!xmlStrcmp (node->name, (const xmlChar*) "default-show-in-search"))
+                {
+                  content = xmlNodeGetContent (node);
+                  priv->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
+                }
             }
-
-          if (!xmlStrcmp (node->name, (const xmlChar*) "import-tags-from-metadata"))
-            {
-              xmlChar *content = NULL;
-
-              content = xmlNodeGetContent (node);
-              priv->import_tags_from_metadata = !xmlStrcmp (content, (const xmlChar*) "1");
-
-              xmlFree (content);
-            }
-
-          if (!xmlStrcmp (node->name, (const xmlChar*) "mainview-options"))
-            _load_mainview_options_xml (self, xml, node);
-
-          if (!xmlStrcmp (node->name, (const xmlChar*) "default-visibility"))
-            _load_visibility_xml (self, xml, node);
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "http-proxy"))
             _load_proxy_data_xml (self, xml, node);
 
+          if (!xmlStrcmp (node->name, (const xmlChar*) "tags-autocompletion"))
+            {
+              content = xmlNodeGetContent (node);
+              priv->tags_autocompletion = !xmlStrcmp (content, (const xmlChar*) "1");
+            }
+
+          if (!xmlStrcmp (node->name, (const xmlChar*) "import-tags-from-metadata"))
+            {
+              content = xmlNodeGetContent (node);
+              priv->import_tags_from_metadata = !xmlStrcmp (content, (const xmlChar*) "1");
+            }
+
           if (!xmlStrcmp (node->name, (const xmlChar*) "use-dark-theme"))
             {
-              xmlChar *content = NULL;
-
               content = xmlNodeGetContent (node);
               priv->use_dark_theme = !xmlStrcmp (content, (const xmlChar*) "1");
+            }
 
-              xmlFree (content);
+          if (!xmlStrcmp (node->name, (const xmlChar*) "keep-file-extensions"))
+            {
+              content = xmlNodeGetContent (node);
+              priv->keep_file_extensions = !xmlStrcmp (content, (const xmlChar*) "1");
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "date-taken-as-posted"))
             {
-              xmlChar *content = NULL;
-
               content = xmlNodeGetContent (node);
               priv->date_taken_as_posted = !xmlStrcmp (content, (const xmlChar*) "1");
-
-              xmlFree (content);
             }
+
+          if (content)
+            xmlFree (content);
         }
     }
   else if (node && node->name)
@@ -377,16 +368,20 @@ _load_visibility_xml (FrogrConfig *self,
           priv->friend = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
-      if (!xmlStrcmp (node->name, (const xmlChar*) "send-geolocation-data"))
+      /* By mistake, the following information was saved in the wrong place in version '1' */
+      if (!g_strcmp0 (priv->settings_version, "1"))
         {
-          content = xmlNodeGetContent (node);
-          priv->send_geolocation_data = !xmlStrcmp (content, (const xmlChar*) "1");
-        }
+          if (!xmlStrcmp (node->name, (const xmlChar*) "send-geolocation-data"))
+            {
+              content = xmlNodeGetContent (node);
+              priv->send_geolocation_data = !xmlStrcmp (content, (const xmlChar*) "1");
+            }
 
-      if (!xmlStrcmp (node->name, (const xmlChar*) "show-in-search"))
-        {
-          content = xmlNodeGetContent (node);
-          priv->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
+          if (!xmlStrcmp (node->name, (const xmlChar*) "show-in-search"))
+            {
+              content = xmlNodeGetContent (node);
+              priv->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
+            }
         }
 
       if (content)
@@ -420,12 +415,8 @@ _load_mainview_options_xml (FrogrConfig *self,
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "enable-tooltips"))
         {
-          xmlChar *content = NULL;
-
           content = xmlNodeGetContent (node);
           priv->mainview_enable_tooltips = !xmlStrcmp (content, (const xmlChar*) "1");
-
-          xmlFree (content);
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "sorting-criteria"))
@@ -701,8 +692,6 @@ _save_settings (FrogrConfig *self)
   _xml_add_bool_child (node, "public", priv->public);
   _xml_add_bool_child (node, "family", priv->family);
   _xml_add_bool_child (node, "friend", priv->friend);
-  _xml_add_bool_child (node, "send-geolocation-data", priv->send_geolocation_data);
-  _xml_add_bool_child (node, "show-in-search", priv->show_in_search);
   xmlAddChild (root, node);
 
   /* Default license */
@@ -712,18 +701,16 @@ _save_settings (FrogrConfig *self)
   _xml_add_int_child (root, "default-content-type", priv->content_type);
   _xml_add_int_child (root, "default-safety-level", priv->safety_level);
 
+  /* Other defaults */
+  _xml_add_bool_child (root, "default-send-geolocation-data", priv->send_geolocation_data);
+  _xml_add_bool_child (root, "default-show-in-search", priv->show_in_search);
+
   /* Other stuff */
   _xml_add_bool_child (root, "tags-autocompletion", priv->tags_autocompletion);
   _xml_add_bool_child (root, "keep-file-extensions", priv->keep_file_extensions);
   _xml_add_bool_child (root, "import-tags-from-metadata", priv->import_tags_from_metadata);
   _xml_add_bool_child (root, "use-dark-theme", priv->use_dark_theme);
   _xml_add_bool_child (root, "date-taken-as-posted", priv->date_taken_as_posted);
-  node = xmlNewNode (NULL, (const xmlChar*) "mainview-options");
-  _xml_add_bool_child (node, "enable-tooltips", priv->mainview_enable_tooltips);
-  _xml_add_int_child (node, "sorting-criteria", priv->mainview_sorting_criteria);
-  _xml_add_bool_child (node, "sorting-reversed", priv->mainview_sorting_reversed);
-  xmlAddChild (root, node);
-
 
   /* Use proxy */
   node = xmlNewNode (NULL, (const xmlChar*) "http-proxy");
@@ -732,6 +719,13 @@ _save_settings (FrogrConfig *self)
   _xml_add_string_child (node, "proxy-port", priv->proxy_port);
   _xml_add_string_child (node, "proxy-username", priv->proxy_username);
   _xml_add_string_child (node, "proxy-password", priv->proxy_password);
+  xmlAddChild (root, node);
+
+  /* Options from the 'View' menu */
+  node = xmlNewNode (NULL, (const xmlChar*) "mainview-options");
+  _xml_add_bool_child (node, "enable-tooltips", priv->mainview_enable_tooltips);
+  _xml_add_int_child (node, "sorting-criteria", priv->mainview_sorting_criteria);
+  _xml_add_bool_child (node, "sorting-reversed", priv->mainview_sorting_reversed);
   xmlAddChild (root, node);
 
   xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
