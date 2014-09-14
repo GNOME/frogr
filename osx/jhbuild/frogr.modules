@@ -169,6 +169,10 @@
     <dependencies>
       <dep package="gstreamer"/>
       <dep package="liboil"/>
+      <dep package="libogg"/>
+      <dep package="libvorbis"/>
+      <dep package="libtheora"/>
+      <dep package="liborc"/>
     </dependencies>
     <after>
     </after>
@@ -193,6 +197,7 @@
       <dep package="gstreamer"/>
       <dep package="gst-plugins-base"/>
       <dep package="gst-plugins-good"/>
+      <dep package="gst-ffmpeg"/>
     </dependencies>
   </autotools>
 
@@ -244,6 +249,7 @@
       <dep package="yelp-tools"/>
       <dep package="shared-mime-info"/>
       <dep package="gstreamer"/>
+      <dep package="liboil"/>
       <dep package="libogg"/>
       <dep package="libvorbis"/>
       <dep package="libtheora"/>
