@@ -36,7 +36,7 @@
 /* Path relative to the application data dir */
 #define MPICTURES_IMAGE "/images/mpictures.png"
 
-#define DIALOG_MIN_WIDTH 640
+#define DIALOG_MIN_WIDTH 700
 #define DIALOG_MIN_HEIGHT 480
 
 #define PICTURE_WIDTH 180
@@ -154,7 +154,7 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *private_hbox = NULL;
   GtkWidget *content_type_hbox = NULL;
   GtkWidget *safety_level_hbox = NULL;
-  GtkWidget *align = NULL;
+  GtkWidget *picture_frame = NULL;
   GtkWidget *label = NULL;
   GtkWidget *widget = NULL;
   GtkWidget *grid = NULL;
@@ -182,10 +182,13 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
   priv->picture_button = widget;
 
-  align = gtk_alignment_new (0.6, 0, 0, 0);
-  gtk_grid_attach (GTK_GRID (grid), align, 1, 0, 1, 1);
-  priv->picture_container = align;
-  priv->picture_img = gtk_image_new ();;
+  picture_frame = gtk_frame_new (NULL);
+  gtk_frame_set_shadow_type (GTK_FRAME (picture_frame), GTK_SHADOW_NONE);
+  gtk_widget_set_halign (GTK_WIDGET (picture_frame), GTK_ALIGN_CENTER);
+
+  gtk_grid_attach (GTK_GRID (grid), picture_frame, 1, 0, 1, 1);
+  priv->picture_container = picture_frame;
+  priv->picture_img = gtk_image_new ();
 
   widget = gtk_label_new (NULL);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 1, 1, 1);
@@ -257,9 +260,8 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
-  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
+  gtk_widget_set_halign (widget, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
@@ -312,9 +314,8 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
-  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
+  gtk_widget_set_halign (widget, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("P_hoto"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
@@ -345,9 +346,8 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
-  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
+  gtk_widget_set_halign (widget, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("S_afe"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
@@ -376,9 +376,8 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
-  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
+  gtk_widget_set_halign (widget, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
   widget = gtk_combo_box_text_new ();
   for (i = 0; license_descriptions[i]; i++)
@@ -400,9 +399,8 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), widget);
-  gtk_box_pack_start (GTK_BOX (section_vbox), align, FALSE, FALSE, 0);
+  gtk_widget_set_halign (widget, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
   widget = gtk_check_button_new_with_mnemonic (_("_Show Up in Global Search Results"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
