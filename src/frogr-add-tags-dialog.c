@@ -189,8 +189,8 @@ static void
 frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 {
   FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
+  GtkWidget *content_area = NULL;
   GtkWidget *vbox = NULL;
-  GtkWidget *align = NULL;
   GtkWidget *label = NULL;
 
   /* Create widgets */
@@ -202,17 +202,20 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
-  vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
+  content_area = gtk_dialog_get_content_area (GTK_DIALOG (self));
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_set_margin_bottom (vbox, 12);
 
   label = gtk_label_new (_("Enter a spaces separated list of tags:"));
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
   priv->entry = frogr_live_entry_new ();
-  gtk_box_pack_start (GTK_BOX (vbox), priv->entry, TRUE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), priv->entry, FALSE, FALSE, 0);
 
   gtk_widget_set_size_request (GTK_WIDGET (self), 300, -1);
+
+  gtk_container_add (GTK_CONTAINER (content_area), vbox);
 
   g_signal_connect (G_OBJECT (self), "response",
                     G_CALLBACK (_dialog_response_cb), NULL);
@@ -231,7 +234,7 @@ frogr_add_tags_dialog_show (GtkWindow *parent, const GSList *pictures, const GSL
                       "modal", TRUE,
                       "pictures", pictures,
                       "transient-for", parent,
-                      "resizable", FALSE,
+                      "resizable", TRUE,
                       NULL);
 
   /* Enable autocompletion if needed */
