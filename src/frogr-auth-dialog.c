@@ -102,14 +102,14 @@ _build_verification_code_entry_widget (GtkWidget *dialog)
   gchar *entry_key = NULL;
   gint i = 0;
 
-  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
   for (i = 0; i < 3; i++)
     {
       entry = gtk_entry_new ();
       gtk_entry_set_max_length (GTK_ENTRY (entry), 3);
       gtk_entry_set_width_chars (GTK_ENTRY (entry), 3);
-      gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, FALSE, 6);
+      gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
 
       entry_key = g_strdup_printf ("vercode-%d", i + 1);
       g_object_set_data (G_OBJECT (dialog), entry_key, entry);
@@ -145,29 +145,29 @@ _ask_for_auth_confirmation (GtkWindow *parent)
                                         _("_Close"),
                                         GTK_RESPONSE_CLOSE,
                                         NULL);
+  gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
   g_free (title);
-
-  gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 
   /* Fill action area */
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_set_margin_bottom (vbox, 12);
 
   /* Description label */
   label = gtk_label_new (_("Enter verification code:"));
-  gtk_misc_set_padding (GTK_MISC (label), 12, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
   /* Entry widgets for the verification code */
   ver_code_entry = _build_verification_code_entry_widget (dialog);
-  gtk_box_pack_start (GTK_BOX (vbox), ver_code_entry, TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), ver_code_entry, FALSE, FALSE, 0);
 
   gtk_container_add (GTK_CONTAINER (content_area), vbox);
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_ask_for_auth_confirmation_response_cb), NULL);
 
+  gtk_window_set_default_size (GTK_WINDOW (dialog), 200, -1);
   gtk_widget_show_all (dialog);
 }
 
