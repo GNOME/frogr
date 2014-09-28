@@ -170,7 +170,6 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *box2 = NULL;
   GtkWidget *box3 = NULL;
   GtkWidget *box4 = NULL;
-  GtkWidget *align = NULL;
   GtkWidget *label = NULL;
   GtkWidget *combo = NULL;
   gchar *markup = NULL;
@@ -190,9 +189,8 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_label_set_markup (GTK_LABEL (label), markup);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
 
   box1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
@@ -236,9 +234,8 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_label_set_markup (GTK_LABEL (label), markup);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
 
   box1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
   gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
@@ -261,9 +258,8 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_label_set_markup (GTK_LABEL (label), markup);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
 
   box1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
   gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
@@ -286,9 +282,8 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_label_set_markup (GTK_LABEL (label), markup);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
 
   combo = gtk_combo_box_text_new ();
   for (i = 0; license_descriptions[i]; i++)
@@ -310,9 +305,8 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_label_set_markup (GTK_LABEL (label), markup);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
 
   box1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
@@ -339,7 +333,6 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   FrogrSettingsDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *grid = NULL;
-  GtkWidget *align = NULL;
   GtkWidget *cbutton = NULL;
   GtkWidget *label = NULL;
   GtkWidget *entry = NULL;
@@ -359,16 +352,13 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_label_set_markup (GTK_LABEL (label), markup);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
 
   /* Enable proxy */
 
   cbutton = gtk_check_button_new_with_mnemonic (_("_Enable HTTP Proxy"));
-  align = gtk_alignment_new (0, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (align), cbutton);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), cbutton, FALSE, FALSE, 0);
   priv->use_proxy_cb = cbutton;
 
   /* Proxy host */
@@ -449,7 +439,6 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   FrogrSettingsDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *box = NULL;
-  GtkWidget *align = NULL;
   GtkWidget *label = NULL;
   gchar *markup = NULL;
 
@@ -467,9 +456,8 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   gtk_label_set_markup (GTK_LABEL (label), markup);
   g_free (markup);
 
-  align = gtk_alignment_new (0, 0, 0, 1);
-  gtk_container_add (GTK_CONTAINER (align), label);
-  gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 6);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
 
   box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_box_set_homogeneous (GTK_BOX (box), FALSE);
