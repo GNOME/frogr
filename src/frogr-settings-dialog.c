@@ -166,10 +166,10 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 {
   FrogrSettingsDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
+  GtkWidget *gbox = NULL;
   GtkWidget *box1 = NULL;
   GtkWidget *box2 = NULL;
   GtkWidget *box3 = NULL;
-  GtkWidget *box4 = NULL;
   GtkWidget *label = NULL;
   GtkWidget *combo = NULL;
   gchar *markup = NULL;
@@ -177,10 +177,13 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
-  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
 
   /* Default Visibility */
+
+  gbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), gbox, FALSE, FALSE, 0);
 
   label = gtk_label_new (NULL);
   gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -190,42 +193,36 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (gbox), label, FALSE, FALSE, 0);
 
   box1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
-  box2 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
-  gtk_box_set_homogeneous (GTK_BOX (box2), FALSE);
+  box2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 
-  box3 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (box3), FALSE);
-
-  _add_toggleable_item (self, GTK_BOX (box3), NULL,
+  _add_toggleable_item (self, GTK_BOX (box2), NULL,
                         TRUE, _("_Private"), &priv->private_rb);
 
-  _add_toggleable_item (self, GTK_BOX (box3), GTK_RADIO_BUTTON (priv->private_rb),
+  _add_toggleable_item (self, GTK_BOX (box2), GTK_RADIO_BUTTON (priv->private_rb),
                         FALSE, _("P_ublic"), &priv->public_rb);
 
-  gtk_box_pack_start (GTK_BOX (box2), box3, FALSE, FALSE, 0);
-
-  box3 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (box3), FALSE);
-
-  box4 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (box4), FALSE);
-
-  _add_toggleable_item (self, GTK_BOX (box4), NULL, FALSE,
-                        _("_Family"), &priv->family_cb);
-  _add_toggleable_item (self, GTK_BOX (box4), NULL, FALSE,
-                        _("F_riends"), &priv->friend_cb);
-
-  gtk_box_pack_start (GTK_BOX (box3), box4, FALSE, FALSE, 12);
-  gtk_box_pack_start (GTK_BOX (box2), box3, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+  box2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  box3 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+
+  _add_toggleable_item (self, GTK_BOX (box3), NULL, FALSE,
+                        _("_Family"), &priv->family_cb);
+  _add_toggleable_item (self, GTK_BOX (box3), NULL, FALSE,
+                        _("F_riends"), &priv->friend_cb);
+
+  gtk_box_pack_start (GTK_BOX (box2), box3, FALSE, FALSE, 12);
+  gtk_box_pack_start (GTK_BOX (box1), box2, FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (gbox), box1, FALSE, FALSE, 0);
 
   /* Default Content type */
+
+  gbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), gbox, FALSE, FALSE, 0);
 
   label = gtk_label_new (NULL);
   gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -235,10 +232,9 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (gbox), label, FALSE, FALSE, 0);
 
-  box1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-  gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
+  box1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 
   _add_toggleable_item (self, GTK_BOX (box1), NULL, TRUE,
                         _("P_hoto"), &priv->photo_content_rb);
@@ -247,9 +243,12 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   _add_toggleable_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->photo_content_rb),
                         FALSE, _("Oth_er"), &priv->other_content_rb);
 
-  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (gbox), box1, FALSE, FALSE, 0);
 
   /* Default Safety level */
+
+  gbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), gbox, FALSE, FALSE, 0);
 
   label = gtk_label_new (NULL);
   gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -259,10 +258,9 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (gbox), label, FALSE, FALSE, 0);
 
-  box1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-  gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
+  box1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 
   _add_toggleable_item (self, GTK_BOX (box1), NULL, TRUE,
                         _("S_afe"), &priv->safe_rb);
@@ -271,9 +269,12 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   _add_toggleable_item (self, GTK_BOX (box1), GTK_RADIO_BUTTON (priv->safe_rb),
                         FALSE, _("Restr_icted"), &priv->restricted_rb);
 
-  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (gbox), box1, FALSE, FALSE, 0);
 
   /* License type */
+
+  gbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), gbox, FALSE, FALSE, 0);
 
   label = gtk_label_new (NULL);
   gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -283,13 +284,13 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (gbox), label, FALSE, FALSE, 0);
 
   combo = gtk_combo_box_text_new ();
   for (i = 0; license_descriptions[i]; i++)
     gtk_combo_box_text_insert (GTK_COMBO_BOX_TEXT (combo), i, NULL, _(license_descriptions[i]));
 
-  gtk_box_pack_start (GTK_BOX (vbox), combo, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (gbox), combo, FALSE, FALSE, 0);
   priv->license_cb = combo;
 
   g_signal_connect (G_OBJECT (priv->license_cb), "changed",
@@ -297,6 +298,9 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     self);
 
   /* Other defaults */
+
+  gbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), gbox, FALSE, FALSE, 0);
 
   label = gtk_label_new (NULL);
   gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
@@ -306,10 +310,9 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (gbox), label, FALSE, FALSE, 0);
 
   box1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (box1), FALSE);
 
   _add_toggleable_item (self, GTK_BOX (box1), NULL, FALSE,
                         _("_Show Pictures in Global Search Results"),
@@ -321,9 +324,9 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                         _("Set 'Taken Date' as 'Posted Date' for Pictures"),
                         &priv->date_taken_as_posted_cb);
 
-  gtk_box_pack_start (GTK_BOX (vbox), box1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (gbox), box1, FALSE, FALSE, 0);
 
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_General")));
 }
 
@@ -341,7 +344,6 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
 
   /* Proxy settings */
 
@@ -353,7 +355,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
   /* Enable proxy */
 
@@ -365,7 +367,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   grid = gtk_grid_new ();
   gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
-  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
 
   label = gtk_label_new_with_mnemonic (_("_Host:"));
   gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
@@ -429,7 +431,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
                     G_CALLBACK (_proxy_port_inserted_cb),
                     NULL);
 
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("Connec_tion")));
 }
 
@@ -445,7 +447,6 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
 
   /* Other Stuff */
 
@@ -457,10 +458,9 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
   box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (box), FALSE);
 
   _add_toggleable_item (self, GTK_BOX (box), NULL, FALSE,
                         _("Ena_ble Tags Auto-Completion"),
@@ -479,7 +479,7 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
 
   gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
 
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
   gtk_notebook_append_page (notebook, vbox, gtk_label_new_with_mnemonic (_("_Misc")));
 }
 
@@ -969,7 +969,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
   vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
 
   notebook = GTK_NOTEBOOK (gtk_notebook_new ());
-  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (notebook), TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (notebook), TRUE, TRUE, 0);
 
   _add_general_page (self, notebook);
   _add_connection_page (self, notebook);
