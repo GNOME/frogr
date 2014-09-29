@@ -314,6 +314,7 @@ static void
 frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
 {
   FrogrCreateNewSetDialogPrivate *priv = NULL;
+  GtkWidget *content_area = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *grid = NULL;
   GtkWidget *scroller = NULL;
@@ -332,12 +333,14 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
-  vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
+  content_area = gtk_dialog_get_content_area (GTK_DIALOG (self));
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_set_margin_bottom (vbox, 12);
 
   grid = gtk_grid_new ();
   gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
-  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
-  gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 6);
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+  gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 
   widget = gtk_label_new (_("Title:"));
   gtk_widget_set_halign (GTK_WIDGET (widget), GTK_ALIGN_END);
@@ -373,6 +376,8 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 2, 1, 1);
   priv->copy_to_pictures_cb = widget;
+
+  gtk_container_add (GTK_CONTAINER (content_area), vbox);
 
   g_signal_connect (G_OBJECT (priv->copy_to_pictures_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
