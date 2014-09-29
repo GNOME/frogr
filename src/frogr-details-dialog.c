@@ -150,7 +150,6 @@ _create_widgets (FrogrDetailsDialog *self)
   GtkWidget *hbox = NULL;
   GtkWidget *section_vbox = NULL;
   GtkWidget *internal_hbox = NULL;
-  GtkWidget *visibility_vbox = NULL;
   GtkWidget *private_hbox = NULL;
   GtkWidget *content_type_hbox = NULL;
   GtkWidget *safety_level_hbox = NULL;
@@ -164,18 +163,16 @@ _create_widgets (FrogrDetailsDialog *self)
 
   priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
 
-  main_vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
+  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 18);
+  gtk_widget_set_margin_bottom (hbox, 6);
 
-  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-  gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
 
   /* Left side (image, radio buttons, checkboxes...) */
 
   grid = gtk_grid_new ();
   gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
-  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
 
   widget = gtk_button_new ();
   gtk_widget_set_tooltip_text (widget, _("Open with image viewer"));
@@ -191,6 +188,7 @@ _create_widgets (FrogrDetailsDialog *self)
   priv->picture_img = gtk_image_new ();
 
   widget = gtk_label_new (NULL);
+  gtk_widget_set_margin_bottom (widget, 6);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 1, 1, 1);
   priv->mpictures_label = widget;
   priv->mpictures_pixbuf = NULL;
@@ -239,20 +237,17 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 4, 1, 1);
   priv->tags_entry = widget;
 
-  gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
 
   /* Right side (text fields) */
 
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
+
   /* Visibility */
-  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-  gtk_box_set_homogeneous (GTK_BOX (vbox), FALSE);
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
-  visibility_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (visibility_vbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Visibility"));
@@ -264,7 +259,6 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("_Private"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
@@ -274,10 +268,10 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
   priv->public_rb = widget;
 
-  gtk_box_pack_start (GTK_BOX (visibility_vbox), internal_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
 
+  internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   private_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (private_hbox), FALSE);
 
   widget = gtk_check_button_new_with_mnemonic (_("_Family"));
   gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
@@ -287,26 +281,14 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
   priv->friend_cb = widget;
 
-  internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-  gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
-
   gtk_box_pack_start (GTK_BOX (internal_hbox), private_hbox, FALSE, FALSE, 12);
-  gtk_box_pack_start (GTK_BOX (visibility_vbox), internal_hbox, FALSE, FALSE, 0);
-
-  internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (internal_hbox), FALSE);
-
-  gtk_box_pack_start (GTK_BOX (internal_hbox), visibility_vbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
 
   /* Content type */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
   content_type_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (content_type_hbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Content Type"));
@@ -330,15 +312,12 @@ _create_widgets (FrogrDetailsDialog *self)
   priv->other_content_rb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), content_type_hbox, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
 
   /* Safety level */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
   safety_level_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (safety_level_hbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Safety Level"));
@@ -362,13 +341,11 @@ _create_widgets (FrogrDetailsDialog *self)
   priv->restricted_rb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), safety_level_hbox, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
 
   /* License type */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("License Type"));
@@ -384,14 +361,13 @@ _create_widgets (FrogrDetailsDialog *self)
     gtk_combo_box_text_insert (GTK_COMBO_BOX_TEXT (widget), i, NULL, _(license_descriptions[i]));
 
   priv->license_cb = widget;
-  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
 
   /* Other properties */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_box_set_homogeneous (GTK_BOX (section_vbox), FALSE);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Other Properties"));
@@ -414,11 +390,12 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
   priv->date_taken_as_posted_cb = widget;
 
-  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, TRUE, TRUE, 6);
+  main_vbox = gtk_dialog_get_content_area (GTK_DIALOG (self));
+  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, TRUE, TRUE, 0);
 
   /* Connect signals */
   g_signal_connect (G_OBJECT (priv->public_rb), "clicked",
