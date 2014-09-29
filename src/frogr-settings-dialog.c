@@ -178,7 +178,6 @@ _add_general_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   priv = FROGR_SETTINGS_DIALOG_GET_PRIVATE (self);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
 
   /* Default Visibility */
 
