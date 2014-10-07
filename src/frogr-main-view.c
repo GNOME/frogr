@@ -541,13 +541,13 @@ static void _initialize_toolbar (GtkWidget *toolbar)
   GtkToolItem *toolbar_items[7];
   gint i;
 
-  toolbar_items[0] = _create_toolbar_item ("win.open-project", "gtk-open", _("Open"), _("Open Existing Project"));
-  toolbar_items[1] = _create_toolbar_item ("win.save-project", "gtk-save", _("Save"), _("Save Current Project"));
+  toolbar_items[0] = _create_toolbar_item ("win.open-project", "document-open", _("Open"), _("Open Existing Project"));
+  toolbar_items[1] = _create_toolbar_item ("win.save-project", "document-save", _("Save"), _("Save Current Project"));
   toolbar_items[2] = gtk_separator_tool_item_new ();
-  toolbar_items[3] = _create_toolbar_item ("win.add-pictures", "gtk-add", _("Add"), _("Add Elements"));
-  toolbar_items[4] = _create_toolbar_item ("win.remove-pictures", "gtk-remove", _("Remove"), _("Remove Elements"));
+  toolbar_items[3] = _create_toolbar_item ("win.add-pictures", "list-add", _("Add"), _("Add Elements"));
+  toolbar_items[4] = _create_toolbar_item ("win.remove-pictures", "list-remove", _("Remove"), _("Remove Elements"));
   toolbar_items[5] = gtk_separator_tool_item_new ();
-  toolbar_items[6] = _create_toolbar_item ("win.upload-all", "gtk-go-up", _("Upload"), _("Upload All"));
+  toolbar_items[6] = _create_toolbar_item ("win.upload-all", "go-up", _("Upload"), _("Upload All"));
 
   for (i = 0; i < G_N_ELEMENTS (toolbar_items); ++i)
     gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_items[i], i);
