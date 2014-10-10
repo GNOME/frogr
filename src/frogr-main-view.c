@@ -826,8 +826,6 @@ _tweak_app_menu_for_mac (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = NULL;
   GMenuModel *menu = NULL;
-  /* GtkOSXApplication *osx_app = NULL; */
-  /* GtkWidget *menu_item = NULL; */
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
