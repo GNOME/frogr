@@ -73,6 +73,7 @@ gtkbuilder_DATA = \
 	data/gtkbuilder/frogr-main-view.xml \
 	data/gtkbuilder/frogr-app-menu.xml \
 	data/gtkbuilder/frogr-context-menu.xml \
+	data/gtkbuilder/frogr-menu-button.xml \
 	data/gtkbuilder/frogr-menu-bar.xml
 
 man1_MANS = data/manpages/frogr.1

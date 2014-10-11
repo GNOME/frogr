@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="menu-button">
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Save</attribute>
+          <attribute name="action">win.save-project</attribute>
+          <attribute name="accel">&lt;Primary&gt;s</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Save _As…</attribute>
+          <attribute name="action">win.save-project-as</attribute>
+          <attribute name="accel">&lt;Primary&gt;&lt;Shift&gt;s</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Edit Details…</attribute>
+          <attribute name="action">win.edit-details</attribute>
+          <attribute name="accel">&lt;Primary&gt;d</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add _Tags…</attribute>
+          <attribute name="action">win.add-tags</attribute>
+          <attribute name="accel">&lt;Primary&gt;t</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add to _Group…</attribute>
+          <attribute name="action">win.add-to-group</attribute>
+          <attribute name="accel">&lt;Primary&gt;g</attribute>
+        </item>
+        <submenu>
+          <attribute name="label" translatable="yes">Add to _Photoset</attribute>
+          <section>
+            <item>
+              <attribute name="label" translatable="yes">_Add to Existing Photoset…</attribute>
+              <attribute name="action">win.add-to-set</attribute>
+              <attribute name="accel">&lt;Primary&gt;p</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Create New Photoset…</attribute>
+              <attribute name="action">win.add-to-new-set</attribute>
+              <attribute name="accel">&lt;Primary&gt;&lt;Shift&gt;p</attribute>
+            </item>
+          </section>
+        </submenu>
+      </section>
+      <section>
+        <submenu>
+          <attribute name="label" translatable="yes">_Sort Elements</attribute>
+          <section>
+            <item>
+              <attribute name="label" translatable="yes">As _Loaded</attribute>
+              <attribute name="action">win.sort-by</attribute>
+              <attribute name="target">as-loaded</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">By _Date Taken</attribute>
+              <attribute name="action">win.sort-by</attribute>
+              <attribute name="target">date-taken</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">By _Title</attribute>
+              <attribute name="action">win.sort-by</attribute>
+              <attribute name="target">title</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">By _Size</attribute>
+              <attribute name="action">win.sort-by</attribute>
+              <attribute name="target">size</attribute>
+            </item>
+          </section>
+          <section>
+            <item>
+              <attribute name="label" translatable="yes">_Reversed Order</attribute>
+              <attribute name="action">win.sort-in-reverse-order</attribute>
+            </item>
+          </section>
+        </submenu>
+        <item>
+          <attribute name="label" translatable="yes">Enable _Tooltips</attribute>
+          <attribute name="action">win.enable-tooltips</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Open in External Viewer</attribute>
+          <attribute name="action">win.open-in-external-viewer</attribute>
+          <attribute name="accel">&lt;Primary&gt;v</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Quit</attribute>
+          <attribute name="action">app.quit</attribute>
+          <attribute name="accel">&lt;Primary&gt;q</attribute>
+        </item>
+      </section>
+  </menu>
+</interface>
