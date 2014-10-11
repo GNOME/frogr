@@ -83,7 +83,7 @@ struct _FrogrFileLoaderPrivate
   gboolean friend_visibility;
   gboolean show_in_search;
   gboolean send_location;
-  gboolean date_taken_as_posted;
+  gboolean replace_date_posted;
   FspLicense license;
   FspSafetyLevel safety_level;
   FspContentType content_type;
@@ -552,7 +552,7 @@ _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboo
 
   frogr_picture_set_show_in_search (picture, priv->show_in_search);
   frogr_picture_set_send_location (picture, priv->send_location);
-  frogr_picture_set_date_taken_as_posted (picture, priv->date_taken_as_posted);
+  frogr_picture_set_replace_date_posted (picture, priv->replace_date_posted);
   frogr_picture_set_license (picture, priv->license);
   frogr_picture_set_content_type (picture, priv->content_type);
   frogr_picture_set_safety_level (picture, priv->safety_level);
@@ -832,7 +832,7 @@ frogr_file_loader_init (FrogrFileLoader *self)
   priv->friend_visibility = frogr_config_get_default_friend (config);
   priv->show_in_search = frogr_config_get_default_show_in_search (config);
   priv->send_location = frogr_config_get_default_send_geolocation_data (config);
-  priv->date_taken_as_posted = frogr_config_get_default_date_taken_as_posted (config);
+  priv->replace_date_posted = frogr_config_get_default_replace_date_posted (config);
   priv->license = frogr_config_get_default_license (config);
   priv->safety_level = frogr_config_get_default_safety_level (config);
   priv->content_type = frogr_config_get_default_content_type (config);

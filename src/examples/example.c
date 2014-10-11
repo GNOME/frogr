@@ -44,7 +44,7 @@ void added_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photoset_created_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void get_photosets_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void photo_get_info_cb (GObject *object, GAsyncResult *res, gpointer unused);
-void set_posted_date_cb (GObject *object, GAsyncResult *res, gpointer user_data);
+void set_date_posted_cb (GObject *object, GAsyncResult *res, gpointer user_data);
 void get_location_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void set_location_cb (GObject *object, GAsyncResult *res, gpointer unused);
 void set_license_cb (GObject *object, GAsyncResult *res, gpointer unused);
@@ -374,7 +374,7 @@ photo_get_info_cb                       (GObject      *object,
 }
 
 void
-set_posted_date_cb                      (GObject      *object,
+set_date_posted_cb                      (GObject      *object,
                                          GAsyncResult *res,
                                          gpointer      user_data)
 {
@@ -382,15 +382,15 @@ set_posted_date_cb                      (GObject      *object,
   GError *error = NULL;
   gboolean result = FALSE;
 
-  result = fsp_session_set_posted_date_finish (session, res, &error);
+  result = fsp_session_set_date_posted_finish (session, res, &error);
   if (error != NULL)
     {
-      g_print ("Error setting the posted date: %s\n", error->message);
+      g_print ("Error setting the date posted: %s\n", error->message);
       g_error_free (error);
     }
   else
     {
-      g_print ("[set_posted_date_cb]::Success! (%s)\n\n",
+      g_print ("[set_date_posted_cb]::Success! (%s)\n\n",
                result ? "OK" : "FAIL");
 
       /* Make a pause before continuing */
@@ -434,13 +434,13 @@ get_location_cb                         (GObject      *object,
       g_print ("Press ENTER to continue...\n\n");
       getchar ();
 
-      /* Continue setting the posted date to one year ago */
+      /* Continue setting the date posted to one year ago */
       date_now = g_date_time_new_now_local ();
       date = g_date_time_add_years (date_now, -1);
       date_str = g_date_time_format (date, "%Y-%m-%d %H:%M:%S");
-      g_print ("Setting posted date for photo %s to %s...\n", uploaded_photo_id, date_str);
-      fsp_session_set_posted_date (session, uploaded_photo_id, date, NULL,
-                                   set_posted_date_cb, NULL);
+      g_print ("Setting date posted for photo %s to %s...\n", uploaded_photo_id, date_str);
+      fsp_session_set_date_posted (session, uploaded_photo_id, date, NULL,
+                                   set_date_posted_cb, NULL);
 
       g_free (date_str);
       g_date_time_unref (date);

@@ -284,7 +284,7 @@ fsp_session_get_location_finish          (FspSession    *self,
                                           GError       **error);
 
 void
-fsp_session_set_posted_date             (FspSession          *self,
+fsp_session_set_date_posted             (FspSession          *self,
                                          const gchar         *photo_id,
                                          GDateTime           *date,
                                          GCancellable        *cancellable,
@@ -292,7 +292,7 @@ fsp_session_set_posted_date             (FspSession          *self,
                                          gpointer             data);
 
 gboolean
-fsp_session_set_posted_date_finish      (FspSession    *self,
+fsp_session_set_date_posted_finish      (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error);
 

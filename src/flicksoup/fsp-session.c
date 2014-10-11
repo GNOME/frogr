@@ -2726,7 +2726,7 @@ fsp_session_get_location_finish          (FspSession    *self,
 }
 
 void
-fsp_session_set_posted_date             (FspSession          *self,
+fsp_session_set_date_posted             (FspSession          *self,
                                          const gchar         *photo_id,
                                          GDateTime           *date,
                                          GCancellable        *cancellable,
@@ -2758,14 +2758,14 @@ fsp_session_set_posted_date             (FspSession          *self,
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _set_dates_soup_session_cb, G_OBJECT (self),
-                          cancellable, callback, fsp_session_set_posted_date, data);
+                          cancellable, callback, fsp_session_set_date_posted, data);
 
   g_free (date_str);
   g_free (url);
 }
 
 gboolean
-fsp_session_set_posted_date_finish      (FspSession    *self,
+fsp_session_set_date_posted_finish      (FspSession    *self,
                                          GAsyncResult  *res,
                                          GError       **error)
 {
@@ -2775,7 +2775,7 @@ fsp_session_set_posted_date_finish      (FspSession    *self,
   g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
 
   result = _finish_async_request (G_OBJECT (self), res,
-                                  fsp_session_set_posted_date, error);
+                                  fsp_session_set_date_posted, error);
 
   return result ? TRUE : FALSE;
 }

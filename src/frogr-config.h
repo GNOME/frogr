@@ -121,9 +121,9 @@ void frogr_config_set_default_send_geolocation_data (FrogrConfig *self, gboolean
 
 gboolean frogr_config_get_default_send_geolocation_data (FrogrConfig *self);
 
-void frogr_config_set_default_date_taken_as_posted (FrogrConfig *self, gboolean value);
+void frogr_config_set_default_replace_date_posted (FrogrConfig *self, gboolean value);
 
-gboolean frogr_config_get_default_date_taken_as_posted (FrogrConfig *self);
+gboolean frogr_config_get_default_replace_date_posted (FrogrConfig *self);
 
 void frogr_config_set_tags_autocompletion (FrogrConfig *self, gboolean value);
 
