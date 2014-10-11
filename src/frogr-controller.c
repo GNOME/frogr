@@ -1392,7 +1392,7 @@ _set_date_taken_as_posted_for_picture (FrogrController *self, UploadOnePictureDa
   GTimeVal picture_timeval;
   const gchar *picture_date_str = NULL;
   gchar *debug_msg = NULL;
-  gchar date_iso8601[21];
+  gchar date_iso8601[20];
 
   picture = uop_data->picture;
   picture_date_str = frogr_picture_get_datetime (picture);
@@ -1407,7 +1407,7 @@ _set_date_taken_as_posted_for_picture (FrogrController *self, UploadOnePictureDa
   date_iso8601[10] = 'T';
   date_iso8601[4] = '-';
   date_iso8601[7] = '-';
-  date_iso8601[20] = '\0';
+  date_iso8601[19] = '\0';
 
   if (!g_time_val_from_iso8601 (date_iso8601, &picture_timeval))
     return;
