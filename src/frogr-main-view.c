@@ -45,8 +45,12 @@
 /* Path relative to the application data dir */
 #define UI_MAIN_VIEW_FILE "/gtkbuilder/frogr-main-view.xml"
 #define UI_APP_MENU_FILE "/gtkbuilder/frogr-app-menu.xml"
-#define UI_MENU_BAR_FILE "/gtkbuilder/frogr-menu-bar.xml"
 #define UI_CONTEXT_MENU_FILE "/gtkbuilder/frogr-context-menu.xml"
+#ifdef USE_HEADER_BAR
+#define UI_MENU_BUTTON_FILE "/gtkbuilder/frogr-menu-button.xml"
+#else
+#define UI_MENU_BAR_FILE "/gtkbuilder/frogr-menu-bar.xml"
+#endif
 
 /* Action names for menu items */
 #define ACTION_AUTHORIZE "authorize"
@@ -107,6 +111,9 @@ typedef struct _FrogrMainViewPrivate {
   gchar *project_dir;
   gchar *project_filepath;
 
+#ifdef USE_HEADER_BAR
+  GtkWidget *header_bar;
+#endif
   GtkWidget *icon_view;
   GtkWidget *status_bar;
 
@@ -137,10 +144,15 @@ enum {
 /* Prototypes */
 
 static void _initialize_ui (FrogrMainView *self);
-static void _initialize_toolbar (GtkWidget *toolbar);
 static gboolean _initialize_app_menu (FrogrMainView *self);
 
+#ifdef USE_HEADER_BAR
+static void _initialize_header_bar (FrogrMainView *self);
+static GtkWidget *_create_header_bar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text);
+#else
+static void _initialize_menubar_and_toolbar (FrogrMainView *self);
 static GtkToolItem *_create_toolbar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text);
+#endif
 static gboolean _maybe_show_auth_dialog_on_idle (FrogrMainView *self);
 
 static void _update_project_path (FrogrMainView *self, const gchar *path);
@@ -326,7 +338,6 @@ _initialize_ui (FrogrMainView *self)
   GtkWidget *progress_vbox;
   GtkWidget *progress_bar;
   GtkWidget *progress_label;
-  GtkWidget *toolbar;
   GMenuModel *ctxt_menu_model;
   const gchar *icons_path = NULL;
   gchar *full_path = NULL;
@@ -372,24 +383,17 @@ _initialize_ui (FrogrMainView *self)
                                    app_entries, G_N_ELEMENTS (app_entries),
                                    self);
   priv->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
-  gtk_application_set_app_menu (GTK_APPLICATION (gtk_app), priv->app_menu);
+  gtk_application_set_app_menu (gtk_app, priv->app_menu);
 
-  /* Menu bar */
-  full_path = g_strdup_printf ("%s/" UI_MENU_BAR_FILE, frogr_util_get_app_data_dir ());
-  gtk_builder_add_from_file (builder, full_path, NULL);
-  g_free (full_path);
-
-  g_action_map_add_action_entries (G_ACTION_MAP (self),
-                                   win_entries, G_N_ELEMENTS (win_entries),
-                                   self);
-
-  gtk_application_set_menubar (GTK_APPLICATION (gtk_app),
-                               G_MENU_MODEL (gtk_builder_get_object (builder, "menu-bar")));
-  gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (self), TRUE);
-
-  /* Toolbar */
-  toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "toolbar"));
-  _initialize_toolbar (toolbar);
+#ifdef USE_HEADER_BAR
+  /* Header_Bar and main vertical box below*/
+  _initialize_header_bar (self);
+  gtk_window_set_titlebar (GTK_WINDOW (self), priv->header_bar);
+#else
+  /* Menu bar and Toolbar */
+  _initialize_menubar_and_toolbar (self);
+  gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (self), TRUE);
+#endif
 
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
   priv->icon_view = icon_view;
@@ -484,7 +488,6 @@ _initialize_ui (FrogrMainView *self)
   gtk_widget_set_has_tooltip (icon_view, TRUE);
 
   gtk_window_set_default_size (GTK_WINDOW (self), MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
-  gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (self), TRUE);
 
   /* Init status bar */
   priv->sb_context_id =
@@ -536,10 +539,115 @@ _initialize_ui (FrogrMainView *self)
   gtk_widget_show (GTK_WIDGET (self));
 }
 
-static void _initialize_toolbar (GtkWidget *toolbar)
+static gboolean
+_initialize_app_menu (FrogrMainView *self)
 {
+  _populate_accounts_submenu (self);
+
+#ifdef PLATFORM_MAC
+  _tweak_app_menu_for_mac (self);
+#endif
+
+  return FALSE;
+}
+
+#ifdef USE_HEADER_BAR
+static void _initialize_header_bar (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  GtkWidget *toolbar = NULL;
+  GtkWidget *header_item = NULL;
+  GtkWidget *menu = NULL;
+  gchar *full_path = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  priv->header_bar = gtk_header_bar_new ();
+
+  /* Make sure that the toolbar is not visible when using hte header bar */
+  toolbar = GTK_WIDGET (gtk_builder_get_object (priv->builder, "toolbar"));
+  gtk_widget_show (toolbar);
+
+  /* First create the left side buttons */
+
+  header_item = _create_header_bar_item ("win.open-project", "document-open-symbolic", _("Open"), _("Open Existing Project"));
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
+  header_item = _create_header_bar_item ("win.add-pictures", "list-add-symbolic", _("Add"), _("Add Elements"));
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
+  header_item = _create_header_bar_item ("win.remove-pictures", "list-remove-symbolic", _("Remove"), _("Remove Elements"));
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
+  header_item = _create_header_bar_item ("win.upload-all", "document-send-symbolic", _("Upload"), _("Upload All"));
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
+
+  /* Save project item to the right side */
+
+  header_item = _create_header_bar_item ("win.save-project", "document-save-symbolic", _("Save"), _("Save Current Project"));
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), header_item);
+
+  /* Now create the menu button and its associated menu */
+
+  full_path = g_strdup_printf ("%s/" UI_MENU_BUTTON_FILE, frogr_util_get_app_data_dir ());
+  gtk_builder_add_from_file (priv->builder, full_path, NULL);
+  g_free (full_path);
+
+  menu = gtk_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (priv->builder, "menu-button")));
+  gtk_widget_set_halign (menu, GTK_ALIGN_END);
+
+  g_action_map_add_action_entries (G_ACTION_MAP (self),
+                                   win_entries, G_N_ELEMENTS (win_entries),
+                                   self);
+
+  header_item = gtk_menu_button_new ();
+  gtk_menu_button_set_popup (GTK_MENU_BUTTON (header_item), menu);
+  gtk_widget_show (header_item);
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), header_item);
+
+  /* Finally, make the close button visible and show */
+
+  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->header_bar), TRUE);
+  gtk_widget_show (priv->header_bar);
+}
+
+static GtkWidget *
+_create_header_bar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text)
+{
+  GtkWidget *widget = NULL;
+
+  widget = gtk_button_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
+  gtk_widget_set_tooltip_text (widget, tooltip_text);
+  gtk_actionable_set_action_name (GTK_ACTIONABLE (widget), action_name);
+  gtk_widget_show (widget);
+
+  return widget;
+}
+
+#else /* !USE_HEADER_BAR */
+
+static void _initialize_menubar_and_toolbar (FrogrMainView *self)
+{
+  FrogrMainViewPrivate *priv = NULL;
+  GtkWidget *toolbar = NULL;
   GtkToolItem *toolbar_items[7];
+  gchar *full_path = NULL;
   gint i;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+
+  /* Menu bar */
+  full_path = g_strdup_printf ("%s/" UI_MENU_BAR_FILE, frogr_util_get_app_data_dir ());
+  gtk_builder_add_from_file (priv->builder, full_path, NULL);
+  g_free (full_path);
+
+  g_action_map_add_action_entries (G_ACTION_MAP (self),
+                                   win_entries, G_N_ELEMENTS (win_entries),
+                                   self);
+
+  gtk_application_set_menubar (gtk_window_get_application (GTK_WINDOW (self)),
+                               G_MENU_MODEL (gtk_builder_get_object (priv->builder, "menu-bar")));
+  gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (self), TRUE);
+
+  /* Toolbar */
+  toolbar = GTK_WIDGET (gtk_builder_get_object (priv->builder, "toolbar"));
+  gtk_widget_show (toolbar);
 
   toolbar_items[0] = _create_toolbar_item ("win.open-project", "document-open", _("Open"), _("Open Existing Project"));
   toolbar_items[1] = _create_toolbar_item ("win.save-project", "document-save", _("Save"), _("Save Current Project"));
@@ -554,18 +662,6 @@ static void _initialize_toolbar (GtkWidget *toolbar)
 
   gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
                                GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
-}
-
-static gboolean
-_initialize_app_menu (FrogrMainView *self)
-{
-  _populate_accounts_submenu (self);
-
-#ifdef PLATFORM_MAC
-  _tweak_app_menu_for_mac (self);
-#endif
-
-  return FALSE;
 }
 
 static GtkToolItem *
@@ -584,6 +680,7 @@ _create_toolbar_item (const gchar *action_name, const gchar *icon_name, const gc
 
   return item;
 }
+#endif
 
 static gboolean
 _maybe_show_auth_dialog_on_idle (FrogrMainView *self)
@@ -662,6 +759,26 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
+#ifdef USE_HEADER_BAR
+  gchar *title = NULL;
+  gchar *subtitle = NULL;
+
+  title = priv->project_name
+    ? g_strdup_printf ("%s%s", (dirty ? "*" : ""), priv->project_name)
+    : g_strdup (APP_SHORTNAME);
+
+  subtitle = priv->project_name
+    ? g_strdup_printf ("%s", priv->project_dir)
+    : NULL;
+
+  gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), title);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->header_bar), subtitle);
+
+  g_free (subtitle);
+  g_free (title);
+
+#else /* !USE_HEADER_BAR */
+
   gchar *session_string = NULL;
   gchar *window_title = NULL;
 
@@ -675,6 +792,7 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
 
   gtk_window_set_title (GTK_WINDOW (self), window_title);
   g_free (window_title);
+#endif
 }
 
 static void
