@@ -20,9 +20,16 @@
 
 #include <stdio.h>
 #include <glib.h>
+#include <errno.h>
+#include <gcrypt.h>
+#include <pthread.h>
 
+#include <config.h>
 #include <flicksoup/flicksoup.h>
 #include <libsoup/soup.h>
+
+/* Early for gcrypt pthread threads support */
+GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
@@ -770,6 +777,17 @@ main                                    (int    argc,
   GMainLoop *mainloop;
 
   g_print ("Running flicksoup example...\n\n");
+
+  /* Initialize gcrypt at the very beginning */
+  gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+  /* Version check should be almost the very first call because it
+     makes sure that important subsystems are initialized. */
+  g_assert (gcry_check_version (LIBGCRYPT_MIN_VERSION));
+  /* Allocate a pool of 16k secure memory.  This make the secure
+     memory available and also drops privileges where needed. */
+  gcry_control (GCRYCTL_INIT_SECMEM, 16384, 0);
+  /* Tell Libgcrypt that initialization has completed. */
+  gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0);
 
   /* Find full path to the testing photo */
   test_photo_path = g_strdup_printf ("file://%s/%s",

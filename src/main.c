@@ -29,6 +29,12 @@
 #include <gst/gst.h>
 #endif
 #include <libxml/parser.h>
+#include <errno.h>
+#include <gcrypt.h>
+#include <pthread.h>
+
+/* Early for gcrypt pthread threads support */
+GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 int
 main (int argc, char **argv)
@@ -46,6 +52,17 @@ main (int argc, char **argv)
       g_error_free (error);
     }
 #endif
+
+  /* Initialize gcrypt at the very beginning */
+  gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+  /* Version check should be almost the very first call because it
+     makes sure that important subsystems are initialized. */
+  g_assert (gcry_check_version (LIBGCRYPT_MIN_VERSION));
+  /* Allocate a pool of 16k secure memory.  This make the secure
+     memory available and also drops privileges where needed. */
+  gcry_control (GCRYCTL_INIT_SECMEM, 16384, 0);
+  /* Tell Libgcrypt that initialization has completed. */
+  gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0);
 
   /* Initialize libxml2 library */
   xmlInitParser ();

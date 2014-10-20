@@ -132,6 +132,9 @@ enum  {
 
 /* Prototypes */
 
+static void
+_init_gcrypt                            (void);
+
 static SoupSession *
 _get_soup_session                       (FspSession *self);
 
@@ -502,15 +505,8 @@ fsp_session_init                        (FspSession *self)
   self->priv->using_default_proxy = TRUE;
   self->priv->proxy_uri = NULL;
 
-  /* Apparently, we need to initialize gcrypt not to get a crash:
-     http://lists.gnupg.org/pipermail/gcrypt-devel/2003-August/000458.html */
-  if (!gcry_control (GCRYCTL_ANY_INITIALIZATION_P))
-    {
-      gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
-      gcry_check_version (NULL);
-      gcry_control (GCRYCTL_INIT_SECMEM, 32768);
-      gcry_control (GCRYCTL_INITIALIZATION_FINISHED);
-    }
+  /* Early gcrypt initialization */
+  _init_gcrypt ();
 
 #ifdef SOUP_VERSION_2_42
   /* soup_session_async_new() deprecated in lisoup 2.42 */
@@ -518,6 +514,31 @@ fsp_session_init                        (FspSession *self)
 #else
   self->priv->soup_session = soup_session_async_new ();
 #endif
+}
+
+static void
+_init_gcrypt                            (void)
+{
+  /* Apparently, we need to initialize gcrypt not to get a crash:
+     http://lists.gnupg.org/pipermail/gcrypt-devel/2003-August/000458.html
+     Because you can't know in a library whether another library has
+     already initialized the library */
+  if (!gcry_control (GCRYCTL_INITIALIZATION_FINISHED_P))
+    {
+      g_warning ("gcrypt has not been initialized yet! "
+                 "flicksoup will initialize gcrypt now, "
+                 "but consider to initialize gcrypt yourself "
+                 "at the beginning of this program.");
+      gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+      /* Version check should be almost the very first call because it
+         makes sure that important subsystems are initialized. */
+      g_assert (gcry_check_version (LIBGCRYPT_MIN_VERSION));
+      /* Allocate a pool of 16k secure memory.  This make the secure
+         memory available and also drops privileges where needed. */
+      gcry_control (GCRYCTL_INIT_SECMEM, 16384, 0);
+      /* Tell Libgcrypt that initialization has completed. */
+      gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0);
+    }
 }
 
 static SoupSession *
