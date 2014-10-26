@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2014-05-25 16:16+0000\n"
-"PO-Revision-Date: 2014-05-31 09:58+0200\n"
+"POT-Creation-Date: 2014-09-19 09:01+0000\n"
+"PO-Revision-Date: 2014-10-26 22:12+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
-"Language-Team: Czech <gnome-cs-list@gnome.org>\n"
+"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,13 +82,17 @@ msgstr "Přidání objektů do skupin"
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/preferences.page:21
+#| msgctxt "_"
+#| msgid ""
+#| "external ref='figures/preferences-general.png' "
+#| "md5='8d162b86a0a4d707974113eb822e0796'"
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-general.png' "
-"md5='8d162b86a0a4d707974113eb822e0796'"
+"md5='0423b8b3e0d984bce2929071fac87caa'"
 msgstr ""
 "external ref='figures/preferences-general.png' "
-"md5='8d162b86a0a4d707974113eb822e0796'"
+"md5='0423b8b3e0d984bce2929071fac87caa'"
 
 #. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
@@ -204,13 +208,17 @@ msgstr "Různé předvolby aplikace <app>Frogr</app>."
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/edit-pictures.page:17
+#| msgctxt "_"
+#| msgid ""
+#| "external ref='figures/edit-picture-details.png' "
+#| "md5='61b5d97d77e1251b69c634a3b1718e32'"
 msgctxt "_"
 msgid ""
 "external ref='figures/edit-picture-details.png' "
-"md5='61b5d97d77e1251b69c634a3b1718e32'"
+"md5='c8ace4d6dfa82854b74faa1c25c4fbff'"
 msgstr ""
 "external ref='figures/edit-picture-details.png' "
-"md5='61b5d97d77e1251b69c634a3b1718e32'"
+"md5='c8ace4d6dfa82854b74faa1c25c4fbff'"
 
 #. (itstool) path: info/desc
 #: C/edit-pictures.page:9
