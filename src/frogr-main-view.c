@@ -565,7 +565,7 @@ static void _initialize_header_bar (FrogrMainView *self)
 
   /* Make sure that the toolbar is not visible when using hte header bar */
   toolbar = GTK_WIDGET (gtk_builder_get_object (priv->builder, "toolbar"));
-  gtk_widget_show (toolbar);
+  gtk_widget_hide (toolbar);
 
   /* First create the left side buttons */
 
