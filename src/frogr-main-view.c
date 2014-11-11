@@ -578,12 +578,7 @@ static void _initialize_header_bar (FrogrMainView *self)
   header_item = _create_header_bar_item ("win.upload-all", "document-send-symbolic", _("Upload"), _("Upload All"));
   gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
 
-  /* Save project item to the right side */
-
-  header_item = _create_header_bar_item ("win.save-project", "document-save-symbolic", _("Save"), _("Save Current Project"));
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), header_item);
-
-  /* Now create the menu button and its associated menu */
+  /* Menu button and its associated menu */
 
   full_path = g_strdup_printf ("%s/" UI_MENU_BUTTON_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (priv->builder, full_path, NULL);
@@ -599,6 +594,11 @@ static void _initialize_header_bar (FrogrMainView *self)
   header_item = gtk_menu_button_new ();
   gtk_menu_button_set_popup (GTK_MENU_BUTTON (header_item), menu);
   gtk_widget_show (header_item);
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), header_item);
+
+  /* Save project item */
+
+  header_item = _create_header_bar_item ("win.save-project", "document-save-symbolic", _("Save"), _("Save Current Project"));
   gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), header_item);
 
   /* Finally, make the close button visible and show */
