@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-13 23:34+0000\n"
-"PO-Revision-Date: 2014-09-21 13:19+0200\n"
+"POT-Creation-Date: 2014-10-11 15:43+0000\n"
+"PO-Revision-Date: 2014-11-28 23:58+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <gnome-hu-list@gnome.org>\n"
 "Language: hu\n"
@@ -67,24 +67,24 @@ msgstr ""
 
 #: ../src/frogr-add-tags-dialog.c:198 ../src/frogr-add-to-set-dialog.c:553
 #: ../src/frogr-add-to-group-dialog.c:552
-#: ../src/frogr-create-new-set-dialog.c:328 ../src/frogr-details-dialog.c:1220
-#: ../src/frogr-main-view.c:442 ../src/frogr-main-view.c:1393
-#: ../src/frogr-main-view.c:1470 ../src/frogr-main-view.c:1520
-#: ../src/frogr-settings-dialog.c:974
+#: ../src/frogr-create-new-set-dialog.c:329 ../src/frogr-details-dialog.c:1195
+#: ../src/frogr-main-view.c:446 ../src/frogr-main-view.c:1509
+#: ../src/frogr-main-view.c:1586 ../src/frogr-main-view.c:1636
+#: ../src/frogr-settings-dialog.c:961
 msgid "_Cancel"
 msgstr "Mé_gse"
 
 #: ../src/frogr-add-tags-dialog.c:200 ../src/frogr-add-to-set-dialog.c:555
 #: ../src/frogr-add-to-group-dialog.c:554
-#: ../src/frogr-create-new-set-dialog.c:330
+#: ../src/frogr-create-new-set-dialog.c:331
 msgid "_Add"
 msgstr "Hozzá_adás"
 
-#: ../src/frogr-add-tags-dialog.c:207
+#: ../src/frogr-add-tags-dialog.c:209
 msgid "Enter a spaces separated list of tags:"
 msgstr "Adja meg szóközökkel elválasztott címkék listáját:"
 
-#: ../src/frogr-add-tags-dialog.c:230
+#: ../src/frogr-add-tags-dialog.c:233
 msgid "Add Tags"
 msgstr "Címkék hozzáadása"
 
@@ -122,12 +122,12 @@ msgstr ""
 msgid "Authorize %s"
 msgstr "%s felhatalmazása"
 
-#: ../src/frogr-auth-dialog.c:145 ../src/frogr-settings-dialog.c:976
+#: ../src/frogr-auth-dialog.c:145 ../src/frogr-settings-dialog.c:963
 msgid "_Close"
 msgstr "_Bezárás"
 
 #. Description label
-#: ../src/frogr-auth-dialog.c:158
+#: ../src/frogr-auth-dialog.c:157
 msgid "Enter verification code:"
 msgstr "Írja be az ellenőrző kódot:"
 
@@ -388,23 +388,23 @@ msgid "Error opening project file"
 msgstr "Hiba a projektfájl megnyitásakor"
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1047
+#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1022
 msgid "Missing data required"
 msgstr "Hiányoznak a szükséges adatok"
 
-#: ../src/frogr-create-new-set-dialog.c:342
+#: ../src/frogr-create-new-set-dialog.c:345
 msgid "Title:"
 msgstr "Cím:"
 
-#: ../src/frogr-create-new-set-dialog.c:351
+#: ../src/frogr-create-new-set-dialog.c:354
 msgid "Description:"
 msgstr "Leírás:"
 
-#: ../src/frogr-create-new-set-dialog.c:372
+#: ../src/frogr-create-new-set-dialog.c:375
 msgid "Fill Pictures Details with Title and Description"
 msgstr "Képek részleteinek kitöltése címmel és leírással"
 
-#: ../src/frogr-create-new-set-dialog.c:393
+#: ../src/frogr-create-new-set-dialog.c:398
 msgid "Create New Set"
 msgstr "Új album létrehozása"
 
@@ -440,112 +440,112 @@ msgstr "CC Nevezd meg! - Így add tovább!"
 msgid "CC Attribution-NoDerivs"
 msgstr "CC Nevezd meg! - Ne változtasd!"
 
-#: ../src/frogr-details-dialog.c:181
+#: ../src/frogr-details-dialog.c:178
 msgid "Open with image viewer"
 msgstr "Megnyitás a képnézegetővel"
 
-#: ../src/frogr-details-dialog.c:195
+#: ../src/frogr-details-dialog.c:196
 msgid "_Title:"
 msgstr "_Cím:"
 
-#: ../src/frogr-details-dialog.c:205
+#: ../src/frogr-details-dialog.c:206
 msgid "_Description:"
 msgstr "_Leírás:"
 
-#: ../src/frogr-details-dialog.c:229
+#: ../src/frogr-details-dialog.c:230
 msgid "Ta_gs:"
 msgstr "Cí_mkék:"
 
-#: ../src/frogr-details-dialog.c:255
+#: ../src/frogr-details-dialog.c:253
 msgid "Visibility"
 msgstr "Láthatóság"
 
-#: ../src/frogr-details-dialog.c:267 ../src/frogr-settings-dialog.c:206
+#: ../src/frogr-details-dialog.c:263 ../src/frogr-settings-dialog.c:201
 msgid "_Private"
 msgstr "_Magánjellegű"
 
-#: ../src/frogr-details-dialog.c:271 ../src/frogr-settings-dialog.c:209
+#: ../src/frogr-details-dialog.c:267 ../src/frogr-settings-dialog.c:204
 msgid "P_ublic"
 msgstr "_Nyilvános"
 
-#: ../src/frogr-details-dialog.c:280 ../src/frogr-settings-dialog.c:220
+#: ../src/frogr-details-dialog.c:276 ../src/frogr-settings-dialog.c:212
 msgid "_Family"
 msgstr "_Család"
 
-#: ../src/frogr-details-dialog.c:284 ../src/frogr-settings-dialog.c:222
+#: ../src/frogr-details-dialog.c:280 ../src/frogr-settings-dialog.c:214
 msgid "F_riends"
 msgstr "_Barátok"
 
-#: ../src/frogr-details-dialog.c:310
+#: ../src/frogr-details-dialog.c:294
 msgid "Content Type"
 msgstr "Tartalom típusa"
 
-#: ../src/frogr-details-dialog.c:319 ../src/frogr-settings-dialog.c:247
+#: ../src/frogr-details-dialog.c:302 ../src/frogr-settings-dialog.c:239
 msgid "P_hoto"
 msgstr "_Fénykép"
 
-#: ../src/frogr-details-dialog.c:323 ../src/frogr-settings-dialog.c:249
+#: ../src/frogr-details-dialog.c:306 ../src/frogr-settings-dialog.c:241
 msgid "Scree_nshot"
 msgstr "_Képernyőkép"
 
-#: ../src/frogr-details-dialog.c:327 ../src/frogr-settings-dialog.c:251
+#: ../src/frogr-details-dialog.c:310 ../src/frogr-settings-dialog.c:243
 msgid "Oth_er"
 msgstr "_Egyéb"
 
-#: ../src/frogr-details-dialog.c:343
+#: ../src/frogr-details-dialog.c:323
 msgid "Safety Level"
 msgstr "Biztonsági szint"
 
-#: ../src/frogr-details-dialog.c:352 ../src/frogr-settings-dialog.c:272
+#: ../src/frogr-details-dialog.c:331 ../src/frogr-settings-dialog.c:265
 msgid "S_afe"
 msgstr "_Biztonságos"
 
-#: ../src/frogr-details-dialog.c:356 ../src/frogr-settings-dialog.c:274
+#: ../src/frogr-details-dialog.c:335 ../src/frogr-settings-dialog.c:267
 msgid "_Moderate"
 msgstr "_Mérsékelt"
 
-#: ../src/frogr-details-dialog.c:360 ../src/frogr-settings-dialog.c:276
+#: ../src/frogr-details-dialog.c:339 ../src/frogr-settings-dialog.c:269
 msgid "Restr_icted"
 msgstr "_Korlátozott"
 
-#: ../src/frogr-details-dialog.c:374
+#: ../src/frogr-details-dialog.c:351
 msgid "License Type"
 msgstr "Licenctípus"
 
-#: ../src/frogr-details-dialog.c:398
+#: ../src/frogr-details-dialog.c:373
 msgid "Other Properties"
 msgstr "Egyéb tulajdonságok"
 
-#: ../src/frogr-details-dialog.c:407
+#: ../src/frogr-details-dialog.c:381
 msgid "_Show Up in Global Search Results"
 msgstr "_Megjelenítés a globális keresési eredményekben"
 
-#: ../src/frogr-details-dialog.c:411
+#: ../src/frogr-details-dialog.c:385
 msgid "Set Geo_location Information"
 msgstr "_Földrajzi helyzet információk beállítása"
 
-#: ../src/frogr-details-dialog.c:415
-msgid "Set 'Taken Date' as 'Posted Date'"
-msgstr "A „Készítés dátumának” beállítása „Feltöltési dátumként”"
+#: ../src/frogr-details-dialog.c:389
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr "A „Feltöltési dátum” cseréje a „Készítés dátumával”"
 
 #. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:509
+#: ../src/frogr-details-dialog.c:484
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
 msgstr[0] "(%d kép)"
 msgstr[1] "(%d kép)"
 
-#: ../src/frogr-details-dialog.c:583
+#: ../src/frogr-details-dialog.c:558
 msgid "An error happened trying to load the picture"
 msgstr "Hiba történt a kép betöltésének kísérlete közben"
 
-#: ../src/frogr-details-dialog.c:1221
+#: ../src/frogr-details-dialog.c:1196
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:8
 msgid "_Edit"
 msgstr "S_zerkesztés"
 
-#: ../src/frogr-details-dialog.c:1250
+#: ../src/frogr-details-dialog.c:1225
 msgid "Edit Picture Details"
 msgstr "Kép részleteinek szerkesztése"
 
@@ -584,129 +584,131 @@ msgstr ""
 "Nem tölthető be a(z) %s fájl:\n"
 "A fájl mérete nagyobb, mint amelyet ez a fiók maximálisan megenged (%s)"
 
-#: ../src/frogr-main-view.c:544
+#. First create the left side buttons
+#: ../src/frogr-main-view.c:572 ../src/frogr-main-view.c:652
 msgid "Open"
 msgstr "Megnyitás"
 
-#: ../src/frogr-main-view.c:544
+#: ../src/frogr-main-view.c:572 ../src/frogr-main-view.c:652
 msgid "Open Existing Project"
 msgstr "Létező projekt megnyitása"
 
-#: ../src/frogr-main-view.c:545
-msgid "Save"
-msgstr "Mentés"
-
-#: ../src/frogr-main-view.c:545
-msgid "Save Current Project"
-msgstr "Jelenlegi projekt mentése"
-
-#: ../src/frogr-main-view.c:547
+#: ../src/frogr-main-view.c:574 ../src/frogr-main-view.c:655
 msgid "Add"
 msgstr "Hozzáadás"
 
-#: ../src/frogr-main-view.c:547
+#: ../src/frogr-main-view.c:574 ../src/frogr-main-view.c:655
 msgid "Add Elements"
 msgstr "Elemek hozzáadása"
 
-#: ../src/frogr-main-view.c:548
+#: ../src/frogr-main-view.c:576 ../src/frogr-main-view.c:656
 msgid "Remove"
 msgstr "Eltávolítás"
 
-#: ../src/frogr-main-view.c:548
+#: ../src/frogr-main-view.c:576 ../src/frogr-main-view.c:656
 msgid "Remove Elements"
 msgstr "Elemek eltávolítása"
 
-#: ../src/frogr-main-view.c:550
+#: ../src/frogr-main-view.c:578 ../src/frogr-main-view.c:658
 msgid "Upload"
 msgstr "Feltöltés"
 
-#: ../src/frogr-main-view.c:550
+#: ../src/frogr-main-view.c:578 ../src/frogr-main-view.c:658
 msgid "Upload All"
 msgstr "Összes feltöltése"
 
-#: ../src/frogr-main-view.c:840 ../data/gtkbuilder/frogr-app-menu.xml.h:4
+#. Save project item to the right side
+#: ../src/frogr-main-view.c:583 ../src/frogr-main-view.c:653
+msgid "Save"
+msgstr "Mentés"
+
+#: ../src/frogr-main-view.c:583 ../src/frogr-main-view.c:653
+msgid "Save Current Project"
+msgstr "Jelenlegi projekt mentése"
+
+#: ../src/frogr-main-view.c:956 ../data/gtkbuilder/frogr-app-menu.xml.h:4
 msgid "_About"
 msgstr "_Névjegy"
 
-#: ../src/frogr-main-view.c:844 ../data/gtkbuilder/frogr-app-menu.xml.h:5
+#: ../src/frogr-main-view.c:960 ../data/gtkbuilder/frogr-app-menu.xml.h:5
 msgid "_Quit"
 msgstr "_Kilépés"
 
 #. Create the submenu and insert it in the right section
-#: ../src/frogr-main-view.c:900
+#: ../src/frogr-main-view.c:1016
 msgid "Accounts"
 msgstr "Fiókok"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:1252
+#: ../src/frogr-main-view.c:1368
 #, c-format
 msgid "Taken: %s"
 msgstr "Átvett: %s"
 
-#: ../src/frogr-main-view.c:1257
+#: ../src/frogr-main-view.c:1373
 #, c-format
 msgid "File size: %s"
 msgstr "Fájl mérete: %s"
 
-#: ../src/frogr-main-view.c:1390
+#: ../src/frogr-main-view.c:1506
 msgid "Select File"
 msgstr "Fájl kiválasztása"
 
-#: ../src/frogr-main-view.c:1394 ../src/frogr-main-view.c:1521
+#: ../src/frogr-main-view.c:1510 ../src/frogr-main-view.c:1637
 msgid "_Open"
 msgstr "_Megnyitás"
 
-#: ../src/frogr-main-view.c:1403
+#: ../src/frogr-main-view.c:1519
 msgid "Frogr Project Files"
 msgstr "Frogr projektfájlok"
 
-#: ../src/frogr-main-view.c:1467
+#: ../src/frogr-main-view.c:1583
 msgid "Select Destination"
 msgstr "Cél kiválasztása"
 
-#: ../src/frogr-main-view.c:1471 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
+#: ../src/frogr-main-view.c:1587 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
 msgid "_Save"
 msgstr "M_entés"
 
-#: ../src/frogr-main-view.c:1474
+#: ../src/frogr-main-view.c:1590
 msgid "Untitled Project.frogr"
 msgstr "Névtelen projekt.frogr"
 
-#: ../src/frogr-main-view.c:1517
+#: ../src/frogr-main-view.c:1633
 msgid "Select a Picture"
 msgstr "Válasszon egy képet"
 
-#: ../src/frogr-main-view.c:1544
+#: ../src/frogr-main-view.c:1660
 msgid "All Files"
 msgstr "Minden fájl"
 
-#: ../src/frogr-main-view.c:1547
+#: ../src/frogr-main-view.c:1663
 msgid "Image Files"
 msgstr "Képfájlok"
 
-#: ../src/frogr-main-view.c:1551
+#: ../src/frogr-main-view.c:1667
 msgid "Video Files"
 msgstr "Videofájlok"
 
-#: ../src/frogr-main-view.c:1573
+#: ../src/frogr-main-view.c:1689
 msgid "You don't have any picture added yet"
 msgstr "Még nem adott hozzá egyetlen képet sem"
 
-#: ../src/frogr-main-view.c:1588
+#: ../src/frogr-main-view.c:1704
 msgid "You need to select some pictures first"
 msgstr "Először ki kell választania néhány képet"
 
-#: ../src/frogr-main-view.c:2052
+#: ../src/frogr-main-view.c:2168
 msgid "Not connected to Flickr"
 msgstr "Nincs kapcsolódva a Flickr-hez"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:2062
+#: ../src/frogr-main-view.c:2178
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Kapcsolódva mint %s%s"
 
-#: ../src/frogr-main-view.c:2063
+#: ../src/frogr-main-view.c:2179
 msgid " (PRO account)"
 msgstr " (PRO fiók)"
 
@@ -715,7 +717,7 @@ msgstr " (PRO fiók)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:2087
+#: ../src/frogr-main-view.c:2203
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - %s / %s van hátra"
@@ -723,107 +725,107 @@ msgstr " - %s / %s van hátra"
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
 #. sizes for every picture loaded in the application
-#: ../src/frogr-main-view.c:2113
+#: ../src/frogr-main-view.c:2229
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
 msgstr[0] " - %d feltöltendő fájl (%s)"
 msgstr[1] " - %d feltöltendő fájl (%s)"
 
-#: ../src/frogr-settings-dialog.c:189
+#: ../src/frogr-settings-dialog.c:190
 msgid "Default Visibility"
 msgstr "Alapértelmezett láthatóság"
 
-#: ../src/frogr-settings-dialog.c:235
+#: ../src/frogr-settings-dialog.c:229
 msgid "Default Content Type"
 msgstr "Alapértelmezett tartalom típus"
 
-#: ../src/frogr-settings-dialog.c:260
+#: ../src/frogr-settings-dialog.c:255
 msgid "Default Safety Level"
 msgstr "Alapértelmezett biztonsági szint"
 
-#: ../src/frogr-settings-dialog.c:285
+#: ../src/frogr-settings-dialog.c:281
 msgid "Default License"
 msgstr "Alapértelmezett licenc"
 
-#: ../src/frogr-settings-dialog.c:309
+#: ../src/frogr-settings-dialog.c:307
 msgid "Other Defaults"
 msgstr "Egyéb alapértékek"
 
-#: ../src/frogr-settings-dialog.c:321
+#: ../src/frogr-settings-dialog.c:317
 msgid "_Show Pictures in Global Search Results"
 msgstr "Képek _megjelenítése a globális keresési eredményekben"
 
-#: ../src/frogr-settings-dialog.c:324
+#: ../src/frogr-settings-dialog.c:320
 msgid "Set Geo_location Information for Pictures"
 msgstr "_Földrajzi helyzet információk megadása a képekhez"
 
-#: ../src/frogr-settings-dialog.c:327
-msgid "Set 'Taken Date' as 'Posted Date' for Pictures"
-msgstr ""
-"A „Készítés dátumának” beállítása „Feltöltési dátumként” a fényképeknél"
+#: ../src/frogr-settings-dialog.c:323
+#| msgid "Set 'Taken Date' as 'Posted Date' for Pictures"
+msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
+msgstr "A „Feltöltési dátum” cseréje a „Készítés dátumával” a fényképeknél"
 
-#: ../src/frogr-settings-dialog.c:333
+#: ../src/frogr-settings-dialog.c:329
 msgid "_General"
 msgstr "Á_ltalános"
 
-#: ../src/frogr-settings-dialog.c:358
+#: ../src/frogr-settings-dialog.c:352
 msgid "Proxy Settings"
 msgstr "Proxy beállítások"
 
 #. Enable proxy
-#: ../src/frogr-settings-dialog.c:368
+#: ../src/frogr-settings-dialog.c:361
 msgid "_Enable HTTP Proxy"
 msgstr "HTTP Proxy _engedélyezése"
 
-#: ../src/frogr-settings-dialog.c:380
+#: ../src/frogr-settings-dialog.c:371
 msgid "_Host:"
 msgstr "_Gép:"
 
 #. Proxy port
-#: ../src/frogr-settings-dialog.c:393
+#: ../src/frogr-settings-dialog.c:384
 msgid "_Port:"
 msgstr "_Port:"
 
 #. Proxy username
-#: ../src/frogr-settings-dialog.c:406
+#: ../src/frogr-settings-dialog.c:397
 msgid "U_sername:"
 msgstr "_Felhasználónév:"
 
 #. Proxy password
-#: ../src/frogr-settings-dialog.c:419
+#: ../src/frogr-settings-dialog.c:410
 msgid "Pass_word:"
 msgstr "_Jelszó:"
 
-#: ../src/frogr-settings-dialog.c:443
+#: ../src/frogr-settings-dialog.c:434
 msgid "Connec_tion"
 msgstr "_Kapcsolódás"
 
-#: ../src/frogr-settings-dialog.c:466
+#: ../src/frogr-settings-dialog.c:455
 msgid "Other options"
 msgstr "Egyéb beállítások"
 
-#: ../src/frogr-settings-dialog.c:478
+#: ../src/frogr-settings-dialog.c:465
 msgid "Ena_ble Tags Auto-Completion"
 msgstr "Címkék _automatikus kiegészítésének engedélyezése"
 
-#: ../src/frogr-settings-dialog.c:481
+#: ../src/frogr-settings-dialog.c:468
 msgid "_Import Tags from Pictures Metadata"
 msgstr "Címkék _importálása a képek metaadatából"
 
-#: ../src/frogr-settings-dialog.c:485
+#: ../src/frogr-settings-dialog.c:472
 msgid "Use _Dark GTK Theme"
 msgstr "_Sötét GTK téma használata"
 
-#: ../src/frogr-settings-dialog.c:489
+#: ../src/frogr-settings-dialog.c:476
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr "Fájlkiterjesztések m_egtartása a címekben betöltéskor"
 
-#: ../src/frogr-settings-dialog.c:495
+#: ../src/frogr-settings-dialog.c:482
 msgid "_Misc"
 msgstr "_Egyebek"
 
-#: ../src/frogr-settings-dialog.c:1017
+#: ../src/frogr-settings-dialog.c:1004
 msgid "Preferences"
 msgstr "Beállítások"
 
@@ -930,6 +932,9 @@ msgstr "_Fordított sorrend"
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:23
 msgid "Enable _Tooltips"
 msgstr "_Buboréksúgó engedélyezése"
+
+#~ msgid "Set 'Taken Date' as 'Posted Date'"
+#~ msgstr "A „Készítés dátumának” beállítása „Feltöltési dátumként”"
 
 #~ msgid "Visible to _Family"
 #~ msgstr "Látható a _család számára"
