@@ -687,13 +687,18 @@ static GtkWidget *
 _create_header_bar_item (GtkApplication *app, const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text, const gchar *accel)
 {
   GtkWidget *widget = NULL;
+#if GTK_CHECK_VERSION (3, 12, 0)
+  const gchar *accels[2] = { accel, NULL };
+#endif
 
   widget = gtk_button_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
   gtk_widget_set_tooltip_text (widget, tooltip_text);
   gtk_actionable_set_action_name (GTK_ACTIONABLE (widget), action_name);
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+#if GTK_CHECK_VERSION (3, 12, 0)
+  gtk_application_set_accels_for_action (app, action_name, accels);
+#else
   gtk_application_add_accelerator (app, accel, action_name, NULL);
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+#endif
   gtk_widget_show (widget);
 
   return widget;
