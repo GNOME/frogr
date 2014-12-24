@@ -66,8 +66,8 @@ AM_CONDITIONAL([PLATFORM_MAC],[test "x$osx" = "xyes"])
 AC_MSG_CHECKING([Checking whether to enable the GtkHeaderBar])
 AC_ARG_ENABLE(header-bar,
               AC_HELP_STRING([--enable-header-bar],
-                             [Enable GtkHeaderBar [default=no]]),
-              [header_bar_feature="$enableval"],[header_bar_feature="no"])
+                             [Enable GtkHeaderBar [default=yes]]),
+              [header_bar_feature="$enableval"],[header_bar_feature="yes"])
 AC_MSG_RESULT([$header_bar_feature])
 
 GTK3_MIN_VERSION=3.4
