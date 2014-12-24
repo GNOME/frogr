@@ -446,7 +446,7 @@ _initialize_ui (FrogrMainView *self)
                                                  _("_Cancel"),
                                                  GTK_RESPONSE_CANCEL,
                                                  NULL);
-  gtk_window_set_title (GTK_WINDOW (progress_dialog), APP_SHORTNAME);
+  gtk_window_set_title (GTK_WINDOW (progress_dialog), "");
 
   gtk_dialog_set_response_sensitive (GTK_DIALOG (progress_dialog),
                                      GTK_RESPONSE_CANCEL, TRUE);
