@@ -558,6 +558,7 @@ static void _initialize_header_bar (FrogrMainView *self)
   GtkWidget *toolbar = NULL;
   GtkWidget *header_item = NULL;
   GtkWidget *menu = NULL;
+  GtkWidget *menu_image = NULL;
   gchar *full_path = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
@@ -592,6 +593,12 @@ static void _initialize_header_bar (FrogrMainView *self)
                                    self);
 
   header_item = gtk_menu_button_new ();
+#if GTK_CHECK_VERSION (3, 14, 0)
+  menu_image = gtk_image_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_MENU);
+#else
+  menu_image = gtk_image_new_from_icon_name ("emblem-system-symbolic", GTK_ICON_SIZE_MENU);
+#endif
+  gtk_button_set_image (GTK_BUTTON (header_item), menu_image);
   gtk_menu_button_set_popup (GTK_MENU_BUTTON (header_item), menu);
   gtk_widget_show (header_item);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), header_item);
