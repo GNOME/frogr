@@ -75,4 +75,11 @@ General Public License Version 2.1 (Copyright 2009, Nokia Corp.)
 
 -------------------------------------------
 
+Implementation of the functions extract_accels_from_menu() and
+extract_accel_from_menu_item () inside of frogr-main-view.ctaken from
+GTK+, licensed under the GNU Lesser General Public License Version 2+
+(Copyright 2010, Codethink Ltd and 2013, Canonical Ltd.)
+
+-------------------------------------------
+
 

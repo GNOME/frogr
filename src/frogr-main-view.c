@@ -148,7 +148,7 @@ static gboolean _initialize_app_menu (FrogrMainView *self);
 
 #ifdef USE_HEADER_BAR
 static void _initialize_header_bar (FrogrMainView *self);
-static GtkWidget *_create_header_bar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text);
+static GtkWidget *_create_header_bar_item (GtkApplication *app, const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text, const gchar *accel);
 #else
 static void _initialize_menubar_and_toolbar (FrogrMainView *self);
 static GtkToolItem *_create_toolbar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text);
@@ -552,9 +552,73 @@ _initialize_app_menu (FrogrMainView *self)
 }
 
 #ifdef USE_HEADER_BAR
+
+/* This function was taken from gtkapplication.c, from gtk+, licensed
+ * under the GNU Lesser General Public License Version 2+ */
+static void
+extract_accel_from_menu_item (GMenuModel     *model,
+                              gint            item,
+                              GtkApplication *app)
+{
+  GMenuAttributeIter *iter;
+  const gchar *key;
+  GVariant *value;
+  const gchar *accel = NULL;
+  const gchar *action = NULL;
+  GVariant *target = NULL;
+
+  iter = g_menu_model_iterate_item_attributes (model, item);
+  while (g_menu_attribute_iter_get_next (iter, &key, &value))
+    {
+      if (g_str_equal (key, "action") && g_variant_is_of_type (value, G_VARIANT_TYPE_STRING))
+        action = g_variant_get_string (value, NULL);
+      else if (g_str_equal (key, "accel") && g_variant_is_of_type (value, G_VARIANT_TYPE_STRING))
+        accel = g_variant_get_string (value, NULL);
+      else if (g_str_equal (key, "target"))
+        target = g_variant_ref (value);
+      g_variant_unref (value);
+    }
+  g_object_unref (iter);
+
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  if (accel && action)
+    gtk_application_add_accelerator (app, accel, action, target);
+  G_GNUC_END_IGNORE_DEPRECATIONS
+
+  if (target)
+    g_variant_unref (target);
+}
+
+/* This function was taken from gtkapplication.c, from gtk+, licensed
+ * under the GNU Lesser General Public License Version 2+ */
+static void
+extract_accels_from_menu (GMenuModel     *model,
+                          GtkApplication *app)
+{
+  gint i;
+  GMenuLinkIter *iter;
+  const gchar *key;
+  GMenuModel *m;
+
+  for (i = 0; i < g_menu_model_get_n_items (model); i++)
+    {
+      extract_accel_from_menu_item (model, i, app);
+
+      iter = g_menu_model_iterate_item_links (model, i);
+      while (g_menu_link_iter_get_next (iter, &key, &m))
+        {
+          extract_accels_from_menu (m, app);
+          g_object_unref (m);
+        }
+      g_object_unref (iter);
+    }
+}
+
 static void _initialize_header_bar (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = NULL;
+  GtkApplication *gtk_app = NULL;
+  GMenuModel *menu_model = NULL;
   GtkWidget *toolbar = NULL;
   GtkWidget *header_item = NULL;
   GtkWidget *menu = NULL;
@@ -562,6 +626,8 @@ static void _initialize_header_bar (FrogrMainView *self)
   gchar *full_path = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  gtk_app = gtk_window_get_application (GTK_WINDOW (self));
+
   priv->header_bar = gtk_header_bar_new ();
 
   /* Make sure that the toolbar is not visible when using hte header bar */
@@ -570,13 +636,13 @@ static void _initialize_header_bar (FrogrMainView *self)
 
   /* First create the left side buttons */
 
-  header_item = _create_header_bar_item ("win.open-project", "document-open-symbolic", _("Open"), _("Open Existing Project"));
+  header_item = _create_header_bar_item (gtk_app, "win.open-project", "document-open-symbolic", _("Open"), _("Open Existing Project"), "<Primary>o");
   gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
-  header_item = _create_header_bar_item ("win.add-pictures", "list-add-symbolic", _("Add"), _("Add Elements"));
+  header_item = _create_header_bar_item (gtk_app, "win.add-pictures", "list-add-symbolic", _("Add"), _("Add Elements"), "<Primary>l");
   gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
-  header_item = _create_header_bar_item ("win.remove-pictures", "list-remove-symbolic", _("Remove"), _("Remove Elements"));
+  header_item = _create_header_bar_item (gtk_app, "win.remove-pictures", "list-remove-symbolic", _("Remove"), _("Remove Elements"), "Delete");
   gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
-  header_item = _create_header_bar_item ("win.upload-all", "document-send-symbolic", _("Upload"), _("Upload All"));
+  header_item = _create_header_bar_item (gtk_app, "win.upload-all", "document-send-symbolic", _("Upload"), _("Upload All"), "<Primary>u");
   gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), header_item);
 
   /* Menu button and its associated menu */
@@ -585,7 +651,10 @@ static void _initialize_header_bar (FrogrMainView *self)
   gtk_builder_add_from_file (priv->builder, full_path, NULL);
   g_free (full_path);
 
-  menu = gtk_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (priv->builder, "menu-button")));
+  menu_model = G_MENU_MODEL (gtk_builder_get_object (priv->builder, "menu-button"));
+  extract_accels_from_menu (menu_model, gtk_app);
+
+  menu = gtk_menu_new_from_model (menu_model);
   gtk_widget_set_halign (menu, GTK_ALIGN_END);
 
   g_action_map_add_action_entries (G_ACTION_MAP (self),
@@ -605,23 +674,26 @@ static void _initialize_header_bar (FrogrMainView *self)
 
   /* Save project item */
 
-  header_item = _create_header_bar_item ("win.save-project", "document-save-symbolic", _("Save"), _("Save Current Project"));
+  header_item = _create_header_bar_item (gtk_app, "win.save-project", "document-save-symbolic", _("Save"), _("Save Current Project"), "<Primary>s");
   gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), header_item);
 
-  /* Finally, make the close button visible and show */
+  /* Make the close button visible and show */
 
   gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->header_bar), TRUE);
   gtk_widget_show (priv->header_bar);
 }
 
 static GtkWidget *
-_create_header_bar_item (const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text)
+_create_header_bar_item (GtkApplication *app, const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text, const gchar *accel)
 {
   GtkWidget *widget = NULL;
 
   widget = gtk_button_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
   gtk_widget_set_tooltip_text (widget, tooltip_text);
   gtk_actionable_set_action_name (GTK_ACTIONABLE (widget), action_name);
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  gtk_application_add_accelerator (app, accel, action_name, NULL);
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_show (widget);
 
   return widget;
