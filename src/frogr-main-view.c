@@ -114,6 +114,8 @@ typedef struct _FrogrMainViewPrivate {
   gchar *project_dir;
   gchar *project_filepath;
 
+  GtkApplication *gtk_app;
+
 #ifdef USE_HEADER_BAR
   GtkWidget *header_bar;
 #endif
@@ -332,7 +334,6 @@ static void
 _initialize_ui (FrogrMainView *self)
 {
   FrogrMainViewPrivate *priv = NULL;
-  GtkApplication *gtk_app;
   GtkBuilder *builder;
   GtkWidget *main_vbox;
   GtkWidget *icon_view;
@@ -381,12 +382,12 @@ _initialize_ui (FrogrMainView *self)
   gtk_builder_add_from_file (builder, full_path, NULL);
   g_free (full_path);
 
-  gtk_app = gtk_window_get_application (GTK_WINDOW (self));
-  g_action_map_add_action_entries (G_ACTION_MAP (gtk_app),
+  priv->gtk_app = gtk_window_get_application (GTK_WINDOW (self));
+  g_action_map_add_action_entries (G_ACTION_MAP (priv->gtk_app),
                                    app_entries, G_N_ELEMENTS (app_entries),
                                    self);
   priv->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
-  gtk_application_set_app_menu (gtk_app, priv->app_menu);
+  gtk_application_set_app_menu (priv->gtk_app, priv->app_menu);
 
 #ifdef USE_HEADER_BAR
   /* Header_Bar and main vertical box below*/
@@ -1027,8 +1028,10 @@ _on_toggle_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpoint
 static void
 _quit_application (FrogrMainView *self)
 {
-  GtkApplication *gtk_app = gtk_window_get_application (GTK_WINDOW (self));
-  g_application_quit (G_APPLICATION (gtk_app));
+  FrogrMainViewPrivate *priv = NULL;
+
+  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
+  g_application_quit (G_APPLICATION (priv->gtk_app));
 }
 
 #ifdef PLATFORM_MAC
@@ -1096,11 +1099,8 @@ _populate_accounts_submenu (FrogrMainView *self)
 
       if (frogr_account_is_active (account))
         {
-          GtkApplication *gtk_app = NULL;
           GAction *action = NULL;
-
-          gtk_app = gtk_window_get_application (GTK_WINDOW (self));
-          action = g_action_map_lookup_action (G_ACTION_MAP (gtk_app), ACTION_LOGIN_AS);
+          action = g_action_map_lookup_action (G_ACTION_MAP (priv->gtk_app), ACTION_LOGIN_AS);
           g_action_activate (action, g_variant_new_string (username));
         }
     }
