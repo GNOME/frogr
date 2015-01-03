@@ -474,6 +474,7 @@ _initialize_ui (FrogrMainView *self)
   gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progress_bar), TRUE);
 
   gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
+  gtk_widget_set_margin_bottom (progress_bar, 6);
 
   gtk_widget_hide (progress_dialog);
   priv->progress_dialog = progress_dialog;

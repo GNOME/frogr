@@ -565,7 +565,7 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
                                   GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget),
                                        GTK_SHADOW_ETCHED_IN);
-  gtk_box_pack_start (GTK_BOX (vbox), widget, TRUE, TRUE, 12);
+  gtk_box_pack_start (GTK_BOX (vbox), widget, TRUE, TRUE, 6);
 
   priv->treeview = _create_tree_view (self);
   gtk_container_add (GTK_CONTAINER (widget), priv->treeview);

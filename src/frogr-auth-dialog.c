@@ -151,7 +151,7 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   /* Fill action area */
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_widget_set_margin_bottom (vbox, 12);
+  gtk_widget_set_margin_bottom (vbox, 6);
 
   /* Description label */
   label = gtk_label_new (_("Enter verification code:"));
