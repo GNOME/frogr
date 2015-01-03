@@ -39,6 +39,9 @@
 /* Paths relative to the icons dir */
 #define ICON_PATH_FORMAT_STRING "%s/hicolor/%s/apps/frogr.png"
 
+#define MENU_BUTTON_ICON "open-menu-symbolic"
+#define MENU_BUTTON_ICON_FALLBACK "emblem-system-symbolic"
+
 #define MINIMUM_WINDOW_WIDTH 840
 #define MINIMUM_WINDOW_HEIGHT 600
 
@@ -628,6 +631,7 @@ static void _initialize_header_bar (FrogrMainView *self)
   GtkWidget *header_item = NULL;
   GtkWidget *menu = NULL;
   GtkWidget *menu_image = NULL;
+  GtkIconTheme *icon_theme = NULL;
   gchar *full_path = NULL;
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
@@ -666,12 +670,12 @@ static void _initialize_header_bar (FrogrMainView *self)
                                    win_entries, G_N_ELEMENTS (win_entries),
                                    self);
 
+  icon_theme = gtk_icon_theme_get_default ();
+  menu_image = gtk_icon_theme_has_icon (icon_theme, MENU_BUTTON_ICON)
+    ? gtk_image_new_from_icon_name (MENU_BUTTON_ICON, GTK_ICON_SIZE_MENU)
+    : gtk_image_new_from_icon_name (MENU_BUTTON_ICON_FALLBACK, GTK_ICON_SIZE_MENU);
+
   header_item = gtk_menu_button_new ();
-#if GTK_CHECK_VERSION (3, 14, 0)
-  menu_image = gtk_image_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_MENU);
-#else
-  menu_image = gtk_image_new_from_icon_name ("emblem-system-symbolic", GTK_ICON_SIZE_MENU);
-#endif
   gtk_button_set_image (GTK_BUTTON (header_item), menu_image);
   gtk_menu_button_set_popup (GTK_MENU_BUTTON (header_item), menu);
   gtk_widget_show (header_item);
