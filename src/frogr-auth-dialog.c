@@ -167,6 +167,8 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_ask_for_auth_confirmation_response_cb), NULL);
 
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
+
   gtk_window_set_default_size (GTK_WINDOW (dialog), 200, -1);
   gtk_widget_show_all (dialog);
 }

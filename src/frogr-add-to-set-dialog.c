@@ -585,6 +585,8 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
   g_signal_connect (G_OBJECT (self), "response",
                     G_CALLBACK (_dialog_response_cb), NULL);
 
+  gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_ACCEPT);
+
   gtk_window_set_default_size (GTK_WINDOW (self),
                                MINIMUM_WINDOW_WIDTH,
                                MINIMUM_WINDOW_HEIGHT);

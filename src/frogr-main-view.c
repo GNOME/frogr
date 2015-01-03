@@ -1625,6 +1625,8 @@ _open_project_dialog (FrogrMainView *self)
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_open_project_dialog_response_cb), self);
 
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_widget_show_all (dialog);
 }
@@ -1697,6 +1699,8 @@ _save_project_as_dialog (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_save_project_as_dialog_response_cb), self);
+
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_widget_show_all (dialog);
@@ -1776,6 +1780,8 @@ _load_pictures_dialog (FrogrMainView *self)
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_load_pictures_dialog_response_cb), self);
+
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_widget_show_all (dialog);

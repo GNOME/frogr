@@ -383,6 +383,8 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
                     G_CALLBACK (_on_button_toggled),
                     self);
 
+  gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_ACCEPT);
+
   priv->copy_to_pictures = FALSE;
 }
 

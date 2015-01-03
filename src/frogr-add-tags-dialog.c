@@ -219,6 +219,8 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 
   g_signal_connect (G_OBJECT (self), "response",
                     G_CALLBACK (_dialog_response_cb), NULL);
+
+  gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_ACCEPT);
 }
 
 /* Public API */

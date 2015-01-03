@@ -983,8 +983,7 @@ frogr_settings_dialog_init (FrogrSettingsDialog *self)
                     G_CALLBACK (_on_dialog_delete_event),
                     NULL);
 
-  gtk_dialog_set_default_response (GTK_DIALOG (self),
-                                   GTK_RESPONSE_CLOSE);
+  gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_CLOSE);
 }
 
 
