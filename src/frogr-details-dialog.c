@@ -1222,6 +1222,9 @@ frogr_details_dialog_show (GtkWindow *parent,
                       "height-request", -1,
                       "resizable", TRUE,
                       "title", _("Edit Picture Details"),
+#if GTK_CHECK_VERSION (3, 12, 0)
+                      "use-header-bar", USE_HEADER_BAR,
+#endif
                       NULL);
 
   /* Initialize values for widgets based on the data (pictures) passed */

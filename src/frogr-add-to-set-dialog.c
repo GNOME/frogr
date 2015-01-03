@@ -609,6 +609,9 @@ frogr_add_to_set_dialog_show (GtkWindow *parent,
                       "photosets", photosets,
                       "transient-for", parent,
                       "resizable", TRUE,
+#if GTK_CHECK_VERSION (3, 12, 0)
+                      "use-header-bar", USE_HEADER_BAR,
+#endif
                       NULL);
 
   self = FROGR_ADD_TO_SET_DIALOG (new);

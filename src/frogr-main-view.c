@@ -49,7 +49,7 @@
 #define UI_MAIN_VIEW_FILE "/gtkbuilder/frogr-main-view.xml"
 #define UI_APP_MENU_FILE "/gtkbuilder/frogr-app-menu.xml"
 #define UI_CONTEXT_MENU_FILE "/gtkbuilder/frogr-context-menu.xml"
-#ifdef USE_HEADER_BAR
+#if USE_HEADER_BAR
 #define UI_MENU_BUTTON_FILE "/gtkbuilder/frogr-menu-button.xml"
 #else
 #define UI_MENU_BAR_FILE "/gtkbuilder/frogr-menu-bar.xml"
@@ -116,7 +116,7 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkApplication *gtk_app;
 
-#ifdef USE_HEADER_BAR
+#if USE_HEADER_BAR
   GtkWidget *header_bar;
 #endif
   GtkWidget *icon_view;
@@ -146,7 +146,7 @@ enum {
   FPICTURE_COL
 };
 
-#ifdef USE_HEADER_BAR
+#if USE_HEADER_BAR
 typedef enum {
   HEADER_BAR_POSITION_START,
   HEADER_BAR_POSITION_END
@@ -158,7 +158,7 @@ typedef enum {
 static void _initialize_ui (FrogrMainView *self);
 static gboolean _initialize_app_menu (FrogrMainView *self);
 
-#ifdef USE_HEADER_BAR
+#if USE_HEADER_BAR
 static void _initialize_header_bar (FrogrMainView *self);
 static void _add_item_to_header_bar (FrogrMainView *self, HeaderBarItemPosition pos, const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text, const gchar *accel);
 #else
@@ -396,7 +396,7 @@ _initialize_ui (FrogrMainView *self)
   priv->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
   gtk_application_set_app_menu (priv->gtk_app, priv->app_menu);
 
-#ifdef USE_HEADER_BAR
+#if USE_HEADER_BAR
   /* Header_Bar and main vertical box below*/
   _initialize_header_bar (self);
   gtk_window_set_titlebar (GTK_WINDOW (self), priv->header_bar);
@@ -563,7 +563,7 @@ _initialize_app_menu (FrogrMainView *self)
   return FALSE;
 }
 
-#ifdef USE_HEADER_BAR
+#if USE_HEADER_BAR
 
 /* This function was taken from gtkapplication.c, from gtk+, licensed
  * under the GNU Lesser General Public License Version 2+ */
@@ -863,7 +863,7 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
 {
   FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
-#ifdef USE_HEADER_BAR
+#if USE_HEADER_BAR
   gchar *title = NULL;
   gchar *subtitle = NULL;
 

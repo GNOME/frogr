@@ -237,6 +237,9 @@ frogr_add_tags_dialog_show (GtkWindow *parent, const GSList *pictures, const GSL
                       "pictures", pictures,
                       "transient-for", parent,
                       "resizable", TRUE,
+#if GTK_CHECK_VERSION (3, 12, 0)
+                      "use-header-bar", USE_HEADER_BAR,
+#endif
                       NULL);
 
   /* Enable autocompletion if needed */

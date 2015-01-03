@@ -405,6 +405,9 @@ frogr_create_new_set_dialog_show (GtkWindow *parent,
                                      "width-request", -1,
                                      "height-request", 300,
                                      "resizable", TRUE,
+#if GTK_CHECK_VERSION (3, 12, 0)
+                                     "use-header-bar", USE_HEADER_BAR,
+#endif
                                      NULL));
 
   g_signal_connect (G_OBJECT (dialog), "response",

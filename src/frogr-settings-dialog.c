@@ -1001,6 +1001,9 @@ frogr_settings_dialog_show (GtkWindow *parent)
                              "transient-for", parent,
                              "resizable", TRUE,
                              "title", _("Preferences"),
+#if GTK_CHECK_VERSION (3, 12, 0)
+                             "use-header-bar", USE_HEADER_BAR,
+#endif
                              NULL);
 
       _instance = FROGR_SETTINGS_DIALOG (object);

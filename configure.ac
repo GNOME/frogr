@@ -72,12 +72,12 @@ AC_MSG_RESULT([$header_bar_feature])
 
 GTK3_MIN_VERSION=3.4
 if test "x$header_bar_feature" = "xyes"; then
-   with_gtk_3_10="no"
-   PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= 3.10,
-                     [with_gtk_3_10="yes"], [with_gtk_3_10="no"])
+   with_gtk_3_12="no"
+   PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= 3.12,
+                     [with_gtk_3_12="yes"], [with_gtk_3_12="no"])
 
-   # Disable header bar and fallback to GTK+ minimum version if 3.10 is not found
-   if test "x$with_gtk_3_10" = "xyes"; then
+   # Disable header bar and fallback to GTK+ minimum version if 3.12 is not found
+   if test "x$with_gtk_3_12" = "xyes"; then
       AC_DEFINE(USE_HEADER_BAR, 1, [Use GtkHeaderBar])
    else
       header_bar_feature="no"
@@ -85,6 +85,7 @@ if test "x$header_bar_feature" = "xyes"; then
 fi
 if test "x$header_bar_feature" = "xno"; then
    PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= $GTK3_MIN_VERSION)
+   AC_DEFINE(USE_HEADER_BAR, 0, [Use GtkHeaderBar])
 fi
 FROGR_CFLAGS="$FROGR_CFLAGS $GTK3_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $GTK3_LIBS"

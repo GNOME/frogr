@@ -141,7 +141,9 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   title = g_strdup_printf (_("Authorize %s"), APP_SHORTNAME);
   dialog = gtk_dialog_new_with_buttons (title,
                                         parent,
-                                        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_USE_HEADER_BAR,
+                                        _("_Cancel"),
+                                        GTK_RESPONSE_CANCEL,
                                         _("_Close"),
                                         GTK_RESPONSE_CLOSE,
                                         NULL);
@@ -213,7 +215,7 @@ _ask_for_auth_confirmation_response_cb (GtkDialog *dialog, gint response, gpoint
       g_free (vercode_full);
     }
 
-  if (valid)
+  if (response == GTK_RESPONSE_CANCEL || valid)
     gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 

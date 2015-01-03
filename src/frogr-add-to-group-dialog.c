@@ -608,6 +608,9 @@ frogr_add_to_group_dialog_show (GtkWindow *parent,
                       "groups", groups,
                       "transient-for", parent,
                       "resizable", TRUE,
+#if GTK_CHECK_VERSION (3, 12, 0)
+                      "use-header-bar", USE_HEADER_BAR,
+#endif
                       NULL);
 
   self = FROGR_ADD_TO_GROUP_DIALOG (new);
