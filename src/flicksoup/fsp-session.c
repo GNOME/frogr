@@ -33,8 +33,9 @@
 #include <stdarg.h>
 #include <string.h>
 
-/* We need this macro defined to properly initialize gcrypt */
+#if GCRYPT_VERSION_NUMBER < 0x010600
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
+#endif
 
 #define FLICKR_API_BASE_URL   "https://api.flickr.com/services/rest"
 #define FLICKR_API_UPLOAD_URL "https://up.flickr.com/services/upload"
@@ -529,7 +530,9 @@ _init_gcrypt                            (void)
                  "flicksoup will initialize gcrypt now, "
                  "but consider to initialize gcrypt yourself "
                  "at the beginning of this program.");
+#if GCRYPT_VERSION_NUMBER < 0x010600
       gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+#endif
       /* Version check should be almost the very first call because it
          makes sure that important subsystems are initialized. */
       g_assert (gcry_check_version (LIBGCRYPT_MIN_VERSION));

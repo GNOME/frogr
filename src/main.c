@@ -33,8 +33,9 @@
 #include <gcrypt.h>
 #include <pthread.h>
 
-/* Early for gcrypt pthread threads support */
+#if GCRYPT_VERSION_NUMBER < 0x010600
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
+#endif
 
 int
 main (int argc, char **argv)
@@ -53,8 +54,11 @@ main (int argc, char **argv)
     }
 #endif
 
+#if GCRYPT_VERSION_NUMBER < 0x010600
   /* Initialize gcrypt at the very beginning */
   gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+#endif
+
   /* Version check should be almost the very first call because it
      makes sure that important subsystems are initialized. */
   g_assert (gcry_check_version (LIBGCRYPT_MIN_VERSION));

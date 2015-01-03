@@ -28,8 +28,9 @@
 #include <flicksoup/flicksoup.h>
 #include <libsoup/soup.h>
 
-/* Early for gcrypt pthread threads support */
+#if GCRYPT_VERSION_NUMBER < 0x010600
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
+#endif
 
 #define API_KEY "18861766601de84f0921ce6be729f925"
 #define SHARED_SECRET "6233fbefd85f733a"
@@ -778,8 +779,11 @@ main                                    (int    argc,
 
   g_print ("Running flicksoup example...\n\n");
 
+#if GCRYPT_VERSION_NUMBER < 0x010600
   /* Initialize gcrypt at the very beginning */
   gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+#endif
+
   /* Version check should be almost the very first call because it
      makes sure that important subsystems are initialized. */
   g_assert (gcry_check_version (LIBGCRYPT_MIN_VERSION));
