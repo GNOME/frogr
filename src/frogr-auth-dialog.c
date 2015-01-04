@@ -27,6 +27,13 @@
 #include <config.h>
 #include <glib/gi18n.h>
 
+#if GTK_CHECK_VERSION (3, 12, 0)
+#define AUTH_DIALOG_FLAGS (GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_USE_HEADER_BAR)
+#else
+#define AUTH_DIALOG_FLAGS (GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT)
+#endif
+
+
 /* Prototypes */
 
 static void _ask_for_authorization (GtkWindow *parent);
@@ -142,7 +149,7 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   title = g_strdup_printf (_("Authorize %s"), APP_SHORTNAME);
   dialog = gtk_dialog_new_with_buttons (title,
                                         parent,
-                                        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_USE_HEADER_BAR,
+                                        AUTH_DIALOG_FLAGS,
                                         _("_Cancel"),
                                         GTK_RESPONSE_CANCEL,
                                         _("_Close"),
