@@ -109,7 +109,8 @@ _build_verification_code_entry_widget (GtkWidget *dialog)
       entry = gtk_entry_new ();
       gtk_entry_set_max_length (GTK_ENTRY (entry), 3);
       gtk_entry_set_width_chars (GTK_ENTRY (entry), 3);
-      gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
+      gtk_entry_set_alignment (GTK_ENTRY (entry), 0.5);
+      gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, FALSE, 6);
 
       entry_key = g_strdup_printf ("vercode-%d", i + 1);
       g_object_set_data (G_OBJECT (dialog), entry_key, entry);
