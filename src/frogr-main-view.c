@@ -2577,7 +2577,6 @@ frogr_main_view_new (GtkApplication *app)
   FrogrMainView *mainview =
     FROGR_MAIN_VIEW (g_object_new (FROGR_TYPE_MAIN_VIEW,
                                    "application", app,
-                                   "show-menubar", TRUE,
                                    NULL));
 
   /* Now initialize all the stuff strictly related to the UI */
