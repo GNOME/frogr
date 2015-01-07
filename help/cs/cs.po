@@ -1,15 +1,15 @@
 # Czech translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Marek Černocký <marek@manet.cz>, 2011, 2012, 2013, 2014.
+# Marek Černocký <marek@manet.cz>, 2011, 2012, 2013, 2014, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2014-09-19 09:01+0000\n"
-"PO-Revision-Date: 2014-10-26 22:12+0100\n"
+"POT-Creation-Date: 2015-01-07 21:19+0000\n"
+"PO-Revision-Date: 2015-01-07 22:45+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
-"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
+"Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,10 +50,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/add-to-groups.png' "
-"md5='29b7992f2aceddaaf2f474cbf618fb49'"
+"md5='a65107ee59c5b86730b660b77782aa41'"
 msgstr ""
 "external ref='figures/add-to-groups.png' "
-"md5='29b7992f2aceddaaf2f474cbf618fb49'"
+"md5='a65107ee59c5b86730b660b77782aa41'"
 
 #. (itstool) path: info/desc
 #: C/group-pictures.page:9
@@ -82,17 +82,13 @@ msgstr "Přidání objektů do skupin"
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/preferences.page:21
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/preferences-general.png' "
-#| "md5='8d162b86a0a4d707974113eb822e0796'"
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-general.png' "
-"md5='0423b8b3e0d984bce2929071fac87caa'"
+"md5='4fdb5481893123f61347dde744236a2b'"
 msgstr ""
 "external ref='figures/preferences-general.png' "
-"md5='0423b8b3e0d984bce2929071fac87caa'"
+"md5='4fdb5481893123f61347dde744236a2b'"
 
 #. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
@@ -103,10 +99,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-connection.png' "
-"md5='94a57d8bb4307783b862d7daf88383e3'"
+"md5='1830543cba33afb5e2434d11ff408264'"
 msgstr ""
 "external ref='figures/preferences-connection.png' "
-"md5='94a57d8bb4307783b862d7daf88383e3'"
+"md5='1830543cba33afb5e2434d11ff408264'"
 
 #. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
@@ -117,10 +113,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-misc.png' "
-"md5='1fac74a18600440c855cfd0c29e87ae9'"
+"md5='a2587009a97ec5f2554dfd5af36aa358'"
 msgstr ""
 "external ref='figures/preferences-misc.png' "
-"md5='1fac74a18600440c855cfd0c29e87ae9'"
+"md5='a2587009a97ec5f2554dfd5af36aa358'"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
@@ -208,17 +204,13 @@ msgstr "Různé předvolby aplikace <app>Frogr</app>."
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/edit-pictures.page:17
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/edit-picture-details.png' "
-#| "md5='61b5d97d77e1251b69c634a3b1718e32'"
 msgctxt "_"
 msgid ""
 "external ref='figures/edit-picture-details.png' "
-"md5='c8ace4d6dfa82854b74faa1c25c4fbff'"
+"md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
 msgstr ""
 "external ref='figures/edit-picture-details.png' "
-"md5='c8ace4d6dfa82854b74faa1c25c4fbff'"
+"md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
 
 #. (itstool) path: info/desc
 #: C/edit-pictures.page:9
@@ -424,10 +416,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/auth-dialog-step1.png' "
-"md5='0bee821ca7fdd16842a4e2536e2bb17e'"
+"md5='4a5a05a788f09eff146f379812dad604'"
 msgstr ""
 "external ref='figures/auth-dialog-step1.png' "
-"md5='0bee821ca7fdd16842a4e2536e2bb17e'"
+"md5='4a5a05a788f09eff146f379812dad604'"
 
 #. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
@@ -438,10 +430,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/auth-dialog-step2.png' "
-"md5='c9b217898c3f1516cdae9a5c19439176'"
+"md5='cd9a1f0cb20fec024f7b9bb7f037187e'"
 msgstr ""
 "external ref='figures/auth-dialog-step2.png' "
-"md5='c9b217898c3f1516cdae9a5c19439176'"
+"md5='cd9a1f0cb20fec024f7b9bb7f037187e'"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
@@ -507,10 +499,10 @@ msgstr "Autorizace Frogr. Dokončení procesu"
 msgctxt "_"
 msgid ""
 "external ref='figures/frogr-remote-organizer.png' "
-"md5='cb4f8098adc7b429e874c7d72d490b8e'"
+"md5='409cc7c292ff84a6ebc910c18ef2293e'"
 msgstr ""
 "external ref='figures/frogr-remote-organizer.png' "
-"md5='cb4f8098adc7b429e874c7d72d490b8e'"
+"md5='409cc7c292ff84a6ebc910c18ef2293e'"
 
 #. (itstool) path: info/desc
 #: C/introduction.page:8
@@ -620,9 +612,9 @@ msgstr ""
 #: C/set-pictures.page:18
 msgctxt "_"
 msgid ""
-"external ref='figures/add-to-sets.png' md5='7b5f33cb2f29b7f939c746b1dacba908'"
+"external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
 msgstr ""
-"external ref='figures/add-to-sets.png' md5='7b5f33cb2f29b7f939c746b1dacba908'"
+"external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
 
 #. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
@@ -633,10 +625,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/create-new-set.png' "
-"md5='dcb532384b0d30df70fa72b2b6db628f'"
+"md5='760f5dd0865302be33f2bf9898597917'"
 msgstr ""
 "external ref='figures/create-new-set.png' "
-"md5='dcb532384b0d30df70fa72b2b6db628f'"
+"md5='760f5dd0865302be33f2bf9898597917'"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
@@ -719,10 +711,10 @@ msgstr "Organizujte"
 msgctxt "_"
 msgid ""
 "external ref='figures/add-tags-dialog.png' "
-"md5='27e60f1fb9c62f58c82559069c17c913'"
+"md5='d6c0a23671166602f4f4f27aee990745'"
 msgstr ""
 "external ref='figures/add-tags-dialog.png' "
-"md5='27e60f1fb9c62f58c82559069c17c913'"
+"md5='d6c0a23671166602f4f4f27aee990745'"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
