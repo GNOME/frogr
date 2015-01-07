@@ -18,7 +18,7 @@ BuildRequires:	json-glib-devel > 0.12
 BuildRequires:	libsoup-devel > 2.34
 BuildRequires:	libxml2-devel > 2.6.8
 BuildRequires:	libexif-devel > 0.6.14
-BuildRequires:	libgcrypt-devel
+BuildRequires:	libgcrypt-devel > 1.5.0
 BuildRequires:	desktop-file-utils
 
 #Explicitly Requires: gvfs since we need to be able to open a web
