@@ -1,4 +1,4 @@
-AC_INIT([frogr], [0.11], [msanchez@gnome.org])
+AC_INIT([frogr], [0.12], [msanchez@gnome.org])
 AM_INIT_AUTOMAKE([foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
