@@ -29,7 +29,7 @@ Mailing list: http://mail.gnome.org/mailman/listinfo/frogr-list
 
 -------------------------------------------
 
-Frogr is Copyright (c) 2009-2014 Mario Sanchez Prada
+Frogr is Copyright (c) 2009-2015 Mario Sanchez Prada
 
 https://wiki.gnome.org/Apps/Frogr
 
@@ -48,7 +48,7 @@ See the COPYING file for more details.
 -------------------------------------------
 
 Frogr's Flickr API implementation (we call it "flicksoup", located
-under src/flicksoup) is Copyright (c) 2010-2014 Mario Sanchez Prada
+under src/flicksoup) is Copyright (c) 2010-2015 Mario Sanchez Prada
 
 Flicksoup is Free Software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 3 as
