@@ -1,5 +1,5 @@
-0.11 (??)
-=========
+0.11 (7 Jan 2015)
+=================
 
   * Moved to GtkHeaderBar plus a new menu button for GTK+ >= 3.12.
   * Added new option to replace "date posted" with "date taken" for new uploads.
