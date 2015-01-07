@@ -1,6 +1,37 @@
 0.11 (??)
 =========
 
+  * Moved to GtkHeaderBar plus a new menu button for GTK+ >= 3.12.
+  * Added new option to replace "date posted" with "date taken" for new uploads.
+  * Speeded up picture loading when the "import tags" feature is enabled.
+  * Fixed random crashes due to missing initialization of the gcrypt library.
+  * Fixed issue setting inconsistent state of toggle buttons for multiple pictures.
+  * Removed deprecated usage of GtkAlignment and gtk_misc_set_padding().
+  * Removed usage of deprecated icon names (use those from the Icon Naming Spec).
+  * Normalized .doap file (added 'category' and 'programming-language').
+  * Set the minimum required version of gcrypt to 1.5.0.
+
+Bug fixes:
+
+  * #734202: frogr super slow to load photos
+  * #732475: ath.c:193: _gcry_ath_mutex_lock: Assertion `*lock == ((ath_mutex_t) 0)' failed.
+  * #734193: on upload, set 'upload date' to 'taken date'
+  * #738863: Complete gcrypt initialization and set min version to 1.5.0
+
+New and updated translations:
+
+  * cs (Marek Černocký)
+  * es (Daniel Mustieles)
+  * hu (Balázs Úr)
+  * id (Andika Triwidada)
+  * pl (Piotr Drąg)
+  * pt_BR (Rafael Ferreira)
+  * ro (Daniel Șerbănescu)
+  * sl (Matej Urbančič)
+  * sr (Мирослав Николић)
+  * sr@latin (Miroslav Nikolić)
+  * tr (Muhammet Kara)
+
 
 0.10 (17 June 2014)
 ===================
