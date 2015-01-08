@@ -7,7 +7,7 @@
     <key>CFBundleExecutable</key>
     <string>frogr</string>
     <key>CFBundleGetInfoString</key>
-    <string>@VERSION@, (c) 2009-2014 Mario Sanchez Prada, https://wiki.gnome.org/Apps/Frogr</string>
+    <string>@VERSION@, (c) 2009-2015 Mario Sanchez Prada, https://wiki.gnome.org/Apps/Frogr</string>
     <key>CFBundleIconFile</key>
     <string>frogr.icns</string>
     <key>CFBundleIdentifier</key>
