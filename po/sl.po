@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the frogr package.
 #
 # Saša Batistič <sasa.batistic@gmail.com>, 2011.
-# Matej Urbančič <mateju@svn.gnome.org>, 2011-2014.
+# Matej Urbančič <mateju@svn.gnome.org>, 2011-2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-08-06 04:51+0000\n"
-"PO-Revision-Date: 2014-08-06 14:46+0100\n"
+"POT-Creation-Date: 2015-02-28 17:46+0000\n"
+"PO-Revision-Date: 2015-02-28 21:27+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -63,50 +63,50 @@ msgstr "Oddaljeni organizator slik GNOME Flickr\n"
 msgid "translator-credits"
 msgstr "Saša Batistič <sasa.batistic@gmail.com>"
 
-#: ../src/frogr-add-tags-dialog.c:198 ../src/frogr-add-to-set-dialog.c:553
-#: ../src/frogr-add-to-group-dialog.c:552
-#: ../src/frogr-create-new-set-dialog.c:328 ../src/frogr-details-dialog.c:1194
-#: ../src/frogr-main-view.c:442 ../src/frogr-main-view.c:1393
-#: ../src/frogr-main-view.c:1470 ../src/frogr-main-view.c:1520
-#: ../src/frogr-settings-dialog.c:957
+#: ../src/frogr-add-tags-dialog.c:198 ../src/frogr-add-to-group-dialog.c:552
+#: ../src/frogr-add-to-set-dialog.c:553 ../src/frogr-auth-dialog.c:153
+#: ../src/frogr-create-new-set-dialog.c:329 ../src/frogr-details-dialog.c:1195
+#: ../src/frogr-main-view.c:457 ../src/frogr-main-view.c:1612
+#: ../src/frogr-main-view.c:1691 ../src/frogr-main-view.c:1743
+#: ../src/frogr-settings-dialog.c:961
 msgid "_Cancel"
 msgstr "_Prekliči"
 
-#: ../src/frogr-add-tags-dialog.c:200 ../src/frogr-add-to-set-dialog.c:555
-#: ../src/frogr-add-to-group-dialog.c:554
-#: ../src/frogr-create-new-set-dialog.c:330
+#: ../src/frogr-add-tags-dialog.c:200 ../src/frogr-add-to-group-dialog.c:554
+#: ../src/frogr-add-to-set-dialog.c:555
+#: ../src/frogr-create-new-set-dialog.c:331
 msgid "_Add"
 msgstr "_Dodaj"
 
-#: ../src/frogr-add-tags-dialog.c:207
+#: ../src/frogr-add-tags-dialog.c:209
 msgid "Enter a spaces separated list of tags:"
 msgstr "Vnesite oznake ločene s presledki:"
 
-#: ../src/frogr-add-tags-dialog.c:230
+#: ../src/frogr-add-tags-dialog.c:235
 msgid "Add Tags"
 msgstr "Dodaj oznako"
-
-#: ../src/frogr-add-to-set-dialog.c:155
-msgid "Title"
-msgstr "Naslov"
-
-#: ../src/frogr-add-to-set-dialog.c:170 ../src/frogr-add-to-group-dialog.c:169
-msgid "Elements"
-msgstr "Predmeti"
-
-#: ../src/frogr-add-to-set-dialog.c:604
-msgid "Add to Sets"
-msgstr "Dodaj naborom"
 
 #: ../src/frogr-add-to-group-dialog.c:154
 msgid "Name"
 msgstr "Ime"
 
-#: ../src/frogr-add-to-group-dialog.c:603
+#: ../src/frogr-add-to-group-dialog.c:169 ../src/frogr-add-to-set-dialog.c:170
+msgid "Elements"
+msgstr "Predmeti"
+
+#: ../src/frogr-add-to-group-dialog.c:605
 msgid "Add to Groups"
 msgstr "Dodaj skupinam"
 
-#: ../src/frogr-auth-dialog.c:52
+#: ../src/frogr-add-to-set-dialog.c:155
+msgid "Title"
+msgstr "Naslov"
+
+#: ../src/frogr-add-to-set-dialog.c:606
+msgid "Add to Sets"
+msgstr "Dodaj naborom"
+
+#: ../src/frogr-auth-dialog.c:59
 #, c-format
 msgid ""
 "Please press the button to authorize %s and then come back to complete the "
@@ -115,29 +115,29 @@ msgstr ""
 "Pritisnite gumb za overitev %s in se vrnite na to okno za dokončanje "
 "opravila."
 
-#: ../src/frogr-auth-dialog.c:56 ../src/frogr-auth-dialog.c:141
+#: ../src/frogr-auth-dialog.c:63 ../src/frogr-auth-dialog.c:149
 #, c-format
 msgid "Authorize %s"
 msgstr "Pooblasti %s"
 
-#: ../src/frogr-auth-dialog.c:145 ../src/frogr-settings-dialog.c:959
+#: ../src/frogr-auth-dialog.c:155 ../src/frogr-settings-dialog.c:963
 msgid "_Close"
 msgstr "_Zapri"
 
 #. Description label
-#: ../src/frogr-auth-dialog.c:158
+#: ../src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "Vnos kode za overitev:"
 
-#: ../src/frogr-auth-dialog.c:209
+#: ../src/frogr-auth-dialog.c:221
 msgid "Invalid verification code"
 msgstr "Neveljavna overitvena koda "
 
-#: ../src/frogr-controller.c:591
+#: ../src/frogr-controller.c:597
 msgid "Process cancelled"
 msgstr "Opravilo je bilo prekinjeno"
 
-#: ../src/frogr-controller.c:596
+#: ../src/frogr-controller.c:602
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -145,7 +145,7 @@ msgstr ""
 "Napaka povezave:\n"
 "omrežje ni na voljo"
 
-#: ../src/frogr-controller.c:600
+#: ../src/frogr-controller.c:606
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -153,7 +153,7 @@ msgstr ""
 "Napaka povezave:\n"
 "slaba zahteva"
 
-#: ../src/frogr-controller.c:604
+#: ../src/frogr-controller.c:610
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -161,7 +161,7 @@ msgstr ""
 "Napaka povezave:\n"
 "napaka s strani strežnika"
 
-#: ../src/frogr-controller.c:608
+#: ../src/frogr-controller.c:614
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -169,7 +169,7 @@ msgstr ""
 "Napaka med pošiljanjem:\n"
 "neveljavna datoteka."
 
-#: ../src/frogr-controller.c:612
+#: ../src/frogr-controller.c:618
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -177,7 +177,7 @@ msgstr ""
 "Napaka med pošiljanjem slike:\n"
 "količinska omejitev je presežena."
 
-#: ../src/frogr-controller.c:617
+#: ../src/frogr-controller.c:623
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
@@ -186,7 +186,7 @@ msgstr[1] "Presežena je omejitev (omejitev: %d posnetek na mesec)"
 msgstr[2] "Presežena je omejitev (omejitev: %d posnetka na mesec)"
 msgstr[3] "Presežena je omejitev (omejitev: %d posnetki na mesec)"
 
-#: ../src/frogr-controller.c:621
+#: ../src/frogr-controller.c:627
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
@@ -194,7 +194,7 @@ msgstr ""
 "Napaka pošiljanja videa:\n"
 "S tem računom ni več mogoče pošiljati posnetkov"
 
-#: ../src/frogr-controller.c:627
+#: ../src/frogr-controller.c:633
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -202,7 +202,7 @@ msgstr ""
 "Napaka:\n"
 "fotografije ni mogoče najti"
 
-#: ../src/frogr-controller.c:631
+#: ../src/frogr-controller.c:637
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -210,7 +210,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je že v naboru fotografij"
 
-#: ../src/frogr-controller.c:635
+#: ../src/frogr-controller.c:641
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -218,7 +218,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je že v skupini"
 
-#: ../src/frogr-controller.c:639
+#: ../src/frogr-controller.c:645
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -226,7 +226,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je že v največ dovoljenih skupinah "
 
-#: ../src/frogr-controller.c:643
+#: ../src/frogr-controller.c:649
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -234,7 +234,7 @@ msgstr ""
 "Napaka:\n"
 "omejitev skupine je že dosežena."
 
-#: ../src/frogr-controller.c:647
+#: ../src/frogr-controller.c:653
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -242,7 +242,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je dodana v čakalno vrsto skupine"
 
-#: ../src/frogr-controller.c:651
+#: ../src/frogr-controller.c:657
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -250,7 +250,7 @@ msgstr ""
 "Napaka:\n"
 "fotografija je že dodana v čakalno vrsto skupine"
 
-#: ../src/frogr-controller.c:655
+#: ../src/frogr-controller.c:661
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -258,7 +258,7 @@ msgstr ""
 "Napaka:\n"
 "vsebina ni dovoljena za to skupino"
 
-#: ../src/frogr-controller.c:659
+#: ../src/frogr-controller.c:665
 #, c-format
 msgid ""
 "Authorization failed.\n"
@@ -267,7 +267,7 @@ msgstr ""
 "Pooblastitev je spodletela.\n"
 "poskusite znova"
 
-#: ../src/frogr-controller.c:665
+#: ../src/frogr-controller.c:671
 #, c-format
 msgid ""
 "Error\n"
@@ -278,7 +278,7 @@ msgstr ""
 "%s ni pravilno odobren za pošiljanje slik na Flickr.\n"
 "Treba je znova odobriti."
 
-#: ../src/frogr-controller.c:670
+#: ../src/frogr-controller.c:676
 #, c-format
 msgid ""
 "Unable to authenticate in Flickr\n"
@@ -287,7 +287,7 @@ msgstr ""
 "Ni mogoče overiti v sistemu Flickr.\n"
 "Poskusite znova."
 
-#: ../src/frogr-controller.c:674
+#: ../src/frogr-controller.c:680
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -296,7 +296,7 @@ msgstr ""
 "%s je treba pred pošiljanjem slik na na flickr pravilno odobriti.\n"
 "Poskusite znova."
 
-#: ../src/frogr-controller.c:679
+#: ../src/frogr-controller.c:685
 #, c-format
 msgid ""
 "Invalid verification code.\n"
@@ -305,7 +305,7 @@ msgstr ""
 "Neveljavna koda za pooblastitev.\n"
 "Poskusite znova."
 
-#: ../src/frogr-controller.c:683
+#: ../src/frogr-controller.c:689
 #, c-format
 msgid ""
 "Error:\n"
@@ -315,58 +315,58 @@ msgstr ""
 "storitev ni na voljo."
 
 #. General error: just dump the raw error description
-#: ../src/frogr-controller.c:688
+#: ../src/frogr-controller.c:694
 #, c-format
 msgid "An error happened: %s."
 msgstr "Prišlo je do napake: %s."
 
-#: ../src/frogr-controller.c:904
+#: ../src/frogr-controller.c:910
 msgid "Authorization failed (timed out)"
 msgstr "Overitev je spodletela (zakasnela)"
 
-#: ../src/frogr-controller.c:956
+#: ../src/frogr-controller.c:962
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Ponovno prejemanje (poskus %d/%d) ..."
 
-#: ../src/frogr-controller.c:961
+#: ../src/frogr-controller.c:967
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Pošiljanje '%s'..."
 
-#: ../src/frogr-controller.c:2219
+#: ../src/frogr-controller.c:2329
 msgid "Updating credentials…"
 msgstr "Posodabljanje poveril ..."
 
-#: ../src/frogr-controller.c:2224
+#: ../src/frogr-controller.c:2334
 msgid "Retrieving data for authorization…"
 msgstr "Pridobivanje podatkov za overitev ..."
 
-#: ../src/frogr-controller.c:2229
+#: ../src/frogr-controller.c:2339
 msgid "Finishing authorization…"
 msgstr "Zaključevanje overitve ..."
 
-#: ../src/frogr-controller.c:2234
+#: ../src/frogr-controller.c:2344
 msgid "Retrieving list of sets…"
 msgstr "Pridobivanje seznama naborov ..."
 
-#: ../src/frogr-controller.c:2239
+#: ../src/frogr-controller.c:2349
 msgid "Retrieving list of groups…"
 msgstr "Pridobivanje seznama skupin ..."
 
-#: ../src/frogr-controller.c:2244
+#: ../src/frogr-controller.c:2354
 msgid "Retrieving list of tags…"
 msgstr "Pridobivanje seznama oznak ..."
 
-#: ../src/frogr-controller.c:2361
+#: ../src/frogr-controller.c:2471
 msgid "No sets found"
 msgstr "Ni najdenih naborov"
 
-#: ../src/frogr-controller.c:2388
+#: ../src/frogr-controller.c:2498
 msgid "No groups found"
 msgstr "Ni najdenih skupin"
 
-#: ../src/frogr-controller.c:3031
+#: ../src/frogr-controller.c:3142
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -375,158 +375,162 @@ msgstr ""
 "%s mora biti pred pošiljanjem na Flickr overjen.\n"
 "Treba je znova odobriti."
 
-#: ../src/frogr-controller.c:3041
+#: ../src/frogr-controller.c:3152
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Pred pošiljanjem slik na Flickr mora biti račun overjen."
 
-#: ../src/frogr-controller.c:3113
+#: ../src/frogr-controller.c:3224
 #, c-format
 msgid "Error opening project file"
 msgstr "Napaka med odpiranjem datoteke projekta"
 
 #. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1021
+#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1022
 msgid "Missing data required"
 msgstr "Zahtevani so manjkajoči podatki"
 
-#: ../src/frogr-create-new-set-dialog.c:342
+#: ../src/frogr-create-new-set-dialog.c:345
 msgid "Title:"
 msgstr "Naslov:"
 
-#: ../src/frogr-create-new-set-dialog.c:351
+#: ../src/frogr-create-new-set-dialog.c:354
 msgid "Description:"
 msgstr "Opis:"
 
-#: ../src/frogr-create-new-set-dialog.c:372
+#: ../src/frogr-create-new-set-dialog.c:375
 msgid "Fill Pictures Details with Title and Description"
 msgstr "Izpolni podrobnosti slike s podatki naslova in opisa"
 
-#: ../src/frogr-create-new-set-dialog.c:393
+#: ../src/frogr-create-new-set-dialog.c:400
 msgid "Create New Set"
 msgstr "Ustvari nov nabor"
 
-#: ../src/frogr-details-dialog.c:90 ../src/frogr-settings-dialog.c:97
+#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:99
 msgid "Default (as specified in Flickr)"
 msgstr "Privzeto (kot je določeno na spletišču Flickr)"
 
-#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:98
+#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:100
 msgid "All rights reserved"
 msgstr "Vse pravice pridržane"
 
-#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:99
+#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:101
 msgid "CC Attribution-NonCommercial-ShareAlike"
 msgstr "Dovoljenje CC - nekomercialno - deljenje pod istimi pogoji"
 
-#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:100
+#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:102
 msgid "CC Attribution-NonCommercial"
 msgstr "Dovoljenje CC - nekomercialno "
 
-#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:101
+#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:103
 msgid "CC Attribution-NonCommercial-NoDerivs"
 msgstr "Dovoljenje CC - nekomercialno - brez predelav"
 
 # Nekomercialno (Noncommercial)
 # Brez predelav (No Derivative Works)
 # Deljenje pod istimi pogoji (Share Alike)
-#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:102
+#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:104
 msgid "CC Attribution"
 msgstr "Dovoljenje CC"
 
-#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:103
+#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:105
 msgid "CC Attribution-ShareAlike"
 msgstr "Dovoljenje CC - deljenje pod istimi pogoji"
 
-#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:104
+#: ../src/frogr-details-dialog.c:98 ../src/frogr-settings-dialog.c:106
 msgid "CC Attribution-NoDerivs"
 msgstr "Dovoljenje CC - brez predelav"
 
-#: ../src/frogr-details-dialog.c:180
+#: ../src/frogr-details-dialog.c:178
 msgid "Open with image viewer"
 msgstr "Odpri s pregledovalnikom slik"
 
-#: ../src/frogr-details-dialog.c:194
+#: ../src/frogr-details-dialog.c:196
 msgid "_Title:"
 msgstr "_Naslov:"
 
-#: ../src/frogr-details-dialog.c:204
+#: ../src/frogr-details-dialog.c:206
 msgid "_Description:"
 msgstr "_Opis:"
 
-#: ../src/frogr-details-dialog.c:228
+#: ../src/frogr-details-dialog.c:230
 msgid "Ta_gs:"
 msgstr "Ozna_ke:"
 
-#: ../src/frogr-details-dialog.c:254
+#: ../src/frogr-details-dialog.c:253
 msgid "Visibility"
 msgstr "Vidnost"
 
-#: ../src/frogr-details-dialog.c:266 ../src/frogr-settings-dialog.c:204
+#: ../src/frogr-details-dialog.c:263 ../src/frogr-settings-dialog.c:201
 msgid "_Private"
 msgstr "_Zasebno"
 
-#: ../src/frogr-details-dialog.c:270 ../src/frogr-settings-dialog.c:207
+#: ../src/frogr-details-dialog.c:267 ../src/frogr-settings-dialog.c:204
 msgid "P_ublic"
 msgstr "_Javno"
 
-#: ../src/frogr-details-dialog.c:279 ../src/frogr-settings-dialog.c:218
+#: ../src/frogr-details-dialog.c:276 ../src/frogr-settings-dialog.c:212
 msgid "_Family"
 msgstr "_Družina"
 
-#: ../src/frogr-details-dialog.c:283 ../src/frogr-settings-dialog.c:220
+#: ../src/frogr-details-dialog.c:280 ../src/frogr-settings-dialog.c:214
 msgid "F_riends"
 msgstr "_Prijatelji"
 
-#: ../src/frogr-details-dialog.c:309
+#: ../src/frogr-details-dialog.c:294
 msgid "Content Type"
 msgstr "Vrsta vsebine"
 
-#: ../src/frogr-details-dialog.c:318 ../src/frogr-settings-dialog.c:245
+#: ../src/frogr-details-dialog.c:302 ../src/frogr-settings-dialog.c:239
 msgid "P_hoto"
 msgstr "_Fotografija"
 
-#: ../src/frogr-details-dialog.c:322 ../src/frogr-settings-dialog.c:247
+#: ../src/frogr-details-dialog.c:306 ../src/frogr-settings-dialog.c:241
 msgid "Scree_nshot"
 msgstr "_Zaslonska slika"
 
-#: ../src/frogr-details-dialog.c:326 ../src/frogr-settings-dialog.c:249
+#: ../src/frogr-details-dialog.c:310 ../src/frogr-settings-dialog.c:243
 msgid "Oth_er"
 msgstr "Dru_go"
 
-#: ../src/frogr-details-dialog.c:342
+#: ../src/frogr-details-dialog.c:323
 msgid "Safety Level"
 msgstr "Raven varnosti"
 
-#: ../src/frogr-details-dialog.c:351 ../src/frogr-settings-dialog.c:270
+#: ../src/frogr-details-dialog.c:331 ../src/frogr-settings-dialog.c:265
 msgid "S_afe"
 msgstr "_Varno"
 
-#: ../src/frogr-details-dialog.c:355 ../src/frogr-settings-dialog.c:272
+#: ../src/frogr-details-dialog.c:335 ../src/frogr-settings-dialog.c:267
 msgid "_Moderate"
 msgstr "Zme_rno"
 
-#: ../src/frogr-details-dialog.c:359 ../src/frogr-settings-dialog.c:274
+#: ../src/frogr-details-dialog.c:339 ../src/frogr-settings-dialog.c:269
 msgid "Restr_icted"
 msgstr "_Omejeno"
 
-#: ../src/frogr-details-dialog.c:373
+#: ../src/frogr-details-dialog.c:351
 msgid "License Type"
 msgstr "Vrsta dovoljenja"
 
-#: ../src/frogr-details-dialog.c:397
+#: ../src/frogr-details-dialog.c:373
 msgid "Other Properties"
 msgstr "Druge lastnosti"
 
-#: ../src/frogr-details-dialog.c:406
-msgid "Set Geo_location Information"
-msgstr "Pošlji _geolokacijske podatke"
-
-#: ../src/frogr-details-dialog.c:410
+#: ../src/frogr-details-dialog.c:381
 msgid "_Show Up in Global Search Results"
 msgstr "_Pokaži v splošnih rezultatih iskanja"
 
+#: ../src/frogr-details-dialog.c:385
+msgid "Set Geo_location Information"
+msgstr "Pošlji _geolokacijske podatke"
+
+#: ../src/frogr-details-dialog.c:389
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr "Zamenjaj 'datum objave' z datumom 'prevzema'"
+
 #. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:501
+#: ../src/frogr-details-dialog.c:484
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
@@ -535,11 +539,11 @@ msgstr[1] "(%d slika)"
 msgstr[2] "(%d sliki)"
 msgstr[3] "(%d slike)"
 
-#: ../src/frogr-details-dialog.c:575
+#: ../src/frogr-details-dialog.c:558
 msgid "An error happened trying to load the picture"
 msgstr "Prišlo je do napake med nalaganjem slike"
 
-#: ../src/frogr-details-dialog.c:1195
+#: ../src/frogr-details-dialog.c:1196
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:8
 msgid "_Edit"
 msgstr "_Uredi"
@@ -548,12 +552,12 @@ msgstr "_Uredi"
 msgid "Edit Picture Details"
 msgstr "Urejanje podrobnosti slike"
 
-#: ../src/frogr-file-loader.c:147
+#: ../src/frogr-file-loader.c:148
 #, c-format
 msgid "Loading files %d / %d"
 msgstr "Nalaganje datotek %d / %d"
 
-#: ../src/frogr-file-loader.c:381
+#: ../src/frogr-file-loader.c:382
 #, c-format
 msgid ""
 "Unable to load picture %s:\n"
@@ -562,7 +566,7 @@ msgstr ""
 "Ni mogoče naložiti slike %s:\n"
 "%s"
 
-#: ../src/frogr-file-loader.c:412
+#: ../src/frogr-file-loader.c:413
 #, c-format
 msgid ""
 "Unable to load video %s\n"
@@ -574,7 +578,7 @@ msgstr ""
 #. First %s is the title of the picture (filename of the file by
 #. default). Second %s is the max allowed size for a picture to be
 #. uploaded to flickr (different for free and PRO accounts).
-#: ../src/frogr-file-loader.c:652
+#: ../src/frogr-file-loader.c:654
 #, c-format
 msgid ""
 "Can't load file %s:\n"
@@ -583,129 +587,133 @@ msgstr ""
 "Datoteke %s ni mogoče naložiti:\n"
 "Velikost datoteke je večja kot največja dovoljena velikost za ta račun (%s)."
 
-#: ../src/frogr-main-view.c:544
+#. First create the left side buttons
+#: ../src/frogr-main-view.c:654 ../src/frogr-main-view.c:756
 msgid "Open"
 msgstr "Odpri"
 
-#: ../src/frogr-main-view.c:544
+#: ../src/frogr-main-view.c:654 ../src/frogr-main-view.c:756
 msgid "Open Existing Project"
 msgstr "Odpri obstoječi projekt"
 
-#: ../src/frogr-main-view.c:545
-msgid "Save"
-msgstr "Shrani"
-
-#: ../src/frogr-main-view.c:545
-msgid "Save Current Project"
-msgstr "Shrani trenutni projekt"
-
-#: ../src/frogr-main-view.c:547
+#: ../src/frogr-main-view.c:655 ../src/frogr-main-view.c:759
 msgid "Add"
 msgstr "Dodaj"
 
-#: ../src/frogr-main-view.c:547
+#: ../src/frogr-main-view.c:655 ../src/frogr-main-view.c:759
 msgid "Add Elements"
 msgstr "Dodajanje predmetov"
 
-#: ../src/frogr-main-view.c:548
+#: ../src/frogr-main-view.c:656 ../src/frogr-main-view.c:760
 msgid "Remove"
 msgstr "Odstrani"
 
-#: ../src/frogr-main-view.c:548
+#: ../src/frogr-main-view.c:656 ../src/frogr-main-view.c:760
 msgid "Remove Elements"
 msgstr "Odstranjevanje predmetov"
 
-#: ../src/frogr-main-view.c:550
+#: ../src/frogr-main-view.c:657 ../src/frogr-main-view.c:762
 msgid "Upload"
 msgstr "Pošlji"
 
-#: ../src/frogr-main-view.c:550
+#: ../src/frogr-main-view.c:657 ../src/frogr-main-view.c:762
 msgid "Upload All"
 msgstr "Pošlji vse"
 
-#: ../src/frogr-main-view.c:840 ../data/gtkbuilder/frogr-app-menu.xml.h:4
+#. Save project item
+#: ../src/frogr-main-view.c:690 ../src/frogr-main-view.c:757
+msgid "Save"
+msgstr "Shrani"
+
+#: ../src/frogr-main-view.c:690 ../src/frogr-main-view.c:757
+msgid "Save Current Project"
+msgstr "Shrani trenutni projekt"
+
+#: ../src/frogr-main-view.c:1062 ../data/gtkbuilder/frogr-app-menu.xml.h:4
 msgid "_About"
 msgstr "_O programu"
 
-#: ../src/frogr-main-view.c:844 ../data/gtkbuilder/frogr-app-menu.xml.h:5
+#: ../src/frogr-main-view.c:1066 ../data/gtkbuilder/frogr-app-menu.xml.h:5
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:17
 msgid "_Quit"
 msgstr "_Končaj"
 
 #. Create the submenu and insert it in the right section
-#: ../src/frogr-main-view.c:900
+#: ../src/frogr-main-view.c:1119
 msgid "Accounts"
 msgstr "Računi"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:1252
+#: ../src/frogr-main-view.c:1471
 #, c-format
 msgid "Taken: %s"
 msgstr "Posneto: %s"
 
-#: ../src/frogr-main-view.c:1257
+#: ../src/frogr-main-view.c:1476
 #, c-format
 msgid "File size: %s"
 msgstr "Velikost datoteke: %s"
 
-#: ../src/frogr-main-view.c:1390
+#: ../src/frogr-main-view.c:1609
 msgid "Select File"
 msgstr "Izbor datoteke"
 
-#: ../src/frogr-main-view.c:1394 ../src/frogr-main-view.c:1521
+#: ../src/frogr-main-view.c:1613 ../src/frogr-main-view.c:1744
 msgid "_Open"
 msgstr "_Odpri"
 
-#: ../src/frogr-main-view.c:1403
+#: ../src/frogr-main-view.c:1622
 msgid "Frogr Project Files"
 msgstr "Datoteke projekta Frogr"
 
-#: ../src/frogr-main-view.c:1467
+#: ../src/frogr-main-view.c:1688
 msgid "Select Destination"
 msgstr "Izbor cilja"
 
-#: ../src/frogr-main-view.c:1471 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
+#: ../src/frogr-main-view.c:1692 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:1
 msgid "_Save"
 msgstr "_Shrani"
 
-#: ../src/frogr-main-view.c:1474
+#: ../src/frogr-main-view.c:1695
 msgid "Untitled Project.frogr"
 msgstr "neimenovan projekt.frogr"
 
-#: ../src/frogr-main-view.c:1517
+#: ../src/frogr-main-view.c:1740
 msgid "Select a Picture"
 msgstr "Izberi sliko"
 
-#: ../src/frogr-main-view.c:1544
+#: ../src/frogr-main-view.c:1767
 msgid "All Files"
 msgstr "Vse datoteke"
 
-#: ../src/frogr-main-view.c:1547
+#: ../src/frogr-main-view.c:1770
 msgid "Image Files"
 msgstr "Slikovne datoteke"
 
-#: ../src/frogr-main-view.c:1551
+#: ../src/frogr-main-view.c:1774
 msgid "Video Files"
 msgstr "Video datoteke"
 
-#: ../src/frogr-main-view.c:1573
+#: ../src/frogr-main-view.c:1798
 msgid "You don't have any picture added yet"
 msgstr "Ni še dodanih slik"
 
-#: ../src/frogr-main-view.c:1588
+#: ../src/frogr-main-view.c:1813
 msgid "You need to select some pictures first"
 msgstr "Najprej je treba izbrati nekaj slik"
 
-#: ../src/frogr-main-view.c:2052
+#: ../src/frogr-main-view.c:2277
 msgid "Not connected to Flickr"
 msgstr "Ni povezave s spletiščem Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:2062
+#: ../src/frogr-main-view.c:2287
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Povezanva ustvarjena za %s%s"
 
-#: ../src/frogr-main-view.c:2063
+#: ../src/frogr-main-view.c:2288
 msgid " (PRO account)"
 msgstr "(PRO račun)"
 
@@ -714,7 +722,7 @@ msgstr "(PRO račun)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:2087
+#: ../src/frogr-main-view.c:2312
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - še %s / %s"
@@ -722,7 +730,7 @@ msgstr " - še %s / %s"
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
 #. sizes for every picture loaded in the application
-#: ../src/frogr-main-view.c:2113
+#: ../src/frogr-main-view.c:2338
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
@@ -731,19 +739,19 @@ msgstr[1] " - %d datoteka za pošiljanje (%s)"
 msgstr[2] " - %d datoteki za pošiljanje (%s)"
 msgstr[3] " - %d datoteke za pošiljanje (%s)"
 
-#: ../src/frogr-settings-dialog.c:187
+#: ../src/frogr-settings-dialog.c:190
 msgid "Default Visibility"
 msgstr "Privzeta vidljivost"
 
-#: ../src/frogr-settings-dialog.c:233
+#: ../src/frogr-settings-dialog.c:229
 msgid "Default Content Type"
 msgstr "Privzeta vrsta vsebine"
 
-#: ../src/frogr-settings-dialog.c:258
+#: ../src/frogr-settings-dialog.c:255
 msgid "Default Safety Level"
 msgstr "P_rivzeta varnostna raven"
 
-#: ../src/frogr-settings-dialog.c:283
+#: ../src/frogr-settings-dialog.c:281
 msgid "Default License"
 msgstr "Privzeto dovoljenje"
 
@@ -751,75 +759,79 @@ msgstr "Privzeto dovoljenje"
 msgid "Other Defaults"
 msgstr "Drugo privzeto"
 
-#: ../src/frogr-settings-dialog.c:319
-msgid "Set Geo_location Information for Pictures"
-msgstr "Pošlji _geolokacijske podatke slik"
-
-#: ../src/frogr-settings-dialog.c:322
+#: ../src/frogr-settings-dialog.c:317
 msgid "_Show Pictures in Global Search Results"
 msgstr "_Pokaži slike v splošnih rezultatih iskanja"
 
-#: ../src/frogr-settings-dialog.c:328
+#: ../src/frogr-settings-dialog.c:320
+msgid "Set Geo_location Information for Pictures"
+msgstr "Pošlji _geolokacijske podatke slik"
+
+#: ../src/frogr-settings-dialog.c:323
+msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
+msgstr "Zamenjaj 'datum objave' z datumom 'prevzema' za slike"
+
+#: ../src/frogr-settings-dialog.c:329
 msgid "_General"
 msgstr "_Splošno"
 
-#: ../src/frogr-settings-dialog.c:353
+#: ../src/frogr-settings-dialog.c:352
 msgid "Proxy Settings"
 msgstr "Nastavitve posredniškega strežnika"
 
 #. Enable proxy
-#: ../src/frogr-settings-dialog.c:363
+#: ../src/frogr-settings-dialog.c:361
 msgid "_Enable HTTP Proxy"
 msgstr "_Omogoči posredovalni strežnik"
 
-#: ../src/frogr-settings-dialog.c:375
+#: ../src/frogr-settings-dialog.c:371
 msgid "_Host:"
 msgstr "_Gostitelj:"
 
 #. Proxy port
-#: ../src/frogr-settings-dialog.c:388
+#: ../src/frogr-settings-dialog.c:384
 msgid "_Port:"
 msgstr "_Vrata:"
 
 #. Proxy username
-#: ../src/frogr-settings-dialog.c:401
+#: ../src/frogr-settings-dialog.c:397
 msgid "U_sername:"
 msgstr "_Uporabniško ime:"
 
 #. Proxy password
-#: ../src/frogr-settings-dialog.c:414
+#: ../src/frogr-settings-dialog.c:410
 msgid "Pass_word:"
 msgstr "_Geslo:"
 
-#: ../src/frogr-settings-dialog.c:438
+#: ../src/frogr-settings-dialog.c:434
 msgid "Connec_tion"
 msgstr "Pove_zava"
 
-#: ../src/frogr-settings-dialog.c:461
+#: ../src/frogr-settings-dialog.c:455
 msgid "Other options"
 msgstr "Druge možnosti"
 
-#: ../src/frogr-settings-dialog.c:473
+#: ../src/frogr-settings-dialog.c:465
 msgid "Ena_ble Tags Auto-Completion"
 msgstr "Omogoči samodejno _dopolnjevanje oznak"
 
-#: ../src/frogr-settings-dialog.c:476
+#: ../src/frogr-settings-dialog.c:468
 msgid "_Import Tags from Pictures Metadata"
 msgstr "_Uvozi oznake iz metapodatkov slik"
 
-#: ../src/frogr-settings-dialog.c:480
+#: ../src/frogr-settings-dialog.c:472
 msgid "Use _Dark GTK Theme"
 msgstr "Uporabi _temno temo"
 
-#: ../src/frogr-settings-dialog.c:484
+#: ../src/frogr-settings-dialog.c:476
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr "_Ohrani pripono datotek v naslovu med nalaganjem slik"
 
-#: ../src/frogr-settings-dialog.c:490
+#: ../src/frogr-settings-dialog.c:482
 msgid "_Misc"
 msgstr "_Razno"
 
-#: ../src/frogr-settings-dialog.c:1000
+#: ../src/frogr-settings-dialog.c:1003
 msgid "Preferences"
 msgstr "Možnosti"
 
@@ -835,6 +847,53 @@ msgstr "_Možnosti ..."
 msgid "_Help"
 msgstr "Pomo_č"
 
+#: ../data/gtkbuilder/frogr-context-menu.xml.h:1
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:3
+msgid "_Edit Details…"
+msgstr "_Uredi podrobnosti ..."
+
+#: ../data/gtkbuilder/frogr-context-menu.xml.h:2
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:4
+msgid "Add _Tags…"
+msgstr "Dodaj _oznake ..."
+
+#: ../data/gtkbuilder/frogr-context-menu.xml.h:3
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:11
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:5
+msgid "Add to _Group…"
+msgstr "Dodaj _skupini ..."
+
+#: ../data/gtkbuilder/frogr-context-menu.xml.h:4
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:12
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:6
+msgid "Add to _Photoset"
+msgstr "_Dodaj v nabor slik"
+
+#: ../data/gtkbuilder/frogr-context-menu.xml.h:5
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:13
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:7
+msgid "_Add to Existing Photoset…"
+msgstr "D_odaj k obstoječemu naboru ..."
+
+#: ../data/gtkbuilder/frogr-context-menu.xml.h:6
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:14
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:8
+msgid "_Create New Photoset…"
+msgstr "_Ustvari nov nabor slik ..."
+
+#: ../data/gtkbuilder/frogr-context-menu.xml.h:7
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:15
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:16
+msgid "_Open in External Viewer"
+msgstr "Odpri v zunanjem pregledovalniku"
+
+#: ../data/gtkbuilder/frogr-context-menu.xml.h:8
+#: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
+msgid "_Remove Elements"
+msgstr "_Odstrani predmete"
+
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:1
 msgid "_File"
 msgstr "_Datoteka"
@@ -844,6 +903,7 @@ msgid "_Open…"
 msgstr "_Odpri ..."
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:4
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:2
 msgid "Save _As…"
 msgstr "Shrani _kot ..."
 
@@ -851,79 +911,46 @@ msgstr "Shrani _kot ..."
 msgid "A_dd Elements…"
 msgstr "_Dodaj predmete ..."
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:8
-msgid "_Remove Elements"
-msgstr "_Odstrani predmete"
-
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:7
 msgid "_Upload All"
 msgstr "Pošlji _vse"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:1
-msgid "_Edit Details…"
-msgstr "_Uredi podrobnosti ..."
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:2
-msgid "Add _Tags…"
-msgstr "Dodaj _oznake ..."
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:11
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:3
-msgid "Add to _Group…"
-msgstr "Dodaj _skupini ..."
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:12
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:4
-msgid "Add to _Photoset"
-msgstr "_Dodaj v nabor slik"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:13
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:5
-msgid "_Add to Existing Photoset…"
-msgstr "D_odaj k obstoječemu naboru ..."
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:14
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:6
-msgid "_Create New Photoset…"
-msgstr "_Ustvari nov nabor slik ..."
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:15
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:7
-msgid "_Open in External Viewer"
-msgstr "Odpri v zunanjem pregledovalniku"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:16
 msgid "_View"
 msgstr "_Pogled"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:17
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:9
 msgid "_Sort Elements"
 msgstr "_Razvrsti predmete"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:18
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:10
 msgid "As _Loaded"
 msgstr "po _nalaganju"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:19
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:11
 msgid "By _Date Taken"
 msgstr "po _datumu posnetka"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:20
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:12
 msgid "By _Title"
 msgstr "po _naslovu"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:21
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:13
 msgid "By _Size"
 msgstr "Po veliko_sti"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:22
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:14
 msgid "_Reversed Order"
 msgstr "_Obrnjen vrstni red"
 
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:23
+#: ../data/gtkbuilder/frogr-menu-button.xml.h:15
 msgid "Enable _Tooltips"
 msgstr "Omogoči _orodne namige"
 
