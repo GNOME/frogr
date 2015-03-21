@@ -51,7 +51,7 @@ msgstr "Šalji i organiziraj fotografije u  Flickr nalozima"
 
 #: ../data/frogr.desktop.in.in.h:4
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
-msgstr "Flickr;Slika;Slika;Fotografija;Video;Uploader"
+msgstr "Flickr;Slika;Slika;Fotografija;Video;Uploader;"
 
 #: ../src/frogr-about-dialog.c:43
 msgid "A Flickr remote organizer for GNOME\n"
