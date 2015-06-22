@@ -1608,7 +1608,7 @@ _open_project_dialog (FrogrMainView *self)
 
   dialog = gtk_file_chooser_dialog_new (_("Select File"),
                                         GTK_WINDOW (self),
-                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        GTK_FILE_CHOOSER_ACTION_OPEN,
                                         _("_Cancel"), GTK_RESPONSE_CANCEL,
                                         _("_Open"), GTK_RESPONSE_ACCEPT,
                                         NULL);
