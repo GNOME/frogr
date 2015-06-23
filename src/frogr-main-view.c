@@ -451,30 +451,24 @@ _initialize_ui (FrogrMainView *self)
   _initialize_drag_n_drop (self);
 
   /* Create and hide progress bar dialog for uploading pictures */
-  progress_dialog = gtk_dialog_new_with_buttons (NULL,
-                                                 GTK_WINDOW (self),
-                                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                 _("_Cancel"),
-                                                 GTK_RESPONSE_CANCEL,
-                                                 NULL);
-  gtk_window_set_title (GTK_WINDOW (progress_dialog), "");
-
+  progress_dialog = gtk_message_dialog_new (GTK_WINDOW (self),
+                                            GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                            GTK_MESSAGE_OTHER,
+                                            GTK_BUTTONS_CANCEL,
+                                            NULL);
   gtk_dialog_set_response_sensitive (GTK_DIALOG (progress_dialog),
                                      GTK_RESPONSE_CANCEL, TRUE);
-
   gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
   gtk_window_set_default_size (GTK_WINDOW (progress_dialog), 250, -1);
+  gtk_window_set_title (GTK_WINDOW (progress_dialog), _("Uploading Pictures"));
 
-  progress_vbox = gtk_dialog_get_content_area (GTK_DIALOG (progress_dialog));
-
+  progress_vbox = gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (progress_dialog));
   progress_label = gtk_label_new (NULL);
-  gtk_box_pack_start (GTK_BOX (progress_vbox), progress_label, FALSE, FALSE, 6);
+  gtk_container_add (GTK_CONTAINER (progress_vbox), progress_label);
 
   progress_bar = gtk_progress_bar_new ();
   gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progress_bar), TRUE);
-
-  gtk_box_pack_start (GTK_BOX (progress_vbox), progress_bar, FALSE, FALSE, 6);
-  gtk_widget_set_margin_bottom (progress_bar, 6);
+  gtk_container_add (GTK_CONTAINER (progress_vbox), progress_bar);
 
   gtk_widget_hide (progress_dialog);
   priv->progress_dialog = progress_dialog;
