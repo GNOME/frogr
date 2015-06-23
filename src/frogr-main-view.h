@@ -55,7 +55,7 @@ void frogr_main_view_update_project_path (FrogrMainView *self, const gchar *path
 
 void frogr_main_view_set_status_text (FrogrMainView *self, const gchar *text);
 
-void frogr_main_view_show_progress (FrogrMainView *self, const gchar *text);
+void frogr_main_view_show_progress (FrogrMainView *self, const gchar *title, const gchar *text);
 
 void frogr_main_view_set_progress_description (FrogrMainView *self, const gchar *text);
 

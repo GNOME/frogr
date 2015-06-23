@@ -460,7 +460,6 @@ _initialize_ui (FrogrMainView *self)
                                      GTK_RESPONSE_CANCEL, TRUE);
   gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
   gtk_window_set_default_size (GTK_WINDOW (progress_dialog), 250, -1);
-  gtk_window_set_title (GTK_WINDOW (progress_dialog), _("Uploading Pictures"));
 
   progress_vbox = gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (progress_dialog));
   progress_label = gtk_label_new (NULL);
@@ -2608,7 +2607,7 @@ frogr_main_view_set_status_text (FrogrMainView *self,
 }
 
 void
-frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
+frogr_main_view_show_progress (FrogrMainView *self, const gchar *title, const gchar *text)
 {
   FrogrMainViewPrivate *priv = NULL;
 
@@ -2622,6 +2621,7 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *text)
   priv->progress_is_showing = TRUE;
 
   gtk_label_set_text (GTK_LABEL (priv->progress_label), text ? text : "");
+  gtk_window_set_title (GTK_WINDOW (priv->progress_dialog), title);
 
   /* Reset values */
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), "");

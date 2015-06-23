@@ -2363,7 +2363,29 @@ _show_progress_on_idle (gpointer data)
   frogr_main_view_pulse_progress (priv->mainview);
   if (show_dialog)
     {
-      frogr_main_view_show_progress (priv->mainview, text);
+      gchar *title = NULL;
+
+      switch (activity)
+        {
+        case FETCHING_TOKEN_REPLACEMENT:
+        case FETCHING_AUTH_URL:
+        case FETCHING_AUTH_TOKEN:
+          title = g_strdup_printf (_("Authorize %s"), APP_SHORTNAME);
+          break;
+
+        case FETCHING_PHOTOSETS:
+        case FETCHING_GROUPS:
+        case FETCHING_TAGS:
+          title = g_strdup_printf (_("Fetching information"));
+          break;
+
+        default:
+          title = g_strdup ("");
+        }
+
+      frogr_main_view_show_progress (priv->mainview, title, text);
+      g_free (title);
+
       return G_SOURCE_CONTINUE;
     }
   else
@@ -3167,7 +3189,7 @@ frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
 
       /* Load the pictures! */
       _set_state (self, FROGR_STATE_UPLOADING_PICTURES);
-      frogr_main_view_show_progress (priv->mainview, NULL);
+      frogr_main_view_show_progress (priv->mainview, _("Uploading Pictures"), NULL);
       _upload_next_picture (self, up_data);
     }
 }
