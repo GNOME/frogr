@@ -126,7 +126,6 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkWidget *progress_dialog;
   GtkWidget *progress_bar;
-  GtkWidget *progress_label;
   gboolean progress_is_showing;
   gchar* state_description;
 
@@ -348,7 +347,6 @@ _initialize_ui (FrogrMainView *self)
   GtkWidget *progress_dialog;
   GtkWidget *progress_vbox;
   GtkWidget *progress_bar;
-  GtkWidget *progress_label;
   GMenuModel *ctxt_menu_model;
   const gchar *icons_path = NULL;
   gchar *full_path = NULL;
@@ -461,18 +459,15 @@ _initialize_ui (FrogrMainView *self)
   gtk_container_set_border_width (GTK_CONTAINER (progress_dialog), 6);
   gtk_window_set_default_size (GTK_WINDOW (progress_dialog), 250, -1);
 
-  progress_vbox = gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (progress_dialog));
-  progress_label = gtk_label_new (NULL);
-  gtk_container_add (GTK_CONTAINER (progress_vbox), progress_label);
-
   progress_bar = gtk_progress_bar_new ();
   gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progress_bar), TRUE);
+
+  progress_vbox = gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (progress_dialog));
   gtk_container_add (GTK_CONTAINER (progress_vbox), progress_bar);
 
   gtk_widget_hide (progress_dialog);
   priv->progress_dialog = progress_dialog;
   priv->progress_bar = progress_bar;
-  priv->progress_label = progress_label;
   priv->progress_is_showing = FALSE;
   priv->state_description = NULL;
 
@@ -2620,8 +2615,9 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *title, const gc
 
   priv->progress_is_showing = TRUE;
 
-  gtk_label_set_text (GTK_LABEL (priv->progress_label), text ? text : "");
   gtk_window_set_title (GTK_WINDOW (priv->progress_dialog), title);
+  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (priv->progress_dialog),
+                                 text ? text : "");
 
   /* Reset values */
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), "");
@@ -2640,7 +2636,7 @@ frogr_main_view_set_progress_description (FrogrMainView *self, const gchar *text
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
   priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gtk_label_set_text (GTK_LABEL (priv->progress_label), text);
+  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (priv->progress_dialog), text);
 }
 
 void
