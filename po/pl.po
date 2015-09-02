@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-29 22:56+0200\n"
-"PO-Revision-Date: 2015-06-29 22:57+0200\n"
+"POT-Creation-Date: 2015-09-03 01:18+0200\n"
+"PO-Revision-Date: 2015-09-03 01:19+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -143,7 +143,7 @@ msgstr "Nieprawidłowy kod weryfikacyjny"
 
 #: ../src/frogr-controller.c:597
 msgid "Process cancelled"
-msgstr "Proces został anulowany"
+msgstr "Anulowano proces"
 
 #: ../src/frogr-controller.c:602
 msgid ""
@@ -339,7 +339,7 @@ msgstr "Ponawianie wysyłania (próba %d/%d)…"
 #: ../src/frogr-controller.c:967
 #, c-format
 msgid "Uploading '%s'…"
-msgstr "Wysyłanie \"%s\"…"
+msgstr "Wysyłanie „%s”…"
 
 #: ../src/frogr-controller.c:2329
 msgid "Updating credentials…"
@@ -543,7 +543,7 @@ msgstr "Ustawianie informacji geo_lokalizacji"
 
 #: ../src/frogr-details-dialog.c:389
 msgid "Replace 'Date Posted' with 'Date Taken'"
-msgstr "Zastępowanie \"Daty opublikowania\" \"Datą wykonania\""
+msgstr "Zastępowanie „Daty opublikowania” „Datą wykonania”"
 
 #. Visually indicate how many pictures are being edited
 #: ../src/frogr-details-dialog.c:484
@@ -740,7 +740,7 @@ msgstr " (konto typu PRO)"
 #: ../src/frogr-main-view.c:2300
 #, c-format
 msgid " - %s / %s remaining"
-msgstr " - pozostało %s/%s"
+msgstr " — pozostało %s/%s"
 
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
@@ -749,9 +749,9 @@ msgstr " - pozostało %s/%s"
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
-msgstr[0] " - %d plik do wysłania (%s)"
-msgstr[1] " - %d pliki do wysłania (%s)"
-msgstr[2] " - %d plików do wysłania (%s)"
+msgstr[0] " — %d plik do wysłania (%s)"
+msgstr[1] " — %d pliki do wysłania (%s)"
+msgstr[2] " — %d plików do wysłania (%s)"
 
 #: ../src/frogr-settings-dialog.c:190
 msgid "Default Visibility"
@@ -783,7 +783,7 @@ msgstr "Ustawianie informacji geo_lokalizacji dla zdjęć"
 
 #: ../src/frogr-settings-dialog.c:323
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
-msgstr "Zastępowanie \"Daty opublikowania\" \"Datą wykonania\" dla zdjęć"
+msgstr "Zastępowanie „Daty opublikowania” „Datą wykonania” dla zdjęć"
 
 #: ../src/frogr-settings-dialog.c:329
 msgid "_General"
@@ -796,7 +796,7 @@ msgstr "Ustawienia pośrednika"
 #. Enable proxy
 #: ../src/frogr-settings-dialog.c:361
 msgid "_Enable HTTP Proxy"
-msgstr "_Używanie pośrednika HTTP"
+msgstr "_Pośrednik HTTP"
 
 #: ../src/frogr-settings-dialog.c:371
 msgid "_Host:"
@@ -835,7 +835,7 @@ msgstr "_Importowanie etykiet z metadanych obrazów"
 
 #: ../src/frogr-settings-dialog.c:472
 msgid "Use _Dark GTK Theme"
-msgstr "Uży_wanie ciemnego motywu GTK"
+msgstr "_Ciemny motyw GTK+"
 
 #: ../src/frogr-settings-dialog.c:476
 msgid "_Keep File Extensions in Titles when Loading"
