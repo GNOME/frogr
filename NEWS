@@ -1,6 +1,8 @@
 0.12 (??)
 =========
 
+  * Use a GtkMessageDialog for the "Uploading pictures" dialog.
+
 
 0.11 (7 Jan 2015)
 =================
