@@ -157,17 +157,17 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 
   if (!app_info || !g_app_info_launch_uris (app_info, uris_list, NULL, &error))
     {
-      /* The default app didn't succeed, so try 'gnome-open' / 'open' */
+      /* The default app didn't succeed, so try 'xdg-open' / 'open' */
       gchar *command = NULL;
       gchar *uris = NULL;
 
       uris = _get_uris_string_from_list (uris_list);
 
 #ifdef PLATFORM_MAC
-      /* In MacOSX use 'open' instead of 'gnome-open' */
+      /* In MacOSX use 'open' instead of 'xdg-open' */
       command = g_strdup_printf ("open %s", uris);
 #else
-      command = g_strdup_printf ("gnome-open %s", uris);
+      command = g_strdup_printf ("xdg-open %s", uris);
 #endif
       _spawn_command (command);
 

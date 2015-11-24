@@ -1,6 +1,7 @@
 0.12 (??)
 =========
 
+  * Use xdg-open instead of gnome-open as a fallback plan to open URIs.
   * Use a GtkMessageDialog for the "Uploading pictures" dialog.
 
 
