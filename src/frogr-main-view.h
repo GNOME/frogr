@@ -27,27 +27,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_MAIN_VIEW           (frogr_main_view_get_type())
-#define FROGR_MAIN_VIEW(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_MAIN_VIEW, FrogrMainView))
-#define FROGR_MAIN_VIEW_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_MAIN_VIEW, FrogrMainViewClass))
-#define FROGR_IS_MAIN_VIEW(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_MAIN_VIEW))
-#define FROGR_IS_MAIN_VIEW_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_MAIN_VIEW))
-#define FROGR_MAIN_VIEW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_MAIN_VIEW, FrogrMainViewClass))
+#define FROGR_TYPE_MAIN_VIEW (frogr_main_view_get_type())
 
-typedef struct _FrogrMainView        FrogrMainView;
-typedef struct _FrogrMainViewClass   FrogrMainViewClass;
-
-struct _FrogrMainViewClass
-{
-  GtkApplicationWindowClass parent_class;
-};
-
-struct _FrogrMainView
-{
-  GtkApplicationWindow parent;
-};
-
-GType frogr_main_view_get_type (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrMainView, frogr_main_view, FROGR, MAIN_VIEW, GtkApplicationWindow)
 
 FrogrMainView *frogr_main_view_new (GtkApplication *app);
 

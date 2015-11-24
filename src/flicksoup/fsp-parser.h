@@ -28,31 +28,9 @@
 
 G_BEGIN_DECLS
 
-#define FSP_TYPE_PARSER                         \
-  (fsp_parser_get_type())
-#define FSP_PARSER(obj)                                                 \
-  (G_TYPE_CHECK_INSTANCE_CAST (obj, FSP_TYPE_PARSER, FspParser))
-#define FSP_PARSER_CLASS(klass)                                         \
-  (G_TYPE_CHECK_CLASS_CAST(klass, FSP_TYPE_PARSER, FspParserClass))
-#define FSP_IS_PARSER(obj)                              \
-  (G_TYPE_CHECK_INSTANCE_TYPE(obj, FSP_TYPE_PARSER))
-#define FSP_IS_PARSER_CLASS(klass)                      \
-  (G_TYPE_CHECK_CLASS_TYPE((klass), FSP_TYPE_PARSER))
-#define FSP_PARSER_GET_CLASS(obj)                                       \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), FSP_TYPE_PARSER, FspParserClass))
+#define FSP_TYPE_PARSER (fsp_parser_get_type())
 
-typedef struct _FspParser FspParser;
-typedef struct _FspParserClass FspParserClass;
-
-struct _FspParser
-{
-  GObject parent_instance;
-};
-
-struct _FspParserClass
-{
-  GObjectClass parent_class;
-};
+G_DECLARE_FINAL_TYPE (FspParser, fsp_parser, FSP, PARSER, GObject)
 
 /* All the parsers should be defined like this type */
 typedef
@@ -60,9 +38,6 @@ gpointer (* FspParserFunc)        (FspParser  *self,
                                    const gchar      *buffer,
                                    gulong            buf_size,
                                    GError          **error);
-
-GType
-fsp_parser_get_type              (void) G_GNUC_CONST;
 
 FspParser *
 fsp_parser_get_instance          (void);

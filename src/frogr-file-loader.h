@@ -28,28 +28,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_FILE_LOADER            (frogr_file_loader_get_type())
-#define FROGR_FILE_LOADER(obj)            (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_FILE_LOADER, FrogrFileLoader))
-#define FROGR_FILE_LOADER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_FILE_LOADER, FrogrFileLoaderClass))
-#define FROGR_IS_FILE_LOADER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_FILE_LOADER))
-#define FROGR_IS_FILE_LOADER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_FILE_LOADER))
-#define FROGR_FILE_LOADER_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_FILE_LOADER, FrogrFileLoaderClass))
+#define FROGR_TYPE_FILE_LOADER (frogr_file_loader_get_type())
 
-typedef struct _FrogrFileLoader FrogrFileLoader;
-typedef struct _FrogrFileLoaderClass FrogrFileLoaderClass;
-
-struct _FrogrFileLoader
-{
-  GObject parent_instance;
-};
-
-struct _FrogrFileLoaderClass
-{
-  GObjectClass parent_class;
-};
-
-
-GType frogr_file_loader_get_type(void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrFileLoader, frogr_file_loader, FROGR, FILE_LOADER, GObject)
 
 FrogrFileLoader *frogr_file_loader_new_from_uris (GSList *file_uris, gulong max_picture_size, gulong max_video_size);
 

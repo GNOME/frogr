@@ -32,28 +32,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_PICTURE           (frogr_picture_get_type())
-#define FROGR_PICTURE(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_PICTURE, FrogrPicture))
-#define FROGR_PICTURE_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_PICTURE, FrogrPictureClass))
-#define FROGR_IS_PICTURE(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_PICTURE))
-#define FROGR_IS_PICTURE_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_PICTURE))
-#define FROGR_PICTURE_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_PICTURE, FrogrPictureClass))
+#define FROGR_TYPE_PICTURE (frogr_picture_get_type())
 
-typedef struct _FrogrPicture FrogrPicture;
-typedef struct _FrogrPictureClass FrogrPictureClass;
-
-struct _FrogrPicture
-{
-  GObject parent_instance;
-};
-
-struct _FrogrPictureClass
-{
-  GObjectClass parent_class;
-};
-
-
-GType frogr_picture_get_type(void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrPicture, frogr_picture, FROGR, PICTURE, GObject)
 
 /* Constructor */
 FrogrPicture *frogr_picture_new (const gchar *fileuri,

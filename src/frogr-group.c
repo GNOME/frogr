@@ -20,22 +20,18 @@
 
 #include "frogr-group.h"
 
-#define FROGR_GROUP_GET_PRIVATE(object)                 \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FROGR_TYPE_GROUP,       \
-                                FrogrGroupPrivate))
 
-G_DEFINE_TYPE (FrogrGroup, frogr_group, G_TYPE_OBJECT)
-
-/* Private struct */
-typedef struct _FrogrGroupPrivate FrogrGroupPrivate;
-struct _FrogrGroupPrivate
+struct _FrogrGroup
 {
+  GObject parent;
+
   gchar *id;
   gchar *name;
   FspGroupPrivacy privacy;
   gint n_photos;
 };
+
+G_DEFINE_TYPE (FrogrGroup, frogr_group, G_TYPE_OBJECT)
 
 /* Properties */
 enum  {
@@ -85,21 +81,21 @@ _frogr_group_get_property (GObject *object,
                            GValue *value,
                            GParamSpec *pspec)
 {
-  FrogrGroupPrivate *priv = FROGR_GROUP_GET_PRIVATE (object);
+  FrogrGroup *self = FROGR_GROUP (object);
 
   switch (prop_id)
     {
     case PROP_ID:
-      g_value_set_string (value, priv->id);
+      g_value_set_string (value, self->id);
       break;
     case PROP_NAME:
-      g_value_set_string (value, priv->name);
+      g_value_set_string (value, self->name);
       break;
     case PROP_PRIVACY:
-      g_value_set_int (value, priv->privacy);
+      g_value_set_int (value, self->privacy);
       break;
     case PROP_N_PHOTOS:
-      g_value_set_int (value, priv->n_photos);
+      g_value_set_int (value, self->n_photos);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -110,11 +106,11 @@ _frogr_group_get_property (GObject *object,
 static void
 _frogr_group_finalize (GObject* object)
 {
-  FrogrGroupPrivate *priv = FROGR_GROUP_GET_PRIVATE (object);
+  FrogrGroup *self = FROGR_GROUP (object);
 
   /* free strings */
-  g_free (priv->id);
-  g_free (priv->name);
+  g_free (self->id);
+  g_free (self->name);
 
   /* call super class */
   G_OBJECT_CLASS (frogr_group_parent_class)->finalize(object);
@@ -167,20 +163,16 @@ frogr_group_class_init(FrogrGroupClass *klass)
                                                      G_MAXINT,
                                                      0,
                                                      G_PARAM_READWRITE));
-
-  g_type_class_add_private (obj_class, sizeof (FrogrGroupPrivate));
 }
 
 static void
 frogr_group_init (FrogrGroup *self)
 {
-  FrogrGroupPrivate *priv = FROGR_GROUP_GET_PRIVATE (self);
-
   /* Default values */
-  priv->id = NULL;
-  priv->name = NULL;
-  priv->privacy = FSP_GROUP_PRIVACY_NONE;
-  priv->n_photos = 0;
+  self->id = NULL;
+  self->name = NULL;
+  self->privacy = FSP_GROUP_PRIVACY_NONE;
+  self->n_photos = 0;
 }
 
 
@@ -209,95 +201,64 @@ frogr_group_new (const gchar *id,
 const gchar *
 frogr_group_get_id (FrogrGroup *self)
 {
-  FrogrGroupPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_GROUP(self), NULL);
-
-  priv = FROGR_GROUP_GET_PRIVATE (self);
-  return (const gchar *)priv->id;
+  return (const gchar *)self->id;
 }
 
 void
 frogr_group_set_id (FrogrGroup *self,
                     const gchar *id)
 {
-  FrogrGroupPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_GROUP(self));
-
-  priv = FROGR_GROUP_GET_PRIVATE (self);
-  g_free (priv->id);
-  priv->id = g_strdup (id);
+  g_free (self->id);
+  self->id = g_strdup (id);
 }
 
 const gchar *
 frogr_group_get_name (FrogrGroup *self)
 {
-  FrogrGroupPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_GROUP(self), NULL);
-
-  priv = FROGR_GROUP_GET_PRIVATE (self);
-  return (const gchar *)priv->name;
+  return (const gchar *)self->name;
 }
 
 void
 frogr_group_set_name (FrogrGroup *self,
                        const gchar *name)
 {
-  FrogrGroupPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_GROUP(self));
   g_return_if_fail(name != NULL);
 
-  priv = FROGR_GROUP_GET_PRIVATE (self);
-  g_free (priv->name);
-  priv->name = g_strdup (name);
+  g_free (self->name);
+  self->name = g_strdup (name);
 }
 
 
 FspGroupPrivacy
 frogr_group_get_privacy (FrogrGroup *self)
 {
-  FrogrGroupPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_GROUP(self), FALSE);
-
-  priv =FROGR_GROUP_GET_PRIVATE (self);
-  return priv->privacy;
+  return self->privacy;
 }
 
 void
 frogr_group_set_privacy (FrogrGroup *self, FspGroupPrivacy privacy)
 {
-  FrogrGroupPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_GROUP(self));
-
-  priv = FROGR_GROUP_GET_PRIVATE (self);
-  priv->privacy = privacy;
+  self->privacy = privacy;
 }
 
 gint
 frogr_group_get_n_photos (FrogrGroup *self)
 {
-  FrogrGroupPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_GROUP(self), FALSE);
-
-  priv = FROGR_GROUP_GET_PRIVATE (self);
-  return priv->n_photos;
+  return self->n_photos;
 }
 
 void
 frogr_group_set_n_photos (FrogrGroup *self,
                           gint n)
 {
-  FrogrGroupPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_GROUP(self));
-
-  priv = FROGR_GROUP_GET_PRIVATE (self);
-  priv->n_photos = n;
+  self->n_photos = n;
 }
 

@@ -29,14 +29,10 @@
 #include <config.h>
 #include <glib/gi18n.h>
 
-#define FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE(object)                 \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                               \
-                                FROGR_TYPE_CREATE_NEW_SET_DIALOG,       \
-                                FrogrCreateNewSetDialogPrivate))
 
-G_DEFINE_TYPE (FrogrCreateNewSetDialog, frogr_create_new_set_dialog, GTK_TYPE_DIALOG)
+struct _FrogrCreateNewSetDialog {
+  GtkDialog parent;
 
-typedef struct _FrogrCreateNewSetDialogPrivate {
   GtkWidget *title_entry;
   GtkWidget *description_tv;
   GtkWidget *copy_to_pictures_cb;
@@ -45,7 +41,10 @@ typedef struct _FrogrCreateNewSetDialogPrivate {
   GSList *pictures;
   GSList *photosets;
   gboolean copy_to_pictures;
-} FrogrCreateNewSetDialogPrivate;
+};
+
+G_DEFINE_TYPE (FrogrCreateNewSetDialog, frogr_create_new_set_dialog, GTK_TYPE_DIALOG)
+
 
 /* Properties */
 enum  {
@@ -78,47 +77,38 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 static void
 _set_pictures (FrogrCreateNewSetDialog *self, const GSList *pictures)
 {
-  FrogrCreateNewSetDialogPrivate *priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
-  priv->pictures = g_slist_copy ((GSList*) pictures);
-  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+  self->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (self->pictures, (GFunc)g_object_ref, NULL);
 }
 
 static void
 _set_photosets (FrogrCreateNewSetDialog *self, const GSList *photosets)
 {
-  FrogrCreateNewSetDialogPrivate *priv = NULL;
-
-  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
-  priv->photosets = g_slist_copy ((GSList*)photosets);
-  g_slist_foreach (priv->photosets, (GFunc)g_object_ref, NULL);
+  self->photosets = g_slist_copy ((GSList*)photosets);
+  g_slist_foreach (self->photosets, (GFunc)g_object_ref, NULL);
 }
 
 static void
 _on_button_toggled (GtkToggleButton *button, gpointer data)
 {
   FrogrCreateNewSetDialog *self = NULL;
-  FrogrCreateNewSetDialogPrivate *priv = NULL;
   gboolean active = FALSE;
 
   self = FROGR_CREATE_NEW_SET_DIALOG (data);
-  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   active = gtk_toggle_button_get_active (button);
 
-  if (GTK_WIDGET (button) == priv->copy_to_pictures_cb)
-    priv->copy_to_pictures = active;
+  if (GTK_WIDGET (button) == self->copy_to_pictures_cb)
+    self->copy_to_pictures = active;
 }
 
 static gboolean
 _validate_dialog_data (FrogrCreateNewSetDialog *self)
 {
-  FrogrCreateNewSetDialogPrivate *priv = NULL;
   gchar *title = NULL;
   gboolean result = TRUE;
 
-  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
-
   /* Validate set's title */
-  title = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
+  title = g_strdup (gtk_entry_get_text (GTK_ENTRY (self->title_entry)));
   if ((title == NULL) || g_str_equal (g_strstrip (title), ""))
     result = FALSE;
   g_free (title);
@@ -129,22 +119,19 @@ _validate_dialog_data (FrogrCreateNewSetDialog *self)
 static gboolean
 _save_data (FrogrCreateNewSetDialog *self)
 {
-  FrogrCreateNewSetDialogPrivate *priv = NULL;
   GtkTextIter start;
   GtkTextIter end;
   gchar *title = NULL;
   gchar *description = NULL;
   gboolean result = FALSE;
 
-  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
-
   /* Save data */
-  title = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
+  title = g_strdup (gtk_entry_get_text (GTK_ENTRY (self->title_entry)));
   title = g_strstrip (title);
 
-  gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (priv->description_buffer),
+  gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (self->description_buffer),
                               &start, &end);
-  description = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (priv->description_buffer),
+  description = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (self->description_buffer),
                                           &start, &end, FALSE);
   description = g_strstrip (description);
 
@@ -168,14 +155,12 @@ _update_model (FrogrCreateNewSetDialog *self,
                const gchar *title,
                const gchar *description)
 {
-  FrogrCreateNewSetDialogPrivate *priv = NULL;
   FrogrController *controller = NULL;
   FrogrModel *model = NULL;
   FrogrPhotoSet *new_set = NULL;
   FrogrPicture *picture = NULL;
   GSList *item = NULL;
 
-  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
   controller = frogr_controller_get_instance ();
   model = frogr_controller_get_model (controller);
 
@@ -184,13 +169,13 @@ _update_model (FrogrCreateNewSetDialog *self,
   frogr_model_add_local_photoset (model, new_set);
 
   /* Add the set to the list of sets for each picture */
-  for (item = priv->pictures; item; item = g_slist_next (item))
+  for (item = self->pictures; item; item = g_slist_next (item))
     {
       picture = FROGR_PICTURE (item->data);
       frogr_picture_add_photoset (picture, new_set);
 
       /* Copy album's details over pictures if requested */
-      if (priv->copy_to_pictures)
+      if (self->copy_to_pictures)
         {
           frogr_picture_set_title (picture, title);
           frogr_picture_set_description (picture, description);
@@ -241,15 +226,15 @@ _frogr_create_new_set_dialog_get_property (GObject *object,
                                            GValue *value,
                                            GParamSpec *pspec)
 {
-  FrogrCreateNewSetDialogPrivate *priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (object);
+  FrogrCreateNewSetDialog *dialog = FROGR_CREATE_NEW_SET_DIALOG (object);
 
   switch (prop_id)
     {
     case PROP_PICTURES:
-      g_value_set_pointer (value, priv->pictures);
+      g_value_set_pointer (value, dialog->pictures);
       break;
     case PROP_PHOTOSETS:
-      g_value_set_pointer (value, priv->photosets);
+      g_value_set_pointer (value, dialog->photosets);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -260,20 +245,20 @@ _frogr_create_new_set_dialog_get_property (GObject *object,
 static void
 _frogr_create_new_set_dialog_dispose (GObject *object)
 {
-  FrogrCreateNewSetDialogPrivate *priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (object);
+  FrogrCreateNewSetDialog *dialog = FROGR_CREATE_NEW_SET_DIALOG (object);
 
-  if (priv->pictures)
+  if (dialog->pictures)
     {
-      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->pictures);
-      priv->pictures = NULL;
+      g_slist_foreach (dialog->pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (dialog->pictures);
+      dialog->pictures = NULL;
     }
 
-  if (priv->photosets)
+  if (dialog->photosets)
     {
-      g_slist_foreach (priv->photosets, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->photosets);
-      priv->photosets = NULL;
+      g_slist_foreach (dialog->photosets, (GFunc)g_object_unref, NULL);
+      g_slist_free (dialog->photosets);
+      dialog->photosets = NULL;
     }
 
   G_OBJECT_CLASS(frogr_create_new_set_dialog_parent_class)->dispose (object);
@@ -306,23 +291,19 @@ frogr_create_new_set_dialog_class_init (FrogrCreateNewSetDialogClass *klass)
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (obj_class, PROP_PHOTOSETS, pspec);
-
-  g_type_class_add_private (obj_class, sizeof (FrogrCreateNewSetDialogPrivate));
 }
 
 static void
 frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
 {
-  FrogrCreateNewSetDialogPrivate *priv = NULL;
   GtkWidget *content_area = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *grid = NULL;
   GtkWidget *scroller = NULL;
   GtkWidget *widget = NULL;
 
-  priv = FROGR_CREATE_NEW_SET_DIALOG_GET_PRIVATE (self);
-  priv->pictures = NULL;
-  priv->photosets = NULL;
+  self->pictures = NULL;
+  self->photosets = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -349,7 +330,7 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   widget = gtk_entry_new ();
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 0, 1, 1);
-  priv->title_entry = widget;
+  self->title_entry = widget;
 
   widget = gtk_label_new (_("Description:"));
   gtk_widget_set_halign (GTK_WIDGET (widget), GTK_ALIGN_END);
@@ -369,23 +350,23 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   gtk_widget_set_vexpand (GTK_WIDGET (scroller), TRUE);
   gtk_grid_attach (GTK_GRID (grid), scroller, 1, 1, 1, 1);
 
-  priv->description_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
-  priv->description_tv = widget;
+  self->description_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
+  self->description_tv = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("Fill Pictures Details with Title and Description"));
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 2, 1, 1);
-  priv->copy_to_pictures_cb = widget;
+  self->copy_to_pictures_cb = widget;
 
   gtk_container_add (GTK_CONTAINER (content_area), vbox);
 
-  g_signal_connect (G_OBJECT (priv->copy_to_pictures_cb), "toggled",
+  g_signal_connect (G_OBJECT (self->copy_to_pictures_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
                     self);
 
   gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_ACCEPT);
 
-  priv->copy_to_pictures = FALSE;
+  self->copy_to_pictures = FALSE;
 }
 
 /* Public API */

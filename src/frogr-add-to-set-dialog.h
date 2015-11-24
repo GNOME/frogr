@@ -25,27 +25,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_ADD_TO_SET_DIALOG           (frogr_add_to_set_dialog_get_type())
-#define FROGR_ADD_TO_SET_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_ADD_TO_SET_DIALOG, FrogrAddToSetDialog))
-#define FROGR_ADD_TO_SET_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_ADD_TO_SET_DIALOG, FrogrAddToSetDialogClass))
-#define FROGR_IS_ADD_TO_SET_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_ADD_TO_SET_DIALOG))
-#define FROGR_IS_ADD_TO_SET_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_ADD_TO_SET_DIALOG))
-#define FROGR_ADD_TO_SET_DIALOG_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_ADD_TO_SET_DIALOG, FrogrAddToSetDialogClass))
+#define FROGR_TYPE_ADD_TO_SET_DIALOG (frogr_add_to_set_dialog_get_type())
 
-typedef struct _FrogrAddToSetDialog        FrogrAddToSetDialog;
-typedef struct _FrogrAddToSetDialogClass   FrogrAddToSetDialogClass;
-
-struct _FrogrAddToSetDialogClass
-{
-  GtkDialogClass parent_class;
-};
-
-struct _FrogrAddToSetDialog
-{
-  GtkDialog parent;
-};
-
-GType frogr_add_to_set_dialog_get_type (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrAddToSetDialog, frogr_add_to_set_dialog, FROGR, ADD_TO_SET_DIALOG, GtkDialog)
 
 void frogr_add_to_set_dialog_show (GtkWindow *parent,
                                    const GSList *pictures,

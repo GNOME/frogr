@@ -4,7 +4,7 @@
   * Use xdg-open instead of gnome-open as a fallback plan to open URIs.
   * Use a GtkMessageDialog for the "Uploading pictures" dialog.
   * Migrated from GSimpleAsyncResult to GTask.
-  * Raised GLib minimum version up to 2.36.
+  * Raised GLib minimum version up to 2.44.
 
 
 0.11 (7 Jan 2015)

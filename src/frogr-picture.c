@@ -27,21 +27,13 @@
 
 #define TAGS_DELIMITER " "
 
-#define FROGR_PICTURE_GET_PRIVATE(object)               \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FROGR_TYPE_PICTURE,     \
-                                FrogrPicturePrivate))
-
 static void json_serializable_init (JsonSerializableIface *iface);
 
-G_DEFINE_TYPE_EXTENDED (FrogrPicture, frogr_picture, G_TYPE_OBJECT, 0,
-                        G_IMPLEMENT_INTERFACE (JSON_TYPE_SERIALIZABLE,
-                                               json_serializable_init))
 
-/* Private struct */
-typedef struct _FrogrPicturePrivate FrogrPicturePrivate;
-struct _FrogrPicturePrivate
+struct _FrogrPicture
 {
+  GObject parent;
+
   gchar *id;
   gchar *fileuri;
   gchar *title;
@@ -71,6 +63,11 @@ struct _FrogrPicturePrivate
 
   GdkPixbuf *pixbuf;
 };
+
+G_DEFINE_TYPE_EXTENDED (FrogrPicture, frogr_picture, G_TYPE_OBJECT, 0,
+                        G_IMPLEMENT_INTERFACE (JSON_TYPE_SERIALIZABLE,
+                                               json_serializable_init))
+
 
 /* Properties */
 enum  {
@@ -124,11 +121,10 @@ static gboolean _deserialize_property (JsonSerializable *serializable,
 static gboolean
 _tag_is_set (FrogrPicture *self, const gchar *tag)
 {
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (self);
   GSList *item;
   gboolean tag_found = FALSE;
 
-  for (item = priv->tags_list; item; item = g_slist_next (item))
+  for (item = self->tags_list; item; item = g_slist_next (item))
     {
       if (g_str_equal ((gchar *)item->data, tag))
         {
@@ -144,8 +140,6 @@ static void
 _add_tags_to_tags_list (FrogrPicture *self,
                         const gchar *tags_string)
 {
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (self);
-
   /* Check if valid data is passed to the function */
   if (tags_string != NULL)
     {
@@ -163,7 +157,7 @@ _add_tags_to_tags_list (FrogrPicture *self,
               /* add stripped tag if not already set*/
               tag = g_strstrip(g_strdup (tags_array[i]));
               if (!g_str_equal (tag, "") && !_tag_is_set (self, tag))
-                priv->tags_list = g_slist_append (priv->tags_list, tag);
+                self->tags_list = g_slist_append (self->tags_list, tag);
             }
 
           /* Free */
@@ -179,24 +173,22 @@ _add_tags_to_tags_list (FrogrPicture *self,
 static void
 _update_tags_string (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (self);
-
   /* Reset previous tags string */
-  g_free (priv->tags_string);
-  priv->tags_string = NULL;
+  g_free (self->tags_string);
+  self->tags_string = NULL;
 
   /* Set the tags_string value, if needed */
-  if (priv->tags_list != NULL)
+  if (self->tags_list != NULL)
     {
       GSList *item = NULL;
       gchar *new_str = NULL;
       gchar *tmp_str = NULL;
 
       /* Init new_string to first item */
-      new_str = g_strdup ((gchar *)priv->tags_list->data);
+      new_str = g_strdup ((gchar *)self->tags_list->data);
 
       /* Continue with the remaining tags */
-      for (item = g_slist_next (priv->tags_list);
+      for (item = g_slist_next (self->tags_list);
            item != NULL;
            item = g_slist_next (item))
         {
@@ -208,7 +200,7 @@ _update_tags_string (FrogrPicture *self)
         }
 
       /* Store final result */
-      priv->tags_string = new_str;
+      self->tags_string = new_str;
     }
 }
 
@@ -342,16 +334,16 @@ _serialize_property (JsonSerializable *serializable,
                      const GValue *value,
                      GParamSpec *pspec)
 {
-  FrogrPicturePrivate *priv = NULL;
+  FrogrPicture *self = NULL;
   JsonNode *json_node = NULL;
 
   g_return_val_if_fail (FROGR_IS_PICTURE (serializable), FALSE);
 
-  priv = FROGR_PICTURE_GET_PRIVATE (serializable);
+  self = FROGR_PICTURE (serializable);
   if (g_str_equal (name, "photosets"))
-    json_node = _serialize_list (priv->photosets, FROGR_TYPE_PHOTOSET);
+    json_node = _serialize_list (self->photosets, FROGR_TYPE_PHOTOSET);
   else if (g_str_equal (name, "groups"))
-    json_node = _serialize_list (priv->groups, FROGR_TYPE_GROUP);
+    json_node = _serialize_list (self->groups, FROGR_TYPE_GROUP);
   else
     {
       /* Default serialization here */
@@ -411,7 +403,6 @@ _frogr_picture_set_property (GObject *object,
                              GParamSpec *pspec)
 {
   FrogrPicture *self = FROGR_PICTURE (object);
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (self);
 
   switch (prop_id)
     {
@@ -419,7 +410,7 @@ _frogr_picture_set_property (GObject *object,
       frogr_picture_set_id (self, g_value_get_string (value));
       break;
     case PROP_FILEURI:
-      priv->fileuri = g_value_dup_string (value);
+      self->fileuri = g_value_dup_string (value);
       break;
     case PROP_TITLE:
       frogr_picture_set_title (self, g_value_get_string (value));
@@ -461,7 +452,7 @@ _frogr_picture_set_property (GObject *object,
       frogr_picture_set_replace_date_posted (self, g_value_get_boolean (value));
       break;
     case PROP_IS_VIDEO:
-      priv->is_video = g_value_get_boolean (value);
+      self->is_video = g_value_get_boolean (value);
       break;
     case PROP_FILESIZE:
       frogr_picture_set_filesize (self, g_value_get_uint (value));
@@ -487,69 +478,69 @@ _frogr_picture_get_property (GObject *object,
                              GValue *value,
                              GParamSpec *pspec)
 {
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
+  FrogrPicture *self = FROGR_PICTURE (object);
 
   switch (prop_id)
     {
     case PROP_ID:
-      g_value_set_string (value, priv->id);
+      g_value_set_string (value, self->id);
       break;
     case PROP_FILEURI:
-      g_value_set_string (value, priv->fileuri);
+      g_value_set_string (value, self->fileuri);
       break;
     case PROP_TITLE:
-      g_value_set_string (value, priv->title);
+      g_value_set_string (value, self->title);
       break;
     case PROP_DESCRIPTION:
-      g_value_set_string (value, priv->description);
+      g_value_set_string (value, self->description);
       break;
     case PROP_TAGS_STRING:
-      g_value_set_string (value, priv->tags_string);
+      g_value_set_string (value, self->tags_string);
       break;
     case PROP_IS_PUBLIC:
-      g_value_set_boolean (value, priv->is_public);
+      g_value_set_boolean (value, self->is_public);
       break;
     case PROP_IS_FAMILY:
-      g_value_set_boolean (value, priv->is_family);
+      g_value_set_boolean (value, self->is_family);
       break;
     case PROP_IS_FRIEND:
-      g_value_set_boolean (value, priv->is_friend);
+      g_value_set_boolean (value, self->is_friend);
       break;
     case PROP_SAFETY_LEVEL:
-      g_value_set_int (value, priv->safety_level);
+      g_value_set_int (value, self->safety_level);
       break;
     case PROP_CONTENT_TYPE:
-      g_value_set_int (value, priv->content_type);
+      g_value_set_int (value, self->content_type);
       break;
     case PROP_LICENSE:
-      g_value_set_int (value, priv->license);
+      g_value_set_int (value, self->license);
       break;
     case PROP_LOCATION:
-      g_value_set_object (value, priv->location);
+      g_value_set_object (value, self->location);
       break;
     case PROP_SHOW_IN_SEARCH:
-      g_value_set_boolean (value, priv->show_in_search);
+      g_value_set_boolean (value, self->show_in_search);
       break;
     case PROP_SEND_LOCATION:
-      g_value_set_boolean (value, priv->send_location);
+      g_value_set_boolean (value, self->send_location);
       break;
     case PROP_REPLACE_DATE_POSTED:
-      g_value_set_boolean (value, priv->replace_date_posted);
+      g_value_set_boolean (value, self->replace_date_posted);
       break;
     case PROP_IS_VIDEO:
-      g_value_set_boolean (value, priv->is_video);
+      g_value_set_boolean (value, self->is_video);
       break;
     case PROP_FILESIZE:
-      g_value_set_uint (value, priv->filesize);
+      g_value_set_uint (value, self->filesize);
       break;
     case PROP_DATETIME:
-      g_value_set_string (value, priv->datetime);
+      g_value_set_string (value, self->datetime);
       break;
     case PROP_PHOTOSETS:
-      g_value_set_pointer (value, priv->photosets);
+      g_value_set_pointer (value, self->photosets);
       break;
     case PROP_GROUPS:
-      g_value_set_pointer (value, priv->groups);
+      g_value_set_pointer (value, self->groups);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -560,23 +551,23 @@ _frogr_picture_get_property (GObject *object,
 static void
 _frogr_picture_dispose (GObject* object)
 {
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
+  FrogrPicture *self = FROGR_PICTURE (object);
 
-  g_clear_object (&priv->pixbuf);
-  g_clear_object (&priv->location);
+  g_clear_object (&self->pixbuf);
+  g_clear_object (&self->location);
 
-  if (priv->photosets)
+  if (self->photosets)
     {
-      g_slist_foreach (priv->photosets, (GFunc) g_object_unref, NULL);
-      g_slist_free (priv->photosets);
-      priv->photosets = NULL;
+      g_slist_foreach (self->photosets, (GFunc) g_object_unref, NULL);
+      g_slist_free (self->photosets);
+      self->photosets = NULL;
     }
 
-  if (priv->groups)
+  if (self->groups)
     {
-      g_slist_foreach (priv->groups, (GFunc) g_object_unref, NULL);
-      g_slist_free (priv->groups);
-      priv->groups = NULL;
+      g_slist_foreach (self->groups, (GFunc) g_object_unref, NULL);
+      g_slist_free (self->groups);
+      self->groups = NULL;
     }
 
   /* call super class */
@@ -586,19 +577,19 @@ _frogr_picture_dispose (GObject* object)
 static void
 _frogr_picture_finalize (GObject* object)
 {
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (object);
+  FrogrPicture *self = FROGR_PICTURE (object);
 
   /* free strings */
-  g_free (priv->id);
-  g_free (priv->fileuri);
-  g_free (priv->title);
-  g_free (priv->description);
-  g_free (priv->tags_string);
-  g_free (priv->datetime);
+  g_free (self->id);
+  g_free (self->fileuri);
+  g_free (self->title);
+  g_free (self->description);
+  g_free (self->tags_string);
+  g_free (self->datetime);
 
   /* free GSList of tags */
-  g_slist_foreach (priv->tags_list, (GFunc) g_free, NULL);
-  g_slist_free (priv->tags_list);
+  g_slist_foreach (self->tags_list, (GFunc) g_free, NULL);
+  g_slist_free (self->tags_list);
 
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class)->finalize(object);
@@ -776,45 +767,41 @@ frogr_picture_class_init(FrogrPictureClass *klass)
                                                          "groups",
                                                          "List of groups the picture is in",
                                                          G_PARAM_READWRITE));
-
-  g_type_class_add_private (obj_class, sizeof (FrogrPicturePrivate));
 }
 
 static void
 frogr_picture_init (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = FROGR_PICTURE_GET_PRIVATE (self);
-
   /* Default values */
-  priv->id = NULL;
-  priv->fileuri = NULL;
-  priv->title = NULL;
-  priv->description = NULL;
-  priv->tags_string = NULL;
-  priv->tags_list = NULL;
+  self->id = NULL;
+  self->fileuri = NULL;
+  self->title = NULL;
+  self->description = NULL;
+  self->tags_string = NULL;
+  self->tags_list = NULL;
 
-  priv->is_public = FALSE;
-  priv->is_friend = FALSE;
-  priv->is_family = FALSE;
+  self->is_public = FALSE;
+  self->is_friend = FALSE;
+  self->is_family = FALSE;
 
-  priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
-  priv->content_type = FSP_CONTENT_TYPE_PHOTO;
-  priv->license = FSP_LICENSE_NONE;
-  priv->location = NULL;
+  self->safety_level = FSP_SAFETY_LEVEL_SAFE;
+  self->content_type = FSP_CONTENT_TYPE_PHOTO;
+  self->license = FSP_LICENSE_NONE;
+  self->location = NULL;
 
-  priv->show_in_search = TRUE;
-  priv->send_location = FALSE;
-  priv->replace_date_posted = FALSE;
+  self->show_in_search = TRUE;
+  self->send_location = FALSE;
+  self->replace_date_posted = FALSE;
 
-  priv->is_video = FALSE;
+  self->is_video = FALSE;
 
-  priv->filesize = 0;
-  priv->datetime = NULL;
+  self->filesize = 0;
+  self->datetime = NULL;
 
-  priv->photosets = NULL;
-  priv->groups = NULL;
+  self->photosets = NULL;
+  self->groups = NULL;
 
-  priv->pixbuf = NULL;
+  self->pixbuf = NULL;
 }
 
 
@@ -847,122 +834,83 @@ frogr_picture_new (const gchar *fileuri,
 const gchar *
 frogr_picture_get_id (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return (const gchar *)priv->id;
+  return (const gchar *)self->id;
 }
 
 void
 frogr_picture_set_id (FrogrPicture *self,
                       const gchar *id)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  g_free (priv->id);
-  priv->id = g_strdup (id);
+  g_free (self->id);
+  self->id = g_strdup (id);
 }
 
 const gchar *
 frogr_picture_get_fileuri (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return (const gchar *)priv->fileuri;
+  return (const gchar *)self->fileuri;
 }
 
 const gchar *
 frogr_picture_get_title (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return (const gchar *)priv->title;
+  return (const gchar *)self->title;
 }
 
 void
 frogr_picture_set_title (FrogrPicture *self,
                          const gchar *title)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
   g_return_if_fail(title != NULL);
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  g_free (priv->title);
-  priv->title = g_strdup (title);
+  g_free (self->title);
+  self->title = g_strdup (title);
 }
 
 const gchar *
 frogr_picture_get_description (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return (const gchar *)priv->description;
+  return (const gchar *)self->description;
 }
 
 void
 frogr_picture_set_description (FrogrPicture *self,
                                const gchar *description)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  g_free (priv->description);
-  priv->description = g_strdup (description);
+  g_free (self->description);
+  self->description = g_strdup (description);
 }
 
 const GSList *
 frogr_picture_get_tags_list (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->tags_list;
+  return self->tags_list;
 }
 
 const gchar *
 frogr_picture_get_tags (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->tags_string;
+  return self->tags_string;
 }
 
 void
 frogr_picture_set_tags (FrogrPicture *self, const gchar *tags_string)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-
   /* First remove all the previous tags list */
-  g_slist_foreach (priv->tags_list, (GFunc) g_free, NULL);
-  g_slist_free (priv->tags_list);
-  priv->tags_list = NULL;
+  g_slist_foreach (self->tags_list, (GFunc) g_free, NULL);
+  g_slist_free (self->tags_list);
+  self->tags_list = NULL;
 
   /* Add to internal tags_list */
   _add_tags_to_tags_list (self, tags_string);
@@ -987,343 +935,227 @@ frogr_picture_remove_tags (FrogrPicture *self)
 gboolean
 frogr_picture_is_public (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->is_public;
+  return self->is_public;
 }
 
 void
 frogr_picture_set_public (FrogrPicture *self,
                           gboolean public)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->is_public = public;
+  self->is_public = public;
 }
 
 gboolean
 frogr_picture_is_friend (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->is_friend;
+  return self->is_friend;
 }
 
 void
 frogr_picture_set_friend (FrogrPicture *self,
                           gboolean friend)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->is_friend = friend;
+  self->is_friend = friend;
 }
 
 gboolean
 frogr_picture_is_family (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->is_family;
+  return self->is_family;
 }
 
 void
 frogr_picture_set_family (FrogrPicture *self,
                           gboolean family)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->is_family = family;
+  self->is_family = family;
 }
 
 FspSafetyLevel
 frogr_picture_get_safety_level (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->safety_level;
+  return self->safety_level;
 }
 
 void
 frogr_picture_set_safety_level (FrogrPicture *self,
                                 FspSafetyLevel safety_level)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->safety_level = safety_level;
+  self->safety_level = safety_level;
 }
 
 FspContentType
 frogr_picture_get_content_type (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->content_type;
+  return self->content_type;
 }
 
 void
 frogr_picture_set_content_type (FrogrPicture *self,
                                 FspContentType content_type)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->content_type = content_type;
+  self->content_type = content_type;
 }
 
 FspLicense
 frogr_picture_get_license (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->license;
+  return self->license;
 }
 
 void
 frogr_picture_set_license (FrogrPicture *self, FspLicense license)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->license = license;
+  self->license = license;
 }
 
 FrogrLocation *
 frogr_picture_get_location (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->location;
+  return self->location;
 }
 
 void
 frogr_picture_set_location (FrogrPicture *self, FrogrLocation *location)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  if (priv->location)
-    g_object_unref (priv->location);
+  if (self->location)
+    g_object_unref (self->location);
 
-  priv->location = FROGR_IS_LOCATION (location) ? g_object_ref (location) : NULL;
+  self->location = FROGR_IS_LOCATION (location) ? g_object_ref (location) : NULL;
 }
 
 gboolean
 frogr_picture_show_in_search (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->show_in_search;
+  return self->show_in_search;
 }
 
 void
 frogr_picture_set_show_in_search (FrogrPicture *self,
                                   gboolean show_in_search)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->show_in_search = show_in_search;
+  self->show_in_search = show_in_search;
 }
 
 gboolean
 frogr_picture_send_location (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->send_location;
+  return self->send_location;
 }
 
 void
 frogr_picture_set_send_location (FrogrPicture *self, gboolean send_location)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->send_location = send_location;
+  self->send_location = send_location;
 }
 
 gboolean
 frogr_picture_replace_date_posted (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->replace_date_posted;
+  return self->replace_date_posted;
 }
 
 void
 frogr_picture_set_replace_date_posted (FrogrPicture *self, gboolean replace_date_posted)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->replace_date_posted = replace_date_posted;
+  self->replace_date_posted = replace_date_posted;
 }
 
 GdkPixbuf *
 frogr_picture_get_pixbuf (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->pixbuf;
+  return self->pixbuf;
 }
 
 void
 frogr_picture_set_pixbuf (FrogrPicture *self,
                           GdkPixbuf *pixbuf)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  if (priv->pixbuf)
-    g_object_unref (priv->pixbuf);
+  if (self->pixbuf)
+    g_object_unref (self->pixbuf);
 
-  priv->pixbuf = GDK_IS_PIXBUF (pixbuf) ? g_object_ref (pixbuf) : NULL;
+  self->pixbuf = GDK_IS_PIXBUF (pixbuf) ? g_object_ref (pixbuf) : NULL;
 }
 
 gboolean frogr_picture_is_video (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->is_video;
+  return self->is_video;
 }
 
 guint frogr_picture_get_filesize (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), 0);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->filesize;
+  return self->filesize;
 }
 
 void frogr_picture_set_filesize (FrogrPicture *self, guint filesize)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->filesize = filesize;
+  self->filesize = filesize;
 }
 
 void
 frogr_picture_set_datetime (FrogrPicture *self, const gchar *datetime)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  g_free (priv->datetime);
-  priv->datetime = g_strdup (datetime);
+  g_free (self->datetime);
+  self->datetime = g_strdup (datetime);
 }
 
 const gchar *
 frogr_picture_get_datetime (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), 0);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return (const gchar *)priv->datetime;
+  return (const gchar *)self->datetime;
 }
 
 GSList *
 frogr_picture_get_photosets (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->photosets;
+  return self->photosets;
 }
 
 void
 frogr_picture_set_photosets (FrogrPicture *self, GSList *photosets)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-
   /* First remove all the previous sets list */
-  g_slist_foreach (priv->photosets, (GFunc) g_object_unref, NULL);
-  g_slist_free (priv->photosets);
+  g_slist_foreach (self->photosets, (GFunc) g_object_unref, NULL);
+  g_slist_free (self->photosets);
 
-  priv->photosets = photosets;
+  self->photosets = photosets;
 }
 
 void
 frogr_picture_add_photoset (FrogrPicture *self, FrogrPhotoSet *photoset)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
   g_return_if_fail(FROGR_IS_PHOTOSET(photoset));
 
@@ -1331,8 +1163,7 @@ frogr_picture_add_photoset (FrogrPicture *self, FrogrPhotoSet *photoset)
   if (frogr_picture_in_photoset (self, photoset))
     return;
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->photosets = g_slist_append (priv->photosets, g_object_ref (photoset));
+  self->photosets = g_slist_append (self->photosets, g_object_ref (photoset));
 }
 
 void
@@ -1346,12 +1177,9 @@ frogr_picture_remove_photosets (FrogrPicture *self)
 gboolean
 frogr_picture_in_photoset (FrogrPicture *self, FrogrPhotoSet *photoset)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  if (g_slist_find_custom (priv->photosets, photoset,
+  if (g_slist_find_custom (self->photosets, photoset,
                            (GCompareFunc)_compare_photosets))
     return TRUE;
 
@@ -1361,35 +1189,25 @@ frogr_picture_in_photoset (FrogrPicture *self, FrogrPhotoSet *photoset)
 GSList *
 frogr_picture_get_groups (FrogrPicture *self)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), NULL);
-
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  return priv->groups;
+  return self->groups;
 }
 
 void
 frogr_picture_set_groups (FrogrPicture *self, GSList *groups)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-
   /* First remove all the previous groups list */
-  g_slist_foreach (priv->groups, (GFunc) g_object_unref, NULL);
-  g_slist_free (priv->groups);
+  g_slist_foreach (self->groups, (GFunc) g_object_unref, NULL);
+  g_slist_free (self->groups);
 
-  priv->groups = groups;
+  self->groups = groups;
 }
 
 void
 frogr_picture_add_group (FrogrPicture *self, FrogrGroup *group)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_PICTURE(self));
   g_return_if_fail(FROGR_IS_GROUP(group));
 
@@ -1397,8 +1215,7 @@ frogr_picture_add_group (FrogrPicture *self, FrogrGroup *group)
   if (frogr_picture_in_group (self, group))
     return;
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  priv->groups = g_slist_append (priv->groups, g_object_ref (group));
+  self->groups = g_slist_append (self->groups, g_object_ref (group));
 }
 
 void
@@ -1412,12 +1229,9 @@ frogr_picture_remove_groups (FrogrPicture *self)
 gboolean
 frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group)
 {
-  FrogrPicturePrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
-  priv = FROGR_PICTURE_GET_PRIVATE (self);
-  if (g_slist_find_custom (priv->groups, group,
+  if (g_slist_find_custom (self->groups, group,
                            (GCompareFunc)_compare_groups))
     return TRUE;
 

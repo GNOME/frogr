@@ -26,8 +26,11 @@
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 
-G_DEFINE_TYPE (FspParser, fsp_parser, G_TYPE_OBJECT)
+struct _FspParser {
+  GObject parent;
+};
 
+G_DEFINE_TYPE (FspParser, fsp_parser, G_TYPE_OBJECT)
 
 /* Types of responses */
 typedef enum {

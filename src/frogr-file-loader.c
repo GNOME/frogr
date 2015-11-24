@@ -44,22 +44,17 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 
-#define FROGR_FILE_LOADER_GET_PRIVATE(object)                   \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_FILE_LOADER,         \
-                                FrogrFileLoaderPrivate))
-
-G_DEFINE_TYPE (FrogrFileLoader, frogr_file_loader, G_TYPE_OBJECT)
 
 typedef enum {
   LOADING_MODE_FROM_URIS,
   LOADING_MODE_FROM_PICTURES,
 } LoadingMode;
 
-/* Private struct */
-typedef struct _FrogrFileLoaderPrivate FrogrFileLoaderPrivate;
-struct _FrogrFileLoaderPrivate
+
+struct _FrogrFileLoader
 {
+  GObject parent;
+
   FrogrController *controller;
   FrogrMainView *mainview;
 
@@ -88,6 +83,8 @@ struct _FrogrFileLoaderPrivate
   FspSafetyLevel safety_level;
   FspContentType content_type;
 };
+
+G_DEFINE_TYPE (FrogrFileLoader, frogr_file_loader, G_TYPE_OBJECT)
 
 /* Signals */
 enum {
@@ -138,17 +135,14 @@ static void _finish_task_and_self_destruct (FrogrFileLoader *self);
 static void
 _update_status_and_progress (FrogrFileLoader *self)
 {
-  FrogrFileLoaderPrivate *priv =
-    FROGR_FILE_LOADER_GET_PRIVATE (self);
-
   gchar *status_text = NULL;
 
   /* Update progress */
-  if (priv->current_uri || priv->current_picture)
+  if (self->current_uri || self->current_picture)
     status_text = g_strdup_printf (_("Loading files %d / %d"),
-                                   priv->index, priv->n_files);
+                                   self->index, self->n_files);
 
-  frogr_main_view_set_status_text (priv->mainview, status_text);
+  frogr_main_view_set_status_text (self->mainview, status_text);
 
   /* Free */
   g_free (status_text);
@@ -157,31 +151,26 @@ _update_status_and_progress (FrogrFileLoader *self)
 static void
 _advance_to_next_file (FrogrFileLoader *self)
 {
-  FrogrFileLoaderPrivate *priv =
-    FROGR_FILE_LOADER_GET_PRIVATE (self);
-
   /* update internal status and check the next file */
-  if (priv->loading_mode == LOADING_MODE_FROM_PICTURES)
-    priv->current_picture = g_slist_next (priv->current_picture);
+  if (self->loading_mode == LOADING_MODE_FROM_PICTURES)
+    self->current_picture = g_slist_next (self->current_picture);
   else
-    priv->current_uri = g_slist_next (priv->current_uri);
+    self->current_uri = g_slist_next (self->current_uri);
 
-  priv->index++;
+  self->index++;
 }
 
 static void
 _load_current_file (FrogrFileLoader *self)
 {
-  FrogrFileLoaderPrivate *priv =
-    FROGR_FILE_LOADER_GET_PRIVATE (self);
   const gchar *file_uri = NULL;
 
   /* Get the uri for the file first */
-  if (priv->loading_mode == LOADING_MODE_FROM_URIS && priv->current_uri)
-    file_uri = (const gchar *)priv->current_uri->data;
-  else if (priv->current_picture)
+  if (self->loading_mode == LOADING_MODE_FROM_URIS && self->current_uri)
+    file_uri = (const gchar *)self->current_uri->data;
+  else if (self->current_picture)
     {
-      FrogrPicture *picture = FROGR_PICTURE (priv->current_picture->data);
+      FrogrPicture *picture = FROGR_PICTURE (self->current_picture->data);
       file_uri = frogr_picture_get_fileuri (picture);
     }
 
@@ -254,7 +243,6 @@ _load_current_file_cb (GObject *object,
                        gpointer data)
 {
   FrogrFileLoader *self = NULL;
-  FrogrFileLoaderPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GFile *file = NULL;
   GError *error = NULL;
@@ -262,8 +250,7 @@ _load_current_file_cb (GObject *object,
   gsize length = 0;
   gboolean keep_going = FALSE;
 
-  self = FROGR_FILE_LOADER (data);;
-  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
+  self = FROGR_FILE_LOADER (data);
 
   file = G_FILE (object);
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
@@ -280,10 +267,10 @@ _load_current_file_cb (GObject *object,
 
       if (pixbuf)
 	{
-	  if (priv->loading_mode == LOADING_MODE_FROM_PICTURES)
+	  if (self->loading_mode == LOADING_MODE_FROM_PICTURES)
 	    {
 	      /* Just update the picture if we are not loading from URIs */
-	      picture = FROGR_PICTURE (priv->current_picture->data);
+	      picture = FROGR_PICTURE (self->current_picture->data);
 	      frogr_picture_set_pixbuf (picture, pixbuf);
 	    }
 	  else
@@ -324,7 +311,7 @@ _load_current_file_cb (GObject *object,
         g_signal_emit (self, signals[FILE_LOADED], 0, picture);
 
       /* We only unref the picture if it was created here */
-      if (priv->loading_mode != LOADING_MODE_FROM_PICTURES)
+      if (self->loading_mode != LOADING_MODE_FROM_PICTURES)
         g_object_unref (picture);
     }
 
@@ -382,7 +369,7 @@ _try_get_pixbuf_for_image (FrogrFileLoader *self,
       msg = g_strdup_printf (_("Unable to load picture %s:\n%s"), file_name, error->message);
       g_free (file_name);
 
-      frogr_util_show_error_dialog (GTK_WINDOW (FROGR_FILE_LOADER_GET_PRIVATE (self)->mainview), msg);
+      frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
       g_free (msg);
 
       g_error_free (error);
@@ -414,7 +401,7 @@ _try_get_pixbuf_for_video (FrogrFileLoader *self,
 			       "Please check that you have the right codec installed"), file_name);
       g_free (file_name);
 
-      frogr_util_show_error_dialog (GTK_WINDOW (FROGR_FILE_LOADER_GET_PRIVATE (self)->mainview), msg);
+      frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
       g_free (msg);
 
       if (error)
@@ -501,7 +488,6 @@ get_location_from_exif (ExifData *exif_data)
 static FrogrPicture*
 _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboolean is_video)
 {
-  FrogrFileLoaderPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GFileInfo* file_info = NULL;
   gchar *file_name = NULL;
@@ -529,9 +515,7 @@ _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboo
       file_name = g_file_get_basename (file);
     }
 
-  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
-
-  if (!priv->keep_file_extensions)
+  if (!self->keep_file_extensions)
     {
       gchar *extension_dot = NULL;
 
@@ -545,17 +529,17 @@ _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboo
   file_uri = g_file_get_uri (file);
   picture = frogr_picture_new (file_uri,
                                 file_name,
-                                priv->public_visibility,
-                                priv->family_visibility,
-                                priv->friend_visibility,
+                                self->public_visibility,
+                                self->family_visibility,
+                                self->friend_visibility,
                                 is_video);
 
-  frogr_picture_set_show_in_search (picture, priv->show_in_search);
-  frogr_picture_set_send_location (picture, priv->send_location);
-  frogr_picture_set_replace_date_posted (picture, priv->replace_date_posted);
-  frogr_picture_set_license (picture, priv->license);
-  frogr_picture_set_content_type (picture, priv->content_type);
-  frogr_picture_set_safety_level (picture, priv->safety_level);
+  frogr_picture_set_show_in_search (picture, self->show_in_search);
+  frogr_picture_set_send_location (picture, self->send_location);
+  frogr_picture_set_replace_date_posted (picture, self->replace_date_posted);
+  frogr_picture_set_license (picture, self->license);
+  frogr_picture_set_content_type (picture, self->content_type);
+  frogr_picture_set_safety_level (picture, self->safety_level);
   frogr_picture_set_pixbuf (picture, pixbuf);
 
   /* FrogrPicture stores the size in KB */
@@ -606,7 +590,7 @@ _update_picture_with_exif_data (FrogrFileLoader *self,
         }
 
       /* Import tags from XMP metadata, if required */
-      if (FROGR_FILE_LOADER_GET_PRIVATE (self)->import_tags)
+      if (self->import_tags)
         {
           gchar *imported_tags = NULL;
 
@@ -635,13 +619,11 @@ _update_picture_with_exif_data (FrogrFileLoader *self,
 static gboolean
 _check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture)
 {
-  FrogrFileLoaderPrivate *priv = NULL;
   gulong picture_filesize = 0;
   gulong max_filesize = 0;
   gboolean keep_going = TRUE;
 
-  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
-  max_filesize = frogr_picture_is_video (picture) ? priv->max_video_size : priv->max_picture_size;
+  max_filesize = frogr_picture_is_video (picture) ? self->max_video_size : self->max_picture_size;
   picture_filesize = frogr_picture_get_filesize (picture);
 
   if (picture_filesize > max_filesize)
@@ -656,7 +638,7 @@ _check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture)
                              frogr_picture_get_title (picture),
                              frogr_util_get_datasize_string (max_filesize));
 
-      frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
+      frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
       g_free (msg);
 
       keep_going = FALSE;
@@ -759,24 +741,20 @@ _finish_task_and_self_destruct (FrogrFileLoader *self)
 static void
 _frogr_file_loader_dispose (GObject* object)
 {
-  FrogrFileLoaderPrivate *priv =
-    FROGR_FILE_LOADER_GET_PRIVATE (object);
-
-  g_clear_object (&priv->mainview);
-  g_clear_object (&priv->controller);
-
+  FrogrFileLoader *self = FROGR_FILE_LOADER (object);
+  g_clear_object (&self->mainview);
+  g_clear_object (&self->controller);
   G_OBJECT_CLASS (frogr_file_loader_parent_class)->dispose(object);
 }
 
 static void
 _frogr_file_loader_finalize (GObject* object)
 {
-  FrogrFileLoaderPrivate *priv =
-    FROGR_FILE_LOADER_GET_PRIVATE (object);
+  FrogrFileLoader *self = FROGR_FILE_LOADER (object);
 
   /* Free */
-  g_slist_foreach (priv->file_uris, (GFunc)g_free, NULL);
-  g_slist_free (priv->file_uris);
+  g_slist_foreach (self->file_uris, (GFunc)g_free, NULL);
+  g_slist_free (self->file_uris);
 
   G_OBJECT_CLASS (frogr_file_loader_parent_class)->finalize(object);
 }
@@ -804,46 +782,41 @@ frogr_file_loader_class_init(FrogrFileLoaderClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
-
-  g_type_class_add_private (obj_class, sizeof (FrogrFileLoaderPrivate));
 }
 
 static void
 frogr_file_loader_init (FrogrFileLoader *self)
 {
-  FrogrFileLoaderPrivate *priv =
-    FROGR_FILE_LOADER_GET_PRIVATE (self);
-
   FrogrConfig *config = frogr_config_get_instance ();
 
   /* Init private data */
 
   /* We need the controller to get the main window */
-  priv->controller = g_object_ref (frogr_controller_get_instance ());
-  priv->mainview = g_object_ref (frogr_controller_get_main_view (priv->controller));
+  self->controller = g_object_ref (frogr_controller_get_instance ());
+  self->mainview = g_object_ref (frogr_controller_get_main_view (self->controller));
 
   /* Initialize values from frogr configuration */
-  priv->max_picture_size = G_MAXULONG;
-  priv->max_video_size = G_MAXULONG;
-  priv->keep_file_extensions = frogr_config_get_keep_file_extensions (config);
-  priv->import_tags = frogr_config_get_import_tags_from_metadata (config);
-  priv->public_visibility = frogr_config_get_default_public (config);
-  priv->family_visibility = frogr_config_get_default_family (config);
-  priv->friend_visibility = frogr_config_get_default_friend (config);
-  priv->show_in_search = frogr_config_get_default_show_in_search (config);
-  priv->send_location = frogr_config_get_default_send_geolocation_data (config);
-  priv->replace_date_posted = frogr_config_get_default_replace_date_posted (config);
-  priv->license = frogr_config_get_default_license (config);
-  priv->safety_level = frogr_config_get_default_safety_level (config);
-  priv->content_type = frogr_config_get_default_content_type (config);
+  self->max_picture_size = G_MAXULONG;
+  self->max_video_size = G_MAXULONG;
+  self->keep_file_extensions = frogr_config_get_keep_file_extensions (config);
+  self->import_tags = frogr_config_get_import_tags_from_metadata (config);
+  self->public_visibility = frogr_config_get_default_public (config);
+  self->family_visibility = frogr_config_get_default_family (config);
+  self->friend_visibility = frogr_config_get_default_friend (config);
+  self->show_in_search = frogr_config_get_default_show_in_search (config);
+  self->send_location = frogr_config_get_default_send_geolocation_data (config);
+  self->replace_date_posted = frogr_config_get_default_replace_date_posted (config);
+  self->license = frogr_config_get_default_license (config);
+  self->safety_level = frogr_config_get_default_safety_level (config);
+  self->content_type = frogr_config_get_default_content_type (config);
 
   /* Init the rest of private data */
-  priv->file_uris = NULL;
-  priv->pictures = NULL;
-  priv->current_uri = NULL;
-  priv->current_picture = NULL;
-  priv->index = -1;
-  priv->n_files = 0;
+  self->file_uris = NULL;
+  self->pictures = NULL;
+  self->current_uri = NULL;
+  self->current_picture = NULL;
+  self->index = -1;
+  self->n_files = 0;
 }
 
 /* Public API */
@@ -852,20 +825,18 @@ FrogrFileLoader *
 frogr_file_loader_new_from_uris (GSList *file_uris, gulong max_picture_size, gulong max_video_size)
 {
   FrogrFileLoader *self = NULL;
-  FrogrFileLoaderPrivate *priv = NULL;
 
   g_return_val_if_fail (file_uris, NULL);
 
   self = FROGR_FILE_LOADER (g_object_new(FROGR_TYPE_FILE_LOADER, NULL));
-  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
 
-  priv->loading_mode = LOADING_MODE_FROM_URIS;
-  priv->file_uris = file_uris;
-  priv->current_uri = priv->file_uris;
-  priv->index = 0;
-  priv->n_files = g_slist_length (priv->file_uris);
-  priv->max_picture_size = max_picture_size;
-  priv->max_video_size = max_video_size;
+  self->loading_mode = LOADING_MODE_FROM_URIS;
+  self->file_uris = file_uris;
+  self->current_uri = self->file_uris;
+  self->index = 0;
+  self->n_files = g_slist_length (self->file_uris);
+  self->max_picture_size = max_picture_size;
+  self->max_video_size = max_video_size;
 
   return self;
 }
@@ -874,18 +845,16 @@ FrogrFileLoader *
 frogr_file_loader_new_from_pictures (GSList *pictures)
 {
   FrogrFileLoader *self = NULL;
-  FrogrFileLoaderPrivate *priv = NULL;
 
   g_return_val_if_fail (pictures, NULL);
 
   self = FROGR_FILE_LOADER (g_object_new(FROGR_TYPE_FILE_LOADER, NULL));
-  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
 
-  priv->loading_mode = LOADING_MODE_FROM_PICTURES;
-  priv->pictures = pictures;
-  priv->current_picture = pictures;
-  priv->index = 0;
-  priv->n_files = g_slist_length (priv->pictures);
+  self->loading_mode = LOADING_MODE_FROM_PICTURES;
+  self->pictures = pictures;
+  self->current_picture = pictures;
+  self->index = 0;
+  self->n_files = g_slist_length (self->pictures);
 
   return self;
 }
@@ -893,14 +862,10 @@ frogr_file_loader_new_from_pictures (GSList *pictures)
 void
 frogr_file_loader_load (FrogrFileLoader *self)
 {
-  FrogrFileLoaderPrivate *priv = NULL;
-
   g_return_if_fail (FROGR_IS_FILE_LOADER (self));
 
-  priv = FROGR_FILE_LOADER_GET_PRIVATE (self);
-
   /* Check first whether there's something to load */
-  if (!priv->n_files)
+  if (!self->n_files)
     return;
 
   /* Update status and progress */

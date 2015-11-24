@@ -31,28 +31,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_MODEL           (frogr_model_get_type())
-#define FROGR_MODEL(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_MODEL, FrogrModel))
-#define FROGR_MODEL_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_MODEL, FrogrModelClass))
-#define FROGR_IS_MODEL(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_MODEL))
-#define FROGR_IS_MODEL_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_MODEL))
-#define FROGR_MODEL_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_MODEL, FrogrModelClass))
+#define FROGR_TYPE_MODEL (frogr_model_get_type())
 
-typedef struct _FrogrModel FrogrModel;
-typedef struct _FrogrModelClass FrogrModelClass;
-
-struct _FrogrModel
-{
-  GObject parent_instance;
-};
-
-struct _FrogrModelClass
-{
-  GObjectClass parent_class;
-};
-
-
-GType frogr_model_get_type(void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrModel, frogr_model, FROGR, MODEL, GObject)
 
 FrogrModel *frogr_model_new (void);
 

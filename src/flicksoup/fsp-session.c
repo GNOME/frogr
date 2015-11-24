@@ -53,17 +53,10 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 #define DEBUG(...)
 #endif
 
-#define FSP_SESSION_GET_PRIVATE(object)                 \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FSP_TYPE_SESSION,       \
-                                FspSessionPrivate))
-
-G_DEFINE_TYPE (FspSession, fsp_session, G_TYPE_OBJECT)
-
-
-/* Private struct */
-struct _FspSessionPrivate
+struct _FspSession
 {
+  GObject parent;
+
   gchar *api_key;
   gchar *secret;
   gchar *token;
@@ -76,6 +69,8 @@ struct _FspSessionPrivate
   SoupURI *proxy_uri;
   SoupSession *soup_session;
 };
+
+G_DEFINE_TYPE (FspSession, fsp_session, G_TYPE_OBJECT)
 
 /* Signals */
 enum {
@@ -359,17 +354,16 @@ fsp_session_set_property                (GObject      *object,
                                          GParamSpec   *pspec)
 {
   FspSession *self = FSP_SESSION (object);
-  FspSessionPrivate *priv = self->priv;
 
   switch (prop_id)
     {
     case PROP_API_KEY:
-      g_free (priv->api_key);
-      priv->api_key = g_value_dup_string (value);
+      g_free (self->api_key);
+      self->api_key = g_value_dup_string (value);
       break;
     case PROP_SECRET:
-      g_free (priv->secret);
-      priv->secret = g_value_dup_string (value);
+      g_free (self->secret);
+      self->secret = g_value_dup_string (value);
       break;
     case PROP_TOKEN:
       fsp_session_set_token (self, g_value_get_string (value));
@@ -394,16 +388,16 @@ fsp_session_get_property                (GObject    *object,
   switch (prop_id)
     {
     case PROP_API_KEY:
-      g_value_set_string (value, self->priv->api_key);
+      g_value_set_string (value, self->api_key);
       break;
     case PROP_SECRET:
-      g_value_set_string (value, self->priv->secret);
+      g_value_set_string (value, self->secret);
       break;
     case PROP_TOKEN:
-      g_value_set_string (value, self->priv->token);
+      g_value_set_string (value, self->token);
       break;
     case PROP_TOKEN_SECRET:
-      g_value_set_string (value, self->priv->token_secret);
+      g_value_set_string (value, self->token_secret);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -417,16 +411,16 @@ fsp_session_dispose                     (GObject* object)
   FspSession *self = FSP_SESSION (object);
 
   /* Unref object */
-  if (self->priv->soup_session)
+  if (self->soup_session)
     {
-      g_object_unref (self->priv->soup_session);
-      self->priv->soup_session = NULL;
+      g_object_unref (self->soup_session);
+      self->soup_session = NULL;
     }
 
-  if (self->priv->proxy_uri)
+  if (self->proxy_uri)
     {
-      soup_uri_free (self->priv->proxy_uri);
-      self->priv->proxy_uri = NULL;
+      soup_uri_free (self->proxy_uri);
+      self->proxy_uri = NULL;
     }
 
   /* Call superclass */
@@ -439,12 +433,12 @@ fsp_session_finalize                    (GObject* object)
   FspSession *self = FSP_SESSION (object);
 
   /* Free memory */
-  g_free (self->priv->api_key);
-  g_free (self->priv->secret);
-  g_free (self->priv->token);
-  g_free (self->priv->token_secret);
-  g_free (self->priv->tmp_token);
-  g_free (self->priv->tmp_token_secret);
+  g_free (self->api_key);
+  g_free (self->secret);
+  g_free (self->token);
+  g_free (self->token_secret);
+  g_free (self->tmp_token);
+  g_free (self->tmp_token_secret);
 
   /* Call superclass */
   G_OBJECT_CLASS (fsp_session_parent_class)->finalize(object);
@@ -487,33 +481,28 @@ fsp_session_class_init                  (FspSessionClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__DOUBLE,
                   G_TYPE_NONE, 1, G_TYPE_DOUBLE);
-
-  /* Add private */
-  g_type_class_add_private (obj_class, sizeof (FspSessionPrivate));
 }
 
 static void
 fsp_session_init                        (FspSession *self)
 {
-  self->priv = FSP_SESSION_GET_PRIVATE (self);
-
-  self->priv->api_key = NULL;
-  self->priv->secret = NULL;
-  self->priv->token = NULL;
-  self->priv->token_secret = NULL;
-  self->priv->tmp_token = NULL;
-  self->priv->tmp_token_secret = NULL;
-  self->priv->using_default_proxy = TRUE;
-  self->priv->proxy_uri = NULL;
+  self->api_key = NULL;
+  self->secret = NULL;
+  self->token = NULL;
+  self->token_secret = NULL;
+  self->tmp_token = NULL;
+  self->tmp_token_secret = NULL;
+  self->using_default_proxy = TRUE;
+  self->proxy_uri = NULL;
 
   /* Early gcrypt initialization */
   _init_gcrypt ();
 
 #ifdef SOUP_VERSION_2_42
   /* soup_session_async_new() deprecated in lisoup 2.42 */
-  self->priv->soup_session = soup_session_new ();
+  self->soup_session = soup_session_new ();
 #else
-  self->priv->soup_session = soup_session_async_new ();
+  self->soup_session = soup_session_async_new ();
 #endif
 }
 
@@ -548,7 +537,7 @@ static SoupSession *
 _get_soup_session                       (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
-  return self->priv->soup_session;
+  return self->soup_session;
 }
 
 static void
@@ -1239,7 +1228,6 @@ _get_signed_url                       (FspSession          *self,
                                        const gchar         *first_param,
                                        ... )
 {
-  FspSessionPrivate *priv = NULL;
   va_list args;
   GHashTable *table = NULL;
   gchar *signing_key = NULL;
@@ -1253,18 +1241,17 @@ _get_signed_url                       (FspSession          *self,
   g_return_val_if_fail (url != NULL, NULL);
   g_return_val_if_fail (first_param != NULL, NULL);
 
-  priv = self->priv;
   va_start (args, first_param);
 
   if (token_type == TOKEN_TYPE_PERMANENT)
     {
-      token = priv->token;
-      token_secret = priv->token_secret;
+      token = self->token;
+      token_secret = self->token_secret;
     }
   else
     {
-      token = priv->tmp_token;
-      token_secret = priv->tmp_token_secret;
+      token = self->tmp_token;
+      token_secret = self->tmp_token_secret;
     }
 
   /* Get the hash table for the params */
@@ -1273,15 +1260,15 @@ _get_signed_url                       (FspSession          *self,
   /* Fill the table with mandatory parameters */
   if (auth_method == AUTHORIZATION_METHOD_OAUTH_1)
     {
-      _fill_hash_table_with_oauth_params (table, priv->api_key, token);
-      signing_key = g_strdup_printf ("%s&%s", priv->secret, token_secret ? token_secret : "");
+      _fill_hash_table_with_oauth_params (table, self->api_key, token);
+      signing_key = g_strdup_printf ("%s&%s", self->secret, token_secret ? token_secret : "");
     }
   else
     {
-      g_hash_table_insert (table, g_strdup ("api_key"), g_strdup (priv->api_key));
+      g_hash_table_insert (table, g_strdup ("api_key"), g_strdup (self->api_key));
       if (token)
         g_hash_table_insert (table, g_strdup ("auth_token"), g_strdup (token));
-      signing_key = g_strdup (priv->secret);
+      signing_key = g_strdup (self->secret);
     }
 
   api_sig = _get_api_signature_from_hash_table (url, table, signing_key, "GET", auth_method);
@@ -1305,21 +1292,18 @@ _get_signed_url                       (FspSession          *self,
 static void
 _clear_temporary_token                (FspSession *self)
 {
-  FspSessionPrivate *priv = NULL;
-
   g_return_if_fail (FSP_IS_SESSION (self));
 
-  priv = self->priv;
-  if (priv->tmp_token)
+  if (self->tmp_token)
     {
-      g_free (priv->tmp_token);
-      priv->tmp_token = NULL;
+      g_free (self->tmp_token);
+      self->tmp_token = NULL;
     }
 
-  if (priv->tmp_token_secret)
+  if (self->tmp_token_secret)
     {
-      g_free (priv->tmp_token_secret);
-      priv->tmp_token_secret = NULL;
+      g_free (self->tmp_token_secret);
+      self->tmp_token_secret = NULL;
     }
 }
 
@@ -1692,17 +1676,17 @@ fsp_session_set_default_proxy           (FspSession *self,
   g_return_if_fail (FSP_IS_SESSION (self));
 
   /* Ensure we clean the URI of a custom proxy, if present */
-  if (self->priv->proxy_uri)
-    soup_uri_free (self->priv->proxy_uri);
-  self->priv->proxy_uri = NULL;
+  if (self->proxy_uri)
+    soup_uri_free (self->proxy_uri);
+  self->proxy_uri = NULL;
 
   /* Explicitly enable or disable the feature in the session */
   if (enabled)
-    soup_session_add_feature_by_type (self->priv->soup_session, SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
+    soup_session_add_feature_by_type (self->soup_session, SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
   else
-    soup_session_remove_feature_by_type (self->priv->soup_session, SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
+    soup_session_remove_feature_by_type (self->soup_session, SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
 
-  self->priv->using_default_proxy = enabled;
+  self->using_default_proxy = enabled;
 }
 
 gboolean
@@ -1747,25 +1731,25 @@ fsp_session_set_custom_proxy            (FspSession *self,
     }
 
   /* Set the custom proxy (even if no valid data was provided) */
-  g_object_set (G_OBJECT (self->priv->soup_session),
+  g_object_set (G_OBJECT (self->soup_session),
                 SOUP_SESSION_PROXY_URI,
                 proxy_uri,
                 NULL);
 
-  was_using_default_proxy = self->priv->using_default_proxy;
-  self->priv->using_default_proxy = FALSE;
+  was_using_default_proxy = self->using_default_proxy;
+  self->using_default_proxy = FALSE;
 
   /* Update internal values if needed */
   if (was_using_default_proxy
-      || (!self->priv->proxy_uri && proxy_uri)
-      || (self->priv->proxy_uri && !proxy_uri)
-      || (self->priv->proxy_uri && proxy_uri && !soup_uri_equal (self->priv->proxy_uri, proxy_uri)))
+      || (!self->proxy_uri && proxy_uri)
+      || (self->proxy_uri && !proxy_uri)
+      || (self->proxy_uri && proxy_uri && !soup_uri_equal (self->proxy_uri, proxy_uri)))
     {
       /* Save internal reference to the proxy */
-      if (self->priv->proxy_uri)
-        soup_uri_free (self->priv->proxy_uri);
+      if (self->proxy_uri)
+        soup_uri_free (self->proxy_uri);
 
-      self->priv->proxy_uri = proxy_uri;
+      self->proxy_uri = proxy_uri;
 
       /* Proxy configuration actually changed */
       return TRUE;
@@ -1779,7 +1763,7 @@ fsp_session_get_api_key                 (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
 
-  return self->priv->api_key;
+  return self->api_key;
 }
 
 const gchar *
@@ -1787,7 +1771,7 @@ fsp_session_get_secret                  (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
 
-  return self->priv->secret;
+  return self->secret;
 }
 
 const gchar *
@@ -1795,7 +1779,7 @@ fsp_session_get_token                   (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
 
-  return self->priv->token;
+  return self->token;
 }
 
 void
@@ -1804,8 +1788,8 @@ fsp_session_set_token                   (FspSession  *self,
 {
   g_return_if_fail (FSP_IS_SESSION (self));
 
-  g_free (self->priv->token);
-  self->priv->token = g_strdup (token);
+  g_free (self->token);
+  self->token = g_strdup (token);
 }
 
 const gchar *
@@ -1813,7 +1797,7 @@ fsp_session_get_token_secret            (FspSession *self)
 {
   g_return_val_if_fail (FSP_IS_SESSION (self), NULL);
 
-  return self->priv->token_secret;
+  return self->token_secret;
 }
 
 void
@@ -1822,8 +1806,8 @@ fsp_session_set_token_secret            (FspSession  *self,
 {
   g_return_if_fail (FSP_IS_SESSION (self));
 
-  g_free (self->priv->token_secret);
-  self->priv->token_secret = g_strdup (token_secret);
+  g_free (self->token_secret);
+  self->token_secret = g_strdup (token_secret);
 }
 
 /* Get authorization URL */
@@ -1850,7 +1834,7 @@ fsp_session_get_auth_url                (FspSession          *self,
                          NULL);
 
   /* Perform the async request */
-  _perform_async_request (self->priv->soup_session, url,
+  _perform_async_request (self->soup_session, url,
                           _get_request_token_session_cb, G_OBJECT (self),
                           c, cb, fsp_session_get_auth_url, data);
 
@@ -1876,8 +1860,8 @@ fsp_session_get_auth_url_finish         (FspSession    *self,
   if (auth_token != NULL)
     {
       /* Save the temporaty data */
-      self->priv->tmp_token = g_strdup (auth_token->token);
-      self->priv->tmp_token_secret = g_strdup (auth_token->token_secret);
+      self->tmp_token = g_strdup (auth_token->token);
+      self->tmp_token_secret = g_strdup (auth_token->token_secret);
 
       /* Build the authorization url */
       auth_url = g_strdup_printf ("%s?oauth_token=%s",
@@ -1899,13 +1883,10 @@ fsp_session_complete_auth               (FspSession          *self,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
-
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (cb != NULL);
 
-  priv = self->priv;
-  if (priv->tmp_token != NULL && priv->tmp_token_secret != NULL)
+  if (self->tmp_token != NULL && self->tmp_token_secret != NULL)
     {
       gchar *url = NULL;
 
@@ -1918,7 +1899,7 @@ fsp_session_complete_auth               (FspSession          *self,
                              NULL);
 
       /* Perform the async request */
-      _perform_async_request (priv->soup_session, url,
+      _perform_async_request (self->soup_session, url,
                               _get_access_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_complete_auth, data);
 
@@ -1968,13 +1949,10 @@ fsp_session_exchange_token              (FspSession          *self,
                                          GAsyncReadyCallback cb,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
-
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (cb != NULL);
 
-  priv = self->priv;
-  if (priv->token != NULL)
+  if (self->token != NULL)
     {
       gchar *url = NULL;
 
@@ -1987,7 +1965,7 @@ fsp_session_exchange_token              (FspSession          *self,
                              NULL);
 
       /* Perform the async request */
-      _perform_async_request (priv->soup_session, url,
+      _perform_async_request (self->soup_session, url,
                               _exchange_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_exchange_token, data);
 
@@ -2031,13 +2009,10 @@ fsp_session_check_auth_info             (FspSession          *self,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
-
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (cb != NULL);
 
-  priv = self->priv;
-  if (priv->token != NULL)
+  if (self->token != NULL)
     {
       gchar *url = NULL;
 
@@ -2050,7 +2025,7 @@ fsp_session_check_auth_info             (FspSession          *self,
                              NULL);
 
       /* Perform the async request */
-      _perform_async_request (priv->soup_session, url,
+      _perform_async_request (self->soup_session, url,
                               _check_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_check_auth_info, data);
 
@@ -2089,13 +2064,10 @@ fsp_session_get_upload_status           (FspSession          *self,
                                          GAsyncReadyCallback cb,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
-
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (cb != NULL);
 
-  priv = self->priv;
-  if (priv->token != NULL)
+  if (self->token != NULL)
     {
       gchar *url = NULL;
 
@@ -2108,7 +2080,7 @@ fsp_session_get_upload_status           (FspSession          *self,
                              NULL);
 
       /* Perform the async request */
-      _perform_async_request (priv->soup_session, url,
+      _perform_async_request (self->soup_session, url,
                               _get_upload_status_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_get_upload_status, data);
 
@@ -2157,7 +2129,6 @@ fsp_session_upload                      (FspSession          *self,
                                          GAsyncReadyCallback  callback,
                                          gpointer             data)
 {
-  FspSessionPrivate *priv = NULL;
   SoupSession *soup_session = NULL;
   GHashTable *extra_params = NULL;
   AsyncRequestData *ard_clos = NULL;
@@ -2170,7 +2141,6 @@ fsp_session_upload                      (FspSession          *self,
   g_return_if_fail (fileuri != NULL);
 
   /* Get flickr proxy */
-  priv = self->priv;
   soup_session = _get_soup_session (self);
 
   /* Get extra params (those actually used for the picture) */
@@ -2179,7 +2149,7 @@ fsp_session_upload                      (FspSession          *self,
                                            safety_level, content_type, hidden);
 
   /* Add mandatory parameters according to OAuth specification */
-  _fill_hash_table_with_oauth_params (extra_params, priv->api_key, priv->token);
+  _fill_hash_table_with_oauth_params (extra_params, self->api_key, self->token);
 
   /* OAuth requires to encode some fields just to calculate the
      signature, so do some extra encoding now and undo it later */
@@ -2188,7 +2158,7 @@ fsp_session_upload                      (FspSession          *self,
   _encode_param_from_table_for_signature (extra_params, "tags");
 
   /* Build the api signature and add it to the hash table */
-  signing_key = g_strdup_printf ("%s&%s", priv->secret, priv->token_secret);
+  signing_key = g_strdup_printf ("%s&%s", self->secret, self->token_secret);
   api_sig = _get_api_signature_from_hash_table (FLICKR_API_UPLOAD_URL, extra_params, signing_key,
                                                 "POST", AUTHORIZATION_METHOD_OAUTH_1);
 

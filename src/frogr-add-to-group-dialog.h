@@ -25,27 +25,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_ADD_TO_GROUP_DIALOG           (frogr_add_to_group_dialog_get_type())
-#define FROGR_ADD_TO_GROUP_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_ADD_TO_GROUP_DIALOG, FrogrAddToGroupDialog))
-#define FROGR_ADD_TO_GROUP_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_ADD_TO_GROUP_DIALOG, FrogrAddToGroupDialogClass))
-#define FROGR_IS_ADD_TO_GROUP_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_ADD_TO_GROUP_DIALOG))
-#define FROGR_IS_ADD_TO_GROUP_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_ADD_TO_GROUP_DIALOG))
-#define FROGR_ADD_TO_GROUP_DIALOG_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_ADD_TO_GROUP_DIALOG, FrogrAddToGroupDialogClass))
+#define FROGR_TYPE_ADD_TO_GROUP_DIALOG (frogr_add_to_group_dialog_get_type())
 
-typedef struct _FrogrAddToGroupDialog        FrogrAddToGroupDialog;
-typedef struct _FrogrAddToGroupDialogClass   FrogrAddToGroupDialogClass;
-
-struct _FrogrAddToGroupDialogClass
-{
-  GtkDialogClass parent_class;
-};
-
-struct _FrogrAddToGroupDialog
-{
-  GtkDialog parent;
-};
-
-GType frogr_add_to_group_dialog_get_type (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrAddToGroupDialog, frogr_add_to_group_dialog, FROGR, ADD_TO_GROUP_DIALOG, GtkDialog)
 
 void frogr_add_to_group_dialog_show (GtkWindow *parent,
                                      const GSList *pictures,

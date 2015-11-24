@@ -34,18 +34,11 @@
 #define ACCOUNTS_FILENAME "accounts.xml"
 #define SETTINGS_FILENAME "settings.xml"
 
-#define FROGR_CONFIG_GET_PRIVATE(object)                \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FROGR_TYPE_CONFIG,      \
-                                FrogrConfigPrivate))
 
-
-G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT)
-
-
-typedef struct _FrogrConfigPrivate FrogrConfigPrivate;
-struct _FrogrConfigPrivate
+struct _FrogrConfig
 {
+  GObject parent;
+
   gchar *config_dir;
 
   GSList *accounts;
@@ -79,6 +72,9 @@ struct _FrogrConfigPrivate
 
   gchar *settings_version;
 };
+
+G_DEFINE_TYPE (FrogrConfig, frogr_config, G_TYPE_OBJECT)
+
 
 static FrogrConfig *_instance = NULL;
 
@@ -130,15 +126,13 @@ static xmlNodePtr _xml_add_string_child (xmlNodePtr   parent,
 static FrogrAccount *
 _find_account_by_username (FrogrConfig *self, const gchar *username)
 {
-  FrogrConfigPrivate *priv = NULL;
   FrogrAccount *current = NULL;
   GSList *item = NULL;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
   g_return_val_if_fail (username != NULL, NULL);
 
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  for (item = priv->accounts; item; item = g_slist_next (item))
+  for (item = self->accounts; item; item = g_slist_next (item))
     {
       current = FROGR_ACCOUNT (item->data);
       if (!g_strcmp0 (username, frogr_account_get_username (current)))
@@ -151,23 +145,20 @@ _find_account_by_username (FrogrConfig *self, const gchar *username)
 static void
 _load_settings (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
   gchar *xml_path = NULL;
   xmlNodePtr node = NULL;
   xmlDocPtr xml = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-
-  xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
+  xml_path = g_build_filename (self->config_dir, SETTINGS_FILENAME, NULL);
   if (g_file_test (xml_path, G_FILE_TEST_IS_REGULAR))
     xml = xmlParseFile (xml_path);
 
   if (xml)
     node = xmlDocGetRootElement (xml);
   else
-    DEBUG ("Could not load '%s/%s'", priv->config_dir, SETTINGS_FILENAME);
+    DEBUG ("Could not load '%s/%s'", self->config_dir, SETTINGS_FILENAME);
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "settings"))
     {
@@ -176,8 +167,8 @@ _load_settings (FrogrConfig *self)
 
       /* Check version of the settings file first */
       version = xmlGetProp (node, (const xmlChar *) "version");
-      g_free (priv->settings_version);
-      priv->settings_version = g_strdup (version ? (gchar *) version : "1");
+      g_free (self->settings_version);
+      self->settings_version = g_strdup (version ? (gchar *) version : "1");
 
       if (version)
         xmlFree (version);
@@ -208,13 +199,13 @@ _load_settings (FrogrConfig *self)
                   switch (code)
                     {
                     case FSP_CONTENT_TYPE_SCREENSHOT:
-                      priv->content_type = FSP_CONTENT_TYPE_SCREENSHOT;
+                      self->content_type = FSP_CONTENT_TYPE_SCREENSHOT;
                       break;
                     case FSP_CONTENT_TYPE_OTHER:
-                      priv->content_type = FSP_CONTENT_TYPE_OTHER;
+                      self->content_type = FSP_CONTENT_TYPE_OTHER;
                       break;
                     default:
-                      priv->content_type = FSP_CONTENT_TYPE_PHOTO;
+                      self->content_type = FSP_CONTENT_TYPE_PHOTO;
                     }
                 }
             }
@@ -230,13 +221,13 @@ _load_settings (FrogrConfig *self)
                   switch (code)
                     {
                     case FSP_SAFETY_LEVEL_MODERATE:
-                      priv->safety_level = FSP_SAFETY_LEVEL_MODERATE;
+                      self->safety_level = FSP_SAFETY_LEVEL_MODERATE;
                       break;
                     case FSP_SAFETY_LEVEL_RESTRICTED:
-                      priv->safety_level = FSP_SAFETY_LEVEL_RESTRICTED;
+                      self->safety_level = FSP_SAFETY_LEVEL_RESTRICTED;
                       break;
                     default:
-                      priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
+                      self->safety_level = FSP_SAFETY_LEVEL_SAFE;
                     }
                 }
             }
@@ -251,32 +242,32 @@ _load_settings (FrogrConfig *self)
                   code = (gint) g_ascii_strtoll ((gchar *) content, NULL, 10);
 
                   if (code < FSP_LICENSE_NONE || code >= FSP_LICENSE_LAST)
-                    priv->license = FSP_LICENSE_NONE;
+                    self->license = FSP_LICENSE_NONE;
                   else
-                    priv->license = (FspLicense) code;
+                    self->license = (FspLicense) code;
                 }
             }
 
           /* By mistake, the following information was saved in the wrong place in version '1' */
-          if (g_strcmp0 (priv->settings_version, "1"))
+          if (g_strcmp0 (self->settings_version, "1"))
             {
               if (!xmlStrcmp (node->name, (const xmlChar*) "default-send-geolocation-data"))
                 {
                   content = xmlNodeGetContent (node);
-                  priv->send_geolocation_data = !xmlStrcmp (content, (const xmlChar*) "1");
+                  self->send_geolocation_data = !xmlStrcmp (content, (const xmlChar*) "1");
                 }
 
               if (!xmlStrcmp (node->name, (const xmlChar*) "default-show-in-search"))
                 {
                   content = xmlNodeGetContent (node);
-                  priv->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
+                  self->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
                 }
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "default-replace-date-posted"))
             {
               content = xmlNodeGetContent (node);
-              priv->replace_date_posted = !xmlStrcmp (content, (const xmlChar*) "1");
+              self->replace_date_posted = !xmlStrcmp (content, (const xmlChar*) "1");
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "http-proxy"))
@@ -285,25 +276,25 @@ _load_settings (FrogrConfig *self)
           if (!xmlStrcmp (node->name, (const xmlChar*) "tags-autocompletion"))
             {
               content = xmlNodeGetContent (node);
-              priv->tags_autocompletion = !xmlStrcmp (content, (const xmlChar*) "1");
+              self->tags_autocompletion = !xmlStrcmp (content, (const xmlChar*) "1");
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "import-tags-from-metadata"))
             {
               content = xmlNodeGetContent (node);
-              priv->import_tags_from_metadata = !xmlStrcmp (content, (const xmlChar*) "1");
+              self->import_tags_from_metadata = !xmlStrcmp (content, (const xmlChar*) "1");
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "use-dark-theme"))
             {
               content = xmlNodeGetContent (node);
-              priv->use_dark_theme = !xmlStrcmp (content, (const xmlChar*) "1");
+              self->use_dark_theme = !xmlStrcmp (content, (const xmlChar*) "1");
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "keep-file-extensions"))
             {
               content = xmlNodeGetContent (node);
-              priv->keep_file_extensions = !xmlStrcmp (content, (const xmlChar*) "1");
+              self->keep_file_extensions = !xmlStrcmp (content, (const xmlChar*) "1");
             }
 
           if (content)
@@ -313,11 +304,11 @@ _load_settings (FrogrConfig *self)
   else if (node && node->name)
     {
       g_warning ("File '%s/%s' does not start with "
-                 "a <settings> tag", priv->config_dir, SETTINGS_FILENAME);
+                 "a <settings> tag", self->config_dir, SETTINGS_FILENAME);
     }
   else if (!node && xml)
     {
-      g_warning ("File '%s/%s' is empty", priv->config_dir, SETTINGS_FILENAME);
+      g_warning ("File '%s/%s' is empty", self->config_dir, SETTINGS_FILENAME);
     }
 
   if (xml)
@@ -331,15 +322,12 @@ _load_visibility_xml (FrogrConfig *self,
                       xmlDocPtr     xml,
                       xmlNodePtr    rootnode)
 {
-  FrogrConfigPrivate *priv = NULL;
   xmlNodePtr node;
   xmlChar *content = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
   g_return_if_fail (xml      != NULL);
   g_return_if_fail (rootnode != NULL);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Traverse child nodes and extract relevant information. */
   for (node = rootnode->children; node != NULL; node = node->next)
@@ -353,34 +341,34 @@ _load_visibility_xml (FrogrConfig *self,
       if (!xmlStrcmp (node->name, (const xmlChar*) "public"))
         {
           content = xmlNodeGetContent (node);
-          priv->public = !xmlStrcmp (content, (const xmlChar*) "1");
+          self->public = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "family"))
         {
           content = xmlNodeGetContent (node);
-          priv->family = !xmlStrcmp (content, (const xmlChar*) "1");
+          self->family = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "friend"))
         {
           content = xmlNodeGetContent (node);
-          priv->friend = !xmlStrcmp (content, (const xmlChar*) "1");
+          self->friend = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       /* By mistake, the following information was saved in the wrong place in version '1' */
-      if (!g_strcmp0 (priv->settings_version, "1"))
+      if (!g_strcmp0 (self->settings_version, "1"))
         {
           if (!xmlStrcmp (node->name, (const xmlChar*) "send-geolocation-data"))
             {
               content = xmlNodeGetContent (node);
-              priv->send_geolocation_data = !xmlStrcmp (content, (const xmlChar*) "1");
+              self->send_geolocation_data = !xmlStrcmp (content, (const xmlChar*) "1");
             }
 
           if (!xmlStrcmp (node->name, (const xmlChar*) "show-in-search"))
             {
               content = xmlNodeGetContent (node);
-              priv->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
+              self->show_in_search = !xmlStrcmp (content, (const xmlChar*) "1");
             }
         }
 
@@ -394,15 +382,12 @@ _load_mainview_options_xml (FrogrConfig *self,
                             xmlDocPtr     xml,
                             xmlNodePtr    rootnode)
 {
-  FrogrConfigPrivate *priv = NULL;
   xmlNodePtr node;
   xmlChar *content = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
   g_return_if_fail (xml      != NULL);
   g_return_if_fail (rootnode != NULL);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Traverse child nodes and extract relevant information. */
   for (node = rootnode->children; node != NULL; node = node->next)
@@ -416,26 +401,26 @@ _load_mainview_options_xml (FrogrConfig *self,
       if (!xmlStrcmp (node->name, (const xmlChar*) "enable-tooltips"))
         {
           content = xmlNodeGetContent (node);
-          priv->mainview_enable_tooltips = !xmlStrcmp (content, (const xmlChar*) "1");
+          self->mainview_enable_tooltips = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "sorting-criteria"))
         {
           content = xmlNodeGetContent (node);
           if (!xmlStrcmp (content, (const xmlChar*) "1"))
-            priv->mainview_sorting_criteria = SORT_BY_TITLE;
+            self->mainview_sorting_criteria = SORT_BY_TITLE;
           else if (!xmlStrcmp (content, (const xmlChar*) "2"))
-            priv->mainview_sorting_criteria = SORT_BY_DATE;
+            self->mainview_sorting_criteria = SORT_BY_DATE;
           else if (!xmlStrcmp (content, (const xmlChar*) "3"))
-            priv->mainview_sorting_criteria = SORT_BY_SIZE;
+            self->mainview_sorting_criteria = SORT_BY_SIZE;
           else
-            priv->mainview_sorting_criteria = SORT_AS_LOADED;
+            self->mainview_sorting_criteria = SORT_AS_LOADED;
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "sorting-reversed"))
         {
           content = xmlNodeGetContent (node);
-          priv->mainview_sorting_reversed = !xmlStrcmp (content, (const xmlChar*) "1");
+          self->mainview_sorting_reversed = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (content)
@@ -448,15 +433,12 @@ _load_proxy_data_xml (FrogrConfig *self,
                       xmlDocPtr     xml,
                       xmlNodePtr    rootnode)
 {
-  FrogrConfigPrivate *priv = NULL;
   xmlNodePtr node;
   xmlChar *content = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
   g_return_if_fail (xml      != NULL);
   g_return_if_fail (rootnode != NULL);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Traverse child nodes and extract relevant information. */
   for (node = rootnode->children; node != NULL; node = node->next)
@@ -470,43 +452,43 @@ _load_proxy_data_xml (FrogrConfig *self,
       if (!xmlStrcmp (node->name, (const xmlChar*) "use-proxy"))
         {
           content = xmlNodeGetContent (node);
-          priv->use_proxy = !xmlStrcmp (content, (const xmlChar*) "1");
+          self->use_proxy = !xmlStrcmp (content, (const xmlChar*) "1");
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-host"))
         {
           content = xmlNodeGetContent (node);
-          g_free (priv->proxy_host);
-          priv->proxy_host = g_strdup ((gchar *) content);
-          if (priv->proxy_host)
-            g_strstrip (priv->proxy_host);
+          g_free (self->proxy_host);
+          self->proxy_host = g_strdup ((gchar *) content);
+          if (self->proxy_host)
+            g_strstrip (self->proxy_host);
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-port"))
         {
           content = xmlNodeGetContent (node);
-          g_free (priv->proxy_port);
-          priv->proxy_port = g_strdup ((gchar *) content);
-          if (priv->proxy_port)
-            g_strstrip (priv->proxy_port);
+          g_free (self->proxy_port);
+          self->proxy_port = g_strdup ((gchar *) content);
+          if (self->proxy_port)
+            g_strstrip (self->proxy_port);
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-username"))
         {
           content = xmlNodeGetContent (node);
-          g_free (priv->proxy_username);
-          priv->proxy_username = g_strdup ((gchar *) content);
-          if (priv->proxy_username)
-            g_strstrip (priv->proxy_username);
+          g_free (self->proxy_username);
+          self->proxy_username = g_strdup ((gchar *) content);
+          if (self->proxy_username)
+            g_strstrip (self->proxy_username);
         }
 
       if (!xmlStrcmp (node->name, (const xmlChar*) "proxy-password"))
         {
           content = xmlNodeGetContent (node);
-          g_free (priv->proxy_password);
-          priv->proxy_password = g_strdup ((gchar *) content);
-          if (priv->proxy_password)
-            g_strstrip (priv->proxy_password);
+          g_free (self->proxy_password);
+          self->proxy_password = g_strdup ((gchar *) content);
+          if (self->proxy_password)
+            g_strstrip (self->proxy_password);
         }
 
       if (content)
@@ -517,22 +499,20 @@ _load_proxy_data_xml (FrogrConfig *self,
 static void
 _load_accounts (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
   gchar *xml_path = NULL;
   xmlNodePtr node = NULL;
   xmlDocPtr xml = NULL;
 
   g_return_if_fail (FROGR_IS_CONFIG (self));
 
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  xml_path = g_build_filename (priv->config_dir, ACCOUNTS_FILENAME, NULL);
+  xml_path = g_build_filename (self->config_dir, ACCOUNTS_FILENAME, NULL);
   if (g_file_test (xml_path, G_FILE_TEST_IS_REGULAR))
     xml = xmlParseFile (xml_path);
 
   if (xml)
     node = xmlDocGetRootElement (xml);
   else
-    DEBUG ("Could not load '%s/%s'", priv->config_dir, ACCOUNTS_FILENAME);
+    DEBUG ("Could not load '%s/%s'", self->config_dir, ACCOUNTS_FILENAME);
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "accounts"))
     {
@@ -549,7 +529,7 @@ _load_accounts (FrogrConfig *self)
               else
                 {
                   g_warning ("Malformed account in '%s/%s', "
-                             "skipping it", priv->config_dir, ACCOUNTS_FILENAME);
+                             "skipping it", self->config_dir, ACCOUNTS_FILENAME);
 
                   xmlUnlinkNode (node);
                   xmlFreeNode (node);
@@ -564,11 +544,11 @@ _load_accounts (FrogrConfig *self)
   else if (node && node->name)
     {
       g_warning ("File '%s/%s' does not start with "
-                 "an <accounts> tag", priv->config_dir, ACCOUNTS_FILENAME);
+                 "an <accounts> tag", self->config_dir, ACCOUNTS_FILENAME);
     }
   else if (!node && xml)
     {
-      g_warning ("File '%s/%s' is empty", priv->config_dir, ACCOUNTS_FILENAME);
+      g_warning ("File '%s/%s' is empty", self->config_dir, ACCOUNTS_FILENAME);
     }
 
   if (xml)
@@ -669,7 +649,6 @@ _load_account_xml (FrogrAccount *faccount,
 static gboolean
 _save_settings (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
   xmlDocPtr xml = NULL;
   xmlNodePtr root = NULL;
   xmlNodePtr node = NULL;
@@ -677,8 +656,6 @@ _save_settings (FrogrConfig *self)
   gboolean retval = TRUE;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   xml = xmlNewDoc ((const xmlChar*) "1.0");
   root = xmlNewNode (NULL, (const xmlChar*) "settings");
@@ -689,46 +666,46 @@ _save_settings (FrogrConfig *self)
 
   /* Default visibility */
   node = xmlNewNode (NULL, (const xmlChar*) "default-visibility");
-  _xml_add_bool_child (node, "public", priv->public);
-  _xml_add_bool_child (node, "family", priv->family);
-  _xml_add_bool_child (node, "friend", priv->friend);
+  _xml_add_bool_child (node, "public", self->public);
+  _xml_add_bool_child (node, "family", self->family);
+  _xml_add_bool_child (node, "friend", self->friend);
   xmlAddChild (root, node);
 
   /* Default license */
-  _xml_add_int_child (root, "default-license", priv->license);
+  _xml_add_int_child (root, "default-license", self->license);
 
   /* Default content type and safety level */
-  _xml_add_int_child (root, "default-content-type", priv->content_type);
-  _xml_add_int_child (root, "default-safety-level", priv->safety_level);
+  _xml_add_int_child (root, "default-content-type", self->content_type);
+  _xml_add_int_child (root, "default-safety-level", self->safety_level);
 
   /* Other defaults */
-  _xml_add_bool_child (root, "default-send-geolocation-data", priv->send_geolocation_data);
-  _xml_add_bool_child (root, "default-show-in-search", priv->show_in_search);
-  _xml_add_bool_child (root, "default-replace-date-posted", priv->replace_date_posted);
+  _xml_add_bool_child (root, "default-send-geolocation-data", self->send_geolocation_data);
+  _xml_add_bool_child (root, "default-show-in-search", self->show_in_search);
+  _xml_add_bool_child (root, "default-replace-date-posted", self->replace_date_posted);
 
   /* Other stuff */
-  _xml_add_bool_child (root, "tags-autocompletion", priv->tags_autocompletion);
-  _xml_add_bool_child (root, "keep-file-extensions", priv->keep_file_extensions);
-  _xml_add_bool_child (root, "import-tags-from-metadata", priv->import_tags_from_metadata);
-  _xml_add_bool_child (root, "use-dark-theme", priv->use_dark_theme);
+  _xml_add_bool_child (root, "tags-autocompletion", self->tags_autocompletion);
+  _xml_add_bool_child (root, "keep-file-extensions", self->keep_file_extensions);
+  _xml_add_bool_child (root, "import-tags-from-metadata", self->import_tags_from_metadata);
+  _xml_add_bool_child (root, "use-dark-theme", self->use_dark_theme);
 
   /* Use proxy */
   node = xmlNewNode (NULL, (const xmlChar*) "http-proxy");
-  _xml_add_bool_child (node, "use-proxy", priv->use_proxy);
-  _xml_add_string_child (node, "proxy-host", priv->proxy_host);
-  _xml_add_string_child (node, "proxy-port", priv->proxy_port);
-  _xml_add_string_child (node, "proxy-username", priv->proxy_username);
-  _xml_add_string_child (node, "proxy-password", priv->proxy_password);
+  _xml_add_bool_child (node, "use-proxy", self->use_proxy);
+  _xml_add_string_child (node, "proxy-host", self->proxy_host);
+  _xml_add_string_child (node, "proxy-port", self->proxy_port);
+  _xml_add_string_child (node, "proxy-username", self->proxy_username);
+  _xml_add_string_child (node, "proxy-password", self->proxy_password);
   xmlAddChild (root, node);
 
   /* Options from the 'View' menu */
   node = xmlNewNode (NULL, (const xmlChar*) "mainview-options");
-  _xml_add_bool_child (node, "enable-tooltips", priv->mainview_enable_tooltips);
-  _xml_add_int_child (node, "sorting-criteria", priv->mainview_sorting_criteria);
-  _xml_add_bool_child (node, "sorting-reversed", priv->mainview_sorting_reversed);
+  _xml_add_bool_child (node, "enable-tooltips", self->mainview_enable_tooltips);
+  _xml_add_int_child (node, "sorting-criteria", self->mainview_sorting_criteria);
+  _xml_add_bool_child (node, "sorting-reversed", self->mainview_sorting_reversed);
   xmlAddChild (root, node);
 
-  xml_path = g_build_filename (priv->config_dir, SETTINGS_FILENAME, NULL);
+  xml_path = g_build_filename (self->config_dir, SETTINGS_FILENAME, NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
     g_critical ("Unable to open '%s' for saving", xml_path);
@@ -745,7 +722,6 @@ _save_settings (FrogrConfig *self)
 static gboolean
 _save_accounts (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
   FrogrAccount *account = NULL;
   GSList *item = NULL;
   xmlDocPtr xml = NULL;
@@ -755,20 +731,18 @@ _save_accounts (FrogrConfig *self)
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-
   xml = xmlNewDoc ((const xmlChar*) "1.0");
   root = xmlNewNode (NULL, (const xmlChar*) "accounts");
   xmlDocSetRootElement (xml, root);
 
   /* Handle accounts */
-  for (item = priv->accounts; item; item = g_slist_next (item))
+  for (item = self->accounts; item; item = g_slist_next (item))
     {
       account = FROGR_ACCOUNT (item->data);
       _save_account_xml (account, root);
     }
 
-  xml_path = g_build_filename (priv->config_dir, ACCOUNTS_FILENAME, NULL);
+  xml_path = g_build_filename (self->config_dir, ACCOUNTS_FILENAME, NULL);
 
   if (xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1) == -1) {
     g_critical ("Unable to open '%s' for saving", xml_path);
@@ -897,13 +871,13 @@ frogr_config_save_settings (FrogrConfig *self)
 static void
 _dispose (GObject *object)
 {
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
+  FrogrConfig *config = FROGR_CONFIG (object);
 
-  if (priv->accounts)
+  if (config->accounts)
     {
-      g_slist_foreach (priv->accounts, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->accounts);
-      priv->accounts = NULL;
+      g_slist_foreach (config->accounts, (GFunc)g_object_unref, NULL);
+      g_slist_free (config->accounts);
+      config->accounts = NULL;
     }
 
   /* Call superclass */
@@ -913,14 +887,14 @@ _dispose (GObject *object)
 static void
 _finalize (GObject *object)
 {
-  FrogrConfigPrivate *priv = FROGR_CONFIG_GET_PRIVATE (object);
+  FrogrConfig *config = FROGR_CONFIG (object);
 
-  g_free (priv->config_dir);
-  g_free (priv->proxy_host);
-  g_free (priv->proxy_port);
-  g_free (priv->proxy_username);
-  g_free (priv->proxy_password);
-  g_free (priv->settings_version);
+  g_free (config->config_dir);
+  g_free (config->proxy_host);
+  g_free (config->proxy_port);
+  g_free (config->proxy_username);
+  g_free (config->proxy_password);
+  g_free (config->settings_version);
 
   /* Call superclass */
   G_OBJECT_CLASS (frogr_config_parent_class)->finalize (object);
@@ -952,8 +926,6 @@ frogr_config_class_init (FrogrConfigClass *klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 
-  g_type_class_add_private (klass, sizeof (FrogrConfigPrivate));
-
   obj_class->constructor = _constructor;
   obj_class->dispose = _dispose;
   obj_class->finalize = _finalize;
@@ -962,44 +934,41 @@ frogr_config_class_init (FrogrConfigClass *klass)
 static void
 frogr_config_init (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
   gchar *config_dir = NULL;
 
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-
-  priv->config_dir = NULL;
-  priv->active_account = NULL;
-  priv->accounts = NULL;
+  self->config_dir = NULL;
+  self->active_account = NULL;
+  self->accounts = NULL;
 
   /* Default values (if no config file found) */
-  priv->public = FALSE;
-  priv->family = FALSE;
-  priv->friend = FALSE;
-  priv->send_geolocation_data = FALSE;
-  priv->show_in_search = TRUE;
-  priv->license = FSP_LICENSE_NONE;
-  priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
-  priv->content_type = FSP_CONTENT_TYPE_PHOTO;
-  priv->tags_autocompletion = TRUE;
-  priv->keep_file_extensions = FALSE;
-  priv->import_tags_from_metadata = TRUE;
-  priv->mainview_sorting_criteria = SORT_AS_LOADED;
-  priv->mainview_sorting_reversed = FALSE;
-  priv->mainview_enable_tooltips = TRUE;
-  priv->use_dark_theme = TRUE;
-  priv->replace_date_posted = FALSE;
-  priv->use_proxy = FALSE;
-  priv->proxy_host = NULL;
-  priv->proxy_port = NULL;
-  priv->proxy_username = NULL;
-  priv->proxy_password = NULL;
-  priv->settings_version = NULL;
+  self->public = FALSE;
+  self->family = FALSE;
+  self->friend = FALSE;
+  self->send_geolocation_data = FALSE;
+  self->show_in_search = TRUE;
+  self->license = FSP_LICENSE_NONE;
+  self->safety_level = FSP_SAFETY_LEVEL_SAFE;
+  self->content_type = FSP_CONTENT_TYPE_PHOTO;
+  self->tags_autocompletion = TRUE;
+  self->keep_file_extensions = FALSE;
+  self->import_tags_from_metadata = TRUE;
+  self->mainview_sorting_criteria = SORT_AS_LOADED;
+  self->mainview_sorting_reversed = FALSE;
+  self->mainview_enable_tooltips = TRUE;
+  self->use_dark_theme = TRUE;
+  self->replace_date_posted = FALSE;
+  self->use_proxy = FALSE;
+  self->proxy_host = NULL;
+  self->proxy_port = NULL;
+  self->proxy_username = NULL;
+  self->proxy_password = NULL;
+  self->settings_version = NULL;
 
   /* Ensure that we have the config directory in place. */
   config_dir = g_build_filename (g_get_user_config_dir (), APP_SHORTNAME, NULL);
   if (g_mkdir_with_parents (config_dir, 0777) == 0)
     {
-      priv->config_dir = g_strdup (config_dir);
+      self->config_dir = g_strdup (config_dir);
 
       /* Load data */
       _load_settings (self);
@@ -1007,13 +976,13 @@ frogr_config_init (FrogrConfig *self)
 
       /* Make sure at least one account is active, despite of not having
          the <active> node present, for backwards compatibility */
-      if (g_slist_length (priv->accounts) > 0 && !priv->active_account)
+      if (g_slist_length (self->accounts) > 0 && !self->active_account)
         {
           FrogrAccount *account = NULL;
-          account = FROGR_ACCOUNT (priv->accounts->data);
+          account = FROGR_ACCOUNT (self->accounts->data);
 
           frogr_account_set_is_active (account, TRUE);
-          priv->active_account = account;
+          self->active_account = account;
 
           _save_accounts (self);
         }
@@ -1041,14 +1010,11 @@ gboolean
 frogr_config_add_account (FrogrConfig  *self,
                           FrogrAccount *faccount)
 {
-  FrogrConfigPrivate *priv = NULL;
   FrogrAccount *found_account = NULL;
   const gchar *username = NULL;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
   g_return_val_if_fail (FROGR_IS_ACCOUNT (faccount), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Only add the account if not already in */
   username = frogr_account_get_username (faccount);
@@ -1061,7 +1027,7 @@ frogr_config_add_account (FrogrConfig  *self,
       DEBUG ("Account %s already in the configuration system", username);
     }
 
-  priv->accounts = g_slist_append (priv->accounts, g_object_ref (faccount));
+  self->accounts = g_slist_append (self->accounts, g_object_ref (faccount));
 
   /* Set it as active if needed */
   if (frogr_account_is_active (faccount))
@@ -1074,33 +1040,27 @@ frogr_config_add_account (FrogrConfig  *self,
 GSList *
 frogr_config_get_accounts (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->accounts;
+  return self->accounts;
 }
 
 gboolean
 frogr_config_set_active_account (FrogrConfig *self, const gchar *username)
 {
-  FrogrConfigPrivate *priv = NULL;
   FrogrAccount *current = NULL;
   GSList *item = NULL;
   gboolean result = FALSE;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
 
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  for (item = priv->accounts; item; item = g_slist_next (item))
+  for (item = self->accounts; item; item = g_slist_next (item))
     {
       current = FROGR_ACCOUNT (item->data);
 
       if (!g_strcmp0 (username, frogr_account_get_username (current)))
         {
           frogr_account_set_is_active (current, TRUE);
-          priv->active_account = current;
+          self->active_account = current;
           result = TRUE;
         }
       else
@@ -1113,29 +1073,23 @@ frogr_config_set_active_account (FrogrConfig *self, const gchar *username)
 FrogrAccount *
 frogr_config_get_active_account (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), NULL);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->active_account;
+  return self->active_account;
 }
 
 gboolean
 frogr_config_remove_account (FrogrConfig *self, const gchar *username)
 {
-  FrogrConfigPrivate *priv = NULL;
   FrogrAccount *found_account = NULL;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
   g_return_val_if_fail (username != NULL, FALSE);
 
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
   found_account = _find_account_by_username (self, username);
 
   if (found_account)
     {
-      priv->accounts = g_slist_remove (priv->accounts, found_account);
+      self->accounts = g_slist_remove (self->accounts, found_account);
       g_object_unref (found_account);
 
       return TRUE;
@@ -1147,495 +1101,323 @@ frogr_config_remove_account (FrogrConfig *self, const gchar *username)
 void
 frogr_config_set_default_public (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->public = value;
+  self->public = value;
 }
 
 gboolean
 frogr_config_get_default_public (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->public;
+  return self->public;
 }
 
 void
 frogr_config_set_default_family (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->family = value;
+  self->family = value;
 }
 
 gboolean
 frogr_config_get_default_family (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->family;
+  return self->family;
 }
 
 void
 frogr_config_set_default_friend (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->friend = value;
+  self->friend = value;
 }
 
 gboolean
 frogr_config_get_default_friend (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->friend;
+  return self->friend;
 }
 
 void
 frogr_config_set_default_license (FrogrConfig *self,
                                   FspLicense license)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Check out of bounds values */
   if (license < FSP_LICENSE_NONE || license >= FSP_LICENSE_LAST)
-    priv->license = FSP_LICENSE_NONE;
+    self->license = FSP_LICENSE_NONE;
   else
-    priv->license = license;
+    self->license = license;
 }
 
 FspLicense
 frogr_config_get_default_license (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->license;
+  return self->license;
 }
 
 void
 frogr_config_set_default_safety_level (FrogrConfig *self,
                                        FspSafetyLevel safety_level)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Check out of bounds values */
   if (safety_level <= FSP_SAFETY_LEVEL_NONE || safety_level >= FSP_SAFETY_LEVEL_LAST)
-    priv->safety_level = FSP_SAFETY_LEVEL_SAFE;
+    self->safety_level = FSP_SAFETY_LEVEL_SAFE;
   else
-    priv->safety_level = safety_level;
+    self->safety_level = safety_level;
 }
 
 FspSafetyLevel
 frogr_config_get_default_safety_level (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->safety_level;
+  return self->safety_level;
 }
 
 void
 frogr_config_set_default_content_type (FrogrConfig *self,
                                        FspContentType content_type)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
 
   /* Check out of bounds values */
   if (content_type <= FSP_CONTENT_TYPE_NONE || content_type >= FSP_CONTENT_TYPE_LAST)
-    priv->content_type = FSP_CONTENT_TYPE_PHOTO;
+    self->content_type = FSP_CONTENT_TYPE_PHOTO;
   else
-    priv->content_type = content_type;
+    self->content_type = content_type;
 }
 
 FspContentType
 frogr_config_get_default_content_type (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->content_type;
+  return self->content_type;
 }
 
 void
 frogr_config_set_default_show_in_search (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->show_in_search = value;
+  self->show_in_search = value;
 }
 
 gboolean
 frogr_config_get_default_show_in_search (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->show_in_search;
+  return self->show_in_search;
 }
 
 void
 frogr_config_set_default_send_geolocation_data (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->send_geolocation_data = value;
+  self->send_geolocation_data = value;
 }
 
 gboolean
 frogr_config_get_default_send_geolocation_data (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->send_geolocation_data;
+  return self->send_geolocation_data;
 }
 
 void
 frogr_config_set_default_replace_date_posted (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->replace_date_posted = value;
+  self->replace_date_posted = value;
 }
 
 gboolean
 frogr_config_get_default_replace_date_posted (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->replace_date_posted;
+  return self->replace_date_posted;
 }
 
 void
 frogr_config_set_tags_autocompletion (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->tags_autocompletion = value;
+  self->tags_autocompletion = value;
 }
 
 gboolean
 frogr_config_get_tags_autocompletion (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->tags_autocompletion;
+  return self->tags_autocompletion;
 }
 
 void
 frogr_config_set_keep_file_extensions (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->keep_file_extensions = value;
+  self->keep_file_extensions = value;
 }
 
 gboolean
 frogr_config_get_keep_file_extensions (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->keep_file_extensions;
+  return self->keep_file_extensions;
 }
 
 void
 frogr_config_set_import_tags_from_metadata (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->import_tags_from_metadata = value;
+  self->import_tags_from_metadata = value;
 }
 
 gboolean
 frogr_config_get_import_tags_from_metadata (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->import_tags_from_metadata;
+  return self->import_tags_from_metadata;
 }
 
 void
 frogr_config_set_mainview_enable_tooltips (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->mainview_enable_tooltips = value;
+  self->mainview_enable_tooltips = value;
 }
 
 gboolean
 frogr_config_get_mainview_enable_tooltips (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->mainview_enable_tooltips;
+  return self->mainview_enable_tooltips;
 }
 
 void
 frogr_config_set_use_dark_theme (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->use_dark_theme = value;
+  self->use_dark_theme = value;
 }
 
 gboolean
 frogr_config_get_use_dark_theme (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->use_dark_theme;
+  return self->use_dark_theme;
 }
 
 void
 frogr_config_set_mainview_sorting_criteria (FrogrConfig *self,
                                             SortingCriteria criteria)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->mainview_sorting_criteria = criteria;
+  self->mainview_sorting_criteria = criteria;
 }
 
 SortingCriteria
 frogr_config_get_mainview_sorting_criteria (FrogrConfig *self)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), SORT_AS_LOADED);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->mainview_sorting_criteria;
+  return self->mainview_sorting_criteria;
 }
 
 void
 frogr_config_set_mainview_sorting_reversed (FrogrConfig *self, gboolean reversed)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->mainview_sorting_reversed = reversed;
+  self->mainview_sorting_reversed = reversed;
 }
 
 gboolean
 frogr_config_get_mainview_sorting_reversed (FrogrConfig *self)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), SORT_AS_LOADED);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->mainview_sorting_reversed;
+  return self->mainview_sorting_reversed;
 }
 
 void
 frogr_config_set_use_proxy (FrogrConfig *self, gboolean value)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  priv->use_proxy = value;
+  self->use_proxy = value;
 }
 
 gboolean
 frogr_config_get_use_proxy (FrogrConfig *self)
 {
-  FrogrConfigPrivate *priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->use_proxy;
+  return self->use_proxy;
 }
 
 void
 frogr_config_set_proxy_host (FrogrConfig *self, const gchar *host)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  g_free (priv->proxy_host);
-  priv->proxy_host = g_strdup (host);
+  g_free (self->proxy_host);
+  self->proxy_host = g_strdup (host);
 }
 
 const gchar *
 frogr_config_get_proxy_host (FrogrConfig *self)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->proxy_host;
+  return self->proxy_host;
 }
 
 void
 frogr_config_set_proxy_port (FrogrConfig *self, const gchar *port)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  g_free (priv->proxy_port);
-  priv->proxy_port = g_strdup (port);
+  g_free (self->proxy_port);
+  self->proxy_port = g_strdup (port);
 }
 
 const gchar *
 frogr_config_get_proxy_port (FrogrConfig *self)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->proxy_port;
+  return self->proxy_port;
 }
 
 void
 frogr_config_set_proxy_username (FrogrConfig *self, const gchar *username)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  g_free (priv->proxy_username);
-  priv->proxy_username = g_strdup (username);
+  g_free (self->proxy_username);
+  self->proxy_username = g_strdup (username);
 }
 
 const gchar *
 frogr_config_get_proxy_username (FrogrConfig *self)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->proxy_username;
+  return self->proxy_username;
 }
 
 void
 frogr_config_set_proxy_password (FrogrConfig *self, const gchar *password)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_if_fail (FROGR_IS_CONFIG (self));
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  g_free (priv->proxy_password);
-  priv->proxy_password = g_strdup (password);
+  g_free (self->proxy_password);
+  self->proxy_password = g_strdup (password);
 }
 
 const gchar *
 frogr_config_get_proxy_password (FrogrConfig *self)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->proxy_password;
+  return self->proxy_password;
 }
 
 const gchar *
 frogr_config_get_settings_version (FrogrConfig *self)
 {
-  FrogrConfigPrivate * priv = NULL;
-
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
-
-  priv = FROGR_CONFIG_GET_PRIVATE (self);
-  return priv->settings_version;
+  return self->settings_version;
 }

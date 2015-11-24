@@ -25,27 +25,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_LIVE_ENTRY           (frogr_live_entry_get_type())
-#define FROGR_LIVE_ENTRY(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_LIVE_ENTRY, FrogrLiveEntry))
-#define FROGR_LIVE_ENTRY_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_LIVE_ENTRY, FrogrLiveEntryClass))
-#define FROGR_IS_LIVE_ENTRY(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_LIVE_ENTRY))
-#define FROGR_IS_LIVE_ENTRY_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_LIVE_ENTRY))
-#define FROGR_LIVE_ENTRY_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_LIVE_ENTRY, FrogrLiveEntryClass))
+#define FROGR_TYPE_LIVE_ENTRY (frogr_live_entry_get_type())
 
-typedef struct _FrogrLiveEntry        FrogrLiveEntry;
-typedef struct _FrogrLiveEntryClass   FrogrLiveEntryClass;
-
-struct _FrogrLiveEntryClass
-{
-  GtkEntryClass parent_class;
-};
-
-struct _FrogrLiveEntry
-{
-  GtkEntry parent;
-};
-
-GType frogr_live_entry_get_type (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrLiveEntry, frogr_live_entry, FROGR, LIVE_ENTRY, GtkEntry)
 
 GtkWidget *frogr_live_entry_new (void);
 

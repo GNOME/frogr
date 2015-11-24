@@ -25,27 +25,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_SETTINGS_DIALOG           (frogr_settings_dialog_get_type())
-#define FROGR_SETTINGS_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_SETTINGS_DIALOG, FrogrSettingsDialog))
-#define FROGR_SETTINGS_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_SETTINGS_DIALOG, FrogrSettingsDialogClass))
-#define FROGR_IS_SETTINGS_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_SETTINGS_DIALOG))
-#define FROGR_IS_SETTINGS_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_SETTINGS_DIALOG))
-#define FROGR_SETTINGS_DIALOG_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_SETTINGS_DIALOG, FrogrSettingsDialogClass))
+#define FROGR_TYPE_SETTINGS_DIALOG (frogr_settings_dialog_get_type())
 
-typedef struct _FrogrSettingsDialog        FrogrSettingsDialog;
-typedef struct _FrogrSettingsDialogClass   FrogrSettingsDialogClass;
-
-struct _FrogrSettingsDialogClass
-{
-  GtkDialogClass parent_class;
-};
-
-struct _FrogrSettingsDialog
-{
-  GtkDialog parent;
-};
-
-GType frogr_settings_dialog_get_type (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrSettingsDialog, frogr_settings_dialog, FROGR, SETTINGS_DIALOG, GtkDialog)
 
 void frogr_settings_dialog_show (GtkWindow *parent);
 

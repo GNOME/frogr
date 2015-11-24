@@ -32,25 +32,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_CONTROLLER           (frogr_controller_get_type())
-#define FROGR_CONTROLLER(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_CONTROLLER, FrogrController))
-#define FROGR_CONTROLLER_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_CONTROLLER, FrogrControllerClass))
-#define FROGR_IS_CONTROLLER(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_CONTROLLER))
-#define FROGR_IS_CONTROLLER_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_CONTROLLER))
-#define FROGR_CONTROLLER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_CONTROLLER, FrogrControllerClass))
+#define FROGR_TYPE_CONTROLLER (frogr_controller_get_type())
 
-typedef struct _FrogrController      FrogrController;
-typedef struct _FrogrControllerClass FrogrControllerClass;
-
-struct _FrogrControllerClass
-{
-  GObjectClass parent_class;
-};
-
-struct _FrogrController
-{
-  GObject parent;
-};
+G_DECLARE_FINAL_TYPE (FrogrController, frogr_controller, FROGR, CONTROLLER, GObject)
 
 typedef enum {
   FROGR_STATE_UNKNOWN,
@@ -60,8 +44,6 @@ typedef enum {
 } FrogrControllerState;
 
 #define FROGR_STATE_IS_BUSY(state) ((state) != FROGR_STATE_UNKNOWN && (state) != FROGR_STATE_IDLE)
-
-GType frogr_controller_get_type (void) G_GNUC_CONST;
 
 FrogrController *frogr_controller_get_instance (void);
 

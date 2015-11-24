@@ -26,28 +26,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_LOCATION           (frogr_location_get_type())
-#define FROGR_LOCATION(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_LOCATION, FrogrLocation))
-#define FROGR_LOCATION_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_LOCATION, FrogrLocationClass))
-#define FROGR_IS_LOCATION(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_LOCATION))
-#define FROGR_IS_LOCATION_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_LOCATION))
-#define FROGR_LOCATION_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_LOCATION, FrogrLocationClass))
+#define FROGR_TYPE_LOCATION (frogr_location_get_type())
 
-typedef struct _FrogrLocation FrogrLocation;
-typedef struct _FrogrLocationClass FrogrLocationClass;
-
-struct _FrogrLocation
-{
-  GObject parent_instance;
-};
-
-struct _FrogrLocationClass
-{
-  GObjectClass parent_class;
-};
-
-
-GType frogr_location_get_type(void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrLocation, frogr_location, FROGR, LOCATION, GObject)
 
 /* Constructor */
 FrogrLocation *frogr_location_new (gdouble latitude, gdouble longitude);

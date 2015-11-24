@@ -31,17 +31,16 @@
 #include <config.h>
 #include <glib/gi18n.h>
 
-#define FROGR_ADD_TAGS_DIALOG_GET_PRIVATE(object)               \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_ADD_TAGS_DIALOG,     \
-                                FrogrAddTagsDialogPrivate))
+
+struct _FrogrAddTagsDialog {
+  GtkDialog parent;
+
+  GtkWidget *entry;
+  GSList *pictures;
+};
 
 G_DEFINE_TYPE (FrogrAddTagsDialog, frogr_add_tags_dialog, GTK_TYPE_DIALOG)
 
-typedef struct _FrogrAddTagsDialogPrivate {
-  GtkWidget *entry;
-  GSList *pictures;
-} FrogrAddTagsDialogPrivate;
 
 /* Properties */
 enum  {
@@ -61,9 +60,8 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 static void
 _set_pictures (FrogrAddTagsDialog *self, const GSList *pictures)
 {
-  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
-  priv->pictures = g_slist_copy ((GSList*) pictures);
-  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+  self->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (self->pictures, (GFunc)g_object_ref, NULL);
 }
 
 static void
@@ -72,14 +70,12 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
   if (response == GTK_RESPONSE_ACCEPT)
     {
       FrogrAddTagsDialog *self = NULL;
-      FrogrAddTagsDialogPrivate *priv = NULL;
       gchar *tags = NULL;
 
       self = FROGR_ADD_TAGS_DIALOG (dialog);
-      priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
 
       /* Update pictures data */
-      tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->entry)));
+      tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (self->entry)));
       tags = g_strstrip (tags);
 
       /* Check if there's something to add */
@@ -92,7 +88,7 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
           DEBUG ("Adding tags to picture(s): %s", tags);
 
           /* Iterate over the rest of elements */
-          for (item = priv->pictures; item; item = g_slist_next (item))
+          for (item = self->pictures; item; item = g_slist_next (item))
             {
               picture = FROGR_PICTURE (item->data);
               frogr_picture_add_tags (picture, tags);
@@ -134,12 +130,12 @@ _frogr_add_tags_dialog_get_property (GObject *object,
                                      GValue *value,
                                      GParamSpec *pspec)
 {
-  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (object);
+  FrogrAddTagsDialog *dialog = FROGR_ADD_TAGS_DIALOG (object);
 
   switch (prop_id)
     {
     case PROP_PICTURES:
-      g_value_set_pointer (value, priv->pictures);
+      g_value_set_pointer (value, dialog->pictures);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -150,13 +146,13 @@ _frogr_add_tags_dialog_get_property (GObject *object,
 static void
 _frogr_add_tags_dialog_dispose (GObject *object)
 {
-  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (object);
+  FrogrAddTagsDialog *dialog = FROGR_ADD_TAGS_DIALOG (object);
 
-  if (priv->pictures)
+  if (dialog->pictures)
     {
-      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->pictures);
-      priv->pictures = NULL;
+      g_slist_foreach (dialog->pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (dialog->pictures);
+      dialog->pictures = NULL;
     }
 
   G_OBJECT_CLASS(frogr_add_tags_dialog_parent_class)->dispose (object);
@@ -181,14 +177,11 @@ frogr_add_tags_dialog_class_init (FrogrAddTagsDialogClass *klass)
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (obj_class, PROP_PICTURES, pspec);
-
-  g_type_class_add_private (obj_class, sizeof (FrogrAddTagsDialogPrivate));
 }
 
 static void
 frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
 {
-  FrogrAddTagsDialogPrivate *priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (self);
   GtkWidget *content_area = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *label = NULL;
@@ -210,8 +203,8 @@ frogr_add_tags_dialog_init (FrogrAddTagsDialog *self)
   gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-  priv->entry = frogr_live_entry_new ();
-  gtk_box_pack_start (GTK_BOX (vbox), priv->entry, FALSE, FALSE, 0);
+  self->entry = frogr_live_entry_new ();
+  gtk_box_pack_start (GTK_BOX (vbox), self->entry, FALSE, FALSE, 0);
 
   gtk_widget_set_size_request (GTK_WIDGET (self), 300, -1);
 
@@ -246,9 +239,8 @@ frogr_add_tags_dialog_show (GtkWindow *parent, const GSList *pictures, const GSL
   config = frogr_config_get_instance ();
   if (config && frogr_config_get_tags_autocompletion (config))
     {
-      FrogrAddTagsDialogPrivate *priv = NULL;
-      priv = FROGR_ADD_TAGS_DIALOG_GET_PRIVATE (new);
-      frogr_live_entry_set_auto_completion (FROGR_LIVE_ENTRY (priv->entry), tags);
+      FrogrAddTagsDialog *dialog = FROGR_ADD_TAGS_DIALOG (new);
+      frogr_live_entry_set_auto_completion (FROGR_LIVE_ENTRY (dialog->entry), tags);
     }
 
   gtk_widget_show_all (GTK_WIDGET (new));

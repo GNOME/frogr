@@ -26,18 +26,16 @@
 #include <config.h>
 #include <glib/gi18n.h>
 
-#define FROGR_LIVE_ENTRY_GET_PRIVATE(object)            \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FROGR_TYPE_LIVE_ENTRY,  \
-                                FrogrLiveEntryPrivate))
 
-G_DEFINE_TYPE (FrogrLiveEntry, frogr_live_entry, GTK_TYPE_ENTRY)
+struct _FrogrLiveEntry {
+  GtkEntry parent;
 
-typedef struct _FrogrLiveEntryPrivate {
   GtkEntryCompletion *entry_completion;
   GtkTreeModel *treemodel;
   gboolean auto_completion;
-} FrogrLiveEntryPrivate;
+};
+
+G_DEFINE_TYPE (FrogrLiveEntry, frogr_live_entry, GTK_TYPE_ENTRY)
 
 
 /* Tree view columns */
@@ -89,7 +87,6 @@ _entry_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
                              GtkTreeIter *iter, gpointer data)
 {
   FrogrLiveEntry *self = NULL;
-  FrogrLiveEntryPrivate *priv = NULL;
   gchar *stripped_entry_text = NULL;
   gchar *basetext = NULL;
   gchar *entry = NULL;
@@ -99,8 +96,7 @@ _entry_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
   gboolean matches = FALSE;
 
   self = FROGR_LIVE_ENTRY (data);
-  priv = FROGR_LIVE_ENTRY_GET_PRIVATE (self);
-  gtk_tree_model_get (priv->treemodel, iter, TEXT_COL, &entry, -1);
+  gtk_tree_model_get (self->treemodel, iter, TEXT_COL, &entry, -1);
 
   /* Do nothing if not a valid entry */
   if (!entry)
@@ -176,12 +172,12 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
 static void
 _frogr_live_entry_dispose (GObject *object)
 {
-  FrogrLiveEntryPrivate *priv = FROGR_LIVE_ENTRY_GET_PRIVATE (object);
+  FrogrLiveEntry *self = FROGR_LIVE_ENTRY (object);
 
-  if (priv->treemodel)
+  if (self->treemodel)
     {
-      g_object_unref (priv->treemodel);
-      priv->treemodel = NULL;
+      g_object_unref (self->treemodel);
+      self->treemodel = NULL;
     }
 
   G_OBJECT_CLASS(frogr_live_entry_parent_class)->dispose (object);
@@ -194,18 +190,14 @@ frogr_live_entry_class_init (FrogrLiveEntryClass *klass)
 
   /* GObject signals */
   obj_class->dispose = _frogr_live_entry_dispose;
-
-  g_type_class_add_private (obj_class, sizeof (FrogrLiveEntryPrivate));
 }
 
 static void
 frogr_live_entry_init (FrogrLiveEntry *self)
 {
-  FrogrLiveEntryPrivate *priv = FROGR_LIVE_ENTRY_GET_PRIVATE (self);
-
-  priv->entry_completion = NULL;
-  priv->treemodel = NULL;
-  priv->auto_completion = FALSE;
+  self->entry_completion = NULL;
+  self->treemodel = NULL;
+  self->auto_completion = FALSE;
 }
 
 /* Public API */
@@ -219,36 +211,33 @@ frogr_live_entry_new (void)
 void
 frogr_live_entry_set_auto_completion (FrogrLiveEntry *self, const GSList *data)
 {
-  FrogrLiveEntryPrivate *priv = NULL;
-
-  priv = FROGR_LIVE_ENTRY_GET_PRIVATE (self);
-  priv->auto_completion = data ? TRUE : FALSE;
+  self->auto_completion = data ? TRUE : FALSE;
 
   /* Initialize the auto-completion stuff if it's the first time */
-  if (priv->auto_completion && priv->entry_completion == NULL)
+  if (self->auto_completion && self->entry_completion == NULL)
     {
       GtkTreeModel *model = NULL;
 
       model = GTK_TREE_MODEL (gtk_list_store_new (1, G_TYPE_STRING));
-      priv->treemodel = model;
+      self->treemodel = model;
 
-      priv->entry_completion = gtk_entry_completion_new ();
-      gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (priv->entry_completion), TEXT_COL);
-      gtk_entry_completion_set_inline_completion (GTK_ENTRY_COMPLETION (priv->entry_completion), TRUE);
-      gtk_entry_completion_set_match_func (GTK_ENTRY_COMPLETION (priv->entry_completion),
+      self->entry_completion = gtk_entry_completion_new ();
+      gtk_entry_completion_set_text_column (GTK_ENTRY_COMPLETION (self->entry_completion), TEXT_COL);
+      gtk_entry_completion_set_inline_completion (GTK_ENTRY_COMPLETION (self->entry_completion), TRUE);
+      gtk_entry_completion_set_match_func (GTK_ENTRY_COMPLETION (self->entry_completion),
                                            _entry_list_completion_func,
                                            self, NULL);
 
-      gtk_entry_completion_set_model (GTK_ENTRY_COMPLETION (priv->entry_completion), model);
+      gtk_entry_completion_set_model (GTK_ENTRY_COMPLETION (self->entry_completion), model);
 
-      g_signal_connect (G_OBJECT (priv->entry_completion), "match-selected",
+      g_signal_connect (G_OBJECT (self->entry_completion), "match-selected",
                         G_CALLBACK (_completion_match_selected_cb), self);
     }
 
   /* Enable or disable auto-completion as needed */
-  gtk_entry_set_completion (GTK_ENTRY (self), data ? priv->entry_completion : NULL);
+  gtk_entry_set_completion (GTK_ENTRY (self), data ? self->entry_completion : NULL);
 
   /* Populate the tree model with the data (or 'no data) passed */
-  if (priv->treemodel)
-    _populate_treemodel_with_data (priv->treemodel, data);
+  if (self->treemodel)
+    _populate_treemodel_with_data (self->treemodel, data);
 }

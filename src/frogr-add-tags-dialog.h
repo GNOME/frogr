@@ -25,27 +25,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_ADD_TAGS_DIALOG           (frogr_add_tags_dialog_get_type())
-#define FROGR_ADD_TAGS_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_ADD_TAGS_DIALOG, FrogrAddTagsDialog))
-#define FROGR_ADD_TAGS_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_ADD_TAGS_DIALOG, FrogrAddTagsDialogClass))
-#define FROGR_IS_ADD_TAGS_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_ADD_TAGS_DIALOG))
-#define FROGR_IS_ADD_TAGS_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_ADD_TAGS_DIALOG))
-#define FROGR_ADD_TAGS_DIALOG_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_ADD_TAGS_DIALOG, FrogrAddTagsDialogClass))
+#define FROGR_TYPE_ADD_TAGS_DIALOG (frogr_add_tags_dialog_get_type())
 
-typedef struct _FrogrAddTagsDialog        FrogrAddTagsDialog;
-typedef struct _FrogrAddTagsDialogClass   FrogrAddTagsDialogClass;
-
-struct _FrogrAddTagsDialogClass
-{
-  GtkDialogClass parent_class;
-};
-
-struct _FrogrAddTagsDialog
-{
-  GtkDialog parent;
-};
-
-GType frogr_add_tags_dialog_get_type (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrAddTagsDialog, frogr_add_tags_dialog, FROGR, ADD_TAGS_DIALOG, GtkDialog)
 
 void frogr_add_tags_dialog_show (GtkWindow *parent, const GSList *pictures, const GSList *tags);
 

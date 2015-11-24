@@ -50,18 +50,11 @@
 
 #define MAX_ATTEMPTS 5
 
-#define FROGR_CONTROLLER_GET_PRIVATE(object)                    \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_CONTROLLER,          \
-                                FrogrControllerPrivate))
 
-G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT)
-
-/* Private data */
-
-typedef struct _FrogrControllerPrivate FrogrControllerPrivate;
-struct _FrogrControllerPrivate
+struct _FrogrController
 {
+  GObject parent;
+
   FrogrControllerState state;
 
   FrogrMainView *mainview;
@@ -96,6 +89,9 @@ struct _FrogrControllerPrivate
   guint show_add_to_set_dialog_source_id;
   guint show_add_to_group_dialog_source_id;
 };
+
+G_DEFINE_TYPE (FrogrController, frogr_controller, G_TYPE_OBJECT)
+
 
 /* Signals */
 enum {
@@ -339,7 +335,6 @@ static void
 _g_application_startup_cb (GApplication *app, gpointer data)
 {
   FrogrController *self = FROGR_CONTROLLER (data);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   FrogrModel *model = NULL;
   FrogrAccount *account = NULL;
   gboolean use_dark_theme;
@@ -347,11 +342,11 @@ _g_application_startup_cb (GApplication *app, gpointer data)
   DEBUG ("%s", "Application started!\n");
 
   /* Create UI window */
-  priv->mainview = frogr_main_view_new (GTK_APPLICATION (app));
-  g_object_add_weak_pointer (G_OBJECT (priv->mainview),
-                             (gpointer) & priv->mainview);
+  self->mainview = frogr_main_view_new (GTK_APPLICATION (app));
+  g_object_add_weak_pointer (G_OBJECT (self->mainview),
+                             (gpointer) & self->mainview);
   /* Connect to signals */
-  model = frogr_main_view_get_model (priv->mainview);
+  model = frogr_main_view_get_model (self->mainview);
   g_signal_connect (G_OBJECT (model), "model-deserialized",
                     G_CALLBACK (_on_model_deserialized),
                     self);
@@ -360,21 +355,21 @@ _g_application_startup_cb (GApplication *app, gpointer data)
   _set_state (self, FROGR_STATE_IDLE);
 
   /* Select the dark theme if needed */
-  use_dark_theme = frogr_config_get_use_dark_theme (priv->config);
+  use_dark_theme = frogr_config_get_use_dark_theme (self->config);
   frogr_controller_set_use_dark_theme (self, use_dark_theme);
 
   /* Select the right account */
-  account = frogr_config_get_active_account (priv->config);
+  account = frogr_config_get_active_account (self->config);
   if (account)
     _set_active_account (self, account);
 
   /* Set HTTP proxy if needed */
-  if (frogr_config_get_use_proxy (priv->config))
+  if (frogr_config_get_use_proxy (self->config))
     {
-      const gchar *host = frogr_config_get_proxy_host (priv->config);
-      const gchar *port = frogr_config_get_proxy_port (priv->config);
-      const gchar *username = frogr_config_get_proxy_username (priv->config);
-      const gchar *password = frogr_config_get_proxy_password (priv->config);
+      const gchar *host = frogr_config_get_proxy_host (self->config);
+      const gchar *port = frogr_config_get_proxy_port (self->config);
+      const gchar *username = frogr_config_get_proxy_username (self->config);
+      const gchar *password = frogr_config_get_proxy_password (self->config);
       frogr_controller_set_proxy (self, FALSE, host, port, username, password);
     }
 }
@@ -382,19 +377,19 @@ _g_application_startup_cb (GApplication *app, gpointer data)
 static void
 _g_application_activate_cb (GApplication *app, gpointer data)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (data);
+  FrogrController *self = FROGR_CONTROLLER (data);
 
   DEBUG ("%s", "Application activated!\n");
 
   /* Show the UI */
-  gtk_widget_show (GTK_WIDGET(priv->mainview));
-  gtk_window_present (GTK_WINDOW (priv->mainview));
+  gtk_widget_show (GTK_WIDGET(self->mainview));
+  gtk_window_present (GTK_WINDOW (self->mainview));
 }
 
 static void
 _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gchar *hint, gpointer data)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (data);
+  FrogrController *self = FROGR_CONTROLLER (data);
   GFileInfo *file_info = NULL;
   gboolean is_project_file = FALSE;
 
@@ -447,33 +442,32 @@ _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gc
     }
 
   /* Show the UI */
-  gtk_widget_show (GTK_WIDGET(priv->mainview));
-  gtk_window_present (GTK_WINDOW (priv->mainview));
+  gtk_widget_show (GTK_WIDGET(self->mainview));
+  gtk_window_present (GTK_WINDOW (self->mainview));
 }
 
 static void
 _g_application_shutdown_cb (GApplication *app, gpointer data)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (data);
+  FrogrController *self = FROGR_CONTROLLER (data);
 
   DEBUG ("%s", "Shutting down application...");
 
-  if (priv->app_running)
+  if (self->app_running)
     {
       while (gtk_events_pending ())
         gtk_main_iteration ();
 
-      gtk_widget_destroy (GTK_WIDGET (priv->mainview));
-      priv->app_running = FALSE;
+      gtk_widget_destroy (GTK_WIDGET (self->mainview));
+      self->app_running = FALSE;
 
-      frogr_config_save_all (priv->config);
+      frogr_config_save_all (self->config);
     }
 }
 
 static void
 _set_active_account (FrogrController *self, FrogrAccount *account)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrAccount *new_account = NULL;
   gboolean accounts_changed = FALSE;
   const gchar *token = NULL;
@@ -482,47 +476,45 @@ _set_active_account (FrogrController *self, FrogrAccount *account)
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   new_account = FROGR_IS_ACCOUNT (account) ? g_object_ref (account) : NULL;
   if (new_account)
     {
       const gchar *new_username = NULL;
 
       new_username = frogr_account_get_username (new_account);
-      if (!frogr_config_set_active_account (priv->config, new_username))
+      if (!frogr_config_set_active_account (self->config, new_username))
         {
           /* Fallback to manually creating a new account */
           frogr_account_set_is_active (new_account, TRUE);
-          accounts_changed = frogr_config_add_account (priv->config, new_account);
+          accounts_changed = frogr_config_add_account (self->config, new_account);
         }
 
       /* Get the token for setting it later on */
       token = frogr_account_get_token (new_account);
       token_secret = frogr_account_get_token_secret (new_account);
     }
-  else if (FROGR_IS_ACCOUNT (priv->account))
+  else if (FROGR_IS_ACCOUNT (self->account))
     {
       /* If NULL is passed it means 'delete current account' */
-      const gchar *username = frogr_account_get_username (priv->account);
-      accounts_changed = frogr_config_remove_account (priv->config, username);
+      const gchar *username = frogr_account_get_username (self->account);
+      accounts_changed = frogr_config_remove_account (self->config, username);
     }
 
   /* Update internal pointer in the controller */
-  if (priv->account)
-    g_object_unref (priv->account);
-  priv->account = new_account;
+  if (self->account)
+    g_object_unref (self->account);
+  self->account = new_account;
 
   /* Update token in the session */
-  fsp_session_set_token (priv->session, token);
-  fsp_session_set_token_secret (priv->session, token_secret);
+  fsp_session_set_token (self->session, token);
+  fsp_session_set_token_secret (self->session, token_secret);
 
   /* Fetch needed info for this account or update tokens stored */
   account_version = new_account ? frogr_account_get_version (new_account) : NULL;
   if (account_version && g_strcmp0 (account_version, ACCOUNTS_CURRENT_VERSION))
     {
-      priv->fetching_token_replacement = TRUE;
-      fsp_session_exchange_token (priv->session, NULL, _exchange_token_cb, self);
+      self->fetching_token_replacement = TRUE;
+      fsp_session_exchange_token (self->session, NULL, _exchange_token_cb, self);
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TOKEN_REPLACEMENT));
 
       /* Make sure we show proper feedback if connection is too slow */
@@ -541,27 +533,22 @@ _set_active_account (FrogrController *self, FrogrAccount *account)
     }
 
   /* Save new state in configuration */
-  frogr_config_save_accounts (priv->config);
+  frogr_config_save_accounts (self->config);
 }
 
 void
 _set_state (FrogrController *self, FrogrControllerState state)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  priv->state = state;
+  self->state = state;
   g_signal_emit (self, signals[STATE_CHANGED], 0, state);
 }
 
 static GCancellable *
 _register_new_cancellable (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
   GCancellable *cancellable = NULL;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   cancellable = g_cancellable_new();
-  priv->cancellables = g_list_prepend (priv->cancellables, cancellable);
+  self->cancellables = g_list_prepend (self->cancellables, cancellable);
 
   return cancellable;
 }
@@ -569,22 +556,19 @@ _register_new_cancellable (FrogrController *self)
 static void
 _clear_cancellable (FrogrController *self, GCancellable *cancellable)
 {
-  FrogrControllerPrivate *priv = NULL;
   GList *item = NULL;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  item = g_list_find (priv->cancellables, cancellable);
+  item = g_list_find (self->cancellables, cancellable);
   if (item)
     {
       g_object_unref (G_OBJECT (item->data));
-      priv->cancellables = g_list_delete_link (priv->cancellables, item);
+      self->cancellables = g_list_delete_link (self->cancellables, item);
     }
 }
 
 static void
 _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_user)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   void (* error_function) (GtkWindow *, const gchar *) = NULL;
   gchar *msg = NULL;
   gchar *video_quota_msg = NULL;
@@ -619,7 +603,7 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
       break;
 
     case FSP_ERROR_UPLOAD_QUOTA_VIDEO_EXCEEDED:
-      n_videos = frogr_account_get_current_videos (priv->account);
+      n_videos = frogr_account_get_current_videos (self->account);
       video_quota_msg = g_strdup_printf (ngettext ("Quota exceeded (limit: %d video per month)",
                                                    "Quota exceeded (limit: %d videos per month)", n_videos),
                                          n_videos);
@@ -695,7 +679,7 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
     }
 
   if (notify_user && error_function)
-    error_function (GTK_WINDOW (priv->mainview), msg);
+    error_function (GTK_WINDOW (self->mainview), msg);
 
   DEBUG ("%s", msg);
   g_free (msg);
@@ -730,12 +714,8 @@ static void
 _data_fraction_sent_cb (FspSession *session, gdouble fraction, gpointer data)
 {
   FrogrController *self = NULL;
-  FrogrControllerPrivate *priv = NULL;
-
   self = FROGR_CONTROLLER(data);
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  frogr_main_view_set_progress_status_fraction (priv->mainview, fraction);
+  frogr_main_view_set_progress_status_fraction (self->mainview, fraction);
 }
 
 static void
@@ -757,14 +737,12 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   CancellableOperationData *co_data = NULL;
   FrogrController *self = NULL;
-  FrogrControllerPrivate *priv = NULL;
   GError *error = NULL;
   gchar *auth_url = NULL;
 
   session = FSP_SESSION (obj);
   co_data = (CancellableOperationData*) data;
   self = co_data->controller;
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   auth_url = fsp_session_get_auth_url_finish (session, res, &error);
   if (auth_url != NULL && error == NULL)
@@ -775,7 +753,7 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
       frogr_util_open_uri (url_with_permissions);
 
       /* Run the auth confirmation dialog */
-      frogr_auth_dialog_show (GTK_WINDOW (priv->mainview), CONFIRM_AUTHORIZATION);
+      frogr_auth_dialog_show (GTK_WINDOW (self->mainview), CONFIRM_AUTHORIZATION);
 
       DEBUG ("Auth URL: %s", url_with_permissions);
 
@@ -790,12 +768,12 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
       g_error_free (error);
     }
 
-  frogr_main_view_hide_progress (priv->mainview);
+  frogr_main_view_hide_progress (self->mainview);
 
   _clear_cancellable (self, co_data->cancellable);
   g_slice_free (CancellableOperationData, co_data);
 
-  priv->fetching_auth_url = FALSE;
+  self->fetching_auth_url = FALSE;
 }
 
 static void
@@ -804,14 +782,12 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
   FspSession *session = NULL;
   CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FspDataAuthToken *auth_token = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   co_data = (CancellableOperationData*) data;
   controller = co_data->controller;
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   auth_token = fsp_session_complete_auth_finish (session, result, &error);
   if (auth_token)
@@ -845,12 +821,12 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
       g_error_free (error);
     }
 
-  frogr_main_view_hide_progress (priv->mainview);
+  frogr_main_view_hide_progress (controller->mainview);
 
   _clear_cancellable (controller, co_data->cancellable);
   g_slice_free (CancellableOperationData, co_data);
 
-  priv->fetching_auth_token = FALSE;
+  controller->fetching_auth_token = FALSE;
 }
 
 static void
@@ -858,12 +834,10 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   fsp_session_exchange_token_finish (session, result, &error);
   if (error == NULL)
@@ -873,17 +847,17 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
 
       /* If everything went fine, get the token and secret from the
          session and update the current user account */
-      token = fsp_session_get_token (priv->session);
-      frogr_account_set_token (priv->account, token);
+      token = fsp_session_get_token (controller->session);
+      frogr_account_set_token (controller->account, token);
 
-      token_secret = fsp_session_get_token_secret (priv->session);
-      frogr_account_set_token_secret (priv->account, token_secret);
+      token_secret = fsp_session_get_token_secret (controller->session);
+      frogr_account_set_token_secret (controller->account, token_secret);
 
       /* Make sure we update the version for the account too */
-      frogr_account_set_version (priv->account, ACCOUNTS_CURRENT_VERSION);
+      frogr_account_set_version (controller->account, ACCOUNTS_CURRENT_VERSION);
 
       /* Finally, try to set the active account again */
-      _set_active_account (controller, priv->account);
+      _set_active_account (controller, controller->account);
     }
   else
     {
@@ -892,22 +866,21 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
       g_error_free (error);
     }
 
-  frogr_main_view_hide_progress (priv->mainview);
-  priv->fetching_token_replacement = FALSE;
+  frogr_main_view_hide_progress (controller->mainview);
+  controller->fetching_token_replacement = FALSE;
 }
 
 static gboolean
 _cancel_authorization_on_timeout (gpointer data)
 {
   FrogrController *self = FROGR_CONTROLLER (data);
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
-  if (priv->fetching_auth_url || priv->fetching_auth_token || priv->fetching_token_replacement)
+  if (self->fetching_auth_url || self->fetching_auth_token || self->fetching_token_replacement)
     {
       frogr_controller_cancel_ongoing_requests (self);
-      frogr_main_view_hide_progress (priv->mainview);
+      frogr_main_view_hide_progress (self->mainview);
 
-      _show_auth_failed_dialog (GTK_WINDOW (priv->mainview), _("Authorization failed (timed out)"), FALSE);
+      _show_auth_failed_dialog (GTK_WINDOW (self->mainview), _("Authorization failed (timed out)"), FALSE);
     }
 
   return G_SOURCE_REMOVE;
@@ -935,19 +908,15 @@ _should_retry_operation (GError *error, gint attempts)
 static void
 _invalidate_extra_data (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   /* Just reset the flags */
-  priv->photosets_fetched = FALSE;
-  priv->groups_fetched = FALSE;
-  priv->tags_fetched = FALSE;
+  self->photosets_fetched = FALSE;
+  self->groups_fetched = FALSE;
+  self->tags_fetched = FALSE;
 }
 
 static void
 _update_upload_progress (FrogrController *self, UploadPicturesData *up_data)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   gchar *description = NULL;
   gchar *status_text = NULL;
 
@@ -969,8 +938,8 @@ _update_upload_progress (FrogrController *self, UploadPicturesData *up_data)
       status_text = g_strdup_printf ("%d / %d", up_data->index, up_data->n_pictures);
       g_free (title);
     }
-  frogr_main_view_set_progress_description(priv->mainview, description);
-  frogr_main_view_set_progress_status_text (priv->mainview, status_text);
+  frogr_main_view_set_progress_description(self->mainview, description);
+  frogr_main_view_set_progress_status_text (self->mainview, status_text);
 
   /* Free */
   g_free (description);
@@ -980,8 +949,6 @@ _update_upload_progress (FrogrController *self, UploadPicturesData *up_data)
 static void
 _upload_next_picture (FrogrController *self, UploadPicturesData *up_data)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   /* Advance the list only if not in the first element */
   if (up_data->index > 0)
     up_data->current = g_slist_next(up_data->current);
@@ -1000,7 +967,7 @@ _upload_next_picture (FrogrController *self, UploadPicturesData *up_data)
   else
     {
       /* Hide progress bar dialog and finish */
-      frogr_main_view_hide_progress (priv->mainview);
+      frogr_main_view_hide_progress (self->mainview);
       _finish_upload_pictures_process (self, up_data);
     }
 }
@@ -1008,7 +975,6 @@ _upload_next_picture (FrogrController *self, UploadPicturesData *up_data)
 static void
 _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesData *up_data)
 {
-  FrogrControllerPrivate *priv = NULL;
   UploadOnePictureData *uop_data = NULL;
   FspVisibility public_visibility = FSP_VISIBILITY_NONE;
   FspVisibility family_visibility = FSP_VISIBILITY_NONE;
@@ -1032,7 +998,6 @@ _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesDat
   uop_data->is_cancelled = FALSE;
   uop_data->up_data = up_data;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   g_object_ref (picture);
 
   public_visibility = frogr_picture_is_public (picture) ? FSP_VISIBILITY_YES : FSP_VISIBILITY_NO;
@@ -1043,11 +1008,11 @@ _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesDat
   search_scope = frogr_picture_show_in_search (picture) ? FSP_SEARCH_SCOPE_PUBLIC : FSP_SEARCH_SCOPE_HIDDEN;
 
   /* Connect to this signal to report progress to the user */
-  g_signal_connect (G_OBJECT (priv->session), "data-fraction-sent",
+  g_signal_connect (G_OBJECT (self->session), "data-fraction-sent",
                     G_CALLBACK (_data_fraction_sent_cb),
                     self);
 
-  fsp_session_upload (priv->session,
+  fsp_session_upload (self->session,
                       frogr_picture_get_fileuri (picture),
                       frogr_picture_get_title (picture),
                       frogr_picture_get_description (picture),
@@ -1069,7 +1034,6 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   UploadOnePictureData *uop_data = NULL;
   UploadPicturesData *up_data = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GError *error = NULL;
   gchar *photo_id = NULL;
@@ -1087,8 +1051,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
     }
 
   /* Stop reporting to the user */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  g_signal_handlers_disconnect_by_func (priv->session, _data_fraction_sent_cb, controller);
+  g_signal_handlers_disconnect_by_func (controller->session, _data_fraction_sent_cb, controller);
 
   up_data = uop_data->up_data;
   if (error && _should_retry_operation (error, up_data->upload_attempts))
@@ -1242,22 +1205,20 @@ _set_license_cb (GObject *object, GAsyncResult *res, gpointer data)
           uop_data->up_data->error = error;
         }
 
-      FROGR_CONTROLLER_GET_PRIVATE (controller)->setting_license = FALSE;
+      controller->setting_license = FALSE;
     }
 }
 
 static void
 _set_license_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   gchar *debug_msg = NULL;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->setting_license = TRUE;
+  self->setting_license = TRUE;
   picture = uop_data->picture;
 
-  fsp_session_set_license (priv->session,
+  fsp_session_set_license (self->session,
                            frogr_picture_get_id (picture),
                            frogr_picture_get_license (picture),
                            uop_data->cancellable,
@@ -1305,14 +1266,13 @@ _set_location_cb (GObject *object, GAsyncResult *res, gpointer data)
           uop_data->up_data->error = error;
         }
 
-      FROGR_CONTROLLER_GET_PRIVATE (controller)->setting_location = FALSE;
+      controller->setting_location = FALSE;
     }
 }
 
 static void
 _set_location_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   FrogrLocation *location = NULL;
   FspDataLocation *data_location = NULL;
@@ -1324,10 +1284,9 @@ _set_location_for_picture (FrogrController *self, UploadOnePictureData *uop_data
   data_location->latitude = frogr_location_get_latitude (location);
   data_location->longitude = frogr_location_get_longitude (location);
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->setting_location = TRUE;
+  self->setting_location = TRUE;
 
-  fsp_session_set_location (priv->session,
+  fsp_session_set_location (self->session,
                             frogr_picture_get_id (picture),
                             data_location,
                             uop_data->cancellable,
@@ -1379,14 +1338,13 @@ _set_replace_date_posted_cb (GObject *object, GAsyncResult *res, gpointer data)
           uop_data->up_data->error = error;
         }
 
-      FROGR_CONTROLLER_GET_PRIVATE (controller)->setting_replace_date_posted = FALSE;
+      controller->setting_replace_date_posted = FALSE;
     }
 }
 
 static void
 _set_replace_date_posted_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GDateTime *picture_date = NULL;
   GTimeVal picture_timeval;
@@ -1424,10 +1382,9 @@ _set_replace_date_posted_for_picture (FrogrController *self, UploadOnePictureDat
   if (!picture_date)
     return;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->setting_replace_date_posted = TRUE;
+  self->setting_replace_date_posted = TRUE;
 
-  fsp_session_set_date_posted (priv->session,
+  fsp_session_set_date_posted (self->session,
                                frogr_picture_get_id (picture),
                                picture_date,
                                uop_data->cancellable,
@@ -1445,14 +1402,12 @@ _set_replace_date_posted_for_picture (FrogrController *self, UploadOnePictureDat
 static gboolean
 _add_picture_to_photosets_or_create (FrogrController *self, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrPhotoSet *set = NULL;
 
   if (g_slist_length (uop_data->photosets) == 0)
     return FALSE;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->adding_to_set = TRUE;
+  self->adding_to_set = TRUE;
 
   uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] = 0;
 
@@ -1468,17 +1423,15 @@ _add_picture_to_photosets_or_create (FrogrController *self, UploadOnePictureData
 static void
 _create_photoset_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
   gchar *debug_msg = NULL;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   picture = uop_data->picture;
   set = FROGR_PHOTOSET (uop_data->photosets->data);
 
   /* Set with ID: Create set along with this picture */
-  fsp_session_create_photoset (priv->session,
+  fsp_session_create_photoset (self->session,
                                frogr_photoset_get_title (set),
                                frogr_photoset_get_description (set),
                                frogr_picture_get_id (picture),
@@ -1548,24 +1501,22 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
         }
 
       if (!keep_going)
-        FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_set = FALSE;
+        controller->adding_to_set = FALSE;
     }
 }
 
 static void
 _add_picture_to_photoset (FrogrController *self, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
   gchar *debug_msg = NULL;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   picture = uop_data->picture;
   set = FROGR_PHOTOSET (uop_data->photosets->data);
 
   /* Set with ID: Add picture to it */
-  fsp_session_add_to_photoset (priv->session,
+  fsp_session_add_to_photoset (self->session,
                                frogr_picture_get_id (picture),
                                frogr_photoset_get_id (set),
                                uop_data->cancellable,
@@ -1629,21 +1580,18 @@ _add_to_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
         }
 
       if (!keep_going)
-        FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_set = FALSE;
+        controller->adding_to_set = FALSE;
     }
 }
 
 static gboolean
 _add_picture_to_groups (FrogrController *self, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   /* Add pictures to groups, if any */
   if (g_slist_length (uop_data->groups) == 0)
     return FALSE;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->adding_to_group = TRUE;
+  self->adding_to_group = TRUE;
 
   _add_picture_to_group (self, uop_data);
 
@@ -1653,16 +1601,14 @@ _add_picture_to_groups (FrogrController *self, UploadOnePictureData *uop_data)
 static void
 _add_picture_to_group (FrogrController *self, UploadOnePictureData *uop_data)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   FrogrGroup *group = NULL;
   gchar *debug_msg = NULL;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   picture = uop_data->picture;
   group = FROGR_GROUP (uop_data->groups->data);
 
-  fsp_session_add_to_group (priv->session,
+  fsp_session_add_to_group (self->session,
                             frogr_picture_get_id (picture),
                             frogr_group_get_id (group),
                             uop_data->cancellable,
@@ -1726,7 +1672,7 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
         }
 
       if (!keep_going)
-        FROGR_CONTROLLER_GET_PRIVATE (controller)->adding_to_group = FALSE;
+        controller->adding_to_group = FALSE;
     }
 }
 
@@ -1736,7 +1682,6 @@ _complete_picture_upload_on_idle (gpointer data)
   UploadOnePictureData *uop_data = NULL;
   UploadPicturesData *up_data = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
 
   uop_data = (UploadOnePictureData*) data;
@@ -1744,11 +1689,10 @@ _complete_picture_upload_on_idle (gpointer data)
   up_data = uop_data->up_data;
 
   /* Keep the source while busy */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
-  if (priv->setting_license || priv->setting_location || priv->setting_replace_date_posted
-      || priv->adding_to_set || priv->adding_to_group)
+  if (controller->setting_license || controller->setting_location || controller->setting_replace_date_posted
+      || controller->adding_to_set || controller->adding_to_group)
     {
-      frogr_main_view_pulse_progress (priv->mainview);
+      frogr_main_view_pulse_progress (controller->mainview);
       _update_upload_progress (controller, up_data);
       return G_SOURCE_CONTINUE;
     }
@@ -1762,7 +1706,7 @@ _complete_picture_upload_on_idle (gpointer data)
     {
       /* Remove it from the model if no error happened */
       FrogrModel *model = NULL;
-      model = frogr_main_view_get_model (priv->mainview);
+      model = frogr_main_view_get_model (controller->mainview);
       frogr_model_remove_picture (model, picture);
     }
 
@@ -1778,15 +1722,12 @@ _complete_picture_upload_on_idle (gpointer data)
 static void
 _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrModel *model = NULL;
 
   g_return_if_fail (FROGR_IS_CONTROLLER (self));
   g_return_if_fail (FROGR_IS_PICTURE (picture));
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  model = frogr_main_view_get_model (priv->mainview);
+  model = frogr_main_view_get_model (self->mainview);
   frogr_model_add_picture (model, picture);
 }
 
@@ -1850,8 +1791,6 @@ _fetch_account_info_finish (FrogrController *self, FetchAccountInfoData *data)
 static void
 _fetch_account_basic_info (FrogrController *self, FetchAccountInfoData *data)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
@@ -1860,8 +1799,7 @@ _fetch_account_basic_info (FrogrController *self, FetchAccountInfoData *data)
       return;
     }
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  fsp_session_check_auth_info (priv->session, NULL,
+  fsp_session_check_auth_info (self->session, NULL,
                                (GAsyncReadyCallback)_fetch_account_basic_info_cb,
                                data);
 }
@@ -1871,38 +1809,36 @@ _fetch_account_basic_info_cb (GObject *object, GAsyncResult *res, FetchAccountIn
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FspDataAuthToken *auth_token = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   controller = frogr_controller_get_instance ();
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   auth_token = fsp_session_check_auth_info_finish (session, res, &error);
-  if (auth_token && priv->account)
+  if (auth_token && controller->account)
     {
       const gchar *old_username = NULL;
       const gchar *old_fullname = NULL;
       gboolean username_changed = FALSE;
 
       /* Check for changes (only for fields that it makes sense) */
-      old_username = frogr_account_get_username (priv->account);
-      old_fullname = frogr_account_get_fullname (priv->account);
+      old_username = frogr_account_get_username (controller->account);
+      old_fullname = frogr_account_get_fullname (controller->account);
       if (g_strcmp0 (old_username, auth_token->username)
           || g_strcmp0 (old_fullname, auth_token->fullname))
         {
           username_changed = TRUE;
         }
 
-      frogr_account_set_username (priv->account, auth_token->username);
-      frogr_account_set_fullname (priv->account, auth_token->fullname);
+      frogr_account_set_username (controller->account, auth_token->username);
+      frogr_account_set_fullname (controller->account, auth_token->fullname);
 
       if (username_changed)
         {
           /* Save to disk and emit signal if basic info changed */
-          frogr_config_save_accounts (priv->config);
-          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
+          frogr_config_save_accounts (controller->config);
+          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, controller->account);
         }
 
       /* Now fetch the remaining bits of information */
@@ -1924,8 +1860,6 @@ _fetch_account_basic_info_cb (GObject *object, GAsyncResult *res, FetchAccountIn
 
 static void _fetch_account_upload_status (FrogrController *self, FetchAccountInfoData *data)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_authorized (self))
@@ -1934,8 +1868,7 @@ static void _fetch_account_upload_status (FrogrController *self, FetchAccountInf
       return;
     }
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  fsp_session_get_upload_status (priv->session, NULL,
+  fsp_session_get_upload_status (self->session, NULL,
                                  (GAsyncReadyCallback)_fetch_account_upload_status_cb,
                                  data);
 }
@@ -1945,45 +1878,43 @@ _fetch_account_upload_status_cb (GObject *object, GAsyncResult *res, FetchAccoun
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FspDataUploadStatus *upload_status = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
   controller = frogr_controller_get_instance ();
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   upload_status = fsp_session_get_upload_status_finish (session, res, &error);
-  if (upload_status && priv->account)
+  if (upload_status && controller->account)
     {
       gulong old_remaining_bw;
       gulong old_max_bw;
       gboolean old_is_pro;
 
       /* Check for changes */
-      old_remaining_bw = frogr_account_get_remaining_bandwidth (priv->account);
-      old_max_bw = frogr_account_get_max_bandwidth (priv->account);
-      old_is_pro = frogr_account_is_pro (priv->account);
+      old_remaining_bw = frogr_account_get_remaining_bandwidth (controller->account);
+      old_max_bw = frogr_account_get_max_bandwidth (controller->account);
+      old_is_pro = frogr_account_is_pro (controller->account);
 
-      frogr_account_set_remaining_bandwidth (priv->account, upload_status->bw_remaining_kb);
-      frogr_account_set_max_bandwidth (priv->account, upload_status->bw_max_kb);
-      frogr_account_set_max_picture_filesize (priv->account, upload_status->picture_fs_max_kb);
+      frogr_account_set_remaining_bandwidth (controller->account, upload_status->bw_remaining_kb);
+      frogr_account_set_max_bandwidth (controller->account, upload_status->bw_max_kb);
+      frogr_account_set_max_picture_filesize (controller->account, upload_status->picture_fs_max_kb);
 
-      frogr_account_set_remaining_videos (priv->account, upload_status->bw_remaining_videos);
-      frogr_account_set_current_videos (priv->account, upload_status->bw_used_videos);
-      frogr_account_set_max_video_filesize (priv->account, upload_status->video_fs_max_kb);
+      frogr_account_set_remaining_videos (controller->account, upload_status->bw_remaining_videos);
+      frogr_account_set_current_videos (controller->account, upload_status->bw_used_videos);
+      frogr_account_set_max_video_filesize (controller->account, upload_status->video_fs_max_kb);
 
-      frogr_account_set_is_pro (priv->account, upload_status->pro_user);
+      frogr_account_set_is_pro (controller->account, upload_status->pro_user);
 
       /* Mark that we received this extra info for the user */
-      frogr_account_set_has_extra_info (priv->account, TRUE);
+      frogr_account_set_has_extra_info (controller->account, TRUE);
 
       if (old_remaining_bw != upload_status->bw_remaining_kb
           || old_max_bw != upload_status->bw_max_kb
           || old_is_pro != upload_status->pro_user)
         {
           /* Emit signal if extra info changed */
-          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, priv->account);
+          g_signal_emit (controller, signals[ACTIVE_ACCOUNT_CHANGED], 0, controller->account);
         }
 
       /* Chain with the continuation function if any */
@@ -2004,14 +1935,10 @@ _fetch_account_upload_status_cb (GObject *object, GAsyncResult *res, FetchAccoun
 static void
 _fetch_extra_data (FrogrController *self, gboolean force)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   if (!frogr_controller_is_connected (self))
     return;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Invalidate all fetched data. */
   if (force)
@@ -2019,18 +1946,17 @@ _fetch_extra_data (FrogrController *self, gboolean force)
 
   /* Sets, groups and tags can take much longer to retrieve,
      so we only retrieve that if actually needed */
-  if (force || !priv->photosets_fetched)
+  if (force || !self->photosets_fetched)
     _fetch_photosets (self);
-  if (force || !priv->groups_fetched)
+  if (force || !self->groups_fetched)
     _fetch_groups (self);
-  if (force || !priv->tags_fetched)
+  if (force || !self->tags_fetched)
     _fetch_tags (self);
 }
 
 static void
 _fetch_photosets (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
   CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
@@ -2038,14 +1964,13 @@ _fetch_photosets (FrogrController *self)
   if (!frogr_controller_is_connected (self))
     return;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->photosets_fetched = FALSE;
-  priv->fetching_photosets = TRUE;
+  self->photosets_fetched = FALSE;
+  self->fetching_photosets = TRUE;
 
   co_data = g_slice_new0 (CancellableOperationData);
   co_data->controller = self;
   co_data->cancellable = _register_new_cancellable (self);
-  fsp_session_get_photosets (priv->session, co_data->cancellable,
+  fsp_session_get_photosets (self->session, co_data->cancellable,
                              _fetch_photosets_cb, co_data);
 }
 
@@ -2055,7 +1980,6 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   GSList *data_sets_list = NULL;
   GSList *sets_list = NULL;
   GError *error = NULL;
@@ -2064,7 +1988,6 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
   session = FSP_SESSION (object);
   co_data = (CancellableOperationData*) data;
   controller = co_data->controller;
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   data_sets_list = fsp_session_get_photosets_finish (session, res, &error);
   if (error != NULL)
@@ -2088,7 +2011,7 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
           FrogrPhotoSet *current_set = NULL;
 
           /* Consider the received result valid if no previous one has arrived first */
-          valid = !priv->photosets_fetched;
+          valid = !controller->photosets_fetched;
 
           for (item = data_sets_list; item; item = g_slist_next (item))
             {
@@ -2112,21 +2035,20 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   if (valid)
     {
-      FrogrModel *model = frogr_main_view_get_model (priv->mainview);
+      FrogrModel *model = frogr_main_view_get_model (controller->mainview);
       frogr_model_set_remote_photosets (model, sets_list);
-      priv->photosets_fetched = TRUE;
+      controller->photosets_fetched = TRUE;
     }
 
   _clear_cancellable (controller, co_data->cancellable);
   g_slice_free (CancellableOperationData, co_data);
 
-  priv->fetching_photosets = FALSE;
+  controller->fetching_photosets = FALSE;
 }
 
 static void
 _fetch_groups (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
   CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
@@ -2134,14 +2056,13 @@ _fetch_groups (FrogrController *self)
   if (!frogr_controller_is_connected (self))
     return;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->groups_fetched = FALSE;
-  priv->fetching_groups = TRUE;
+  self->groups_fetched = FALSE;
+  self->fetching_groups = TRUE;
 
   co_data = g_slice_new0 (CancellableOperationData);
   co_data->controller = self;
   co_data->cancellable = _register_new_cancellable (self);
-  fsp_session_get_groups (priv->session, co_data->cancellable,
+  fsp_session_get_groups (self->session, co_data->cancellable,
                           _fetch_groups_cb, co_data);
 }
 
@@ -2151,7 +2072,6 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   GSList *data_groups_list = NULL;
   GSList *groups_list = NULL;
   GError *error = NULL;
@@ -2160,7 +2080,6 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   session = FSP_SESSION (object);
   co_data = (CancellableOperationData*) data;
   controller = co_data->controller;
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   data_groups_list = fsp_session_get_groups_finish (session, res, &error);
   if (error != NULL)
@@ -2184,7 +2103,7 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
           FrogrGroup *current_group = NULL;
 
           /* Consider the received result valid if no previous one has arrived first */
-          valid = !priv->groups_fetched;
+          valid = !controller->groups_fetched;
 
           for (item = data_groups_list; item; item = g_slist_next (item))
             {
@@ -2207,21 +2126,20 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   if (valid)
     {
-      FrogrModel *model = frogr_main_view_get_model (priv->mainview);
+      FrogrModel *model = frogr_main_view_get_model (controller->mainview);
       frogr_model_set_groups (model, groups_list);
-      priv->groups_fetched = TRUE;
+      controller->groups_fetched = TRUE;
     }
 
   _clear_cancellable (controller, co_data->cancellable);
   g_slice_free (CancellableOperationData, co_data);
 
-  priv->fetching_groups = FALSE;
+  controller->fetching_groups = FALSE;
 }
 
 static void
 _fetch_tags (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
   CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
@@ -2229,18 +2147,17 @@ _fetch_tags (FrogrController *self)
   if (!frogr_controller_is_connected (self))
     return;
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  priv->tags_fetched = FALSE;
+  self->tags_fetched = FALSE;
 
   /* Do not actually fetch tags if the autocompletion is off */
-  if (!frogr_config_get_tags_autocompletion (priv->config))
+  if (!frogr_config_get_tags_autocompletion (self->config))
     return;
-  priv->fetching_tags = TRUE;
+  self->fetching_tags = TRUE;
 
   co_data = g_slice_new0 (CancellableOperationData);
   co_data->controller = self;
   co_data->cancellable = _register_new_cancellable (self);
-  fsp_session_get_tags_list (priv->session, co_data->cancellable,
+  fsp_session_get_tags_list (self->session, co_data->cancellable,
                              _fetch_tags_cb, co_data);
 }
 
@@ -2250,7 +2167,6 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   GSList *tags_list = NULL;
   GError *error = NULL;
   gboolean valid = FALSE;
@@ -2258,7 +2174,6 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   session = FSP_SESSION (object);
   co_data = (CancellableOperationData*) data;
   controller = co_data->controller;
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   tags_list = fsp_session_get_tags_list_finish (session, res, &error);
   if (error != NULL)
@@ -2278,7 +2193,7 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   else
     {
       /* Consider the received result valid if no previous one has arrived first */
-      valid = !priv->tags_fetched;
+      valid = !controller->tags_fetched;
       if (!valid)
         {
           g_slist_foreach (tags_list, (GFunc)g_free, NULL);
@@ -2288,15 +2203,15 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   if (valid)
     {
-      FrogrModel *model = frogr_main_view_get_model (priv->mainview);
+      FrogrModel *model = frogr_main_view_get_model (controller->mainview);
       frogr_model_set_remote_tags (model, tags_list);
-      priv->tags_fetched = TRUE;
+      controller->tags_fetched = TRUE;
     }
 
   _clear_cancellable (controller, co_data->cancellable);
   g_slice_free (CancellableOperationData, co_data);
 
-  priv->fetching_tags = FALSE;
+  controller->fetching_tags = FALSE;
 }
 
 static void
@@ -2314,45 +2229,43 @@ static gboolean
 _show_progress_on_idle (gpointer data)
 {
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FetchingActivity activity = FETCHING_NOTHING;
   const gchar *text = NULL;
   gboolean show_dialog = FALSE;
 
   controller = frogr_controller_get_instance ();
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   activity = GPOINTER_TO_INT (data);
   switch (activity)
     {
     case FETCHING_TOKEN_REPLACEMENT:
       text = _("Updating credentials…");
-      show_dialog = priv->fetching_token_replacement;
+      show_dialog = controller->fetching_token_replacement;
       break;
 
     case FETCHING_AUTH_URL:
       text = _("Retrieving data for authorization…");
-      show_dialog = priv->fetching_auth_url;
+      show_dialog = controller->fetching_auth_url;
       break;
 
     case FETCHING_AUTH_TOKEN:
       text = _("Finishing authorization…");
-      show_dialog = priv->fetching_auth_token;
+      show_dialog = controller->fetching_auth_token;
       break;
 
     case FETCHING_PHOTOSETS:
       text = _("Retrieving list of sets…");
-      show_dialog = priv->fetching_photosets;
+      show_dialog = controller->fetching_photosets;
       break;
 
     case FETCHING_GROUPS:
       text = _("Retrieving list of groups…");
-      show_dialog = priv->fetching_groups;
+      show_dialog = controller->fetching_groups;
       break;
 
     case FETCHING_TAGS:
       text = _("Retrieving list of tags…");
-      show_dialog = priv->fetching_tags;
+      show_dialog = controller->fetching_tags;
       break;
 
     default:
@@ -2360,7 +2273,7 @@ _show_progress_on_idle (gpointer data)
     }
 
   /* Pulse and show/hide the progress dialog as needed */
-  frogr_main_view_pulse_progress (priv->mainview);
+  frogr_main_view_pulse_progress (controller->mainview);
   if (show_dialog)
     {
       gchar *title = NULL;
@@ -2383,14 +2296,14 @@ _show_progress_on_idle (gpointer data)
           title = g_strdup ("");
         }
 
-      frogr_main_view_show_progress (priv->mainview, title, text);
+      frogr_main_view_show_progress (controller->mainview, title, text);
       g_free (title);
 
       return G_SOURCE_CONTINUE;
     }
   else
     {
-      frogr_main_view_hide_progress (priv->mainview);
+      frogr_main_view_hide_progress (controller->mainview);
       return G_SOURCE_REMOVE;
     }
 }
@@ -2399,24 +2312,22 @@ static gboolean
 _show_details_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FrogrModel *model = NULL;
   GSList *tags_list = NULL;
 
   controller = frogr_controller_get_instance ();
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while internally busy */
-  if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
+  if (controller->fetching_tags && frogr_config_get_tags_autocompletion (controller->config))
     return G_SOURCE_CONTINUE;
 
-  model = frogr_main_view_get_model (priv->mainview);
+  model = frogr_main_view_get_model (controller->mainview);
   tags_list = frogr_model_get_tags (model);
 
   /* Sets already pre-fetched: show the dialog */
-  frogr_details_dialog_show (GTK_WINDOW (priv->mainview), pictures, tags_list);
+  frogr_details_dialog_show (GTK_WINDOW (controller->mainview), pictures, tags_list);
 
-  priv->show_details_dialog_source_id = 0;
+  controller->show_details_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2424,24 +2335,22 @@ static gboolean
 _show_add_tags_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FrogrModel *model = NULL;
   GSList *tags_list = NULL;
 
   controller = frogr_controller_get_instance ();
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while internally busy */
-  if (priv->fetching_tags && frogr_config_get_tags_autocompletion (priv->config))
+  if (controller->fetching_tags && frogr_config_get_tags_autocompletion (controller->config))
       return G_SOURCE_CONTINUE;
 
-  model = frogr_main_view_get_model (priv->mainview);
+  model = frogr_main_view_get_model (controller->mainview);
   tags_list = frogr_model_get_tags (model);
 
   /* Sets already pre-fetched: show the dialog */
-  frogr_add_tags_dialog_show (GTK_WINDOW (priv->mainview), pictures, tags_list);
+  frogr_add_tags_dialog_show (GTK_WINDOW (controller->mainview), pictures, tags_list);
 
-  priv->show_add_tags_dialog_source_id = 0;
+  controller->show_add_tags_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2449,23 +2358,21 @@ static gboolean
 _show_create_new_set_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FrogrModel *model = NULL;
   GSList *photosets = NULL;
 
   controller = frogr_controller_get_instance ();
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while internally busy */
-  if (priv->fetching_photosets)
+  if (controller->fetching_photosets)
       return G_SOURCE_CONTINUE;
 
-  model = frogr_main_view_get_model (priv->mainview);
+  model = frogr_main_view_get_model (controller->mainview);
   photosets = frogr_model_get_photosets (model);
 
-  frogr_create_new_set_dialog_show (GTK_WINDOW (priv->mainview), pictures, photosets);
+  frogr_create_new_set_dialog_show (GTK_WINDOW (controller->mainview), pictures, photosets);
 
-  priv->show_create_new_set_dialog_source_id = 0;
+  controller->show_create_new_set_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2473,26 +2380,24 @@ static gboolean
 _show_add_to_set_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FrogrModel *model = NULL;
   GSList *photosets = NULL;
 
   controller = frogr_controller_get_instance ();
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while internally busy */
-  if (priv->fetching_photosets)
+  if (controller->fetching_photosets)
       return G_SOURCE_CONTINUE;
 
-  model = frogr_main_view_get_model (priv->mainview);
+  model = frogr_main_view_get_model (controller->mainview);
   photosets = frogr_model_get_photosets (model);
 
   if (frogr_model_n_photosets (model) > 0)
-    frogr_add_to_set_dialog_show (GTK_WINDOW (priv->mainview), pictures, photosets);
-  else if (priv->photosets_fetched)
-    frogr_util_show_info_dialog (GTK_WINDOW (priv->mainview), _("No sets found"));
+    frogr_add_to_set_dialog_show (GTK_WINDOW (controller->mainview), pictures, photosets);
+  else if (controller->photosets_fetched)
+    frogr_util_show_info_dialog (GTK_WINDOW (controller->mainview), _("No sets found"));
 
-  priv->show_add_to_set_dialog_source_id = 0;
+  controller->show_add_to_set_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
@@ -2500,40 +2405,35 @@ static gboolean
 _show_add_to_group_dialog_on_idle (GSList *pictures)
 {
   FrogrController *controller = NULL;
-  FrogrControllerPrivate *priv = NULL;
   FrogrModel *model = NULL;
   GSList *groups = NULL;
 
   controller = frogr_controller_get_instance ();
-  priv = FROGR_CONTROLLER_GET_PRIVATE (controller);
 
   /* Keep the source while internally busy */
-  if (priv->fetching_groups)
+  if (controller->fetching_groups)
       return G_SOURCE_CONTINUE;
 
-  model = frogr_main_view_get_model (priv->mainview);
+  model = frogr_main_view_get_model (controller->mainview);
   groups = frogr_model_get_groups (model);
 
   if (frogr_model_n_groups (model) > 0)
-    frogr_add_to_group_dialog_show (GTK_WINDOW (priv->mainview), pictures, groups);
-  else if (priv->groups_fetched)
-    frogr_util_show_info_dialog (GTK_WINDOW (priv->mainview), _("No groups found"));
+    frogr_add_to_group_dialog_show (GTK_WINDOW (controller->mainview), pictures, groups);
+  else if (controller->groups_fetched)
+    frogr_util_show_info_dialog (GTK_WINDOW (controller->mainview), _("No groups found"));
 
-  priv->show_add_to_group_dialog_source_id = 0;
+  controller->show_add_to_group_dialog_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
 static gboolean
 _is_modal_dialog_about_to_be_shown  (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (priv->show_details_dialog_source_id
-      || priv->show_add_tags_dialog_source_id
-      || priv->show_create_new_set_dialog_source_id
-      || priv->show_add_to_set_dialog_source_id
-      || priv->show_add_to_group_dialog_source_id)
+  if (self->show_details_dialog_source_id
+      || self->show_add_tags_dialog_source_id
+      || self->show_create_new_set_dialog_source_id
+      || self->show_add_to_set_dialog_source_id
+      || self->show_add_to_group_dialog_source_id)
     return TRUE;
 
   return FALSE;
@@ -2563,18 +2463,18 @@ _frogr_controller_constructor (GType type,
 static void
 _frogr_controller_dispose (GObject* object)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (object);
+  FrogrController *controller = FROGR_CONTROLLER (object);
 
-  g_clear_object (&priv->mainview);
-  g_clear_object (&priv->config);
-  g_clear_object (&priv->account);
-  g_clear_object (&priv->session);
+  g_clear_object (&controller->mainview);
+  g_clear_object (&controller->config);
+  g_clear_object (&controller->account);
+  g_clear_object (&controller->session);
 
-  if (priv->cancellables)
+  if (controller->cancellables)
     {
-      g_list_foreach (priv->cancellables, (GFunc)g_object_unref, NULL);
-      g_list_free (priv->cancellables);
-      priv->cancellables = NULL;
+      g_list_foreach (controller->cancellables, (GFunc)g_object_unref, NULL);
+      g_list_free (controller->cancellables);
+      controller->cancellables = NULL;
     }
 
   G_OBJECT_CLASS (frogr_controller_parent_class)->dispose (object);
@@ -2611,44 +2511,40 @@ frogr_controller_class_init (FrogrControllerClass *klass)
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
-
-  g_type_class_add_private (obj_class, sizeof (FrogrControllerPrivate));
 }
 
 static void
 frogr_controller_init (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   /* Default variables */
-  priv->state = FROGR_STATE_IDLE;
-  priv->mainview = NULL;
+  self->state = FROGR_STATE_IDLE;
+  self->mainview = NULL;
 
-  priv->config = frogr_config_get_instance ();
-  g_object_ref (priv->config);
+  self->config = frogr_config_get_instance ();
+  g_object_ref (self->config);
 
-  priv->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
-  priv->cancellables = NULL;
-  priv->app_running = FALSE;
-  priv->fetching_token_replacement = FALSE;
-  priv->fetching_auth_url = FALSE;
-  priv->fetching_auth_token = FALSE;
-  priv->fetching_photosets = FALSE;
-  priv->fetching_groups = FALSE;
-  priv->fetching_tags = FALSE;
-  priv->setting_license = FALSE;
-  priv->setting_location = FALSE;
-  priv->setting_replace_date_posted = FALSE;
-  priv->adding_to_set = FALSE;
-  priv->adding_to_group = FALSE;
-  priv->photosets_fetched = FALSE;
-  priv->groups_fetched = FALSE;
-  priv->tags_fetched = FALSE;
-  priv->show_details_dialog_source_id = 0;
-  priv->show_add_tags_dialog_source_id = 0;
-  priv->show_create_new_set_dialog_source_id = 0;
-  priv->show_add_to_set_dialog_source_id = 0;
-  priv->show_add_to_group_dialog_source_id = 0;
+  self->session = fsp_session_new (API_KEY, SHARED_SECRET, NULL);
+  self->cancellables = NULL;
+  self->app_running = FALSE;
+  self->fetching_token_replacement = FALSE;
+  self->fetching_auth_url = FALSE;
+  self->fetching_auth_token = FALSE;
+  self->fetching_photosets = FALSE;
+  self->fetching_groups = FALSE;
+  self->fetching_tags = FALSE;
+  self->setting_license = FALSE;
+  self->setting_location = FALSE;
+  self->setting_replace_date_posted = FALSE;
+  self->adding_to_set = FALSE;
+  self->adding_to_group = FALSE;
+  self->photosets_fetched = FALSE;
+  self->groups_fetched = FALSE;
+  self->tags_fetched = FALSE;
+  self->show_details_dialog_source_id = 0;
+  self->show_add_tags_dialog_source_id = 0;
+  self->show_create_new_set_dialog_source_id = 0;
+  self->show_add_to_set_dialog_source_id = 0;
+  self->show_add_to_group_dialog_source_id = 0;
 }
 
 
@@ -2666,20 +2562,17 @@ frogr_controller_get_instance (void)
 gint
 frogr_controller_run_app (FrogrController *self, int argc, char **argv)
 {
-  FrogrControllerPrivate *priv = NULL;
   GtkApplication *app = NULL;
   gint status;
 
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), -1);
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  if (priv->app_running)
+  if (self->app_running)
     {
       DEBUG ("%s", "Application already running");
       return -1;
     }
-  priv->app_running = TRUE;
+  self->app_running = TRUE;
 
   /* Initialize and run the Gtk application */
   g_set_application_name(APP_SHORTNAME);
@@ -2701,40 +2594,31 @@ frogr_controller_run_app (FrogrController *self, int argc, char **argv)
 FrogrMainView *
 frogr_controller_get_main_view (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  return priv->mainview;
+  return self->mainview;
 }
 
 FrogrModel *
 frogr_controller_get_model (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (!priv->mainview)
+  if (!self->mainview)
     return NULL;
 
-  return frogr_main_view_get_model (priv->mainview);;
+  return frogr_main_view_get_model (self->mainview);;
 }
 
 void
 frogr_controller_set_active_account (FrogrController *self, const gchar *username)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrAccount *account = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
   g_return_if_fail(username);
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_config_set_active_account (priv->config, username);
-  account = frogr_config_get_active_account (priv->config);
+  frogr_config_set_active_account (self->config, username);
+  account = frogr_config_get_active_account (self->config);
 
   _set_active_account (self, account);
 }
@@ -2742,34 +2626,22 @@ frogr_controller_set_active_account (FrogrController *self, const gchar *usernam
 FrogrAccount *
 frogr_controller_get_active_account (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  return priv->account;
+  return self->account;
 }
 
 GSList *
 frogr_controller_get_all_accounts (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  return frogr_config_get_accounts (priv->config);
+  return frogr_config_get_accounts (self->config);
 }
 
 FrogrControllerState
 frogr_controller_get_state (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  return priv->state;
+  return self->state;
 }
 
 void
@@ -2778,19 +2650,16 @@ frogr_controller_set_proxy (FrogrController *self,
                             const char *host, const char *port,
                             const char *username, const char *password)
 {
-  FrogrControllerPrivate *priv = NULL;
   gboolean proxy_changed = FALSE;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   if (use_default_proxy)
     {
       DEBUG ("Using default proxy settings");
-      fsp_session_set_default_proxy (priv->session, TRUE);
+      fsp_session_set_default_proxy (self->session, TRUE);
 
-      if (!priv->photosets_fetched || !priv->groups_fetched || !priv->tags_fetched)
+      if (!self->photosets_fetched || !self->groups_fetched || !self->tags_fetched)
         _fetch_everything (self, FALSE);
 
       return;
@@ -2798,7 +2667,7 @@ frogr_controller_set_proxy (FrogrController *self,
 
   /* The host is mandatory to set up a proxy */
   if (host == NULL || *host == '\0') {
-    proxy_changed = fsp_session_set_custom_proxy (priv->session, NULL, NULL, NULL, NULL);
+    proxy_changed = fsp_session_set_custom_proxy (self->session, NULL, NULL, NULL, NULL);
     DEBUG ("%s", "Not enabling the HTTP proxy");
   } else {
     gchar *auth_part = NULL;
@@ -2814,76 +2683,60 @@ frogr_controller_set_proxy (FrogrController *self,
     DEBUG ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
     g_free (auth_part);
 
-    proxy_changed = fsp_session_set_custom_proxy (priv->session,
+    proxy_changed = fsp_session_set_custom_proxy (self->session,
                                                   host, port,
                                                   username, password);
   }
 
   /* Re-fetch information if needed after changing proxy configuration */
-  if (priv->app_running && proxy_changed)
+  if (self->app_running && proxy_changed)
     _fetch_everything (self, FALSE);
 }
 
 void
 frogr_controller_fetch_tags_if_needed (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (!priv->fetching_tags && !priv->tags_fetched)
+  if (!self->fetching_tags && !self->tags_fetched)
     _fetch_tags (self);
 }
 
 void
 frogr_controller_show_about_dialog (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   /* Run the about dialog */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_about_dialog_show (GTK_WINDOW (priv->mainview));
+  frogr_about_dialog_show (GTK_WINDOW (self->mainview));
 }
 
 void
 frogr_controller_show_auth_dialog (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Do not show the authorization dialog if we are exchanging an old
      token for a new one, as it should re-authorize automatically */
-  if (priv->fetching_token_replacement)
+  if (self->fetching_token_replacement)
     return;
 
   /* Run the auth dialog */
-  frogr_auth_dialog_show (GTK_WINDOW (priv->mainview), REQUEST_AUTHORIZATION);
+  frogr_auth_dialog_show (GTK_WINDOW (self->mainview), REQUEST_AUTHORIZATION);
 }
 
 void
 frogr_controller_show_settings_dialog (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   /* Run the auth dialog */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_settings_dialog_show (GTK_WINDOW (priv->mainview));
+  frogr_settings_dialog_show (GTK_WINDOW (self->mainview));
 }
 
 void
 frogr_controller_show_details_dialog (FrogrController *self,
                                       GSList *pictures)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   /* Don't show the dialog if one is to be shown already */
@@ -2891,16 +2744,15 @@ frogr_controller_show_details_dialog (FrogrController *self,
     return;
 
   /* Fetch the tags list first if needed */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
+  if (frogr_config_get_tags_autocompletion (self->config) && !self->tags_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TAGS));
-      if (!priv->fetching_tags)
+      if (!self->fetching_tags)
         _fetch_tags (self);
     }
 
   /* Show the dialog when possible */
-  priv->show_details_dialog_source_id =
+  self->show_details_dialog_source_id =
     gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
                                   (GSourceFunc) _show_details_dialog_on_idle, pictures,
                                   (GDestroyNotify) _dispose_slist_of_objects);
@@ -2910,8 +2762,6 @@ void
 frogr_controller_show_add_tags_dialog (FrogrController *self,
                                        GSList *pictures)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   /* Don't show the dialog if one is to be shown already */
@@ -2919,16 +2769,15 @@ frogr_controller_show_add_tags_dialog (FrogrController *self,
     return;
 
   /* Fetch the tags list first if needed */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (frogr_config_get_tags_autocompletion (priv->config) && !priv->tags_fetched)
+  if (frogr_config_get_tags_autocompletion (self->config) && !self->tags_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_TAGS));
-      if (!priv->fetching_tags)
+      if (!self->fetching_tags)
         _fetch_tags (self);
     }
 
   /* Show the dialog when possible */
-  priv->show_add_tags_dialog_source_id =
+  self->show_add_tags_dialog_source_id =
     gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
                                   (GSourceFunc) _show_add_tags_dialog_on_idle, pictures,
                                   (GDestroyNotify) _dispose_slist_of_objects);
@@ -2938,8 +2787,6 @@ void
 frogr_controller_show_create_new_set_dialog (FrogrController *self,
                                              GSList *pictures)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   /* Don't show the dialog if one is to be shown already */
@@ -2947,16 +2794,15 @@ frogr_controller_show_create_new_set_dialog (FrogrController *self,
     return;
 
   /* Fetch the sets first if needed */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (!priv->photosets_fetched)
+  if (!self->photosets_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_PHOTOSETS));
-      if (!priv->fetching_photosets)
+      if (!self->fetching_photosets)
         _fetch_photosets (self);
     }
 
   /* Show the dialog when possible */
-  priv->show_create_new_set_dialog_source_id =
+  self->show_create_new_set_dialog_source_id =
     gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
                                   (GSourceFunc) _show_create_new_set_dialog_on_idle, pictures,
                                   (GDestroyNotify) _dispose_slist_of_objects);
@@ -2966,8 +2812,6 @@ void
 frogr_controller_show_add_to_set_dialog (FrogrController *self,
                                          GSList *pictures)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   /* Don't show the dialog if one is to be shown already */
@@ -2975,16 +2819,15 @@ frogr_controller_show_add_to_set_dialog (FrogrController *self,
     return;
 
   /* Fetch the sets first if needed */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (!priv->photosets_fetched)
+  if (!self->photosets_fetched)
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_PHOTOSETS));
-      if (!priv->fetching_photosets)
+      if (!self->fetching_photosets)
         _fetch_photosets (self);
     }
 
   /* Show the dialog when possible */
-  priv->show_add_to_set_dialog_source_id =
+  self->show_add_to_set_dialog_source_id =
     gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
                                   (GSourceFunc) _show_add_to_set_dialog_on_idle, pictures,
                                   (GDestroyNotify) _dispose_slist_of_objects);
@@ -2994,8 +2837,6 @@ void
 frogr_controller_show_add_to_group_dialog (FrogrController *self,
                                            GSList *pictures)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
   /* Don't show the dialog if one is to be shown already */
@@ -3003,17 +2844,16 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
     return;
 
   /* Fetch the groups first if needed */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (!priv->groups_fetched)
+  if (!self->groups_fetched)
 
     {
       gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_GROUPS));
-      if (!priv->fetching_groups)
+      if (!self->fetching_groups)
         _fetch_groups (self);
     }
 
   /* Show the dialog when possible */
-  priv->show_add_to_group_dialog_source_id =
+  self->show_add_to_group_dialog_source_id =
     gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT_IDLE, DEFAULT_TIMEOUT,
                                   (GSourceFunc) _show_add_to_group_dialog_on_idle, pictures,
                                   (GDestroyNotify) _dispose_slist_of_objects);
@@ -3022,17 +2862,16 @@ frogr_controller_show_add_to_group_dialog (FrogrController *self,
 void
 frogr_controller_open_auth_url (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv->fetching_auth_url = TRUE;
+  self->fetching_auth_url = TRUE;
 
   co_data = g_slice_new0 (CancellableOperationData);
   co_data->controller = self;
   co_data->cancellable = _register_new_cancellable (self);
-  fsp_session_get_auth_url (priv->session, co_data->cancellable,
+  fsp_session_get_auth_url (self->session, co_data->cancellable,
                             _get_auth_url_cb, co_data);
 
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_URL));
@@ -3044,17 +2883,16 @@ frogr_controller_open_auth_url (FrogrController *self)
 void
 frogr_controller_complete_auth (FrogrController *self, const gchar *verification_code)
 {
-  FrogrControllerPrivate *priv = FROGR_CONTROLLER_GET_PRIVATE (self);
   CancellableOperationData *co_data = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv->fetching_auth_token = TRUE;
+  self->fetching_auth_token = TRUE;
 
   co_data = g_slice_new0 (CancellableOperationData);
   co_data->controller = self;
   co_data->cancellable = _register_new_cancellable (self);
-  fsp_session_complete_auth (priv->session, verification_code, co_data->cancellable,
+  fsp_session_complete_auth (self->session, verification_code, co_data->cancellable,
                              _complete_auth_cb, co_data);
 
   gdk_threads_add_timeout (DEFAULT_TIMEOUT, (GSourceFunc) _show_progress_on_idle, GINT_TO_POINTER (FETCHING_AUTH_TOKEN));
@@ -3066,17 +2904,13 @@ frogr_controller_complete_auth (FrogrController *self, const gchar *verification
 gboolean
 frogr_controller_is_authorized (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  if (!priv->account)
+  if (!self->account)
     return FALSE;
 
   /* Old versions for accounts previously stored must be updated first */
-  if (g_strcmp0 (frogr_account_get_version (priv->account), ACCOUNTS_CURRENT_VERSION))
+  if (g_strcmp0 (frogr_account_get_version (self->account), ACCOUNTS_CURRENT_VERSION))
     return FALSE;
 
   return TRUE;;
@@ -3085,30 +2919,23 @@ frogr_controller_is_authorized (FrogrController *self)
 void
 frogr_controller_revoke_authorization (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
   /* Ensure there's the token/account is no longer active anywhere */
-  fsp_session_set_token (priv->session, NULL);
-  fsp_session_set_token_secret (priv->session, NULL);
+  fsp_session_set_token (self->session, NULL);
+  fsp_session_set_token_secret (self->session, NULL);
   _set_active_account (self, NULL);
 }
 
 gboolean
 frogr_controller_is_connected (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
 
   /* We can't be sure 100% about having connected to flickr until we
      received the extra information for the current account */
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  if (priv->account)
-    return frogr_account_has_extra_info (priv->account);
+  if (self->account)
+    return frogr_account_has_extra_info (self->account);
 
   return FALSE;
 }
@@ -3117,19 +2944,16 @@ void
 frogr_controller_load_pictures (FrogrController *self,
                                 GSList *fileuris)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrFileLoader *loader = NULL;
   gulong max_picture_filesize = G_MAXULONG;
   gulong max_video_filesize = G_MAXULONG;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-
-  if (priv->account)
+  if (self->account)
     {
-      max_picture_filesize = frogr_account_get_max_picture_filesize (priv->account);
-      max_video_filesize = frogr_account_get_max_video_filesize (priv->account);
+      max_picture_filesize = frogr_account_get_max_picture_filesize (self->account);
+      max_video_filesize = frogr_account_get_max_video_filesize (self->account);
     }
 
   loader = frogr_file_loader_new_from_uris (fileuris, max_picture_filesize, max_video_filesize);
@@ -3150,12 +2974,8 @@ frogr_controller_load_pictures (FrogrController *self,
 void
 frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
   g_return_if_fail(pictures);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Upload pictures */
   if (!frogr_controller_is_authorized (self))
@@ -3165,7 +2985,7 @@ frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
                                " uploading any pictures to Flickr.\n"
                                "Please re-authorize it."), APP_SHORTNAME);
 
-      frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
+      frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
       g_free (msg);
     }
   else if (!frogr_controller_is_connected (self))
@@ -3173,7 +2993,7 @@ frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
       gchar *msg = NULL;
       msg = g_strdup_printf (_("You need to be connected before"
                                " uploading any pictures to Flickr."));
-      frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
+      frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
       g_free (msg);
     }
   else
@@ -3189,7 +3009,7 @@ frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
 
       /* Load the pictures! */
       _set_state (self, FROGR_STATE_UPLOADING_PICTURES);
-      frogr_main_view_show_progress (priv->mainview, _("Uploading Pictures"), NULL);
+      frogr_main_view_show_progress (self->mainview, _("Uploading Pictures"), NULL);
       _upload_next_picture (self, up_data);
     }
 }
@@ -3197,25 +3017,19 @@ frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
 void
 frogr_controller_reorder_pictures (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  frogr_main_view_reorder_pictures (priv->mainview);
+  frogr_main_view_reorder_pictures (self->mainview);
 }
 
 void
 frogr_controller_cancel_ongoing_requests (FrogrController *self)
 {
-  FrogrControllerPrivate *priv = NULL;
   GCancellable *cancellable = NULL;
   GList *item = NULL;
 
   g_return_if_fail(FROGR_IS_CONTROLLER (self));
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  for (item = priv->cancellables; item; item = g_list_next (item))
+  for (item = self->cancellables; item; item = g_list_next (item))
     {
       cancellable = G_CANCELLABLE (item->data);
       if (!g_cancellable_is_cancelled (cancellable))
@@ -3226,15 +3040,12 @@ frogr_controller_cancel_ongoing_requests (FrogrController *self)
 gboolean
 frogr_controller_open_project_from_file (FrogrController *self, const gchar *path)
 {
-  FrogrControllerPrivate *priv = NULL;
   JsonParser *json_parser = NULL;
   GError *error = NULL;
   gboolean result = FALSE;
 
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
   g_return_val_if_fail(path, FALSE);
-
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
 
   /* Load from disk */
   json_parser = json_parser_new ();
@@ -3244,7 +3055,7 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
       gchar *msg = NULL;
 
       msg = g_strdup_printf (_("Error opening project file"));
-      frogr_util_show_error_dialog (GTK_WINDOW (priv->mainview), msg);
+      frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
       g_free (msg);
 
       DEBUG ("Error loading project file: %s", error->message);
@@ -3259,19 +3070,19 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
 
       /* Make sure we are not fetching any data from the network at
          this moment, or cancel otherwise, so the model is ready */
-      if (priv->fetching_photosets || priv->fetching_groups || priv->fetching_tags)
+      if (self->fetching_photosets || self->fetching_groups || self->fetching_tags)
         frogr_controller_cancel_ongoing_requests (self);
 
       /* Deserialize from the JSON data and update the model */
       _set_state (self, FROGR_STATE_LOADING_PICTURES);
 
-      model = frogr_main_view_get_model (priv->mainview);
+      model = frogr_main_view_get_model (self->mainview);
 
       root_node = json_parser_get_root (json_parser);
       root_object = json_node_get_object (root_node);
       data_object = json_object_get_object_member (root_object, "data");
 
-      frogr_main_view_update_project_path (priv->mainview, path);
+      frogr_main_view_update_project_path (self->mainview, path);
       frogr_model_deserialize (model, data_object);
       result = TRUE;
     }
@@ -3283,7 +3094,6 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
 gboolean
 frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
 {
-  FrogrControllerPrivate *priv = NULL;
   FrogrModel *model = NULL;
   JsonGenerator *json_gen = NULL;
   JsonNode *root_node = NULL;
@@ -3298,8 +3108,7 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
   g_return_val_if_fail(path, FALSE);
 
-  priv = FROGR_CONTROLLER_GET_PRIVATE (self);
-  model = frogr_main_view_get_model (priv->mainview);
+  model = frogr_main_view_get_model (self->mainview);
 
   n_pictures = frogr_model_n_pictures (model);
   n_photosets = frogr_model_n_photosets (model);
@@ -3344,7 +3153,7 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
       return FALSE;
     }
 
-  frogr_main_view_update_project_path (priv->mainview, path);
+  frogr_main_view_update_project_path (self->mainview, path);
   return TRUE;
 }
 

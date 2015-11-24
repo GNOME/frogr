@@ -28,33 +28,12 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_ACCOUNT            (frogr_account_get_type())
-#define FROGR_IS_ACCOUNT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_ACCOUNT))
-#define FROGR_IS_ACCOUNT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE(klass,  FROGR_TYPE_ACCOUNT))
-#define FROGR_ACCOUNT(obj)            (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_ACCOUNT, FrogrAccount))
-#define FROGR_ACCOUNT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST(klass,  FROGR_TYPE_ACCOUNT, FrogrAccountClass))
-#define FROGR_ACCOUNT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS(obj,  FROGR_TYPE_ACCOUNT, FrogrAccountClass))
+#define FROGR_TYPE_ACCOUNT (frogr_account_get_type())
+
+G_DECLARE_FINAL_TYPE (FrogrAccount, frogr_account, FROGR, ACCOUNT, GObject)
 
 /* Increase this when changing the xml schema for storing accounts */
 #define ACCOUNTS_CURRENT_VERSION "2"
-
-typedef struct _FrogrAccount      FrogrAccount;
-typedef struct _FrogrAccountClass FrogrAccountClass;
-
-
-struct _FrogrAccount
-{
-  GObject parent_instance;
-};
-
-
-struct _FrogrAccountClass
-{
-  GObjectClass parent_class;
-};
-
-
-GType frogr_account_get_type(void) G_GNUC_CONST;
 
 FrogrAccount* frogr_account_new (void);
 

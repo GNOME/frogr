@@ -25,27 +25,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_DETAILS_DIALOG           (frogr_details_dialog_get_type())
-#define FROGR_DETAILS_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_DETAILS_DIALOG, FrogrDetailsDialog))
-#define FROGR_DETAILS_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_DETAILS_DIALOG, FrogrDetailsDialogClass))
-#define FROGR_IS_DETAILS_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_DETAILS_DIALOG))
-#define FROGR_IS_DETAILS_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_DETAILS_DIALOG))
-#define FROGR_DETAILS_DIALOG_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_DETAILS_DIALOG, FrogrDetailsDialogClass))
+#define FROGR_TYPE_DETAILS_DIALOG (frogr_details_dialog_get_type())
 
-typedef struct _FrogrDetailsDialog        FrogrDetailsDialog;
-typedef struct _FrogrDetailsDialogClass   FrogrDetailsDialogClass;
-
-struct _FrogrDetailsDialogClass
-{
-  GtkDialogClass parent_class;
-};
-
-struct _FrogrDetailsDialog
-{
-  GtkDialog parent;
-};
-
-GType frogr_details_dialog_get_type (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrDetailsDialog, frogr_details_dialog, FROGR, DETAILS_DIALOG, GtkDialog)
 
 void frogr_details_dialog_show (GtkWindow *parent,
                                 const GSList *pictures,

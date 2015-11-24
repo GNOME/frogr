@@ -28,28 +28,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_GROUP           (frogr_group_get_type())
-#define FROGR_GROUP(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_GROUP, FrogrGroup))
-#define FROGR_GROUP_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_GROUP, FrogrGroupClass))
-#define FROGR_IS_GROUP(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_GROUP))
-#define FROGR_IS_GROUP_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_GROUP))
-#define FROGR_GROUP_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_GROUP, FrogrGroupClass))
+#define FROGR_TYPE_GROUP (frogr_group_get_type())
 
-typedef struct _FrogrGroup FrogrGroup;
-typedef struct _FrogrGroupClass FrogrGroupClass;
-
-struct _FrogrGroup
-{
-  GObject parent_instance;
-};
-
-struct _FrogrGroupClass
-{
-  GObjectClass parent_class;
-};
-
-
-GType frogr_group_get_type(void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrGroup, frogr_group, FROGR, GROUP, GObject)
 
 /* Constructors */
 FrogrGroup *frogr_group_new (const gchar *id,

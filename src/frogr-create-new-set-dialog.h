@@ -25,27 +25,9 @@
 
 G_BEGIN_DECLS
 
-#define FROGR_TYPE_CREATE_NEW_SET_DIALOG           (frogr_create_new_set_dialog_get_type())
-#define FROGR_CREATE_NEW_SET_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_CAST(obj, FROGR_TYPE_CREATE_NEW_SET_DIALOG, FrogrCreateNewSetDialog))
-#define FROGR_CREATE_NEW_SET_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST(klass, FROGR_TYPE_CREATE_NEW_SET_DIALOG, FrogrCreateNewSetDialogClass))
-#define FROGR_IS_CREATE_NEW_SET_DIALOG(obj)           (G_TYPE_CHECK_INSTANCE_TYPE(obj, FROGR_TYPE_CREATE_NEW_SET_DIALOG))
-#define FROGR_IS_CREATE_NEW_SET_DIALOG_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), FROGR_TYPE_CREATE_NEW_SET_DIALOG))
-#define FROGR_CREATE_NEW_SET_DIALOG_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), FROGR_TYPE_CREATE_NEW_SET_DIALOG, FrogrCreateNewSetDialogClass))
+#define FROGR_TYPE_CREATE_NEW_SET_DIALOG (frogr_create_new_set_dialog_get_type())
 
-typedef struct _FrogrCreateNewSetDialog        FrogrCreateNewSetDialog;
-typedef struct _FrogrCreateNewSetDialogClass   FrogrCreateNewSetDialogClass;
-
-struct _FrogrCreateNewSetDialogClass
-{
-  GtkDialogClass parent_class;
-};
-
-struct _FrogrCreateNewSetDialog
-{
-  GtkDialog parent;
-};
-
-GType frogr_create_new_set_dialog_get_type (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FrogrCreateNewSetDialog, frogr_create_new_set_dialog, FROGR, CREATE_NEW_SET_DIALOG, GtkDialog)
 
 void frogr_create_new_set_dialog_show (GtkWindow *parent,
                                        const GSList *pictures,

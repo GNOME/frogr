@@ -42,14 +42,10 @@
 #define PICTURE_WIDTH 180
 #define PICTURE_HEIGHT 140
 
-#define FROGR_DETAILS_DIALOG_GET_PRIVATE(object)                \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_DETAILS_DIALOG,      \
-                                FrogrDetailsDialogPrivate))
 
-G_DEFINE_TYPE (FrogrDetailsDialog, frogr_details_dialog, GTK_TYPE_DIALOG)
+struct _FrogrDetailsDialog {
+  GtkDialog parent;
 
-typedef struct _FrogrDetailsDialogPrivate {
   GtkWidget *title_entry;
   GtkWidget *desc_tview;
   GtkWidget *tags_entry;
@@ -78,7 +74,9 @@ typedef struct _FrogrDetailsDialogPrivate {
   GSList *pictures;
   gulong picture_button_handler_id;
   gchar *reference_description;
-} FrogrDetailsDialogPrivate;
+};
+
+G_DEFINE_TYPE (FrogrDetailsDialog, frogr_details_dialog, GTK_TYPE_DIALOG)
 
 /* Properties */
 enum  {
@@ -136,15 +134,13 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 static void
 _set_pictures (FrogrDetailsDialog *self, const GSList *pictures)
 {
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
-  priv->pictures = g_slist_copy ((GSList*) pictures);
-  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+  self->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (self->pictures, (GFunc)g_object_ref, NULL);
 }
 
 static void
 _create_widgets (FrogrDetailsDialog *self)
 {
-  FrogrDetailsDialogPrivate *priv = NULL;
   GtkWidget *main_vbox = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *hbox = NULL;
@@ -161,8 +157,6 @@ _create_widgets (FrogrDetailsDialog *self)
   gchar *markup = NULL;
   gint i;
 
-  priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
-
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 18);
   gtk_widget_set_margin_bottom (hbox, 6);
 
@@ -177,21 +171,21 @@ _create_widgets (FrogrDetailsDialog *self)
   widget = gtk_button_new ();
   gtk_widget_set_tooltip_text (widget, _("Open with image viewer"));
   gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
-  priv->picture_button = widget;
+  self->picture_button = widget;
 
   picture_frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (picture_frame), GTK_SHADOW_NONE);
   gtk_widget_set_halign (GTK_WIDGET (picture_frame), GTK_ALIGN_CENTER);
 
   gtk_grid_attach (GTK_GRID (grid), picture_frame, 1, 0, 1, 1);
-  priv->picture_container = picture_frame;
-  priv->picture_img = gtk_image_new ();
+  self->picture_container = picture_frame;
+  self->picture_img = gtk_image_new ();
 
   widget = gtk_label_new (NULL);
   gtk_widget_set_margin_bottom (widget, 6);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 1, 1, 1);
-  priv->mpictures_label = widget;
-  priv->mpictures_pixbuf = NULL;
+  self->mpictures_label = widget;
+  self->mpictures_pixbuf = NULL;
 
   label = gtk_label_new_with_mnemonic (_("_Title:"));
   gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
@@ -201,7 +195,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 2, 1, 1);
-  priv->title_entry = widget;
+  self->title_entry = widget;
 
   label = gtk_label_new_with_mnemonic (_("_Description:"));
   gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
@@ -223,9 +217,9 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_widget_set_hexpand (GTK_WIDGET (scroller), TRUE);
   gtk_widget_set_vexpand (GTK_WIDGET (scroller), TRUE);
   gtk_grid_attach (GTK_GRID (grid), scroller, 1, 3, 1, 1);
-  priv->desc_tview = widget;
-  priv->text_buffer =
-    gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->desc_tview));
+  self->desc_tview = widget;
+  self->text_buffer =
+    gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->desc_tview));
 
   label = gtk_label_new_with_mnemonic (_("Ta_gs:"));
   gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
@@ -235,7 +229,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 4, 1, 1);
-  priv->tags_entry = widget;
+  self->tags_entry = widget;
 
   gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 
@@ -262,11 +256,11 @@ _create_widgets (FrogrDetailsDialog *self)
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("_Private"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
-  priv->private_rb = widget;
+  self->private_rb = widget;
 
-  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->private_rb), _("P_ublic"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->private_rb), _("P_ublic"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
-  priv->public_rb = widget;
+  self->public_rb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
 
@@ -275,11 +269,11 @@ _create_widgets (FrogrDetailsDialog *self)
 
   widget = gtk_check_button_new_with_mnemonic (_("_Family"));
   gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
-  priv->family_cb = widget;
+  self->family_cb = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("F_riends"));
   gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
-  priv->friend_cb = widget;
+  self->friend_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (internal_hbox), private_hbox, FALSE, FALSE, 12);
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
@@ -301,15 +295,15 @@ _create_widgets (FrogrDetailsDialog *self)
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("P_hoto"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
-  priv->photo_content_rb = widget;
+  self->photo_content_rb = widget;
 
-  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb), _("Scree_nshot"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->photo_content_rb), _("Scree_nshot"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
-  priv->sshot_content_rb = widget;
+  self->sshot_content_rb = widget;
 
-  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->photo_content_rb), _("Oth_er"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->photo_content_rb), _("Oth_er"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
-  priv->other_content_rb = widget;
+  self->other_content_rb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), content_type_hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
@@ -330,15 +324,15 @@ _create_widgets (FrogrDetailsDialog *self)
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("S_afe"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
-  priv->safe_rb = widget;
+  self->safe_rb = widget;
 
-  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->safe_rb), _("_Moderate"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->safe_rb), _("_Moderate"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
-  priv->moderate_rb = widget;
+  self->moderate_rb = widget;
 
-  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (priv->safe_rb), _("Restr_icted"));
+  widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->safe_rb), _("Restr_icted"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
-  priv->restricted_rb = widget;
+  self->restricted_rb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), safety_level_hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
@@ -360,7 +354,7 @@ _create_widgets (FrogrDetailsDialog *self)
   for (i = 0; license_descriptions[i]; i++)
     gtk_combo_box_text_insert (GTK_COMBO_BOX_TEXT (widget), i, NULL, _(license_descriptions[i]));
 
-  priv->license_cb = widget;
+  self->license_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
@@ -380,15 +374,15 @@ _create_widgets (FrogrDetailsDialog *self)
 
   widget = gtk_check_button_new_with_mnemonic (_("_Show Up in Global Search Results"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
-  priv->show_in_search_cb = widget;
+  self->show_in_search_cb = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("Set Geo_location Information"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
-  priv->send_location_cb = widget;
+  self->send_location_cb = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("Replace 'Date Posted' with 'Date Taken'"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
-  priv->replace_date_posted_cb = widget;
+  self->replace_date_posted_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
 
@@ -398,43 +392,43 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, TRUE, TRUE, 0);
 
   /* Connect signals */
-  g_signal_connect (G_OBJECT (priv->public_rb), "clicked",
+  g_signal_connect (G_OBJECT (self->public_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
 
-  g_signal_connect (G_OBJECT (priv->private_rb), "clicked",
+  g_signal_connect (G_OBJECT (self->private_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
 
-  g_signal_connect (G_OBJECT (priv->family_cb), "toggled",
+  g_signal_connect (G_OBJECT (self->family_cb), "toggled",
                     G_CALLBACK (_on_toggle_button_toggled), self);
 
-  g_signal_connect (G_OBJECT (priv->friend_cb), "toggled",
+  g_signal_connect (G_OBJECT (self->friend_cb), "toggled",
                     G_CALLBACK (_on_toggle_button_toggled), self);
 
-  g_signal_connect (G_OBJECT (priv->show_in_search_cb), "toggled",
+  g_signal_connect (G_OBJECT (self->show_in_search_cb), "toggled",
                     G_CALLBACK (_on_toggle_button_toggled), self);
 
-  g_signal_connect (G_OBJECT (priv->send_location_cb), "toggled",
+  g_signal_connect (G_OBJECT (self->send_location_cb), "toggled",
                     G_CALLBACK (_on_toggle_button_toggled), self);
 
-  g_signal_connect (G_OBJECT (priv->replace_date_posted_cb), "toggled",
+  g_signal_connect (G_OBJECT (self->replace_date_posted_cb), "toggled",
                     G_CALLBACK (_on_toggle_button_toggled), self);
 
-  g_signal_connect (G_OBJECT (priv->photo_content_rb), "clicked",
+  g_signal_connect (G_OBJECT (self->photo_content_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
 
-  g_signal_connect (G_OBJECT (priv->sshot_content_rb), "clicked",
+  g_signal_connect (G_OBJECT (self->sshot_content_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
 
-  g_signal_connect (G_OBJECT (priv->other_content_rb), "clicked",
+  g_signal_connect (G_OBJECT (self->other_content_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
 
-  g_signal_connect (G_OBJECT (priv->safe_rb), "clicked",
+  g_signal_connect (G_OBJECT (self->safe_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
 
-  g_signal_connect (G_OBJECT (priv->moderate_rb), "clicked",
+  g_signal_connect (G_OBJECT (self->moderate_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
 
-  g_signal_connect (G_OBJECT (priv->restricted_rb), "clicked",
+  g_signal_connect (G_OBJECT (self->restricted_rb), "clicked",
                     G_CALLBACK (_on_radio_button_clicked), self);
 
   /* Show widgets */
@@ -444,45 +438,42 @@ _create_widgets (FrogrDetailsDialog *self)
 static void
 _update_ui (FrogrDetailsDialog *self)
 {
-  FrogrDetailsDialogPrivate *priv =
-    FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
   gboolean active;
 
   /* Adjust sensitiveness for check buttons */
-  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->public_rb));
-  gtk_widget_set_sensitive (priv->friend_cb, !active);
-  gtk_widget_set_sensitive (priv->family_cb, !active);
+  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->public_rb));
+  gtk_widget_set_sensitive (self->friend_cb, !active);
+  gtk_widget_set_sensitive (self->family_cb, !active);
 }
 
 static void
 _load_picture_from_disk (FrogrDetailsDialog *self)
 {
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
   guint n_pictures;
 
-  n_pictures = g_slist_length (priv->pictures);
+  n_pictures = g_slist_length (self->pictures);
   if (n_pictures > 1)
     {
       gchar *mpictures_str = NULL;
 
       /* Get the 'multiple pictures pixbuf' if not got yet (lazy approach) */
-      if (!priv->mpictures_pixbuf)
+      if (!self->mpictures_pixbuf)
         {
           gchar *mpictures_full_path = NULL;
 
           /* Set the image for editing multiple pictures */
           mpictures_full_path = g_strdup_printf ("%s/" MPICTURES_IMAGE,
                                                  frogr_util_get_app_data_dir ());
-          priv->mpictures_pixbuf = gdk_pixbuf_new_from_file (mpictures_full_path, NULL);
+          self->mpictures_pixbuf = gdk_pixbuf_new_from_file (mpictures_full_path, NULL);
           g_free (mpictures_full_path);
         }
 
       /* Just set the pixbuf in the image */
-      gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), priv->mpictures_pixbuf);
+      gtk_image_set_from_pixbuf (GTK_IMAGE (self->picture_img), self->mpictures_pixbuf);
 
       /* Visually indicate how many pictures are being edited */
       mpictures_str = g_strdup_printf (ngettext ("(%d Picture)", "(%d Pictures)", n_pictures), n_pictures);
-      gtk_label_set_text (GTK_LABEL (priv->mpictures_label), mpictures_str);
+      gtk_label_set_text (GTK_LABEL (self->mpictures_label), mpictures_str);
       g_free (mpictures_str);
 
       /* No need to spawn any async operation, show the dialog now */
@@ -494,7 +485,7 @@ _load_picture_from_disk (FrogrDetailsDialog *self)
       gchar *file_uri = NULL;
       GFile *gfile = NULL;
 
-      picture = FROGR_PICTURE (priv->pictures->data);
+      picture = FROGR_PICTURE (self->pictures->data);
       file_uri = (gchar *)frogr_picture_get_fileuri (picture);
       gfile = g_file_new_for_uri (file_uri);
 
@@ -509,7 +500,6 @@ _load_picture_from_disk_cb (GObject *object,
                             gpointer data)
 {
   FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (data);
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
   GFile *file = NULL;
   GError *error = NULL;
   gchar *contents = NULL;
@@ -521,7 +511,7 @@ _load_picture_from_disk_cb (GObject *object,
       FrogrPicture *picture = NULL;
       GdkPixbuf *pixbuf = NULL;
 
-      picture = FROGR_PICTURE (priv->pictures->data);
+      picture = FROGR_PICTURE (self->pictures->data);
       if (frogr_picture_is_video (picture))
         pixbuf = frogr_util_get_pixbuf_for_video_file (file, PICTURE_WIDTH, PICTURE_HEIGHT, &error);
       else
@@ -530,7 +520,7 @@ _load_picture_from_disk_cb (GObject *object,
 
       if (pixbuf)
         {
-          gtk_image_set_from_pixbuf (GTK_IMAGE (priv->picture_img), pixbuf);
+          gtk_image_set_from_pixbuf (GTK_IMAGE (self->picture_img), pixbuf);
           g_object_unref (pixbuf);
         }
 
@@ -565,16 +555,14 @@ _load_picture_from_disk_cb (GObject *object,
 static void
 _place_picture_in_dialog_and_show (FrogrDetailsDialog *self)
 {
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
+  gtk_button_set_image (GTK_BUTTON (self->picture_button),
+                        self->picture_img);
 
-  gtk_button_set_image (GTK_BUTTON (priv->picture_button),
-                        priv->picture_img);
+  gtk_container_add (GTK_CONTAINER (self->picture_container),
+                     self->picture_button);
 
-  gtk_container_add (GTK_CONTAINER (priv->picture_container),
-                     priv->picture_button);
-
-  priv->picture_button_handler_id =
-    g_signal_connect (G_OBJECT (priv->picture_button), "clicked",
+  self->picture_button_handler_id =
+    g_signal_connect (G_OBJECT (self->picture_button), "clicked",
                       G_CALLBACK (_on_picture_button_clicked),
                       self);
 
@@ -584,9 +572,6 @@ _place_picture_in_dialog_and_show (FrogrDetailsDialog *self)
 static void
 _fill_dialog_with_data (FrogrDetailsDialog *self)
 {
-  FrogrDetailsDialogPrivate *priv =
-    FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
-
   FrogrPicture *picture;
   GSList *item;
   GtkWidget *picture_widget;
@@ -605,7 +590,7 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   FspContentType content_type_val = FSP_CONTENT_TYPE_NONE;
 
   /* Take first element values */
-  item = priv->pictures;
+  item = self->pictures;
   picture = FROGR_PICTURE (item->data);
 
   title_val = (gchar *)frogr_picture_get_title (picture);
@@ -680,39 +665,39 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
         tags_val = NULL;
 
       /* Check radio and check buttons consistence */
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->public_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->public_rb),
                                               is_public_val != is_public);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->private_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->private_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->private_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->private_rb),
                                               is_public_val != is_public);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->family_cb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->family_cb),
                                               is_family_val != is_family);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->friend_cb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->friend_cb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->friend_cb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->friend_cb),
                                               is_friend_val != is_friend);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->show_in_search_cb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->show_in_search_cb),
                                               show_in_search_val != show_in_search);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->send_location_cb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->send_location_cb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->send_location_cb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->send_location_cb),
                                               send_location_val != send_location);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->replace_date_posted_cb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->replace_date_posted_cb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->replace_date_posted_cb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->replace_date_posted_cb),
                                               replace_date_posted_val != replace_date_posted);
         }
 
@@ -721,39 +706,39 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
           license_inconsistent = TRUE;
         }
 
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->photo_content_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->photo_content_rb),
                                               content_type_val != content_type);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->photo_content_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->photo_content_rb),
                                               content_type_val != content_type);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->sshot_content_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->sshot_content_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->sshot_content_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->sshot_content_rb),
                                               content_type_val != content_type);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->other_content_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->other_content_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->other_content_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->other_content_rb),
                                               content_type_val != content_type);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->safe_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->safe_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->safe_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->safe_rb),
                                               safety_level_val != safety_level);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->moderate_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->moderate_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->moderate_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->moderate_rb),
                                               safety_level_val != safety_level);
         }
-      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->restricted_rb)))
+      if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->restricted_rb)))
         {
-          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (priv->restricted_rb),
+          gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (self->restricted_rb),
                                               safety_level_val != safety_level);
         }
 
@@ -772,81 +757,81 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
   /* Fill in with data */
 
   if (title_val != NULL)
-    gtk_entry_set_text (GTK_ENTRY (priv->title_entry), title_val);
+    gtk_entry_set_text (GTK_ENTRY (self->title_entry), title_val);
 
   if (desc_val != NULL)
     {
-      gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv->text_buffer), desc_val, -1);
-      priv->reference_description = g_strstrip (g_strdup (desc_val));
+      gtk_text_buffer_set_text (GTK_TEXT_BUFFER (self->text_buffer), desc_val, -1);
+      self->reference_description = g_strstrip (g_strdup (desc_val));
     }
   else
     {
       /* We store "" in this case for ease further comparisons. */
-      priv->reference_description = g_strdup ("");
+      self->reference_description = g_strdup ("");
     }
 
   if (tags_val != NULL)
-    gtk_entry_set_text (GTK_ENTRY (priv->tags_entry), tags_val);
+    gtk_entry_set_text (GTK_ENTRY (self->tags_entry), tags_val);
 
-  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->public_rb), is_public_val);
-  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->private_rb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->private_rb), !is_public_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->public_rb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->public_rb), is_public_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->private_rb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->private_rb), !is_public_val);
 
-  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->friend_cb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->friend_cb), is_friend_val);
-  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->family_cb), is_family_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->friend_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->friend_cb), is_friend_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->family_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->family_cb), is_family_val);
 
-  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb), show_in_search_val);
-  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->send_location_cb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->send_location_cb), send_location_val);
-  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->replace_date_posted_cb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->replace_date_posted_cb), replace_date_posted_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->show_in_search_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->show_in_search_cb), show_in_search_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->send_location_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->send_location_cb), send_location_val);
+  if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->replace_date_posted_cb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->replace_date_posted_cb), replace_date_posted_val);
 
   if (license_inconsistent)
-    gtk_combo_box_set_active (GTK_COMBO_BOX (priv->license_cb), FSP_LICENSE_LAST + 1);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (self->license_cb), FSP_LICENSE_LAST + 1);
   else
-    gtk_combo_box_set_active (GTK_COMBO_BOX (priv->license_cb), license_val + 1);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (self->license_cb), license_val + 1);
 
   if (content_type_val == FSP_CONTENT_TYPE_SCREENSHOT
-      && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->sshot_content_rb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->sshot_content_rb), TRUE);
+      && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->sshot_content_rb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->sshot_content_rb), TRUE);
   else if (content_type_val == FSP_CONTENT_TYPE_OTHER
-      && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->other_content_rb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->other_content_rb), TRUE);
-  else if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->photo_content_rb), TRUE);
+      && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->other_content_rb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->other_content_rb), TRUE);
+  else if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->photo_content_rb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->photo_content_rb), TRUE);
 
   if (safety_level_val == FSP_SAFETY_LEVEL_MODERATE
-      && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->moderate_rb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->moderate_rb), TRUE);
+      && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->moderate_rb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->moderate_rb), TRUE);
   else if (safety_level_val == FSP_SAFETY_LEVEL_RESTRICTED
-      && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->restricted_rb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->restricted_rb), TRUE);
-  else if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->safe_rb)))
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->safe_rb), TRUE);
+      && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->restricted_rb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->restricted_rb), TRUE);
+  else if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->safe_rb)))
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->safe_rb), TRUE);
 
-  picture_widget = gtk_bin_get_child (GTK_BIN (priv->picture_container));
+  picture_widget = gtk_bin_get_child (GTK_BIN (self->picture_container));
   if (picture_widget)
     {
-      gtk_container_remove (GTK_CONTAINER (priv->picture_container),
+      gtk_container_remove (GTK_CONTAINER (self->picture_container),
                             picture_widget);
     }
 
-  if (priv->picture_button_handler_id)
+  if (self->picture_button_handler_id)
     {
-      g_signal_handler_disconnect (priv->picture_button,
-                                   priv->picture_button_handler_id);
+      g_signal_handler_disconnect (self->picture_button,
+                                   self->picture_button_handler_id);
     }
 
   /* Update UI */
   _update_ui (self);
 
   /* Initial widget to grab focus */
-  gtk_widget_grab_focus (priv->title_entry);
-  gtk_editable_set_position (GTK_EDITABLE (priv->title_entry), -1);
+  gtk_widget_grab_focus (self->title_entry);
+  gtk_editable_set_position (GTK_EDITABLE (self->title_entry), -1);
 
   /* Load the picture from disk, asynchronously */
   _load_picture_from_disk (self);
@@ -855,16 +840,13 @@ _fill_dialog_with_data (FrogrDetailsDialog *self)
 static gboolean
 _validate_dialog_data (FrogrDetailsDialog *self)
 {
-  FrogrDetailsDialogPrivate *priv =
-    FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
-
   gboolean result = TRUE;
 
   /* Mandatory fields (only if editing a single picture) */
-  if (g_slist_length (priv->pictures) <= 1)
+  if (g_slist_length (self->pictures) <= 1)
     {
       gchar *title =
-        g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
+        g_strdup (gtk_entry_get_text (GTK_ENTRY (self->title_entry)));
 
       if ((title == NULL) || g_str_equal (g_strstrip (title), ""))
         result = FALSE;
@@ -879,9 +861,6 @@ _validate_dialog_data (FrogrDetailsDialog *self)
 static gboolean
 _save_data (FrogrDetailsDialog *self)
 {
-  FrogrDetailsDialogPrivate *priv =
-    FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
-
   GtkTextIter start;
   GtkTextIter end;
   gchar *title = NULL;
@@ -899,27 +878,27 @@ _save_data (FrogrDetailsDialog *self)
   gboolean result = FALSE;
 
   /* Save data */
-  title = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
+  title = g_strdup (gtk_entry_get_text (GTK_ENTRY (self->title_entry)));
   title = g_strstrip (title);
 
-  gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (priv->text_buffer),
+  gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (self->text_buffer),
                               &start, &end);
-  description = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (priv->text_buffer),
+  description = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (self->text_buffer),
                                           &start, &end, FALSE);
   description = g_strstrip (description);
 
-  tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->tags_entry)));
+  tags = g_strdup (gtk_entry_get_text (GTK_ENTRY (self->tags_entry)));
   tags = g_strstrip (tags);
 
   is_public =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->public_rb));
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->public_rb));
 
   if (!is_public)
     {
       is_friend =
-        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->friend_cb));
+        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->friend_cb));
       is_family =
-        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->family_cb));
+        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->family_cb));
     }
   else
     {
@@ -929,27 +908,27 @@ _save_data (FrogrDetailsDialog *self)
     }
 
   show_in_search =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->show_in_search_cb));
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->show_in_search_cb));
   send_location =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->send_location_cb));
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->send_location_cb));
   replace_date_posted =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->replace_date_posted_cb));
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->replace_date_posted_cb));
 
   /* License type (values in the combo are shifted +1) */
-  license = gtk_combo_box_get_active (GTK_COMBO_BOX (priv->license_cb)) - 1;
+  license = gtk_combo_box_get_active (GTK_COMBO_BOX (self->license_cb)) - 1;
 
   /* Content type */
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->photo_content_rb)))
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->photo_content_rb)))
     content_type = FSP_CONTENT_TYPE_PHOTO;
-  else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->sshot_content_rb)))
+  else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->sshot_content_rb)))
     content_type = FSP_CONTENT_TYPE_SCREENSHOT;
   else
     content_type = FSP_CONTENT_TYPE_OTHER;
 
   /* Safety level */
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->safe_rb)))
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->safe_rb)))
     safety_level = FSP_SAFETY_LEVEL_SAFE;
-  else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->moderate_rb)))
+  else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->moderate_rb)))
     safety_level = FSP_SAFETY_LEVEL_MODERATE;
   else
     safety_level = FSP_SAFETY_LEVEL_RESTRICTED;
@@ -965,44 +944,44 @@ _save_data (FrogrDetailsDialog *self)
       model = frogr_controller_get_model (frogr_controller_get_instance ());
 
       /* Iterate over the rest of elements */
-      n_pictures = g_slist_length (priv->pictures);
-      for (item = priv->pictures; item; item = g_slist_next (item))
+      n_pictures = g_slist_length (self->pictures);
+      for (item = self->pictures; item; item = g_slist_next (item))
         {
           picture = FROGR_PICTURE (item->data);
 
           if (!g_str_equal (title, "") || (n_pictures <= 1))
             frogr_picture_set_title (picture, title);
 
-          if (!g_str_equal (description, priv->reference_description))
+          if (!g_str_equal (description, self->reference_description))
             frogr_picture_set_description (picture, description);
 
           if (!g_str_equal (tags, "") || (n_pictures <= 1))
             frogr_picture_set_tags (picture, tags);
 
-          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->public_rb)))
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->public_rb)))
             frogr_picture_set_public (picture, is_public);
-          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->friend_cb)))
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->friend_cb)))
             frogr_picture_set_friend (picture, is_friend);
-          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->family_cb)))
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->family_cb)))
             frogr_picture_set_family (picture, is_family);
-          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->show_in_search_cb)))
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->show_in_search_cb)))
             frogr_picture_set_show_in_search (picture, show_in_search);
-          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->send_location_cb)))
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->send_location_cb)))
             frogr_picture_set_send_location (picture, send_location);
-          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->replace_date_posted_cb)))
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->replace_date_posted_cb)))
             frogr_picture_set_replace_date_posted (picture, replace_date_posted);
 
           if (license >= FSP_LICENSE_NONE && license < FSP_LICENSE_LAST)
             frogr_picture_set_license (picture, license);
 
-          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->photo_content_rb))
-              && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->sshot_content_rb))
-              && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->other_content_rb)))
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->photo_content_rb))
+              && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->sshot_content_rb))
+              && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->other_content_rb)))
             frogr_picture_set_content_type (picture, content_type);
 
-          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->safe_rb))
-              && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->moderate_rb))
-              && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (priv->restricted_rb)))
+          if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->safe_rb))
+              && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->moderate_rb))
+              && !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (self->restricted_rb)))
             frogr_picture_set_safety_level (picture, safety_level);
 
           /* Everything went fine */
@@ -1059,7 +1038,6 @@ static void
 _on_toggle_button_toggled (GtkToggleButton *tbutton, gpointer data)
 {
   FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (data);
-
   /* Reset consistence and update UI */
   gtk_toggle_button_set_inconsistent (tbutton, FALSE);
   _update_ui (self);
@@ -1068,8 +1046,8 @@ _on_toggle_button_toggled (GtkToggleButton *tbutton, gpointer data)
 static void
 _on_picture_button_clicked (GtkButton *button, gpointer data)
 {
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (data);
-  frogr_util_open_pictures_in_viewer (priv->pictures);
+  FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (data);
+  frogr_util_open_pictures_in_viewer (self->pictures);
 }
 
 static void
@@ -1111,12 +1089,12 @@ _frogr_details_dialog_get_property (GObject *object,
                                     GValue *value,
                                     GParamSpec *pspec)
 {
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (object);
+  FrogrDetailsDialog *dialog = FROGR_DETAILS_DIALOG (object);
 
   switch (prop_id)
     {
     case PROP_PICTURES:
-      g_value_set_pointer (value, priv->pictures);
+      g_value_set_pointer (value, dialog->pictures);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1127,19 +1105,19 @@ _frogr_details_dialog_get_property (GObject *object,
 static void
 _frogr_details_dialog_dispose (GObject *object)
 {
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (object);
+  FrogrDetailsDialog *dialog = FROGR_DETAILS_DIALOG (object);
 
-  if (priv->mpictures_pixbuf)
+  if (dialog->mpictures_pixbuf)
     {
-      g_object_unref (priv->mpictures_pixbuf);
-      priv->mpictures_pixbuf = NULL;
+      g_object_unref (dialog->mpictures_pixbuf);
+      dialog->mpictures_pixbuf = NULL;
     }
 
-  if (priv->pictures)
+  if (dialog->pictures)
     {
-      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->pictures);
-      priv->pictures = NULL;
+      g_slist_foreach (dialog->pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (dialog->pictures);
+      dialog->pictures = NULL;
     }
 
   G_OBJECT_CLASS(frogr_details_dialog_parent_class)->dispose (object);
@@ -1148,9 +1126,9 @@ _frogr_details_dialog_dispose (GObject *object)
 static void
 _frogr_details_dialog_finalize (GObject *object)
 {
-  FrogrDetailsDialogPrivate *priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (object);
+  FrogrDetailsDialog *dialog = FROGR_DETAILS_DIALOG (object);
 
-  g_free (priv->reference_description);
+  g_free (dialog->reference_description);
 
   G_OBJECT_CLASS(frogr_details_dialog_parent_class)->finalize (object);
 }
@@ -1175,19 +1153,14 @@ frogr_details_dialog_class_init (FrogrDetailsDialogClass *klass)
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (obj_class, PROP_PICTURES, pspec);
-
-  g_type_class_add_private (obj_class, sizeof (FrogrDetailsDialogPrivate));
 }
 
 static void
 frogr_details_dialog_init (FrogrDetailsDialog *self)
 {
-  FrogrDetailsDialogPrivate *priv =
-    FROGR_DETAILS_DIALOG_GET_PRIVATE (self);
-
-  priv->pictures = NULL;
-  priv->picture_button_handler_id = 0;
-  priv->reference_description = NULL;
+  self->pictures = NULL;
+  self->picture_button_handler_id = 0;
+  self->reference_description = NULL;
 
   _create_widgets (self);
 
@@ -1234,8 +1207,7 @@ frogr_details_dialog_show (GtkWindow *parent,
   config = frogr_config_get_instance ();
   if (config && frogr_config_get_tags_autocompletion (config))
     {
-      FrogrDetailsDialogPrivate *priv = NULL;
-      priv = FROGR_DETAILS_DIALOG_GET_PRIVATE (new);
-      frogr_live_entry_set_auto_completion (FROGR_LIVE_ENTRY (priv->tags_entry), tags);
+      FrogrDetailsDialog *dialog = FROGR_DETAILS_DIALOG (new);
+      frogr_live_entry_set_auto_completion (FROGR_LIVE_ENTRY (dialog->tags_entry), tags);
     }
 }

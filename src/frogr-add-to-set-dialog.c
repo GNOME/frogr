@@ -31,14 +31,10 @@
 #define MINIMUM_WINDOW_WIDTH 540
 #define MINIMUM_WINDOW_HEIGHT 420
 
-#define FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE(object)             \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),                       \
-                                FROGR_TYPE_ADD_TO_SET_DIALOG,   \
-                                FrogrAddToSetDialogPrivate))
 
-G_DEFINE_TYPE (FrogrAddToSetDialog, frogr_add_to_set_dialog, GTK_TYPE_DIALOG)
+struct _FrogrAddToSetDialog {
+  GtkDialog parent;
 
-typedef struct _FrogrAddToSetDialogPrivate {
   GtkWidget *treeview;
   GtkTreeModel *treemodel;
 
@@ -48,7 +44,10 @@ typedef struct _FrogrAddToSetDialogPrivate {
 
   GSList *pictures;
   GSList *photosets;
-} FrogrAddToSetDialogPrivate;
+};
+
+G_DEFINE_TYPE (FrogrAddToSetDialog, frogr_add_to_set_dialog, GTK_TYPE_DIALOG)
+
 
 /* Properties */
 enum  {
@@ -106,30 +105,24 @@ static void _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data
 static void
 _set_pictures (FrogrAddToSetDialog *self, const GSList *pictures)
 {
-  FrogrAddToSetDialogPrivate *priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
-  priv->pictures = g_slist_copy ((GSList*) pictures);
-  g_slist_foreach (priv->pictures, (GFunc)g_object_ref, NULL);
+  self->pictures = g_slist_copy ((GSList*) pictures);
+  g_slist_foreach (self->pictures, (GFunc)g_object_ref, NULL);
 }
 
 static void
 _set_photosets (FrogrAddToSetDialog *self, const GSList *photosets)
 {
-  FrogrAddToSetDialogPrivate *priv = NULL;
-
-  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
-  priv->photosets = g_slist_copy ((GSList*)photosets);
-  g_slist_foreach (priv->photosets, (GFunc)g_object_ref, NULL);
+  self->photosets = g_slist_copy ((GSList*)photosets);
+  g_slist_foreach (self->photosets, (GFunc)g_object_ref, NULL);
 }
 
 static GtkWidget *
 _create_tree_view (FrogrAddToSetDialog *self)
 {
-  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkWidget *treeview = NULL;
   GtkTreeViewColumn *col = NULL;
   GtkCellRenderer *rend = NULL;
 
-  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
   treeview = gtk_tree_view_new();
 
   /* Checkbox */
@@ -148,7 +141,7 @@ _create_tree_view (FrogrAddToSetDialog *self)
   g_signal_connect (col, "clicked",
                     G_CALLBACK (_column_clicked_cb), self);
 
-  priv->checkbox_col = col;
+  self->checkbox_col = col;
 
   /* Title */
   rend = gtk_cell_renderer_text_new ();
@@ -163,7 +156,7 @@ _create_tree_view (FrogrAddToSetDialog *self)
   g_signal_connect (col, "clicked",
                     G_CALLBACK (_column_clicked_cb), self);
 
-  priv->title_col = col;
+  self->title_col = col;
 
   /* Description */
   rend = gtk_cell_renderer_text_new ();
@@ -178,7 +171,7 @@ _create_tree_view (FrogrAddToSetDialog *self)
   g_signal_connect (col, "clicked",
                     G_CALLBACK (_column_clicked_cb), self);
 
-  priv->n_elements_col = col;
+  self->n_elements_col = col;
 
   return treeview;
 }
@@ -187,21 +180,19 @@ static void
 _column_clicked_cb (GtkTreeViewColumn *col, gpointer data)
 {
   FrogrAddToSetDialog *self = NULL;
-  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkTreeModel *model = NULL;
 
   self = FROGR_ADD_TO_SET_DIALOG (data);
-  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
-  model = gtk_tree_view_get_model (GTK_TREE_VIEW (priv->treeview));
+  model = gtk_tree_view_get_model (GTK_TREE_VIEW (self->treeview));
   if (!GTK_IS_TREE_SORTABLE (model))
     return;
 
-  if (col == priv->checkbox_col)
+  if (col == self->checkbox_col)
     _toggle_column_sort_order (GTK_TREE_SORTABLE (model), col, CHECKBOX_COL);
-  else if (col == priv->title_col)
+  else if (col == self->title_col)
     _toggle_column_sort_order (GTK_TREE_SORTABLE (model), col, TITLE_COL);
-  else if (col == priv->n_elements_col)
+  else if (col == self->n_elements_col)
     _toggle_column_sort_order (GTK_TREE_SORTABLE (model), col, N_ELEMENTS_COL);
   else
     g_assert_not_reached ();
@@ -257,15 +248,12 @@ _tree_iter_compare_n_elements_func (GtkTreeModel *model,
 static void
 _populate_treemodel_with_photosets (FrogrAddToSetDialog *self)
 {
-  FrogrAddToSetDialogPrivate *priv = NULL;
   FrogrPhotoSet *set = NULL;
   GtkTreeIter iter;
   GSList *current = NULL;
   gchar *n_elements_str = NULL;
 
-  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
-
-  for (current = priv->photosets; current; current = g_slist_next (current))
+  for (current = self->photosets; current; current = g_slist_next (current))
     {
       if (!FROGR_IS_PHOTOSET (current->data))
         continue;
@@ -273,8 +261,8 @@ _populate_treemodel_with_photosets (FrogrAddToSetDialog *self)
       set = FROGR_PHOTOSET (current->data);
       n_elements_str = g_strdup_printf ("%d", frogr_photoset_get_n_photos (set));
 
-      gtk_list_store_append (GTK_LIST_STORE (priv->treemodel), &iter);
-      gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
+      gtk_list_store_append (GTK_LIST_STORE (self->treemodel), &iter);
+      gtk_list_store_set (GTK_LIST_STORE (self->treemodel), &iter,
                           CHECKBOX_COL, FALSE,
                           TITLE_COL, frogr_photoset_get_title (set),
                           N_ELEMENTS_COL, n_elements_str,
@@ -287,31 +275,29 @@ _populate_treemodel_with_photosets (FrogrAddToSetDialog *self)
 static void
 _fill_dialog_with_data (FrogrAddToSetDialog *self)
 {
-  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkTreeIter iter;
   gint n_sets;
   gint n_pictures;
 
-  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
-  n_sets = g_slist_length (priv->photosets);
-  n_pictures = g_slist_length (priv->pictures);
+  n_sets = g_slist_length (self->photosets);
+  n_pictures = g_slist_length (self->pictures);
 
   /* No sets, nothing to do */
   if (n_sets == 0 || n_pictures == 0)
     return;
 
   /* Iterate over all the items */
-  gtk_tree_model_get_iter_first (priv->treemodel, &iter);
+  gtk_tree_model_get_iter_first (self->treemodel, &iter);
   do
     {
       FrogrPhotoSet *set = NULL;
       GSList *p_item = NULL;
       gboolean do_check = TRUE;
 
-      gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
+      gtk_tree_model_get (GTK_TREE_MODEL (self->treemodel), &iter,
                           SET_COL, &set, -1);
 
-      for (p_item = priv->pictures; p_item; p_item = g_slist_next (p_item))
+      for (p_item = self->pictures; p_item; p_item = g_slist_next (p_item))
         {
           FrogrPicture *picture = NULL;
 
@@ -324,10 +310,10 @@ _fill_dialog_with_data (FrogrAddToSetDialog *self)
         }
       g_object_unref (set);
 
-      gtk_list_store_set (GTK_LIST_STORE (priv->treemodel), &iter,
+      gtk_list_store_set (GTK_LIST_STORE (self->treemodel), &iter,
                           CHECKBOX_COL, do_check, -1);
     }
-  while (gtk_tree_model_iter_next (priv->treemodel, &iter));
+  while (gtk_tree_model_iter_next (self->treemodel, &iter));
 }
 
 static void
@@ -358,34 +344,31 @@ _set_toggled_cb (GtkCellRendererToggle *celltoggle,
 static GSList *
 _get_selected_photosets (FrogrAddToSetDialog *self)
 {
-  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkTreeIter iter;
   gboolean selected = FALSE;
   FrogrPhotoSet *set = NULL;
   GSList *selected_sets = NULL;
 
-  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
-
   /* No sets, nothing to do */
-  if (g_slist_length (priv->photosets) == 0)
+  if (g_slist_length (self->photosets) == 0)
     return NULL;
 
   /* Iterate over all the items */
-  gtk_tree_model_get_iter_first (priv->treemodel, &iter);
+  gtk_tree_model_get_iter_first (self->treemodel, &iter);
   do
     {
-      gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
+      gtk_tree_model_get (GTK_TREE_MODEL (self->treemodel), &iter,
                           CHECKBOX_COL, &selected, -1);
       if (!selected)
         continue;
 
-      gtk_tree_model_get (GTK_TREE_MODEL (priv->treemodel), &iter,
+      gtk_tree_model_get (GTK_TREE_MODEL (self->treemodel), &iter,
                           SET_COL, &set, -1);
 
       if (FROGR_IS_PHOTOSET (set))
         selected_sets = g_slist_append (selected_sets, set);
     }
-  while (gtk_tree_model_iter_next (priv->treemodel, &iter));
+  while (gtk_tree_model_iter_next (self->treemodel, &iter));
 
   return selected_sets;
 }
@@ -393,19 +376,16 @@ _get_selected_photosets (FrogrAddToSetDialog *self)
 static void
 _update_pictures (FrogrAddToSetDialog *self)
 {
-  FrogrAddToSetDialogPrivate *priv = NULL;
   FrogrPicture *picture = NULL;
   GSList *selected_sets = NULL;
   GSList *item = NULL;
-
-  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
 
   selected_sets = _get_selected_photosets (self);
   if (selected_sets)
     {
       FrogrModel *model = NULL;
 
-      for (item = priv->pictures; item; item = g_slist_next (item))
+      for (item = self->pictures; item; item = g_slist_next (item))
         {
           picture = FROGR_PICTURE (item->data);
 
@@ -461,15 +441,15 @@ _frogr_add_to_set_dialog_get_property (GObject *object,
                                        GValue *value,
                                        GParamSpec *pspec)
 {
-  FrogrAddToSetDialogPrivate *priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (object);
+  FrogrAddToSetDialog *dialog = FROGR_ADD_TO_SET_DIALOG (object);
 
   switch (prop_id)
     {
     case PROP_PICTURES:
-      g_value_set_pointer (value, priv->pictures);
+      g_value_set_pointer (value, dialog->pictures);
       break;
     case PROP_PHOTOSETS:
-      g_value_set_pointer (value, priv->photosets);
+      g_value_set_pointer (value, dialog->photosets);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -480,27 +460,27 @@ _frogr_add_to_set_dialog_get_property (GObject *object,
 static void
 _frogr_add_to_set_dialog_dispose (GObject *object)
 {
-  FrogrAddToSetDialogPrivate *priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (object);
+  FrogrAddToSetDialog *dialog = FROGR_ADD_TO_SET_DIALOG (object);
 
-  if (priv->pictures)
+  if (dialog->pictures)
     {
-      g_slist_foreach (priv->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->pictures);
-      priv->pictures = NULL;
+      g_slist_foreach (dialog->pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (dialog->pictures);
+      dialog->pictures = NULL;
     }
 
-   if (priv->photosets)
+   if (dialog->photosets)
     {
-      g_slist_foreach (priv->photosets, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->photosets);
-      priv->photosets = NULL;
+      g_slist_foreach (dialog->photosets, (GFunc)g_object_unref, NULL);
+      g_slist_free (dialog->photosets);
+      dialog->photosets = NULL;
     }
 
-  if (priv->treemodel)
+  if (dialog->treemodel)
     {
-      gtk_list_store_clear (GTK_LIST_STORE (priv->treemodel));
-      g_object_unref (priv->treemodel);
-      priv->treemodel = NULL;
+      gtk_list_store_clear (GTK_LIST_STORE (dialog->treemodel));
+      g_object_unref (dialog->treemodel);
+      dialog->treemodel = NULL;
     }
 
   G_OBJECT_CLASS(frogr_add_to_set_dialog_parent_class)->dispose (object);
@@ -533,20 +513,16 @@ frogr_add_to_set_dialog_class_init (FrogrAddToSetDialogClass *klass)
                                 G_PARAM_READWRITE
                                 | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (obj_class, PROP_PHOTOSETS, pspec);
-
-  g_type_class_add_private (obj_class, sizeof (FrogrAddToSetDialogPrivate));
 }
 
 static void
 frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
 {
-  FrogrAddToSetDialogPrivate *priv = NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *widget = NULL;
 
-  priv = FROGR_ADD_TO_SET_DIALOG_GET_PRIVATE (self);
-  priv->pictures = NULL;
-  priv->photosets = NULL;
+  self->pictures = NULL;
+  self->photosets = NULL;
 
   /* Create widgets */
   gtk_dialog_add_buttons (GTK_DIALOG (self),
@@ -567,17 +543,17 @@ frogr_add_to_set_dialog_init (FrogrAddToSetDialog *self)
                                        GTK_SHADOW_ETCHED_IN);
   gtk_box_pack_start (GTK_BOX (vbox), widget, TRUE, TRUE, 6);
 
-  priv->treeview = _create_tree_view (self);
-  gtk_container_add (GTK_CONTAINER (widget), priv->treeview);
+  self->treeview = _create_tree_view (self);
+  gtk_container_add (GTK_CONTAINER (widget), self->treeview);
 
-  priv->treemodel =
+  self->treemodel =
     GTK_TREE_MODEL (gtk_list_store_new (4, G_TYPE_BOOLEAN,
                                         G_TYPE_STRING, G_TYPE_STRING,
                                         G_TYPE_OBJECT));
-  gtk_tree_view_set_model (GTK_TREE_VIEW (priv->treeview), priv->treemodel);
+  gtk_tree_view_set_model (GTK_TREE_VIEW (self->treeview), self->treemodel);
 
   /* Sorting function for the number of elements column */
-  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (priv->treemodel),
+  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (self->treemodel),
                                    N_ELEMENTS_COL,
                                    _tree_iter_compare_n_elements_func,
                                    self, NULL);

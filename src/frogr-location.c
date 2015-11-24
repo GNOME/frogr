@@ -20,20 +20,16 @@
 
 #include "frogr-location.h"
 
-#define FROGR_LOCATION_GET_PRIVATE(object)              \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FROGR_TYPE_LOCATION,    \
-                                FrogrLocationPrivate))
 
-G_DEFINE_TYPE (FrogrLocation, frogr_location, G_TYPE_OBJECT)
-
-/* Private struct */
-typedef struct _FrogrLocationPrivate FrogrLocationPrivate;
-struct _FrogrLocationPrivate
+struct _FrogrLocation
 {
+  GObject parent;
+
   gdouble latitude;
   gdouble longitude;
 };
+
+G_DEFINE_TYPE (FrogrLocation, frogr_location, G_TYPE_OBJECT)
 
 /* Properties */
 enum  {
@@ -72,15 +68,15 @@ _frogr_location_get_property (GObject *object,
                              GValue *value,
                              GParamSpec *pspec)
 {
-  FrogrLocationPrivate *priv = FROGR_LOCATION_GET_PRIVATE (object);
+  FrogrLocation *self = FROGR_LOCATION (object);
 
   switch (prop_id)
     {
     case PROP_LATITUDE:
-      g_value_set_double (value, priv->latitude);
+      g_value_set_double (value, self->latitude);
       break;
     case PROP_LONGITUDE:
-      g_value_set_double (value, priv->longitude);
+      g_value_set_double (value, self->longitude);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -117,18 +113,14 @@ frogr_location_class_init(FrogrLocationClass *klass)
                                                         180.0,
                                                         0.0,
                                                         G_PARAM_READWRITE));
-
-  g_type_class_add_private (obj_class, sizeof (FrogrLocationPrivate));
 }
 
 static void
 frogr_location_init (FrogrLocation *self)
 {
-  FrogrLocationPrivate *priv = FROGR_LOCATION_GET_PRIVATE (self);
-
   /* Default values */
-  priv->latitude = 0.0;
-  priv->longitude = 0.0;
+  self->latitude = 0.0;
+  self->longitude = 0.0;
 }
 
 
@@ -149,45 +141,29 @@ frogr_location_new (gdouble latitude, gdouble longitude)
 gdouble
 frogr_location_get_latitude (FrogrLocation *self)
 {
-  FrogrLocationPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_LOCATION(self), 0.0);
-
-  priv = FROGR_LOCATION_GET_PRIVATE (self);
-  return priv->latitude;
+  return self->latitude;
 }
 
 void
 frogr_location_set_latitude (FrogrLocation *self,
                              gdouble latitude)
 {
-  FrogrLocationPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_LOCATION(self));
-
-  priv = FROGR_LOCATION_GET_PRIVATE (self);
-  priv->latitude = latitude;
+  self->latitude = latitude;
 }
 
 gdouble
 frogr_location_get_longitude (FrogrLocation *self)
 {
-  FrogrLocationPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_LOCATION(self), 0.0);
-
-  priv = FROGR_LOCATION_GET_PRIVATE (self);
-  return priv->longitude;
+  return self->longitude;
 }
 
 void
 frogr_location_set_longitude (FrogrLocation *self,
                               gdouble longitude)
 {
-  FrogrLocationPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_LOCATION(self));
-
-  priv = FROGR_LOCATION_GET_PRIVATE (self);
-  priv->longitude = longitude;
+  self->longitude = longitude;
 }

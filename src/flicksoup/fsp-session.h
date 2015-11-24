@@ -29,37 +29,9 @@
 
 G_BEGIN_DECLS
 
-#define FSP_TYPE_SESSION                  \
-  (fsp_session_get_type())
-#define FSP_SESSION(obj)                  \
-  (G_TYPE_CHECK_INSTANCE_CAST (obj, FSP_TYPE_SESSION, FspSession))
-#define FSP_SESSION_CLASS(klass)          \
-  (G_TYPE_CHECK_CLASS_CAST(klass, FSP_TYPE_SESSION, FspSessionClass))
-#define FSP_IS_SESSION(obj)               \
-  (G_TYPE_CHECK_INSTANCE_TYPE(obj, FSP_TYPE_SESSION))
-#define FSP_IS_SESSION_CLASS(klass)       \
-  (G_TYPE_CHECK_CLASS_TYPE((klass), FSP_TYPE_SESSION))
-#define FSP_SESSION_GET_CLASS(obj)        \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), FSP_TYPE_SESSION, FspSessionClass))
+#define FSP_TYPE_SESSION (fsp_session_get_type())
 
-typedef struct _FspSession FspSession;
-typedef struct _FspSessionClass FspSessionClass;
-typedef struct _FspSessionPrivate FspSessionPrivate;
-
-struct _FspSession
-{
-  GObject parent_instance;
-  FspSessionPrivate *priv;
-};
-
-struct _FspSessionClass
-{
-  GObjectClass parent_class;
-};
-
-
-GType
-fsp_session_get_type                    (void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE (FspSession, fsp_session, FSP, SESSION, GObject)
 
 FspSession *
 fsp_session_new                         (const gchar *api_key,

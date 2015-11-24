@@ -89,16 +89,10 @@
 #define GDK_PRIMARY_MASK GDK_CONTROL_MASK
 #endif
 
-#define FROGR_MAIN_VIEW_GET_PRIVATE(object)             \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((object),               \
-                                FROGR_TYPE_MAIN_VIEW,   \
-                                FrogrMainViewPrivate))
 
-G_DEFINE_TYPE (FrogrMainView, frogr_main_view, GTK_TYPE_APPLICATION_WINDOW)
+struct _FrogrMainView {
+  GtkApplicationWindow parent;
 
-/* Private Data */
-
-typedef struct _FrogrMainViewPrivate {
   FrogrModel *model;
   FrogrController *controller;
 
@@ -135,7 +129,9 @@ typedef struct _FrogrMainViewPrivate {
 
   GtkBuilder *builder;
   GMenuModel *app_menu;
-} FrogrMainViewPrivate;
+};
+
+G_DEFINE_TYPE (FrogrMainView, frogr_main_view, GTK_TYPE_APPLICATION_WINDOW)
 
 
 /* Icon view treeview */
@@ -291,9 +287,9 @@ static void _model_changed (FrogrController *controller, gpointer data);
 
 static void _model_deserialized (FrogrController *controller, gpointer data);
 
-static void _update_state_description (FrogrMainView *mainview);
+static void _update_state_description (FrogrMainView *self);
 
-static gchar *_craft_state_description (FrogrMainView *mainview);
+static gchar *_craft_state_description (FrogrMainView *self);
 
 static void _update_sensitiveness (FrogrMainView *self);
 static void _update_sensitiveness_for_action (FrogrMainView *self,
@@ -339,7 +335,6 @@ static GActionEntry win_entries[] = {
 static void
 _initialize_ui (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
   GtkBuilder *builder;
   GtkWidget *main_vbox;
   GtkWidget *icon_view;
@@ -354,8 +349,6 @@ _initialize_ui (FrogrMainView *self)
   GAction *action = NULL;
   GVariant *action_parameter = NULL;
   gint i = 0;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Provide a default icon list in several sizes */
 
@@ -373,7 +366,7 @@ _initialize_ui (FrogrMainView *self)
 
   /* Get widgets from GtkBuilder */
   builder = gtk_builder_new ();
-  priv->builder = builder;
+  self->builder = builder;
 
   full_path = g_strdup_printf ("%s/" UI_MAIN_VIEW_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (builder, full_path, NULL);
@@ -387,17 +380,17 @@ _initialize_ui (FrogrMainView *self)
   gtk_builder_add_from_file (builder, full_path, NULL);
   g_free (full_path);
 
-  priv->gtk_app = gtk_window_get_application (GTK_WINDOW (self));
-  g_action_map_add_action_entries (G_ACTION_MAP (priv->gtk_app),
+  self->gtk_app = gtk_window_get_application (GTK_WINDOW (self));
+  g_action_map_add_action_entries (G_ACTION_MAP (self->gtk_app),
                                    app_entries, G_N_ELEMENTS (app_entries),
                                    self);
-  priv->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
-  gtk_application_set_app_menu (priv->gtk_app, priv->app_menu);
+  self->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
+  gtk_application_set_app_menu (self->gtk_app, self->app_menu);
 
 #if USE_HEADER_BAR
   /* Header_Bar and main vertical box below*/
   _initialize_header_bar (self);
-  gtk_window_set_titlebar (GTK_WINDOW (self), priv->header_bar);
+  gtk_window_set_titlebar (GTK_WINDOW (self), self->header_bar);
 #else
   /* Menu bar and Toolbar */
   _initialize_menubar_and_toolbar (self);
@@ -405,10 +398,10 @@ _initialize_ui (FrogrMainView *self)
 #endif
 
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
-  priv->icon_view = icon_view;
+  self->icon_view = icon_view;
 
   status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "status_bar"));
-  priv->status_bar = status_bar;
+  self->status_bar = status_bar;
 
   /* Init main model's state description */
   _update_state_description (self);
@@ -418,22 +411,22 @@ _initialize_ui (FrogrMainView *self)
 
   /* Initialize sorting criteria and reverse in the UI */
   action = g_action_map_lookup_action (G_ACTION_MAP (self), ACTION_SORT_BY);
-  if (priv->sorting_criteria == SORT_BY_TITLE)
+  if (self->sorting_criteria == SORT_BY_TITLE)
     action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_TITLE);
-  else if (priv->sorting_criteria == SORT_BY_DATE)
+  else if (self->sorting_criteria == SORT_BY_DATE)
     action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_DATE_TAKEN);
-  else if (priv->sorting_criteria == SORT_BY_SIZE)
+  else if (self->sorting_criteria == SORT_BY_SIZE)
     action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_SIZE);
   else
     action_parameter = g_variant_new_string (ACTION_SORT_BY_TARGET_AS_LOADED);
   g_action_change_state (G_ACTION (action), action_parameter);
 
   action = g_action_map_lookup_action (G_ACTION_MAP (self), ACTION_SORT_IN_REVERSE_ORDER);
-  g_action_change_state (G_ACTION (action), g_variant_new_boolean (priv->sorting_reversed));
+  g_action_change_state (G_ACTION (action), g_variant_new_boolean (self->sorting_reversed));
 
   /* Initialize 'tooltips enabled' in the UI */
   action = g_action_map_lookup_action (G_ACTION_MAP (self), ACTION_ENABLE_TOOLTIPS);
-  g_action_change_state (G_ACTION (action), g_variant_new_boolean (priv->tooltips_enabled));
+  g_action_change_state (G_ACTION (action), g_variant_new_boolean (self->tooltips_enabled));
 
   /* Initialize extra widgets */
 
@@ -442,8 +435,8 @@ _initialize_ui (FrogrMainView *self)
   gtk_builder_add_from_file (builder, full_path, NULL);
   g_free (full_path);
   ctxt_menu_model = G_MENU_MODEL (gtk_builder_get_object (builder, "context-menu"));
-  priv->pictures_ctxt_menu = gtk_menu_new_from_model (ctxt_menu_model);
-  gtk_menu_attach_to_widget (GTK_MENU (priv->pictures_ctxt_menu), GTK_WIDGET (self), NULL);
+  self->pictures_ctxt_menu = gtk_menu_new_from_model (ctxt_menu_model);
+  gtk_menu_attach_to_widget (GTK_MENU (self->pictures_ctxt_menu), GTK_WIDGET (self), NULL);
 
   /* Initialize drag'n'drop support */
   _initialize_drag_n_drop (self);
@@ -466,17 +459,17 @@ _initialize_ui (FrogrMainView *self)
   gtk_container_add (GTK_CONTAINER (progress_vbox), progress_bar);
 
   gtk_widget_hide (progress_dialog);
-  priv->progress_dialog = progress_dialog;
-  priv->progress_bar = progress_bar;
-  priv->progress_is_showing = FALSE;
-  priv->state_description = NULL;
+  self->progress_dialog = progress_dialog;
+  self->progress_bar = progress_bar;
+  self->progress_is_showing = FALSE;
+  self->state_description = NULL;
 
   /* Initialize model */
-  priv->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
+  self->tree_model = GTK_TREE_MODEL (gtk_list_store_new (3,
                                                          G_TYPE_STRING,
                                                          GDK_TYPE_PIXBUF,
                                                          G_TYPE_OBJECT));
-  gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), priv->tree_model);
+  gtk_icon_view_set_model (GTK_ICON_VIEW (icon_view), self->tree_model);
   gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), PIXBUF_COL);
   gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view),
                                     GTK_SELECTION_MULTIPLE);
@@ -490,8 +483,8 @@ _initialize_ui (FrogrMainView *self)
   gtk_window_set_default_size (GTK_WINDOW (self), MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
 
   /* Init status bar */
-  priv->sb_context_id =
-    gtk_statusbar_get_context_id (GTK_STATUSBAR (priv->status_bar),
+  self->sb_context_id =
+    gtk_statusbar_get_context_id (GTK_STATUSBAR (self->status_bar),
                                   "Status bar messages");
 
   /* Connect signals */
@@ -499,19 +492,19 @@ _initialize_ui (FrogrMainView *self)
                     G_CALLBACK (_on_main_view_delete_event),
                     self);
 
-  g_signal_connect (G_OBJECT (priv->icon_view), "query-tooltip",
+  g_signal_connect (G_OBJECT (self->icon_view), "query-tooltip",
                     G_CALLBACK (_on_icon_view_query_tooltip),
                     self);
 
-  g_signal_connect (G_OBJECT (priv->icon_view), "selection-changed",
+  g_signal_connect (G_OBJECT (self->icon_view), "selection-changed",
                     G_CALLBACK (_on_icon_view_selection_changed),
                     self);
 
-  g_signal_connect (G_OBJECT (priv->progress_dialog), "response",
+  g_signal_connect (G_OBJECT (self->progress_dialog), "response",
                     G_CALLBACK(_progress_dialog_response),
                     self);
 
-  g_signal_connect (G_OBJECT (priv->progress_dialog),
+  g_signal_connect (G_OBJECT (self->progress_dialog),
                     "delete-event",
                     G_CALLBACK(_progress_dialog_delete_event),
                     self);
@@ -621,7 +614,6 @@ extract_accels_from_menu (GMenuModel     *model,
 
 static void _initialize_header_bar (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
   GMenuModel *menu_model = NULL;
   GtkWidget *toolbar = NULL;
   GtkWidget *header_item = NULL;
@@ -630,11 +622,10 @@ static void _initialize_header_bar (FrogrMainView *self)
   GtkIconTheme *icon_theme = NULL;
   gchar *full_path = NULL;
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  priv->header_bar = gtk_header_bar_new ();
+  self->header_bar = gtk_header_bar_new ();
 
   /* Make sure that the toolbar is not visible when using hte header bar */
-  toolbar = GTK_WIDGET (gtk_builder_get_object (priv->builder, "toolbar"));
+  toolbar = GTK_WIDGET (gtk_builder_get_object (self->builder, "toolbar"));
   gtk_widget_hide (toolbar);
 
   /* First create the left side buttons */
@@ -647,11 +638,11 @@ static void _initialize_header_bar (FrogrMainView *self)
   /* Menu button and its associated menu */
 
   full_path = g_strdup_printf ("%s/" UI_MENU_BUTTON_FILE, frogr_util_get_app_data_dir ());
-  gtk_builder_add_from_file (priv->builder, full_path, NULL);
+  gtk_builder_add_from_file (self->builder, full_path, NULL);
   g_free (full_path);
 
-  menu_model = G_MENU_MODEL (gtk_builder_get_object (priv->builder, "menu-button"));
-  extract_accels_from_menu (menu_model, priv->gtk_app);
+  menu_model = G_MENU_MODEL (gtk_builder_get_object (self->builder, "menu-button"));
+  extract_accels_from_menu (menu_model, self->gtk_app);
 
   menu = gtk_menu_new_from_model (menu_model);
   gtk_widget_set_halign (menu, GTK_ALIGN_END);
@@ -671,7 +662,7 @@ static void _initialize_header_bar (FrogrMainView *self)
   gtk_button_set_image (GTK_BUTTON (header_item), menu_image);
   gtk_menu_button_set_popup (GTK_MENU_BUTTON (header_item), menu);
   gtk_widget_show (header_item);
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), header_item);
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (self->header_bar), header_item);
 
   /* Save project item */
 
@@ -679,35 +670,32 @@ static void _initialize_header_bar (FrogrMainView *self)
 
   /* Make the close button visible and show */
 
-  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->header_bar), TRUE);
-  gtk_widget_show (priv->header_bar);
+  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (self->header_bar), TRUE);
+  gtk_widget_show (self->header_bar);
 }
 
 static void
 _add_item_to_header_bar (FrogrMainView *self, HeaderBarItemPosition pos, const gchar *action_name, const gchar *icon_name, const gchar *label, const gchar *tooltip_text, const gchar *accel)
 {
-  FrogrMainViewPrivate *priv = NULL;
   GtkWidget *item = NULL;
 #if GTK_CHECK_VERSION (3, 12, 0)
   const gchar *accels[2] = { accel, NULL };
 #endif
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   item = gtk_button_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
   gtk_widget_set_tooltip_text (item, tooltip_text);
   gtk_actionable_set_action_name (GTK_ACTIONABLE (item), action_name);
 
 #if GTK_CHECK_VERSION (3, 12, 0)
-  gtk_application_set_accels_for_action (priv->gtk_app, action_name, accels);
+  gtk_application_set_accels_for_action (self->gtk_app, action_name, accels);
 #else
-  gtk_application_add_accelerator (priv->gtk_app, accel, action_name, NULL);
+  gtk_application_add_accelerator (self->gtk_app, accel, action_name, NULL);
 #endif
 
   if (pos == HEADER_BAR_POSITION_START)
-    gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), item);
+    gtk_header_bar_pack_start (GTK_HEADER_BAR (self->header_bar), item);
   else
-    gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), item);
+    gtk_header_bar_pack_end (GTK_HEADER_BAR (self->header_bar), item);
 
   gtk_widget_show (item);
 }
@@ -716,17 +704,14 @@ _add_item_to_header_bar (FrogrMainView *self, HeaderBarItemPosition pos, const g
 
 static void _initialize_menubar_and_toolbar (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
   GtkWidget *toolbar = NULL;
   GtkToolItem *toolbar_items[7];
   gchar *full_path = NULL;
   gint i;
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Menu bar */
   full_path = g_strdup_printf ("%s/" UI_MENU_BAR_FILE, frogr_util_get_app_data_dir ());
-  gtk_builder_add_from_file (priv->builder, full_path, NULL);
+  gtk_builder_add_from_file (self->builder, full_path, NULL);
   g_free (full_path);
 
   g_action_map_add_action_entries (G_ACTION_MAP (self),
@@ -734,11 +719,11 @@ static void _initialize_menubar_and_toolbar (FrogrMainView *self)
                                    self);
 
   gtk_application_set_menubar (gtk_window_get_application (GTK_WINDOW (self)),
-                               G_MENU_MODEL (gtk_builder_get_object (priv->builder, "menu-bar")));
+                               G_MENU_MODEL (gtk_builder_get_object (self->builder, "menu-bar")));
   gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (self), TRUE);
 
   /* Toolbar */
-  toolbar = GTK_WIDGET (gtk_builder_get_object (priv->builder, "toolbar"));
+  toolbar = GTK_WIDGET (gtk_builder_get_object (self->builder, "toolbar"));
   gtk_widget_show (toolbar);
 
   toolbar_items[0] = _create_toolbar_item ("win.open-project", "document-open", _("Open"), _("Open Existing Project"));
@@ -777,12 +762,10 @@ _create_toolbar_item (const gchar *action_name, const gchar *icon_name, const gc
 static gboolean
 _maybe_show_auth_dialog_on_idle (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (!frogr_controller_is_authorized (priv->controller))
+  if (!frogr_controller_is_authorized (self->controller))
     {
       /* Show authorization dialog if needed */
-      frogr_controller_show_auth_dialog (priv->controller);
+      frogr_controller_show_auth_dialog (self->controller);
     }
 
   return FALSE;
@@ -791,21 +774,19 @@ _maybe_show_auth_dialog_on_idle (FrogrMainView *self)
 static void
 _update_project_path (FrogrMainView *self, const gchar *path)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Early return if nothing changed */
-  if (!g_strcmp0 (priv->project_filepath, path))
+  if (!g_strcmp0 (self->project_filepath, path))
       return;
 
-  g_free (priv->project_name);
-  g_free (priv->project_dir);
-  g_free (priv->project_filepath);
+  g_free (self->project_name);
+  g_free (self->project_dir);
+  g_free (self->project_filepath);
 
   if (!path)
     {
-      priv->project_name = NULL;
-      priv->project_dir = NULL;
-      priv->project_filepath = NULL;
+      self->project_name = NULL;
+      self->project_dir = NULL;
+      self->project_filepath = NULL;
     }
   else
     {
@@ -822,7 +803,7 @@ _update_project_path (FrogrMainView *self, const gchar *path)
                                      G_FILE_QUERY_INFO_NONE,
                                      NULL,
                                      NULL);
-      priv->project_name = g_strdup (g_file_info_get_display_name (file_info));
+      self->project_name = g_strdup (g_file_info_get_display_name (file_info));
 
       /* Get the base directory, in beautiful UTF-8 too */
       dir = g_file_get_parent (file);
@@ -836,10 +817,10 @@ _update_project_path (FrogrMainView *self, const gchar *path)
           dir_path = g_strdup_printf ("~%s", &dir_path[g_utf8_strlen (home_dir, -1)]);
           g_free (tmp_path);
         }
-      priv->project_dir = dir_path;
+      self->project_dir = dir_path;
 
       /* Finally, store the raw path too */
-      priv->project_filepath = g_strdup (path);
+      self->project_filepath = g_strdup (path);
 
       g_object_unref (file);
       g_object_unref (dir);
@@ -849,22 +830,20 @@ _update_project_path (FrogrMainView *self, const gchar *path)
 static void
 _update_window_title (FrogrMainView *self, gboolean dirty)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
 #if USE_HEADER_BAR
   gchar *title = NULL;
   gchar *subtitle = NULL;
 
-  title = priv->project_name
-    ? g_strdup_printf ("%s%s", (dirty ? "*" : ""), priv->project_name)
+  title = self->project_name
+    ? g_strdup_printf ("%s%s", (dirty ? "*" : ""), self->project_name)
     : g_strdup (APP_SHORTNAME);
 
-  subtitle = priv->project_name
-    ? g_strdup_printf ("%s", priv->project_dir)
+  subtitle = self->project_name
+    ? g_strdup_printf ("%s", self->project_dir)
     : NULL;
 
-  gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), title);
-  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->header_bar), subtitle);
+  gtk_header_bar_set_title (GTK_HEADER_BAR (self->header_bar), title);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (self->header_bar), subtitle);
 
   g_free (subtitle);
   g_free (title);
@@ -874,9 +853,9 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
   gchar *session_string = NULL;
   gchar *window_title = NULL;
 
-  session_string = priv->project_name
+  session_string = self->project_name
     ? g_strdup_printf ("%s%s (%s) - ", (dirty ? "*" : ""),
-                       priv->project_name, priv->project_dir)
+                       self->project_name, self->project_dir)
     : g_strdup("");
 
   window_title = g_strdup_printf ("%s%s", session_string, APP_SHORTNAME);
@@ -891,11 +870,9 @@ static void
 _on_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer data)
 {
   FrogrMainView *self = NULL;
-  FrogrMainViewPrivate *priv = NULL;
   const gchar *action_name = NULL;
 
   self = FROGR_MAIN_VIEW (data);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   action_name = g_action_get_name (G_ACTION (action));
 
   if (!g_strcmp0 (action_name, ACTION_UPLOAD_ALL))
@@ -923,11 +900,11 @@ _on_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpointer da
   else if (!g_strcmp0 (action_name, ACTION_SAVE_PROJECT_AS))
     _save_project_as_dialog (self);
   else if (!g_strcmp0 (action_name, ACTION_AUTHORIZE))
-    frogr_controller_show_auth_dialog (priv->controller);
+    frogr_controller_show_auth_dialog (self->controller);
   else if (!g_strcmp0 (action_name, ACTION_PREFERENCES))
-    frogr_controller_show_settings_dialog (priv->controller);
+    frogr_controller_show_settings_dialog (self->controller);
   else if (!g_strcmp0 (action_name, ACTION_ABOUT))
-    frogr_controller_show_about_dialog (priv->controller);
+    frogr_controller_show_about_dialog (self->controller);
   else if (!g_strcmp0 (action_name, ACTION_HELP))
     frogr_util_open_uri ("help:frogr");
   else if (!g_strcmp0 (action_name, ACTION_QUIT))
@@ -945,18 +922,18 @@ _on_radio_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpoin
 static void
 _on_radio_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-  FrogrMainViewPrivate *priv = NULL;
+  FrogrMainView *self = NULL;
   const gchar *action_name = NULL;
   const gchar *target = NULL;
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  self = FROGR_MAIN_VIEW (data);
   action_name = g_action_get_name (G_ACTION (action));
   target = g_variant_get_string (parameter, NULL);
 
   if (!g_strcmp0 (action_name, ACTION_LOGIN_AS))
     {
       DEBUG ("Selected account: %s", target);
-      frogr_controller_set_active_account (priv->controller, target);
+      frogr_controller_set_active_account (self->controller, target);
     }
   else if (!g_strcmp0 (action_name, ACTION_SORT_BY))
     {
@@ -970,9 +947,9 @@ _on_radio_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointe
         criteria = SORT_BY_SIZE;
 
       /* Update the UI and save settings */
-      _reorder_pictures (FROGR_MAIN_VIEW (data), criteria, priv->sorting_reversed);
-      frogr_config_set_mainview_sorting_criteria (priv->config, criteria);
-      frogr_config_save_settings (priv->config);
+      _reorder_pictures (FROGR_MAIN_VIEW (data), criteria, self->sorting_reversed);
+      frogr_config_set_mainview_sorting_criteria (self->config, criteria);
+      frogr_config_save_settings (self->config);
     }
   else
     g_assert_not_reached ();
@@ -994,30 +971,28 @@ _on_toggle_menu_item_activated (GSimpleAction *action, GVariant *parameter, gpoi
 static void
 _on_toggle_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = NULL;
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
   const gchar *action_name = NULL;
   gboolean checked;
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
   action_name = g_action_get_name (G_ACTION (action));
   checked = g_variant_get_boolean (parameter);
 
   if (!g_strcmp0 (action_name, ACTION_ENABLE_TOOLTIPS))
     {
-      frogr_config_set_mainview_enable_tooltips (priv->config, checked);
-      priv->tooltips_enabled = checked;
+      frogr_config_set_mainview_enable_tooltips (self->config, checked);
+      self->tooltips_enabled = checked;
     }
   else if (!g_strcmp0 (action_name, ACTION_SORT_IN_REVERSE_ORDER))
     {
-      _reorder_pictures (mainview, priv->sorting_criteria, checked);
-      frogr_config_set_mainview_sorting_reversed (priv->config, checked);
+      _reorder_pictures (self, self->sorting_criteria, checked);
+      frogr_config_set_mainview_sorting_reversed (self->config, checked);
     }
   else
     g_assert_not_reached ();
 
   /* State for check menu items should be immediately stored */
-  frogr_config_save_settings (priv->config);
+  frogr_config_save_settings (self->config);
 
   /* Update the action */
   g_simple_action_set_state (action, parameter);
@@ -1026,40 +1001,33 @@ _on_toggle_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpoint
 static void
 _quit_application (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  g_application_quit (G_APPLICATION (priv->gtk_app));
+  g_application_quit (G_APPLICATION (self->gtk_app));
 }
 
 #ifdef PLATFORM_MAC
 static void
 _tweak_app_menu_for_mac (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
   GMenuModel *menu = NULL;
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Hide the Section including the 'Help' menu item */
-  g_menu_remove (G_MENU (priv->app_menu), 2);
+  g_menu_remove (G_MENU (self->app_menu), 2);
 
   /* The section removed contained the 'About' and 'Quit' items, so
      create new ones and place them in their right places */
   menu = G_MENU_MODEL (g_menu_new ());
   g_menu_append_item (G_MENU (menu), g_menu_item_new (_("_About"), "app.about"));
-  g_menu_insert_section (G_MENU (priv->app_menu), 0, NULL, menu);
+  g_menu_insert_section (G_MENU (self->app_menu), 0, NULL, menu);
 
   menu = G_MENU_MODEL (g_menu_new ());
   g_menu_append_item (G_MENU (menu), g_menu_item_new (_("_Quit"), "app.quit"));
-  g_menu_insert_section (G_MENU (priv->app_menu), 3, NULL, menu);
+  g_menu_insert_section (G_MENU (self->app_menu), 3, NULL, menu);
 }
 #endif
 
 static void
 _populate_accounts_submenu (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
   FrogrAccount *account = NULL;
   GMenuItem *accounts_menu;
   GMenuItem *menu_item = NULL;
@@ -1070,14 +1038,12 @@ _populate_accounts_submenu (FrogrMainView *self)
   const gchar *username = NULL;
   gchar *action_str = NULL;
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Remove a previous submenu if present (it will be regenerated later) */
-  section = g_menu_model_get_item_link (priv->app_menu, 0, G_MENU_LINK_SECTION);
+  section = g_menu_model_get_item_link (self->app_menu, 0, G_MENU_LINK_SECTION);
   if (g_menu_model_get_n_items (G_MENU_MODEL (section)) > 1)
     g_menu_remove (G_MENU (section), 1);
 
-  accounts = frogr_controller_get_all_accounts (priv->controller);
+  accounts = frogr_controller_get_all_accounts (self->controller);
   if (!g_slist_length (accounts))
     return;
 
@@ -1098,7 +1064,7 @@ _populate_accounts_submenu (FrogrMainView *self)
       if (frogr_account_is_active (account))
         {
           GAction *action = NULL;
-          action = g_action_map_lookup_action (G_ACTION_MAP (priv->gtk_app), ACTION_LOGIN_AS);
+          action = g_action_map_lookup_action (G_ACTION_MAP (self->gtk_app), ACTION_LOGIN_AS);
           g_action_activate (action, g_variant_new_string (username));
         }
     }
@@ -1111,13 +1077,11 @@ _populate_accounts_submenu (FrogrMainView *self)
 static void
 _initialize_drag_n_drop (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  gtk_drag_dest_set (priv->icon_view, GTK_DEST_DEFAULT_ALL,
+  gtk_drag_dest_set (self->icon_view, GTK_DEST_DEFAULT_ALL,
                      NULL, 0, GDK_ACTION_COPY );
-  gtk_drag_dest_add_uri_targets (priv->icon_view);
+  gtk_drag_dest_add_uri_targets (self->icon_view);
 
-  g_signal_connect(G_OBJECT(priv->icon_view), "drag-data-received",
+  g_signal_connect(G_OBJECT(self->icon_view), "drag-data-received",
                    G_CALLBACK(_on_icon_view_drag_data_received),
                    self);
 }
@@ -1131,17 +1095,15 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
                                   gpointer data)
 {
   FrogrMainView *self = NULL;
-  FrogrMainViewPrivate *priv = NULL;
   GdkAtom target;
   GSList *fileuris_list = NULL;
   gchar **fileuris_array = NULL;
   gint i;
 
   self = FROGR_MAIN_VIEW (data);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
 
   /* Do nothing when the application is busy doing something else */
-  if (FROGR_STATE_IS_BUSY(frogr_controller_get_state (priv->controller)))
+  if (FROGR_STATE_IS_BUSY(frogr_controller_get_state (self->controller)))
     return;
 
   target = gtk_selection_data_get_target (selection_data);
@@ -1171,26 +1133,25 @@ _on_icon_view_key_press_event (GtkWidget *widget,
                                GdkEventKey *event,
                                gpointer data)
 {
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
 
   /* Actions are only allowed in IDLE state */
-  if (frogr_controller_get_state (priv->controller) != FROGR_STATE_IDLE)
+  if (frogr_controller_get_state (self->controller) != FROGR_STATE_IDLE)
     return TRUE;
 
   /* Do nothing if there's no picture loaded yet */
-  if (!_n_pictures (mainview))
+  if (!_n_pictures (self))
     return TRUE;
 
   /* Remove selected pictures if pressed Supr */
   if ((event->type == GDK_KEY_PRESS) && (event->keyval == GDK_KEY_Delete))
-    _remove_selected_pictures (mainview);
+    _remove_selected_pictures (self);
 
   /* Show contextual menu if pressed the 'Menu' key */
   if (event->type == GDK_KEY_PRESS && event->keyval == GDK_KEY_Menu
-      && priv->n_selected_pictures > 0)
+      && self->n_selected_pictures > 0)
     {
-      GtkMenu *menu = GTK_MENU (priv->pictures_ctxt_menu);
+      GtkMenu *menu = GTK_MENU (self->pictures_ctxt_menu);
       gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
                       0, gtk_get_current_event_time ());
     }
@@ -1201,36 +1162,32 @@ _on_icon_view_key_press_event (GtkWidget *widget,
 static void
 _clear_reference_picture (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  if (priv->reference_picture)
+  if (self->reference_picture)
     {
-      gtk_tree_path_free (priv->reference_picture);
-      priv->reference_picture = NULL;
+      gtk_tree_path_free (self->reference_picture);
+      self->reference_picture = NULL;
     }
 }
 
 static void
 _update_reference_picture (FrogrMainView *self, GtkTreePath *new_path)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   _clear_reference_picture (self);
   if (new_path)
-    priv->reference_picture = gtk_tree_path_copy (new_path);
+    self->reference_picture = gtk_tree_path_copy (new_path);
 }
 
 static void
-_handle_selection_for_button_event_and_path (FrogrMainView *mainview,
+_handle_selection_for_button_event_and_path (FrogrMainView *self,
                                              GdkEventButton *event,
                                              GtkTreePath *path)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
   gboolean using_primary_key = event->state & GDK_PRIMARY_MASK;
   gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
   gboolean is_single_click = event->type == GDK_BUTTON_PRESS;
   gboolean is_double_click = event->type == GDK_2BUTTON_PRESS;
   gboolean is_primary_btn = event->button == 1;
-  gboolean path_selected = gtk_icon_view_path_is_selected (GTK_ICON_VIEW (priv->icon_view), path);
+  gboolean path_selected = gtk_icon_view_path_is_selected (GTK_ICON_VIEW (self->icon_view), path);
 
   /* Clicking with the secondary button in a selected element means
      we just want to open the contextual menu, so do nothing */
@@ -1240,17 +1197,17 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
   /* Handle simple cases (no modifiers) */
   if (!using_primary_key && !using_shift_key)
     {
-      gint n_selected_pictures = priv->n_selected_pictures;
+      gint n_selected_pictures = self->n_selected_pictures;
 
       if (!is_double_click)
-        _deselect_all_pictures (mainview);
+        _deselect_all_pictures (self);
 
       /* We will just select the pointed element if it's not selected yet
          or if it is, but it belongs to a multiple selection previously done */
       if (!path_selected || n_selected_pictures > 1)
         {
-          gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
-          _update_reference_picture (mainview, path);
+          gtk_icon_view_select_path (GTK_ICON_VIEW (self->icon_view), path);
+          _update_reference_picture (self, path);
         }
 
       /* Already handled */
@@ -1269,14 +1226,14 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
       if (!using_shift_key || path_selected)
         {
           if (!using_shift_key)
-            _clear_reference_picture (mainview);
+            _clear_reference_picture (self);
 
           if (path_selected)
-            gtk_icon_view_unselect_path (GTK_ICON_VIEW (priv->icon_view), path);
+            gtk_icon_view_unselect_path (GTK_ICON_VIEW (self->icon_view), path);
           else
             {
-              gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
-              _update_reference_picture (mainview, path);
+              gtk_icon_view_select_path (GTK_ICON_VIEW (self->icon_view), path);
+              _update_reference_picture (self, path);
             }
 
           /* Already handled */
@@ -1285,12 +1242,12 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
     }
 
   /* Finally, handle special cases with Shift */
-  if (priv->reference_picture)
+  if (self->reference_picture)
     {
       GtkTreeIter start_iter;
-      if (gtk_tree_model_get_iter (priv->tree_model, &start_iter, priv->reference_picture))
+      if (gtk_tree_model_get_iter (self->tree_model, &start_iter, self->reference_picture))
         {
-          GtkTreePath *start_path = priv->reference_picture;
+          GtkTreePath *start_path = self->reference_picture;
           GtkTreePath *end_path = path;
           GtkTreePath *current_path = NULL;
 
@@ -1306,12 +1263,12 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
              we first unselect everything and then start selecting, but keeping
              the reference icon anyway, since we will just extend from there */
           if (!using_primary_key)
-            gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
+            gtk_icon_view_unselect_all (GTK_ICON_VIEW (self->icon_view));
 
           current_path = gtk_tree_path_copy (start_path);
           while (gtk_tree_path_compare (current_path, end_path) <= 0)
             {
-              gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), current_path);
+              gtk_icon_view_select_path (GTK_ICON_VIEW (self->icon_view), current_path);
               gtk_tree_path_next(current_path);
             }
           gtk_tree_path_free (current_path);
@@ -1322,8 +1279,8 @@ _handle_selection_for_button_event_and_path (FrogrMainView *mainview,
     }
 
   /* If nothing was previously selected when using Shift, treat it as a normal click */
-  gtk_icon_view_select_path (GTK_ICON_VIEW (priv->icon_view), path);
-  _update_reference_picture (mainview, path);
+  gtk_icon_view_select_path (GTK_ICON_VIEW (self->icon_view), path);
+  _update_reference_picture (self, path);
 }
 
 gboolean
@@ -1331,8 +1288,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
                                   GdkEventButton *event,
                                   gpointer data)
 {
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (data);
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
   gboolean using_primary_key = event->state & GDK_PRIMARY_MASK;
   gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
   GtkTreePath *new_path = NULL;
@@ -1341,7 +1297,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
   gtk_widget_grab_focus(widget);
 
   /* Actions are only allowed in IDLE state */
-  if (frogr_controller_get_state (priv->controller) != FROGR_STATE_IDLE)
+  if (frogr_controller_get_state (self->controller) != FROGR_STATE_IDLE)
     return TRUE;
 
   /* Only left and right clicks are supported */
@@ -1349,11 +1305,11 @@ _on_icon_view_button_press_event (GtkWidget *widget,
     return TRUE;
 
   /* Do nothing if there's no picture loaded yet */
-  if (!_n_pictures (mainview))
+  if (!_n_pictures (self))
     return TRUE;
 
   /* Check if we clicked on top of an item */
-  if (gtk_icon_view_get_item_at_pos (GTK_ICON_VIEW (priv->icon_view),
+  if (gtk_icon_view_get_item_at_pos (GTK_ICON_VIEW (self->icon_view),
                                      event->x, event->y, &new_path, NULL))
     {
       gboolean is_primary_btn = event->button == 1;
@@ -1361,18 +1317,18 @@ _on_icon_view_button_press_event (GtkWidget *widget,
       gboolean is_double_click = event->type == GDK_2BUTTON_PRESS;
 
       /* Decide whether we need to change the selection and how */
-      _handle_selection_for_button_event_and_path (mainview, event, new_path);
+      _handle_selection_for_button_event_and_path (self, event, new_path);
 
       /* Perform the right action: edit picture or show ctxt menu */
       if (is_primary_btn && is_double_click && !using_primary_key)
         {
           /* edit selected item */
-          _edit_selected_pictures (mainview);
+          _edit_selected_pictures (self);
         }
       else if (!is_primary_btn && is_single_click)
         {
           /* Show contextual menu */
-          gtk_menu_popup (GTK_MENU (priv->pictures_ctxt_menu),
+          gtk_menu_popup (GTK_MENU (self->pictures_ctxt_menu),
               NULL, NULL, NULL, NULL,
               event->button,
               gtk_get_current_event_time ());
@@ -1385,7 +1341,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
 
   /* Make sure we reset everything if simply clicking outside of any picture*/
   if (!using_primary_key && !using_shift_key)
-    _deselect_all_pictures (mainview);
+    _deselect_all_pictures (self);
 
   return FALSE;
 }
@@ -1407,7 +1363,6 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
                              gpointer data)
 {
   FrogrMainView *self = NULL;
-  FrogrMainViewPrivate *priv = NULL;
   GtkTreePath *path;
   gint bw_x;
   gint bw_y;
@@ -1417,10 +1372,9 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
     return FALSE;
 
   self = FROGR_MAIN_VIEW (data);
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Disabled by configuration */
-  if (!frogr_config_get_mainview_enable_tooltips (priv->config))
+  if (!frogr_config_get_mainview_enable_tooltips (self->config))
     return FALSE;
 
   /* Check whether we're asking for a tooltip over a picture */
@@ -1438,8 +1392,8 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       const gchar *datetime = NULL;
 
       /* Get needed information */
-      gtk_tree_model_get_iter (priv->tree_model, &iter, path);
-      gtk_tree_model_get (priv->tree_model,
+      gtk_tree_model_get_iter (self->tree_model, &iter, path);
+      gtk_tree_model_get (self->tree_model,
                           &iter,
                           FPICTURE_COL, &picture,
                           -1);
@@ -1489,21 +1443,20 @@ static void
 _on_icon_view_selection_changed (GtkWidget *icon_view, gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GList *selected_pictures = NULL;
   gint len = 0;
 
   /* We save the value here to avoid traversing all the list whenever
      we need to check the number of selected pictures */
   selected_pictures =
-    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
+    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (self->icon_view));
 
   len = g_list_length (selected_pictures);
 
   g_list_foreach (selected_pictures, (GFunc)gtk_tree_path_free, NULL);
   g_list_free (selected_pictures);
 
-  priv->n_selected_pictures = len;
+  self->n_selected_pictures = len;
 
   /* Update sensitiveness for actions */
   _update_sensitiveness (self);
@@ -1512,23 +1465,20 @@ _on_icon_view_selection_changed (GtkWidget *icon_view, gpointer data)
 static void
 _deselect_all_pictures (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  gtk_icon_view_unselect_all (GTK_ICON_VIEW (priv->icon_view));
+  gtk_icon_view_unselect_all (GTK_ICON_VIEW (self->icon_view));
   _clear_reference_picture (self);
 }
 
 static GSList *
 _get_selected_pictures (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GSList *pictures = NULL;
   GList *selected_pictures;
   GList *item;
 
   /* Iterate over selected items */
   selected_pictures =
-    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (priv->icon_view));
+    gtk_icon_view_get_selected_items (GTK_ICON_VIEW (self->icon_view));
   for (item = selected_pictures; item; item = g_list_next (item))
     {
       FrogrPicture *picture;
@@ -1537,8 +1487,8 @@ _get_selected_pictures (FrogrMainView *self)
 
       /* Get needed information */
       path = (GtkTreePath *)(item->data);
-      gtk_tree_model_get_iter (priv->tree_model, &iter, path);
-      gtk_tree_model_get (priv->tree_model,
+      gtk_tree_model_get_iter (self->tree_model, &iter, path);
+      gtk_tree_model_get (self->tree_model,
                           &iter,
                           FPICTURE_COL, &picture,
                           -1);
@@ -1556,10 +1506,8 @@ _get_selected_pictures (FrogrMainView *self)
 static gint
 _n_pictures (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Just return the number of pictures in the model */
-  return frogr_model_n_pictures (priv->model);
+  return frogr_model_n_pictures (self->model);
 }
 
 static void
@@ -1576,10 +1524,8 @@ _open_project_dialog_response_cb (GtkDialog *dialog,
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
       if (filename != NULL)
         {
-          FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
           /* Load from disk and update project's path */
-          if (frogr_controller_open_project_from_file (priv->controller, filename))
+          if (frogr_controller_open_project_from_file (self->controller, filename))
             _update_window_title (self, FALSE);
           g_free (filename);
         }
@@ -1622,10 +1568,8 @@ _open_project_dialog (FrogrMainView *self)
 static void
 _save_current_project (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (priv->project_filepath)
-    _save_project_to_file (self, priv->project_filepath);
+  if (self->project_filepath)
+    _save_project_to_file (self, self->project_filepath);
   else
     _save_project_as_dialog (self);
 }
@@ -1633,10 +1577,8 @@ _save_current_project (FrogrMainView *self)
 static void
 _save_project_to_file (FrogrMainView *self, const gchar *filepath)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Save to disk and update project's path */
-  if (frogr_controller_save_project_to_file (priv->controller, filepath))
+  if (frogr_controller_save_project_to_file (self->controller, filepath))
     _update_window_title (self, FALSE);
 }
 
@@ -1778,9 +1720,7 @@ _load_pictures_dialog (FrogrMainView *self)
 static gboolean
 _pictures_loaded_required_check (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (!frogr_model_get_pictures (priv->model))
+  if (!frogr_model_get_pictures (self->model))
     {
       frogr_util_show_error_dialog (GTK_WINDOW (self),
                                     _("You don't have any picture added yet"));
@@ -1793,9 +1733,7 @@ _pictures_loaded_required_check (FrogrMainView *self)
 static gboolean
 _pictures_selected_required_check (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (priv->n_selected_pictures == 0)
+  if (self->n_selected_pictures == 0)
     {
       frogr_util_show_error_dialog (GTK_WINDOW (self),
                                     _("You need to select some pictures first"));
@@ -1808,65 +1746,55 @@ _pictures_selected_required_check (FrogrMainView *self)
 static void
 _add_tags_to_pictures (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   if (!_pictures_selected_required_check (self))
     return;
 
   /* Call the controller to add tags to them */
-  frogr_controller_show_add_tags_dialog (priv->controller,
+  frogr_controller_show_add_tags_dialog (self->controller,
                                          _get_selected_pictures (self));
 }
 
 static void
 _add_pictures_to_new_set (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   if (!_pictures_selected_required_check (self))
     return;
 
   /* Call the controller to add the pictures to sets */
-  frogr_controller_show_create_new_set_dialog (priv->controller,
+  frogr_controller_show_create_new_set_dialog (self->controller,
                                                _get_selected_pictures (self));
 }
 
 static void
 _add_pictures_to_existing_set (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   if (!_pictures_selected_required_check (self))
     return;
 
   /* Call the controller to add the pictures to sets */
-  frogr_controller_show_add_to_set_dialog (priv->controller,
+  frogr_controller_show_add_to_set_dialog (self->controller,
                                            _get_selected_pictures (self));
 }
 
 static void
 _add_pictures_to_group (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   if (!_pictures_selected_required_check (self))
     return;
 
   /* Call the controller to add the pictures to sets */
-  frogr_controller_show_add_to_group_dialog (priv->controller,
+  frogr_controller_show_add_to_group_dialog (self->controller,
                                              _get_selected_pictures (self));
 }
 
 static void
 _edit_selected_pictures (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   if (!_pictures_selected_required_check (self))
     return;
 
   /* Call the controller to edit them */
-  frogr_controller_show_details_dialog (priv->controller,
+  frogr_controller_show_details_dialog (self->controller,
                                         _get_selected_pictures (self));
 }
 
@@ -1887,7 +1815,6 @@ _open_pictures_in_external_viewer (FrogrMainView *self)
 static void
 _remove_selected_pictures (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GSList *selected_pictures;
   GSList *item;
 
@@ -1899,7 +1826,7 @@ _remove_selected_pictures (FrogrMainView *self)
   for (item = selected_pictures; item; item = g_slist_next (item))
     {
       FrogrPicture *picture = FROGR_PICTURE (item->data);
-      frogr_model_remove_picture (priv->model, picture);
+      frogr_model_remove_picture (self->model, picture);
     }
 
   /* Update UI */
@@ -1913,26 +1840,22 @@ _remove_selected_pictures (FrogrMainView *self)
 static void
 _load_pictures (FrogrMainView *self, GSList *fileuris)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  frogr_controller_load_pictures (priv->controller, fileuris);
+  frogr_controller_load_pictures (self->controller, fileuris);
 }
 
 static void
 _upload_pictures (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   if (!_pictures_loaded_required_check (self))
     return;
 
   _deselect_all_pictures (self);
-  frogr_controller_upload_pictures (priv->controller, priv->sorted_pictures);
+  frogr_controller_upload_pictures (self->controller, self->sorted_pictures);
 }
 
 static void
 _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GSList *list_as_loaded = NULL;
   GSList *current_list = NULL;
   GSList *current_item = NULL;
@@ -1942,8 +1865,8 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
 
   gchar *property_name = NULL;
 
-  priv->sorting_criteria = criteria;
-  priv->sorting_reversed = reversed;
+  self->sorting_criteria = criteria;
+  self->sorting_reversed = reversed;
 
   if (!_n_pictures (self))
     return;
@@ -1973,36 +1896,36 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
 
   /* Temporarily save the current list, and alloc an array to
      represent the new order compared to the old positions */
-  current_list = g_slist_copy (priv->sorted_pictures);
+  current_list = g_slist_copy (self->sorted_pictures);
   new_order = g_new0 (gint, g_slist_length (current_list));
 
   /* Use the original list (as loaded) as reference for sorting */
-  list_as_loaded = g_slist_copy (frogr_model_get_pictures (priv->model));
+  list_as_loaded = g_slist_copy (frogr_model_get_pictures (self->model));
   if (property_name)
     list_as_loaded = g_slist_sort_with_data (list_as_loaded,
                                              (GCompareDataFunc) _compare_pictures_by_property,
                                              (gchar*) property_name);
   /* Update the list of pictures */
-  if (priv->sorted_pictures)
+  if (self->sorted_pictures)
     {
-      g_slist_foreach (priv->sorted_pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->sorted_pictures);
+      g_slist_foreach (self->sorted_pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (self->sorted_pictures);
     }
-  priv->sorted_pictures = list_as_loaded;
-  g_slist_foreach (priv->sorted_pictures, (GFunc)g_object_ref, NULL);
+  self->sorted_pictures = list_as_loaded;
+  g_slist_foreach (self->sorted_pictures, (GFunc)g_object_ref, NULL);
 
   /* If we're reordering in reverse order, reverse the result list */
   if (reversed)
-    priv->sorted_pictures = g_slist_reverse (priv->sorted_pictures);
+    self->sorted_pictures = g_slist_reverse (self->sorted_pictures);
 
   /* Build the new_order array and update the treeview */
   current_pos = 0;
   for (current_item = current_list; current_item; current_item = g_slist_next (current_item))
     {
-      new_pos = g_slist_index (priv->sorted_pictures, current_item->data);
+      new_pos = g_slist_index (self->sorted_pictures, current_item->data);
       new_order[new_pos] = current_pos++;
     }
-  gtk_list_store_reorder (GTK_LIST_STORE (priv->tree_model), new_order);
+  gtk_list_store_reorder (GTK_LIST_STORE (self->tree_model), new_order);
 
   g_slist_free (current_list);
   g_free (new_order);
@@ -2078,10 +2001,8 @@ _progress_dialog_response (GtkDialog *dialog,
                            gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  frogr_controller_cancel_ongoing_requests (priv->controller);
-  gtk_widget_hide (priv->progress_dialog);
+  frogr_controller_cancel_ongoing_requests (self->controller);
+  gtk_widget_hide (self->progress_dialog);
 }
 
 static gboolean
@@ -2090,10 +2011,8 @@ _progress_dialog_delete_event (GtkWidget *widget,
                                gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  frogr_controller_cancel_ongoing_requests (priv->controller);
-  gtk_widget_hide (priv->progress_dialog);
+  frogr_controller_cancel_ongoing_requests (self->controller);
+  gtk_widget_hide (self->progress_dialog);
 
   return TRUE;
 }
@@ -2103,8 +2022,8 @@ _controller_state_changed (FrogrController *controller,
                            FrogrControllerState state,
                            gpointer data)
 {
-  FrogrMainView *mainview = FROGR_MAIN_VIEW (data);
-  _update_ui (mainview);
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+  _update_ui (self);
 }
 
 static void
@@ -2112,23 +2031,23 @@ _controller_active_account_changed (FrogrController *controller,
                                     FrogrAccount *account,
                                     gpointer data)
 {
-  FrogrMainView *mainview = NULL;
+  FrogrMainView *self = NULL;
 
-  mainview = FROGR_MAIN_VIEW (data);
-  _update_state_description (mainview);
-  _update_ui (mainview);
+  self = FROGR_MAIN_VIEW (data);
+  _update_state_description (self);
+  _update_ui (self);
 }
 
 static void
 _controller_accounts_changed (FrogrController *controller,
                               gpointer data)
 {
-  FrogrMainView *mainview = NULL;
+  FrogrMainView *self = NULL;
 
   /* Re-populate the accounts submenu */
-  mainview = FROGR_MAIN_VIEW (data);
-  _populate_accounts_submenu (mainview);
-  _update_ui (mainview);
+  self = FROGR_MAIN_VIEW (data);
+  _populate_accounts_submenu (self);
+  _update_ui (self);
 
   DEBUG ("%s", "Accounts list changed");
 }
@@ -2139,7 +2058,6 @@ _model_picture_added (FrogrController *controller,
                       gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
   GdkPixbuf *pixbuf = NULL;
   const gchar *fileuri = NULL;
   GtkTreeIter iter;
@@ -2148,19 +2066,19 @@ _model_picture_added (FrogrController *controller,
   fileuri = frogr_picture_get_fileuri (picture);
   pixbuf = frogr_picture_get_pixbuf (picture);
 
-  gtk_list_store_append (GTK_LIST_STORE (priv->tree_model), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (priv->tree_model), &iter,
+  gtk_list_store_append (GTK_LIST_STORE (self->tree_model), &iter);
+  gtk_list_store_set (GTK_LIST_STORE (self->tree_model), &iter,
                       FILEURI_COL, fileuri,
                       PIXBUF_COL, pixbuf,
                       FPICTURE_COL, picture,
                       -1);
 
   /* Update the list */
-  priv->sorted_pictures = g_slist_append (priv->sorted_pictures,
+  self->sorted_pictures = g_slist_append (self->sorted_pictures,
                                           g_object_ref (picture));
 
   /* Reorder if needed */
-  if (priv->sorting_criteria != SORT_AS_LOADED || priv->sorting_reversed)
+  if (self->sorting_criteria != SORT_AS_LOADED || self->sorting_reversed)
     frogr_main_view_reorder_pictures (self);
 
   /* Update upload size in state description */
@@ -2173,14 +2091,11 @@ _model_picture_removed (FrogrController *controller,
                         gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
-  FrogrMainViewPrivate *priv = NULL;
   GtkTreeModel *tree_model = NULL;
   GtkTreeIter iter;
 
   /* Check items in the icon_view */
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  tree_model = gtk_icon_view_get_model (GTK_ICON_VIEW (priv->icon_view));
+  tree_model = gtk_icon_view_get_model (GTK_ICON_VIEW (self->icon_view));
   if (gtk_tree_model_get_iter_first (tree_model, &iter))
     {
       /* Look for the picture and remove it */
@@ -2190,7 +2105,7 @@ _model_picture_removed (FrogrController *controller,
           FrogrPicture *picture_from_ui;
 
           /* Get needed information */
-          gtk_tree_model_get (priv->tree_model,
+          gtk_tree_model_get (self->tree_model,
                               &iter,
                               FPICTURE_COL, &picture_from_ui,
                               -1);
@@ -2198,10 +2113,10 @@ _model_picture_removed (FrogrController *controller,
           if (picture_from_ui == picture)
             {
               /* Remove from the GtkIconView and break loop */
-              gtk_list_store_remove (GTK_LIST_STORE (priv->tree_model), &iter);
+              gtk_list_store_remove (GTK_LIST_STORE (self->tree_model), &iter);
 
               /* Update the list */
-              priv->sorted_pictures = g_slist_remove (priv->sorted_pictures, picture);
+              self->sorted_pictures = g_slist_remove (self->sorted_pictures, picture);
               g_object_unref (picture);
 
               found = TRUE;
@@ -2230,24 +2145,19 @@ _model_deserialized (FrogrController *controller, gpointer data)
 }
 
 static void
-_update_state_description (FrogrMainView *mainview)
+_update_state_description (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-
-  g_free (priv->state_description);
-  priv->state_description = _craft_state_description (mainview);
+  g_free (self->state_description);
+  self->state_description = _craft_state_description (self);
 
   /* Do not force updating the status bar when loading pictures */
-  if (frogr_controller_get_state (priv->controller) != FROGR_STATE_LOADING_PICTURES)
-    frogr_main_view_set_status_text (mainview, priv->state_description);
+  if (frogr_controller_get_state (self->controller) != FROGR_STATE_LOADING_PICTURES)
+    frogr_main_view_set_status_text (self, self->state_description);
 }
 
 static gchar *
-_craft_state_description (FrogrMainView *mainview)
+_craft_state_description (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
   FrogrAccount *account = NULL;
   GSList *pictures = NULL;
   guint n_pictures = 0;
@@ -2258,10 +2168,9 @@ _craft_state_description (FrogrMainView *mainview)
   gchar *upload_size_str = NULL;
   gboolean is_pro = FALSE;
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (mainview);
-  account = frogr_controller_get_active_account (priv->controller);
+  account = frogr_controller_get_active_account (self->controller);
 
-  if (!FROGR_IS_ACCOUNT (account) || !frogr_controller_is_connected (priv->controller))
+  if (!FROGR_IS_ACCOUNT (account) || !frogr_controller_is_connected (self->controller))
     return g_strdup (_("Not connected to Flickr"));
 
   /* Just use the username here ant not the fullname (when available),
@@ -2307,8 +2216,8 @@ _craft_state_description (FrogrMainView *mainview)
     }
 
   /* Check size of the loaded pictures, if any */
-  pictures = frogr_model_get_pictures (priv->model);
-  n_pictures = frogr_model_n_pictures (priv->model);
+  pictures = frogr_model_get_pictures (self->model);
+  n_pictures = frogr_model_n_pictures (self->model);
   if (n_pictures)
     {
       GSList *item = NULL;
@@ -2372,8 +2281,6 @@ static gchar *iconview_actions[] = {
 static void
 _update_sensitiveness (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* gboolean has_accounts = FALSE; */
   gboolean has_pics = FALSE;
   gint n_selected_pics = 0;
@@ -2381,7 +2288,7 @@ _update_sensitiveness (FrogrMainView *self)
   gint i = 0;
 
   /* Set sensitiveness */
-  switch (frogr_controller_get_state (priv->controller))
+  switch (frogr_controller_get_state (self->controller))
     {
     case FROGR_STATE_LOADING_PICTURES:
     case FROGR_STATE_UPLOADING_PICTURES:
@@ -2394,7 +2301,7 @@ _update_sensitiveness (FrogrMainView *self)
 
     case FROGR_STATE_IDLE:
       has_pics = (_n_pictures (self) > 0);
-      n_selected_pics = priv->n_selected_pictures;
+      n_selected_pics = self->n_selected_pictures;
 
       /* Elements from the GMenu - file operations */
       for (i = 0; i < G_N_ELEMENTS (file_actions); i++)
@@ -2429,58 +2336,56 @@ _update_sensitiveness_for_action (FrogrMainView *self, const gchar *name, gboole
 static void
 _update_ui (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Set sensitiveness */
   _update_sensitiveness (self);
 
   /* Update status bar from model's state description */
-  if (frogr_controller_get_state (priv->controller) == FROGR_STATE_IDLE)
-    frogr_main_view_set_status_text (self, priv->state_description);
+  if (frogr_controller_get_state (self->controller) == FROGR_STATE_IDLE)
+    frogr_main_view_set_status_text (self, self->state_description);
 }
 
 static void
 _frogr_main_view_dispose (GObject *object)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
+  FrogrMainView *self = FROGR_MAIN_VIEW (object);
 
   /* Free memory */
-  if (priv->model)
+  if (self->model)
     {
-      g_object_unref (priv->model);
-      priv->model = NULL;
+      g_object_unref (self->model);
+      self->model = NULL;
     }
 
-  if (priv->sorted_pictures)
+  if (self->sorted_pictures)
     {
-      g_slist_foreach (priv->sorted_pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (priv->sorted_pictures);
-      priv->sorted_pictures = NULL;
+      g_slist_foreach (self->sorted_pictures, (GFunc)g_object_unref, NULL);
+      g_slist_free (self->sorted_pictures);
+      self->sorted_pictures = NULL;
     }
 
-  if (priv->controller)
+  if (self->controller)
     {
-      g_object_unref (priv->controller);
-      priv->controller = NULL;
+      g_object_unref (self->controller);
+      self->controller = NULL;
     }
 
-  if (priv->config)
+  if (self->config)
     {
-      g_object_unref (priv->config);
-      priv->config = NULL;
+      g_object_unref (self->config);
+      self->config = NULL;
     }
 
-  if (priv->tree_model)
+  if (self->tree_model)
     {
-      gtk_list_store_clear (GTK_LIST_STORE (priv->tree_model));
-      g_object_unref (priv->tree_model);
-      priv->tree_model = NULL;
+      gtk_list_store_clear (GTK_LIST_STORE (self->tree_model));
+      g_object_unref (self->tree_model);
+      self->tree_model = NULL;
     }
 
-  if (priv->builder)
+  if (self->builder)
     {
-      g_object_unref (priv->builder);
-      priv->builder = NULL;
+      g_object_unref (self->builder);
+      self->builder = NULL;
     }
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->dispose (object);
@@ -2489,13 +2394,13 @@ _frogr_main_view_dispose (GObject *object)
 static void
 _frogr_main_view_finalize (GObject *object)
 {
-  FrogrMainViewPrivate *priv = FROGR_MAIN_VIEW_GET_PRIVATE (object);
+  FrogrMainView *self = FROGR_MAIN_VIEW (object);
 
-  g_free (priv->project_name);
-  g_free (priv->project_dir);
-  g_free (priv->project_filepath);
-  g_free (priv->state_description);
-  gtk_tree_path_free (priv->reference_picture);
+  g_free (self->project_name);
+  g_free (self->project_dir);
+  g_free (self->project_filepath);
+  g_free (self->state_description);
+  gtk_tree_path_free (self->reference_picture);
 
   G_OBJECT_CLASS(frogr_main_view_parent_class)->finalize (object);
 }
@@ -2507,52 +2412,47 @@ frogr_main_view_class_init (FrogrMainViewClass *klass)
 
   obj_class->dispose = _frogr_main_view_dispose;
   obj_class->finalize = _frogr_main_view_finalize;
-
-  g_type_class_add_private (obj_class, sizeof (FrogrMainViewPrivate));
 }
 
 static void
 frogr_main_view_init (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   /* Initialize internal state NOT related with the UI */
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  priv->model = frogr_model_new ();
-  priv->controller = g_object_ref (frogr_controller_get_instance ());
-  priv->config = g_object_ref (frogr_config_get_instance ());
+  self->model = frogr_model_new ();
+  self->controller = g_object_ref (frogr_controller_get_instance ());
+  self->config = g_object_ref (frogr_config_get_instance ());
 
   /* Initialize sorting criteria and reverse */
-  priv->sorted_pictures = NULL;
-  priv->sorting_criteria = frogr_config_get_mainview_sorting_criteria (priv->config);
-  priv->sorting_reversed = frogr_config_get_mainview_sorting_reversed (priv->config);
+  self->sorted_pictures = NULL;
+  self->sorting_criteria = frogr_config_get_mainview_sorting_criteria (self->config);
+  self->sorting_reversed = frogr_config_get_mainview_sorting_reversed (self->config);
 
   /* Read value for 'tooltips enabled' */
-  priv->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (priv->config);
+  self->tooltips_enabled = frogr_config_get_mainview_enable_tooltips (self->config);
 
   /* No selected pictures at the beginning */
-  priv->n_selected_pictures = 0;
+  self->n_selected_pictures = 0;
 
   /* Connect signals */
-  g_signal_connect (G_OBJECT (priv->controller), "state-changed",
+  g_signal_connect (G_OBJECT (self->controller), "state-changed",
                     G_CALLBACK (_controller_state_changed), self);
 
-  g_signal_connect (G_OBJECT (priv->controller), "active-account-changed",
+  g_signal_connect (G_OBJECT (self->controller), "active-account-changed",
                     G_CALLBACK (_controller_active_account_changed), self);
 
-  g_signal_connect (G_OBJECT (priv->controller), "accounts-changed",
+  g_signal_connect (G_OBJECT (self->controller), "accounts-changed",
                     G_CALLBACK (_controller_accounts_changed), self);
 
-  g_signal_connect (G_OBJECT (priv->model), "picture-added",
+  g_signal_connect (G_OBJECT (self->model), "picture-added",
                     G_CALLBACK (_model_picture_added), self);
 
-  g_signal_connect (G_OBJECT (priv->model), "picture-removed",
+  g_signal_connect (G_OBJECT (self->model), "picture-removed",
                     G_CALLBACK (_model_picture_removed), self);
 
-  g_signal_connect (G_OBJECT (priv->model), "model-changed",
+  g_signal_connect (G_OBJECT (self->model), "model-changed",
                     G_CALLBACK (_model_changed), self);
 
-  g_signal_connect (G_OBJECT (priv->model), "model-deserialized",
+  g_signal_connect (G_OBJECT (self->model), "model-deserialized",
                     G_CALLBACK (_model_deserialized), self);
 }
 
@@ -2562,14 +2462,14 @@ frogr_main_view_init (FrogrMainView *self)
 FrogrMainView *
 frogr_main_view_new (GtkApplication *app)
 {
-  FrogrMainView *mainview =
+  FrogrMainView *self =
     FROGR_MAIN_VIEW (g_object_new (FROGR_TYPE_MAIN_VIEW,
                                    "application", app,
                                    NULL));
 
   /* Now initialize all the stuff strictly related to the UI */
-  _initialize_ui (mainview);
-  return mainview;
+  _initialize_ui (self);
+  return self;
 }
 
 void
@@ -2583,20 +2483,17 @@ void
 frogr_main_view_set_status_text (FrogrMainView *self,
                                  const gchar *text)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
   /* Pop old message if present */
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gtk_statusbar_pop (GTK_STATUSBAR (priv->status_bar),
-                     priv->sb_context_id);
+  gtk_statusbar_pop (GTK_STATUSBAR (self->status_bar),
+                     self->sb_context_id);
 
   if (text != NULL)
     {
       /* Push new message */
-      gtk_statusbar_push (GTK_STATUSBAR (priv->status_bar),
-                          priv->sb_context_id,
+      gtk_statusbar_push (GTK_STATUSBAR (self->status_bar),
+                          self->sb_context_id,
                           text);
     }
 }
@@ -2604,66 +2501,50 @@ frogr_main_view_set_status_text (FrogrMainView *self,
 void
 frogr_main_view_show_progress (FrogrMainView *self, const gchar *title, const gchar *text)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
-  if (priv->progress_is_showing)
+  if (self->progress_is_showing)
     return;
 
-  priv->progress_is_showing = TRUE;
+  self->progress_is_showing = TRUE;
 
-  gtk_window_set_title (GTK_WINDOW (priv->progress_dialog), title);
-  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (priv->progress_dialog),
+  gtk_window_set_title (GTK_WINDOW (self->progress_dialog), title);
+  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (self->progress_dialog),
                                  text ? text : "");
 
   /* Reset values */
-  gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), "");
-  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), 0.0);
-  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), FALSE);
+  gtk_progress_bar_set_text (GTK_PROGRESS_BAR (self->progress_bar), "");
+  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (self->progress_bar), 0.0);
+  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (self->progress_bar), FALSE);
 
-  gtk_widget_show_all (GTK_WIDGET (priv->progress_dialog));
-  gtk_window_present (GTK_WINDOW (priv->progress_dialog));
+  gtk_widget_show_all (GTK_WIDGET (self->progress_dialog));
+  gtk_window_present (GTK_WINDOW (self->progress_dialog));
 }
 
 void
 frogr_main_view_set_progress_description (FrogrMainView *self, const gchar *text)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (priv->progress_dialog), text);
+  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (self->progress_dialog), text);
 }
 
 void
 frogr_main_view_set_progress_status_text (FrogrMainView *self, const gchar *text)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Set superimposed text, if specified */
   if (text != NULL)
     {
-      gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), TRUE);
-      gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), text);
+      gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (self->progress_bar), TRUE);
+      gtk_progress_bar_set_text (GTK_PROGRESS_BAR (self->progress_bar), text);
     }
 }
 
 void
 frogr_main_view_set_progress_status_fraction (FrogrMainView *self, double fraction)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
 
   /* Check limits */
   if (fraction < 0.0)
@@ -2671,56 +2552,39 @@ frogr_main_view_set_progress_status_fraction (FrogrMainView *self, double fracti
   if (fraction > 1.0)
     fraction = 1.0;
 
-  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar), fraction);
+  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (self->progress_bar), fraction);
 }
 
 void
 frogr_main_view_pulse_progress (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
 
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-
   /* Show the widget and pulse */
-  gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv->progress_bar));
+  gtk_progress_bar_pulse (GTK_PROGRESS_BAR (self->progress_bar));
 
   /* Empty text for this */
-  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progress_bar), FALSE);
+  gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (self->progress_bar), FALSE);
 }
 
 void
 frogr_main_view_hide_progress (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  priv->progress_is_showing = FALSE;
-
-  gtk_widget_hide (GTK_WIDGET (priv->progress_dialog));
+  self->progress_is_showing = FALSE;
+  gtk_widget_hide (GTK_WIDGET (self->progress_dialog));
 }
 
 void
 frogr_main_view_reorder_pictures (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_if_fail(FROGR_IS_MAIN_VIEW (self));
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  _reorder_pictures (self, priv->sorting_criteria, priv->sorting_reversed);
+  _reorder_pictures (self, self->sorting_criteria, self->sorting_reversed);
 }
 
 FrogrModel *
 frogr_main_view_get_model (FrogrMainView *self)
 {
-  FrogrMainViewPrivate *priv = NULL;
-
   g_return_val_if_fail(FROGR_IS_MAIN_VIEW (self), NULL);
-
-  priv = FROGR_MAIN_VIEW_GET_PRIVATE (self);
-  return priv->model;
+  return self->model;
 }
