@@ -1085,24 +1085,17 @@ _check_async_errors_on_finish           (GObject       *object,
                                          gpointer       source_tag,
                                          GError       **error)
 {
-  gboolean errors_found = TRUE;
-
   g_return_val_if_fail (G_IS_OBJECT (object), FALSE);
-  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), FALSE);
+  g_return_val_if_fail (G_IS_TASK (res), FALSE);
 
-  if (g_simple_async_result_is_valid (res, object, source_tag))
+  GTask *task = G_TASK (res);
+  if (!g_async_result_is_tagged (res, source_tag) || !g_task_is_valid (task, object))
     {
-      GSimpleAsyncResult *simple = NULL;
-
-      /* Check error */
-      simple = G_SIMPLE_ASYNC_RESULT (res);
-      if (!g_simple_async_result_propagate_error (simple, error))
-	errors_found = FALSE;
+      g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER, "Internal error");
+      return TRUE;
     }
-  else
-    g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER, "Internal error");
 
-  return errors_found;
+  return FALSE;
 }
 
 
@@ -1444,7 +1437,7 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
                                          gpointer    result,
                                          GError     *error)
 {
-  GSimpleAsyncResult *res = NULL;
+  GTask *task = NULL;
   GObject *object = NULL;
   GCancellableData *cancellable_data = NULL;
   GCancellable *cancellable = NULL;
@@ -1473,19 +1466,16 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
   g_idle_add ((GSourceFunc) _disconnect_cancellable_on_idle, cancellable_data);
 
   /* Build response and call async callback */
-  res = g_simple_async_result_new (object, callback,
-                                   data, source_tag);
+  task = g_task_new (object, cancellable, callback, data);
+  g_task_set_source_tag (task, source_tag);
 
   /* Return the given value or an error otherwise */
   if (error != NULL)
-    g_simple_async_result_set_from_error (res, error);
+    g_task_return_error (task, error);
   else
-    g_simple_async_result_set_op_res_gpointer (res, result, NULL);
+    g_task_return_pointer (task, result, NULL);
 
-  /* Execute the callback */
-  g_simple_async_result_complete_in_idle (res);
-
-  g_object_unref (G_OBJECT (res));
+  g_object_unref (G_OBJECT (task));
 }
 
 static gpointer
@@ -1494,28 +1484,15 @@ _finish_async_request                   (GObject       *object,
                                          gpointer       source_tag,
                                          GError       **error)
 {
-  gpointer retval = NULL;
-
   g_return_val_if_fail (G_IS_OBJECT (object), NULL);
-  g_return_val_if_fail (G_IS_ASYNC_RESULT (res), NULL);
+  g_return_val_if_fail (G_IS_TASK (res), FALSE);
 
   /* Check for errors */
-  if (!_check_async_errors_on_finish (object, res, source_tag, error))
-    {
-      GSimpleAsyncResult *simple = NULL;
-      gpointer result = NULL;
+  if (_check_async_errors_on_finish (object, res, source_tag, error))
+    return NULL;
 
-      /* Get result */
-      simple = G_SIMPLE_ASYNC_RESULT (res);
-      result = g_simple_async_result_get_op_res_gpointer (simple);
-      if (result != NULL)
-        retval = result;
-      else
-        g_set_error_literal (error, FSP_ERROR, FSP_ERROR_OTHER,
-                             "Internal error");
-    }
-
-  return retval;
+  /* Get result or propagate error */
+  return g_task_propagate_pointer (G_TASK (res), error);
 }
 
 static void
@@ -1953,8 +1930,7 @@ fsp_session_complete_auth               (FspSession          *self,
 
       /* Build and report error */
       err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET, "Not authorized yet");
-      g_simple_async_report_gerror_in_idle (G_OBJECT (self),
-                                            cb, data, err);
+      g_task_report_error (G_OBJECT (self), cb, data, fsp_session_complete_auth, err);
     }
 }
 
@@ -2023,8 +1999,7 @@ fsp_session_exchange_token              (FspSession          *self,
 
       /* Build and report error */
       err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET, "Not authorized yet");
-      g_simple_async_report_gerror_in_idle (G_OBJECT (self),
-                                            cb, data, err);
+      g_task_report_error (G_OBJECT (self), cb, data, fsp_session_exchange_token, err);
     }
 }
 
@@ -2087,8 +2062,7 @@ fsp_session_check_auth_info             (FspSession          *self,
 
       /* Build and report error */
       err = g_error_new (FSP_ERROR, FSP_ERROR_NOT_AUTHENTICATED, "No authenticated");
-      g_simple_async_report_gerror_in_idle (G_OBJECT (self),
-                                            cb, data, err);
+      g_task_report_error (G_OBJECT (self), cb, data, fsp_session_check_auth_info, err);
     }
 }
 
@@ -2146,8 +2120,7 @@ fsp_session_get_upload_status           (FspSession          *self,
 
       /* Build and report error */
       err = g_error_new (FSP_ERROR, FSP_ERROR_NOT_AUTHENTICATED, "No authenticated");
-      g_simple_async_report_gerror_in_idle (G_OBJECT (self),
-                                            cb, data, err);
+      g_task_report_error (G_OBJECT (self), cb, data, fsp_session_get_upload_status, err);
     }
 }
 
