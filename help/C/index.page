@@ -5,22 +5,22 @@
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
   </info>
 
-  <title>Frogr Help</title>
+  <title>frogr help</title>
 
   <section id="account">
-    <title>Managing Your Flickr Account</title>
+    <title>Managing your flickr account</title>
   </section>
 
   <section id="pictures">
-    <title>Managing Your Pictures</title>
+    <title>Managing your pictures</title>
   </section>
 
   <section id="organize">
-    <title>Organize and Sort Your Pictures</title>
+    <title>Organize and sort your pictures</title>
   </section>
 
   <section id="customize">
-    <title>Set Up Frogr</title>
+    <title>Set up frogr</title>
   </section>
 
 </page>

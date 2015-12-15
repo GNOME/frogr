@@ -9,7 +9,7 @@
     <desc>Amend pictures</desc>
   </info>
 
-  <title>Edit Details</title>
+  <title>Edit details</title>
   <p>To edit the details of a picture or a video, right-click on an element and choose <gui>Edit Details</gui>.Until you edit the details, these will use the default details.</p>
   <figure>
     <title>Edit picture details</title>
@@ -23,11 +23,11 @@
     <item><title>Description</title><p>Add some description the element</p></item>
     <item><title>Tags</title><p>Add some tags to better categorize the element</p></item>
     <item><title>Visibility</title><p>Choose whether the element is public or private.</p></item>
-    <item><title>Content Type</title><p>You can specify whether the element is a photo, a screenshot or something else</p></item>
-    <item><title>Safety Level</title><p>You can rate the kind of element you're uploading</p></item>
+    <item><title>Content type</title><p>You can specify whether the element is a photo, a screenshot or something else</p></item>
+    <item><title>Safety level</title><p>You can rate the kind of element you're uploading</p></item>
     <item><title>License</title><p>You can change the license, or just use the default one set on Flickr</p></item>
     <item><title>Geolocation data</title><p>You can let frogr set the geolocation information for a picture on Flickr based on its EXIF information</p></item>
-    <item><title>Show in Global Search Results</title><p>You can specify whether it should be possible to find your picture or video using Flickr's search engine</p></item>
+    <item><title>Show in global search results</title><p>You can specify whether it should be possible to find your picture or video using Flickr's search engine</p></item>
   </list>
 
 </page>

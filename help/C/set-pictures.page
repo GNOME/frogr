@@ -6,10 +6,10 @@
   <info>
     <link type="guide" xref="organize"/>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
-    <desc>Adding Elements to Sets</desc>
+    <desc>Adding elements to sets</desc>
   </info>
 
-  <title>Adding Elements to Sets</title>
+  <title>Adding elements to sets</title>
   <p>You can add pictures and videos to sets in Flickr. A set is a category. Set do not imply hierarchical view.</p>
   <p>Right-click on one or more elements and choose <gui>Add to set</gui>. You may choose to add to an already existing set or create a new one.</p>
   <figure>

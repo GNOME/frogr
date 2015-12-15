@@ -6,10 +6,10 @@
   <info>
     <link type="guide" xref="organize"/>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
-    <desc>Tag Elements</desc>
+    <desc>Tag elements</desc>
   </info>
 
-  <title>Tag Elements</title>
+  <title>Tag elements</title>
   <p>You can assign several tags to any element. Flickr allows you to define your own tags. It allows you to easily find any element you did upload.</p>
   <p>Right-click on a element, and choose <gui>Add tags</gui>. Or click on the menu <gui>Edit</gui>, and choose <gui>Add tags</gui>. Or, when you're editing element's detail, you can see and edit the tags</p>
   <figure>

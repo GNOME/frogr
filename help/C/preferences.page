@@ -11,38 +11,38 @@
 
   <title>Preferences</title>
 
-  <p>Go to Preferences using menu <guiseq><gui>Frogr</gui><gui>Preferences</gui></guiseq>.</p>
+  <p>Go to Preferences using menu <guiseq><gui>frogr</gui><gui>Preferences</gui></guiseq>.</p>
 
   <section id="preferences-general">
-    <title>General Preferences</title>
+    <title>General preferences</title>
     <figure>
-      <title><gui>Frogr</gui> general preferences</title>
-      <desc><app>Frogr</app> general preferences</desc>
+      <title><gui>frogr</gui> general preferences</title>
+      <desc><app>frogr</app> general preferences</desc>
       <media type="image" src="figures/preferences-general.png" mime="image/png" style="right">
-        <p><app>Frogr</app> general preferences.</p>
+        <p><app>frogr</app> general preferences.</p>
       </media>
     </figure>
   </section>
 
   <section id="preferences-connection">
-    <title>Connection Preferences</title>
+    <title>Connection preferences</title>
     <p>This tab allows you to set up a proxy.</p>
     <figure>
-      <title><gui>Frogr </gui> connection preferences</title>
-      <desc><app>Frogr</app> connection preferences</desc>
+      <title><gui>frogr </gui> connection preferences</title>
+      <desc><app>frogr</app> connection preferences</desc>
       <media type="image" src="figures/preferences-connection.png" mime="image/png" style="right">
-        <p><app>Frogr</app> main window.</p>
+        <p><app>frogr</app> main window.</p>
       </media>
     </figure>
   </section>
 
   <section id="preferences-misc">
-    <title>Miscelleanous Preferences</title>
+    <title>Miscelleanous preferences</title>
     <figure>
-      <title><gui>Frogr </gui> misc preferences window</title>
-      <desc><app>Frogr</app> misc preferences window</desc>
+      <title><gui>frogr </gui> misc preferences window</title>
+      <desc><app>frogr</app> misc preferences window</desc>
       <media type="image" src="figures/preferences-misc.png" mime="image/png" style="right">
-        <p><app>Frogr</app> misc preferences window.</p>
+        <p><app>frogr</app> misc preferences window.</p>
       </media>
     </figure>
   </section>
