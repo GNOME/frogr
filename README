@@ -1,7 +1,7 @@
 frogr - A Flickr Remote Organizer for GNOME
 -------------------------------------------
 
-Frogr intends to be a complete GNOME application to remotely manage a
+frogr intends to be a complete GNOME application to remotely manage a
 flickr account from the desktop.
 
 To get the source, please checkout the git repository at gnome.org:
@@ -29,7 +29,7 @@ Mailing list: http://mail.gnome.org/mailman/listinfo/frogr-list
 
 -------------------------------------------
 
-Frogr is Copyright (c) 2009-2015 Mario Sanchez Prada
+frogr is Copyright (c) 2009-2015 Mario Sanchez Prada
 
 https://wiki.gnome.org/Apps/Frogr
 
@@ -47,7 +47,7 @@ See the COPYING file for more details.
 
 -------------------------------------------
 
-Frogr's Flickr API implementation (we call it "flicksoup", located
+frogr's Flickr API implementation (we call it "flicksoup", located
 under src/flicksoup) is Copyright (c) 2010-2015 Mario Sanchez Prada
 
 Flicksoup is Free Software: you can redistribute it and/or modify it

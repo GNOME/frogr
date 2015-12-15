@@ -2,11 +2,11 @@
 <application>
   <id type="desktop">frogr.desktop</id>
   <licence>CC0</licence>
-  <name>Frogr</name>
-  <summary>Frogr: a Flickr Remote Organizer for GNOME</summary>
+  <name>frogr</name>
+  <summary>frogr: a Flickr Remote Organizer for GNOME</summary>
   <description>
     <_p>
-      Frogr is a small application for the GNOME desktop that allows
+      frogr is a small application for the GNOME desktop that allows
       users to manage their accounts in the Flickr image hosting
       website.
     </_p>

@@ -1,5 +1,5 @@
 /*
- * frogr-live-entry.c -- Frogr 'live' entry (autocompletion enabled)
+ * frogr-live-entry.c -- frogr 'live' entry (autocompletion enabled)
  *
  * Copyright (C) 2012 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>

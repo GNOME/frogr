@@ -1,5 +1,5 @@
 /*
- * frogr-account.c -- User account for Frogr.
+ * frogr-account.c -- User account for frogr.
  *
  * Copyright (C) 2009-2012 Mario Sanchez Prada
  *           (C) 2009 Adrian Perez

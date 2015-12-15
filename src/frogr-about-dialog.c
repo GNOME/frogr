@@ -40,7 +40,7 @@ static const gchar *artists[] = {
   NULL
 };
 
-static const gchar *appdescr = N_("A Flickr remote organizer for GNOME\n");
+static const gchar *appdescr = N_("A Flickr Remote Organizer for GNOME\n");
 static const gchar *copyright = "(c) 2009-2015 Mario Sanchez Prada";
 static const gchar *website = "http://wiki.gnome.org/Apps/Frogr";
 

@@ -1,5 +1,5 @@
 /*
- * frogr-add-tags-dialog.c -- Frogr 'add tags' dialog
+ * frogr-add-tags-dialog.c -- frogr 'add tags' dialog
  *
  * Copyright (C) 2009-2015 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>
