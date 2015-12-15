@@ -11,7 +11,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, desktop-file-utils, gvfs, shared-mime-info
 Recommends: gstreamer0.10-ffmpeg
 Description: Flickr Remote Organizer for GNOME
- Frogr is a small application for the GNOME desktop that allows users
+ frogr is a small application for the GNOME desktop that allows users
  to manage their accounts in the Flickr image hosting website.
  It supports all the basic Flickr features, including uploading
  pictures, adding descriptions, setting tags and managing sets.

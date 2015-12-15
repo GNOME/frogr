@@ -31,7 +31,7 @@ Requires:	gvfs
 Requires:	shared-mime-info
 
 %description
-Frogr is a small application for the GNOME desktop that allows users
+frogr is a small application for the GNOME desktop that allows users
 to manage their accounts in the Flickr image hosting website. It
 supports all the basic tasks, including uploading pictures, adding
 descriptions, setting tags and managing sets.
