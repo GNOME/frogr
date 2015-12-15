@@ -4,7 +4,7 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
 
-  <name xml:lang="en">Frogr</name>
+  <name xml:lang="en">frogr</name>
   <shortname>frogr</shortname>
   <shortdesc xml:lang="en">Flickr Remote Organizer for GNOME</shortdesc>
   <description>A Flickr Remote Organizer for GNOME</description>
