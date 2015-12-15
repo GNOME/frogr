@@ -28,6 +28,7 @@
     <item><title>License</title><p>You can change the license, or just use the default one set on Flickr</p></item>
     <item><title>Geolocation data</title><p>You can let frogr set the geolocation information for a picture on Flickr based on its EXIF information</p></item>
     <item><title>Show in global search results</title><p>You can specify whether it should be possible to find your picture or video using Flickr's search engine</p></item>
+    <item><title>Replace 'date posted' with 'date taken'</title><p>It affects how your pictures are sorted in your photostream</p></item>
   </list>
 
 </page>
