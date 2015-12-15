@@ -76,7 +76,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/pixmaps/%{name}.xpm
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
-%{_datadir}/icons/HighContrast/*/apps/%{name}.svg
+%{_datadir}/icons/hicolor/*/apps/%{name}-symbolic.svg
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/help/*/frogr
 %{_mandir}/man1/frogr.1.*
