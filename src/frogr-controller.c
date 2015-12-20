@@ -2626,14 +2626,14 @@ frogr_controller_set_active_account (FrogrController *self, const gchar *usernam
 FrogrAccount *
 frogr_controller_get_active_account (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), NULL);
   return self->account;
 }
 
 GSList *
 frogr_controller_get_all_accounts (FrogrController *self)
 {
-  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FROGR_STATE_UNKNOWN);
+  g_return_val_if_fail(FROGR_IS_CONTROLLER (self), NULL);
   return frogr_config_get_accounts (self->config);
 }
 
