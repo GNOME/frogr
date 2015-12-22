@@ -405,7 +405,7 @@ msgstr "Popis:"
 
 #: ../src/frogr-create-new-set-dialog.c:356
 msgid "Fill Pictures Details with Title and Description"
-msgstr "Vyplnit podrobnosti o obrázku podle názvu a popisu"
+msgstr "Vyplnit údaje o obrázku podle názvu a popisu"
 
 #: ../src/frogr-create-new-set-dialog.c:381
 msgid "Create New Set"
@@ -550,7 +550,7 @@ msgstr "_Upravit"
 
 #: ../src/frogr-details-dialog.c:1197
 msgid "Edit Picture Details"
-msgstr "Úprava podrobností obrázku"
+msgstr "Úprava údajů o obrázku"
 
 #: ../src/frogr-file-loader.c:142
 #, c-format
