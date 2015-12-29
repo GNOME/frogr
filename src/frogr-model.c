@@ -63,18 +63,6 @@ static guint signals[N_SIGNALS] = { 0 };
 
 /* Private API */
 
-static gint
-_compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
-{
-  g_return_val_if_fail (FROGR_IS_PHOTOSET (photoset1), 1);
-  g_return_val_if_fail (FROGR_IS_PHOTOSET (photoset2), -1);
-
-  if (photoset1 == photoset2)
-    return 0;
-
-  return g_strcmp0 (frogr_photoset_get_id (photoset1), frogr_photoset_get_id (photoset2));
-}
-
 static void
 _remove_remote_photosets (FrogrModel *self)
 {
@@ -497,7 +485,7 @@ frogr_model_get_photosets (FrogrModel *self)
   list = g_slist_copy (self->remote_sets);
   for (current = self->local_sets; current; current = g_slist_next (current))
     {
-      if (!g_slist_find_custom (list, current->data, (GCompareFunc)_compare_photosets))
+      if (!g_slist_find_custom (list, current->data, (GCompareFunc)frogr_photoset_compare))
         list = g_slist_prepend (list, current->data);
     }
 

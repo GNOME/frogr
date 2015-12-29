@@ -101,7 +101,6 @@ static void _add_tags_to_tags_list (FrogrPicture *self,
                                     const gchar *tags_string);
 static void _update_tags_string (FrogrPicture *self);
 
-static gint _compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2);
 static gint _compare_groups (FrogrGroup *group1, FrogrGroup *group2);
 
 static JsonNode *_serialize_list (GSList *objects_list, GType g_type);
@@ -202,36 +201,6 @@ _update_tags_string (FrogrPicture *self)
       /* Store final result */
       self->tags_string = new_str;
     }
-}
-
-static gint
-_compare_photosets (FrogrPhotoSet *photoset1, FrogrPhotoSet *photoset2)
-{
-  const gchar *id1 = NULL;
-  const gchar *id2 = NULL;
-  const gchar *local_id1 = NULL;
-  const gchar *local_id2 = NULL;
-
-  g_return_val_if_fail (FROGR_IS_PHOTOSET (photoset1), 1);
-  g_return_val_if_fail (FROGR_IS_PHOTOSET (photoset2), -1);
-
-  if (photoset1 == photoset2)
-    return 0;
-
-  id1 = frogr_photoset_get_id (photoset1);
-  id2 = frogr_photoset_get_id (photoset2);
-  if (id1 != NULL && id2 != NULL)
-    return g_strcmp0 (id1, id2);
-
-  local_id1 = frogr_photoset_get_local_id (photoset1);
-  local_id2 = frogr_photoset_get_local_id (photoset2);
-  if (local_id1 != NULL && local_id2 != NULL)
-    return g_strcmp0 (local_id1, local_id2);
-
-  if (id1 != NULL)
-    return 1;
-  else
-    return -1;
 }
 
 static gint
@@ -1180,7 +1149,7 @@ frogr_picture_in_photoset (FrogrPicture *self, FrogrPhotoSet *photoset)
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   if (g_slist_find_custom (self->photosets, photoset,
-                           (GCompareFunc)_compare_photosets))
+                           (GCompareFunc)frogr_photoset_compare))
     return TRUE;
 
   return FALSE;

@@ -66,6 +66,8 @@ void frogr_photoset_set_n_photos (FrogrPhotoSet *self,
 
 gboolean frogr_photoset_is_local (FrogrPhotoSet *self);
 
+gint frogr_photoset_compare (FrogrPhotoSet *self, FrogrPhotoSet *other);
+
 G_END_DECLS
 
 #endif

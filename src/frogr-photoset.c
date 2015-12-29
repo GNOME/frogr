@@ -412,3 +412,24 @@ frogr_photoset_is_local (FrogrPhotoSet *self)
   g_return_val_if_fail(FROGR_IS_PHOTOSET(self), FALSE);
   return self->id == NULL && self->local_id != NULL;
 }
+
+gint
+frogr_photoset_compare (FrogrPhotoSet *self, FrogrPhotoSet *other)
+{
+  g_return_val_if_fail (FROGR_IS_PHOTOSET (self), 1);
+  g_return_val_if_fail (FROGR_IS_PHOTOSET (other), -1);
+
+  if (self == other)
+    return 0;
+
+  if (self->id != NULL && other->id != NULL)
+    return g_strcmp0 (self->id, other->id);
+
+  if (self->local_id != NULL && other->local_id != NULL)
+    return g_strcmp0 (self->local_id, other->local_id);
+
+  if (self->id != NULL)
+    return 1;
+  else
+    return -1;
+}
