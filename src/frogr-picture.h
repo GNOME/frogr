@@ -124,6 +124,9 @@ void frogr_picture_add_group (FrogrPicture *self, FrogrGroup *group);
 void frogr_picture_remove_groups (FrogrPicture *self);
 gboolean frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group);
 
+gint frogr_picture_compare_by_property (FrogrPicture *self, FrogrPicture *other,
+                                        const gchar *property_name);
+
 G_END_DECLS
 
 #endif

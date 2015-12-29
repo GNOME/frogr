@@ -1181,3 +1181,66 @@ frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group)
 
   return FALSE;
 }
+
+gint
+frogr_picture_compare_by_property (FrogrPicture *self, FrogrPicture *other,
+                                   const gchar *property_name)
+{
+  GParamSpec *pspec1 = NULL;
+  GParamSpec *pspec2 = NULL;
+  GValue value1 = { 0 };
+  GValue value2 = { 0 };
+  gint result = 0;
+
+  g_return_val_if_fail (FROGR_IS_PICTURE (self), 1);
+  g_return_val_if_fail (FROGR_IS_PICTURE (other), -1);
+
+  pspec1 = g_object_class_find_property (G_OBJECT_GET_CLASS (self), property_name);
+  pspec2 = g_object_class_find_property (G_OBJECT_GET_CLASS (other), property_name);
+
+  /* They should be the same! */
+  if (pspec1->value_type != pspec2->value_type)
+    return 0;
+
+  g_value_init (&value1, pspec1->value_type);
+  g_value_init (&value2, pspec1->value_type);
+
+  g_object_get_property (G_OBJECT (self), property_name, &value1);
+  g_object_get_property (G_OBJECT (other), property_name, &value2);
+
+  if (G_VALUE_HOLDS_BOOLEAN (&value1))
+    result = g_value_get_boolean (&value1) - g_value_get_boolean (&value2);
+  else if (G_VALUE_HOLDS_INT (&value1))
+    result = g_value_get_int (&value1) - g_value_get_int (&value2);
+  else if (G_VALUE_HOLDS_UINT (&value1))
+    result = g_value_get_uint (&value1) - g_value_get_uint (&value2);
+  else if (G_VALUE_HOLDS_LONG (&value1))
+    result = g_value_get_long (&value1) - g_value_get_long (&value2);
+  else if (G_VALUE_HOLDS_STRING (&value1))
+    {
+      const gchar *str1 = NULL;
+      const gchar *str2 = NULL;
+      gchar *str1_cf = NULL;
+      gchar *str2_cf = NULL;
+
+      /* Comparison of strings require some additional work to take
+         into account the different rules for each locale */
+      str1 = g_value_get_string (&value1);
+      str2 = g_value_get_string (&value2);
+
+      str1_cf = g_utf8_casefold (str1 ? str1 : "", -1);
+      str2_cf = g_utf8_casefold (str2 ? str2 : "", -1);
+
+      result = g_utf8_collate (str1_cf, str2_cf);
+
+      g_free (str1_cf);
+      g_free (str2_cf);
+    }
+  else
+    g_warning ("Unsupported type for property used for sorting");
+
+  g_value_unset (&value1);
+  g_value_unset (&value2);
+
+  return result;
+}
