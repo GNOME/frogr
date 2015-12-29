@@ -23,7 +23,7 @@
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>NSHumanReadableCopyright</key>
-    <string>Licensed under the terms of the GNU General Public License version 3 Copyright (c) 2009-2014 Mario Sanchez Prada</string>
+    <string>Licensed under the terms of the GNU General Public License version 3 Copyright (c) 2009-2015 Mario Sanchez Prada</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.4</string>
 </dict>
