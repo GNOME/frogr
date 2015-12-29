@@ -5,12 +5,15 @@
   * Use a GtkMessageDialog for the "Uploading pictures" dialog.
   * Migrated from GSimpleAsyncResult to GTask.
   * Raised GLib minimum version up to 2.44.
+  * Add a title to all the dialogs showing progress bars.
+  * A few minor improvements, fixes and cleanups.
 
 Bug fixes:
 
   * #747022: provide a scalable -symbolic variant of the app icon
   * #748240: Modernize look of the "uploading" progress dialog
   * #759086: Inconsequent naming of Frogr
+  * #759960: Only the last locally created photoset shows up in "Add to Set" dialog.
 
 0.11 (7 Jan 2015)
 =================
