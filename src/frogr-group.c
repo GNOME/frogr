@@ -262,3 +262,20 @@ frogr_group_set_n_photos (FrogrGroup *self,
   self->n_photos = n;
 }
 
+gint
+frogr_group_compare (FrogrGroup *self, FrogrGroup *other)
+{
+  g_return_val_if_fail (FROGR_IS_GROUP (self), 1);
+  g_return_val_if_fail (FROGR_IS_GROUP (other), -1);
+
+  if (self == other)
+    return 0;
+
+  if (self->id != NULL && other->id != NULL)
+    return g_strcmp0 (self->id, other->id);
+
+  if (self->id != NULL)
+    return 1;
+  else
+    return -1;
+}

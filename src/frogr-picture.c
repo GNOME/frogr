@@ -101,8 +101,6 @@ static void _add_tags_to_tags_list (FrogrPicture *self,
                                     const gchar *tags_string);
 static void _update_tags_string (FrogrPicture *self);
 
-static gint _compare_groups (FrogrGroup *group1, FrogrGroup *group2);
-
 static JsonNode *_serialize_list (GSList *objects_list, GType g_type);
 static gboolean _deserialize_list (JsonNode *node, GValue *value, GType g_type);
 
@@ -201,29 +199,6 @@ _update_tags_string (FrogrPicture *self)
       /* Store final result */
       self->tags_string = new_str;
     }
-}
-
-static gint
-_compare_groups (FrogrGroup *group1, FrogrGroup *group2)
-{
-  const gchar *id1 = NULL;
-  const gchar *id2 = NULL;
-
-  g_return_val_if_fail (FROGR_IS_GROUP (group1), 1);
-  g_return_val_if_fail (FROGR_IS_GROUP (group2), -1);
-
-  if (group1 == group2)
-    return 0;
-
-  id1 = frogr_group_get_id (group1);
-  id2 = frogr_group_get_id (group2);
-  if (id1 != NULL && id2 != NULL)
-    return g_strcmp0 (id1, id2);
-
-  if (id1 != NULL)
-    return 1;
-  else
-    return -1;
 }
 
 static JsonNode *
@@ -1201,7 +1176,7 @@ frogr_picture_in_group (FrogrPicture *self, FrogrGroup *group)
   g_return_val_if_fail(FROGR_IS_PICTURE(self), FALSE);
 
   if (g_slist_find_custom (self->groups, group,
-                           (GCompareFunc)_compare_groups))
+                           (GCompareFunc)frogr_group_compare))
     return TRUE;
 
   return FALSE;

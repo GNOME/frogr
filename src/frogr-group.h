@@ -52,6 +52,8 @@ void frogr_group_set_privacy (FrogrGroup *self, FspGroupPrivacy privacy);
 gint frogr_group_get_n_photos (FrogrGroup *self);
 void frogr_group_set_n_photos (FrogrGroup *self, gint n);
 
+gint frogr_group_compare (FrogrGroup *self, FrogrGroup *other);
+
 G_END_DECLS
 
 #endif
