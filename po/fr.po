@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2015-12-15 07:02+0000\n"
-"PO-Revision-Date: 2015-12-30 09:38+0100\n"
+"PO-Revision-Date: 2015-12-30 10:02+0100\n"
 "Last-Translator: Alexandre Franke <alexandre.franke@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "Language: \n"
@@ -33,7 +33,7 @@ msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
 msgstr ""
-"Elle prend en charge toutes les fonctionnalités basiques de Flickr, comme l'envoi d'images, l'ajout de descriptions, la définition d'étiquettes et la gestion de collections ou des groupes."
+"Elle prend en charge toutes les fonctionnalités basiques de Flickr, comme l'envoi d'images, l'ajout de descriptions, la définition d'étiquettes et la gestion des albums ou des groupes."
 
 #: ../data/frogr.desktop.in.in.h:1
 msgid "frogr"
@@ -550,7 +550,7 @@ msgstr "_Édition"
 
 #: ../src/frogr-details-dialog.c:1197
 msgid "Edit Picture Details"
-msgstr "Modifier les détails d'une image"
+msgstr "Modifier les informations d'une image"
 
 #: ../src/frogr-file-loader.c:142
 #, c-format
@@ -850,7 +850,7 @@ msgstr "Aid_e"
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
 #: ../data/gtkbuilder/frogr-menu-button.xml.h:3
 msgid "_Edit Details…"
-msgstr "Modifier les _détails…"
+msgstr "Modifier les _informations…"
 
 #: ../data/gtkbuilder/frogr-context-menu.xml.h:2
 #: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
