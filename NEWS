@@ -15,6 +15,21 @@ Bug fixes:
   * #759086: Inconsequent naming of Frogr
   * #759960: Only the last locally created photoset shows up in "Add to Set" dialog.
 
+New and updated translations:
+
+  * bs (Samir Ribic)
+  * ca (Gil Forcada)
+  * cs (Marek Černocký)
+  * el (Efstathios Iosifidis)
+  * es (Daniel Mustieles)
+  * fi (Jiri Grönroos)
+  * hu (Balázs Úr)
+  * pl (Piotr Drąg)
+  * pt (Pedro Albuquerque)
+  * sl (Matej Urbančič)
+  * tr (Muhammet Kara)
+
+
 0.11 (7 Jan 2015)
 =================
 

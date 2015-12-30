@@ -1,3 +1,7 @@
+bs (Bosnian)
+------------
+Samir Ribic <samir.ribic@etf.unsa.ba>
+
 ca (Catalan)
 ------------
 Gil Forcada <gforcada@gnome.org>
@@ -20,6 +24,7 @@ el (Greek)
 Mel Argyropoulou <bunnydee93@gmail.com>
 Dimitris Spingos <dmtrs32@gmail.com>
 Tom Tryfonidis <tomtryf@gmail.com>
+Efstathios Iosifidis <iosifidis@opensuse.org>
 
 en_GB (British English)
 -----------------------
@@ -32,6 +37,10 @@ Alejandro Piñeiro Iglesias <apinheiro@igalia.com>
 Mario Sanchez Prada <msanchez@gnome.org>
 Daniel Mustieles <daniel.mustieles@gmail.com>
 Jorge González <jorgegonz@svn.gnome.org>
+
+fi (Finnish)
+------------
+Jiri Grönroos <jiri.gronroos+l10n@iki.fi>
 
 fr (French)
 -----------
@@ -81,6 +90,10 @@ Aviary.pl <gnomepl@aviary.pl>
 Łukasz Jernaś <deejay1@srem.org>
 Piotr Drąg <piotrdrag@gmail.com>
 Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>
+
+pt (Portuguese)
+---------------
+Pedro Albuquerque <palbuquerque73@gmail.com>
 
 pt_BR (Brazilian Portuguese)
 ----------------------------
