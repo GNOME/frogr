@@ -6,13 +6,13 @@ Release:	0
 Group:		Applications/Internet
 License:	GPLv3
 URL:		https://wiki.gnome.org/Apps/Frogr
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.12/%{name}-%{version}.tar.xz
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{version}/%{name}-%{version}.tar.xz
 
 BuildRequires:	intltool
 BuildRequires:	gettext
 BuildRequires:	yelp-tools
 BuildRequires:	gtk3-devel > 3.4
-BuildRequires:	glib2-devel > 2.32
+BuildRequires:	glib2-devel > 2.44
 BuildRequires:	gstreamer1-devel > 1.0
 BuildRequires:	json-glib-devel > 0.12
 BuildRequires:	libsoup-devel > 2.34
