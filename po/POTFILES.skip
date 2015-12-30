@@ -1,1 +1,6 @@
 data/frogr.desktop.in
+
+# We need to explicitly skip this file or make distcheck will fail due to
+# a bug in intltool (see https://bugs.launchpad.net/intltool/+bug/1117944).
+sub/data/frogr.desktop.in
+
