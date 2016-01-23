@@ -6,14 +6,14 @@
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Łukasz Jernaś <deejay1@srem.org>, 2011.
 # Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>, 2012.
-# Piotr Drąg <piotrdrag@gmail.com>, 2012-2015.
-# Aviary.pl <gnomepl@aviary.pl>, 2011-2015.
+# Piotr Drąg <piotrdrag@gmail.com>, 2012-2016.
+# Aviary.pl <gnomepl@aviary.pl>, 2011-2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-16 01:19+0100\n"
-"PO-Revision-Date: 2015-12-16 01:20+0100\n"
+"POT-Creation-Date: 2016-01-23 17:44+0100\n"
+"PO-Revision-Date: 2016-01-23 17:45+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -42,6 +42,10 @@ msgstr ""
 "zdjęć, dodawanie opisów, ustawianie etykiet oraz zarządzanie zestawami i "
 "grupami."
 
+#: ../data/frogr.appdata.xml.in.h:3
+msgid "Screenshot of frogr"
+msgstr "Zrzut ekranu programu frogr"
+
 #: ../data/frogr.desktop.in.in.h:1
 msgid "frogr"
 msgstr "frogr"
@@ -68,14 +72,14 @@ msgid "translator-credits"
 msgstr ""
 "Łukasz Jernaś <deejay1@srem.org>, 2011\n"
 "Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>, 2012\n"
-"Piotr Drąg <piotrdrag@gmail.com>, 2012-2015\n"
-"Aviary.pl <gnomepl@aviary.pl>, 2011-2015"
+"Piotr Drąg <piotrdrag@gmail.com>, 2012-2016\n"
+"Aviary.pl <gnomepl@aviary.pl>, 2011-2016"
 
 #: ../src/frogr-add-tags-dialog.c:191 ../src/frogr-add-to-group-dialog.c:528
 #: ../src/frogr-add-to-set-dialog.c:529 ../src/frogr-auth-dialog.c:153
 #: ../src/frogr-create-new-set-dialog.c:310 ../src/frogr-details-dialog.c:1168
-#: ../src/frogr-main-view.c:1546 ../src/frogr-main-view.c:1621
-#: ../src/frogr-main-view.c:1673 ../src/frogr-settings-dialog.c:930
+#: ../src/frogr-main-view.c:1543 ../src/frogr-main-view.c:1618
+#: ../src/frogr-main-view.c:1670 ../src/frogr-settings-dialog.c:930
 msgid "_Cancel"
 msgstr "_Anuluj"
 
@@ -602,132 +606,132 @@ msgstr ""
 "Rozmiar pliku przekracza dozwolone maksimum dla tego konta (%s)"
 
 #. First create the left side buttons
-#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:729
+#: ../src/frogr-main-view.c:630 ../src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Otwórz"
 
-#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:729
+#: ../src/frogr-main-view.c:630 ../src/frogr-main-view.c:726
 msgid "Open Existing Project"
 msgstr "Otwarcie istniejącego projektu"
 
-#: ../src/frogr-main-view.c:634 ../src/frogr-main-view.c:732
+#: ../src/frogr-main-view.c:631 ../src/frogr-main-view.c:729
 msgid "Add"
 msgstr "Dodaj"
 
-#: ../src/frogr-main-view.c:634 ../src/frogr-main-view.c:732
+#: ../src/frogr-main-view.c:631 ../src/frogr-main-view.c:729
 msgid "Add Elements"
 msgstr "Dodanie elementów"
 
-#: ../src/frogr-main-view.c:635 ../src/frogr-main-view.c:733
+#: ../src/frogr-main-view.c:632 ../src/frogr-main-view.c:730
 msgid "Remove"
 msgstr "Usuń"
 
-#: ../src/frogr-main-view.c:635 ../src/frogr-main-view.c:733
+#: ../src/frogr-main-view.c:632 ../src/frogr-main-view.c:730
 msgid "Remove Elements"
 msgstr "Usunięcie elementów"
 
-#: ../src/frogr-main-view.c:636 ../src/frogr-main-view.c:735
+#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:732
 msgid "Upload"
 msgstr "Wyślij"
 
-#: ../src/frogr-main-view.c:636 ../src/frogr-main-view.c:735
+#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:732
 msgid "Upload All"
 msgstr "Wysłanie wszystkiego"
 
 #. Save project item
-#: ../src/frogr-main-view.c:669 ../src/frogr-main-view.c:730
+#: ../src/frogr-main-view.c:666 ../src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Zapisz"
 
-#: ../src/frogr-main-view.c:669 ../src/frogr-main-view.c:730
+#: ../src/frogr-main-view.c:666 ../src/frogr-main-view.c:727
 msgid "Save Current Project"
 msgstr "Zapis bieżącego projektu"
 
-#: ../src/frogr-main-view.c:1019 ../data/gtkbuilder/frogr-app-menu.xml.h:4
+#: ../src/frogr-main-view.c:1016 ../data/gtkbuilder/frogr-app-menu.xml.h:4
 msgid "_About"
 msgstr "_O programie"
 
-#: ../src/frogr-main-view.c:1023 ../data/gtkbuilder/frogr-app-menu.xml.h:5
+#: ../src/frogr-main-view.c:1020 ../data/gtkbuilder/frogr-app-menu.xml.h:5
 #: ../data/gtkbuilder/frogr-menu-button.xml.h:17
 msgid "_Quit"
 msgstr "Za_kończ"
 
 #. Create the submenu and insert it in the right section
-#: ../src/frogr-main-view.c:1073
+#: ../src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Konta"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:1413
+#: ../src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
 msgstr "Utworzono: %s"
 
-#: ../src/frogr-main-view.c:1418
+#: ../src/frogr-main-view.c:1415
 #, c-format
 msgid "File size: %s"
 msgstr "Rozmiar pliku: %s"
 
-#: ../src/frogr-main-view.c:1543
+#: ../src/frogr-main-view.c:1540
 msgid "Select File"
 msgstr "Wybór pliku"
 
-#: ../src/frogr-main-view.c:1547 ../src/frogr-main-view.c:1674
+#: ../src/frogr-main-view.c:1544 ../src/frogr-main-view.c:1671
 msgid "_Open"
 msgstr "_Otwórz"
 
-#: ../src/frogr-main-view.c:1556
+#: ../src/frogr-main-view.c:1553
 msgid "Frogr Project Files"
 msgstr "Pliki projektu programu Frogr"
 
-#: ../src/frogr-main-view.c:1618
+#: ../src/frogr-main-view.c:1615
 msgid "Select Destination"
 msgstr "Wybór miejsca docelowego"
 
-#: ../src/frogr-main-view.c:1622 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
+#: ../src/frogr-main-view.c:1619 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
 #: ../data/gtkbuilder/frogr-menu-button.xml.h:1
 msgid "_Save"
 msgstr "_Zapisz"
 
-#: ../src/frogr-main-view.c:1625
+#: ../src/frogr-main-view.c:1622
 msgid "Untitled Project.frogr"
 msgstr "Projekt bez tytułu.frogr"
 
-#: ../src/frogr-main-view.c:1670
+#: ../src/frogr-main-view.c:1667
 msgid "Select a Picture"
 msgstr "Wybór obrazów"
 
-#: ../src/frogr-main-view.c:1697
+#: ../src/frogr-main-view.c:1694
 msgid "All Files"
 msgstr "Wszystkie pliki"
 
-#: ../src/frogr-main-view.c:1700
+#: ../src/frogr-main-view.c:1697
 msgid "Image Files"
 msgstr "Pliki obrazów"
 
-#: ../src/frogr-main-view.c:1704
+#: ../src/frogr-main-view.c:1701
 msgid "Video Files"
 msgstr "Pliki wideo"
 
-#: ../src/frogr-main-view.c:1726
+#: ../src/frogr-main-view.c:1723
 msgid "You don't have any picture added yet"
 msgstr "Nie dodano jeszcze żadnych zdjęć"
 
-#: ../src/frogr-main-view.c:1739
+#: ../src/frogr-main-view.c:1736
 msgid "You need to select some pictures first"
 msgstr "Należy najpierw wybrać jakieś obrazy"
 
-#: ../src/frogr-main-view.c:2174
+#: ../src/frogr-main-view.c:2108
 msgid "Not connected to Flickr"
 msgstr "Nie połączono z serwisem Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:2184
+#: ../src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Połączono jako %s%s"
 
-#: ../src/frogr-main-view.c:2185
+#: ../src/frogr-main-view.c:2119
 msgid " (PRO account)"
 msgstr " (konto typu PRO)"
 
@@ -736,7 +740,7 @@ msgstr " (konto typu PRO)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:2209
+#: ../src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " — pozostało %s/%s"
@@ -744,7 +748,7 @@ msgstr " — pozostało %s/%s"
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
 #. sizes for every picture loaded in the application
-#: ../src/frogr-main-view.c:2235
+#: ../src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
