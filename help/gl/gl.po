@@ -560,7 +560,7 @@ msgid "<app>Frogr</app> connection preferences"
 msgstr "Preferencias da conexión de <app>Frogr</app>"
 
 #: C/preferences.page:40(title)
-msgid "Miscelleanous Preferences"
+msgid "Miscellaneous Preferences"
 msgstr "Preferencias varias"
 
 #: C/preferences.page:42(title)

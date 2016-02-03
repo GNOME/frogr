@@ -196,7 +196,7 @@ msgstr "Ventana principal de <app>Frogr</app>."
 
 #. (itstool) path: section/title
 #: C/preferences.page:40
-msgid "Miscelleanous Preferences"
+msgid "Miscellaneous Preferences"
 msgstr "Preferencias varias"
 
 #. (itstool) path: figure/title

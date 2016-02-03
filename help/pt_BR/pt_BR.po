@@ -180,7 +180,7 @@ msgstr "Janela principal do <app>frogr</app>."
 
 #. (itstool) path: section/title
 #: C/preferences.page:40
-msgid "Miscelleanous preferences"
+msgid "Miscellaneous preferences"
 msgstr "Preferências miscelâneas"
 
 #. (itstool) path: figure/title

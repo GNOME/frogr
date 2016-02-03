@@ -180,7 +180,7 @@ msgstr "Hlavní okno aplikace <app>frogr</app>."
 
 #. (itstool) path: section/title
 #: C/preferences.page:40
-msgid "Miscelleanous preferences"
+msgid "Miscellaneous preferences"
 msgstr "Různé předvolby"
 
 #. (itstool) path: figure/title
