@@ -43,4 +43,4 @@ HELP_FILES = \
 	pictures.page \
 	upload-pictures.page
 
-HELP_LINGUAS = cs es de el en_GB fr gl pt_BR ru sl
+HELP_LINGUAS = cs es de el en_GB fr gl pt_BR ru sl sv
