@@ -1,15 +1,16 @@
 # Spanish translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
+# 
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2013, 2014, 2015., 2016.
 #
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2013, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2015-01-07 21:19+0000\n"
-"PO-Revision-Date: 2015-07-29 \n"
+"POT-Creation-Date: 2016-02-03 16:32+0000\n"
+"PO-Revision-Date: 2016-02-22 18:59+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: Spanish <gnome-es-list@gnome.org>\n"
+"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,12 +21,13 @@ msgstr ""
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
 msgid "translator-credits"
-msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011 - 2013"
+msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011 - 2016"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/add-pictures.page:9 C/add-pictures.page:12
-msgid "Add Elements"
+#| msgid "Add Elements"
+msgid "Add elements"
 msgstr "Añadir elementos"
 
 #. (itstool) path: page/p
@@ -47,10 +49,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/group-pictures.page:17
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/add-to-groups.png' "
-#| "md5='29b7992f2aceddaaf2f474cbf618fb49'"
 msgctxt "_"
 msgid ""
 "external ref='figures/add-to-groups.png' "
@@ -61,12 +59,14 @@ msgstr ""
 
 #. (itstool) path: info/desc
 #: C/group-pictures.page:9
-msgid "Group Elements"
+#| msgid "Group Elements"
+msgid "Group elements"
 msgstr "Agrupar elementos"
 
 #. (itstool) path: page/title
 #: C/group-pictures.page:12
-msgid "Add to Groups"
+#| msgid "Add to Groups"
+msgid "Add to groups"
 msgstr "Añadir a grupos"
 
 #. (itstool) path: page/p
@@ -86,10 +86,6 @@ msgstr "Añadir elementos a grupos"
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/preferences.page:21
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/preferences-general.png' "
-#| "md5='8d162b86a0a4d707974113eb822e0796'"
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-general.png' "
@@ -104,10 +100,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/preferences.page:33
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/preferences-connection.png' "
-#| "md5='94a57d8bb4307783b862d7daf88383e3'"
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-connection.png' "
@@ -122,10 +114,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/preferences.page:44
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/preferences-misc.png' "
-#| "md5='1fac74a18600440c855cfd0c29e87ae9'"
 msgctxt "_"
 msgid ""
 "external ref='figures/preferences-misc.png' "
@@ -142,36 +130,44 @@ msgstr "Preferencias"
 
 #. (itstool) path: page/p
 #: C/preferences.page:14
+#| msgid ""
+#| "Go to Preferences using menu <guiseq><gui>Frogr</gui><gui>Preferences</"
+#| "gui></guiseq>."
 msgid ""
-"Go to Preferences using menu <guiseq><gui>Frogr</gui><gui>Preferences</gui></"
+"Go to Preferences using menu <guiseq><gui>frogr</gui><gui>Preferences</gui></"
 "guiseq>."
 msgstr ""
-"Vaya a las preferencias usando el menú <guiseq><gui>Frogr</"
+"Vaya a las preferencias usando el menú <guiseq><gui>frogr</"
 "gui><gui>Preferencias</gui></guiseq>."
 
 #. (itstool) path: section/title
 #: C/preferences.page:17
-msgid "General Preferences"
+#| msgid "General Preferences"
+msgid "General preferences"
 msgstr "Preferencias generales"
 
 #. (itstool) path: figure/title
 #: C/preferences.page:19
-msgid "<gui>Frogr</gui> general preferences"
-msgstr "Preferencias generales de <gui>Frogr</gui>"
+#| msgid "<gui>Frogr</gui> general preferences"
+msgid "<gui>frogr</gui> general preferences"
+msgstr "Preferencias generales de <gui>frogr</gui>"
 
 #. (itstool) path: figure/desc
 #: C/preferences.page:20
-msgid "<app>Frogr</app> general preferences"
-msgstr "Preferencias generales de <app>Frogr</app>"
+#| msgid "<app>Frogr</app> general preferences"
+msgid "<app>frogr</app> general preferences"
+msgstr "Preferencias generales de <app>frogr</app>"
 
 #. (itstool) path: media/p
 #: C/preferences.page:22
-msgid "<app>Frogr</app> general preferences."
-msgstr "Preferencias generales de <app>Frogr</app>."
+#| msgid "<app>Frogr</app> general preferences."
+msgid "<app>frogr</app> general preferences."
+msgstr "Preferencias generales de <app>frogr</app>."
 
 #. (itstool) path: section/title
 #: C/preferences.page:28
-msgid "Connection Preferences"
+#| msgid "Connection Preferences"
+msgid "Connection preferences"
 msgstr "Preferencias de la conexión"
 
 #. (itstool) path: section/p
@@ -181,38 +177,45 @@ msgstr "Esta pestaña le permite configurar un proxy."
 
 #. (itstool) path: figure/title
 #: C/preferences.page:31
-msgid "<gui>Frogr </gui> connection preferences"
-msgstr "Preferencias de la conexión de <gui>Frogr </gui>"
+#| msgid "<gui>Frogr </gui> connection preferences"
+msgid "<gui>frogr </gui> connection preferences"
+msgstr "Preferencias de conexión de <gui>frogr </gui>"
 
 #. (itstool) path: figure/desc
 #: C/preferences.page:32
-msgid "<app>Frogr</app> connection preferences"
-msgstr "Preferencias de conexión de <app>Frogr</app>"
+#| msgid "<app>Frogr</app> connection preferences"
+msgid "<app>frogr</app> connection preferences"
+msgstr "Preferencias de conexión de <app>frogr</app>"
 
 #. (itstool) path: media/p
 #: C/preferences.page:34 C/introduction.page:18
-msgid "<app>Frogr</app> main window."
-msgstr "Ventana principal de <app>Frogr</app>."
+#| msgid "<app>Frogr</app> main window."
+msgid "<app>frogr</app> main window."
+msgstr "Ventana principal de <app>frogr</app>."
 
 #. (itstool) path: section/title
 #: C/preferences.page:40
-msgid "Miscellaneous Preferences"
+#| msgid "Miscellaneous Preferences"
+msgid "Miscellaneous preferences"
 msgstr "Preferencias varias"
 
 #. (itstool) path: figure/title
 #: C/preferences.page:42
-msgid "<gui>Frogr </gui> misc preferences window"
-msgstr "Ventana de preferencias varias de <gui>Frogr</gui>"
+#| msgid "<gui>Frogr </gui> misc preferences window"
+msgid "<gui>frogr </gui> misc preferences window"
+msgstr "Ventana de preferencias varias de <gui>frogr</gui>"
 
 #. (itstool) path: figure/desc
 #: C/preferences.page:43
-msgid "<app>Frogr</app> misc preferences window"
-msgstr "Ventana de preferencias varias de <app>Frogr</app>"
+#| msgid "<app>Frogr</app> misc preferences window"
+msgid "<app>frogr</app> misc preferences window"
+msgstr "Ventana de preferencias varias de <app>frogr</app>"
 
 #. (itstool) path: media/p
 #: C/preferences.page:45
-msgid "<app>Frogr</app> misc preferences window."
-msgstr "Ventana de preferencias varias de <app>Frogr</app>."
+#| msgid "<app>Frogr</app> misc preferences window."
+msgid "<app>frogr</app> misc preferences window."
+msgstr "Ventana de preferencias varias de <app>frogr</app>."
 
 #. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
@@ -220,10 +223,6 @@ msgstr "Ventana de preferencias varias de <app>Frogr</app>."
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/edit-pictures.page:17
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/edit-picture-details.png' "
-#| "md5='61b5d97d77e1251b69c634a3b1718e32'"
 msgctxt "_"
 msgid ""
 "external ref='figures/edit-picture-details.png' "
@@ -239,7 +238,8 @@ msgstr "Corregir imágenes"
 
 #. (itstool) path: page/title
 #: C/edit-pictures.page:12
-msgid "Edit Details"
+#| msgid "Edit Details"
+msgid "Edit details"
 msgstr "Editar los detalles"
 
 #. (itstool) path: page/p
@@ -305,7 +305,8 @@ msgstr "Elegir si el elemento es público o privado"
 
 #. (itstool) path: item/title
 #: C/edit-pictures.page:26
-msgid "Content Type"
+#| msgid "Content Type"
+msgid "Content type"
 msgstr "Tipo de contenido"
 
 #. (itstool) path: item/p
@@ -319,7 +320,8 @@ msgstr ""
 
 #. (itstool) path: item/title
 #: C/edit-pictures.page:27
-msgid "Safety Level"
+#| msgid "Safety Level"
+msgid "Safety level"
 msgstr "Nivel de seguridad"
 
 #. (itstool) path: item/p
@@ -355,7 +357,8 @@ msgstr ""
 
 #. (itstool) path: item/title
 #: C/edit-pictures.page:30
-msgid "Show in Global Search Results"
+#| msgid "Show in Global Search Results"
+msgid "Show in global search results"
 msgstr "Mostrar en los resultados de búsqueda globales"
 
 #. (itstool) path: item/p
@@ -366,6 +369,16 @@ msgid ""
 msgstr ""
 "Puede especificar si debe ser posible encontrar su imagen o vídeo usando el "
 "motor de búsqueda de Flickr"
+
+#. (itstool) path: item/title
+#: C/edit-pictures.page:31
+msgid "Replace 'date posted' with 'date taken'"
+msgstr "Reemplazar la «fecha de publicación» por la «fecha de captura»"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:31
+msgid "It affects how your pictures are sorted in your photostream"
+msgstr "Esto afecta a cómo se ordenan las imágenes"
 
 #. (itstool) path: info/desc
 #: C/external-viewer.page:9
@@ -388,33 +401,39 @@ msgstr ""
 
 #. (itstool) path: page/title
 #: C/index.page:8
-msgid "Frogr Help"
-msgstr "Ayuda de Frogr"
+#| msgid "Frogr Help"
+msgid "frogr help"
+msgstr "Ayuda de frogr"
 
 #. (itstool) path: section/title
 #: C/index.page:11
-msgid "Managing Your Flickr Account"
-msgstr "Gestionar su cuenta de Flickr"
+#| msgid "Managing Your Flickr Account"
+msgid "Managing your flickr account"
+msgstr "Gestionar su cuenta de flickr"
 
 #. (itstool) path: section/title
 #: C/index.page:15
-msgid "Managing Your Pictures"
+#| msgid "Managing Your Pictures"
+msgid "Managing your pictures"
 msgstr "Gestionar sus imágenes"
 
 #. (itstool) path: section/title
 #: C/index.page:19
-msgid "Organize and Sort Your Pictures"
+#| msgid "Organize and Sort Your Pictures"
+msgid "Organize and sort your pictures"
 msgstr "Organizar y ordenar sus imágenes"
 
 #. (itstool) path: section/title
 #: C/index.page:23
-msgid "Set Up Frogr"
-msgstr "Configurar Frogr"
+#| msgid "Set Up Frogr"
+msgid "Set up frogr"
+msgstr "Configurar frogr"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/remove-pictures.page:9 C/remove-pictures.page:12
-msgid "Remove Elements"
+#| msgid "Remove Elements"
+msgid "Remove elements"
 msgstr "Quitar elementos"
 
 #. (itstool) path: page/p
@@ -434,10 +453,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/create-account.page:17
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/auth-dialog-step1.png' "
-#| "md5='0bee821ca7fdd16842a4e2536e2bb17e'"
 msgctxt "_"
 msgid ""
 "external ref='figures/auth-dialog-step1.png' "
@@ -452,10 +467,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/create-account.page:25
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/auth-dialog-step2.png' "
-#| "md5='c9b217898c3f1516cdae9a5c19439176'"
 msgctxt "_"
 msgid ""
 "external ref='figures/auth-dialog-step2.png' "
@@ -467,7 +478,8 @@ msgstr ""
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/create-account.page:8 C/create-account.page:11
-msgid "How to create your Account"
+#| msgid "How to create your Account"
+msgid "How to create your account"
 msgstr "Cómo crear una cuenta"
 
 #. (itstool) path: page/p
@@ -477,11 +489,14 @@ msgstr "Primero cree una cuenta"
 
 #. (itstool) path: page/p
 #: C/create-account.page:13
+#| msgid ""
+#| "When you first run <app>Frogr</app>, it displays a window explaining "
+#| "you'll have to create an account."
 msgid ""
-"When you first run <app>Frogr</app>, it displays a window explaining you'll "
+"When you first run <app>frogr</app>, it displays a window explaining you'll "
 "have to create an account."
 msgstr ""
-"Cuando ejecuta <app>Frogr</app> por primera vez, se muestra una ventana que "
+"Cuando ejecuta <app>frogr</app> por primera vez, se muestra una ventana que "
 "explica que tendrá que crear una cuenta."
 
 #. (itstool) path: figure/title
@@ -506,13 +521,17 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/create-account.page:21
+#| msgid ""
+#| "Then, authorize <app>Frogr</app> to access to this account. You may now "
+#| "go back to <app>Frogr</app> window, enter the verification code and use "
+#| "the application to upload any picture!"
 msgid ""
-"Then, authorize <app>Frogr</app> to access to this account. You may now go "
-"back to <app>Frogr</app> window, enter the verification code and use the "
+"Then, authorize <app>frogr</app> to access to this account. You may now go "
+"back to <app>frogr</app> window, enter the verification code and use the "
 "application to upload any picture!"
 msgstr ""
-"Entonces, autorice a <app>Frogr</app> a acceder a esta cuenta. Ahora puede "
-"regresar a la ventana de <app>Frogr</app>, introducir el código de "
+"Entonces, autorice a <app>frogr</app> a acceder a esta cuenta. Ahora puede "
+"regresar a la ventana de <app>frogr</app>, introducir el código de "
 "verificación y usar la aplicación para subir cualquier imagen."
 
 #. (itstool) path: figure/desc
@@ -526,10 +545,6 @@ msgstr "Autorizar a frogr. Finalizar el proceso"
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/introduction.page:17
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/frogr-remote-organizer.png' "
-#| "md5='cb4f8098adc7b429e874c7d72d490b8e'"
 msgctxt "_"
 msgid ""
 "external ref='figures/frogr-remote-organizer.png' "
@@ -540,36 +555,45 @@ msgstr ""
 
 #. (itstool) path: info/desc
 #: C/introduction.page:8
-msgid "Introduction to the <app>Frogr</app> Remote Organizer."
-msgstr "Introducción al organizador remoto <app>Frogr</app>."
+#| msgid "Introduction to the <app>Frogr</app> Remote Organizer."
+msgid "Introduction to <app>frogr</app>."
+msgstr "Introducción a <app>frogr</app>."
 
 #. (itstool) path: page/title
 #: C/introduction.page:12
-msgid "Frogr Introduction"
-msgstr "Introducción a Frogr"
+#| msgid "Frogr Introduction"
+msgid "frogr introduction"
+msgstr "Introducción a frogr"
 
 #. (itstool) path: page/p
 #: C/introduction.page:13
+#| msgid ""
+#| "<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
+#| "Remote Organizer. <app>Frogr</app> is a small application for the GNOME "
+#| "desktop that allows users to manage their accounts in the Flickr image "
+#| "hosting website."
 msgid ""
-"<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
-"Remote Organizer. <app>Frogr</app> is a small application for the GNOME "
+"<app>frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
+"Remote Organizer. <app>frogr</app> is a small application for the GNOME "
 "desktop that allows users to manage their accounts in the Flickr image "
 "hosting website."
 msgstr ""
-"<app>Frogr</app> es un organizador remoto para <link href=\"http://www."
-"flickr.com/\">Flickr</link>. <app>Frogr</app> es una pequeña aplicación para "
+"<app>frogr</app> es un organizador remoto para <link href=\"http://www."
+"flickr.com/\">Flickr</link>. <app>frogr</app> es una pequeña aplicación para "
 "el escritorio GNOME que permite a los usuarios gestionar sus cuentas en la "
 "página web del almacenamiento de imágenes Flickr."
 
 #. (itstool) path: figure/title
 #: C/introduction.page:15
-msgid "<gui>Frogr</gui> window"
-msgstr "Ventana de <gui>Frogr</gui>"
+#| msgid "<gui>Frogr</gui> window"
+msgid "<gui>frogr</gui> window"
+msgstr "Ventana de <gui>frogr</gui>"
 
 #. (itstool) path: figure/desc
 #: C/introduction.page:16
-msgid "<app>Frogr</app> main window"
-msgstr "Ventana principal de <app>Frogr</app>"
+#| msgid "<app>Frogr</app> main window"
+msgid "<app>frogr</app> main window"
+msgstr "Ventana principal de <app>frogr</app>"
 
 #. (itstool) path: section/title
 #: C/introduction.page:22
@@ -587,7 +611,8 @@ msgstr ""
 
 #. (itstool) path: section/title
 #: C/introduction.page:26
-msgid "Main Features"
+#| msgid "Main Features"
+msgid "Main features"
 msgstr "Características principales"
 
 #. (itstool) path: item/p
@@ -631,9 +656,13 @@ msgstr "Acerca de"
 
 #. (itstool) path: section/p
 #: C/introduction.page:38
+#, fuzzy
+#| msgid ""
+#| "You can have more information about <app>Frogr</app> using the menu "
+#| "<guiseq><gui>Frogr</gui><gui>About</gui></guiseq>."
 msgid ""
-"You can have more information about <app>Frogr</app> using the menu "
-"<guiseq><gui>Frogr</gui><gui>About</gui></guiseq>."
+"You can have more information about <app>frogr</app> using the menu "
+"<guiseq><gui>frogr</gui><gui>About</gui></guiseq>."
 msgstr ""
 "Puede obtener más información sobre <app>Frogr</app> usando el menú "
 "<guiseq><gui>Ayuda</gui><gui>Acerca de</gui></guiseq>."
@@ -644,10 +673,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/set-pictures.page:18
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/add-to-sets.png' "
-#| "md5='7b5f33cb2f29b7f939c746b1dacba908'"
 msgctxt "_"
 msgid ""
 "external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
@@ -660,10 +685,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/set-pictures.page:25
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/create-new-set.png' "
-#| "md5='dcb532384b0d30df70fa72b2b6db628f'"
 msgctxt "_"
 msgid ""
 "external ref='figures/create-new-set.png' "
@@ -675,8 +696,9 @@ msgstr ""
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/set-pictures.page:9 C/set-pictures.page:12
-msgid "Adding Elements to Sets"
-msgstr "Añadir etiquetas a álbumes"
+#| msgid "Adding Elements to Sets"
+msgid "Adding elements to sets"
+msgstr "Añadir elementos a álbumes"
 
 #. (itstool) path: page/p
 #: C/set-pictures.page:13
@@ -724,7 +746,8 @@ msgstr "Vista corregida"
 
 #. (itstool) path: page/title
 #: C/display.page:12
-msgid "Sort Elements"
+#| msgid "Sort Elements"
+msgid "Sort elements"
 msgstr "Ordenar elementos"
 
 #. (itstool) path: page/p
@@ -750,10 +773,6 @@ msgstr "Organizar"
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/tag.page:18
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/add-tags-dialog.png' "
-#| "md5='27e60f1fb9c62f58c82559069c17c913'"
 msgctxt "_"
 msgid ""
 "external ref='figures/add-tags-dialog.png' "
@@ -765,7 +784,8 @@ msgstr ""
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/tag.page:9 C/tag.page:12
-msgid "Tag Elements"
+#| msgid "Tag Elements"
+msgid "Tag elements"
 msgstr "Etiquetar elementos"
 
 #. (itstool) path: page/p
@@ -802,7 +822,8 @@ msgstr "Añadir, quitar y subir imágenes y vídeos"
 
 #. (itstool) path: page/title
 #: C/pictures.page:12
-msgid "Transfer Elements"
+#| msgid "Transfer Elements"
+msgid "Transfer elements"
 msgstr "Transferir elementos"
 
 #. (itstool) path: page/p
@@ -816,7 +837,8 @@ msgstr ""
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/upload-pictures.page:9 C/upload-pictures.page:12
-msgid "Upload Elements"
+#| msgid "Upload Elements"
+msgid "Upload elements"
 msgstr "Subir elementos"
 
 #. (itstool) path: page/p
