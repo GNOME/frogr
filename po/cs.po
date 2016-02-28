@@ -1,15 +1,15 @@
 # Czech translation for frogr.
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Marek Černocký <marek@manet.cz>, 2011, 2012, 2013, 2015.
+# Marek Černocký <marek@manet.cz>, 2011, 2012, 2013, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-12-15 07:02+0000\n"
-"PO-Revision-Date: 2015-07-21 15:26+0200\n"
+"POT-Creation-Date: 2016-01-22 18:06+0000\n"
+"PO-Revision-Date: 2016-02-28 12:54+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -34,6 +34,10 @@ msgid ""
 msgstr ""
 "Podporuje všechny základní funkce služby Flickr, včetně nahrávání obrázků, "
 "přidávání popisů, nastavování štítků a správy nastavení a skupin."
+
+#: ../data/frogr.appdata.xml.in.h:3
+msgid "Screenshot of frogr"
+msgstr "Snímek obrazovky s aplikací frogr"
 
 #: ../data/frogr.desktop.in.in.h:1
 msgid "frogr"
@@ -62,8 +66,8 @@ msgstr "Marek Černocký <marek@manet.cz>"
 #: ../src/frogr-add-tags-dialog.c:191 ../src/frogr-add-to-group-dialog.c:528
 #: ../src/frogr-add-to-set-dialog.c:529 ../src/frogr-auth-dialog.c:153
 #: ../src/frogr-create-new-set-dialog.c:310 ../src/frogr-details-dialog.c:1168
-#: ../src/frogr-main-view.c:1546 ../src/frogr-main-view.c:1621
-#: ../src/frogr-main-view.c:1673 ../src/frogr-settings-dialog.c:930
+#: ../src/frogr-main-view.c:1543 ../src/frogr-main-view.c:1618
+#: ../src/frogr-main-view.c:1670 ../src/frogr-settings-dialog.c:930
 msgid "_Cancel"
 msgstr "_Zrušit"
 
@@ -588,132 +592,132 @@ msgstr ""
 "Velikost souboru je větší než povolené maximum pro tento účet (%s)"
 
 #. First create the left side buttons
-#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:729
+#: ../src/frogr-main-view.c:630 ../src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Otevřít"
 
-#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:729
+#: ../src/frogr-main-view.c:630 ../src/frogr-main-view.c:726
 msgid "Open Existing Project"
 msgstr "Otevřít existující projekt"
 
-#: ../src/frogr-main-view.c:634 ../src/frogr-main-view.c:732
+#: ../src/frogr-main-view.c:631 ../src/frogr-main-view.c:729
 msgid "Add"
 msgstr "Přidat"
 
-#: ../src/frogr-main-view.c:634 ../src/frogr-main-view.c:732
+#: ../src/frogr-main-view.c:631 ../src/frogr-main-view.c:729
 msgid "Add Elements"
 msgstr "Přidat objekty"
 
-#: ../src/frogr-main-view.c:635 ../src/frogr-main-view.c:733
+#: ../src/frogr-main-view.c:632 ../src/frogr-main-view.c:730
 msgid "Remove"
 msgstr "Odebrat"
 
-#: ../src/frogr-main-view.c:635 ../src/frogr-main-view.c:733
+#: ../src/frogr-main-view.c:632 ../src/frogr-main-view.c:730
 msgid "Remove Elements"
 msgstr "Odebrat objekty"
 
-#: ../src/frogr-main-view.c:636 ../src/frogr-main-view.c:735
+#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:732
 msgid "Upload"
 msgstr "Nahrát"
 
-#: ../src/frogr-main-view.c:636 ../src/frogr-main-view.c:735
+#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:732
 msgid "Upload All"
 msgstr "Nahrát vše"
 
 #. Save project item
-#: ../src/frogr-main-view.c:669 ../src/frogr-main-view.c:730
+#: ../src/frogr-main-view.c:666 ../src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Uložit"
 
-#: ../src/frogr-main-view.c:669 ../src/frogr-main-view.c:730
+#: ../src/frogr-main-view.c:666 ../src/frogr-main-view.c:727
 msgid "Save Current Project"
 msgstr "Uložit současný projekt"
 
-#: ../src/frogr-main-view.c:1019 ../data/gtkbuilder/frogr-app-menu.xml.h:4
+#: ../src/frogr-main-view.c:1016 ../data/gtkbuilder/frogr-app-menu.xml.h:4
 msgid "_About"
 msgstr "O _aplikaci"
 
-#: ../src/frogr-main-view.c:1023 ../data/gtkbuilder/frogr-app-menu.xml.h:5
+#: ../src/frogr-main-view.c:1020 ../data/gtkbuilder/frogr-app-menu.xml.h:5
 #: ../data/gtkbuilder/frogr-menu-button.xml.h:17
 msgid "_Quit"
 msgstr "U_končit"
 
 #. Create the submenu and insert it in the right section
-#: ../src/frogr-main-view.c:1073
+#: ../src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Účty"
 
 #. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:1413
+#: ../src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
 msgstr "Pořízen: %s"
 
-#: ../src/frogr-main-view.c:1418
+#: ../src/frogr-main-view.c:1415
 #, c-format
 msgid "File size: %s"
 msgstr "Velikost souboru: %s"
 
-#: ../src/frogr-main-view.c:1543
+#: ../src/frogr-main-view.c:1540
 msgid "Select File"
 msgstr "Výběr souboru"
 
-#: ../src/frogr-main-view.c:1547 ../src/frogr-main-view.c:1674
+#: ../src/frogr-main-view.c:1544 ../src/frogr-main-view.c:1671
 msgid "_Open"
 msgstr "_Otevřít"
 
-#: ../src/frogr-main-view.c:1556
+#: ../src/frogr-main-view.c:1553
 msgid "Frogr Project Files"
 msgstr "Projektové soubory Frogr"
 
-#: ../src/frogr-main-view.c:1618
+#: ../src/frogr-main-view.c:1615
 msgid "Select Destination"
 msgstr "Výběr cíle"
 
-#: ../src/frogr-main-view.c:1622 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
+#: ../src/frogr-main-view.c:1619 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
 #: ../data/gtkbuilder/frogr-menu-button.xml.h:1
 msgid "_Save"
 msgstr "_Uložit"
 
-#: ../src/frogr-main-view.c:1625
+#: ../src/frogr-main-view.c:1622
 msgid "Untitled Project.frogr"
 msgstr "Nepojmenovaný projekt.frogr"
 
-#: ../src/frogr-main-view.c:1670
+#: ../src/frogr-main-view.c:1667
 msgid "Select a Picture"
 msgstr "Výběr obrázku"
 
-#: ../src/frogr-main-view.c:1697
+#: ../src/frogr-main-view.c:1694
 msgid "All Files"
 msgstr "Všechny soubory"
 
-#: ../src/frogr-main-view.c:1700
+#: ../src/frogr-main-view.c:1697
 msgid "Image Files"
 msgstr "Obrázky"
 
-#: ../src/frogr-main-view.c:1704
+#: ../src/frogr-main-view.c:1701
 msgid "Video Files"
 msgstr "Videa"
 
-#: ../src/frogr-main-view.c:1726
+#: ../src/frogr-main-view.c:1723
 msgid "You don't have any picture added yet"
 msgstr "Zatím nemáte přidaný žádný obrázek"
 
-#: ../src/frogr-main-view.c:1739
+#: ../src/frogr-main-view.c:1736
 msgid "You need to select some pictures first"
 msgstr "Nejdříve musíte vybrat nějaké obrázky"
 
-#: ../src/frogr-main-view.c:2174
+#: ../src/frogr-main-view.c:2108
 msgid "Not connected to Flickr"
 msgstr "Nepřipojeno na Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:2184
+#: ../src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Připojen jako %s%s"
 
-#: ../src/frogr-main-view.c:2185
+#: ../src/frogr-main-view.c:2119
 msgid " (PRO account)"
 msgstr "(účet PRO)"
 
@@ -722,7 +726,7 @@ msgstr "(účet PRO)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:2209
+#: ../src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " – %s / %s zbývá"
@@ -730,7 +734,7 @@ msgstr " – %s / %s zbývá"
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
 #. sizes for every picture loaded in the application
-#: ../src/frogr-main-view.c:2235
+#: ../src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
