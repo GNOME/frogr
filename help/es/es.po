@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2016-02-03 16:32+0000\n"
-"PO-Revision-Date: 2016-02-22 18:59+0100\n"
+"POT-Creation-Date: 2016-02-22 20:20+0000\n"
+"PO-Revision-Date: 2016-03-01 10:07+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -26,7 +26,6 @@ msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011 - 2016"
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/add-pictures.page:9 C/add-pictures.page:12
-#| msgid "Add Elements"
 msgid "Add elements"
 msgstr "Añadir elementos"
 
@@ -59,13 +58,11 @@ msgstr ""
 
 #. (itstool) path: info/desc
 #: C/group-pictures.page:9
-#| msgid "Group Elements"
 msgid "Group elements"
 msgstr "Agrupar elementos"
 
 #. (itstool) path: page/title
 #: C/group-pictures.page:12
-#| msgid "Add to Groups"
 msgid "Add to groups"
 msgstr "Añadir a grupos"
 
@@ -130,9 +127,6 @@ msgstr "Preferencias"
 
 #. (itstool) path: page/p
 #: C/preferences.page:14
-#| msgid ""
-#| "Go to Preferences using menu <guiseq><gui>Frogr</gui><gui>Preferences</"
-#| "gui></guiseq>."
 msgid ""
 "Go to Preferences using menu <guiseq><gui>frogr</gui><gui>Preferences</gui></"
 "guiseq>."
@@ -142,31 +136,26 @@ msgstr ""
 
 #. (itstool) path: section/title
 #: C/preferences.page:17
-#| msgid "General Preferences"
 msgid "General preferences"
 msgstr "Preferencias generales"
 
 #. (itstool) path: figure/title
 #: C/preferences.page:19
-#| msgid "<gui>Frogr</gui> general preferences"
 msgid "<gui>frogr</gui> general preferences"
 msgstr "Preferencias generales de <gui>frogr</gui>"
 
 #. (itstool) path: figure/desc
 #: C/preferences.page:20
-#| msgid "<app>Frogr</app> general preferences"
 msgid "<app>frogr</app> general preferences"
 msgstr "Preferencias generales de <app>frogr</app>"
 
 #. (itstool) path: media/p
 #: C/preferences.page:22
-#| msgid "<app>Frogr</app> general preferences."
 msgid "<app>frogr</app> general preferences."
 msgstr "Preferencias generales de <app>frogr</app>."
 
 #. (itstool) path: section/title
 #: C/preferences.page:28
-#| msgid "Connection Preferences"
 msgid "Connection preferences"
 msgstr "Preferencias de la conexión"
 
@@ -177,43 +166,36 @@ msgstr "Esta pestaña le permite configurar un proxy."
 
 #. (itstool) path: figure/title
 #: C/preferences.page:31
-#| msgid "<gui>Frogr </gui> connection preferences"
 msgid "<gui>frogr </gui> connection preferences"
 msgstr "Preferencias de conexión de <gui>frogr </gui>"
 
 #. (itstool) path: figure/desc
 #: C/preferences.page:32
-#| msgid "<app>Frogr</app> connection preferences"
 msgid "<app>frogr</app> connection preferences"
 msgstr "Preferencias de conexión de <app>frogr</app>"
 
 #. (itstool) path: media/p
 #: C/preferences.page:34 C/introduction.page:18
-#| msgid "<app>Frogr</app> main window."
 msgid "<app>frogr</app> main window."
 msgstr "Ventana principal de <app>frogr</app>."
 
 #. (itstool) path: section/title
 #: C/preferences.page:40
-#| msgid "Miscellaneous Preferences"
 msgid "Miscellaneous preferences"
 msgstr "Preferencias varias"
 
 #. (itstool) path: figure/title
 #: C/preferences.page:42
-#| msgid "<gui>Frogr </gui> misc preferences window"
 msgid "<gui>frogr </gui> misc preferences window"
 msgstr "Ventana de preferencias varias de <gui>frogr</gui>"
 
 #. (itstool) path: figure/desc
 #: C/preferences.page:43
-#| msgid "<app>Frogr</app> misc preferences window"
 msgid "<app>frogr</app> misc preferences window"
 msgstr "Ventana de preferencias varias de <app>frogr</app>"
 
 #. (itstool) path: media/p
 #: C/preferences.page:45
-#| msgid "<app>Frogr</app> misc preferences window."
 msgid "<app>frogr</app> misc preferences window."
 msgstr "Ventana de preferencias varias de <app>frogr</app>."
 
@@ -238,7 +220,6 @@ msgstr "Corregir imágenes"
 
 #. (itstool) path: page/title
 #: C/edit-pictures.page:12
-#| msgid "Edit Details"
 msgid "Edit details"
 msgstr "Editar los detalles"
 
@@ -305,7 +286,6 @@ msgstr "Elegir si el elemento es público o privado"
 
 #. (itstool) path: item/title
 #: C/edit-pictures.page:26
-#| msgid "Content Type"
 msgid "Content type"
 msgstr "Tipo de contenido"
 
@@ -320,7 +300,6 @@ msgstr ""
 
 #. (itstool) path: item/title
 #: C/edit-pictures.page:27
-#| msgid "Safety Level"
 msgid "Safety level"
 msgstr "Nivel de seguridad"
 
@@ -357,7 +336,6 @@ msgstr ""
 
 #. (itstool) path: item/title
 #: C/edit-pictures.page:30
-#| msgid "Show in Global Search Results"
 msgid "Show in global search results"
 msgstr "Mostrar en los resultados de búsqueda globales"
 
@@ -401,38 +379,32 @@ msgstr ""
 
 #. (itstool) path: page/title
 #: C/index.page:8
-#| msgid "Frogr Help"
 msgid "frogr help"
 msgstr "Ayuda de frogr"
 
 #. (itstool) path: section/title
 #: C/index.page:11
-#| msgid "Managing Your Flickr Account"
 msgid "Managing your flickr account"
 msgstr "Gestionar su cuenta de flickr"
 
 #. (itstool) path: section/title
 #: C/index.page:15
-#| msgid "Managing Your Pictures"
 msgid "Managing your pictures"
 msgstr "Gestionar sus imágenes"
 
 #. (itstool) path: section/title
 #: C/index.page:19
-#| msgid "Organize and Sort Your Pictures"
 msgid "Organize and sort your pictures"
 msgstr "Organizar y ordenar sus imágenes"
 
 #. (itstool) path: section/title
 #: C/index.page:23
-#| msgid "Set Up Frogr"
 msgid "Set up frogr"
 msgstr "Configurar frogr"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/remove-pictures.page:9 C/remove-pictures.page:12
-#| msgid "Remove Elements"
 msgid "Remove elements"
 msgstr "Quitar elementos"
 
@@ -478,7 +450,6 @@ msgstr ""
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/create-account.page:8 C/create-account.page:11
-#| msgid "How to create your Account"
 msgid "How to create your account"
 msgstr "Cómo crear una cuenta"
 
@@ -489,9 +460,6 @@ msgstr "Primero cree una cuenta"
 
 #. (itstool) path: page/p
 #: C/create-account.page:13
-#| msgid ""
-#| "When you first run <app>Frogr</app>, it displays a window explaining "
-#| "you'll have to create an account."
 msgid ""
 "When you first run <app>frogr</app>, it displays a window explaining you'll "
 "have to create an account."
@@ -521,10 +489,6 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/create-account.page:21
-#| msgid ""
-#| "Then, authorize <app>Frogr</app> to access to this account. You may now "
-#| "go back to <app>Frogr</app> window, enter the verification code and use "
-#| "the application to upload any picture!"
 msgid ""
 "Then, authorize <app>frogr</app> to access to this account. You may now go "
 "back to <app>frogr</app> window, enter the verification code and use the "
@@ -555,23 +519,16 @@ msgstr ""
 
 #. (itstool) path: info/desc
 #: C/introduction.page:8
-#| msgid "Introduction to the <app>Frogr</app> Remote Organizer."
 msgid "Introduction to <app>frogr</app>."
 msgstr "Introducción a <app>frogr</app>."
 
 #. (itstool) path: page/title
 #: C/introduction.page:12
-#| msgid "Frogr Introduction"
 msgid "frogr introduction"
 msgstr "Introducción a frogr"
 
 #. (itstool) path: page/p
 #: C/introduction.page:13
-#| msgid ""
-#| "<app>Frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
-#| "Remote Organizer. <app>Frogr</app> is a small application for the GNOME "
-#| "desktop that allows users to manage their accounts in the Flickr image "
-#| "hosting website."
 msgid ""
 "<app>frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
 "Remote Organizer. <app>frogr</app> is a small application for the GNOME "
@@ -585,13 +542,11 @@ msgstr ""
 
 #. (itstool) path: figure/title
 #: C/introduction.page:15
-#| msgid "<gui>Frogr</gui> window"
 msgid "<gui>frogr</gui> window"
 msgstr "Ventana de <gui>frogr</gui>"
 
 #. (itstool) path: figure/desc
 #: C/introduction.page:16
-#| msgid "<app>Frogr</app> main window"
 msgid "<app>frogr</app> main window"
 msgstr "Ventana principal de <app>frogr</app>"
 
@@ -611,7 +566,6 @@ msgstr ""
 
 #. (itstool) path: section/title
 #: C/introduction.page:26
-#| msgid "Main Features"
 msgid "Main features"
 msgstr "Características principales"
 
@@ -656,7 +610,6 @@ msgstr "Acerca de"
 
 #. (itstool) path: section/p
 #: C/introduction.page:38
-#, fuzzy
 #| msgid ""
 #| "You can have more information about <app>Frogr</app> using the menu "
 #| "<guiseq><gui>Frogr</gui><gui>About</gui></guiseq>."
@@ -664,8 +617,8 @@ msgid ""
 "You can have more information about <app>frogr</app> using the menu "
 "<guiseq><gui>frogr</gui><gui>About</gui></guiseq>."
 msgstr ""
-"Puede obtener más información sobre <app>Frogr</app> usando el menú "
-"<guiseq><gui>Ayuda</gui><gui>Acerca de</gui></guiseq>."
+"Puede obtener más información sobre <app>frogr</app> usando el menú "
+"<guiseq><gui>frogr</gui><gui>Acerca de</gui></guiseq>."
 
 #. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
@@ -696,7 +649,6 @@ msgstr ""
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/set-pictures.page:9 C/set-pictures.page:12
-#| msgid "Adding Elements to Sets"
 msgid "Adding elements to sets"
 msgstr "Añadir elementos a álbumes"
 
@@ -746,7 +698,6 @@ msgstr "Vista corregida"
 
 #. (itstool) path: page/title
 #: C/display.page:12
-#| msgid "Sort Elements"
 msgid "Sort elements"
 msgstr "Ordenar elementos"
 
@@ -784,7 +735,6 @@ msgstr ""
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/tag.page:9 C/tag.page:12
-#| msgid "Tag Elements"
 msgid "Tag elements"
 msgstr "Etiquetar elementos"
 
@@ -822,7 +772,6 @@ msgstr "Añadir, quitar y subir imágenes y vídeos"
 
 #. (itstool) path: page/title
 #: C/pictures.page:12
-#| msgid "Transfer Elements"
 msgid "Transfer elements"
 msgstr "Transferir elementos"
 
@@ -837,7 +786,6 @@ msgstr ""
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
 #: C/upload-pictures.page:9 C/upload-pictures.page:12
-#| msgid "Upload Elements"
 msgid "Upload elements"
 msgstr "Subir elementos"
 
