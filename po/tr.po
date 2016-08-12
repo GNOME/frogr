@@ -7,9 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-23 16:40+0000\n"
+"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
+"POT-Creation-Date: 2016-08-12 13:09+0100\n"
 "PO-Revision-Date: 2015-08-09 19:14+0300\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
@@ -21,16 +20,28 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.7\n"
 "X-POOTLE-MTIME: 1425026434.000000\n"
 
-#: ../data/frogr.appdata.xml.in.h:1
+#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
+#: data/frogr.desktop.in.in:14
+#, fuzzy
+msgid "frogr"
+msgstr "Frogr"
+
+#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
+#, fuzzy
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "Frogr: GNOME için bir Flickr Uzaktan Düzenleyicisi"
+
+#: data/frogr.appdata.xml.in:8
+#, fuzzy
 msgid ""
-"Frogr is a small application for the GNOME desktop that allows users to "
+"frogr is a small application for the GNOME desktop that allows users to "
 "manage their accounts in the Flickr image hosting website."
 msgstr ""
 "Frogr; GNOME masaüstü için hazırlanmış küçük bir uygulamadır ve "
 "kullanıcıların Flickr resim barındırma web sitesindeki hesaplarını "
 "yönetmelerine olanak tanır."
 
-#: ../data/frogr.appdata.xml.in.h:2
+#: data/frogr.appdata.xml.in:13
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
@@ -39,73 +50,74 @@ msgstr ""
 "eklenmesi, etiketlerin ayarlanması ve küme ve grup havuzlarının yönetilmesi "
 "dahil."
 
-#: ../data/frogr.desktop.in.in.h:1
-msgid "Frogr"
-msgstr "Frogr"
+#: data/frogr.appdata.xml.in:24
+#, fuzzy
+msgid "Screenshot of frogr"
+msgstr "Ekra_n görüntüsü"
 
-#: ../data/frogr.desktop.in.in.h:2
-msgid "Frogr: a Flickr Remote Organizer for GNOME"
-msgstr "Frogr: GNOME için bir Flickr Uzaktan Düzenleyicisi"
+#: data/frogr.appdata.xml.in:29
+msgid "Mario Sanchez Prada"
+msgstr ""
 
-#: ../data/frogr.desktop.in.in.h:3
+#: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Flickr hesaplarına fotoğraf yükleyin ve düzenleyin."
 
-#: ../data/frogr.desktop.in.in.h:4
+#: data/frogr.desktop.in.in:8
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Görüntü;Resim;Fotoğraf;Video;Karşıya Yükleyici;"
 
-#: ../src/frogr-about-dialog.c:43
-msgid "A Flickr remote organizer for GNOME\n"
+#: src/frogr-about-dialog.c:43
+#, fuzzy
+msgid "A Flickr Remote Organizer for GNOME\n"
 msgstr "GNOME için Flickr uzaktan düzenleyicisi\n"
 
-#: ../src/frogr-about-dialog.c:72
+#: src/frogr-about-dialog.c:72
 msgid "translator-credits"
 msgstr "Muhammet Kara <muhammetk@gmail.com>"
 
-#: ../src/frogr-add-tags-dialog.c:198 ../src/frogr-add-to-group-dialog.c:552
-#: ../src/frogr-add-to-set-dialog.c:553 ../src/frogr-auth-dialog.c:153
-#: ../src/frogr-create-new-set-dialog.c:329 ../src/frogr-details-dialog.c:1195
-#: ../src/frogr-main-view.c:1600 ../src/frogr-main-view.c:1679
-#: ../src/frogr-main-view.c:1731 ../src/frogr-settings-dialog.c:961
+#: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
+#: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
+#: src/frogr-create-new-set-dialog.c:310 src/frogr-details-dialog.c:1168
+#: src/frogr-main-view.c:1543 src/frogr-main-view.c:1618
+#: src/frogr-main-view.c:1670 src/frogr-settings-dialog.c:930
 msgid "_Cancel"
 msgstr "_Vazgeç"
 
-#: ../src/frogr-add-tags-dialog.c:200 ../src/frogr-add-to-group-dialog.c:554
-#: ../src/frogr-add-to-set-dialog.c:555
-#: ../src/frogr-create-new-set-dialog.c:331
+#: src/frogr-add-tags-dialog.c:193 src/frogr-add-to-group-dialog.c:530
+#: src/frogr-add-to-set-dialog.c:531 src/frogr-create-new-set-dialog.c:312
 msgid "_Add"
 msgstr "_Ekle"
 
-#: ../src/frogr-add-tags-dialog.c:209
+#: src/frogr-add-tags-dialog.c:202
 msgid "Enter a spaces separated list of tags:"
 msgstr "Boşluklarla ayrılmış bir etiket listesi girin:"
 
-#: ../src/frogr-add-tags-dialog.c:235
+#: src/frogr-add-tags-dialog.c:228
 msgid "Add Tags"
 msgstr "Etiket Ekle"
 
-#: ../src/frogr-add-to-group-dialog.c:154
+#: src/frogr-add-to-group-dialog.c:147
 msgid "Name"
 msgstr "Ad"
 
-#: ../src/frogr-add-to-group-dialog.c:169 ../src/frogr-add-to-set-dialog.c:170
+#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
 msgid "Elements"
 msgstr "Öğeler"
 
-#: ../src/frogr-add-to-group-dialog.c:605
+#: src/frogr-add-to-group-dialog.c:581
 msgid "Add to Groups"
 msgstr "Gruplara Ekle"
 
-#: ../src/frogr-add-to-set-dialog.c:155
+#: src/frogr-add-to-set-dialog.c:148
 msgid "Title"
 msgstr "Başlık"
 
-#: ../src/frogr-add-to-set-dialog.c:606
+#: src/frogr-add-to-set-dialog.c:582
 msgid "Add to Sets"
 msgstr "Kümelere Ekle"
 
-#: ../src/frogr-auth-dialog.c:59
+#: src/frogr-auth-dialog.c:59
 #, c-format
 msgid ""
 "Please press the button to authorize %s and then come back to complete the "
@@ -114,30 +126,29 @@ msgstr ""
 "Lütfen %s'i yetkilendirmek için düğmeye basın ve işlemi tamamlamak için geri "
 "gelin."
 
-#: ../src/frogr-auth-dialog.c:63 ../src/frogr-auth-dialog.c:149
-#: ../src/frogr-controller.c:2373
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
+#: src/frogr-controller.c:2286
 #, c-format
 msgid "Authorize %s"
 msgstr "%s'i Yetkilendir"
 
-#: ../src/frogr-auth-dialog.c:155 ../src/frogr-settings-dialog.c:963
+#: src/frogr-auth-dialog.c:155 src/frogr-settings-dialog.c:932
 msgid "_Close"
 msgstr "_Kapat"
 
-#. Description label
-#: ../src/frogr-auth-dialog.c:167
+#: src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "Doğrulama kodunu girin:"
 
-#: ../src/frogr-auth-dialog.c:221
+#: src/frogr-auth-dialog.c:221
 msgid "Invalid verification code"
 msgstr "Geçersiz doğrulama kodu"
 
-#: ../src/frogr-controller.c:597
+#: src/frogr-controller.c:581
 msgid "Process cancelled"
 msgstr "İşlem iptal edildi"
 
-#: ../src/frogr-controller.c:602
+#: src/frogr-controller.c:586
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -145,7 +156,7 @@ msgstr ""
 "Bağlantı hatası:\n"
 "Ağ kulanılabilir değil"
 
-#: ../src/frogr-controller.c:606
+#: src/frogr-controller.c:590
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -153,7 +164,7 @@ msgstr ""
 "Bağlantı hatası:\n"
 "Hatalı istek"
 
-#: ../src/frogr-controller.c:610
+#: src/frogr-controller.c:594
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -161,7 +172,7 @@ msgstr ""
 "Bağlantı hatası:\n"
 "Sunucu taraflı hata"
 
-#: ../src/frogr-controller.c:614
+#: src/frogr-controller.c:598
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -169,7 +180,7 @@ msgstr ""
 "Karşıya yüklenirken hata oluştu:\n"
 "Dosya geçersiz"
 
-#: ../src/frogr-controller.c:618
+#: src/frogr-controller.c:602
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -177,13 +188,13 @@ msgstr ""
 "Resim karşıya yüklenirken hata:\n"
 "Kota aşıldı"
 
-#: ../src/frogr-controller.c:623
+#: src/frogr-controller.c:607
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
 msgstr[0] "Kota aşıldı (sınır: her ay %d video)"
 
-#: ../src/frogr-controller.c:627
+#: src/frogr-controller.c:611
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
@@ -191,7 +202,7 @@ msgstr ""
 "Video yüklemede hata:\n"
 "Bu hesapla daha fazla video yükleyemezsiniz"
 
-#: ../src/frogr-controller.c:633
+#: src/frogr-controller.c:617
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -199,7 +210,7 @@ msgstr ""
 "Hata:\n"
 "Fotoğraf bulunamadı"
 
-#: ../src/frogr-controller.c:637
+#: src/frogr-controller.c:621
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -207,7 +218,7 @@ msgstr ""
 "Hata:\n"
 "Fotoğraf zaten kümede"
 
-#: ../src/frogr-controller.c:641
+#: src/frogr-controller.c:625
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -215,7 +226,7 @@ msgstr ""
 "Hata:\n"
 "Fotoğraf zaten grupta"
 
-#: ../src/frogr-controller.c:645
+#: src/frogr-controller.c:629
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -223,7 +234,7 @@ msgstr ""
 "Hata:\n"
 "Fotoğraf zaten mümkün olan en yüksek sayıda gruba dahil"
 
-#: ../src/frogr-controller.c:649
+#: src/frogr-controller.c:633
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -231,7 +242,7 @@ msgstr ""
 "Hata:\n"
 "Grup sınırına çoktan ulaşıldı"
 
-#: ../src/frogr-controller.c:653
+#: src/frogr-controller.c:637
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -239,7 +250,7 @@ msgstr ""
 "Hata:\n"
 "Fotoğraf, grup kuyruğuna eklendi"
 
-#: ../src/frogr-controller.c:657
+#: src/frogr-controller.c:641
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -247,7 +258,7 @@ msgstr ""
 "Hata:\n"
 "Fotoğraf, grup kuyruğuna zaten eklenmiş"
 
-#: ../src/frogr-controller.c:661
+#: src/frogr-controller.c:645
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -255,8 +266,7 @@ msgstr ""
 "Hata:\n"
 "Bu grup için içeriğe izin verilmiyor"
 
-#: ../src/frogr-controller.c:665
-#, c-format
+#: src/frogr-controller.c:649
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -264,7 +274,7 @@ msgstr ""
 "Yetkilendirme başarısız oldu.\n"
 "Lütfen tekrar deneyin"
 
-#: ../src/frogr-controller.c:671
+#: src/frogr-controller.c:655
 #, c-format
 msgid ""
 "Error\n"
@@ -275,8 +285,7 @@ msgstr ""
 "%s Flickr'a resim yüklemek için uygun şekilde yetkilendirilmemiş.\n"
 "Lütfen tekrar yetkilendirin"
 
-#: ../src/frogr-controller.c:676
-#, c-format
+#: src/frogr-controller.c:660
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
@@ -284,7 +293,7 @@ msgstr ""
 "Flickr içinde yetkilendirililemedi\n"
 "Lütfen tekrar deneyin."
 
-#: ../src/frogr-controller.c:680
+#: src/frogr-controller.c:664
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -293,8 +302,7 @@ msgstr ""
 "%s'i henüz uygun şekilde yetkilendirmediniz.\n"
 "Lütfen tekrar deneyin."
 
-#: ../src/frogr-controller.c:685
-#, c-format
+#: src/frogr-controller.c:669
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
@@ -302,8 +310,7 @@ msgstr ""
 "Geçersiz doğrulama kodu.\n"
 "Lütfen tekrar deneyin."
 
-#: ../src/frogr-controller.c:689
-#, c-format
+#: src/frogr-controller.c:673
 msgid ""
 "Error:\n"
 "Service not available"
@@ -311,65 +318,62 @@ msgstr ""
 "Hata:\n"
 "Hizmet kullanılabilir değil."
 
-#. General error: just dump the raw error description
-#: ../src/frogr-controller.c:694
+#: src/frogr-controller.c:678
 #, c-format
 msgid "An error happened: %s."
 msgstr "Bir hata oluştu: %s."
 
-#: ../src/frogr-controller.c:910
+#: src/frogr-controller.c:883
 msgid "Authorization failed (timed out)"
 msgstr "Yetkilendirme başarısız oldu (zaman aşımı)"
 
-#: ../src/frogr-controller.c:962
+#: src/frogr-controller.c:931
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Yükleme Tekrar Deneniyor (girişim  %d/%d)..."
 
-#: ../src/frogr-controller.c:967
+#: src/frogr-controller.c:936
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "'%s' karşıya yükleniyor…"
 
-#: ../src/frogr-controller.c:2329
+#: src/frogr-controller.c:2242
 msgid "Updating credentials…"
 msgstr "Kimlik bilgileri güncelleniyor..."
 
-#: ../src/frogr-controller.c:2334
+#: src/frogr-controller.c:2247
 msgid "Retrieving data for authorization…"
 msgstr "Yetkilendirme için veri alınıyor..."
 
-#: ../src/frogr-controller.c:2339
+#: src/frogr-controller.c:2252
 msgid "Finishing authorization…"
 msgstr "Yetkilendirme sonlandırılıyor..."
 
-#: ../src/frogr-controller.c:2344
+#: src/frogr-controller.c:2257
 msgid "Retrieving list of sets…"
 msgstr "Küme listesi alınıyor..."
 
-#: ../src/frogr-controller.c:2349
+#: src/frogr-controller.c:2262
 msgid "Retrieving list of groups…"
 msgstr "Grup listesi alınıyor..."
 
-#: ../src/frogr-controller.c:2354
+#: src/frogr-controller.c:2267
 msgid "Retrieving list of tags…"
 msgstr "Etiket listesi alınıyor..."
 
-#: ../src/frogr-controller.c:2379
-#, c-format
-#| msgid "Set Geo_location Information"
+#: src/frogr-controller.c:2292
 msgid "Fetching information"
 msgstr "Bilgiler alınıyor"
 
-#: ../src/frogr-controller.c:2493
+#: src/frogr-controller.c:2398
 msgid "No sets found"
 msgstr "Küme bulunamadı"
 
-#: ../src/frogr-controller.c:2520
+#: src/frogr-controller.c:2423
 msgid "No groups found"
 msgstr "Grup bulunamadı"
 
-#: ../src/frogr-controller.c:3164
+#: src/frogr-controller.c:2984
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -379,188 +383,182 @@ msgstr ""
 "yetkilendirmelisiniz.\n"
 "Lütfen tekrar yetkilendirin."
 
-#: ../src/frogr-controller.c:3174
-#, c-format
+#: src/frogr-controller.c:2994
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Flickr'a herhangi bir resim yüklemeden önce bağlanmış olmalısınız."
 
-#: ../src/frogr-controller.c:3192
-#| msgid "_Add Pictures"
+#: src/frogr-controller.c:3012
 msgid "Uploading Pictures"
 msgstr "Resimler Karşıya Yükleniyor"
 
-#: ../src/frogr-controller.c:3246
-#, c-format
+#: src/frogr-controller.c:3057
 msgid "Error opening project file"
 msgstr "Proje dosyası açılırken hata"
 
-#. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1022
+#: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr "Gerekli bilgi eksik"
 
-#: ../src/frogr-create-new-set-dialog.c:345
+#: src/frogr-create-new-set-dialog.c:326
 msgid "Title:"
 msgstr "Başlık:"
 
-#: ../src/frogr-create-new-set-dialog.c:354
+#: src/frogr-create-new-set-dialog.c:335
 msgid "Description:"
 msgstr "Açıklama:"
 
-#: ../src/frogr-create-new-set-dialog.c:375
+#: src/frogr-create-new-set-dialog.c:356
 msgid "Fill Pictures Details with Title and Description"
 msgstr "Resim ayrıntılarını Başlık ve Açıklama ile doldur"
 
-#: ../src/frogr-create-new-set-dialog.c:400
+#: src/frogr-create-new-set-dialog.c:381
 msgid "Create New Set"
 msgstr "Yeni Küme Oluştur"
 
-#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:99
+#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
 msgid "Default (as specified in Flickr)"
 msgstr "Öntanımlı (Flickr'da belirtildiği gibi)"
 
-#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:100
+#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
 msgid "All rights reserved"
 msgstr "Tüm hakları saklıdır"
 
-#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:101
+#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
 msgid "CC Attribution-NonCommercial-ShareAlike"
 msgstr "CC Atıf-Gayriticari-LisansDevam"
 
-#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:102
+#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
 msgid "CC Attribution-NonCommercial"
 msgstr "CC Atıf-Gayriticari"
 
-#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:103
+#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
 msgid "CC Attribution-NonCommercial-NoDerivs"
 msgstr "CC Atıf-Gayriticari-Türetilemez"
 
-#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:104
+#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
 msgid "CC Attribution"
 msgstr "CC Atıf"
 
-#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:105
+#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
 msgid "CC Attribution-ShareAlike"
 msgstr "CC Atıf-LisansDevam"
 
-#: ../src/frogr-details-dialog.c:98 ../src/frogr-settings-dialog.c:106
+#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
 msgid "CC Attribution-NoDerivs"
 msgstr "CC Atıf-Türetilemez"
 
-#: ../src/frogr-details-dialog.c:178
+#: src/frogr-details-dialog.c:172
 msgid "Open with image viewer"
 msgstr "Resim görüntüleyici ile aç"
 
-#: ../src/frogr-details-dialog.c:196
+#: src/frogr-details-dialog.c:190
 msgid "_Title:"
 msgstr "_Başlık:"
 
-#: ../src/frogr-details-dialog.c:206
+#: src/frogr-details-dialog.c:200
 msgid "_Description:"
 msgstr "_Açıklama:"
 
-#: ../src/frogr-details-dialog.c:230
+#: src/frogr-details-dialog.c:224
 msgid "Ta_gs:"
 msgstr "Et_iketler:"
 
-#: ../src/frogr-details-dialog.c:253
+#: src/frogr-details-dialog.c:247
 msgid "Visibility"
 msgstr "Görünürlük"
 
-#: ../src/frogr-details-dialog.c:263 ../src/frogr-settings-dialog.c:201
+#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
 msgid "_Private"
 msgstr "_Özel"
 
-#: ../src/frogr-details-dialog.c:267 ../src/frogr-settings-dialog.c:204
+#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
 msgid "P_ublic"
 msgstr "_Genel"
 
-#: ../src/frogr-details-dialog.c:276 ../src/frogr-settings-dialog.c:212
+#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
 msgid "_Family"
 msgstr "_Aile"
 
-#: ../src/frogr-details-dialog.c:280 ../src/frogr-settings-dialog.c:214
+#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
 msgid "F_riends"
 msgstr "A_rkadaşlar"
 
-#: ../src/frogr-details-dialog.c:294
+#: src/frogr-details-dialog.c:288
 msgid "Content Type"
 msgstr "İçerik Türü"
 
-#: ../src/frogr-details-dialog.c:302 ../src/frogr-settings-dialog.c:239
+#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
 msgid "P_hoto"
 msgstr "F_otoğraf"
 
-#: ../src/frogr-details-dialog.c:306 ../src/frogr-settings-dialog.c:241
+#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
 msgid "Scree_nshot"
 msgstr "Ekra_n görüntüsü"
 
-#: ../src/frogr-details-dialog.c:310 ../src/frogr-settings-dialog.c:243
+#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
 msgid "Oth_er"
 msgstr "Diğ_er"
 
-#: ../src/frogr-details-dialog.c:323
+#: src/frogr-details-dialog.c:317
 msgid "Safety Level"
 msgstr "Güvenlik Düzeyi"
 
-#: ../src/frogr-details-dialog.c:331 ../src/frogr-settings-dialog.c:265
+#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
 msgid "S_afe"
 msgstr "G_üvenli"
 
-#: ../src/frogr-details-dialog.c:335 ../src/frogr-settings-dialog.c:267
+#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
 msgid "_Moderate"
 msgstr "_Orta"
 
-#: ../src/frogr-details-dialog.c:339 ../src/frogr-settings-dialog.c:269
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
 msgid "Restr_icted"
 msgstr "_Kısıtlı"
 
-#: ../src/frogr-details-dialog.c:351
+#: src/frogr-details-dialog.c:345
 msgid "License Type"
 msgstr "Lisans Türü"
 
-#: ../src/frogr-details-dialog.c:373
+#: src/frogr-details-dialog.c:367
 msgid "Other Properties"
 msgstr "Diğer Özellikler"
 
-#: ../src/frogr-details-dialog.c:381
+#: src/frogr-details-dialog.c:375
 msgid "_Show Up in Global Search Results"
 msgstr "Genel Arama Sonuçlarında _Görün"
 
-#: ../src/frogr-details-dialog.c:385
+#: src/frogr-details-dialog.c:379
 msgid "Set Geo_location Information"
 msgstr "Coğrafi _Konum Bilgisi Ayarla"
 
-#: ../src/frogr-details-dialog.c:389
+#: src/frogr-details-dialog.c:383
 msgid "Replace 'Date Posted' with 'Date Taken'"
 msgstr "'Gönderilen Tarihi' 'Çekilen Tarih' ile değiştir"
 
-#. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:484
+#: src/frogr-details-dialog.c:475
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
 msgstr[0] "(%d Resim)"
 
-#: ../src/frogr-details-dialog.c:558
+#: src/frogr-details-dialog.c:548
 msgid "An error happened trying to load the picture"
 msgstr "Resim yüklenirken hata oluştu"
 
-#: ../src/frogr-details-dialog.c:1196
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:8
+#: src/frogr-details-dialog.c:1169
 msgid "_Edit"
 msgstr "Düz_enle"
 
-#: ../src/frogr-details-dialog.c:1224
+#: src/frogr-details-dialog.c:1197
 msgid "Edit Picture Details"
 msgstr "Resim Ayrıntılarını Düzenle"
 
-#: ../src/frogr-file-loader.c:148
+#: src/frogr-file-loader.c:142
 #, c-format
 msgid "Loading files %d / %d"
 msgstr "Dosyalar yükleniyor %d / %d"
 
-#: ../src/frogr-file-loader.c:382
+#: src/frogr-file-loader.c:369
 #, c-format
 msgid ""
 "Unable to load picture %s:\n"
@@ -569,7 +567,7 @@ msgstr ""
 "Resim %s yüklenemedi:\n"
 "%s"
 
-#: ../src/frogr-file-loader.c:413
+#: src/frogr-file-loader.c:400
 #, c-format
 msgid ""
 "Unable to load video %s\n"
@@ -578,10 +576,7 @@ msgstr ""
 "Video %s yüklenemedi\n"
 "Lütfen doğru kodlayıcıyı yüklediğinizden emin olun"
 
-#. First %s is the title of the picture (filename of the file by
-#. default). Second %s is the max allowed size for a picture to be
-#. uploaded to flickr (different for free and PRO accounts).
-#: ../src/frogr-file-loader.c:654
+#: src/frogr-file-loader.c:636
 #, c-format
 msgid ""
 "Can't load file %s:\n"
@@ -590,369 +585,303 @@ msgstr ""
 "Dosya %s yüklenemiyor:\n"
 "Dosya boyutu bu hesap için izin verilenden büyük (%s)"
 
-#. First create the left side buttons
-#: ../src/frogr-main-view.c:642 ../src/frogr-main-view.c:744
+#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Aç"
 
-#: ../src/frogr-main-view.c:642 ../src/frogr-main-view.c:744
+#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open Existing Project"
 msgstr "Mevcut Projeyi Aç"
 
-#: ../src/frogr-main-view.c:643 ../src/frogr-main-view.c:747
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
 msgid "Add"
 msgstr "Ekle"
 
-#: ../src/frogr-main-view.c:643 ../src/frogr-main-view.c:747
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
 msgid "Add Elements"
 msgstr "Öğeler Ekle"
 
-#: ../src/frogr-main-view.c:644 ../src/frogr-main-view.c:748
+#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
 msgid "Remove"
 msgstr "Çıkar"
 
-#: ../src/frogr-main-view.c:644 ../src/frogr-main-view.c:748
+#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
 msgid "Remove Elements"
 msgstr "Öğeleri Kaldır"
 
-#: ../src/frogr-main-view.c:645 ../src/frogr-main-view.c:750
+#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
 msgid "Upload"
 msgstr "Karşıya Yükle"
 
-#: ../src/frogr-main-view.c:645 ../src/frogr-main-view.c:750
+#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
 msgid "Upload All"
 msgstr "Tümünü Karşıya Yükle"
 
-#. Save project item
-#: ../src/frogr-main-view.c:678 ../src/frogr-main-view.c:745
+#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Kaydet"
 
-#: ../src/frogr-main-view.c:678 ../src/frogr-main-view.c:745
+#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save Current Project"
 msgstr "Mevcut Projeyi Kaydet"
 
-#: ../src/frogr-main-view.c:1050 ../data/gtkbuilder/frogr-app-menu.xml.h:4
+#: src/frogr-main-view.c:1016
 msgid "_About"
 msgstr "_Hakkında"
 
-#: ../src/frogr-main-view.c:1054 ../data/gtkbuilder/frogr-app-menu.xml.h:5
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:17
+#: src/frogr-main-view.c:1020
 msgid "_Quit"
 msgstr "_Kapat"
 
-#. Create the submenu and insert it in the right section
-#: ../src/frogr-main-view.c:1107
+#: src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Hesaplar"
 
-#. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:1459
+#: src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
 msgstr "Çekildi: %s"
 
-#: ../src/frogr-main-view.c:1464
+#: src/frogr-main-view.c:1415
 #, c-format
 msgid "File size: %s"
 msgstr "Dosya boyutu: %s"
 
-#: ../src/frogr-main-view.c:1597
+#: src/frogr-main-view.c:1540
 msgid "Select File"
 msgstr "Dosya Seç"
 
-#: ../src/frogr-main-view.c:1601 ../src/frogr-main-view.c:1732
+#: src/frogr-main-view.c:1544 src/frogr-main-view.c:1671
 msgid "_Open"
 msgstr "_Aç"
 
-#: ../src/frogr-main-view.c:1610
+#: src/frogr-main-view.c:1553
 msgid "Frogr Project Files"
 msgstr "Frogr Proje Dosyaları"
 
-#: ../src/frogr-main-view.c:1676
+#: src/frogr-main-view.c:1615
 msgid "Select Destination"
 msgstr "Hedef Seçin"
 
-#: ../src/frogr-main-view.c:1680 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:1
+#: src/frogr-main-view.c:1619
 msgid "_Save"
 msgstr "_Kaydet"
 
-#: ../src/frogr-main-view.c:1683
+#: src/frogr-main-view.c:1622
 msgid "Untitled Project.frogr"
 msgstr "Başlıksız Proje.frogr"
 
-#: ../src/frogr-main-view.c:1728
+#: src/frogr-main-view.c:1667
 msgid "Select a Picture"
 msgstr "Bir Resim Seçin"
 
-#: ../src/frogr-main-view.c:1755
+#: src/frogr-main-view.c:1694
 msgid "All Files"
 msgstr "Tüm Dosyalar"
 
-#: ../src/frogr-main-view.c:1758
+#: src/frogr-main-view.c:1697
 msgid "Image Files"
 msgstr "Görüntü Dosyaları"
 
-#: ../src/frogr-main-view.c:1762
+#: src/frogr-main-view.c:1701
 msgid "Video Files"
 msgstr "Video Dosyaları"
 
-#: ../src/frogr-main-view.c:1786
+#: src/frogr-main-view.c:1723
 msgid "You don't have any picture added yet"
 msgstr "Henüz eklenmiş resminiz yok"
 
-#: ../src/frogr-main-view.c:1801
+#: src/frogr-main-view.c:1736
 msgid "You need to select some pictures first"
 msgstr "İlk önce bazı resimler seçmelisiniz"
 
-#: ../src/frogr-main-view.c:2265
+#: src/frogr-main-view.c:2108
 msgid "Not connected to Flickr"
 msgstr "Flickr'a bağlı değil"
 
-#. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:2275
+#: src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
 msgstr "%s%s olarak bağlanıldı"
 
-#: ../src/frogr-main-view.c:2276
+#: src/frogr-main-view.c:2119
 msgid " (PRO account)"
 msgstr "(PRO hesap)"
 
-#. Will show in the status bar the amount of data (in KB, MB
-#. or GB) the user is currently allowed to upload to flicker
-#. till the end of the month, in a CURRENT / MAX fashion.
-#. The '-' at the beginning is just a separator, since more
-#. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:2300
+#: src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - %s / %s kaldı"
 
-#. Will show in the status bar the amount of pictures and data
-#. (in KB, MB or GB) that would be uploaded as the sum of the
-#. sizes for every picture loaded in the application
-#: ../src/frogr-main-view.c:2326
+#: src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
 msgstr[0] " - yüklenecek %d dosya (%s)"
 
-#: ../src/frogr-settings-dialog.c:190
+#: src/frogr-settings-dialog.c:185
 msgid "Default Visibility"
 msgstr "Öntanımlı Görünürlük"
 
-#: ../src/frogr-settings-dialog.c:229
+#: src/frogr-settings-dialog.c:224
 msgid "Default Content Type"
 msgstr "Öntanımlı İçerik Türü"
 
-#: ../src/frogr-settings-dialog.c:255
+#: src/frogr-settings-dialog.c:250
 msgid "Default Safety Level"
 msgstr "Öntanımlı Güvenlik Düzeyi"
 
-#: ../src/frogr-settings-dialog.c:281
+#: src/frogr-settings-dialog.c:276
 msgid "Default License"
 msgstr "Öntanımlı Lisans"
 
-#: ../src/frogr-settings-dialog.c:307
+#: src/frogr-settings-dialog.c:302
 msgid "Other Defaults"
 msgstr "Diğer Öntanımlılar"
 
-#: ../src/frogr-settings-dialog.c:317
+#: src/frogr-settings-dialog.c:312
 msgid "_Show Pictures in Global Search Results"
 msgstr "_Resimleri Genel Arama Sonuçlarında Göster"
 
-#: ../src/frogr-settings-dialog.c:320
+#: src/frogr-settings-dialog.c:315
 msgid "Set Geo_location Information for Pictures"
 msgstr "Resimler için Coğrafi _Konum Bilgisini Ayarla"
 
-#: ../src/frogr-settings-dialog.c:323
+#: src/frogr-settings-dialog.c:318
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
 msgstr "Resimler için 'Gönderim Tarihi'ni 'Çekilen Tarih' ile değiştir"
 
-#: ../src/frogr-settings-dialog.c:329
+#: src/frogr-settings-dialog.c:324
 msgid "_General"
 msgstr "_Genel"
 
-#: ../src/frogr-settings-dialog.c:352
+#: src/frogr-settings-dialog.c:344
 msgid "Proxy Settings"
 msgstr "Vekil Sunucu Ayarları"
 
-#. Enable proxy
-#: ../src/frogr-settings-dialog.c:361
+#: src/frogr-settings-dialog.c:353
 msgid "_Enable HTTP Proxy"
 msgstr "HTTP Vekili _Etkinleştir"
 
-#: ../src/frogr-settings-dialog.c:371
+#: src/frogr-settings-dialog.c:363
 msgid "_Host:"
 msgstr "_Ana makine:"
 
-#. Proxy port
-#: ../src/frogr-settings-dialog.c:384
+#: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr "_Port:"
 
-#. Proxy username
-#: ../src/frogr-settings-dialog.c:397
+#: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr "_Kullanıcı adı:"
 
-#. Proxy password
-#: ../src/frogr-settings-dialog.c:410
+#: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr "Par_ola:"
 
-#: ../src/frogr-settings-dialog.c:434
+#: src/frogr-settings-dialog.c:426
 msgid "Connec_tion"
 msgstr "Bağlan_tı"
 
-#: ../src/frogr-settings-dialog.c:455
+#: src/frogr-settings-dialog.c:444
 msgid "Other options"
 msgstr "Diğer seçenekler"
 
-#: ../src/frogr-settings-dialog.c:465
+#: src/frogr-settings-dialog.c:454
 msgid "Ena_ble Tags Auto-Completion"
 msgstr "Etiket Otomatik Tamamlamayı Etki_nleştir"
 
-#: ../src/frogr-settings-dialog.c:468
+#: src/frogr-settings-dialog.c:457
 msgid "_Import Tags from Pictures Metadata"
 msgstr "Etiketleri Resim Metadata'sından _İçe Aktar"
 
-#: ../src/frogr-settings-dialog.c:472
+#: src/frogr-settings-dialog.c:461
 msgid "Use _Dark GTK Theme"
 msgstr "_Karanlık GTK Teması Kullan"
 
-#: ../src/frogr-settings-dialog.c:476
+#: src/frogr-settings-dialog.c:465
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr "Yüklenirken Dosya Uzantılarını Başlıklarda _Tut"
 
-#: ../src/frogr-settings-dialog.c:482
+#: src/frogr-settings-dialog.c:471
 msgid "_Misc"
 msgstr "_Çeşitli"
 
-#: ../src/frogr-settings-dialog.c:1003
+#: src/frogr-settings-dialog.c:972
 msgid "Preferences"
 msgstr "Tercihler"
 
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:1
-msgid "Aut_horize Account…"
-msgstr "Hesabı Yetki_lendir..."
+#~ msgid "Aut_horize Account…"
+#~ msgstr "Hesabı Yetki_lendir..."
 
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:2
-msgid "_Preferences…"
-msgstr "_Tercihler..."
+#~ msgid "_Preferences…"
+#~ msgstr "_Tercihler..."
 
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:3
-msgid "_Help"
-msgstr "_Yardım"
+#~ msgid "_Help"
+#~ msgstr "_Yardım"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:1
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:3
-msgid "_Edit Details…"
-msgstr "Ayrıntıları _Düzenle…"
+#~ msgid "_Edit Details…"
+#~ msgstr "Ayrıntıları _Düzenle…"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:2
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:4
-msgid "Add _Tags…"
-msgstr "E_tiket Ekle..."
+#~ msgid "Add _Tags…"
+#~ msgstr "E_tiket Ekle..."
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:3
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:11
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:5
-msgid "Add to _Group…"
-msgstr "_Gruba Ekle..."
+#~ msgid "Add to _Group…"
+#~ msgstr "_Gruba Ekle..."
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:4
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:12
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:6
-msgid "Add to _Photoset"
-msgstr "Fotoğraf kümesine _Ekle"
+#~ msgid "Add to _Photoset"
+#~ msgstr "Fotoğraf kümesine _Ekle"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:5
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:13
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:7
-msgid "_Add to Existing Photoset…"
-msgstr "_Mevcut Fotoğraf Kümesine Ekle..."
+#~ msgid "_Add to Existing Photoset…"
+#~ msgstr "_Mevcut Fotoğraf Kümesine Ekle..."
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:6
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:14
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:8
-msgid "_Create New Photoset…"
-msgstr "Yeni Fotoğraf Kümesi _Oluştur..."
+#~ msgid "_Create New Photoset…"
+#~ msgstr "Yeni Fotoğraf Kümesi _Oluştur..."
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:7
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:15
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:16
-msgid "_Open in External Viewer"
-msgstr "Harici Görüntüleyicide _Aç"
+#~ msgid "_Open in External Viewer"
+#~ msgstr "Harici Görüntüleyicide _Aç"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:8
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
-msgid "_Remove Elements"
-msgstr "Öğeleri _Kaldır"
+#~ msgid "_Remove Elements"
+#~ msgstr "Öğeleri _Kaldır"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:1
-msgid "_File"
-msgstr "_Dosya"
+#~ msgid "_File"
+#~ msgstr "_Dosya"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:2
-msgid "_Open…"
-msgstr "_Aç..."
+#~ msgid "_Open…"
+#~ msgstr "_Aç..."
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:4
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:2
-msgid "Save _As…"
-msgstr "F_arklı Kaydet…"
+#~ msgid "Save _As…"
+#~ msgstr "F_arklı Kaydet…"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:5
-msgid "A_dd Elements…"
-msgstr "Öğeler _Ekle..."
+#~ msgid "A_dd Elements…"
+#~ msgstr "Öğeler _Ekle..."
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:7
-msgid "_Upload All"
-msgstr "T_ümünü Karşıya Yükle"
+#~ msgid "_Upload All"
+#~ msgstr "T_ümünü Karşıya Yükle"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:16
-msgid "_View"
-msgstr "_Görünüm"
+#~ msgid "_View"
+#~ msgstr "_Görünüm"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:17
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:9
-msgid "_Sort Elements"
-msgstr "Öğeleri _Sırala"
+#~ msgid "_Sort Elements"
+#~ msgstr "Öğeleri _Sırala"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:18
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:10
-msgid "As _Loaded"
-msgstr "_Yüklemeye Göre"
+#~ msgid "As _Loaded"
+#~ msgstr "_Yüklemeye Göre"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:19
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:11
-msgid "By _Date Taken"
-msgstr "Çekildiği _Tarihe Göre"
+#~ msgid "By _Date Taken"
+#~ msgstr "Çekildiği _Tarihe Göre"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:20
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:12
-msgid "By _Title"
-msgstr "_Başlığa Göre"
+#~ msgid "By _Title"
+#~ msgstr "_Başlığa Göre"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:21
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:13
-msgid "By _Size"
-msgstr "Bo_yuta Göre"
+#~ msgid "By _Size"
+#~ msgstr "Bo_yuta Göre"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:22
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:14
-msgid "_Reversed Order"
-msgstr "Te_rs Sırada"
+#~ msgid "_Reversed Order"
+#~ msgstr "Te_rs Sırada"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:23
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:15
-msgid "Enable _Tooltips"
-msgstr "_İpuçlarını Etkinleştir"
+#~ msgid "Enable _Tooltips"
+#~ msgstr "_İpuçlarını Etkinleştir"
 
 #~ msgid "Flickr Remote Organizer"
 #~ msgstr "Flickr Uzaktan Düzenleyicisi"

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr 0.3\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-19 02:15+0100\n"
+"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
+"POT-Creation-Date: 2016-08-12 13:09+0100\n"
 "PO-Revision-Date: 2010-12-24 17:07+0000\n"
 "Last-Translator: Philip Withnall <philip@tecnocode.co.uk>\n"
 "Language-Team: British English <en@li.org>\n"
@@ -16,69 +16,131 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/frogr-about-dialog.c:44
-msgid "A Flickr remote organizer for GNOME\n"
+#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
+#: data/frogr.desktop.in.in:14
+msgid "frogr"
+msgstr "frogr"
+
+#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
+#, fuzzy
+msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "A Flickr remote organiser for GNOME\n"
 
-#: ../src/frogr-about-dialog.c:107
+#: data/frogr.appdata.xml.in:8
+msgid ""
+"frogr is a small application for the GNOME desktop that allows users to "
+"manage their accounts in the Flickr image hosting website."
+msgstr ""
+
+#: data/frogr.appdata.xml.in:13
+msgid ""
+"It supports all the basic Flickr features, including uploading pictures, "
+"adding descriptions, setting tags and managing sets and groups pools."
+msgstr ""
+
+#: data/frogr.appdata.xml.in:24
+msgid "Screenshot of frogr"
+msgstr ""
+
+#: data/frogr.appdata.xml.in:29
+msgid "Mario Sanchez Prada"
+msgstr ""
+
+#: data/frogr.desktop.in.in:7
+msgid "Upload and organize photos in Flickr accounts"
+msgstr ""
+
+#: data/frogr.desktop.in.in:8
+msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
+msgstr ""
+
+#: src/frogr-about-dialog.c:43
+#, fuzzy
+msgid "A Flickr Remote Organizer for GNOME\n"
+msgstr "A Flickr remote organiser for GNOME\n"
+
+#: src/frogr-about-dialog.c:72
 msgid "translator-credits"
 msgstr "Philip Withnall <philip@tecnocode.co.uk>"
 
-#: ../src/frogr-add-tags-dialog.c:342
+#: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
+#: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
+#: src/frogr-create-new-set-dialog.c:310 src/frogr-details-dialog.c:1168
+#: src/frogr-main-view.c:1543 src/frogr-main-view.c:1618
+#: src/frogr-main-view.c:1670 src/frogr-settings-dialog.c:930
+msgid "_Cancel"
+msgstr ""
+
+#: src/frogr-add-tags-dialog.c:193 src/frogr-add-to-group-dialog.c:530
+#: src/frogr-add-to-set-dialog.c:531 src/frogr-create-new-set-dialog.c:312
+msgid "_Add"
+msgstr ""
+
+#: src/frogr-add-tags-dialog.c:202
 msgid "Enter a spaces separated list of tags:"
 msgstr ""
 
-#: ../src/frogr-add-tags-dialog.c:383
+#: src/frogr-add-tags-dialog.c:228
 msgid "Add Tags"
 msgstr "Add Tags"
 
-#: ../src/frogr-add-to-set-dialog.c:133
-#, fuzzy
-msgid "Title"
-msgstr "Title:"
-
-#: ../src/frogr-add-to-set-dialog.c:148 ../src/frogr-add-to-group-dialog.c:148
-msgid "Elements"
-msgstr ""
-
-#: ../src/frogr-add-to-set-dialog.c:577
-#, fuzzy
-msgid "Add to Sets"
-msgstr "Add to Sets"
-
-#: ../src/frogr-add-to-group-dialog.c:133
+#: src/frogr-add-to-group-dialog.c:147
 msgid "Name"
 msgstr ""
 
-#: ../src/frogr-add-to-group-dialog.c:577
+#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
+msgid "Elements"
+msgstr ""
+
+#: src/frogr-add-to-group-dialog.c:581
 #, fuzzy
 msgid "Add to Groups"
 msgstr "Add to Groups"
 
-#: ../src/frogr-auth-dialog.c:31
+#: src/frogr-add-to-set-dialog.c:148
+#, fuzzy
+msgid "Title"
+msgstr "Title:"
+
+#: src/frogr-add-to-set-dialog.c:582
+#, fuzzy
+msgid "Add to Sets"
+msgstr "Add to Sets"
+
+#: src/frogr-auth-dialog.c:59
 #, fuzzy, c-format
 msgid ""
-"Please press the button to authorize %s and then come back to this screen to "
-"complete the process."
+"Please press the button to authorize %s and then come back to complete the "
+"process."
 msgstr ""
 "You have not properly authorised %s in flickr.\n"
 "Please press the button to authorise %s and then come back to this screen to "
 "complete the process."
 
-#: ../src/frogr-auth-dialog.c:35
-#, c-format
-msgid ""
-"Press the button to start using %s once you've authorized it in your flickr "
-"account."
-msgstr ""
-"Press the button to start using %s once you've authorised it in your flickr "
-"account."
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
+#: src/frogr-controller.c:2286
+#, fuzzy, c-format
+msgid "Authorize %s"
+msgstr "Authorise _frogr"
 
-#: ../src/frogr-controller.c:241
-msgid "Process cancelled by the user"
+#: src/frogr-auth-dialog.c:155 src/frogr-settings-dialog.c:932
+msgid "_Close"
+msgstr ""
+
+#: src/frogr-auth-dialog.c:167
+msgid "Enter verification code:"
+msgstr ""
+
+#: src/frogr-auth-dialog.c:221
+msgid "Invalid verification code"
+msgstr ""
+
+#: src/frogr-controller.c:581
+#, fuzzy
+msgid "Process cancelled"
 msgstr "Process cancelled by the user"
 
-#: ../src/frogr-controller.c:246
+#: src/frogr-controller.c:586
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -86,7 +148,7 @@ msgstr ""
 "Connection error:\n"
 "Network not available"
 
-#: ../src/frogr-controller.c:251
+#: src/frogr-controller.c:590
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -94,7 +156,7 @@ msgstr ""
 "Connection error:\n"
 "Bad request"
 
-#: ../src/frogr-controller.c:256
+#: src/frogr-controller.c:594
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -102,15 +164,16 @@ msgstr ""
 "Connection error:\n"
 "Server-side error"
 
-#: ../src/frogr-controller.c:261
+#: src/frogr-controller.c:598
+#, fuzzy
 msgid ""
-"Error uploading picture:\n"
+"Error uploading:\n"
 "File invalid"
 msgstr ""
 "Error uploading picture:\n"
 "File invalid"
 
-#: ../src/frogr-controller.c:266
+#: src/frogr-controller.c:602
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -118,7 +181,20 @@ msgstr ""
 "Error uploading picture:\n"
 "Quota exceeded"
 
-#: ../src/frogr-controller.c:271
+#: src/frogr-controller.c:607
+#, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frogr-controller.c:611
+msgid ""
+"Error uploading video:\n"
+"You can't upload more videos with this account"
+msgstr ""
+
+#: src/frogr-controller.c:617
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -126,7 +202,7 @@ msgstr ""
 "Error:\n"
 "Photo not found"
 
-#: ../src/frogr-controller.c:276
+#: src/frogr-controller.c:621
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -134,7 +210,7 @@ msgstr ""
 "Error:\n"
 "Photo already in photoset"
 
-#: ../src/frogr-controller.c:281
+#: src/frogr-controller.c:625
 #, fuzzy
 msgid ""
 "Error:\n"
@@ -143,7 +219,7 @@ msgstr ""
 "Error:\n"
 "Photo already in photoset"
 
-#: ../src/frogr-controller.c:286
+#: src/frogr-controller.c:629
 #, fuzzy
 msgid ""
 "Error:\n"
@@ -152,13 +228,13 @@ msgstr ""
 "Error:\n"
 "Photo already in photoset"
 
-#: ../src/frogr-controller.c:291
+#: src/frogr-controller.c:633
 msgid ""
 "Error:\n"
 "Group limit already reached"
 msgstr ""
 
-#: ../src/frogr-controller.c:296
+#: src/frogr-controller.c:637
 #, fuzzy
 msgid ""
 "Error:\n"
@@ -167,7 +243,7 @@ msgstr ""
 "Error:\n"
 "Photo already in photoset"
 
-#: ../src/frogr-controller.c:301
+#: src/frogr-controller.c:641
 #, fuzzy
 msgid ""
 "Error:\n"
@@ -176,14 +252,13 @@ msgstr ""
 "Error:\n"
 "Photo already in photoset"
 
-#: ../src/frogr-controller.c:306
+#: src/frogr-controller.c:645
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
 msgstr ""
 
-#: ../src/frogr-controller.c:311
-#, c-format
+#: src/frogr-controller.c:649
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -191,19 +266,45 @@ msgstr ""
 "Authorisation failed.\n"
 "Please try again"
 
-#: ../src/frogr-controller.c:317
-#, c-format
+#: src/frogr-controller.c:655
+#, fuzzy, c-format
 msgid ""
 "Error\n"
-"%s is not properly authorized to upload pictures to flickr.\n"
+"%s is not properly authorized to upload pictures to Flickr.\n"
 "Please re-authorize it"
 msgstr ""
 "Error\n"
 "%s is not properly authorised to upload pictures to flickr.\n"
 "Please re-authorise it"
 
-#: ../src/frogr-controller.c:323
-#, c-format
+#: src/frogr-controller.c:660
+#, fuzzy
+msgid ""
+"Unable to authenticate in Flickr\n"
+"Please try again."
+msgstr ""
+"Authorisation failed.\n"
+"Please try again"
+
+#: src/frogr-controller.c:664
+#, fuzzy, c-format
+msgid ""
+"You have not properly authorized %s yet.\n"
+"Please try again."
+msgstr ""
+"You need to properly authorise %s before uploading any pictures to flickr.\n"
+"Please re-authorise it."
+
+#: src/frogr-controller.c:669
+#, fuzzy
+msgid ""
+"Invalid verification code.\n"
+"Please try again."
+msgstr ""
+"Authorisation failed.\n"
+"Please try again"
+
+#: src/frogr-controller.c:673
 msgid ""
 "Error:\n"
 "Service not available"
@@ -211,352 +312,586 @@ msgstr ""
 "Error:\n"
 "Service not available"
 
-#. General error: just dump the raw error description
-#: ../src/frogr-controller.c:329
-#, c-format
-msgid "An error happened while uploading a picture: %s."
+#: src/frogr-controller.c:678
+#, fuzzy, c-format
+msgid "An error happened: %s."
 msgstr "An error happened while uploading a picture: %s."
 
-#: ../src/frogr-controller.c:455
-msgid "Authorization successfully completed!"
-msgstr "Authorisation successfully completed!"
+#: src/frogr-controller.c:883
+#, fuzzy
+msgid "Authorization failed (timed out)"
+msgstr ""
+"Authorisation failed.\n"
+"Please try again"
 
-#: ../src/frogr-controller.c:859
-msgid "Creating new photoset…"
+#: src/frogr-controller.c:931
+#, c-format
+msgid "Retrying Upload (attempt %d/%d)…"
 msgstr ""
 
-#: ../src/frogr-controller.c:884
-#, fuzzy
-msgid "Adding picture to photoset…"
-msgstr "Uploading pictures…"
+#: src/frogr-controller.c:936
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Uploading '%s'…"
 
-#: ../src/frogr-controller.c:907
-#, fuzzy
-msgid "Adding picture to group…"
-msgstr "Uploading pictures…"
-
-#: ../src/frogr-controller.c:972
-msgid "Operation successfully completed!"
-msgstr "Operation successfully completed!"
-
-#: ../src/frogr-controller.c:1429 ../src/frogr-controller.c:1462
-msgid "Retrieving list of tags…"
+#: src/frogr-controller.c:2242
+msgid "Updating credentials…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1495 ../src/frogr-controller.c:1527
+#: src/frogr-controller.c:2247
+msgid "Retrieving data for authorization…"
+msgstr ""
+
+#: src/frogr-controller.c:2252
+msgid "Finishing authorization…"
+msgstr ""
+
+#: src/frogr-controller.c:2257
 msgid "Retrieving list of sets…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1540
-msgid "No sets found"
-msgstr ""
-
-#: ../src/frogr-controller.c:1562
+#: src/frogr-controller.c:2262
 msgid "Retrieving list of groups…"
 msgstr ""
 
-#: ../src/frogr-controller.c:1575
+#: src/frogr-controller.c:2267
+msgid "Retrieving list of tags…"
+msgstr ""
+
+#: src/frogr-controller.c:2292
+msgid "Fetching information"
+msgstr ""
+
+#: src/frogr-controller.c:2398
+msgid "No sets found"
+msgstr ""
+
+#: src/frogr-controller.c:2423
 msgid "No groups found"
 msgstr ""
 
-#: ../src/frogr-controller.c:2165
-#, c-format
+#: src/frogr-controller.c:2984
+#, fuzzy, c-format
 msgid ""
-"You need to properly authorize %s before uploading any pictures to flickr.\n"
+"You need to properly authorize %s before uploading any pictures to Flickr.\n"
 "Please re-authorize it."
 msgstr ""
 "You need to properly authorise %s before uploading any pictures to flickr.\n"
 "Please re-authorise it."
 
-#. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:120 ../src/frogr-details-dialog.c:894
+#: src/frogr-controller.c:2994
+#, fuzzy
+msgid "You need to be connected before uploading any pictures to Flickr."
+msgstr ""
+"You need to properly authorise %s before uploading any pictures to flickr.\n"
+"Please re-authorise it."
+
+#: src/frogr-controller.c:3012
+#, fuzzy
+msgid "Uploading Pictures"
+msgstr "Loading pictures %d / %d"
+
+#: src/frogr-controller.c:3057
+msgid "Error opening project file"
+msgstr ""
+
+#: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr "Missing data required"
 
-#: ../src/frogr-create-new-set-dialog.c:304
+#: src/frogr-create-new-set-dialog.c:326
 #, fuzzy
-msgid "Set's title:"
-msgstr "Set Title"
+msgid "Title:"
+msgstr "Title:"
 
-#: ../src/frogr-create-new-set-dialog.c:317
+#: src/frogr-create-new-set-dialog.c:335
 #, fuzzy
-msgid "Set's description:"
+msgid "Description:"
 msgstr "Description:"
 
-#: ../src/frogr-create-new-set-dialog.c:356
-msgid "Create new Set"
+#: src/frogr-create-new-set-dialog.c:356
+msgid "Fill Pictures Details with Title and Description"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:160
-#, fuzzy
-msgid "Visibility"
-msgstr "Default Visibility"
-
-#: ../src/frogr-details-dialog.c:171 ../src/frogr-settings-dialog.c:143
-#, fuzzy
-msgid "_Private"
-msgstr "Private"
-
-#: ../src/frogr-details-dialog.c:175 ../src/frogr-settings-dialog.c:147
-#, fuzzy
-msgid "P_ublic"
-msgstr "Public"
-
-#: ../src/frogr-details-dialog.c:183 ../src/frogr-settings-dialog.c:155
-#, fuzzy
-msgid "Visible to _Family"
-msgstr "Visible to family"
-
-#: ../src/frogr-details-dialog.c:187 ../src/frogr-settings-dialog.c:159
-#, fuzzy
-msgid "Visible to F_riends"
-msgstr "Visible to friends"
-
-#: ../src/frogr-details-dialog.c:200 ../src/frogr-settings-dialog.c:167
-msgid "_Show up in Global Search Results"
+#: src/frogr-create-new-set-dialog.c:381
+msgid "Create New Set"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:213
-msgid "Content type"
+#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
+msgid "Default (as specified in Flickr)"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:222 ../src/frogr-settings-dialog.c:204
-#, fuzzy
-msgid "P_hoto"
-msgstr "Photos"
-
-#: ../src/frogr-details-dialog.c:226 ../src/frogr-settings-dialog.c:208
-msgid "Scree_nshot"
+#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
+msgid "All rights reserved"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:230 ../src/frogr-settings-dialog.c:212
-msgid "Oth_er"
+#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
+msgid "CC Attribution-NonCommercial-ShareAlike"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:244
-msgid "Safety level"
+#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
+msgid "CC Attribution-NonCommercial"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:253 ../src/frogr-settings-dialog.c:245
-msgid "S_afe"
+#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
+msgid "CC Attribution-NonCommercial-NoDerivs"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:257 ../src/frogr-settings-dialog.c:249
-msgid "_Moderate"
+#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
+msgid "CC Attribution"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:261 ../src/frogr-settings-dialog.c:253
-msgid "Restr_icted"
+#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
+msgid "CC Attribution-ShareAlike"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:275
+#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
+msgid "CC Attribution-NoDerivs"
+msgstr ""
+
+#: src/frogr-details-dialog.c:172
+msgid "Open with image viewer"
+msgstr ""
+
+#: src/frogr-details-dialog.c:190
 #, fuzzy
 msgid "_Title:"
 msgstr "Title:"
 
-#: ../src/frogr-details-dialog.c:287
+#: src/frogr-details-dialog.c:200
 #, fuzzy
 msgid "_Description:"
 msgstr "Description:"
 
-#: ../src/frogr-details-dialog.c:313
+#: src/frogr-details-dialog.c:224
 msgid "Ta_gs:"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:1075 ../src/frogr-details-dialog.c:1080
+#: src/frogr-details-dialog.c:247
+#, fuzzy
+msgid "Visibility"
+msgstr "Default Visibility"
+
+#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
+#, fuzzy
+msgid "_Private"
+msgstr "Private"
+
+#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
+#, fuzzy
+msgid "P_ublic"
+msgstr "Public"
+
+#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
+msgid "_Family"
+msgstr ""
+
+#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
+msgid "F_riends"
+msgstr ""
+
+#: src/frogr-details-dialog.c:288
+msgid "Content Type"
+msgstr ""
+
+#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
+#, fuzzy
+msgid "P_hoto"
+msgstr "Photos"
+
+#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
+msgid "Scree_nshot"
+msgstr ""
+
+#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
+msgid "Oth_er"
+msgstr ""
+
+#: src/frogr-details-dialog.c:317
+msgid "Safety Level"
+msgstr ""
+
+#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
+msgid "S_afe"
+msgstr ""
+
+#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
+msgid "_Moderate"
+msgstr ""
+
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
+msgid "Restr_icted"
+msgstr ""
+
+#: src/frogr-details-dialog.c:345
+msgid "License Type"
+msgstr ""
+
+#: src/frogr-details-dialog.c:367
+msgid "Other Properties"
+msgstr ""
+
+#: src/frogr-details-dialog.c:375
+msgid "_Show Up in Global Search Results"
+msgstr ""
+
+#: src/frogr-details-dialog.c:379
+msgid "Set Geo_location Information"
+msgstr ""
+
+#: src/frogr-details-dialog.c:383
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr ""
+
+#: src/frogr-details-dialog.c:475
+#, fuzzy, c-format
+msgid "(%d Picture)"
+msgid_plural "(%d Pictures)"
+msgstr[0] "_Add Pictures"
+msgstr[1] "_Add Pictures"
+
+#: src/frogr-details-dialog.c:548
+#, fuzzy
+msgid "An error happened trying to load the picture"
+msgstr "An error happened while uploading a picture: %s."
+
+#: src/frogr-details-dialog.c:1169
+msgid "_Edit"
+msgstr ""
+
+#: src/frogr-details-dialog.c:1197
 msgid "Edit Picture Details"
 msgstr "Edit Picture Details"
 
-#. File menu
-#: ../src/frogr-main-view.c:228
-msgid "_File"
-msgstr "_File"
+#: src/frogr-file-loader.c:142
+#, fuzzy, c-format
+msgid "Loading files %d / %d"
+msgstr "Loading pictures %d / %d"
 
-#: ../src/frogr-main-view.c:234
-msgid "_Add Pictures"
-msgstr "_Add Pictures"
-
-#. Remove
-#: ../src/frogr-main-view.c:241 ../src/frogr-main-view.c:442
-msgid "_Remove Pictures"
-msgstr "_Remove Pictures"
-
-#. Accounts menu item and submenu
-#: ../src/frogr-main-view.c:251
-msgid "Accou_nts"
+#: src/frogr-file-loader.c:369
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
 msgstr ""
 
-#. Authorize menu item
-#: ../src/frogr-main-view.c:257
-msgid "Authorize _frogr"
-msgstr "Authorise _frogr"
+#: src/frogr-file-loader.c:400
+#, c-format
+msgid ""
+"Unable to load video %s\n"
+"Please check that you have the right codec installed"
+msgstr ""
 
-#: ../src/frogr-main-view.c:266
+#: src/frogr-file-loader.c:636
+#, c-format
+msgid ""
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
+msgstr ""
+
+#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+msgid "Open"
+msgstr ""
+
+#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+msgid "Open Existing Project"
+msgstr ""
+
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
+msgid "Add"
+msgstr "Add"
+
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
 #, fuzzy
-msgid "_Preferences…"
-msgstr "_Preferences…"
-
-#: ../src/frogr-main-view.c:274
-msgid "_Quit"
-msgstr "_Quit"
-
-#. Actions menu
-#: ../src/frogr-main-view.c:280
-msgid "A_ctions"
-msgstr "A_ctions"
-
-#. Edit details
-#: ../src/frogr-main-view.c:286 ../src/frogr-main-view.c:400
-msgid "Edit _Details…"
-msgstr "Edit _Details…"
-
-#. Add Tags
-#: ../src/frogr-main-view.c:293 ../src/frogr-main-view.c:407
-msgid "Add _Tags…"
-msgstr "Add _Tags…"
-
-#. Add to group
-#: ../src/frogr-main-view.c:300 ../src/frogr-main-view.c:414
-#, fuzzy
-msgid "Add to _Group…"
-msgstr "Add to Al_bum…"
-
-#. Add to set
-#: ../src/frogr-main-view.c:307 ../src/frogr-main-view.c:421
-#, fuzzy
-msgid "Add to _Set"
+msgid "Add Elements"
 msgstr "Add to Sets"
 
-#: ../src/frogr-main-view.c:314 ../src/frogr-main-view.c:427
-msgid "_Create New Set…"
+#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
+msgid "Remove"
+msgstr "Remove"
+
+#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
+msgid "Remove Elements"
 msgstr ""
 
-#: ../src/frogr-main-view.c:321 ../src/frogr-main-view.c:433
-#, fuzzy
-msgid "Add to _Existing Set…"
-msgstr "Add to Set…"
+#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
+msgid "Upload"
+msgstr "Upload"
 
-#: ../src/frogr-main-view.c:330
-msgid "_Upload All"
+#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
+#, fuzzy
+msgid "Upload All"
 msgstr "_Upload All"
 
-#. Help menu
-#: ../src/frogr-main-view.c:338
-msgid "_Help"
-msgstr "_Help"
+#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+msgid "Save"
+msgstr ""
 
-#: ../src/frogr-main-view.c:344
+#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+msgid "Save Current Project"
+msgstr ""
+
+#: src/frogr-main-view.c:1016
 msgid "_About"
 msgstr "_About"
 
-#: ../src/frogr-main-view.c:897
+#: src/frogr-main-view.c:1020
+msgid "_Quit"
+msgstr "_Quit"
+
+#: src/frogr-main-view.c:1070
+msgid "Accounts"
+msgstr ""
+
+#: src/frogr-main-view.c:1410
+#, c-format
+msgid "Taken: %s"
+msgstr ""
+
+#: src/frogr-main-view.c:1415
+#, c-format
+msgid "File size: %s"
+msgstr ""
+
+#: src/frogr-main-view.c:1540
+#, fuzzy
+msgid "Select File"
+msgstr "Select a Picture"
+
+#: src/frogr-main-view.c:1544 src/frogr-main-view.c:1671
+msgid "_Open"
+msgstr ""
+
+#: src/frogr-main-view.c:1553
+msgid "Frogr Project Files"
+msgstr ""
+
+#: src/frogr-main-view.c:1615
+#, fuzzy
+msgid "Select Destination"
+msgstr "Description:"
+
+#: src/frogr-main-view.c:1619
+msgid "_Save"
+msgstr ""
+
+#: src/frogr-main-view.c:1622
+msgid "Untitled Project.frogr"
+msgstr ""
+
+#: src/frogr-main-view.c:1667
 msgid "Select a Picture"
 msgstr "Select a Picture"
 
-#: ../src/frogr-main-view.c:930
+#: src/frogr-main-view.c:1694
+msgid "All Files"
+msgstr ""
+
+#: src/frogr-main-view.c:1697
+msgid "Image Files"
+msgstr ""
+
+#: src/frogr-main-view.c:1701
+msgid "Video Files"
+msgstr ""
+
+#: src/frogr-main-view.c:1723
+msgid "You don't have any picture added yet"
+msgstr ""
+
+#: src/frogr-main-view.c:1736
 msgid "You need to select some pictures first"
 msgstr "You need to select some pictures first"
 
-#: ../src/frogr-main-view.c:1147
-msgid "Not connected to flickr"
+#: src/frogr-main-view.c:2108
+msgid "Not connected to Flickr"
 msgstr ""
 
-#: ../src/frogr-main-view.c:1176
-msgid "remaining for the current month"
+#: src/frogr-main-view.c:2118
+#, c-format
+msgid "Connected as %s%s"
 msgstr ""
 
-#: ../src/frogr-main-view.c:1184
-msgid "Connected as"
-msgstr ""
-
-#: ../src/frogr-main-view.c:1185
+#: src/frogr-main-view.c:2119
 msgid " (PRO account)"
 msgstr ""
 
-#: ../src/frogr-picture-loader.c:91
+#: src/frogr-main-view.c:2143
 #, c-format
-msgid "Loading pictures %d / %d"
-msgstr "Loading pictures %d / %d"
+msgid " - %s / %s remaining"
+msgstr ""
 
-#. Update progress
-#: ../src/frogr-picture-uploader.c:85
+#: src/frogr-main-view.c:2169
 #, c-format
-msgid "Uploading '%s'…"
-msgstr "Uploading '%s'…"
+msgid " - %d file to upload (%s)"
+msgid_plural " - %d files to upload (%s)"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../src/frogr-settings-dialog.c:132
+#: src/frogr-settings-dialog.c:185
 msgid "Default Visibility"
 msgstr "Default Visibility"
 
-#: ../src/frogr-settings-dialog.c:194
+#: src/frogr-settings-dialog.c:224
 msgid "Default Content Type"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:235
+#: src/frogr-settings-dialog.c:250
 msgid "Default Safety Level"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:276
-msgid "Default Actions"
+#: src/frogr-settings-dialog.c:276
+#, fuzzy
+msgid "Default License"
 msgstr "Default Actions"
 
-#: ../src/frogr-settings-dialog.c:284
-#, fuzzy
-msgid "Open _Browser after Uploading Pictures"
-msgstr "Open browser after uploading pictures"
+#: src/frogr-settings-dialog.c:302
+msgid "Other Defaults"
+msgstr ""
 
-#: ../src/frogr-settings-dialog.c:293
+#: src/frogr-settings-dialog.c:312
+msgid "_Show Pictures in Global Search Results"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:315
+msgid "Set Geo_location Information for Pictures"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:318
+msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:324
 #, fuzzy
 msgid "_General"
 msgstr "General"
 
-#. Proxy settings
-#: ../src/frogr-settings-dialog.c:312
-msgid "_Use HTTP Proxy"
+#: src/frogr-settings-dialog.c:344
+msgid "Proxy Settings"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:323
+#: src/frogr-settings-dialog.c:353
+msgid "_Enable HTTP Proxy"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:363
 msgid "_Host:"
 msgstr ""
 
-#. Proxy port
-#: ../src/frogr-settings-dialog.c:341
+#: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr ""
 
-#. Proxy username
-#: ../src/frogr-settings-dialog.c:359
+#: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr ""
 
-#. Proxy password
-#: ../src/frogr-settings-dialog.c:377
+#: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:404
+#: src/frogr-settings-dialog.c:426
 msgid "Connec_tion"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:832
+#: src/frogr-settings-dialog.c:444
+msgid "Other options"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:454
+msgid "Ena_ble Tags Auto-Completion"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:457
+msgid "_Import Tags from Pictures Metadata"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:461
+msgid "Use _Dark GTK Theme"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:465
+msgid "_Keep File Extensions in Titles when Loading"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:471
+msgid "_Misc"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:972
 msgid "Preferences"
 msgstr "Preferences"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:1
-msgid "Add"
-msgstr "Add"
+#~ msgid ""
+#~ "Press the button to start using %s once you've authorized it in your "
+#~ "flickr account."
+#~ msgstr ""
+#~ "Press the button to start using %s once you've authorised it in your "
+#~ "flickr account."
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:2
-msgid "Remove"
-msgstr "Remove"
+#~ msgid "Authorization successfully completed!"
+#~ msgstr "Authorisation successfully completed!"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:3
-msgid "Upload"
-msgstr "Upload"
+#, fuzzy
+#~ msgid "Adding picture to photoset…"
+#~ msgstr "Uploading pictures…"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:4
-msgid "frogr"
-msgstr "frogr"
+#, fuzzy
+#~ msgid "Adding picture to group…"
+#~ msgstr "Uploading pictures…"
+
+#~ msgid "Operation successfully completed!"
+#~ msgstr "Operation successfully completed!"
+
+#, fuzzy
+#~ msgid "Set's title:"
+#~ msgstr "Set Title"
+
+#, fuzzy
+#~ msgid "Visible to _Family"
+#~ msgstr "Visible to family"
+
+#, fuzzy
+#~ msgid "Visible to F_riends"
+#~ msgstr "Visible to friends"
+
+#~ msgid "_File"
+#~ msgstr "_File"
+
+#~ msgid "_Remove Pictures"
+#~ msgstr "_Remove Pictures"
+
+#, fuzzy
+#~ msgid "_Preferences…"
+#~ msgstr "_Preferences…"
+
+#~ msgid "A_ctions"
+#~ msgstr "A_ctions"
+
+#~ msgid "Edit _Details…"
+#~ msgstr "Edit _Details…"
+
+#~ msgid "Add _Tags…"
+#~ msgstr "Add _Tags…"
+
+#, fuzzy
+#~ msgid "Add to _Group…"
+#~ msgstr "Add to Al_bum…"
+
+#, fuzzy
+#~ msgid "Add to _Set"
+#~ msgstr "Add to Sets"
+
+#, fuzzy
+#~ msgid "Add to _Existing Set…"
+#~ msgstr "Add to Set…"
+
+#~ msgid "_Help"
+#~ msgstr "_Help"
+
+#, fuzzy
+#~ msgid "Open _Browser after Uploading Pictures"
+#~ msgstr "Open browser after uploading pictures"
 
 #, fuzzy
 #~ msgid "_Remove"

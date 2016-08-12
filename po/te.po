@@ -5,9 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-08-08 22:44+0000\n"
+"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
+"POT-Creation-Date: 2016-08-12 13:09+0100\n"
 "PO-Revision-Date: 2012-12-30 22:48+0530\n"
 "Last-Translator: వీవెన్ <veeven@gmail.com>\n"
 "Language-Team: e-తెలుగు స్థానికీకరణ జట్టు\n"
@@ -19,102 +18,141 @@ msgstr ""
 "X-Generator: Virtaal 0.7.1\n"
 "X-Project-Style: gnome\n"
 
-#: ../data/frogr.desktop.in.in.h:1
-msgid "Frogr"
+#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
+#: data/frogr.desktop.in.in:14
+msgid "frogr"
 msgstr ""
 
-#: ../data/frogr.desktop.in.in.h:2
-msgid "Frogr: a Flickr Remote Organizer for GNOME"
+#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr ""
 
-#: ../data/frogr.desktop.in.in.h:3
+#: data/frogr.appdata.xml.in:8
+msgid ""
+"frogr is a small application for the GNOME desktop that allows users to "
+"manage their accounts in the Flickr image hosting website."
+msgstr ""
+
+#: data/frogr.appdata.xml.in:13
+msgid ""
+"It supports all the basic Flickr features, including uploading pictures, "
+"adding descriptions, setting tags and managing sets and groups pools."
+msgstr ""
+
+#: data/frogr.appdata.xml.in:24
+#, fuzzy
+msgid "Screenshot of frogr"
+msgstr "తెరపట్టు (_n)"
+
+#: data/frogr.appdata.xml.in:29
+msgid "Mario Sanchez Prada"
+msgstr ""
+
+#: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "ఫిక్లర్ ఖాతాల లోనికి ఫొటోలను ఎక్కించి అమర్చుకోండి"
 
-#: ../data/frogr.desktop.in.in.h:4
+#: data/frogr.desktop.in.in:8
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr ""
 
-#: ../src/frogr-about-dialog.c:43
-msgid "A Flickr remote organizer for GNOME\n"
+#: src/frogr-about-dialog.c:43
+msgid "A Flickr Remote Organizer for GNOME\n"
 msgstr ""
 
-#: ../src/frogr-about-dialog.c:72
+#: src/frogr-about-dialog.c:72
 msgid "translator-credits"
 msgstr "వీవెన్ <veeven@gmail.com>"
 
-#: ../src/frogr-add-tags-dialog.c:207
+#: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
+#: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
+#: src/frogr-create-new-set-dialog.c:310 src/frogr-details-dialog.c:1168
+#: src/frogr-main-view.c:1543 src/frogr-main-view.c:1618
+#: src/frogr-main-view.c:1670 src/frogr-settings-dialog.c:930
+msgid "_Cancel"
+msgstr ""
+
+#: src/frogr-add-tags-dialog.c:193 src/frogr-add-to-group-dialog.c:530
+#: src/frogr-add-to-set-dialog.c:531 src/frogr-create-new-set-dialog.c:312
+msgid "_Add"
+msgstr ""
+
+#: src/frogr-add-tags-dialog.c:202
 msgid "Enter a spaces separated list of tags:"
 msgstr ""
 
-#: ../src/frogr-add-tags-dialog.c:230
+#: src/frogr-add-tags-dialog.c:228
 msgid "Add Tags"
 msgstr ""
 
-#: ../src/frogr-add-to-set-dialog.c:155
-msgid "Title"
-msgstr "శీర్షిక"
-
-#: ../src/frogr-add-to-set-dialog.c:170 ../src/frogr-add-to-group-dialog.c:169
-msgid "Elements"
-msgstr "మూలకాలు"
-
-#: ../src/frogr-add-to-set-dialog.c:602
-msgid "Add to Sets"
-msgstr ""
-
-#: ../src/frogr-add-to-group-dialog.c:154
+#: src/frogr-add-to-group-dialog.c:147
 msgid "Name"
 msgstr "పేరు"
 
-#: ../src/frogr-add-to-group-dialog.c:601
+#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
+msgid "Elements"
+msgstr "మూలకాలు"
+
+#: src/frogr-add-to-group-dialog.c:581
 msgid "Add to Groups"
 msgstr ""
 
-#: ../src/frogr-auth-dialog.c:52
+#: src/frogr-add-to-set-dialog.c:148
+msgid "Title"
+msgstr "శీర్షిక"
+
+#: src/frogr-add-to-set-dialog.c:582
+msgid "Add to Sets"
+msgstr ""
+
+#: src/frogr-auth-dialog.c:59
 #, c-format
 msgid ""
 "Please press the button to authorize %s and then come back to complete the "
 "process."
 msgstr ""
 
-#: ../src/frogr-auth-dialog.c:56 ../src/frogr-auth-dialog.c:141
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
+#: src/frogr-controller.c:2286
 #, c-format
 msgid "Authorize %s"
 msgstr ""
 
-#. Description label
-#: ../src/frogr-auth-dialog.c:158
+#: src/frogr-auth-dialog.c:155 src/frogr-settings-dialog.c:932
+msgid "_Close"
+msgstr ""
+
+#: src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "తనిఖీ సంకేతాన్ని ఇవ్వండి:"
 
-#: ../src/frogr-auth-dialog.c:209
+#: src/frogr-auth-dialog.c:221
 msgid "Invalid verification code"
 msgstr "చెల్లని తనిఖీ సంకేతం"
 
-#: ../src/frogr-controller.c:593
+#: src/frogr-controller.c:581
 msgid "Process cancelled"
 msgstr "ప్రక్రియ రద్దయింది"
 
-#: ../src/frogr-controller.c:598
+#: src/frogr-controller.c:586
 msgid ""
 "Connection error:\n"
 "Network not available"
 msgstr ""
 
-#: ../src/frogr-controller.c:602
+#: src/frogr-controller.c:590
 msgid ""
 "Connection error:\n"
 "Bad request"
 msgstr ""
 
-#: ../src/frogr-controller.c:606
+#: src/frogr-controller.c:594
 msgid ""
 "Connection error:\n"
 "Server-side error"
 msgstr ""
 
-#: ../src/frogr-controller.c:610
+#: src/frogr-controller.c:598
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -122,81 +160,80 @@ msgstr ""
 "ఎక్కించడంలో పొరపాటు:\n"
 "చెల్లని దస్త్రం"
 
-#: ../src/frogr-controller.c:614
+#: src/frogr-controller.c:602
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
 msgstr ""
 
-#: ../src/frogr-controller.c:619
+#: src/frogr-controller.c:607
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/frogr-controller.c:623
+#: src/frogr-controller.c:611
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
 msgstr ""
 
-#: ../src/frogr-controller.c:629
+#: src/frogr-controller.c:617
 msgid ""
 "Error:\n"
 "Photo not found"
 msgstr ""
 
-#: ../src/frogr-controller.c:633
+#: src/frogr-controller.c:621
 msgid ""
 "Error:\n"
 "Photo already in photoset"
 msgstr ""
 
-#: ../src/frogr-controller.c:637
+#: src/frogr-controller.c:625
 msgid ""
 "Error:\n"
 "Photo already in group"
 msgstr ""
 
-#: ../src/frogr-controller.c:641
+#: src/frogr-controller.c:629
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
 msgstr ""
 
-#: ../src/frogr-controller.c:645
+#: src/frogr-controller.c:633
 msgid ""
 "Error:\n"
 "Group limit already reached"
 msgstr ""
 
-#: ../src/frogr-controller.c:649
+#: src/frogr-controller.c:637
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
 msgstr ""
 
-#: ../src/frogr-controller.c:653
+#: src/frogr-controller.c:641
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
 msgstr ""
 
-#: ../src/frogr-controller.c:657
+#: src/frogr-controller.c:645
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
 msgstr ""
 
-#: ../src/frogr-controller.c:661
-#, c-format
+#: src/frogr-controller.c:649
 msgid ""
 "Authorization failed.\n"
 "Please try again"
 msgstr ""
 
-#: ../src/frogr-controller.c:667
+#: src/frogr-controller.c:655
 #, c-format
 msgid ""
 "Error\n"
@@ -204,22 +241,20 @@ msgid ""
 "Please re-authorize it"
 msgstr ""
 
-#: ../src/frogr-controller.c:672
-#, c-format
+#: src/frogr-controller.c:660
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
 msgstr ""
 
-#: ../src/frogr-controller.c:676
+#: src/frogr-controller.c:664
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
 "Please try again."
 msgstr ""
 
-#: ../src/frogr-controller.c:681
-#, c-format
+#: src/frogr-controller.c:669
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
@@ -227,8 +262,7 @@ msgstr ""
 "చెల్లని తనిఖీ సంకేతం.\n"
 "దయచేసి మళ్ళీ ప్రయత్నించండి."
 
-#: ../src/frogr-controller.c:685
-#, c-format
+#: src/frogr-controller.c:673
 msgid ""
 "Error:\n"
 "Service not available"
@@ -236,598 +270,525 @@ msgstr ""
 "పొరపాటు:\n"
 "సేవ అందుబాటులో లేదు"
 
-#. General error: just dump the raw error description
-#: ../src/frogr-controller.c:690
+#: src/frogr-controller.c:678
 #, c-format
 msgid "An error happened: %s."
 msgstr "పొరపాటు జరిగింది: %s."
 
-#: ../src/frogr-controller.c:906
+#: src/frogr-controller.c:883
 msgid "Authorization failed (timed out)"
 msgstr ""
 
-#: ../src/frogr-controller.c:958
+#: src/frogr-controller.c:931
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr ""
 
-#: ../src/frogr-controller.c:963
+#: src/frogr-controller.c:936
 #, c-format
 msgid "Uploading '%s'…"
 msgstr ""
 
-#: ../src/frogr-controller.c:2221
+#: src/frogr-controller.c:2242
 msgid "Updating credentials…"
 msgstr ""
 
-#: ../src/frogr-controller.c:2226
+#: src/frogr-controller.c:2247
 msgid "Retrieving data for authorization…"
 msgstr ""
 
-#: ../src/frogr-controller.c:2231
+#: src/frogr-controller.c:2252
 msgid "Finishing authorization…"
 msgstr ""
 
-#: ../src/frogr-controller.c:2236
+#: src/frogr-controller.c:2257
 msgid "Retrieving list of sets…"
 msgstr ""
 
-#: ../src/frogr-controller.c:2241
+#: src/frogr-controller.c:2262
 msgid "Retrieving list of groups…"
 msgstr ""
 
-#: ../src/frogr-controller.c:2246
+#: src/frogr-controller.c:2267
 msgid "Retrieving list of tags…"
 msgstr ""
 
-#: ../src/frogr-controller.c:2363
+#: src/frogr-controller.c:2292
+msgid "Fetching information"
+msgstr ""
+
+#: src/frogr-controller.c:2398
 msgid "No sets found"
 msgstr ""
 
-#: ../src/frogr-controller.c:2390
+#: src/frogr-controller.c:2423
 msgid "No groups found"
 msgstr ""
 
-#: ../src/frogr-controller.c:3031
+#: src/frogr-controller.c:2984
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
 "Please re-authorize it."
 msgstr ""
 
-#: ../src/frogr-controller.c:3041
-#, c-format
+#: src/frogr-controller.c:2994
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr ""
 
-#: ../src/frogr-controller.c:3113
-#, c-format
+#: src/frogr-controller.c:3012
+msgid "Uploading Pictures"
+msgstr ""
+
+#: src/frogr-controller.c:3057
 msgid "Error opening project file"
 msgstr ""
 
-#. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:156 ../src/frogr-details-dialog.c:1024
+#: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr ""
 
-#: ../src/frogr-create-new-set-dialog.c:342
+#: src/frogr-create-new-set-dialog.c:326
 msgid "Title:"
 msgstr "శీర్షిక:"
 
-#: ../src/frogr-create-new-set-dialog.c:351
+#: src/frogr-create-new-set-dialog.c:335
 msgid "Description:"
 msgstr "వివరణ:"
 
-#: ../src/frogr-create-new-set-dialog.c:372
+#: src/frogr-create-new-set-dialog.c:356
 msgid "Fill Pictures Details with Title and Description"
 msgstr ""
 
-#: ../src/frogr-create-new-set-dialog.c:393
+#: src/frogr-create-new-set-dialog.c:381
 msgid "Create New Set"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:90 ../src/frogr-settings-dialog.c:100
+#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
 msgid "Default (as specified in Flickr)"
 msgstr "అప్రమేయం (ఫ్లికర్‌లో పేర్కొన్నట్లు)"
 
-#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:101
+#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
 msgid "All rights reserved"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:102
+#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
 msgid "CC Attribution-NonCommercial-ShareAlike"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:103
+#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
 msgid "CC Attribution-NonCommercial"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:104
+#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
 msgid "CC Attribution-NonCommercial-NoDerivs"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:105
+#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
 msgid "CC Attribution"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:106
+#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
 msgid "CC Attribution-ShareAlike"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:97 ../src/frogr-settings-dialog.c:107
+#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
 msgid "CC Attribution-NoDerivs"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:180
+#: src/frogr-details-dialog.c:172
 msgid "Open with image viewer"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:197
+#: src/frogr-details-dialog.c:190
 msgid "_Title:"
 msgstr "శీర్షిక (_T):"
 
-#: ../src/frogr-details-dialog.c:207
+#: src/frogr-details-dialog.c:200
 msgid "_Description:"
 msgstr "వివరణ (_D):"
 
-#: ../src/frogr-details-dialog.c:231
+#: src/frogr-details-dialog.c:224
 msgid "Ta_gs:"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:257
+#: src/frogr-details-dialog.c:247
 msgid "Visibility"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:269 ../src/frogr-settings-dialog.c:203
-msgid "P_ublic"
-msgstr "బహిరంగం (_u)"
-
-#: ../src/frogr-details-dialog.c:278 ../src/frogr-settings-dialog.c:209
+#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
 msgid "_Private"
 msgstr "అంతరంగికం (_P)"
 
-#: ../src/frogr-details-dialog.c:282 ../src/frogr-settings-dialog.c:212
+#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
+msgid "P_ublic"
+msgstr "బహిరంగం (_u)"
+
+#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
 msgid "_Family"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:286 ../src/frogr-settings-dialog.c:214
+#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
 msgid "F_riends"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:312
+#: src/frogr-details-dialog.c:288
 msgid "Content Type"
 msgstr "విషయపు రకం"
 
-#: ../src/frogr-details-dialog.c:321 ../src/frogr-settings-dialog.c:238
+#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
 msgid "P_hoto"
 msgstr "ఫొటో (_h)"
 
-#: ../src/frogr-details-dialog.c:325 ../src/frogr-settings-dialog.c:240
+#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
 msgid "Scree_nshot"
 msgstr "తెరపట్టు (_n)"
 
-#: ../src/frogr-details-dialog.c:329 ../src/frogr-settings-dialog.c:242
+#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
 msgid "Oth_er"
 msgstr "ఇతర (_e)"
 
-#: ../src/frogr-details-dialog.c:345
+#: src/frogr-details-dialog.c:317
 msgid "Safety Level"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:354 ../src/frogr-settings-dialog.c:263
+#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
 msgid "S_afe"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:358 ../src/frogr-settings-dialog.c:265
+#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
 msgid "_Moderate"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:362 ../src/frogr-settings-dialog.c:267
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
 msgid "Restr_icted"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:376
+#: src/frogr-details-dialog.c:345
 msgid "License Type"
 msgstr "లైసెన్సు రకం"
 
-#: ../src/frogr-details-dialog.c:400
+#: src/frogr-details-dialog.c:367
 msgid "Other Properties"
 msgstr "ఇతర లక్షణాలు"
 
-#: ../src/frogr-details-dialog.c:409
-msgid "Set Geo_location Information"
-msgstr ""
-
-#: ../src/frogr-details-dialog.c:413
+#: src/frogr-details-dialog.c:375
 msgid "_Show Up in Global Search Results"
 msgstr ""
 
-#. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:504
+#: src/frogr-details-dialog.c:379
+msgid "Set Geo_location Information"
+msgstr ""
+
+#: src/frogr-details-dialog.c:383
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr ""
+
+#: src/frogr-details-dialog.c:475
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/frogr-details-dialog.c:578
+#: src/frogr-details-dialog.c:548
 msgid "An error happened trying to load the picture"
 msgstr ""
 
-#: ../src/frogr-details-dialog.c:1227
+#: src/frogr-details-dialog.c:1169
+msgid "_Edit"
+msgstr ""
+
+#: src/frogr-details-dialog.c:1197
 msgid "Edit Picture Details"
 msgstr ""
 
-#: ../src/frogr-file-loader.c:147
+#: src/frogr-file-loader.c:142
 #, c-format
 msgid "Loading files %d / %d"
 msgstr ""
 
-#: ../src/frogr-file-loader.c:381
+#: src/frogr-file-loader.c:369
 #, c-format
 msgid ""
 "Unable to load picture %s:\n"
 "%s"
 msgstr ""
 
-#: ../src/frogr-file-loader.c:412
+#: src/frogr-file-loader.c:400
 #, c-format
 msgid ""
 "Unable to load video %s\n"
 "Please check that you have the right codec installed"
 msgstr ""
 
-#. First %s is the title of the picture (filename of the file by
-#. default). Second %s is the max allowed size for a picture to be
-#. uploaded to flickr (different for free and PRO accounts).
-#: ../src/frogr-file-loader.c:652
+#: src/frogr-file-loader.c:636
 #, c-format
 msgid ""
 "Can't load file %s:\n"
 "Size of file is bigger than the maximum allowed for this account (%s)"
 msgstr ""
 
-#: ../src/frogr-main-view.c:822 ../data/gtkbuilder/frogr-app-menu.xml.h:4
+#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+msgid "Open"
+msgstr "తెరువు"
+
+#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+msgid "Open Existing Project"
+msgstr ""
+
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
+msgid "Add"
+msgstr "చేర్చు"
+
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
+msgid "Add Elements"
+msgstr "మూలకాలను చేర్చు"
+
+#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
+msgid "Remove"
+msgstr "తొలగించు"
+
+#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
+msgid "Remove Elements"
+msgstr "మూలకాలను తొలగించు"
+
+#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
+msgid "Upload"
+msgstr "ఎక్కించు"
+
+#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
+msgid "Upload All"
+msgstr "అన్నింటినీ ఎక్కించు"
+
+#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+msgid "Save"
+msgstr "భద్రపరచు"
+
+#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+msgid "Save Current Project"
+msgstr "ప్రస్తుత ప్రాజెక్టును భద్రపరచు"
+
+#: src/frogr-main-view.c:1016
 msgid "_About"
 msgstr "గురించి (_A)"
 
-#: ../src/frogr-main-view.c:826 ../data/gtkbuilder/frogr-app-menu.xml.h:5
+#: src/frogr-main-view.c:1020
 msgid "_Quit"
 msgstr "చాలించు (_Q)"
 
-#. Create the submenu and insert it in the right section
-#: ../src/frogr-main-view.c:882
+#: src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "ఖాతాలు"
 
-#. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:1111
+#: src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
 msgstr "తీసిన సమయం: %s"
 
-#: ../src/frogr-main-view.c:1116
+#: src/frogr-main-view.c:1415
 #, c-format
 msgid "File size: %s"
 msgstr "దస్త్ర పరిమాణం: %s"
 
-#: ../src/frogr-main-view.c:1239
+#: src/frogr-main-view.c:1540
 msgid "Select File"
 msgstr "దస్త్రాన్ని ఎంచుకోండి"
 
-#: ../src/frogr-main-view.c:1252
+#: src/frogr-main-view.c:1544 src/frogr-main-view.c:1671
+#, fuzzy
+msgid "_Open"
+msgstr "తెరువు"
+
+#: src/frogr-main-view.c:1553
 msgid "Frogr Project Files"
 msgstr ""
 
-#: ../src/frogr-main-view.c:1316
+#: src/frogr-main-view.c:1615
 msgid "Select Destination"
 msgstr "గమ్యస్థానాన్ని ఎంచుకోండి"
 
-#: ../src/frogr-main-view.c:1323
+#: src/frogr-main-view.c:1619
+msgid "_Save"
+msgstr "భద్రపరచు (_S)"
+
+#: src/frogr-main-view.c:1622
 msgid "Untitled Project.frogr"
 msgstr "పేరులేని ప్రాజెక్టు.frogr"
 
-#: ../src/frogr-main-view.c:1364
+#: src/frogr-main-view.c:1667
 msgid "Select a Picture"
 msgstr "ఒక చిత్రాన్ని ఎంచుకోండి"
 
-#: ../src/frogr-main-view.c:1387
+#: src/frogr-main-view.c:1694
 msgid "All Files"
 msgstr "అన్ని దస్త్రాలు"
 
-#: ../src/frogr-main-view.c:1390
+#: src/frogr-main-view.c:1697
 msgid "Image Files"
 msgstr "బొమ్మల దస్త్రాలు"
 
-#: ../src/frogr-main-view.c:1393
+#: src/frogr-main-view.c:1701
 msgid "Video Files"
 msgstr "వీడియో దస్త్రాలు"
 
-#: ../src/frogr-main-view.c:1414
+#: src/frogr-main-view.c:1723
 msgid "You don't have any picture added yet"
 msgstr "మీరు ఇంకా ఏ చిత్రాలనూ చేర్చలేదు"
 
-#: ../src/frogr-main-view.c:1429
+#: src/frogr-main-view.c:1736
 msgid "You need to select some pictures first"
 msgstr ""
 
-#: ../src/frogr-main-view.c:1889
+#: src/frogr-main-view.c:2108
 msgid "Not connected to Flickr"
 msgstr ""
 
-#. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:1899
+#: src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
 msgstr ""
 
-#: ../src/frogr-main-view.c:1900
+#: src/frogr-main-view.c:2119
 msgid " (PRO account)"
 msgstr " (PRO ఖాతా)"
 
-#. Will show in the status bar the amount of data (in KB, MB
-#. or GB) the user is currently allowed to upload to flicker
-#. till the end of the month, in a CURRENT / MAX fashion.
-#. The '-' at the beginning is just a separator, since more
-#. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:1924
+#: src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr ""
 
-#. Will show in the status bar the amount of pictures and data
-#. (in KB, MB or GB) that would be uploaded as the sum of the
-#. sizes for every picture loaded in the application
-#: ../src/frogr-main-view.c:1950
+#: src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/frogr-settings-dialog.c:189
+#: src/frogr-settings-dialog.c:185
 msgid "Default Visibility"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:226
+#: src/frogr-settings-dialog.c:224
 msgid "Default Content Type"
 msgstr "అప్రమేయ విషయపు రకం"
 
-#: ../src/frogr-settings-dialog.c:251
+#: src/frogr-settings-dialog.c:250
 msgid "Default Safety Level"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:276
+#: src/frogr-settings-dialog.c:276
 msgid "Default License"
 msgstr "అప్రమేయ లైసెన్సు"
 
-#: ../src/frogr-settings-dialog.c:300
+#: src/frogr-settings-dialog.c:302
 msgid "Other Defaults"
 msgstr "ఇతర అప్రమేయాలు"
 
-#: ../src/frogr-settings-dialog.c:312
-msgid "Set Geo_location Information for Pictures"
-msgstr ""
-
-#: ../src/frogr-settings-dialog.c:315
+#: src/frogr-settings-dialog.c:312
 msgid "_Show Pictures in Global Search Results"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:321
+#: src/frogr-settings-dialog.c:315
+msgid "Set Geo_location Information for Pictures"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:318
+msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:324
 msgid "_General"
 msgstr "సాధారణం (_G)"
 
-#: ../src/frogr-settings-dialog.c:346
+#: src/frogr-settings-dialog.c:344
 msgid "Proxy Settings"
 msgstr "ప్రాక్సీ అమరికలు"
 
-#. Enable proxy
-#: ../src/frogr-settings-dialog.c:356
+#: src/frogr-settings-dialog.c:353
 msgid "_Enable HTTP Proxy"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:368
+#: src/frogr-settings-dialog.c:363
 msgid "_Host:"
 msgstr ""
 
-#. Proxy port
-#: ../src/frogr-settings-dialog.c:381
+#: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr ""
 
-#. Proxy username
-#: ../src/frogr-settings-dialog.c:394
+#: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr "వాడుకరి పేరు (_s):"
 
-#. Proxy password
-#: ../src/frogr-settings-dialog.c:407
+#: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr "సంకేతపదం (_w):"
 
-#: ../src/frogr-settings-dialog.c:447
+#: src/frogr-settings-dialog.c:426
 msgid "Connec_tion"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:470
+#: src/frogr-settings-dialog.c:444
 msgid "Other options"
 msgstr "ఇతర ఎంపికలు"
 
-#: ../src/frogr-settings-dialog.c:482
+#: src/frogr-settings-dialog.c:454
 msgid "Ena_ble Tags Auto-Completion"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:485
+#: src/frogr-settings-dialog.c:457
 msgid "_Import Tags from Pictures Metadata"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:489
+#: src/frogr-settings-dialog.c:461
 msgid "Use _Dark GTK Theme"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:493
+#: src/frogr-settings-dialog.c:465
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:499
+#: src/frogr-settings-dialog.c:471
 msgid "_Misc"
 msgstr ""
 
-#: ../src/frogr-settings-dialog.c:1035
+#: src/frogr-settings-dialog.c:972
 msgid "Preferences"
 msgstr "అభిరుచులు"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:1
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
-msgid "_Edit Details…"
-msgstr ""
+#~ msgid "_Remove Elements"
+#~ msgstr "మూలకాలను తొలగించు (_R)"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:2
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
-msgid "Add _Tags…"
-msgstr ""
+#~ msgid "_Preferences…"
+#~ msgstr "అభిరుచులు (_P)…"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:3
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:11
-msgid "Add to _Group…"
-msgstr ""
+#~ msgid "_Help"
+#~ msgstr "సహాయం (_H)"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:4
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:12
-msgid "Add to _Photoset"
-msgstr ""
+#~ msgid "_File"
+#~ msgstr "దస్త్రం (_F)"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:5
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:13
-msgid "_Add to Existing Photoset…"
-msgstr ""
+#~ msgid "_Open…"
+#~ msgstr "తెరువు (_O)…"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:6
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:14
-msgid "_Create New Photoset…"
-msgstr ""
+#~ msgid "Save _As…"
+#~ msgstr "మరోపేరుతో భద్రపరచు (_A)…"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:7
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:15
-msgid "_Open in External Viewer"
-msgstr ""
+#~ msgid "_Upload All"
+#~ msgstr "అన్నింటినీ ఎక్కించు (_U)"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:8
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
-msgid "_Remove Elements"
-msgstr "మూలకాలను తొలగించు (_R)"
+#~ msgid "By _Date Taken"
+#~ msgstr "తీసిన తేదీ ప్రకారం (_D)"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:9
-msgid "Open Existing Project"
-msgstr ""
+#~ msgid "By _Title"
+#~ msgstr "శీర్షిక ప్రకారం (_T)"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:10
-msgid "Open"
-msgstr "తెరువు"
+#~ msgid "By _Size"
+#~ msgstr "పరిమాణమును బట్టి (_S)"
 
-#: ../data/gtkbuilder/frogr-main-view.xml.h:11
-msgid "Save Current Project"
-msgstr "ప్రస్తుత ప్రాజెక్టును భద్రపరచు"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:12
-msgid "Save"
-msgstr "భద్రపరచు"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:13
-msgid "Add Elements"
-msgstr "మూలకాలను చేర్చు"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:14
-msgid "Add"
-msgstr "చేర్చు"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:15
-msgid "Remove Elements"
-msgstr "మూలకాలను తొలగించు"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:16
-msgid "Remove"
-msgstr "తొలగించు"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:17
-msgid "Upload All"
-msgstr "అన్నింటినీ ఎక్కించు"
-
-#: ../data/gtkbuilder/frogr-main-view.xml.h:18
-msgid "Upload"
-msgstr "ఎక్కించు"
-
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:1
-msgid "Aut_horize Account…"
-msgstr ""
-
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:2
-msgid "_Preferences…"
-msgstr "అభిరుచులు (_P)…"
-
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:3
-msgid "_Help"
-msgstr "సహాయం (_H)"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:1
-msgid "_File"
-msgstr "దస్త్రం (_F)"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:2
-msgid "_Open…"
-msgstr "తెరువు (_O)…"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:3
-msgid "_Save"
-msgstr "భద్రపరచు (_S)"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:4
-msgid "Save _As…"
-msgstr "మరోపేరుతో భద్రపరచు (_A)…"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:5
-msgid "A_dd Elements…"
-msgstr ""
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:7
-msgid "_Upload All"
-msgstr "అన్నింటినీ ఎక్కించు (_U)"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:8
-msgid "_Edit"
-msgstr ""
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:16
-msgid "_View"
-msgstr ""
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:17
-msgid "_Sort Elements"
-msgstr ""
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:18
-msgid "As _Loaded"
-msgstr ""
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:19
-msgid "By _Date Taken"
-msgstr "తీసిన తేదీ ప్రకారం (_D)"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:20
-msgid "By _Title"
-msgstr "శీర్షిక ప్రకారం (_T)"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:21
-msgid "By _Size"
-msgstr "పరిమాణమును బట్టి (_S)"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:22
-msgid "_Reversed Order"
-msgstr "వ్యతిరేక క్రమం (_R)"
-
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:23
-msgid "Enable _Tooltips"
-msgstr ""
+#~ msgid "_Reversed Order"
+#~ msgstr "వ్యతిరేక క్రమం (_R)"
 
 #~ msgid "Visible to _Family"
 #~ msgstr "కుటుంబసభ్యులకు మాత్రమే (_F)"

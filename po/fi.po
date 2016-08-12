@@ -7,9 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-01-22 18:06+0000\n"
+"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
+"POT-Creation-Date: 2016-08-12 13:09+0100\n"
 "PO-Revision-Date: 2016-03-13 19:22+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
@@ -20,10 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.7\n"
 
-#: ../data/frogr.appdata.xml.in.h:1
-#| msgid ""
-#| "Frogr is a small application for the GNOME desktop that allows users to "
-#| "manage their accounts in the Flickr image hosting website."
+#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
+#: data/frogr.desktop.in.in:14
+msgid "frogr"
+msgstr "frogr"
+
+#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "frogr: Flickrin etähallinta Gnome-työpöydälle"
+
+#: data/frogr.appdata.xml.in:8
 msgid ""
 "frogr is a small application for the GNOME desktop that allows users to "
 "manage their accounts in the Flickr image hosting website."
@@ -31,7 +36,7 @@ msgstr ""
 "Frogr on pieni sovellus, joka mahdollistaa käyttäjien hallita tilejään "
 "Flickr-kuvapalvelussa."
 
-#: ../data/frogr.appdata.xml.in.h:2
+#: data/frogr.appdata.xml.in:13
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
@@ -40,81 +45,72 @@ msgstr ""
 "kuvauksien lisäystä, tunnisteiden asettamista sekä joukkojen ja ryhmien "
 "hallintaa."
 
-#: ../data/frogr.appdata.xml.in.h:3
-#| msgid "Scree_nshot"
+#: data/frogr.appdata.xml.in:24
 msgid "Screenshot of frogr"
 msgstr "Kuvakaappaus frogrista"
 
-#: ../data/frogr.desktop.in.in.h:1
-#| msgid "Frogr"
-msgid "frogr"
-msgstr "frogr"
+#: data/frogr.appdata.xml.in:29
+msgid "Mario Sanchez Prada"
+msgstr ""
 
-#: ../data/frogr.desktop.in.in.h:2
-#| msgid "Frogr: a Flickr Remote Organizer for GNOME"
-msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr "frogr: Flickrin etähallinta Gnome-työpöydälle"
-
-#: ../data/frogr.desktop.in.in.h:3
+#: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Lähetä ja hallitse kuvia Flickr-tileillä"
 
-#: ../data/frogr.desktop.in.in.h:4
+#: data/frogr.desktop.in.in:8
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Image;Picture;Photo;Video;Uploader;kuva;valokuva;lähetys;"
 
-#: ../src/frogr-about-dialog.c:43
-#| msgid "A Flickr remote organizer for GNOME\n"
+#: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
 msgstr "Flickrin etähallinta Gnome-työpöydälle\n"
 
-#: ../src/frogr-about-dialog.c:72
+#: src/frogr-about-dialog.c:72
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
-#: ../src/frogr-add-tags-dialog.c:191 ../src/frogr-add-to-group-dialog.c:528
-#: ../src/frogr-add-to-set-dialog.c:529 ../src/frogr-auth-dialog.c:153
-#: ../src/frogr-create-new-set-dialog.c:310 ../src/frogr-details-dialog.c:1168
-#: ../src/frogr-main-view.c:1543 ../src/frogr-main-view.c:1618
-#: ../src/frogr-main-view.c:1670 ../src/frogr-settings-dialog.c:930
+#: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
+#: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
+#: src/frogr-create-new-set-dialog.c:310 src/frogr-details-dialog.c:1168
+#: src/frogr-main-view.c:1543 src/frogr-main-view.c:1618
+#: src/frogr-main-view.c:1670 src/frogr-settings-dialog.c:930
 msgid "_Cancel"
 msgstr "_Peru"
 
-#: ../src/frogr-add-tags-dialog.c:193 ../src/frogr-add-to-group-dialog.c:530
-#: ../src/frogr-add-to-set-dialog.c:531
-#: ../src/frogr-create-new-set-dialog.c:312
+#: src/frogr-add-tags-dialog.c:193 src/frogr-add-to-group-dialog.c:530
+#: src/frogr-add-to-set-dialog.c:531 src/frogr-create-new-set-dialog.c:312
 msgid "_Add"
 msgstr "_Lisää"
 
-#: ../src/frogr-add-tags-dialog.c:202
+#: src/frogr-add-tags-dialog.c:202
 msgid "Enter a spaces separated list of tags:"
 msgstr "Kirjoita välilyönnein erotettu lista tunnisteita:"
 
-#: ../src/frogr-add-tags-dialog.c:228
+#: src/frogr-add-tags-dialog.c:228
 msgid "Add Tags"
 msgstr "Lisää tunnisteita"
 
-#: ../src/frogr-add-to-group-dialog.c:147
+#: src/frogr-add-to-group-dialog.c:147
 msgid "Name"
 msgstr "Nimi"
 
-#: ../src/frogr-add-to-group-dialog.c:162 ../src/frogr-add-to-set-dialog.c:163
+#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
 msgid "Elements"
 msgstr "Elementit"
 
-#: ../src/frogr-add-to-group-dialog.c:581
+#: src/frogr-add-to-group-dialog.c:581
 msgid "Add to Groups"
 msgstr "Lisää ryhmiin"
 
-#: ../src/frogr-add-to-set-dialog.c:148
+#: src/frogr-add-to-set-dialog.c:148
 msgid "Title"
 msgstr "Nimi"
 
-#: ../src/frogr-add-to-set-dialog.c:582
+#: src/frogr-add-to-set-dialog.c:582
 msgid "Add to Sets"
 msgstr "Lisää joukkoihin"
 
-#: ../src/frogr-auth-dialog.c:59
+#: src/frogr-auth-dialog.c:59
 #, c-format
 msgid ""
 "Please press the button to authorize %s and then come back to complete the "
@@ -123,30 +119,29 @@ msgstr ""
 "Napsauta painiketta valtuuttaksesi %sin ja palaa sitten takaisin "
 "viimeistelläksesi toiminnon."
 
-#: ../src/frogr-auth-dialog.c:63 ../src/frogr-auth-dialog.c:149
-#: ../src/frogr-controller.c:2286
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
+#: src/frogr-controller.c:2286
 #, c-format
 msgid "Authorize %s"
 msgstr "Valtuuta %s"
 
-#: ../src/frogr-auth-dialog.c:155 ../src/frogr-settings-dialog.c:932
+#: src/frogr-auth-dialog.c:155 src/frogr-settings-dialog.c:932
 msgid "_Close"
 msgstr "_Sulje"
 
-#. Description label
-#: ../src/frogr-auth-dialog.c:167
+#: src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "Anna vahvistuskoodi:"
 
-#: ../src/frogr-auth-dialog.c:221
+#: src/frogr-auth-dialog.c:221
 msgid "Invalid verification code"
 msgstr "Virheellinen vahvistuskoodi"
 
-#: ../src/frogr-controller.c:581
+#: src/frogr-controller.c:581
 msgid "Process cancelled"
 msgstr "Toiminto peruttiin"
 
-#: ../src/frogr-controller.c:586
+#: src/frogr-controller.c:586
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -154,7 +149,7 @@ msgstr ""
 "Yhteysvirhe:\n"
 "Ei verkkoyhteyttä"
 
-#: ../src/frogr-controller.c:590
+#: src/frogr-controller.c:590
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -162,7 +157,7 @@ msgstr ""
 "Yhteysvirhe:\n"
 "Virheellinen pyyntö"
 
-#: ../src/frogr-controller.c:594
+#: src/frogr-controller.c:594
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -170,7 +165,7 @@ msgstr ""
 "Yhteysvirhe:\n"
 "Palvelinpään virhe"
 
-#: ../src/frogr-controller.c:598
+#: src/frogr-controller.c:598
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -178,7 +173,7 @@ msgstr ""
 "Virhe lähettäessä:\n"
 "Virheellinen tiedosto"
 
-#: ../src/frogr-controller.c:602
+#: src/frogr-controller.c:602
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -186,14 +181,14 @@ msgstr ""
 "Virhe kuvaa lähettäessä:\n"
 "Kiintiö ylitetty"
 
-#: ../src/frogr-controller.c:607
+#: src/frogr-controller.c:607
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
 msgstr[0] "Kiintiö ylitetty (raja: %d video kuukaudessa)"
 msgstr[1] "Kiintiö ylitetty (raja: %d videota kuukaudessa)"
 
-#: ../src/frogr-controller.c:611
+#: src/frogr-controller.c:611
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
@@ -201,7 +196,7 @@ msgstr ""
 "Virhe videota lähettäessä:\n"
 "Et voi lähettää enempää videoita tällä tilillä"
 
-#: ../src/frogr-controller.c:617
+#: src/frogr-controller.c:617
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -209,7 +204,7 @@ msgstr ""
 "Virhe:\n"
 "Kuvaa ei löytynyt"
 
-#: ../src/frogr-controller.c:621
+#: src/frogr-controller.c:621
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -217,7 +212,7 @@ msgstr ""
 "Virhe:\n"
 "Kuva on jo kuvajoukossa"
 
-#: ../src/frogr-controller.c:625
+#: src/frogr-controller.c:625
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -225,7 +220,7 @@ msgstr ""
 "Virhe:\n"
 "Kuva kuuluu jo ryhmään"
 
-#: ../src/frogr-controller.c:629
+#: src/frogr-controller.c:629
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -233,7 +228,7 @@ msgstr ""
 "Virhe:\n"
 "Kuva kuuluu jo niin moneen ryhmään kuin mahdollista"
 
-#: ../src/frogr-controller.c:633
+#: src/frogr-controller.c:633
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -241,7 +236,7 @@ msgstr ""
 "Virhe:\n"
 "Ryhmän raja on jo tullut täyteen"
 
-#: ../src/frogr-controller.c:637
+#: src/frogr-controller.c:637
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -249,7 +244,7 @@ msgstr ""
 "Virhe:\n"
 "Kuva lisätty ryhmän jonoon"
 
-#: ../src/frogr-controller.c:641
+#: src/frogr-controller.c:641
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -257,7 +252,7 @@ msgstr ""
 "Virhe:\n"
 "Kuva on jo lisätty ryhmän jonoon"
 
-#: ../src/frogr-controller.c:645
+#: src/frogr-controller.c:645
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -265,8 +260,7 @@ msgstr ""
 "Virhe:\n"
 "Sisältö ei ole sallittu tässä ryhmässä"
 
-#: ../src/frogr-controller.c:649
-#, c-format
+#: src/frogr-controller.c:649
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -274,7 +268,7 @@ msgstr ""
 "Valtuutus epäonnistui.\n"
 "Yritä uudelleen"
 
-#: ../src/frogr-controller.c:655
+#: src/frogr-controller.c:655
 #, c-format
 msgid ""
 "Error\n"
@@ -285,8 +279,7 @@ msgstr ""
 "%sia ei ole valtuutettu kelvollisesti kuvien lähettämiseksi Flickriin.\n"
 "Valtuuta sovellus uudelleen."
 
-#: ../src/frogr-controller.c:660
-#, c-format
+#: src/frogr-controller.c:660
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
@@ -294,7 +287,7 @@ msgstr ""
 "Tunnistautuminen Flickriin epäonnistui\n"
 "Yritä uudelleen."
 
-#: ../src/frogr-controller.c:664
+#: src/frogr-controller.c:664
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -303,8 +296,7 @@ msgstr ""
 "Et ole valtuuttanut %sia vielä kelvollisesti.\n"
 "Yritä uudelleen."
 
-#: ../src/frogr-controller.c:669
-#, c-format
+#: src/frogr-controller.c:669
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
@@ -312,8 +304,7 @@ msgstr ""
 "Virheellinen vahvistuskoodi.\n"
 "Yritä uudelleen"
 
-#: ../src/frogr-controller.c:673
-#, c-format
+#: src/frogr-controller.c:673
 msgid ""
 "Error:\n"
 "Service not available"
@@ -321,253 +312,247 @@ msgstr ""
 "Virhe:\n"
 "Palvelu ei ole käytettävissä"
 
-#. General error: just dump the raw error description
-#: ../src/frogr-controller.c:678
+#: src/frogr-controller.c:678
 #, c-format
 msgid "An error happened: %s."
 msgstr "Tapahtui virhe: %s."
 
-#: ../src/frogr-controller.c:883
+#: src/frogr-controller.c:883
 msgid "Authorization failed (timed out)"
 msgstr "Valtuutus epäonnistui (aikakatkaistu)"
 
-#: ../src/frogr-controller.c:931
+#: src/frogr-controller.c:931
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Yritetään lähetystä uudelleen (yritys %d/%d)…"
 
-#: ../src/frogr-controller.c:936
+#: src/frogr-controller.c:936
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Lähetetään '%s'…"
 
-#: ../src/frogr-controller.c:2242
+#: src/frogr-controller.c:2242
 msgid "Updating credentials…"
 msgstr "Päivitetään tilitietoja…"
 
-#: ../src/frogr-controller.c:2247
+#: src/frogr-controller.c:2247
 msgid "Retrieving data for authorization…"
 msgstr "Vastaanotetaan tietoja valtuutusta varten…"
 
-#: ../src/frogr-controller.c:2252
+#: src/frogr-controller.c:2252
 msgid "Finishing authorization…"
 msgstr "Viimeistellään valtuutusta…"
 
-#: ../src/frogr-controller.c:2257
+#: src/frogr-controller.c:2257
 msgid "Retrieving list of sets…"
 msgstr "Vastaanotetaan listaa joukoista…"
 
-#: ../src/frogr-controller.c:2262
+#: src/frogr-controller.c:2262
 msgid "Retrieving list of groups…"
 msgstr "Vastaanotetaan listaa ryhmistä…"
 
-#: ../src/frogr-controller.c:2267
+#: src/frogr-controller.c:2267
 msgid "Retrieving list of tags…"
 msgstr "Vastaanotetaan listaa tunnisteista…"
 
-#: ../src/frogr-controller.c:2292
-#, c-format
+#: src/frogr-controller.c:2292
 msgid "Fetching information"
 msgstr "Noudetaan tietoja"
 
-#: ../src/frogr-controller.c:2398
+#: src/frogr-controller.c:2398
 msgid "No sets found"
 msgstr "Joukkoja ei löytynyt"
 
-#: ../src/frogr-controller.c:2423
+#: src/frogr-controller.c:2423
 msgid "No groups found"
 msgstr "Ryhmiä ei löytynyt"
 
-#: ../src/frogr-controller.c:2984
+#: src/frogr-controller.c:2984
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
 "Please re-authorize it."
 msgstr "Valtuuta %s uudelleen, ennen kuin lähetät kuvia Flickriin."
 
-#: ../src/frogr-controller.c:2994
-#, c-format
+#: src/frogr-controller.c:2994
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Ennen kuvien lähetystä Flickriin tulee yhteyden olla muodostettu."
 
-#: ../src/frogr-controller.c:3012
+#: src/frogr-controller.c:3012
 msgid "Uploading Pictures"
 msgstr "Lähetetään kuvia"
 
-#: ../src/frogr-controller.c:3057
-#, c-format
+#: src/frogr-controller.c:3057
 msgid "Error opening project file"
 msgstr "Virhe projektitiedostoa avattaessa"
 
-#. This shows a dialog notifying the problem to the user
-#: ../src/frogr-create-new-set-dialog.c:143 ../src/frogr-details-dialog.c:1001
+#: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr "Vaadittu tieto puuttuu"
 
-#: ../src/frogr-create-new-set-dialog.c:326
+#: src/frogr-create-new-set-dialog.c:326
 msgid "Title:"
 msgstr "Nimi:"
 
-#: ../src/frogr-create-new-set-dialog.c:335
+#: src/frogr-create-new-set-dialog.c:335
 msgid "Description:"
 msgstr "Kuvaus:"
 
-#: ../src/frogr-create-new-set-dialog.c:356
+#: src/frogr-create-new-set-dialog.c:356
 msgid "Fill Pictures Details with Title and Description"
 msgstr "Täytä kuvan tiedot nimellä ja kuvauksella"
 
-#: ../src/frogr-create-new-set-dialog.c:381
+#: src/frogr-create-new-set-dialog.c:381
 msgid "Create New Set"
 msgstr "Luo uusi joukko"
 
-#: ../src/frogr-details-dialog.c:89 ../src/frogr-settings-dialog.c:97
+#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
 msgid "Default (as specified in Flickr)"
 msgstr "Oletus (Flickrin määrittelemä)"
 
-#: ../src/frogr-details-dialog.c:90 ../src/frogr-settings-dialog.c:98
+#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
 msgid "All rights reserved"
 msgstr "Kaikki oikeudet pidätetään"
 
-#: ../src/frogr-details-dialog.c:91 ../src/frogr-settings-dialog.c:99
+#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
 msgid "CC Attribution-NonCommercial-ShareAlike"
 msgstr ""
 "CC Attribution-NonCommercial-ShareAlike (Nimeä-EiKaupallinen-JaaSamoin)"
 
-#: ../src/frogr-details-dialog.c:92 ../src/frogr-settings-dialog.c:100
+#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
 msgid "CC Attribution-NonCommercial"
 msgstr "CC Attribution-NonCommercial (Nimeä-EiKaupallinen)"
 
-#: ../src/frogr-details-dialog.c:93 ../src/frogr-settings-dialog.c:101
+#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
 msgid "CC Attribution-NonCommercial-NoDerivs"
 msgstr ""
 "CC Attribution-NonCommercial-NoDerivs (Nimeä-EiKaupallinen-EiMuutoksia)"
 
-#: ../src/frogr-details-dialog.c:94 ../src/frogr-settings-dialog.c:102
+#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
 msgid "CC Attribution"
 msgstr "CC Attribution (Nimeä)"
 
-#: ../src/frogr-details-dialog.c:95 ../src/frogr-settings-dialog.c:103
+#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
 msgid "CC Attribution-ShareAlike"
 msgstr "CC Attribution-ShareAlike (Nimeä-JaaSamoin)"
 
-#: ../src/frogr-details-dialog.c:96 ../src/frogr-settings-dialog.c:104
+#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
 msgid "CC Attribution-NoDerivs"
 msgstr "CC Attribution-NoDerivs (Nimeä-EiMuutoksia)"
 
-#: ../src/frogr-details-dialog.c:172
+#: src/frogr-details-dialog.c:172
 msgid "Open with image viewer"
 msgstr "Avaa kuvakatselimella"
 
-#: ../src/frogr-details-dialog.c:190
+#: src/frogr-details-dialog.c:190
 msgid "_Title:"
 msgstr "_Nimi:"
 
-#: ../src/frogr-details-dialog.c:200
+#: src/frogr-details-dialog.c:200
 msgid "_Description:"
 msgstr "_Kuvaus:"
 
-#: ../src/frogr-details-dialog.c:224
+#: src/frogr-details-dialog.c:224
 msgid "Ta_gs:"
 msgstr "_Tunnisteet:"
 
-#: ../src/frogr-details-dialog.c:247
+#: src/frogr-details-dialog.c:247
 msgid "Visibility"
 msgstr "Näkyvyys"
 
-#: ../src/frogr-details-dialog.c:257 ../src/frogr-settings-dialog.c:196
+#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
 msgid "_Private"
 msgstr "_Yksityinen"
 
-#: ../src/frogr-details-dialog.c:261 ../src/frogr-settings-dialog.c:199
+#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
 msgid "P_ublic"
 msgstr "_Julkinen"
 
-#: ../src/frogr-details-dialog.c:270 ../src/frogr-settings-dialog.c:207
+#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
 msgid "_Family"
 msgstr "_Perhe"
 
-#: ../src/frogr-details-dialog.c:274 ../src/frogr-settings-dialog.c:209
+#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
 msgid "F_riends"
 msgstr "Kaver_it"
 
-#: ../src/frogr-details-dialog.c:288
+#: src/frogr-details-dialog.c:288
 msgid "Content Type"
 msgstr "Sisällön tyyppi"
 
-#: ../src/frogr-details-dialog.c:296 ../src/frogr-settings-dialog.c:234
+#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
 msgid "P_hoto"
 msgstr "_Valokuva"
 
-#: ../src/frogr-details-dialog.c:300 ../src/frogr-settings-dialog.c:236
+#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
 msgid "Scree_nshot"
 msgstr "_Kuvakaappaus"
 
-#: ../src/frogr-details-dialog.c:304 ../src/frogr-settings-dialog.c:238
+#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
 msgid "Oth_er"
 msgstr "_Muu"
 
-#: ../src/frogr-details-dialog.c:317
+#: src/frogr-details-dialog.c:317
 msgid "Safety Level"
 msgstr "Turvallisuustaso"
 
-#: ../src/frogr-details-dialog.c:325 ../src/frogr-settings-dialog.c:260
+#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
 msgid "S_afe"
 msgstr "Tu_rvallinen"
 
-#: ../src/frogr-details-dialog.c:329 ../src/frogr-settings-dialog.c:262
+#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
 msgid "_Moderate"
 msgstr "_Keskinkertainen"
 
-#: ../src/frogr-details-dialog.c:333 ../src/frogr-settings-dialog.c:264
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
 msgid "Restr_icted"
 msgstr "R_ajoitettu"
 
-#: ../src/frogr-details-dialog.c:345
+#: src/frogr-details-dialog.c:345
 msgid "License Type"
 msgstr "Lisenssin tyyppi"
 
-#: ../src/frogr-details-dialog.c:367
+#: src/frogr-details-dialog.c:367
 msgid "Other Properties"
 msgstr "Muut ominaisuudet"
 
-#: ../src/frogr-details-dialog.c:375
+#: src/frogr-details-dialog.c:375
 msgid "_Show Up in Global Search Results"
 msgstr "_Näytä julkisissa hakutuloksissa"
 
-#: ../src/frogr-details-dialog.c:379
+#: src/frogr-details-dialog.c:379
 msgid "Set Geo_location Information"
 msgstr "_Aseta paikkatiedot"
 
-#: ../src/frogr-details-dialog.c:383
+#: src/frogr-details-dialog.c:383
 msgid "Replace 'Date Posted' with 'Date Taken'"
 msgstr "Korvaa tietue \"Lähetyspäivä\" tietueella \"Ottopäivä\""
 
-#. Visually indicate how many pictures are being edited
-#: ../src/frogr-details-dialog.c:475
+#: src/frogr-details-dialog.c:475
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
 msgstr[0] "(%d kuva)"
 msgstr[1] "(%d kuvaa)"
 
-#: ../src/frogr-details-dialog.c:548
+#: src/frogr-details-dialog.c:548
 msgid "An error happened trying to load the picture"
 msgstr "Kuvaa ladattaessa tapahtui virhe"
 
-#: ../src/frogr-details-dialog.c:1169 ../data/gtkbuilder/frogr-menu-bar.xml.h:8
+#: src/frogr-details-dialog.c:1169
 msgid "_Edit"
 msgstr "_Muokkaa"
 
-#: ../src/frogr-details-dialog.c:1197
+#: src/frogr-details-dialog.c:1197
 msgid "Edit Picture Details"
 msgstr "Muokkaa kuvan tietoja"
 
-#: ../src/frogr-file-loader.c:142
+#: src/frogr-file-loader.c:142
 #, c-format
 msgid "Loading files %d / %d"
 msgstr "Ladataan tiedostoja %d / %d"
 
-#: ../src/frogr-file-loader.c:369
+#: src/frogr-file-loader.c:369
 #, c-format
 msgid ""
 "Unable to load picture %s:\n"
@@ -576,7 +561,7 @@ msgstr ""
 "Kuvan %s lataaminen epäonnistui:\n"
 "%s"
 
-#: ../src/frogr-file-loader.c:400
+#: src/frogr-file-loader.c:400
 #, c-format
 msgid ""
 "Unable to load video %s\n"
@@ -585,10 +570,7 @@ msgstr ""
 "Videon %s lataaminen epäonnistui\n"
 "Varmista, että järjestelmääsi on asennettu oikea koodekki"
 
-#. First %s is the title of the picture (filename of the file by
-#. default). Second %s is the max allowed size for a picture to be
-#. uploaded to flickr (different for free and PRO accounts).
-#: ../src/frogr-file-loader.c:636
+#: src/frogr-file-loader.c:636
 #, c-format
 msgid ""
 "Can't load file %s:\n"
@@ -597,367 +579,301 @@ msgstr ""
 "Tiedoston %s lataaminen ei onnistu:\n"
 "Tiedoston koko on suurempi kuin tämän tilin enimmäisraja (%s)"
 
-#. First create the left side buttons
-#: ../src/frogr-main-view.c:630 ../src/frogr-main-view.c:726
+#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Avaa"
 
-#: ../src/frogr-main-view.c:630 ../src/frogr-main-view.c:726
+#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open Existing Project"
 msgstr "Avaa olemassa oleva projekti"
 
-#: ../src/frogr-main-view.c:631 ../src/frogr-main-view.c:729
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
 msgid "Add"
 msgstr "Lisää"
 
-#: ../src/frogr-main-view.c:631 ../src/frogr-main-view.c:729
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
 msgid "Add Elements"
 msgstr "Lisää elementtejä"
 
-#: ../src/frogr-main-view.c:632 ../src/frogr-main-view.c:730
+#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
 msgid "Remove"
 msgstr "Poista"
 
-#: ../src/frogr-main-view.c:632 ../src/frogr-main-view.c:730
+#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
 msgid "Remove Elements"
 msgstr "Poista elementtejä"
 
-#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:732
+#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
 msgid "Upload"
 msgstr "Lähetä"
 
-#: ../src/frogr-main-view.c:633 ../src/frogr-main-view.c:732
+#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
 msgid "Upload All"
 msgstr "Lähetä kaikki"
 
-#. Save project item
-#: ../src/frogr-main-view.c:666 ../src/frogr-main-view.c:727
+#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Tallenna"
 
-#: ../src/frogr-main-view.c:666 ../src/frogr-main-view.c:727
+#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save Current Project"
 msgstr "Tallenna nykyinen projekti"
 
-#: ../src/frogr-main-view.c:1016 ../data/gtkbuilder/frogr-app-menu.xml.h:4
+#: src/frogr-main-view.c:1016
 msgid "_About"
 msgstr "_Tietoja"
 
-#: ../src/frogr-main-view.c:1020 ../data/gtkbuilder/frogr-app-menu.xml.h:5
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:17
+#: src/frogr-main-view.c:1020
 msgid "_Quit"
 msgstr "_Lopeta"
 
-#. Create the submenu and insert it in the right section
-#: ../src/frogr-main-view.c:1070
+#: src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Tilit"
 
-#. String showind the date and time a picture was taken
-#: ../src/frogr-main-view.c:1410
+#: src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
 msgstr "Otettu: %s"
 
-#: ../src/frogr-main-view.c:1415
+#: src/frogr-main-view.c:1415
 #, c-format
 msgid "File size: %s"
 msgstr "Tiedoston koko: %s"
 
-#: ../src/frogr-main-view.c:1540
+#: src/frogr-main-view.c:1540
 msgid "Select File"
 msgstr "Valitse tiedosto"
 
-#: ../src/frogr-main-view.c:1544 ../src/frogr-main-view.c:1671
+#: src/frogr-main-view.c:1544 src/frogr-main-view.c:1671
 msgid "_Open"
 msgstr "_Avaa"
 
-#: ../src/frogr-main-view.c:1553
+#: src/frogr-main-view.c:1553
 msgid "Frogr Project Files"
 msgstr "Frogr-projektitiedostot"
 
-#: ../src/frogr-main-view.c:1615
+#: src/frogr-main-view.c:1615
 msgid "Select Destination"
 msgstr "Valitse kohde"
 
-#: ../src/frogr-main-view.c:1619 ../data/gtkbuilder/frogr-menu-bar.xml.h:3
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:1
+#: src/frogr-main-view.c:1619
 msgid "_Save"
 msgstr "_Tallenna"
 
-#: ../src/frogr-main-view.c:1622
+#: src/frogr-main-view.c:1622
 msgid "Untitled Project.frogr"
 msgstr "Nimetön projekti.frogr"
 
-#: ../src/frogr-main-view.c:1667
+#: src/frogr-main-view.c:1667
 msgid "Select a Picture"
 msgstr "Valitse kuva"
 
-#: ../src/frogr-main-view.c:1694
+#: src/frogr-main-view.c:1694
 msgid "All Files"
 msgstr "Kaikki tiedostot"
 
-#: ../src/frogr-main-view.c:1697
+#: src/frogr-main-view.c:1697
 msgid "Image Files"
 msgstr "Kuvatiedostot"
 
-#: ../src/frogr-main-view.c:1701
+#: src/frogr-main-view.c:1701
 msgid "Video Files"
 msgstr "Videotiedostot"
 
-#: ../src/frogr-main-view.c:1723
+#: src/frogr-main-view.c:1723
 msgid "You don't have any picture added yet"
 msgstr "Et ole lisännyt vielä yhtäkään kuvaa"
 
-#: ../src/frogr-main-view.c:1736
+#: src/frogr-main-view.c:1736
 msgid "You need to select some pictures first"
 msgstr "Valitse ensin joitakin kuvia"
 
-#: ../src/frogr-main-view.c:2108
+#: src/frogr-main-view.c:2108
 msgid "Not connected to Flickr"
 msgstr "Ei yhteyttä Flickriin"
 
-#. Login string, showing the user is PRO (second '%s') if so.
-#: ../src/frogr-main-view.c:2118
+#: src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Yhdistetty tilillä %s%s"
 
-#: ../src/frogr-main-view.c:2119
+#: src/frogr-main-view.c:2119
 msgid " (PRO account)"
 msgstr " (PRO-tili)"
 
-#. Will show in the status bar the amount of data (in KB, MB
-#. or GB) the user is currently allowed to upload to flicker
-#. till the end of the month, in a CURRENT / MAX fashion.
-#. The '-' at the beginning is just a separator, since more
-#. blocks of text will be shown in the status bar too.
-#: ../src/frogr-main-view.c:2143
+#: src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - %s / %s jäljellä"
 
-#. Will show in the status bar the amount of pictures and data
-#. (in KB, MB or GB) that would be uploaded as the sum of the
-#. sizes for every picture loaded in the application
-#: ../src/frogr-main-view.c:2169
+#: src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
 msgstr[0] " - %d kuva lähetettäväksi (%s)"
 msgstr[1] " - %d kuvaa lähetettäväksi (%s)"
 
-#: ../src/frogr-settings-dialog.c:185
+#: src/frogr-settings-dialog.c:185
 msgid "Default Visibility"
 msgstr "Oletusnäkyvyys"
 
-#: ../src/frogr-settings-dialog.c:224
+#: src/frogr-settings-dialog.c:224
 msgid "Default Content Type"
 msgstr "Sisällön oletustyyppi"
 
-#: ../src/frogr-settings-dialog.c:250
+#: src/frogr-settings-dialog.c:250
 msgid "Default Safety Level"
 msgstr "Oletusturvallisuustaso"
 
-#: ../src/frogr-settings-dialog.c:276
+#: src/frogr-settings-dialog.c:276
 msgid "Default License"
 msgstr "Oletuslisenssi"
 
-#: ../src/frogr-settings-dialog.c:302
+#: src/frogr-settings-dialog.c:302
 msgid "Other Defaults"
 msgstr "Muut oletukset"
 
-#: ../src/frogr-settings-dialog.c:312
+#: src/frogr-settings-dialog.c:312
 msgid "_Show Pictures in Global Search Results"
 msgstr "Näytä _kuvat julkisissa hakutuloksissa"
 
-#: ../src/frogr-settings-dialog.c:315
+#: src/frogr-settings-dialog.c:315
 msgid "Set Geo_location Information for Pictures"
 msgstr "_Aseta paikkatiedot kuville"
 
-#: ../src/frogr-settings-dialog.c:318
+#: src/frogr-settings-dialog.c:318
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
 msgstr "Korvaa kuvien \"Lähetyspäivä\" tietueella \"Ottopäivä\""
 
-#: ../src/frogr-settings-dialog.c:324
+#: src/frogr-settings-dialog.c:324
 msgid "_General"
 msgstr "_Yleiset"
 
-#: ../src/frogr-settings-dialog.c:344
+#: src/frogr-settings-dialog.c:344
 msgid "Proxy Settings"
 msgstr "Välityspalvelimen asetukset"
 
-#. Enable proxy
-#: ../src/frogr-settings-dialog.c:353
+#: src/frogr-settings-dialog.c:353
 msgid "_Enable HTTP Proxy"
 msgstr "_Käytä HTTP-välityspalvelinta"
 
-#: ../src/frogr-settings-dialog.c:363
+#: src/frogr-settings-dialog.c:363
 msgid "_Host:"
 msgstr "_Osoite:"
 
-#. Proxy port
-#: ../src/frogr-settings-dialog.c:376
+#: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr "_Portti:"
 
-#. Proxy username
-#: ../src/frogr-settings-dialog.c:389
+#: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr "K_äyttäjätunnus:"
 
-#. Proxy password
-#: ../src/frogr-settings-dialog.c:402
+#: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr "_Salasana:"
 
-#: ../src/frogr-settings-dialog.c:426
+#: src/frogr-settings-dialog.c:426
 msgid "Connec_tion"
 msgstr "Y_hteys"
 
-#: ../src/frogr-settings-dialog.c:444
+#: src/frogr-settings-dialog.c:444
 msgid "Other options"
 msgstr "Muut valinnat"
 
-#: ../src/frogr-settings-dialog.c:454
+#: src/frogr-settings-dialog.c:454
 msgid "Ena_ble Tags Auto-Completion"
 msgstr "Käytä tunnisteiden _automaattista täydennystä"
 
-#: ../src/frogr-settings-dialog.c:457
+#: src/frogr-settings-dialog.c:457
 msgid "_Import Tags from Pictures Metadata"
 msgstr "_Tuo tunnisteet kuvien metadatasta"
 
-#: ../src/frogr-settings-dialog.c:461
+#: src/frogr-settings-dialog.c:461
 msgid "Use _Dark GTK Theme"
 msgstr "Käytä tummaa _GTK-teemaa"
 
-#: ../src/frogr-settings-dialog.c:465
+#: src/frogr-settings-dialog.c:465
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr "_Säilytä tiedostopääte nimessä lähettäessä"
 
-#: ../src/frogr-settings-dialog.c:471
+#: src/frogr-settings-dialog.c:471
 msgid "_Misc"
 msgstr "_Muut"
 
-#: ../src/frogr-settings-dialog.c:972
+#: src/frogr-settings-dialog.c:972
 msgid "Preferences"
 msgstr "Asetukset"
 
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:1
-msgid "Aut_horize Account…"
-msgstr "_Valtuuta tili…"
+#~ msgid "Aut_horize Account…"
+#~ msgstr "_Valtuuta tili…"
 
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:2
-msgid "_Preferences…"
-msgstr "_Asetukset…"
+#~ msgid "_Preferences…"
+#~ msgstr "_Asetukset…"
 
-#: ../data/gtkbuilder/frogr-app-menu.xml.h:3
-msgid "_Help"
-msgstr "_Ohje"
+#~ msgid "_Help"
+#~ msgstr "_Ohje"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:1
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:9
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:3
-msgid "_Edit Details…"
-msgstr "_Muokkaa tietoja…"
+#~ msgid "_Edit Details…"
+#~ msgstr "_Muokkaa tietoja…"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:2
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:10
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:4
-msgid "Add _Tags…"
-msgstr "_Lisää tunnisteita…"
+#~ msgid "Add _Tags…"
+#~ msgstr "_Lisää tunnisteita…"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:3
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:11
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:5
-msgid "Add to _Group…"
-msgstr "Lisää _ryhmään…"
+#~ msgid "Add to _Group…"
+#~ msgstr "Lisää _ryhmään…"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:4
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:12
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:6
-msgid "Add to _Photoset"
-msgstr "Lisää _kuvajoukkoon"
+#~ msgid "Add to _Photoset"
+#~ msgstr "Lisää _kuvajoukkoon"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:5
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:13
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:7
-msgid "_Add to Existing Photoset…"
-msgstr "Li_sää olemassa olevaan kuvajoukkoon…"
+#~ msgid "_Add to Existing Photoset…"
+#~ msgstr "Li_sää olemassa olevaan kuvajoukkoon…"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:6
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:14
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:8
-msgid "_Create New Photoset…"
-msgstr "_Luo uusi kuvajoukko…"
+#~ msgid "_Create New Photoset…"
+#~ msgstr "_Luo uusi kuvajoukko…"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:7
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:15
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:16
-msgid "_Open in External Viewer"
-msgstr "_Avaa erillisessä katselimessa"
+#~ msgid "_Open in External Viewer"
+#~ msgstr "_Avaa erillisessä katselimessa"
 
-#: ../data/gtkbuilder/frogr-context-menu.xml.h:8
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:6
-msgid "_Remove Elements"
-msgstr "_Poista elementit"
+#~ msgid "_Remove Elements"
+#~ msgstr "_Poista elementit"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:1
-msgid "_File"
-msgstr "_Tiedosto"
+#~ msgid "_File"
+#~ msgstr "_Tiedosto"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:2
-msgid "_Open…"
-msgstr "_Avaa…"
+#~ msgid "_Open…"
+#~ msgstr "_Avaa…"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:4
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:2
-msgid "Save _As…"
-msgstr "_Tallenna nimellä…"
+#~ msgid "Save _As…"
+#~ msgstr "_Tallenna nimellä…"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:5
-msgid "A_dd Elements…"
-msgstr "Lisää ele_menttejä…"
+#~ msgid "A_dd Elements…"
+#~ msgstr "Lisää ele_menttejä…"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:7
-msgid "_Upload All"
-msgstr "L_ähetä kaikki"
+#~ msgid "_Upload All"
+#~ msgstr "L_ähetä kaikki"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:16
-msgid "_View"
-msgstr "_Näytä"
+#~ msgid "_View"
+#~ msgstr "_Näytä"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:17
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:9
-msgid "_Sort Elements"
-msgstr "Järjestä _elementit"
+#~ msgid "_Sort Elements"
+#~ msgstr "Järjestä _elementit"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:18
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:10
-msgid "As _Loaded"
-msgstr "_Latauksen mukaan"
+#~ msgid "As _Loaded"
+#~ msgstr "_Latauksen mukaan"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:19
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:11
-msgid "By _Date Taken"
-msgstr "_Ottopäivän mukaan"
+#~ msgid "By _Date Taken"
+#~ msgstr "_Ottopäivän mukaan"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:20
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:12
-msgid "By _Title"
-msgstr "_Nimen mukaan"
+#~ msgid "By _Title"
+#~ msgstr "_Nimen mukaan"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:21
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:13
-msgid "By _Size"
-msgstr "_Koon mukaan"
+#~ msgid "By _Size"
+#~ msgstr "_Koon mukaan"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:22
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:14
-msgid "_Reversed Order"
-msgstr "K_äänteinen järjestys"
+#~ msgid "_Reversed Order"
+#~ msgstr "K_äänteinen järjestys"
 
-#: ../data/gtkbuilder/frogr-menu-bar.xml.h:23
-#: ../data/gtkbuilder/frogr-menu-button.xml.h:15
-msgid "Enable _Tooltips"
-msgstr "Kä_ytä työkaluvihjeitä"
+#~ msgid "Enable _Tooltips"
+#~ msgstr "Kä_ytä työkaluvihjeitä"
