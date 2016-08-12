@@ -8,7 +8,6 @@ License:	GPLv3
 URL:		https://wiki.gnome.org/Apps/Frogr
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{version}/%{name}-%{version}.tar.xz
 
-BuildRequires:	intltool
 BuildRequires:	gettext
 BuildRequires:	yelp-tools
 BuildRequires:	gtk3-devel > 3.4
