@@ -2,14 +2,7 @@
 
 set -e
 
-mkdir -p m4
-
-aclocal
-autoconf --force
-autoheader --force
-automake --add-missing --copy --force-missing --foreign
-glib-gettextize --force --copy
-intltoolize --copy --force --automake
+autoreconf --force --install --verbose || exit $?
 
 if test x$NOCONFIGURE = x; then
     ./configure "$@"

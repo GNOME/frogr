@@ -111,7 +111,7 @@ frogr_util_get_locale_dir (void)
     {
 #ifndef PLATFORM_MAC
       /* If not in MacOSX, we trust the defined variable better */
-      locale_dir = g_strdup (FROGR_LOCALE_DIR);
+      locale_dir = g_strdup (LOCALEDIR);
 #endif
 
       /* Fallback for MacOSX and cases where FROGR_LOCALE_DIR was not

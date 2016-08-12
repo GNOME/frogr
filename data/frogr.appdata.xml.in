@@ -5,23 +5,23 @@
   <name>frogr</name>
   <summary>frogr: a Flickr Remote Organizer for GNOME</summary>
   <description>
-    <_p>
+    <p>
       frogr is a small application for the GNOME desktop that allows
       users to manage their accounts in the Flickr image hosting
       website.
-    </_p>
-    <_p>
+    </p>
+    <p>
       It supports all the basic Flickr features, including uploading
       pictures, adding descriptions, setting tags and managing sets
       and groups pools.
-    </_p>
+    </p>
   </description>
   <screenshots>
     <screenshot height="800" width="1280" type="default">
       <image>
         https://wiki.gnome.org/Apps/Frogr?action=AttachFile&amp;do=get&amp;target=frogr-screenshot.png
       </image>
-      <_caption>Screenshot of frogr</_caption>
+      <caption>Screenshot of frogr</caption>
     </screenshot>
   </screenshots>
   <project_license>GPL-3.0</project_license>

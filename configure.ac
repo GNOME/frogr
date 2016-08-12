@@ -1,9 +1,11 @@
 AC_INIT([frogr], [1.1], [msanchez@gnome.org])
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([1.11 foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 AC_CONFIG_HEADERS([config.h])
-IT_PROG_INTLTOOL([0.35.0])
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_SRCDIR([src/main.c])
+AM_MAINTAINER_MODE([enable])
 YELP_HELP_INIT
 
 # Support silent build rules, requires at least automake-1.11. Disable
@@ -136,13 +138,13 @@ else
 fi
 
 # Translations
-FROGR_LOCALE_DIR='${localedir}'
-AM_GLIB_DEFINE_LOCALEDIR([FROGR_LOCALE_DIR])
-AM_GLIB_GNU_GETTEXT
-
-GETTEXT_PACKAGE=frogr
+GETTEXT_PACKAGE=$PACKAGE
 AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
+                   [The prefix for our gettext translation domains.])
+
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION(0.18.3)
 
 # Substitute
 

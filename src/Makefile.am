@@ -27,6 +27,10 @@ frogr_LDADD = \
 frogr_CFLAGS = $(FROGR_CFLAGS) \
 	-DDATA_DIR=\"$(DATA_DIR)\"
 
+frogr_CPPFLAGS = \
+	-DGETTEXT_PACKAGE=\"$(GETTEXT_PACKAGE)\"        \
+	-DLOCALEDIR=\"$(localedir)\"
+
 if PLATFORM_MAC
 frogr_CFLAGS += -DPLATFORM_MAC
 else
