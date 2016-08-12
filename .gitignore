@@ -22,14 +22,25 @@ src/*/*a
 src/*/.deps
 
 *cache
+ABOUT-NLS
+Makefile
+Makefile.in
 aclocal.m4
+compile
 config.*
 configure
 depcomp
 frogr-*.tar*
 install-sh
-Makefile
-Makefile.in
+m4/
 missing
+po/*.header
+po/*.pot
+po/*.po~
+po/*.sed
+po/*.sin
+po/Makevars.template
+po/Rules-quot
+po/stamp-po
 stamp-h1
 tags
