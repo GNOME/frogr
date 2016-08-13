@@ -4,12 +4,14 @@ Type=Application
 Name=frogr
 GenericName=frogr: a Flickr Remote Organizer for GNOME
 Comment=Upload and organize photos in Flickr accounts
+# Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 Keywords=Flickr;Image;Picture;Photo;Video;Uploader;
 Exec=@BINDIR@/frogr %F
 TryExec=@BINDIR@/frogr
 Terminal=false
 Categories=GNOME;GTK;Graphics;
 StartupNotify=true
+# Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 Icon=frogr
 X-Icon-path=@PIXMAPDIR@
 X-Window-Icon=frogr
