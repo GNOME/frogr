@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frogr\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2016-05-04 19:53+0100\n"
 "Last-Translator: Tiago Santos <tiagofsantos81@sapo.pt>\n"
 "Language-Team: Português <happyguy_pt@hotmail.com>\n"
@@ -542,7 +542,7 @@ msgstr[1] "(%d imagens)"
 msgid "An error happened trying to load the picture"
 msgstr "Ocorreu um erro ao tentar carregar a imagem"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "_Editar"
 
@@ -622,11 +622,12 @@ msgstr "Gravar"
 msgid "Save Current Project"
 msgstr "Gravar o projeto atual"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "_Sobre"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "_Sair"
 
@@ -660,7 +661,8 @@ msgstr "Ficheiros de projeto Frogr"
 msgid "Select Destination"
 msgstr "Selecionar destino"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Gravar"
 
@@ -809,74 +811,110 @@ msgstr "_Diversos"
 msgid "Preferences"
 msgstr "Preferências"
 
-#~ msgid "Aut_horize Account…"
-#~ msgstr "Autorizar _Conta…"
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "Autorizar _Conta…"
 
-#~ msgid "_Preferences…"
-#~ msgstr "_Preferências…"
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Preferências…"
 
-#~ msgid "_Help"
-#~ msgstr "A_Juda"
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "A_Juda"
 
-#~ msgid "_Edit Details…"
-#~ msgstr "_Editar detalhes…"
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "_Editar detalhes…"
 
-#~ msgid "Add _Tags…"
-#~ msgstr "Adicionar _Etiquetas"
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "Adicionar _Etiquetas"
 
-#~ msgid "Add to _Group…"
-#~ msgstr "Adicionar a _Grupo…"
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Adicionar a _Grupo…"
 
-#~ msgid "Add to _Photoset"
-#~ msgstr "Adicionar a _Cenário…"
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "Adicionar a _Cenário…"
 
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "_Adicionar a cenário existente…"
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "_Adicionar a cenário existente…"
 
-#~ msgid "_Create New Photoset…"
-#~ msgstr "_Criar novo cenário…"
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "_Criar novo cenário…"
 
-#~ msgid "_Open in External Viewer"
-#~ msgstr "_Abrir em visualizador externo"
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "_Abrir em visualizador externo"
 
-#~ msgid "_Remove Elements"
-#~ msgstr "_Remover elementos"
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "_Remover elementos"
 
-#~ msgid "_File"
-#~ msgstr "_Ficheiro"
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Ficheiro"
 
-#~ msgid "_Open…"
-#~ msgstr ":Abrir…"
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr ":Abrir…"
 
-#~ msgid "Save _As…"
-#~ msgstr "Gravar _Como"
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "Gravar _Como"
 
-#~ msgid "A_dd Elements…"
-#~ msgstr "A_Dicionar elementos"
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "A_Dicionar elementos"
 
-#~ msgid "_Upload All"
-#~ msgstr "_Enviar tudo"
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "_Enviar tudo"
 
-#~ msgid "_View"
-#~ msgstr "_Ver"
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Ver"
 
-#~ msgid "_Sort Elements"
-#~ msgstr "_Ordenar elementos"
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "_Ordenar elementos"
 
-#~ msgid "As _Loaded"
-#~ msgstr "_Como carregados"
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "_Como carregados"
 
-#~ msgid "By _Date Taken"
-#~ msgstr "Por _Data tirada"
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "Por _Data tirada"
 
-#~ msgid "By _Title"
-#~ msgstr "Por _Título"
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "Por _Título"
 
-#~ msgid "By _Size"
-#~ msgstr "Por t_Amanho"
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "Por t_Amanho"
 
-#~ msgid "_Reversed Order"
-#~ msgstr "Ordem _Inversa"
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "Ordem _Inversa"
 
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Ativar _Sugestões"
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Ativar _Sugestões"

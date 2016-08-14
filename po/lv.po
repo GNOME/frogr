@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2013-10-03 15:29+0300\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
@@ -544,7 +544,7 @@ msgstr[2] "(%d attēlu)"
 msgid "An error happened trying to load the picture"
 msgstr "Gadījās kļūda, mēģinot ielādēt attēlu"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "R_ediģēt"
 
@@ -624,11 +624,12 @@ msgstr "Saglabāt"
 msgid "Save Current Project"
 msgstr "Saglabāt šo projektu"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "P_ar"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "_Iziet"
 
@@ -663,7 +664,8 @@ msgstr "Frogr projekta datnes"
 msgid "Select Destination"
 msgstr "Izvēlieties mērķi"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Saglabāt"
 
@@ -813,93 +815,120 @@ msgstr "_Citi"
 msgid "Preferences"
 msgstr "Iestatījumi"
 
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "Piln_varot kontu..."
+
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Iestatījumi..."
+
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "_Palīdzība"
+
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "R_ediģēt informāciju…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "Pievieno_t birkas…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Pievienot _grupai…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "Pievienot _foto kolekcijai"
+
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "Pievienot esoš_ai foto kolekcijai…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "Izveidot jaunu foto kolek_ciju…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "Atvērt ārē_jā skatītājā"
+
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "_Izņemt elementus"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Datne"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "Atvērt…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "S_aglabāt kā..."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "Pie_vienot elementus…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "A_ugšupielādet visus"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Skats"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "Kārtot elementu_s"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "Ie_lādes secībā"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "Pēc uzņemšanas _datuma"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "Pēc _nosaukuma"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "Pēc _izmēra"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "Apg_rieztā secībā"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Aktivē_t paskaidres"
+
 #~| msgid "_Frogr"
 #~ msgid "Frogr"
 #~ msgstr "Frogr"
 
 #~ msgid "_Use GNOME General Proxy Settings"
 #~ msgstr "Izmantot GNOME vispārīgos starpniekservera iestatījum_us"
-
-#~| msgid "Edit _Details…"
-#~ msgid "_Edit Details…"
-#~ msgstr "R_ediģēt informāciju…"
-
-#~ msgid "Add _Tags…"
-#~ msgstr "Pievieno_t birkas…"
-
-#~ msgid "Add to _Group…"
-#~ msgstr "Pievienot _grupai…"
-
-#~| msgid "Add to _Set"
-#~ msgid "Add to _Photoset"
-#~ msgstr "Pievienot _foto kolekcijai"
-
-#~| msgid "Add to _Existing Set…"
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "Pievienot esoš_ai foto kolekcijai…"
-
-#~| msgid "_Create New Set…"
-#~ msgid "_Create New Photoset…"
-#~ msgstr "Izveidot jaunu foto kolek_ciju…"
-
-#~| msgid "Open in E_xternal Viewer"
-#~ msgid "_Open in External Viewer"
-#~ msgstr "Atvērt ārē_jā skatītājā"
-
-#~| msgid "Elements"
-#~ msgid "_Remove Elements"
-#~ msgstr "_Izņemt elementus"
-
-#~ msgid "Aut_horize Account…"
-#~ msgstr "Piln_varot kontu..."
-
-#~ msgid "_Preferences…"
-#~ msgstr "_Iestatījumi..."
-
-#~ msgid "_Help"
-#~ msgstr "_Palīdzība"
-
-#~ msgid "_File"
-#~ msgstr "_Datne"
-
-#~ msgid "_Open…"
-#~ msgstr "Atvērt…"
-
-#~ msgid "Save _As…"
-#~ msgstr "S_aglabāt kā..."
-
-#~| msgid "Elements"
-#~ msgid "A_dd Elements…"
-#~ msgstr "Pie_vienot elementus…"
-
-#~ msgid "_Upload All"
-#~ msgstr "A_ugšupielādet visus"
-
-#~ msgid "_View"
-#~ msgstr "_Skats"
-
-#~| msgid "Elements"
-#~ msgid "_Sort Elements"
-#~ msgstr "Kārtot elementu_s"
-
-#~ msgid "As _Loaded"
-#~ msgstr "Ie_lādes secībā"
-
-#~ msgid "By _Date Taken"
-#~ msgstr "Pēc uzņemšanas _datuma"
-
-#~ msgid "By _Title"
-#~ msgstr "Pēc _nosaukuma"
-
-#~| msgid "By _Title"
-#~ msgid "By _Size"
-#~ msgstr "Pēc _izmēra"
-
-#~ msgid "_Reversed Order"
-#~ msgstr "Apg_rieztā secībā"
-
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Aktivē_t paskaidres"
 
 #~ msgid "Flickr Remote Organizer"
 #~ msgstr "Flickr attālinātais organizētājs"

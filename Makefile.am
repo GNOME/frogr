@@ -70,11 +70,11 @@ images_DATA = data/images/mpictures.png
 
 gtkbuilderdir = $(datadir)/frogr/gtkbuilder
 gtkbuilder_DATA = \
-	data/gtkbuilder/frogr-main-view.xml \
-	data/gtkbuilder/frogr-app-menu.xml \
-	data/gtkbuilder/frogr-context-menu.xml \
-	data/gtkbuilder/frogr-menu-button.xml \
-	data/gtkbuilder/frogr-menu-bar.xml
+	data/gtkbuilder/frogr-main-view.ui \
+	data/gtkbuilder/frogr-app-menu.ui \
+	data/gtkbuilder/frogr-context-menu.ui \
+	data/gtkbuilder/frogr-menu-button.ui \
+	data/gtkbuilder/frogr-menu-bar.ui
 
 man1_MANS = data/manpages/frogr.1
 

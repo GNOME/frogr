@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2012-12-30 22:48+0530\n"
 "Last-Translator: వీవెన్ <veeven@gmail.com>\n"
 "Language-Team: e-తెలుగు స్థానికీకరణ జట్టు\n"
@@ -495,7 +495,7 @@ msgstr[1] ""
 msgid "An error happened trying to load the picture"
 msgstr ""
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr ""
 
@@ -569,11 +569,12 @@ msgstr "భద్రపరచు"
 msgid "Save Current Project"
 msgstr "ప్రస్తుత ప్రాజెక్టును భద్రపరచు"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "గురించి (_A)"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "చాలించు (_Q)"
 
@@ -608,7 +609,8 @@ msgstr ""
 msgid "Select Destination"
 msgstr "గమ్యస్థానాన్ని ఎంచుకోండి"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "భద్రపరచు (_S)"
 
@@ -757,38 +759,115 @@ msgstr ""
 msgid "Preferences"
 msgstr "అభిరుచులు"
 
-#~ msgid "_Remove Elements"
-#~ msgstr "మూలకాలను తొలగించు (_R)"
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr ""
 
-#~ msgid "_Preferences…"
-#~ msgstr "అభిరుచులు (_P)…"
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "అభిరుచులు (_P)…"
 
-#~ msgid "_Help"
-#~ msgstr "సహాయం (_H)"
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "సహాయం (_H)"
 
-#~ msgid "_File"
-#~ msgstr "దస్త్రం (_F)"
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr ""
 
-#~ msgid "_Open…"
-#~ msgstr "తెరువు (_O)…"
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr ""
 
-#~ msgid "Save _As…"
-#~ msgstr "మరోపేరుతో భద్రపరచు (_A)…"
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr ""
 
-#~ msgid "_Upload All"
-#~ msgstr "అన్నింటినీ ఎక్కించు (_U)"
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr ""
 
-#~ msgid "By _Date Taken"
-#~ msgstr "తీసిన తేదీ ప్రకారం (_D)"
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr ""
 
-#~ msgid "By _Title"
-#~ msgstr "శీర్షిక ప్రకారం (_T)"
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr ""
 
-#~ msgid "By _Size"
-#~ msgstr "పరిమాణమును బట్టి (_S)"
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr ""
 
-#~ msgid "_Reversed Order"
-#~ msgstr "వ్యతిరేక క్రమం (_R)"
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "మూలకాలను తొలగించు (_R)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "దస్త్రం (_F)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "తెరువు (_O)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "మరోపేరుతో భద్రపరచు (_A)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+#, fuzzy
+msgid "A_dd Elements…"
+msgstr "మూలకాలను చేర్చు"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "అన్నింటినీ ఎక్కించు (_U)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr ""
+
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+#, fuzzy
+msgid "_Sort Elements"
+msgstr "మూలకాలను తొలగించు (_R)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr ""
+
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "తీసిన తేదీ ప్రకారం (_D)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "శీర్షిక ప్రకారం (_T)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "పరిమాణమును బట్టి (_S)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "వ్యతిరేక క్రమం (_R)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr ""
 
 #~ msgid "Visible to _Family"
 #~ msgstr "కుటుంబసభ్యులకు మాత్రమే (_F)"

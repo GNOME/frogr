@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2016-02-20 11:52+0200\n"
 "Last-Translator: Miroslav Nikolić <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
@@ -545,7 +545,7 @@ msgstr[3] "(jedna slika)"
 msgid "An error happened trying to load the picture"
 msgstr "Došlo je do greške prilikom pokušaja slanja slike"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "_Uređivanje"
 
@@ -625,11 +625,12 @@ msgstr "Sačuvaj"
 msgid "Save Current Project"
 msgstr "Sačuvajte tekući projekat"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "_O programu"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "_Izađi"
 
@@ -663,7 +664,8 @@ msgstr "Datoteke Frogrovog projekta"
 msgid "Select Destination"
 msgstr "Izaberite odredište"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Sačuvaj"
 
@@ -814,74 +816,110 @@ msgstr "_Razno"
 msgid "Preferences"
 msgstr "Postavke"
 
-#~ msgid "Aut_horize Account…"
-#~ msgstr "_Ovlasti nalog…"
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "_Ovlasti nalog…"
 
-#~ msgid "_Preferences…"
-#~ msgstr "_Postavke…"
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Postavke…"
 
-#~ msgid "_Help"
-#~ msgstr "Po_moć"
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "Po_moć"
 
-#~ msgid "_Edit Details…"
-#~ msgstr "Izmeni _detalje…"
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "Izmeni _detalje…"
 
-#~ msgid "Add _Tags…"
-#~ msgstr "Dodaj _oznake…"
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "Dodaj _oznake…"
 
-#~ msgid "Add to _Group…"
-#~ msgstr "Dodaj u _grupu…"
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Dodaj u _grupu…"
 
-#~ msgid "Add to _Photoset"
-#~ msgstr "Dodaj u _skup fotografija"
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "Dodaj u _skup fotografija"
 
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "_Dodaj u postojeći skup fotografija…"
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "_Dodaj u postojeći skup fotografija…"
 
-#~ msgid "_Create New Photoset…"
-#~ msgstr "_Napravi novi skup fotografija…"
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "_Napravi novi skup fotografija…"
 
-#~ msgid "_Open in External Viewer"
-#~ msgstr "Otvori u _spoljnom pregledniku"
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "Otvori u _spoljnom pregledniku"
 
-#~ msgid "_Remove Elements"
-#~ msgstr "_Ukloni elemente"
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "_Ukloni elemente"
 
-#~ msgid "_File"
-#~ msgstr "_Datoteka"
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Datoteka"
 
-#~ msgid "_Open…"
-#~ msgstr "_Otvori…"
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "_Otvori…"
 
-#~ msgid "Save _As…"
-#~ msgstr "Sačuvaj _kao…"
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "Sačuvaj _kao…"
 
-#~ msgid "A_dd Elements…"
-#~ msgstr "Dodaj _elemente…"
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "Dodaj _elemente…"
 
-#~ msgid "_Upload All"
-#~ msgstr "Otpremite _sve"
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "Otpremite _sve"
 
-#~ msgid "_View"
-#~ msgstr "_Pregled"
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Pregled"
 
-#~ msgid "_Sort Elements"
-#~ msgstr "_Poređaj elemente"
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "_Poređaj elemente"
 
-#~ msgid "As _Loaded"
-#~ msgstr "Prema _učitavanju"
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "Prema _učitavanju"
 
-#~ msgid "By _Date Taken"
-#~ msgstr "Prema _datumu snimanja"
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "Prema _datumu snimanja"
 
-#~ msgid "By _Title"
-#~ msgstr "Prema _nazivu"
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "Prema _nazivu"
 
-#~ msgid "By _Size"
-#~ msgstr "Prema _veličini"
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "Prema _veličini"
 
-#~ msgid "_Reversed Order"
-#~ msgstr "_Obrnuti redosled"
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "_Obrnuti redosled"
 
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Uključi oblačiće _alata"
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Uključi oblačiće _alata"

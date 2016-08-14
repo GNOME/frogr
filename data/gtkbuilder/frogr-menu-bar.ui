@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="frogr">
   <menu id="menu-bar">
     <submenu>
       <attribute name="label" translatable="yes">_File</attribute>

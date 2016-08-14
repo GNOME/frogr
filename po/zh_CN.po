@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2014-01-25 10:42+0800\n"
 "Last-Translator: YunQiang Su <wzssyqa@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
@@ -543,7 +543,7 @@ msgstr[0] "(%d 张相片)"
 msgid "An error happened trying to load the picture"
 msgstr "尝试加载相片时发生错误"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "编辑(_E)"
 
@@ -623,11 +623,12 @@ msgstr "保存"
 msgid "Save Current Project"
 msgstr "保存当前项目"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "关于(_A)"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "退出(_Q)"
 
@@ -661,7 +662,8 @@ msgstr "Frogr 项目文件"
 msgid "Select Destination"
 msgstr "选择目标位置"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "保存(_S)"
 
@@ -809,80 +811,116 @@ msgstr "杂项(_M)"
 msgid "Preferences"
 msgstr "首选项"
 
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "认证账户(_H)..."
+
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "首选项(_P)..."
+
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "帮助(_H)"
+
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "编辑详细信息(_E)..."
+
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "添加标签(_T)..."
+
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "添加到群组(_G)..."
+
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "添加到相片集(_P)"
+
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "添加到已有相片集(_A)..."
+
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "创建新相片集(_C)..."
+
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "在外部查看器中打开(_O)"
+
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "移除元素(_R)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "文件(_F)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "打开(_O)..."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "保存为(_A)..."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "添加元素(_D)..."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "全部上传(_U)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "查看(_V)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "排序元素(_S)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "同载入时(_L)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "按拍摄日期(_D)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "按标题(_T)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "按大小(_S)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "逆序(_R)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "启用工具提示(_T)"
+
 #~ msgid "Frogr"
 #~ msgstr "Frogr"
-
-#~ msgid "Aut_horize Account…"
-#~ msgstr "认证账户(_H)..."
-
-#~ msgid "_Preferences…"
-#~ msgstr "首选项(_P)..."
-
-#~ msgid "_Help"
-#~ msgstr "帮助(_H)"
-
-#~ msgid "_File"
-#~ msgstr "文件(_F)"
-
-#~ msgid "_Open…"
-#~ msgstr "打开(_O)..."
-
-#~ msgid "Save _As…"
-#~ msgstr "保存为(_A)..."
-
-#~ msgid "A_dd Elements…"
-#~ msgstr "添加元素(_D)..."
-
-#~ msgid "_Remove Elements"
-#~ msgstr "移除元素(_R)"
-
-#~ msgid "_Upload All"
-#~ msgstr "全部上传(_U)"
-
-#~ msgid "_Edit Details…"
-#~ msgstr "编辑详细信息(_E)..."
-
-#~ msgid "Add _Tags…"
-#~ msgstr "添加标签(_T)..."
-
-#~ msgid "Add to _Group…"
-#~ msgstr "添加到群组(_G)..."
-
-#~ msgid "Add to _Photoset"
-#~ msgstr "添加到相片集(_P)"
-
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "添加到已有相片集(_A)..."
-
-#~ msgid "_Create New Photoset…"
-#~ msgstr "创建新相片集(_C)..."
-
-#~ msgid "_Open in External Viewer"
-#~ msgstr "在外部查看器中打开(_O)"
-
-#~ msgid "_View"
-#~ msgstr "查看(_V)"
-
-#~ msgid "_Sort Elements"
-#~ msgstr "排序元素(_S)"
-
-#~ msgid "As _Loaded"
-#~ msgstr "同载入时(_L)"
-
-#~ msgid "By _Date Taken"
-#~ msgstr "按拍摄日期(_D)"
-
-#~ msgid "By _Title"
-#~ msgstr "按标题(_T)"
-
-#~ msgid "By _Size"
-#~ msgstr "按大小(_S)"
-
-#~ msgid "_Reversed Order"
-#~ msgstr "逆序(_R)"
-
-#~ msgid "Enable _Tooltips"
-#~ msgstr "启用工具提示(_T)"
 
 #~ msgid "Visible to _Family"
 #~ msgstr "家人可见(_F)"

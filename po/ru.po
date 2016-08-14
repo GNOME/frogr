@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2012-12-24 12:12+0300\n"
 "Last-Translator: Yuri Myasoedov <omerta13@yandex.ru>\n"
 "Language-Team: русский <gnome-cyr@gnome.org>\n"
@@ -543,7 +543,7 @@ msgstr[2] "(%d изображений)"
 msgid "An error happened trying to load the picture"
 msgstr "При загрузке изображения возникла ошибка"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "_Правка"
 
@@ -624,11 +624,12 @@ msgstr "Сохранить"
 msgid "Save Current Project"
 msgstr "Сохранить текущий проект"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "_О программе"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "_Закончить"
 
@@ -663,7 +664,8 @@ msgstr "Файлы проекта"
 msgid "Select Destination"
 msgstr "Выберите назначение"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Сохранить"
 
@@ -813,84 +815,119 @@ msgstr "_Разное"
 msgid "Preferences"
 msgstr "Настройки"
 
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "_Авторизовать учётную запись…"
+
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Настройки…"
+
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "_Справка"
+
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "Изменить _подробности…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "Добавить _метки…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Добавить в _группу…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "Добавить в _альбом"
+
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "Добавить в существующий _альбом…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "_Создать новый альбом…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "_Открыть внешним приложением"
+
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "_Удалить элементы"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Файл"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "_Открыть..."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "Сохранить _как..."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "_Добавить элементы..."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "_Загрузить все"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Вид"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "_Упорядочить элементы"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "По _загрузке"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "По _дате"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "По _названию"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "По _размеру"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "_В обратном порядке"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Разрешить _всплывающие подсказки"
+
 #~ msgid "Visible to _Family"
 #~ msgstr "Доступно для _членов семьи"
 
 #~ msgid "Visible to F_riends"
 #~ msgstr "Доступно для _друзей"
-
-#~| msgid "Edit _Details…"
-#~ msgid "_Edit Details…"
-#~ msgstr "Изменить _подробности…"
-
-#~ msgid "Add _Tags…"
-#~ msgstr "Добавить _метки…"
-
-#~ msgid "Add to _Group…"
-#~ msgstr "Добавить в _группу…"
-
-#~ msgid "Add to _Photoset"
-#~ msgstr "Добавить в _альбом"
-
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "Добавить в существующий _альбом…"
-
-#~ msgid "_Create New Photoset…"
-#~ msgstr "_Создать новый альбом…"
-
-#~ msgid "_Open in External Viewer"
-#~ msgstr "_Открыть внешним приложением"
-
-#~ msgid "_Remove Elements"
-#~ msgstr "_Удалить элементы"
-
-#~ msgid "Aut_horize Account…"
-#~ msgstr "_Авторизовать учётную запись…"
-
-#~ msgid "_Preferences…"
-#~ msgstr "_Настройки…"
-
-#~ msgid "_Help"
-#~ msgstr "_Справка"
-
-#~ msgid "_File"
-#~ msgstr "_Файл"
-
-#~ msgid "_Open…"
-#~ msgstr "_Открыть..."
-
-#~ msgid "Save _As…"
-#~ msgstr "Сохранить _как..."
-
-#~ msgid "A_dd Elements…"
-#~ msgstr "_Добавить элементы..."
-
-#~ msgid "_Upload All"
-#~ msgstr "_Загрузить все"
-
-#~ msgid "_View"
-#~ msgstr "_Вид"
-
-#~ msgid "_Sort Elements"
-#~ msgstr "_Упорядочить элементы"
-
-#~ msgid "As _Loaded"
-#~ msgstr "По _загрузке"
-
-#~ msgid "By _Date Taken"
-#~ msgstr "По _дате"
-
-#~ msgid "By _Title"
-#~ msgstr "По _названию"
-
-#~ msgid "By _Size"
-#~ msgstr "По _размеру"
-
-#~ msgid "_Reversed Order"
-#~ msgstr "_В обратном порядке"
-
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Разрешить _всплывающие подсказки"
 
 #~ msgid "Text Files"
 #~ msgstr "Текстовые файлы"

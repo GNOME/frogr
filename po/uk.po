@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2011-07-28 23:32+0300\n"
 "Last-Translator: Korostil Daniel <ted.korostiled@gmail.com>\n"
 "Language-Team: translation@linux.org.ua\n"
@@ -559,7 +559,7 @@ msgstr[2] "(%d зображень)"
 msgid "An error happened trying to load the picture"
 msgstr "Помилка при спробі завантажити малюнок"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr ""
 
@@ -636,11 +636,12 @@ msgstr ""
 msgid "Save Current Project"
 msgstr ""
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "_Про програму"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "Ви_йти"
 
@@ -677,7 +678,8 @@ msgstr ""
 msgid "Select Destination"
 msgstr "Опис альбому:"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr ""
 
@@ -831,6 +833,126 @@ msgstr "_Інше"
 msgid "Preferences"
 msgstr "Параметри"
 
+#: data/gtkbuilder/frogr-app-menu.ui:6
+#, fuzzy
+msgid "Aut_horize Account…"
+msgstr "Авторизувати _frogr"
+
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Параметри…"
+
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "_Довідка"
+
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+#, fuzzy
+msgid "_Edit Details…"
+msgstr "Змінити подробиці…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "Додати мі_тки…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Додати до _групи…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+#, fuzzy
+msgid "Add to _Photoset"
+msgstr "Додати до _альбому"
+
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+#, fuzzy
+msgid "_Add to Existing Photoset…"
+msgstr "Додати до на_явного альбому…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+#, fuzzy
+msgid "_Create New Photoset…"
+msgstr "_Створити новий альбом"
+
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+#, fuzzy
+msgid "_Open in External Viewer"
+msgstr "Відкрити через зовнішній переглядач"
+
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+#, fuzzy
+msgid "_Remove Elements"
+msgstr "Елементи"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Файл"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr ""
+
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr ""
+
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+#, fuzzy
+msgid "A_dd Elements…"
+msgstr "Елементи"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+#, fuzzy
+msgid "_Upload All"
+msgstr "_Вивантажити все"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "П_ерегляд"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+#, fuzzy
+msgid "_Sort Elements"
+msgstr "Елементи"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "За _завантаженням"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "За _часом створення"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "За _назвою"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+#, fuzzy
+msgid "By _Size"
+msgstr "За _назвою"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "Зворотний _порядок"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+#, fuzzy
+msgid "Enable _Tooltips"
+msgstr "Вимкнути пі_дказки"
+
 #~ msgid "Flickr Remote Organizer"
 #~ msgstr "Віддалений упорядник Flickr"
 
@@ -878,62 +1000,14 @@ msgstr "Параметри"
 #~ msgid "A_ctions"
 #~ msgstr "Ді_ї"
 
-#~ msgid "Add _Tags…"
-#~ msgstr "Додати мі_тки…"
-
-#~ msgid "Add to _Existing Set…"
-#~ msgstr "Додати до на_явного альбому…"
-
-#~ msgid "Add to _Group…"
-#~ msgstr "Додати до _групи…"
-
-#~ msgid "Add to _Set"
-#~ msgstr "Додати до _альбому"
-
-#~ msgid "As _Loaded"
-#~ msgstr "За _завантаженням"
-
-#~ msgid "By _Date Taken"
-#~ msgstr "За _часом створення"
-
-#~ msgid "By _Title"
-#~ msgstr "За _назвою"
-
-#~ msgid "Disable _Tooltips"
-#~ msgstr "Вимкнути пі_дказки"
-
-#~ msgid "Edit _Details…"
-#~ msgstr "Змінити подробиці…"
-
-#~ msgid "Open in E_xternal Viewer"
-#~ msgstr "Відкрити через зовнішній переглядач"
-
 #~ msgid "_Add Pictures"
 #~ msgstr "_Додати зображення"
-
-#~ msgid "_Create New Set…"
-#~ msgstr "_Створити новий альбом"
-
-#~ msgid "_File"
-#~ msgstr "_Файл"
-
-#~ msgid "_Help"
-#~ msgstr "_Довідка"
-
-#~ msgid "_Preferences…"
-#~ msgstr "_Параметри…"
 
 #~ msgid "_Remove Pictures"
 #~ msgstr "_Вилучити зображення"
 
-#~ msgid "_Reversed Order"
-#~ msgstr "Зворотний _порядок"
-
 #~ msgid "_Sort Pictures"
 #~ msgstr "_Упорядкувати фотографії"
-
-#~ msgid "_View"
-#~ msgstr "П_ерегляд"
 
 #~ msgid "_About frogr..."
 #~ msgstr "_Про frogr…"

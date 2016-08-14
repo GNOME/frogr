@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2016-03-13 12:15+0200\n"
 "Last-Translator: Cédric Valmary (totenoc.eu) <cvalmary@yahoo.fr>\n"
 "Language-Team: Tot En Òc\n"
@@ -540,7 +540,7 @@ msgstr[1] "(%d imatges)"
 msgid "An error happened trying to load the picture"
 msgstr "Una error s'es producha al moment del cargament de l'imatge"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "_Edicion"
 
@@ -621,11 +621,12 @@ msgstr "Enregistrar"
 msgid "Save Current Project"
 msgstr "Enregistrar lo projècte actual"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "A _prepaus"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "_Quitar"
 
@@ -659,7 +660,8 @@ msgstr "Fichièr projècte Frogr"
 msgid "Select Destination"
 msgstr "Seleccionar una destinacion"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Enregistrar"
 
@@ -811,77 +813,113 @@ msgstr "_Divèrs"
 msgid "Preferences"
 msgstr "Preferéncias"
 
-#~ msgid "Aut_horize Account…"
-#~ msgstr "Auto_rizar lo compte…"
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "Auto_rizar lo compte…"
 
-#~ msgid "_Preferences…"
-#~ msgstr "_Paramètres…"
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Paramètres…"
 
-#~ msgid "_Help"
-#~ msgstr "A_juda"
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "A_juda"
 
-#~ msgid "_Edit Details…"
-#~ msgstr "Modificar las _informacions…"
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "Modificar las _informacions…"
 
-#~ msgid "Add _Tags…"
-#~ msgstr "A_pondre d'etiquetas…"
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "A_pondre d'etiquetas…"
 
-#~ msgid "Add to _Group…"
-#~ msgstr "Apondre al _grop…"
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Apondre al _grop…"
 
-#~ msgid "Add to _Photoset"
-#~ msgstr "Apondre a l'a_lbum"
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "Apondre a l'a_lbum"
 
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "Apondre a un album _existant…"
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "Apondre a un album _existant…"
 
-#~ msgid "_Create New Photoset…"
-#~ msgstr "Crear un _novèl album…"
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "Crear un _novèl album…"
 
-#~ msgid "_Open in External Viewer"
-#~ msgstr "Dobrir dins un afichador e_xtèrne"
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "Dobrir dins un afichador e_xtèrne"
 
-#~ msgid "_Remove Elements"
-#~ msgstr "_Suprimir d'elements"
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "_Suprimir d'elements"
 
-#~ msgid "_File"
-#~ msgstr "_Fichièr"
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Fichièr"
 
-#~ msgid "_Open…"
-#~ msgstr "_Dobrir"
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "_Dobrir"
 
-#~ msgid "Save _As…"
-#~ msgstr "Enregistrar _jos…"
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "Enregistrar _jos…"
 
-#~ msgid "A_dd Elements…"
-#~ msgstr "Aj_outer los elements…"
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "Aj_outer los elements…"
 
-#~ msgid "_Upload All"
-#~ msgstr "_Mandar tot"
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "_Mandar tot"
 
-#~ msgid "_View"
-#~ msgstr "_Afichatge"
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Afichatge"
 
-#~ msgid "_Sort Elements"
-#~ msgstr "_Triar los elements"
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "_Triar los elements"
 
-#~ msgid "As _Loaded"
-#~ msgstr "Per _òrdre de cargament"
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "Per _òrdre de cargament"
 
-#~ msgid "By _Date Taken"
-#~ msgstr "Per _date de prise"
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "Per _date de prise"
 
-#~ msgid "By _Title"
-#~ msgstr "Per _títol"
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "Per _títol"
 
-#~ msgid "By _Size"
-#~ msgstr "Per t_alha"
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "Per t_alha"
 
-#~ msgid "_Reversed Order"
-#~ msgstr "Òrdre _invèrse"
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "Òrdre _invèrse"
 
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Activar las info_bullas"
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Activar las info_bullas"
 
 #~ msgid "Visible to _Family"
 #~ msgstr "Visible per la _familha"

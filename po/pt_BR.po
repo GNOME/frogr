@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2016-02-29 06:48-0300\n"
 "Last-Translator: Rafael Fontenelle <rffontenelle@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
@@ -549,7 +549,7 @@ msgstr[1] "(%d imagens)"
 msgid "An error happened trying to load the picture"
 msgstr "Um erro ocorreu ao tentar carregar a imagem"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "_Editar"
 
@@ -629,11 +629,12 @@ msgstr "Salvar"
 msgid "Save Current Project"
 msgstr "Salva o projeto atual"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "_Sobre"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "_Sair"
 
@@ -667,7 +668,8 @@ msgstr "Arquivos de projeto do Frogr"
 msgid "Select Destination"
 msgstr "Descrição um destino"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Salvar"
 
@@ -816,77 +818,113 @@ msgstr "_Misc"
 msgid "Preferences"
 msgstr "Preferências"
 
-#~ msgid "Aut_horize Account…"
-#~ msgstr "Aut_orizar uma conta…"
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "Aut_orizar uma conta…"
 
-#~ msgid "_Preferences…"
-#~ msgstr "_Preferências…"
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Preferências…"
 
-#~ msgid "_Help"
-#~ msgstr "Aj_uda"
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "Aj_uda"
 
-#~ msgid "_Edit Details…"
-#~ msgstr "Editar _detalhes…"
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "Editar _detalhes…"
 
-#~ msgid "Add _Tags…"
-#~ msgstr "Adicionar _tags…"
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "Adicionar _tags…"
 
-#~ msgid "Add to _Group…"
-#~ msgstr "Adicionar ao _grupo…"
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Adicionar ao _grupo…"
 
-#~ msgid "Add to _Photoset"
-#~ msgstr "Adicionar ao _conjunto de fotos"
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "Adicionar ao _conjunto de fotos"
 
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "Adicionar ao conjunto de fotos _existente…"
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "Adicionar ao conjunto de fotos _existente…"
 
-#~ msgid "_Create New Photoset…"
-#~ msgstr "_Criar novo conjunto de fotos…"
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "_Criar novo conjunto de fotos…"
 
-#~ msgid "_Open in External Viewer"
-#~ msgstr "Abrir em um visualizador e_xterno"
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "Abrir em um visualizador e_xterno"
 
-#~ msgid "_Remove Elements"
-#~ msgstr "_Remover elementos"
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "_Remover elementos"
 
-#~ msgid "_File"
-#~ msgstr "_Arquivo"
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Arquivo"
 
-#~ msgid "_Open…"
-#~ msgstr "_Abrir..."
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "_Abrir..."
 
-#~ msgid "Save _As…"
-#~ msgstr "Salvar _como..."
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "Salvar _como..."
 
-#~ msgid "A_dd Elements…"
-#~ msgstr "A_dicionar elementos..."
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "A_dicionar elementos..."
 
-#~ msgid "_Upload All"
-#~ msgstr "_Enviar todos"
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "_Enviar todos"
 
-#~ msgid "_View"
-#~ msgstr "_Ver"
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Ver"
 
-#~ msgid "_Sort Elements"
-#~ msgstr "_Organizar elementos"
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "_Organizar elementos"
 
-#~ msgid "As _Loaded"
-#~ msgstr "Como _carregadas"
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "Como _carregadas"
 
-#~ msgid "By _Date Taken"
-#~ msgstr "Pela _data de captura"
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "Pela _data de captura"
 
-#~ msgid "By _Title"
-#~ msgstr "Pelo _título"
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "Pelo _título"
 
-#~ msgid "By _Size"
-#~ msgstr "Por _tamanho:"
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "Por _tamanho:"
 
-#~ msgid "_Reversed Order"
-#~ msgstr "_Ordem inversa"
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "_Ordem inversa"
 
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Habilitar _dicas"
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Habilitar _dicas"
 
 #~ msgid "_Use GNOME General Proxy Settings"
 #~ msgstr "_Usar configurações de proxy do GNOME"

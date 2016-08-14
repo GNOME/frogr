@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2014-10-16 19:51+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
@@ -543,7 +543,7 @@ msgstr[0] "(%d Gambar)"
 msgid "An error happened trying to load the picture"
 msgstr "Terjadi galat saat mencoba memuat gambar"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "_Sunting"
 
@@ -623,11 +623,12 @@ msgstr "Simpan"
 msgid "Save Current Project"
 msgstr "Simpan Projek Kini"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "Tent_ang"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "_Keluar"
 
@@ -661,7 +662,8 @@ msgstr "Berkas Projek Frogr"
 msgid "Select Destination"
 msgstr "Pilih Tujuan"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Simpan"
 
@@ -809,74 +811,110 @@ msgstr "_Rupa-rupa"
 msgid "Preferences"
 msgstr "Preferensi"
 
-#~ msgid "Aut_horize Account…"
-#~ msgstr "_Otorisasikan Akun…"
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "_Otorisasikan Akun…"
 
-#~ msgid "_Preferences…"
-#~ msgstr "_Preferensi…"
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Preferensi…"
 
-#~ msgid "_Help"
-#~ msgstr "_Bantuan"
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "_Bantuan"
 
-#~ msgid "_File"
-#~ msgstr "_Berkas"
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "Sunting _Rincian…"
 
-#~ msgid "_Open…"
-#~ msgstr "_Buka…"
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "_Tambah Tag…"
 
-#~ msgid "Save _As…"
-#~ msgstr "Simpan Seb_agai…"
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Tambah ke _Grup…"
 
-#~ msgid "A_dd Elements…"
-#~ msgstr "Tam_bah Elemen…"
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "Tambah ke _Set Foto"
 
-#~ msgid "_Remove Elements"
-#~ msgstr "_Hapus Elemen…"
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "T_ambah ke Set Foto Yang Ada…"
 
-#~ msgid "_Upload All"
-#~ msgstr "_Unggah Semua"
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "_Buat Set Foto Baru…"
 
-#~ msgid "_Edit Details…"
-#~ msgstr "Sunting _Rincian…"
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "Buka di Penampil E_ksternal"
 
-#~ msgid "Add _Tags…"
-#~ msgstr "_Tambah Tag…"
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "_Hapus Elemen…"
 
-#~ msgid "Add to _Group…"
-#~ msgstr "Tambah ke _Grup…"
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Berkas"
 
-#~ msgid "Add to _Photoset"
-#~ msgstr "Tambah ke _Set Foto"
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "_Buka…"
 
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "T_ambah ke Set Foto Yang Ada…"
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "Simpan Seb_agai…"
 
-#~ msgid "_Create New Photoset…"
-#~ msgstr "_Buat Set Foto Baru…"
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "Tam_bah Elemen…"
 
-#~ msgid "_Open in External Viewer"
-#~ msgstr "Buka di Penampil E_ksternal"
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "_Unggah Semua"
 
-#~ msgid "_View"
-#~ msgstr "_Tilik"
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Tilik"
 
-#~ msgid "_Sort Elements"
-#~ msgstr "_Urutkan Elemen"
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "_Urutkan Elemen"
 
-#~ msgid "As _Loaded"
-#~ msgstr "Seperti _Dimuat"
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "Seperti _Dimuat"
 
-#~ msgid "By _Date Taken"
-#~ msgstr "Menurut Tanggal _Diambil"
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "Menurut Tanggal _Diambil"
 
-#~ msgid "By _Title"
-#~ msgstr "Menurut _Judul"
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "Menurut _Judul"
 
-#~ msgid "By _Size"
-#~ msgstr "Menurut _Ukuran"
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "Menurut _Ukuran"
 
-#~ msgid "_Reversed Order"
-#~ msgstr "Balik U_rutan"
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "Balik U_rutan"
 
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Fungsikan _Tooltips"
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Fungsikan _Tooltips"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2016-02-28 12:54+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
@@ -540,7 +540,7 @@ msgstr[2] "(%d obrázků)"
 msgid "An error happened trying to load the picture"
 msgstr "Vyskytla se chyba při načítání obrázku"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "_Upravit"
 
@@ -620,11 +620,12 @@ msgstr "Uložit"
 msgid "Save Current Project"
 msgstr "Uložit současný projekt"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "O _aplikaci"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "U_končit"
 
@@ -658,7 +659,8 @@ msgstr "Projektové soubory Frogr"
 msgid "Select Destination"
 msgstr "Výběr cíle"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Uložit"
 
@@ -808,74 +810,110 @@ msgstr "Růz_né"
 msgid "Preferences"
 msgstr "Předvolby"
 
-#~ msgid "Aut_horize Account…"
-#~ msgstr "A_utorizovat se k účtu…"
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "A_utorizovat se k účtu…"
 
-#~ msgid "_Preferences…"
-#~ msgstr "_Předvolby…"
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Předvolby…"
 
-#~ msgid "_Help"
-#~ msgstr "_Nápověda"
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "_Nápověda"
 
-#~ msgid "_Edit Details…"
-#~ msgstr "Upravit po_drobnosti…"
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "Upravit po_drobnosti…"
 
-#~ msgid "Add _Tags…"
-#~ msgstr "Přidat š_títky…"
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "Přidat š_títky…"
 
-#~ msgid "Add to _Group…"
-#~ msgstr "Přidat do sk_upiny…"
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Přidat do sk_upiny…"
 
-#~ msgid "Add to _Photoset"
-#~ msgstr "_Přidat do sady"
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "_Přidat do sady"
 
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "Přid_at do existující sady…"
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "Přid_at do existující sady…"
 
-#~ msgid "_Create New Photoset…"
-#~ msgstr "_Vytvořit novou sadu…"
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "_Vytvořit novou sadu…"
 
-#~ msgid "_Open in External Viewer"
-#~ msgstr "_Otevřít v externím prohlížeči"
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "_Otevřít v externím prohlížeči"
 
-#~ msgid "_Remove Elements"
-#~ msgstr "Odeb_rat objekty"
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "Odeb_rat objekty"
 
-#~ msgid "_File"
-#~ msgstr "_Soubor"
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Soubor"
 
-#~ msgid "_Open…"
-#~ msgstr "_Otevřít…"
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "_Otevřít…"
 
-#~ msgid "Save _As…"
-#~ msgstr "Uložit j_ako…"
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "Uložit j_ako…"
 
-#~ msgid "A_dd Elements…"
-#~ msgstr "Při_dat objekty…"
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "Při_dat objekty…"
 
-#~ msgid "_Upload All"
-#~ msgstr "Nahrát _vše"
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "Nahrát _vše"
 
-#~ msgid "_View"
-#~ msgstr "_Zobrazit"
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Zobrazit"
 
-#~ msgid "_Sort Elements"
-#~ msgstr "_Seřadit objekty"
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "_Seřadit objekty"
 
-#~ msgid "As _Loaded"
-#~ msgstr "Jak by_ly načteny"
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "Jak by_ly načteny"
 
-#~ msgid "By _Date Taken"
-#~ msgstr "Podle _data pořízení"
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "Podle _data pořízení"
 
-#~ msgid "By _Title"
-#~ msgstr "Podle _názvu"
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "Podle _názvu"
 
-#~ msgid "By _Size"
-#~ msgstr "Podle veliko_sti"
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "Podle veliko_sti"
 
-#~ msgid "_Reversed Order"
-#~ msgstr "_Opačné pořadí"
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "_Opačné pořadí"
 
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Zapnout vysvě_tlivky"
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Zapnout vysvě_tlivky"

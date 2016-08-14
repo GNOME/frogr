@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-12 13:17+0100\n"
+"POT-Creation-Date: 2016-08-14 11:32+0100\n"
 "PO-Revision-Date: 2016-03-13 19:22+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
@@ -539,7 +539,7 @@ msgstr[1] "(%d kuvaa)"
 msgid "An error happened trying to load the picture"
 msgstr "Kuvaa ladattaessa tapahtui virhe"
 
-#: src/frogr-details-dialog.c:1169
+#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
 msgid "_Edit"
 msgstr "_Muokkaa"
 
@@ -619,11 +619,12 @@ msgstr "Tallenna"
 msgid "Save Current Project"
 msgstr "Tallenna nykyinen projekti"
 
-#: src/frogr-main-view.c:1016
+#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
 msgstr "_Tietoja"
 
-#: src/frogr-main-view.c:1020
+#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
+#: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "_Lopeta"
 
@@ -657,7 +658,8 @@ msgstr "Frogr-projektitiedostot"
 msgid "Select Destination"
 msgstr "Valitse kohde"
 
-#: src/frogr-main-view.c:1619
+#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
+#: data/gtkbuilder/frogr-menu-button.ui:6
 msgid "_Save"
 msgstr "_Tallenna"
 
@@ -806,74 +808,110 @@ msgstr "_Muut"
 msgid "Preferences"
 msgstr "Asetukset"
 
-#~ msgid "Aut_horize Account…"
-#~ msgstr "_Valtuuta tili…"
+#: data/gtkbuilder/frogr-app-menu.ui:6
+msgid "Aut_horize Account…"
+msgstr "_Valtuuta tili…"
 
-#~ msgid "_Preferences…"
-#~ msgstr "_Asetukset…"
+#: data/gtkbuilder/frogr-app-menu.ui:12
+msgid "_Preferences…"
+msgstr "_Asetukset…"
 
-#~ msgid "_Help"
-#~ msgstr "_Ohje"
+#: data/gtkbuilder/frogr-app-menu.ui:18
+msgid "_Help"
+msgstr "_Ohje"
 
-#~ msgid "_Edit Details…"
-#~ msgstr "_Muokkaa tietoja…"
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
+#: data/gtkbuilder/frogr-menu-button.ui:18
+msgid "_Edit Details…"
+msgstr "_Muokkaa tietoja…"
 
-#~ msgid "Add _Tags…"
-#~ msgstr "_Lisää tunnisteita…"
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+msgid "Add _Tags…"
+msgstr "_Lisää tunnisteita…"
 
-#~ msgid "Add to _Group…"
-#~ msgstr "Lisää _ryhmään…"
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+msgid "Add to _Group…"
+msgstr "Lisää _ryhmään…"
 
-#~ msgid "Add to _Photoset"
-#~ msgstr "Lisää _kuvajoukkoon"
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+msgid "Add to _Photoset"
+msgstr "Lisää _kuvajoukkoon"
 
-#~ msgid "_Add to Existing Photoset…"
-#~ msgstr "Li_sää olemassa olevaan kuvajoukkoon…"
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+msgid "_Add to Existing Photoset…"
+msgstr "Li_sää olemassa olevaan kuvajoukkoon…"
 
-#~ msgid "_Create New Photoset…"
-#~ msgstr "_Luo uusi kuvajoukko…"
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+msgid "_Create New Photoset…"
+msgstr "_Luo uusi kuvajoukko…"
 
-#~ msgid "_Open in External Viewer"
-#~ msgstr "_Avaa erillisessä katselimessa"
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+msgid "_Open in External Viewer"
+msgstr "_Avaa erillisessä katselimessa"
 
-#~ msgid "_Remove Elements"
-#~ msgstr "_Poista elementit"
+#: data/gtkbuilder/frogr-context-menu.ui:45
+#: data/gtkbuilder/frogr-menu-bar.ui:30
+msgid "_Remove Elements"
+msgstr "_Poista elementit"
 
-#~ msgid "_File"
-#~ msgstr "_Tiedosto"
+#: data/gtkbuilder/frogr-menu-bar.ui:5
+msgid "_File"
+msgstr "_Tiedosto"
 
-#~ msgid "_Open…"
-#~ msgstr "_Avaa…"
+#: data/gtkbuilder/frogr-menu-bar.ui:8
+msgid "_Open…"
+msgstr "_Avaa…"
 
-#~ msgid "Save _As…"
-#~ msgstr "_Tallenna nimellä…"
+#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+msgid "Save _As…"
+msgstr "_Tallenna nimellä…"
 
-#~ msgid "A_dd Elements…"
-#~ msgstr "Lisää ele_menttejä…"
+#: data/gtkbuilder/frogr-menu-bar.ui:25
+msgid "A_dd Elements…"
+msgstr "Lisää ele_menttejä…"
 
-#~ msgid "_Upload All"
-#~ msgstr "L_ähetä kaikki"
+#: data/gtkbuilder/frogr-menu-bar.ui:37
+msgid "_Upload All"
+msgstr "L_ähetä kaikki"
 
-#~ msgid "_View"
-#~ msgstr "_Näytä"
+#: data/gtkbuilder/frogr-menu-bar.ui:86
+msgid "_View"
+msgstr "_Näytä"
 
-#~ msgid "_Sort Elements"
-#~ msgstr "Järjestä _elementit"
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+msgid "_Sort Elements"
+msgstr "Järjestä _elementit"
 
-#~ msgid "As _Loaded"
-#~ msgstr "_Latauksen mukaan"
+#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+msgid "As _Loaded"
+msgstr "_Latauksen mukaan"
 
-#~ msgid "By _Date Taken"
-#~ msgstr "_Ottopäivän mukaan"
+#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+msgid "By _Date Taken"
+msgstr "_Ottopäivän mukaan"
 
-#~ msgid "By _Title"
-#~ msgstr "_Nimen mukaan"
+#: data/gtkbuilder/frogr-menu-bar.ui:102
+#: data/gtkbuilder/frogr-menu-button.ui:63
+msgid "By _Title"
+msgstr "_Nimen mukaan"
 
-#~ msgid "By _Size"
-#~ msgstr "_Koon mukaan"
+#: data/gtkbuilder/frogr-menu-bar.ui:107
+#: data/gtkbuilder/frogr-menu-button.ui:68
+msgid "By _Size"
+msgstr "_Koon mukaan"
 
-#~ msgid "_Reversed Order"
-#~ msgstr "K_äänteinen järjestys"
+#: data/gtkbuilder/frogr-menu-bar.ui:114
+#: data/gtkbuilder/frogr-menu-button.ui:75
+msgid "_Reversed Order"
+msgstr "K_äänteinen järjestys"
 
-#~ msgid "Enable _Tooltips"
-#~ msgstr "Kä_ytä työkaluvihjeitä"
+#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "Enable _Tooltips"
+msgstr "Kä_ytä työkaluvihjeitä"
