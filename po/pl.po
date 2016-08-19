@@ -1,38 +1,35 @@
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Aviary.pl
-# Jeśli masz jakiekolwiek uwagi odnoszące się do tłumaczenia lub chcesz
-# pomóc w jego rozwijaniu i pielęgnowaniu, napisz do nas:
-# gnomepl@aviary.pl
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Polish translation for frogr.
+# Copyright © 2011-2016 the frogr authors.
+# This file is distributed under the same license as the frogr package.
 # Łukasz Jernaś <deejay1@srem.org>, 2011.
 # Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>, 2012.
 # Piotr Drąg <piotrdrag@gmail.com>, 2012-2016.
-# Aviary.pl <gnomepl@aviary.pl>, 2011-2016.
+# Aviary.pl <community-poland@mozilla.org>, 2011-2016.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
-"PO-Revision-Date: 2016-01-23 17:45+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-14 10:38+0000\n"
+"PO-Revision-Date: 2016-08-19 18:22+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
-"Language-Team: Polish <gnomepl@aviary.pl>\n"
+"Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Poedit-Language: Polish\n"
-"X-Poedit-Country: Poland\n"
 
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
+#: data/frogr.desktop.in.in:16
 msgid "frogr"
 msgstr "frogr"
 
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr "frogr: zdalny organizator zdjęć w serwisie Flickr dla środowiska GNOME"
+msgstr "frogr: zdalny organizator zdjęć w serwisie Flickr dla środowiska GNOME"
 
 #: data/frogr.appdata.xml.in:8
 msgid ""
@@ -40,37 +37,30 @@ msgid ""
 "manage their accounts in the Flickr image hosting website."
 msgstr ""
 "frogr to mały program dla środowiska GNOME, umożliwiający użytkownikom "
-"zarządzanie swoimi kontami w serwisie zdjęć Flickr."
+"zarządzanie swoimi kontami w serwisie zdjęć Flickr."
 
 #: data/frogr.appdata.xml.in:13
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
 msgstr ""
-"Obsługuje on wszystkie podstawowe funkcje serwisu Flickr, w tym wysyłanie "
-"zdjęć, dodawanie opisów, ustawianie etykiet oraz zarządzanie zestawami i "
-"grupami."
-
-#: data/frogr.appdata.xml.in:24
-msgid "Screenshot of frogr"
-msgstr "Zrzut ekranu programu frogr"
-
-#: data/frogr.appdata.xml.in:29
-msgid "Mario Sanchez Prada"
-msgstr ""
+"Obsługuje on wszystkie podstawowe funkcje serwisu Flickr, w tym wysyłanie "
+"zdjęć, dodawanie opisów, ustawianie etykiet oraz zarządzanie zestawami "
+"i grupami."
 
 #: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
-msgstr "Organizowanie i przesyłanie zdjęć w serwisie Flickr"
+msgstr "Organizowanie i przesyłanie zdjęć w serwisie Flickr"
 
-#: data/frogr.desktop.in.in:8
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr ""
 "Flickr;Obraz;Obrazek;Zdjęcie;Film;Filmik;Wideo;Video;Wysyłanie;Przesyłanie;"
 
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
-msgstr "Zdalny organizator zdjęć w serwisie Flickr dla środowiska GNOME\n"
+msgstr "Zdalny organizator zdjęć w serwisie Flickr dla środowiska GNOME\n"
 
 #: src/frogr-about-dialog.c:72
 msgid "translator-credits"
@@ -78,7 +68,7 @@ msgstr ""
 "Łukasz Jernaś <deejay1@srem.org>, 2011\n"
 "Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>, 2012\n"
 "Piotr Drąg <piotrdrag@gmail.com>, 2012-2016\n"
-"Aviary.pl <gnomepl@aviary.pl>, 2011-2016"
+"Aviary.pl <community-poland@mozilla.org>, 2011-2016"
 
 #: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
 #: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
@@ -127,7 +117,7 @@ msgid ""
 "Please press the button to authorize %s and then come back to complete the "
 "process."
 msgstr ""
-"Proszę nacisnąć przycisk, aby upoważnić %s, a następnie powrócić w celu "
+"Proszę nacisnąć przycisk, aby upoważnić %s, a następnie powrócić w celu "
 "ukończenia procesu."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
@@ -140,6 +130,7 @@ msgstr "Upoważnij %s"
 msgid "_Close"
 msgstr "Za_mknij"
 
+#. Description label
 #: src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "Proszę wprowadzić kod weryfikacyjny:"
@@ -206,7 +197,7 @@ msgid ""
 "You can't upload more videos with this account"
 msgstr ""
 "Błąd podczas wysyłania wideo:\n"
-"Nie można wysłać więcej wideo z tego konta"
+"Nie można wysłać więcej wideo z tego konta"
 
 #: src/frogr-controller.c:617
 msgid ""
@@ -238,7 +229,7 @@ msgid ""
 "Photo already in the maximum number of groups possible"
 msgstr ""
 "Błąd:\n"
-"Obraz znajduje się już w maksymalnej ilości grup"
+"Obraz znajduje się już w maksymalnej ilości grup"
 
 #: src/frogr-controller.c:633
 msgid ""
@@ -296,7 +287,7 @@ msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
 msgstr ""
-"Nie można upoważnić w serwisie Flickr.\n"
+"Nie można upoważnić w serwisie Flickr.\n"
 "Proszę spróbować ponownie."
 
 #: src/frogr-controller.c:664
@@ -324,6 +315,7 @@ msgstr ""
 "Błąd:\n"
 "Usługa nie jest dostępna"
 
+#. General error: just dump the raw error description
 #: src/frogr-controller.c:678
 #, c-format
 msgid "An error happened: %s."
@@ -403,6 +395,7 @@ msgstr "Wysyłanie zdjęć"
 msgid "Error opening project file"
 msgstr "Błąd podczas otwierania pliku projektu"
 
+#. This shows a dialog notifying the problem to the user
 #: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr "Brak wymaganych danych"
@@ -417,7 +410,7 @@ msgstr "Opis:"
 
 #: src/frogr-create-new-set-dialog.c:356
 msgid "Fill Pictures Details with Title and Description"
-msgstr "Wypełnienie szczegółów obrazów jako tytuł i opis"
+msgstr "Wypełnienie szczegółów obrazów jako tytuł i opis"
 
 #: src/frogr-create-new-set-dialog.c:381
 msgid "Create New Set"
@@ -425,7 +418,7 @@ msgstr "Tworzenie nowego zestawu"
 
 #: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
 msgid "Default (as specified in Flickr)"
-msgstr "Domyślnie (tak jak w serwisie Flickr)"
+msgstr "Domyślnie (tak jak w serwisie Flickr)"
 
 #: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
 msgid "All rights reserved"
@@ -533,7 +526,7 @@ msgstr "Pozostałe właściwości"
 
 #: src/frogr-details-dialog.c:375
 msgid "_Show Up in Global Search Results"
-msgstr "_Wyświetlanie w globalnych wynikach wyszukiwania"
+msgstr "_Wyświetlanie w globalnych wynikach wyszukiwania"
 
 #: src/frogr-details-dialog.c:379
 msgid "Set Geo_location Information"
@@ -543,6 +536,7 @@ msgstr "Ustawianie informacji geo_lokalizacji"
 msgid "Replace 'Date Posted' with 'Date Taken'"
 msgstr "Zastępowanie „Daty opublikowania” „Datą wykonania”"
 
+#. Visually indicate how many pictures are being edited
 #: src/frogr-details-dialog.c:475
 #, c-format
 msgid "(%d Picture)"
@@ -586,6 +580,9 @@ msgstr ""
 "Nie można wczytać wideo %s\n"
 "Proszę sprawdzić, czy zainstalowano właściwy kodek"
 
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
 #: src/frogr-file-loader.c:636
 #, c-format
 msgid ""
@@ -595,6 +592,7 @@ msgstr ""
 "Nie można wczytać pliku %s:\n"
 "Rozmiar pliku przekracza dozwolone maksimum dla tego konta (%s)"
 
+#. First create the left side buttons
 #: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Otwórz"
@@ -627,6 +625,7 @@ msgstr "Wyślij"
 msgid "Upload All"
 msgstr "Wysłanie wszystkiego"
 
+#. Save project item
 #: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Zapisz"
@@ -637,17 +636,19 @@ msgstr "Zapis bieżącego projektu"
 
 #: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
 msgid "_About"
-msgstr "_O programie"
+msgstr "_O programie"
 
 #: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
 #: data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"
 msgstr "Za_kończ"
 
+#. Create the submenu and insert it in the right section
 #: src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Konta"
 
+#. String showind the date and time a picture was taken
 #: src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
@@ -709,8 +710,9 @@ msgstr "Należy najpierw wybrać jakieś obrazy"
 
 #: src/frogr-main-view.c:2108
 msgid "Not connected to Flickr"
-msgstr "Nie połączono z serwisem Flickr"
+msgstr "Nie połączono z serwisem Flickr"
 
+#. Login string, showing the user is PRO (second '%s') if so.
 #: src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
@@ -720,11 +722,19 @@ msgstr "Połączono jako %s%s"
 msgid " (PRO account)"
 msgstr " (konto typu PRO)"
 
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
 #: src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " — pozostało %s/%s"
 
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
 #: src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
@@ -755,7 +765,7 @@ msgstr "Inne domyślne"
 
 #: src/frogr-settings-dialog.c:312
 msgid "_Show Pictures in Global Search Results"
-msgstr "_Wyświetlanie obrazów w globalnych wynikach wyszukiwania"
+msgstr "_Wyświetlanie obrazów w globalnych wynikach wyszukiwania"
 
 #: src/frogr-settings-dialog.c:315
 msgid "Set Geo_location Information for Pictures"
@@ -773,6 +783,7 @@ msgstr "_Ogólne"
 msgid "Proxy Settings"
 msgstr "Ustawienia pośrednika"
 
+#. Enable proxy
 #: src/frogr-settings-dialog.c:353
 msgid "_Enable HTTP Proxy"
 msgstr "_Pośrednik HTTP"
@@ -781,14 +792,17 @@ msgstr "_Pośrednik HTTP"
 msgid "_Host:"
 msgstr "_Serwer:"
 
+#. Proxy port
 #: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr "_Port:"
 
+#. Proxy username
 #: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr "Nazwa _użytkownika:"
 
+#. Proxy password
 #: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr "_Hasło:"
@@ -807,7 +821,7 @@ msgstr "Auto_matyczne uzupełnianie etykiet"
 
 #: src/frogr-settings-dialog.c:457
 msgid "_Import Tags from Pictures Metadata"
-msgstr "_Importowanie etykiet z metadanych obrazów"
+msgstr "_Importowanie etykiet z metadanych obrazów"
 
 #: src/frogr-settings-dialog.c:461
 msgid "Use _Dark GTK Theme"
@@ -815,7 +829,7 @@ msgstr "_Ciemny motyw GTK+"
 
 #: src/frogr-settings-dialog.c:465
 msgid "_Keep File Extensions in Titles when Loading"
-msgstr "Z_achowanie rozszerzeń plików w tytułach podczas wczytywania"
+msgstr "Z_achowanie rozszerzeń plików w tytułach podczas wczytywania"
 
 #: src/frogr-settings-dialog.c:471
 msgid "_Misc"
@@ -870,7 +884,7 @@ msgstr "_Utwórz nowy zestaw zdjęć…"
 #: data/gtkbuilder/frogr-context-menu.ui:38
 #: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
 msgid "_Open in External Viewer"
-msgstr "Otwórz w _zewnętrznej przeglądarce"
+msgstr "Otwórz w _zewnętrznej przeglądarce"
 
 #: data/gtkbuilder/frogr-context-menu.ui:45
 #: data/gtkbuilder/frogr-menu-bar.ui:30
