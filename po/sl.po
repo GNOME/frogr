@@ -3,43 +3,43 @@
 # This file is distributed under the same license as the frogr package.
 #
 # Saša Batistič <sasa.batistic@gmail.com>, 2011.
-# Matej Urbančič <mateju@svn.gnome.org>, 2011-2015.
+# Matej Urbančič <mateju@svn.gnome.org>, 2011-2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
-"PO-Revision-Date: 2015-07-08 21:30+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=frogr&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-08-25 22:25+0200\n"
+"PO-Revision-Date: 2016-08-25 22:27+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
-"Language: sl\n"
+"Language: sl_SI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
+#: data/frogr.desktop.in.in:16
 msgid "frogr"
 msgstr "frogr"
 
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
-#, fuzzy
 msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr "Frogr: oddaljeni organizator slik za GNOME Flickr"
+msgstr "frogr: oddaljeni usklajevalnik GNOME za Flickr"
 
 #: data/frogr.appdata.xml.in:8
-#, fuzzy
 msgid ""
 "frogr is a small application for the GNOME desktop that allows users to "
 "manage their accounts in the Flickr image hosting website."
 msgstr ""
-"Frogr je program namizja Gnome, ki omogoča urejanje uporabniških računov "
-"spletišča Flickr."
+"Program frogr omogoča uporabnikom upravljanje računov na spletišču Flickr za "
+"namizje GNOME."
 
 #: data/frogr.appdata.xml.in:13
 msgid ""
@@ -49,27 +49,18 @@ msgstr ""
 "Podpira vse osnovne zmožnosti spletišča Flickr, vključno s pošiljanjem slik, "
 "dodajanjem opisa, nastavljanje oznak in urejanje skupin."
 
-#: data/frogr.appdata.xml.in:24
-#, fuzzy
-msgid "Screenshot of frogr"
-msgstr "_Zaslonska slika"
-
-#: data/frogr.appdata.xml.in:29
-msgid "Mario Sanchez Prada"
-msgstr ""
-
 #: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Pošiljanje in organiziranje slik na računih Flickr"
 
-#: data/frogr.desktop.in.in:8
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;slika;fotografija;foto;video;pošiljalnik;"
 
 #: src/frogr-about-dialog.c:43
-#, fuzzy
 msgid "A Flickr Remote Organizer for GNOME\n"
-msgstr "Oddaljeni organizator slik GNOME Flickr\n"
+msgstr "Oddaljeni GNOME usklajevalnik za Flickr\n"
 
 #: src/frogr-about-dialog.c:72
 msgid "translator-credits"
@@ -135,6 +126,7 @@ msgstr "Pooblasti %s"
 msgid "_Close"
 msgstr "_Zapri"
 
+#. Description label
 #: src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "Vnos kode za overitev:"
@@ -320,6 +312,7 @@ msgstr ""
 "Napaka:\n"
 "storitev ni na voljo."
 
+#. General error: just dump the raw error description
 #: src/frogr-controller.c:678
 #, c-format
 msgid "An error happened: %s."
@@ -396,6 +389,7 @@ msgstr "Pošiljanje slik"
 msgid "Error opening project file"
 msgstr "Napaka med odpiranjem datoteke projekta"
 
+#. This shows a dialog notifying the problem to the user
 #: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr "Zahtevani so manjkajoči podatki"
@@ -539,6 +533,7 @@ msgstr "Pošlji _geolokacijske podatke"
 msgid "Replace 'Date Posted' with 'Date Taken'"
 msgstr "Zamenjaj 'datum objave' z datumom 'prevzema'"
 
+#. Visually indicate how many pictures are being edited
 #: src/frogr-details-dialog.c:475
 #, c-format
 msgid "(%d Picture)"
@@ -583,6 +578,9 @@ msgstr ""
 "Ni mogoče naložiti videa %s.\n"
 "Preverite, ali je nameščen ustrezen kodek za dekodiranje."
 
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
 #: src/frogr-file-loader.c:636
 #, c-format
 msgid ""
@@ -592,6 +590,7 @@ msgstr ""
 "Datoteke %s ni mogoče naložiti:\n"
 "Velikost datoteke je večja kot največja dovoljena velikost za ta račun (%s)."
 
+#. First create the left side buttons
 #: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Odpri"
@@ -624,6 +623,7 @@ msgstr "Pošlji"
 msgid "Upload All"
 msgstr "Pošlji vse"
 
+#. Save project item
 #: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Shrani"
@@ -641,10 +641,12 @@ msgstr "_O programu"
 msgid "_Quit"
 msgstr "_Končaj"
 
+#. Create the submenu and insert it in the right section
 #: src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Računi"
 
+#. String showind the date and time a picture was taken
 #: src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
@@ -708,6 +710,7 @@ msgstr "Najprej je treba izbrati nekaj slik"
 msgid "Not connected to Flickr"
 msgstr "Ni povezave s spletiščem Flickr"
 
+#. Login string, showing the user is PRO (second '%s') if so.
 #: src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
@@ -717,11 +720,19 @@ msgstr "Povezanva ustvarjena za %s%s"
 msgid " (PRO account)"
 msgstr "(PRO račun)"
 
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
 #: src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - še %s / %s"
 
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
 #: src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
@@ -771,6 +782,7 @@ msgstr "_Splošno"
 msgid "Proxy Settings"
 msgstr "Nastavitve posredniškega strežnika"
 
+#. Enable proxy
 #: src/frogr-settings-dialog.c:353
 msgid "_Enable HTTP Proxy"
 msgstr "_Omogoči posredovalni strežnik"
@@ -779,14 +791,17 @@ msgstr "_Omogoči posredovalni strežnik"
 msgid "_Host:"
 msgstr "_Gostitelj:"
 
+#. Proxy port
 #: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr "_Vrata:"
 
+#. Proxy username
 #: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr "_Uporabniško ime:"
 
+#. Proxy password
 #: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr "_Geslo:"
@@ -931,8 +946,21 @@ msgstr "_Obrnjen vrstni red"
 msgid "Enable _Tooltips"
 msgstr "Omogoči _orodne namige"
 
+#~ msgid ""
+#~ "Frogr is a small application for the GNOME desktop that allows users to "
+#~ "manage their accounts in the Flickr image hosting website."
+#~ msgstr ""
+#~ "Frogr je program namizja Gnome, ki omogoča urejanje uporabniških računov "
+#~ "spletišča Flickr."
+
 #~ msgid "Frogr"
 #~ msgstr "Frogr"
+
+#~ msgid "Frogr: a Flickr Remote Organizer for GNOME"
+#~ msgstr "Frogr: oddaljeni organizator slik za GNOME Flickr"
+
+#~ msgid "A Flickr remote organizer for GNOME\n"
+#~ msgstr "Oddaljeni organizator slik GNOME Flickr\n"
 
 #~ msgid "_Use GNOME General Proxy Settings"
 #~ msgstr "Uporabi _splošne nastavitve posredovanja"
