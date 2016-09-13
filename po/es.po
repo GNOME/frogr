@@ -4,13 +4,14 @@
 # Alejandro Pinheiro <apinheiro@igalia.com>, 2009.
 # Jorge González <jorgegonz@svn.gnome.org>, 2011.
 # 
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2013, 2015., 2016.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2013, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr.master\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=frogr&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-09-06 21:13+0000\n"
 "PO-Revision-Date: 2016-02-01 15:47+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
@@ -21,8 +22,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
+#: data/frogr.desktop.in.in:16
 msgid "frogr"
 msgstr "frogr"
 
@@ -51,15 +53,12 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Captura de pantalla de frogr"
 
-#: data/frogr.appdata.xml.in:29
-msgid "Mario Sanchez Prada"
-msgstr ""
-
 #: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Subir y organizar fotos en cuentas de Flickr"
 
-#: data/frogr.desktop.in.in:8
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Imagen;Foto;Vídeo;Organizador;"
 
@@ -133,6 +132,7 @@ msgstr "Autorizar %s"
 msgid "_Close"
 msgstr "_Cerrar"
 
+#. Description label
 #: src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "Introduzca el código de verificación:"
@@ -316,6 +316,7 @@ msgstr ""
 "Error:\n"
 "El servicio no está disponible"
 
+#. General error: just dump the raw error description
 #: src/frogr-controller.c:678
 #, c-format
 msgid "An error happened: %s."
@@ -392,6 +393,7 @@ msgstr "Subiendo imágenes"
 msgid "Error opening project file"
 msgstr "Error al abrir el archivo del proyecto"
 
+#. This shows a dialog notifying the problem to the user
 #: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr "Falta información necesaria"
@@ -532,6 +534,7 @@ msgstr "Establecer información de geo_localización"
 msgid "Replace 'Date Posted' with 'Date Taken'"
 msgstr "Reemplazar la «Fecha de publicación» con la «Fecha de captura»"
 
+#. Visually indicate how many pictures are being edited
 #: src/frogr-details-dialog.c:475
 #, c-format
 msgid "(%d Picture)"
@@ -574,6 +577,9 @@ msgstr ""
 "No se pudo cargar el vídeo %s\n"
 "Compruebe que tiene instalado el «códec» correcto"
 
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
 #: src/frogr-file-loader.c:636
 #, c-format
 msgid ""
@@ -584,6 +590,7 @@ msgstr ""
 "El tamaño del archivo es superior al tamaño máximo permitido para esta "
 "cuenta (%s)"
 
+#. First create the left side buttons
 #: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Abrir"
@@ -616,6 +623,7 @@ msgstr "Subir"
 msgid "Upload All"
 msgstr "Subir todo"
 
+#. Save project item
 #: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Guardar"
@@ -633,10 +641,12 @@ msgstr "Acerca _de"
 msgid "_Quit"
 msgstr "_Salir"
 
+#. Create the submenu and insert it in the right section
 #: src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Cuentas"
 
+#. String showind the date and time a picture was taken
 #: src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
@@ -700,6 +710,7 @@ msgstr "Debe seleccionar alguna imagen primero"
 msgid "Not connected to Flickr"
 msgstr "No está conectado a Flickr"
 
+#. Login string, showing the user is PRO (second '%s') if so.
 #: src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
@@ -709,11 +720,19 @@ msgstr "Conectado como %s%s"
 msgid " (PRO account)"
 msgstr " (cuenta PRO)"
 
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
 #: src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - %s / %s restantes"
 
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
 #: src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
@@ -763,6 +782,7 @@ msgstr "_General"
 msgid "Proxy Settings"
 msgstr "Ajustes del proxy"
 
+#. Enable proxy
 #: src/frogr-settings-dialog.c:353
 msgid "_Enable HTTP Proxy"
 msgstr "_Activar proxy HTTP"
@@ -771,14 +791,17 @@ msgstr "_Activar proxy HTTP"
 msgid "_Host:"
 msgstr "_Servidor:"
 
+#. Proxy port
 #: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr "_Puerto:"
 
+#. Proxy username
 #: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr "_Usuario:"
 
+#. Proxy password
 #: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr "Contrase_ña:"
