@@ -46,13 +46,13 @@
 #define MINIMUM_WINDOW_HEIGHT 600
 
 /* Path relative to the application data dir */
-#define UI_MAIN_VIEW_FILE "/gtkbuilder/frogr-main-view.xml"
-#define UI_APP_MENU_FILE "/gtkbuilder/frogr-app-menu.xml"
-#define UI_CONTEXT_MENU_FILE "/gtkbuilder/frogr-context-menu.xml"
+#define UI_MAIN_VIEW_FILE "/gtkbuilder/frogr-main-view.ui"
+#define UI_APP_MENU_FILE "/gtkbuilder/frogr-app-menu.ui"
+#define UI_CONTEXT_MENU_FILE "/gtkbuilder/frogr-context-menu.ui"
 #if USE_HEADER_BAR
-#define UI_MENU_BUTTON_FILE "/gtkbuilder/frogr-menu-button.xml"
+#define UI_MENU_BUTTON_FILE "/gtkbuilder/frogr-menu-button.ui"
 #else
-#define UI_MENU_BAR_FILE "/gtkbuilder/frogr-menu-bar.xml"
+#define UI_MENU_BAR_FILE "/gtkbuilder/frogr-menu-bar.ui"
 #endif
 
 /* Action names for menu items */
