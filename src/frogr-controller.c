@@ -135,8 +135,6 @@ typedef struct {
   GSList *groups;
   gint after_upload_attempts[N_AFTER_UPLOAD_OPS];
   GCancellable *cancellable;
-  gulong cancellable_id;
-  gboolean is_cancelled;
   UploadPicturesData *up_data;
 } UploadOnePictureData;
 
@@ -209,8 +207,6 @@ static void _upload_picture (FrogrController *self, FrogrPicture *picture, Uploa
 
 static void _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data);
 
-static void _upload_picture_cancelled_cb (GCancellable *cancellable, gpointer data);
-
 static void _finish_upload_one_picture_process (FrogrController *self, UploadOnePictureData *uop_data);
 
 static void _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_data);
@@ -245,7 +241,7 @@ static void _add_picture_to_group (FrogrController *self, UploadOnePictureData *
 
 static void _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data);
 
-static gboolean _complete_picture_upload_on_idle (gpointer data);
+static gboolean _complete_picture_upload (gpointer data);
 
 static void _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrController *self);
 
@@ -992,10 +988,6 @@ _upload_picture (FrogrController *self, FrogrPicture *picture, UploadPicturesDat
   uop_data->photosets = NULL;
   uop_data->groups = NULL;
   uop_data->cancellable = _register_new_cancellable (self);
-  uop_data->cancellable_id = g_cancellable_connect (uop_data->cancellable,
-                                                    G_CALLBACK (_upload_picture_cancelled_cb),
-                                                    uop_data, NULL);
-  uop_data->is_cancelled = FALSE;
   uop_data->up_data = up_data;
 
   g_object_ref (picture);
@@ -1054,6 +1046,11 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   g_signal_handlers_disconnect_by_func (controller->session, _data_fraction_sent_cb, controller);
 
   up_data = uop_data->up_data;
+  if (g_cancellable_is_cancelled (uop_data->cancellable)) {
+    _complete_picture_upload (uop_data);
+    return;
+  }
+
   if (error && _should_retry_operation (error, up_data->upload_attempts))
     {
       up_data->upload_attempts++;
@@ -1080,17 +1077,8 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
         }
 
       /* Complete the upload process when possible */
-      gdk_threads_add_timeout (DEFAULT_TIMEOUT, _complete_picture_upload_on_idle, uop_data);
+      gdk_threads_add_timeout (DEFAULT_TIMEOUT, _complete_picture_upload, uop_data);
     }
-}
-
-static void
-_upload_picture_cancelled_cb (GCancellable *cancellable, gpointer data)
-{
-  UploadOnePictureData *uop_data = NULL;
-
-  uop_data = (UploadOnePictureData*) data;
-  uop_data->is_cancelled = TRUE;
 }
 
 static void
@@ -1098,10 +1086,7 @@ _finish_upload_one_picture_process (FrogrController *self, UploadOnePictureData 
 {
   g_object_unref (uop_data->picture);
   if (uop_data->cancellable)
-    {
-      g_cancellable_disconnect (uop_data->cancellable, uop_data->cancellable_id);
-      _clear_cancellable (self, uop_data->cancellable);
-    }
+    _clear_cancellable (self, uop_data->cancellable);
   g_slice_free (UploadOnePictureData, uop_data);
 }
 
@@ -1114,7 +1099,7 @@ _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_d
       _fetch_photosets (self);
       _fetch_tags (self);
 
-      DEBUG ("%s", "Success uploading pictures!");
+      DEBUG ("%s", "Finished uploading pictures!");
     }
   else
     {
@@ -1677,7 +1662,7 @@ _add_to_group_cb (GObject *object, GAsyncResult *res, gpointer data)
 }
 
 static gboolean
-_complete_picture_upload_on_idle (gpointer data)
+_complete_picture_upload (gpointer data)
 {
   UploadOnePictureData *uop_data = NULL;
   UploadPicturesData *up_data = NULL;
@@ -1698,7 +1683,7 @@ _complete_picture_upload_on_idle (gpointer data)
     }
   picture = uop_data->picture;
 
-  if (uop_data->is_cancelled || up_data->error)
+  if (g_cancellable_is_cancelled (uop_data->cancellable) || up_data->error)
     {
       up_data->current = NULL;
     }
