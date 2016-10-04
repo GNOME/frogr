@@ -1,8 +1,28 @@
 1.1 (??)
 ========
 
-  * Remove dependency on intltool completely.
+  * Added flatpak support.
+  * Improved content inside the AppData file.
+  * Fix cancellation of the image upload process.
+  * Remove build-dependency on intltool, now relying on gettext only.
   * Raised gettext minimum version up to 0.19.8.
+
+New and updated translations:
+
+  * cs (Marek Černocký)
+  * de (Mario Blättermann, Wolfgang Stöggl)
+  * en_GB (David King)
+  * es (Daniel Mustieles)
+  * fi (Jiri Grönroos)
+  * fr (Alexandre Franke)
+  * hu (Balázs Úr)
+  * oc (Cédric Valmary)
+  * pl (Piotr Drąg)
+  * pt (Tiago Santos)
+  * pt_BR (Enrico Nicoletto, Rafael Fontenelle)
+  * sl (Anders Jonsson, Josef Andersson)
+  * sl (Matej Urbančič)
+  * sr (Мирослав Николић)
 
 1.0 (30 Dec 2015)
 =================
