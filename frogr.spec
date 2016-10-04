@@ -8,16 +8,16 @@ License:	GPLv3
 URL:		https://wiki.gnome.org/Apps/Frogr
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{version}/%{name}-%{version}.tar.xz
 
-BuildRequires:	gettext
 BuildRequires:	yelp-tools
-BuildRequires:	gtk3-devel > 3.4
-BuildRequires:	glib2-devel > 2.44
-BuildRequires:	gstreamer1-devel > 1.0
-BuildRequires:	json-glib-devel > 0.12
-BuildRequires:	libsoup-devel > 2.34
-BuildRequires:	libxml2-devel > 2.6.8
-BuildRequires:	libexif-devel > 0.6.14
-BuildRequires:	libgcrypt-devel > 1.5.0
+BuildRequires:	gettext >= 0.19.8
+BuildRequires:	gtk3-devel >= 3.4
+BuildRequires:	glib2-devel >= 2.44
+BuildRequires:	gstreamer1-devel >= 1.0
+BuildRequires:	json-glib-devel >= 0.12
+BuildRequires:	libsoup-devel >= 2.34
+BuildRequires:	libxml2-devel >= 2.6.8
+BuildRequires:	libexif-devel >= 0.6.14
+BuildRequires:	libgcrypt-devel >= 1.5.0
 BuildRequires:	desktop-file-utils
 
 #Explicitly Requires: gvfs since we need to be able to open a web

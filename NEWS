@@ -1,7 +1,8 @@
 1.1 (??)
 ========
 
-  * Remove dependency on intltool completely. Gettext is enough now.
+  * Remove dependency on intltool completely.
+  * Raised gettext minimum version up to 0.19.8.
 
 1.0 (30 Dec 2015)
 =================
