@@ -167,7 +167,7 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
       /* In MacOSX use 'open' instead of 'xdg-open' */
       command = g_strdup_printf ("open %s", uris);
 #else
-      command = g_strdup_printf ("xdg-open %s", uris);
+      command = g_strdup_printf ("gvfs-open %s", uris);
 #endif
       _spawn_command (command);
 
