@@ -48,5 +48,5 @@ Note that if you do further changes in the `appdir` (e.g. to the metadata), you'
 
 Last, you can bundle frogr to a file with the `build-bundle` subcommand:
 ```
-  flatpak build-bundle repo frogr.bundle org.gnome.Frogr
+  flatpak build-bundle repo org.gnome.Frogr.flatpak org.gnome.Frogr
 ```
