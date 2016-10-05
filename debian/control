@@ -3,6 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: Mario Sanchez Prada <msanchez@gnome.org>
 Build-Depends: cdbs,
+	autopoint,
 	debhelper (>= 5),
 	yelp-tools,
 	libexif-dev (>= 0.6.14),
