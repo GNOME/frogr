@@ -1,9 +1,9 @@
-frogr (1.2~unreleased) unstable; urgency=low
+frogr (1.2) unstable; urgency=low
 
   * New upstream release (see NEWS file for details).
   * Package manually generated out of any distro.
 
- -- Mario Sanchez Prada <mario@endlessm.com>  Wed, 05 Oct 2016 00:03:08 +0100
+ -- Mario Sanchez Prada <msanchez@gnome.org>  Wed, 05 Oct 2016 12:54:08 +0000
 
 frogr (1.1) unstable; urgency=low
 

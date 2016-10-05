@@ -56,7 +56,7 @@ frogr_about_dialog_show (GtkWindow *parent)
   logo = gdk_pixbuf_new_from_file (icon_full_path, NULL);
   g_free (icon_full_path);
 
-  version = g_strdup_printf ("%s~unreleased", VERSION);
+  version = g_strdup_printf ("%s", VERSION);
 
   /* Show about dialog */
   gtk_show_about_dialog (GTK_WINDOW (parent),
