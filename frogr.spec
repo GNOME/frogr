@@ -1,5 +1,5 @@
 Name:		frogr
-Version:	1.2
+Version:	1.3
 Summary:	Flickr Remote Organizer for GNOME
 Release:	0
 

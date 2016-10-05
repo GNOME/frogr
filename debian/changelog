@@ -1,3 +1,10 @@
+frogr (1.3~unreleased) unstable; urgency=low
+
+  * New upstream release (see NEWS file for details).
+  * Package manually generated out of any distro.
+
+ -- Mario Sanchez Prada <msanchez@gnome.org>  Wed, 05 Oct 2016 13:06:44 +0000
+
 frogr (1.2) unstable; urgency=low
 
   * New upstream release (see NEWS file for details).

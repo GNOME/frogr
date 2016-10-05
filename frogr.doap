@@ -35,6 +35,14 @@
 
   <release>
     <Version>
+      <revision>1.2</revision>
+      <created>2016-10-05</created>
+      <file-release rdf:resource="https://download.gnome.org/sources/frogr/1.2/frogr-1.2.tar.xz"/>
+    </Version>
+  </release>
+
+  <release>
+    <Version>
       <revision>1.1</revision>
       <created>2016-10-04</created>
       <file-release rdf:resource="https://download.gnome.org/sources/frogr/1.1/frogr-1.1.tar.xz"/>
