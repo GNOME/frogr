@@ -13,7 +13,7 @@ Build-Depends: cdbs,
 	libjson-glib-dev (>= 0.12),
 	libsoup2.4-dev (>= 2.34),
 	libxml2-dev (>= 2.6.8),
-	gettext (>= 0.19.8)
+	gettext (>= 0.19.7)
 Standards-Version: 3.7.3
 Homepage: https://wiki.gnome.org/Apps/Frogr
 

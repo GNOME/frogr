@@ -9,7 +9,7 @@ URL:		https://wiki.gnome.org/Apps/Frogr
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{version}/%{name}-%{version}.tar.xz
 
 BuildRequires:	yelp-tools
-BuildRequires:	gettext >= 0.19.8
+BuildRequires:	gettext >= 0.19.7
 BuildRequires:	gtk3-devel >= 3.4
 BuildRequires:	glib2-devel >= 2.44
 BuildRequires:	gstreamer1-devel >= 1.0

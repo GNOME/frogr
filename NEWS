@@ -1,6 +1,8 @@
 1.2 (??)
 ========
 
+  * Lowered gettext minimum version down to 0.19.7 to make
+    it easier for older distributions to package frogr.
 
 1.1 (4 Oct 2016)
 ================
