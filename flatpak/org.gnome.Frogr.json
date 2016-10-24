@@ -1,13 +1,14 @@
 {
     "app-id": "org.gnome.Frogr",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "3.22",
+    "runtime-version": "master",
     "sdk": "org.gnome.Sdk",
     "command": "frogr",
     "rename-appdata-file": "frogr.appdata.xml",
     "rename-desktop-file": "frogr.desktop",
     "rename-icon": "frogr",
     "tags": ["nightly"],
+    "desktop-file-name-prefix": "(Nightly) ",
     "finish-args": [
         /* X11 + XShm access */
         "--share=ipc", "--socket=x11",
@@ -28,15 +29,18 @@
             "V": "1"
         }
     },
-    "cleanup": [],
+    "cleanup": ["/include", "/lib/pkgconfig",
+                "/share/pkgconfig", "/share/aclocal",
+                "/man", "/share/man", "/share/gtk-doc",
+                "/share/dbus-1",
+                "*.la", "*.a"],
     "modules": [
         {
             "name": "frogr",
             "sources": [
                 {
                     "type": "git",
-                    "url": "git://git.gnome.org/frogr",
-                    "branch": "RELEASE_1.2"
+                    "url": "git://git.gnome.org/frogr"
                 }
             ]
         }
