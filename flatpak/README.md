@@ -28,25 +28,25 @@ Instructions:
 ```
 (3) Build frogr From this directory:
 ```
-  flatpak-builder --force-clean --ccache --require-changes --repo=repo frogr.appdir org.gnome.Frogr.json
+  flatpak-builder --force-clean --ccache --require-changes --repo=repo frogr.appdir org.gnome.frogr.json
 ```
 (4) Add a remote to your local repo and install it:
 ```
   flatpak --user remote-add --no-gpg-verify frogr-repo repo
-  flatpak --user install frogr-repo org.gnome.Frogr
+  flatpak --user install frogr-repo org.gnome.frogr
 ```
 (5) Run frogr as an flatpak:
 ```
-  flatpak run org.gnome.Frogr
+  flatpak run org.gnome.frogr
 ```
 
 Note that if you do further changes in the `appdir` (e.g. to the metadata), you'll need to re-publish it in your local repo and update before running it again:
 ```
   flatpak build-export repo frogr.appdir
-  flatpak --user update org.gnome.Frogr
+  flatpak --user update org.gnome.frogr
 ```
 
 Last, you can bundle frogr to a file with the `build-bundle` subcommand:
 ```
-  flatpak build-bundle repo org.gnome.Frogr.flatpak org.gnome.Frogr
+  flatpak build-bundle repo org.gnome.frogr.flatpak org.gnome.frogr
 ```
