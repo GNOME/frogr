@@ -1,930 +1,470 @@
-# Danish translation for frogr.
-# Copyright (C) 2013 frogr's COPYRIGHT HOLDER
-# This file is distributed under the same license as the frogr package.
-# Joe Hansen <joedalton2@yahoo.dk>, 2011, 2012, 2013.
-#
-# title -> navn   (kunne også være titel).
+# Danish translation of eog-plugins.
+# Copyright (C) 2007-2013 Free Software Foundation, Inc.
+# This file is distributed under the same license as the eog-plugins package.
+# Kris Hansen <mumien@yahoo.dk>, 2008.
+# Kris Thomsen <mail@kristhomsen.dk>, 2013.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2016.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
-"PO-Revision-Date: 2013-03-28 12:12+0000\n"
-"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Project-Id-Version: Eog-plugins\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=eog&keywords=I18N+L10N&component=plugins\n"
+"POT-Creation-Date: 2016-10-01 13:19+0000\n"
+"PO-Revision-Date: 2016-11-13 14:32+0100\n"
+"Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
-#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
-#, fuzzy
-msgid "frogr"
-msgstr "Frogr"
+#: ../plugins/exif-display/eog-exif-display-plugin.c:105
+msgid " (invalid Unicode)"
+msgstr " (ugyldig Unicode)"
 
-#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
-#, fuzzy
-msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr "Frogr: En ekstern organisator til Flickr for GNOME"
-
-#: data/frogr.appdata.xml.in:8
-msgid ""
-"frogr is a small application for the GNOME desktop that allows users to "
-"manage their accounts in the Flickr image hosting website."
-msgstr ""
-
-#: data/frogr.appdata.xml.in:13
-msgid ""
-"It supports all the basic Flickr features, including uploading pictures, "
-"adding descriptions, setting tags and managing sets and groups pools."
-msgstr ""
-
-#: data/frogr.appdata.xml.in:24
-#, fuzzy
-msgid "Screenshot of frogr"
-msgstr "_Skærmbillede"
-
-#: data/frogr.appdata.xml.in:29
-msgid "Mario Sanchez Prada"
-msgstr ""
-
-#: data/frogr.desktop.in.in:7
-msgid "Upload and organize photos in Flickr accounts"
-msgstr "Overfør og organiser billeder i Flickr-konti"
-
-#: data/frogr.desktop.in.in:8
-msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
-msgstr ""
-
-#: src/frogr-about-dialog.c:43
-#, fuzzy
-msgid "A Flickr Remote Organizer for GNOME\n"
-msgstr "En ekstern organisator til Flickr for GNOME\n"
-
-#: src/frogr-about-dialog.c:72
-msgid "translator-credits"
-msgstr ""
-"Joe Hansen, 2011, 2012, 2013.\n"
-"\n"
-"Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
-"Mere info: http://www.dansk-gruppen.dk"
-
-#: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
-#: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
-#: src/frogr-create-new-set-dialog.c:310 src/frogr-details-dialog.c:1168
-#: src/frogr-main-view.c:1543 src/frogr-main-view.c:1618
-#: src/frogr-main-view.c:1670 src/frogr-settings-dialog.c:930
-msgid "_Cancel"
-msgstr ""
-
-#: src/frogr-add-tags-dialog.c:193 src/frogr-add-to-group-dialog.c:530
-#: src/frogr-add-to-set-dialog.c:531 src/frogr-create-new-set-dialog.c:312
-msgid "_Add"
-msgstr ""
-
-#: src/frogr-add-tags-dialog.c:202
-msgid "Enter a spaces separated list of tags:"
-msgstr "Indtast en mellemrumsadskilt liste af mærker:"
-
-#: src/frogr-add-tags-dialog.c:228
-msgid "Add Tags"
-msgstr "Tilføj mærker"
-
-#: src/frogr-add-to-group-dialog.c:147
-msgid "Name"
-msgstr "Navn"
-
-#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
-msgid "Elements"
-msgstr "Elementer"
-
-#: src/frogr-add-to-group-dialog.c:581
-msgid "Add to Groups"
-msgstr "Tilføj til grupper"
-
-#: src/frogr-add-to-set-dialog.c:148
-msgid "Title"
-msgstr "Navn"
-
-#: src/frogr-add-to-set-dialog.c:582
-msgid "Add to Sets"
-msgstr "Tilføj til sæt"
-
-#: src/frogr-auth-dialog.c:59
+#. TRANSLATORS: This is the actual focal length used when
+#. the image was taken.
+#: ../plugins/exif-display/eog-exif-display-plugin.c:183
 #, c-format
-msgid ""
-"Please press the button to authorize %s and then come back to complete the "
-"process."
-msgstr ""
-"Tryk venligst på knappen for at godkende %s og kom så tilbage for at "
-"færdigbehandle processen."
+msgid "%.1fmm (lens)"
+msgstr "%.1fmm (objektiv)"
 
-#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
-#: src/frogr-controller.c:2286
+#. Print as float to get a similar look as above.
+#. TRANSLATORS: This is the equivalent focal length assuming
+#. a 35mm film camera.
+#: ../plugins/exif-display/eog-exif-display-plugin.c:194
 #, c-format
-msgid "Authorize %s"
-msgstr "Godkend %s"
+msgid "%.1fmm (35mm film)"
+msgstr "%.1fmm (35mm film)"
 
-#: src/frogr-auth-dialog.c:155 src/frogr-settings-dialog.c:932
-msgid "_Close"
-msgstr ""
+#: ../plugins/exif-display/exif-display-config.ui.h:1
+msgid "Histogram"
+msgstr "Histogram"
 
-#: src/frogr-auth-dialog.c:167
-msgid "Enter verification code:"
-msgstr "Indtast verificeringskode:"
+#: ../plugins/exif-display/exif-display-config.ui.h:2
+msgid "Display per-channel histogram"
+msgstr "Vis per-kanal-histogram"
 
-#: src/frogr-auth-dialog.c:221
-msgid "Invalid verification code"
-msgstr "Ugyldig verificeringskode"
+#: ../plugins/exif-display/exif-display-config.ui.h:3
+msgid "Display RGB histogram"
+msgstr "Vis RGB-histogram"
 
-#: src/frogr-controller.c:581
-msgid "Process cancelled"
-msgstr "Proces afbrudt"
+#: ../plugins/exif-display/exif-display-config.ui.h:4
+msgid "General"
+msgstr "Generelt"
 
-#: src/frogr-controller.c:586
-msgid ""
-"Connection error:\n"
-"Network not available"
-msgstr ""
-"Forbindelsesfejl:\n"
-"Netværk er ikke tilgængeligt"
+#: ../plugins/exif-display/exif-display-config.ui.h:5
+msgid "Display camera settings in statusbar"
+msgstr "Vis kameraindstillinger i statuslinje"
 
-#: src/frogr-controller.c:590
-msgid ""
-"Connection error:\n"
-"Bad request"
-msgstr ""
-"Forbindelsesfejl:\n"
-"Ugyldig forespørgsel"
+#: ../plugins/exif-display/exif-display.plugin.desktop.in.h:1
+#: ../plugins/exif-display/eog-exif-display.metainfo.xml.in.h:1
+msgid "Exif Display"
+msgstr "Exif-visning"
 
-#: src/frogr-controller.c:594
-msgid ""
-"Connection error:\n"
-"Server-side error"
-msgstr ""
-"Forbindelsesfejl:\n"
-"Fejl på serverside"
+#: ../plugins/exif-display/exif-display.plugin.desktop.in.h:2
+msgid "Displays camera settings and histogram"
+msgstr "Vis kameraindstillinger og histogram"
 
-#: src/frogr-controller.c:598
-msgid ""
-"Error uploading:\n"
-"File invalid"
-msgstr ""
-"Fejl under overførsel:\n"
-"Fil er ugyldig"
+#: ../plugins/exif-display/eog-exif-display.metainfo.xml.in.h:2
+msgid "Displays Exif tags in the side panel and optionally the statusbar"
+msgstr "Vis Exif-mærker i sidepanelet og eventuelt i statuslinjen"
 
-#: src/frogr-controller.c:602
-msgid ""
-"Error uploading picture:\n"
-"Quota exceeded"
-msgstr ""
-"Fejl under overførsel af billede:\n"
-"Kvote er overskredet"
+#: ../plugins/exif-display/exif-display.ui.h:1
+msgid "ISO speed:"
+msgstr "ISO-hastighed:"
 
-#: src/frogr-controller.c:607
-#, c-format
-msgid "Quota exceeded (limit: %d video per month)"
-msgid_plural "Quota exceeded (limit: %d videos per month)"
-msgstr[0] "Kvote overskredet (begrænsning: %d video per måned)"
-msgstr[1] "Kvote overskredet (begrænsning: %d videoer per måned)"
+#: ../plugins/exif-display/exif-display.ui.h:2
+msgid "Expo. Time:"
+msgstr "Belysningstid:"
 
-#: src/frogr-controller.c:611
-msgid ""
-"Error uploading video:\n"
-"You can't upload more videos with this account"
-msgstr ""
-"Fejl under overførsel af video:\n"
-"Du kan ikke overføre flere videoer med denne konto"
+#: ../plugins/exif-display/exif-display.ui.h:3
+msgid "Aperture:"
+msgstr "Blænde:"
 
-#: src/frogr-controller.c:617
-msgid ""
-"Error:\n"
-"Photo not found"
-msgstr ""
-"Fejl:\n"
-"Billede blev ikke fundet"
+#: ../plugins/exif-display/exif-display.ui.h:4
+msgid "Zoom:"
+msgstr "Zoom:"
 
-#: src/frogr-controller.c:621
-msgid ""
-"Error:\n"
-"Photo already in photoset"
-msgstr ""
-"Fejl:\n"
-"Billede er allerede i billedsættet"
+#: ../plugins/exif-display/exif-display.ui.h:5
+msgid "Metering:"
+msgstr "Måling:"
 
-#: src/frogr-controller.c:625
-msgid ""
-"Error:\n"
-"Photo already in group"
-msgstr ""
-"Fejl:\n"
-"Billede er allerede i gruppen"
+#: ../plugins/exif-display/exif-display.ui.h:6
+msgid "Expo. bias:"
+msgstr "Belysningsindflydelse:"
 
-#: src/frogr-controller.c:629
-msgid ""
-"Error:\n"
-"Photo already in the maximum number of groups possible"
-msgstr ""
-"Fejl:\n"
-"Billede er allerede i det maksimale antal grupper"
-
-#: src/frogr-controller.c:633
-msgid ""
-"Error:\n"
-"Group limit already reached"
-msgstr ""
-"Fejl:\n"
-"Gruppebegrænsning er allerede nået"
-
-#: src/frogr-controller.c:637
-msgid ""
-"Error:\n"
-"Photo added to group's queue"
-msgstr ""
-"Fejl:\n"
-"Billede er tilføjet gruppens kø"
-
-#: src/frogr-controller.c:641
-msgid ""
-"Error:\n"
-"Photo already added to group's queue"
-msgstr ""
-"Fejl:\n"
-"Billede er allerede tilføjet gruppens kø"
-
-#: src/frogr-controller.c:645
-msgid ""
-"Error:\n"
-"Content not allowed for this group"
-msgstr ""
-"Fejl:\n"
-"Indhold er ikke tilladt for denne gruppe"
-
-#: src/frogr-controller.c:649
-msgid ""
-"Authorization failed.\n"
-"Please try again"
-msgstr ""
-"Godkendelse mislykkedes.\n"
-"Prøv venligst igen"
-
-#: src/frogr-controller.c:655
-#, c-format
-msgid ""
-"Error\n"
-"%s is not properly authorized to upload pictures to Flickr.\n"
-"Please re-authorize it"
-msgstr ""
-"Fejl:\n"
-"%s er ikke korrekt godkendt til at overføre billeder til Flickr.\n"
-"Godkend venligst igen"
-
-#: src/frogr-controller.c:660
-msgid ""
-"Unable to authenticate in Flickr\n"
-"Please try again."
-msgstr ""
-"Kunne ikke godkende i Flickr\n"
-"Prøv venligst igen."
-
-#: src/frogr-controller.c:664
-#, c-format
-msgid ""
-"You have not properly authorized %s yet.\n"
-"Please try again."
-msgstr ""
-"Du har endnu ikke godkendt %s på korrekt vis.\n"
-"Prøv venligst igen."
-
-#: src/frogr-controller.c:669
-msgid ""
-"Invalid verification code.\n"
-"Please try again."
-msgstr ""
-"Ugyldig verificeringskode.\n"
-"Prøv venligst igen"
-
-#: src/frogr-controller.c:673
-msgid ""
-"Error:\n"
-"Service not available"
-msgstr ""
-"Fejl:\n"
-"Tjeneste er ikke tilgængelig"
-
-#: src/frogr-controller.c:678
-#, c-format
-msgid "An error happened: %s."
-msgstr "Der opstod en fejl: %s."
-
-#: src/frogr-controller.c:883
-msgid "Authorization failed (timed out)"
-msgstr "Godkendelse mislykkedes (tidsudløb)"
-
-#: src/frogr-controller.c:931
-#, c-format
-msgid "Retrying Upload (attempt %d/%d)…"
-msgstr "Prøver at overføre igen (forsøg %d/%d) …"
-
-#: src/frogr-controller.c:936
-#, c-format
-msgid "Uploading '%s'…"
-msgstr "Overfører \"%s\"…"
-
-#: src/frogr-controller.c:2242
-msgid "Updating credentials…"
-msgstr "Opdaterer akkreditiver …"
-
-#: src/frogr-controller.c:2247
-msgid "Retrieving data for authorization…"
-msgstr "Henter data for godkendelse …"
-
-#: src/frogr-controller.c:2252
-msgid "Finishing authorization…"
-msgstr "Afslutter godkendelse …"
-
-#: src/frogr-controller.c:2257
-msgid "Retrieving list of sets…"
-msgstr "Henter liste af sæt …"
-
-#: src/frogr-controller.c:2262
-msgid "Retrieving list of groups…"
-msgstr "Henter liste af grupper …"
-
-#: src/frogr-controller.c:2267
-msgid "Retrieving list of tags…"
-msgstr "Henter liste af mærker …"
-
-#: src/frogr-controller.c:2292
-#, fuzzy
-msgid "Fetching information"
-msgstr "Angiv information om geografisk placering"
-
-#: src/frogr-controller.c:2398
-msgid "No sets found"
-msgstr "Ingen sæt fundet"
-
-#: src/frogr-controller.c:2423
-msgid "No groups found"
-msgstr "Ingen grupper fundet"
-
-#: src/frogr-controller.c:2984
-#, c-format
-msgid ""
-"You need to properly authorize %s before uploading any pictures to Flickr.\n"
-"Please re-authorize it."
-msgstr ""
-"Du skal på passende vis godkende %s, før du overfører billeder til Flickr.\n"
-"Godkend venligst igen."
-
-#: src/frogr-controller.c:2994
-msgid "You need to be connected before uploading any pictures to Flickr."
-msgstr "Du skal være tilsluttet før du overfører billeder til Flickr."
-
-#: src/frogr-controller.c:3012
-#, fuzzy
-msgid "Uploading Pictures"
-msgstr "Overfører \"%s\"…"
-
-#: src/frogr-controller.c:3057
-msgid "Error opening project file"
-msgstr "Der opstod en fejl under åbning af projektfil"
-
-#: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
-msgid "Missing data required"
-msgstr "Manglende data krævet"
-
-#: src/frogr-create-new-set-dialog.c:326
-msgid "Title:"
-msgstr "Navn:"
-
-#: src/frogr-create-new-set-dialog.c:335
+#: ../plugins/exif-display/exif-display.ui.h:7
 msgid "Description:"
 msgstr "Beskrivelse:"
 
-#: src/frogr-create-new-set-dialog.c:356
-msgid "Fill Pictures Details with Title and Description"
-msgstr "Udfyld billeddetaljer med navn og beskrivelse"
+#: ../plugins/export-to-folder/eog-export-to-folder.metainfo.xml.in.h:1
+#: ../plugins/export-to-folder/export-to-folder.plugin.desktop.in.h:1
+msgid "Export to Folder"
+msgstr "Eksportér til mappe"
 
-#: src/frogr-create-new-set-dialog.c:381
-msgid "Create New Set"
-msgstr "Opret nyt sæt"
+#: ../plugins/export-to-folder/eog-export-to-folder.metainfo.xml.in.h:2
+#: ../plugins/export-to-folder/export-to-folder.plugin.desktop.in.h:2
+msgid "Export the current image to a separate directory"
+msgstr "Eksportér det nuværende billede til en separat mappe"
 
-#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
-msgid "Default (as specified in Flickr)"
-msgstr "Standard (som angivet i Flickr)"
+#: ../plugins/export-to-folder/export-to-folder.py:56
+msgid "_Export"
+msgstr "_Eksportér"
 
-#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
-msgid "All rights reserved"
-msgstr "Alle rettigheder forbeholdes"
+#: ../plugins/export-to-folder/org.gnome.eog.plugins.export-to-folder.gschema.xml.in.h:1
+msgid "The folder to export to"
+msgstr "Mappen, der eksporteres til"
 
-#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
-msgid "CC Attribution-NonCommercial-ShareAlike"
-msgstr "CC Attribution-NonCommercial-ShareAlike"
-
-#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
-msgid "CC Attribution-NonCommercial"
-msgstr "CC Attribution-NonCommercial"
-
-#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
-msgid "CC Attribution-NonCommercial-NoDerivs"
-msgstr "CC Attribution-NonCommercial-NoDerivs"
-
-#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
-msgid "CC Attribution"
-msgstr "CC Attribution"
-
-#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
-msgid "CC Attribution-ShareAlike"
-msgstr "CC Attribution-ShareAlike"
-
-#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
-msgid "CC Attribution-NoDerivs"
-msgstr "CC Attribution-NoDerivs"
-
-#: src/frogr-details-dialog.c:172
-msgid "Open with image viewer"
-msgstr "Åbn med billedfremviser"
-
-#: src/frogr-details-dialog.c:190
-msgid "_Title:"
-msgstr "_Navn:"
-
-#: src/frogr-details-dialog.c:200
-msgid "_Description:"
-msgstr "_Beskrivelse:"
-
-#: src/frogr-details-dialog.c:224
-msgid "Ta_gs:"
-msgstr "_Mærker:"
-
-#: src/frogr-details-dialog.c:247
-msgid "Visibility"
-msgstr "Synlighed"
-
-#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
-msgid "_Private"
-msgstr "_Privat"
-
-#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
-msgid "P_ublic"
-msgstr "_Offentlig"
-
-#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
-msgid "_Family"
-msgstr ""
-
-#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
-msgid "F_riends"
-msgstr ""
-
-#: src/frogr-details-dialog.c:288
-msgid "Content Type"
-msgstr "Indholdstype"
-
-#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
-msgid "P_hoto"
-msgstr "_Billede"
-
-#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
-msgid "Scree_nshot"
-msgstr "_Skærmbillede"
-
-#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
-msgid "Oth_er"
-msgstr "_Andet"
-
-#: src/frogr-details-dialog.c:317
-msgid "Safety Level"
-msgstr "Sikkerhedsniveau"
-
-#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
-msgid "S_afe"
-msgstr "_Sikker"
-
-#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
-msgid "_Moderate"
-msgstr "_Moderat"
-
-#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
-msgid "Restr_icted"
-msgstr "_Begrænset"
-
-#: src/frogr-details-dialog.c:345
-msgid "License Type"
-msgstr "Licenstype"
-
-#: src/frogr-details-dialog.c:367
-msgid "Other Properties"
-msgstr "Andre egenskaber"
-
-#: src/frogr-details-dialog.c:375
-msgid "_Show Up in Global Search Results"
-msgstr "_Vis i globale søgeresultater"
-
-#: src/frogr-details-dialog.c:379
-msgid "Set Geo_location Information"
-msgstr "Angiv information om geografisk placering"
-
-#: src/frogr-details-dialog.c:383
-msgid "Replace 'Date Posted' with 'Date Taken'"
-msgstr ""
-
-#: src/frogr-details-dialog.c:475
-#, c-format
-msgid "(%d Picture)"
-msgid_plural "(%d Pictures)"
-msgstr[0] "(%d billede)"
-msgstr[1] "(%d billeder)"
-
-#: src/frogr-details-dialog.c:548
-msgid "An error happened trying to load the picture"
-msgstr "Der opstod en fejl under forsøg på at indlæse billedet"
-
-#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
-msgid "_Edit"
-msgstr "_Rediger"
-
-#: src/frogr-details-dialog.c:1197
-msgid "Edit Picture Details"
-msgstr "Rediger billeddetaljer"
-
-#: src/frogr-file-loader.c:142
-#, c-format
-msgid "Loading files %d / %d"
-msgstr "Indlæser filer %d / %d"
-
-#: src/frogr-file-loader.c:369
-#, c-format
+#: ../plugins/export-to-folder/org.gnome.eog.plugins.export-to-folder.gschema.xml.in.h:2
 msgid ""
-"Unable to load picture %s:\n"
-"%s"
+"This is the folder the plugin will place the exported files in. Plugin will "
+"export to $HOME/exported-images if not set."
 msgstr ""
-"Kan ikke indlæse billede %s:\n"
-"%s"
+"Dette er mappen, hvor udvidelsesmodulet vil placere de eksportede filer i. "
+"Udvidelsesmodulet vil eksportere til $HOME/exported-images, hvis intet er "
+"angivet."
 
-#: src/frogr-file-loader.c:400
-#, c-format
+#: ../plugins/export-to-folder/preferences_dialog.ui.h:1
+msgid "Export directory:"
+msgstr "Eksportmappe:"
+
+#: ../plugins/fit-to-width/eog-fit-to-width.metainfo.xml.in.h:1
+#: ../plugins/fit-to-width/fit-to-width.plugin.desktop.in.h:1
+msgid "Zoom to Fit Image Width"
+msgstr "Zoom for at tilpasse billedbredde"
+
+#: ../plugins/fit-to-width/eog-fit-to-width.metainfo.xml.in.h:2
+msgid "Adjusts the zoom to have the image's width fit into the window"
+msgstr "Justerer zoomniveauet, så billedets bredde passer til vinduet"
+
+#: ../plugins/fit-to-width/eog-fit-to-width-plugin.c:129
+msgid "Fit to width"
+msgstr "Tilpas til bredde"
+
+#: ../plugins/fit-to-width/fit-to-width.plugin.desktop.in.h:2
+msgid "Fit images to the window width"
+msgstr "Tilpas billeder til vinduets bredde"
+
+#: ../plugins/fullscreenbg/eog-fullscreenbg.metainfo.xml.in.h:1
+#: ../plugins/fullscreenbg/fullscreenbg.plugin.desktop.in.h:1
+msgid "Fullscreen Background"
+msgstr "Fuldskærmsbaggrund"
+
+#: ../plugins/fullscreenbg/eog-fullscreenbg.metainfo.xml.in.h:2
+#: ../plugins/fullscreenbg/fullscreenbg.plugin.desktop.in.h:2
+msgid "Enables changing background in fullscreen mode"
+msgstr "Aktiverer skift af baggrund i fuldskærmstilstand"
+
+#: ../plugins/fullscreenbg/org.gnome.eog.plugins.fullscreenbg.gschema.xml.in.h:1
+msgid "Use custom background settings"
+msgstr "Brug tilpassede baggrundsindstillinger"
+
+#: ../plugins/fullscreenbg/org.gnome.eog.plugins.fullscreenbg.gschema.xml.in.h:2
+msgid "Whether the plugin should use global settings or its own."
+msgstr "Om udvidelsesmodulet skal bruge globale indstillinger eller dets egne."
+
+#: ../plugins/fullscreenbg/org.gnome.eog.plugins.fullscreenbg.gschema.xml.in.h:3
+msgid "Background color in fullscreen mode"
+msgstr "Baggrundsfarve i fuldskærmstilstand"
+
+#: ../plugins/fullscreenbg/org.gnome.eog.plugins.fullscreenbg.gschema.xml.in.h:4
 msgid ""
-"Unable to load video %s\n"
-"Please check that you have the right codec installed"
+"The color that is used to fill the area behind the image. This option has "
+"effect only if use-custom is enabled."
 msgstr ""
-"Kan ikke indlæse video %s:\n"
-"Kontroller at du har den korrekte codec installeret"
+"Farven, som bruges til at udfylde området bag billedet. Denne indstilling "
+"har kun effekt, hvis brug-tilpasset er aktiveret."
 
-#: src/frogr-file-loader.c:636
+#: ../plugins/fullscreenbg/preferences_dialog.ui.h:1
+msgid "Use custom color:"
+msgstr "Brug tilpasset farve:"
+
+#: ../plugins/hide-titlebar/eog-hide-titlebar.metainfo.xml.in.h:1
+#: ../plugins/hide-titlebar/hide-titlebar.plugin.desktop.in.h:1
+msgid "Hide Titlebar"
+msgstr "Skjul titellinje"
+
+#: ../plugins/hide-titlebar/eog-hide-titlebar.metainfo.xml.in.h:2
+msgid "Hides the titlebar of maximized windows"
+msgstr "Skjuler maksimerede vinduers titellinje"
+
+#: ../plugins/hide-titlebar/hide-titlebar.plugin.desktop.in.h:2
+msgid "Hides the titlebar of maximized Eye of GNOME windows"
+msgstr "Skjuler titellinjen i maksimerede GNOMEs øje-vinduer"
+
+#: ../plugins/light-theme/eog-light-theme.metainfo.xml.in.h:1
+#: ../plugins/light-theme/light-theme.plugin.desktop.in.h:1
+msgid "Disable Dark Theme"
+msgstr "Deaktivér mørkt tema"
+
+#: ../plugins/light-theme/eog-light-theme.metainfo.xml.in.h:2
+msgid "Disables dark theme"
+msgstr "Deaktiverer mørkt tema"
+
+#: ../plugins/light-theme/light-theme.plugin.desktop.in.h:2
+msgid "Disables Eye of GNOME's preference of dark theme variants"
+msgstr "Deaktiverer GNOMEs øjes indstilling for mørke tema-varianter"
+
+#: ../plugins/map/eog-map.metainfo.xml.in.h:1
+#: ../plugins/map/eog-map-plugin.c:461 ../plugins/map/map.plugin.desktop.in.h:1
+msgid "Map"
+msgstr "Kort"
+
+#: ../plugins/map/eog-map.metainfo.xml.in.h:2
+msgid "Displays on a map in the side panel where the picture was taken"
+msgstr "Viser på et kort i sidepanelet, hvor billedet blev taget"
+
+#: ../plugins/map/eog-map-plugin.c:424
+msgid "Jump to current image's location"
+msgstr "Hop til det nuværende billedes lokation"
+
+#: ../plugins/map/eog-map-plugin.c:437
+msgid "Zoom in"
+msgstr "Zoom ind"
+
+#: ../plugins/map/eog-map-plugin.c:446
+msgid "Zoom out"
+msgstr "Zoom ud"
+
+#: ../plugins/map/map.plugin.desktop.in.h:2
+msgid "Display the geolocation of the image on a map"
+msgstr "Vis den geografiske placering af billedet på et kort"
+
+#: ../plugins/maximize-windows/eog-maximize-windows.metainfo.xml.in.h:1
+#: ../plugins/maximize-windows/maximize-windows.plugin.desktop.in.h:1
+msgid "Maximize Windows"
+msgstr "Maksimér vinduer"
+
+#: ../plugins/maximize-windows/eog-maximize-windows.metainfo.xml.in.h:2
+msgid "New windows will open maximized"
+msgstr "Nye vinduer vil blive åbnet maksimeret"
+
+#: ../plugins/maximize-windows/maximize-windows.plugin.desktop.in.h:2
+msgid "Maximize new windows"
+msgstr "Maksimér nye vinduer"
+
+#: ../plugins/postasa/eog-postasa.metainfo.xml.in.h:1
+msgid "Picasa Web Uploader"
+msgstr "Overførsel til Picasa Web"
+
+#: ../plugins/postasa/eog-postasa.metainfo.xml.in.h:2
+msgid "Supports uploading photos to Google Picasa Web"
+msgstr "Understøtter upload af billeder til Google Picasa Web"
+
+#: ../plugins/postasa/eog-postasa-plugin.c:306
+msgid "Uploading..."
+msgstr "Overfører..."
+
+#: ../plugins/postasa/eog-postasa-plugin.c:352
+msgid "Uploaded"
+msgstr "Overført"
+
+#: ../plugins/postasa/eog-postasa-plugin.c:356
+msgid "Cancelled"
+msgstr "Annulleret"
+
+#: ../plugins/postasa/eog-postasa-plugin.c:359
+msgid "Failed"
+msgstr "Mislykkedes"
+
+#: ../plugins/postasa/eog-postasa-plugin.c:582
 #, c-format
-msgid ""
-"Can't load file %s:\n"
-"Size of file is bigger than the maximum allowed for this account (%s)"
-msgstr ""
-"Kan ikke indlæse fil %s:\n"
-"Filens størrelse er større end det tilladte maksimum for denne konto (%s)"
+msgid "Login failed. %s"
+msgstr "Indlogning mislykkedes. %s"
 
-#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
-msgid "Open"
-msgstr "Åbn"
+#: ../plugins/postasa/eog-postasa-plugin.c:586
+msgid "Logged in successfully."
+msgstr "Loggede ind med success."
 
-#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
-msgid "Open Existing Project"
-msgstr "Åbn eksisterende projekt"
+#: ../plugins/postasa/eog-postasa-plugin.c:587
+msgid "Close"
+msgstr "Luk"
 
-#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
-msgid "Add"
-msgstr "Tilføj"
+#: ../plugins/postasa/eog-postasa-plugin.c:608
+msgid "Cancel"
+msgstr "Annullér"
 
-#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
-msgid "Add Elements"
-msgstr "Tilføj elementer"
+#. TODO: want to handle passwords more securely
+#: ../plugins/postasa/eog-postasa-plugin.c:614
+msgid "Logging in..."
+msgstr "Logger ind..."
 
-#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
-msgid "Remove"
-msgstr "Fjern"
+#: ../plugins/postasa/eog-postasa-plugin.c:663
+msgid "Please log in to continue upload."
+msgstr "Log venligst ind, for at fortsætte overførsel."
 
-#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
-msgid "Remove Elements"
-msgstr "Fjern elementer"
+#: ../plugins/postasa/eog-postasa-plugin.c:842
+msgid "Upload to PicasaWeb"
+msgstr "Overfør til PicasaWeb"
 
-#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
-msgid "Upload"
-msgstr "Overfør"
+#: ../plugins/postasa/postasa-config.xml.h:1
+msgid "PicasaWeb Login"
+msgstr "PicasaWeb-login"
 
-#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
-msgid "Upload All"
-msgstr "Overfør alle"
+#: ../plugins/postasa/postasa-config.xml.h:2
+msgid "_Cancel"
+msgstr "_Annullér"
 
-#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
-msgid "Save"
-msgstr "Gem"
+#: ../plugins/postasa/postasa-config.xml.h:3
+msgid "_Login"
+msgstr "_Log ind"
 
-#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
-msgid "Save Current Project"
-msgstr "Gem aktuelt projekt"
-
-#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
-msgid "_About"
-msgstr "_Om"
-
-#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
-#: data/gtkbuilder/frogr-menu-button.ui:94
-msgid "_Quit"
-msgstr "_Afslut"
-
-#: src/frogr-main-view.c:1070
-msgid "Accounts"
-msgstr "Konti"
-
-#: src/frogr-main-view.c:1410
-#, c-format
-msgid "Taken: %s"
-msgstr "Optagelsestidspunkt: %s"
-
-#: src/frogr-main-view.c:1415
-#, c-format
-msgid "File size: %s"
-msgstr "Filstørrelse: %s"
-
-#: src/frogr-main-view.c:1540
-msgid "Select File"
-msgstr "Vælg fil"
-
-#: src/frogr-main-view.c:1544 src/frogr-main-view.c:1671
-#, fuzzy
-msgid "_Open"
-msgstr "Åbn"
-
-#: src/frogr-main-view.c:1553
-msgid "Frogr Project Files"
-msgstr "Frogr-projektfiler"
-
-#: src/frogr-main-view.c:1615
-msgid "Select Destination"
-msgstr "Vælg destination"
-
-#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
-#: data/gtkbuilder/frogr-menu-button.ui:6
-msgid "_Save"
-msgstr "_Gem"
-
-#: src/frogr-main-view.c:1622
-msgid "Untitled Project.frogr"
-msgstr "Unavngivet Project.frogr"
-
-#: src/frogr-main-view.c:1667
-msgid "Select a Picture"
-msgstr "Vælg et billede"
-
-#: src/frogr-main-view.c:1694
-msgid "All Files"
-msgstr "Alle filer"
-
-#: src/frogr-main-view.c:1697
-msgid "Image Files"
-msgstr "Billedfiler"
-
-#: src/frogr-main-view.c:1701
-msgid "Video Files"
-msgstr "Videofiler"
-
-#: src/frogr-main-view.c:1723
-msgid "You don't have any picture added yet"
-msgstr "Du har endnu ikke tilføjet billeder"
-
-#: src/frogr-main-view.c:1736
-msgid "You need to select some pictures first"
-msgstr "Du skal vælge nogle billeder først"
-
-#: src/frogr-main-view.c:2108
-msgid "Not connected to Flickr"
-msgstr "Ikke forbundet til Flickr"
-
-#: src/frogr-main-view.c:2118
-#, c-format
-msgid "Connected as %s%s"
-msgstr "Forbundet som %s%s"
-
-#: src/frogr-main-view.c:2119
-msgid " (PRO account)"
-msgstr " (PRO-konto)"
-
-#: src/frogr-main-view.c:2143
-#, c-format
-msgid " - %s / %s remaining"
-msgstr " - %s / %s tilbage"
-
-#: src/frogr-main-view.c:2169
-#, c-format
-msgid " - %d file to upload (%s)"
-msgid_plural " - %d files to upload (%s)"
-msgstr[0] " - %d fil der skal overføres (%s)"
-msgstr[1] " - %d filer der skal overføres (%s)"
-
-#: src/frogr-settings-dialog.c:185
-msgid "Default Visibility"
-msgstr "Standardsynlighed"
-
-#: src/frogr-settings-dialog.c:224
-msgid "Default Content Type"
-msgstr "Standardindholdstype"
-
-#: src/frogr-settings-dialog.c:250
-msgid "Default Safety Level"
-msgstr "Standardsikkerhedsniveau"
-
-#: src/frogr-settings-dialog.c:276
-msgid "Default License"
-msgstr "Standardlicens"
-
-#: src/frogr-settings-dialog.c:302
-msgid "Other Defaults"
-msgstr "Andre standardindstillinger"
-
-#: src/frogr-settings-dialog.c:312
-msgid "_Show Pictures in Global Search Results"
-msgstr "_Vis billeder i globale søgeresultater"
-
-#: src/frogr-settings-dialog.c:315
-msgid "Set Geo_location Information for Pictures"
-msgstr "Angiv information om geografisk placering for billeder"
-
-#: src/frogr-settings-dialog.c:318
-msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
-msgstr ""
-
-#: src/frogr-settings-dialog.c:324
-msgid "_General"
-msgstr "_Generelt"
-
-#: src/frogr-settings-dialog.c:344
-msgid "Proxy Settings"
-msgstr "Proxy-opsætning"
-
-#: src/frogr-settings-dialog.c:353
-msgid "_Enable HTTP Proxy"
-msgstr "_Aktiver HTTP-proxy"
-
-#: src/frogr-settings-dialog.c:363
-msgid "_Host:"
-msgstr "_Vært:"
-
-#: src/frogr-settings-dialog.c:376
-msgid "_Port:"
-msgstr "_Port:"
-
-#: src/frogr-settings-dialog.c:389
-msgid "U_sername:"
+#: ../plugins/postasa/postasa-config.xml.h:4
+msgid "_Username:"
 msgstr "_Brugernavn:"
 
-#: src/frogr-settings-dialog.c:402
-msgid "Pass_word:"
-msgstr "_Adgangskode:"
+#: ../plugins/postasa/postasa-config.xml.h:5
+msgid "_Password:"
+msgstr "Adgangs_kode:"
 
-#: src/frogr-settings-dialog.c:426
-msgid "Connec_tion"
-msgstr "_Forbindelse"
+#: ../plugins/postasa/postasa.plugin.desktop.in.h:1
+msgid "PicasaWeb Uploader"
+msgstr "Overførsel til PicasaWeb"
 
-#: src/frogr-settings-dialog.c:444
-msgid "Other options"
-msgstr "Andre indstillinger"
+#: ../plugins/postasa/postasa.plugin.desktop.in.h:2
+msgid "Upload your pictures to PicasaWeb"
+msgstr "Overfør dine billeder til PicasaWeb"
 
-#: src/frogr-settings-dialog.c:454
-msgid "Ena_ble Tags Auto-Completion"
-msgstr "_Aktiver automatisk færdiggørelse af mærker"
+#: ../plugins/postasa/postasa-uploads.xml.h:1
+msgid "Uploads:"
+msgstr "Overførsler:"
 
-#: src/frogr-settings-dialog.c:457
-msgid "_Import Tags from Pictures Metadata"
-msgstr "_Importer mærker fra billedernes metadata"
+#: ../plugins/postasa/postasa-uploads.xml.h:2
+msgid "File"
+msgstr "Fil"
 
-#: src/frogr-settings-dialog.c:461
-msgid "Use _Dark GTK Theme"
-msgstr "Brug GTK-temaet _Dark"
+#: ../plugins/postasa/postasa-uploads.xml.h:3
+msgid "Size"
+msgstr "Størrelse"
 
-#: src/frogr-settings-dialog.c:465
-msgid "_Keep File Extensions in Titles when Loading"
-msgstr "_Bevar filendelser i navne når der indlæses billeder"
+#: ../plugins/postasa/postasa-uploads.xml.h:4
+msgid "Status"
+msgstr "Status"
 
-#: src/frogr-settings-dialog.c:471
-msgid "_Misc"
-msgstr "_Diverse"
+#: ../plugins/postasa/postasa-uploads.xml.h:5
+msgid "Cancel Selected"
+msgstr "Annullér valgte"
 
-#: src/frogr-settings-dialog.c:972
-msgid "Preferences"
-msgstr "Præferencer"
+#: ../plugins/postasa/postasa-uploads.xml.h:6
+msgid "Cancel All"
+msgstr "Annullér alle"
 
-#: data/gtkbuilder/frogr-app-menu.ui:6
-msgid "Aut_horize Account…"
-msgstr "_Godkend konto …"
+#: ../plugins/postr/eog-postr.metainfo.xml.in.h:1
+msgid "Postr"
+msgstr "Postr"
 
-#: data/gtkbuilder/frogr-app-menu.ui:12
-msgid "_Preferences…"
-msgstr "_Indstillinger…"
+#: ../plugins/postr/eog-postr.metainfo.xml.in.h:2
+msgid "Supports uploading photos to Flickr"
+msgstr "Understøtter upload af billeder til Flickr"
 
-#: data/gtkbuilder/frogr-app-menu.ui:18
-msgid "_Help"
-msgstr "_Hjælp"
+#: ../plugins/postr/eog-postr-plugin.c:156
+msgid "Upload to Flickr"
+msgstr "Overfør til Flickr"
 
-#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
-#: data/gtkbuilder/frogr-menu-button.ui:18
-msgid "_Edit Details…"
-msgstr "_Rediger detaljer …"
+#: ../plugins/postr/postr.plugin.desktop.in.h:1
+msgid "Flickr Uploader"
+msgstr "Overførsel til Flickr"
 
-#: data/gtkbuilder/frogr-context-menu.ui:11
-#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
-msgid "Add _Tags…"
-msgstr "Tilføj _mærker…"
+#: ../plugins/postr/postr.plugin.desktop.in.h:2
+msgid "Upload your pictures to Flickr"
+msgstr "Overfør dine billeder til Flickr"
 
-#: data/gtkbuilder/frogr-context-menu.ui:16
-#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
-msgid "Add to _Group…"
-msgstr "Tilføj til _gruppe…"
+#: ../plugins/pythonconsole/config.ui.h:1
+msgid "C_ommand color:"
+msgstr "K_ommando-farve:"
 
-#: data/gtkbuilder/frogr-context-menu.ui:21
-#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
-msgid "Add to _Photoset"
-msgstr "Tilføj til _billedsæt"
+#: ../plugins/pythonconsole/config.ui.h:2
+msgid "_Error color:"
+msgstr "_Fejl-farve:"
 
-#: data/gtkbuilder/frogr-context-menu.ui:24
-#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
-msgid "_Add to Existing Photoset…"
-msgstr "_Tilføj til eksisterende billedsæt …"
+#: ../plugins/pythonconsole/eog-pythonconsole.metainfo.xml.in.h:1
+#: ../plugins/pythonconsole/__init__.py:87
+#: ../plugins/pythonconsole/pythonconsole.plugin.desktop.in.h:1
+msgid "Python Console"
+msgstr "Python-konsol"
 
-#: data/gtkbuilder/frogr-context-menu.ui:29
-#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
-msgid "_Create New Photoset…"
-msgstr "_Opret nyt billedsæt …"
+#: ../plugins/pythonconsole/eog-pythonconsole.metainfo.xml.in.h:2
+msgid "Adds a Python console"
+msgstr "Tilføjer en Python-konsol"
 
-#: data/gtkbuilder/frogr-context-menu.ui:38
-#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
-msgid "_Open in External Viewer"
-msgstr "_Åbn i ekstern fremviser"
+#: ../plugins/pythonconsole/__init__.py:59
+msgid "P_ython Console"
+msgstr "P_ython-konsol"
 
-#: data/gtkbuilder/frogr-context-menu.ui:45
-#: data/gtkbuilder/frogr-menu-bar.ui:30
-msgid "_Remove Elements"
-msgstr "_Fjern elementer"
+#: ../plugins/pythonconsole/org.gnome.eog.plugins.pythonconsole.gschema.xml.in.h:1
+msgid "Command Text Color"
+msgstr "Farve for kommandotekst"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:5
-msgid "_File"
-msgstr "_Fil"
+#: ../plugins/pythonconsole/org.gnome.eog.plugins.pythonconsole.gschema.xml.in.h:2
+msgid "The color used for commands."
+msgstr "Farven, som bruges til kommandoer."
 
-#: data/gtkbuilder/frogr-menu-bar.ui:8
-msgid "_Open…"
-msgstr "_Åbn …"
+#: ../plugins/pythonconsole/org.gnome.eog.plugins.pythonconsole.gschema.xml.in.h:3
+msgid "Error Text Color"
+msgstr "Farve for fejltekst"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
-msgid "Save _As…"
-msgstr "Gem _som …"
+#: ../plugins/pythonconsole/org.gnome.eog.plugins.pythonconsole.gschema.xml.in.h:4
+msgid "The color used for errors."
+msgstr "Farven, som bruges til fejl."
 
-#: data/gtkbuilder/frogr-menu-bar.ui:25
-msgid "A_dd Elements…"
-msgstr "_Tilføj elementer …"
+#: ../plugins/pythonconsole/org.gnome.eog.plugins.pythonconsole.gschema.xml.in.h:5
+msgid "Whether to use the system font"
+msgstr "Om systemskrifttypen skal bruges"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:37
-msgid "_Upload All"
-msgstr "_Overfør alle"
+#: ../plugins/pythonconsole/org.gnome.eog.plugins.pythonconsole.gschema.xml.in.h:6
+msgid ""
+"If true, the terminal will use the desktop-global standard font if it's "
+"monospace (and the most similar font it can come up with otherwise)."
+msgstr ""
+"Hvis markeret, vil terminalen bruge skrivebordets standardskrifttype, hvis "
+"den er fastbredde (og ellers, vil den finde den skrifttype, der ligner mest)."
 
-#: data/gtkbuilder/frogr-menu-bar.ui:86
-msgid "_View"
-msgstr "_Vis"
+#: ../plugins/pythonconsole/org.gnome.eog.plugins.pythonconsole.gschema.xml.in.h:7
+msgid "Font used by Python Console"
+msgstr "Skrifttype brugt af Python-konsol"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
-msgid "_Sort Elements"
-msgstr "_Sorter elementer"
+#: ../plugins/pythonconsole/org.gnome.eog.plugins.pythonconsole.gschema.xml.in.h:8
+msgid "A Pango font name. Examples are \"Sans 12\" or \"Monospace Bold 14\"."
+msgstr ""
+"Et Pango-skrifttypenavn. Eksempler er \"Sans 12\" eller \"Monospace Bold "
+"14\"."
 
-#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
-msgid "As _Loaded"
-msgstr "Som _indlæst"
+#: ../plugins/pythonconsole/pythonconsole.plugin.desktop.in.h:2
+msgid "Python console for Eye of GNOME"
+msgstr "Python-konsol til GNOMEs øje"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
-msgid "By _Date Taken"
-msgstr "Efter _optagelsestidspunkt"
+#: ../plugins/send-by-mail/eog-send-by-mail.metainfo.xml.in.h:1
+#: ../plugins/send-by-mail/eog-send-by-mail-plugin.c:118
+msgid "Send by Mail"
+msgstr "Send med mail"
 
-# titel eller navn
-#: data/gtkbuilder/frogr-menu-bar.ui:102
-#: data/gtkbuilder/frogr-menu-button.ui:63
-msgid "By _Title"
-msgstr "Efter _navn"
+#: ../plugins/send-by-mail/eog-send-by-mail.metainfo.xml.in.h:2
+#: ../plugins/send-by-mail/send-by-mail.plugin.desktop.in.h:2
+msgid "Sends an image attached to a new mail"
+msgstr "Sender en billedvedhæftning til en ny mail"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:107
-#: data/gtkbuilder/frogr-menu-button.ui:68
-msgid "By _Size"
-msgstr "Efter _størrelse"
+#: ../plugins/send-by-mail/send-by-mail.plugin.desktop.in.h:1
+msgid "Send By Mail"
+msgstr "Send med mail"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:114
-#: data/gtkbuilder/frogr-menu-button.ui:75
-msgid "_Reversed Order"
-msgstr "_Omvendt rækkefølge"
+#: ../plugins/slideshowshuffle/eog-slideshowshuffle.metainfo.xml.in.h:1
+#: ../plugins/slideshowshuffle/slideshowshuffle.plugin.desktop.in.h:1
+msgid "Slideshow Shuffle"
+msgstr "Bland diasshow"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:122
-#: data/gtkbuilder/frogr-menu-button.ui:81
-msgid "Enable _Tooltips"
-msgstr "Aktiver _værktøjsfif"
+#: ../plugins/slideshowshuffle/eog-slideshowshuffle.metainfo.xml.in.h:2
+msgid "Shuffles the photos in slideshow mode"
+msgstr "Blander billeder i diasshow-tilstand"
 
-#~ msgid "Visible to _Family"
-#~ msgstr "Synlig for _familie"
+#: ../plugins/slideshowshuffle/slideshowshuffle.plugin.desktop.in.h:2
+msgid "Shuffles images in slideshow mode"
+msgstr "Bland billeder i diasshow-tilstand"
 
-#~ msgid "Visible to F_riends"
-#~ msgstr "Synlig for _venner"
+#~ msgid "Fit the image to the window width"
+#~ msgstr "Tilpas billede til vinduets bredde"
+
+#~ msgid "Send the selected images by mail"
+#~ msgstr "Send de valgte billeder med mail"
