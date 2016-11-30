@@ -2,14 +2,15 @@
 # Copyright (C) 2011 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
 # İşbaran Akçayır <isbaran@gmail.com>, 2015.
-# Muhammet Kara <muhammetk@gmail.com>, 2011, 2014, 2015.
+# Muhammet Kara <muhammetk@gmail.com>, 2011, 2014, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
-"PO-Revision-Date: 2015-08-09 19:14+0300\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=frogr&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-09-06 21:13+0000\n"
+"PO-Revision-Date: 2016-12-01 00:14+0300\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -20,24 +21,22 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.7\n"
 "X-POOTLE-MTIME: 1425026434.000000\n"
 
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
-#, fuzzy
+#: data/frogr.desktop.in.in:16
 msgid "frogr"
-msgstr "Frogr"
+msgstr "frogr"
 
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
-#, fuzzy
 msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr "Frogr: GNOME için bir Flickr Uzaktan Düzenleyicisi"
+msgstr "frogr: GNOME için bir Flickr Uzaktan Düzenleyicisi"
 
 #: data/frogr.appdata.xml.in:8
-#, fuzzy
 msgid ""
 "frogr is a small application for the GNOME desktop that allows users to "
 "manage their accounts in the Flickr image hosting website."
 msgstr ""
-"Frogr; GNOME masaüstü için hazırlanmış küçük bir uygulamadır ve "
+"frogr; GNOME masaüstü için hazırlanmış küçük bir uygulamadır ve "
 "kullanıcıların Flickr resim barındırma web sitesindeki hesaplarını "
 "yönetmelerine olanak tanır."
 
@@ -51,26 +50,21 @@ msgstr ""
 "dahil."
 
 #: data/frogr.appdata.xml.in:24
-#, fuzzy
 msgid "Screenshot of frogr"
-msgstr "Ekra_n görüntüsü"
-
-#: data/frogr.appdata.xml.in:29
-msgid "Mario Sanchez Prada"
-msgstr ""
+msgstr "frogr'nin ekra görüntüsü"
 
 #: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Flickr hesaplarına fotoğraf yükleyin ve düzenleyin."
 
-#: data/frogr.desktop.in.in:8
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Görüntü;Resim;Fotoğraf;Video;Karşıya Yükleyici;"
 
 #: src/frogr-about-dialog.c:43
-#, fuzzy
 msgid "A Flickr Remote Organizer for GNOME\n"
-msgstr "GNOME için Flickr uzaktan düzenleyicisi\n"
+msgstr "GNOME için Flickr Uzaktan Düzenleyicisi\n"
 
 #: src/frogr-about-dialog.c:72
 msgid "translator-credits"
@@ -136,6 +130,7 @@ msgstr "%s'i Yetkilendir"
 msgid "_Close"
 msgstr "_Kapat"
 
+#. Description label
 #: src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "Doğrulama kodunu girin:"
@@ -318,6 +313,7 @@ msgstr ""
 "Hata:\n"
 "Hizmet kullanılabilir değil."
 
+#. General error: just dump the raw error description
 #: src/frogr-controller.c:678
 #, c-format
 msgid "An error happened: %s."
@@ -395,6 +391,7 @@ msgstr "Resimler Karşıya Yükleniyor"
 msgid "Error opening project file"
 msgstr "Proje dosyası açılırken hata"
 
+#. This shows a dialog notifying the problem to the user
 #: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr "Gerekli bilgi eksik"
@@ -535,6 +532,7 @@ msgstr "Coğrafi _Konum Bilgisi Ayarla"
 msgid "Replace 'Date Posted' with 'Date Taken'"
 msgstr "'Gönderilen Tarihi' 'Çekilen Tarih' ile değiştir"
 
+#. Visually indicate how many pictures are being edited
 #: src/frogr-details-dialog.c:475
 #, c-format
 msgid "(%d Picture)"
@@ -576,6 +574,9 @@ msgstr ""
 "Video %s yüklenemedi\n"
 "Lütfen doğru kodlayıcıyı yüklediğinizden emin olun"
 
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
 #: src/frogr-file-loader.c:636
 #, c-format
 msgid ""
@@ -585,6 +586,7 @@ msgstr ""
 "Dosya %s yüklenemiyor:\n"
 "Dosya boyutu bu hesap için izin verilenden büyük (%s)"
 
+#. First create the left side buttons
 #: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Aç"
@@ -617,6 +619,7 @@ msgstr "Karşıya Yükle"
 msgid "Upload All"
 msgstr "Tümünü Karşıya Yükle"
 
+#. Save project item
 #: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Kaydet"
@@ -634,10 +637,12 @@ msgstr "_Hakkında"
 msgid "_Quit"
 msgstr "_Kapat"
 
+#. Create the submenu and insert it in the right section
 #: src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Hesaplar"
 
+#. String showind the date and time a picture was taken
 #: src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
@@ -701,6 +706,7 @@ msgstr "İlk önce bazı resimler seçmelisiniz"
 msgid "Not connected to Flickr"
 msgstr "Flickr'a bağlı değil"
 
+#. Login string, showing the user is PRO (second '%s') if so.
 #: src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
@@ -710,11 +716,19 @@ msgstr "%s%s olarak bağlanıldı"
 msgid " (PRO account)"
 msgstr "(PRO hesap)"
 
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
 #: src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - %s / %s kaldı"
 
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
 #: src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
@@ -761,6 +775,7 @@ msgstr "_Genel"
 msgid "Proxy Settings"
 msgstr "Vekil Sunucu Ayarları"
 
+#. Enable proxy
 #: src/frogr-settings-dialog.c:353
 msgid "_Enable HTTP Proxy"
 msgstr "HTTP Vekili _Etkinleştir"
@@ -769,14 +784,17 @@ msgstr "HTTP Vekili _Etkinleştir"
 msgid "_Host:"
 msgstr "_Ana makine:"
 
+#. Proxy port
 #: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr "_Port:"
 
+#. Proxy username
 #: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr "_Kullanıcı adı:"
 
+#. Proxy password
 #: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr "Par_ola:"
