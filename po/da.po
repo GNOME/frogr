@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-09-06 21:13+0000\n"
-"PO-Revision-Date: 2016-11-16 13:45+0100\n"
+"POT-Creation-Date: 2017-01-18 21:49+0000\n"
+"PO-Revision-Date: 2017-02-11 16:05+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -36,7 +36,9 @@ msgstr "frogr: Fjernhåndtering af Flickr til GNOME"
 msgid ""
 "frogr is a small application for the GNOME desktop that allows users to "
 "manage their accounts in the Flickr image hosting website."
-msgstr "frogr er et lille program til GNOME-skrivebordet, som tillader brugere at håndtere deres konti på billeddelingstjenesten Flickr."
+msgstr ""
+"frogr er et lille program til GNOME-skrivebordet, som tillader brugere at "
+"håndtere deres konti på billeddelingstjenesten Flickr."
 
 #: data/frogr.appdata.xml.in:13
 msgid ""
@@ -49,7 +51,11 @@ msgstr ""
 
 #: data/frogr.appdata.xml.in:24
 msgid "Screenshot of frogr"
-msgstr "_Skærmbillede af frogr"
+msgstr "Skærmbillede af frogr"
+
+#: data/frogr.appdata.xml.in:29
+msgid "Mario Sanchez Prada"
+msgstr "Mario Sanchez Prada"
 
 #: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
@@ -124,7 +130,7 @@ msgstr ""
 "færdigbehandle processen."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
-#: src/frogr-controller.c:2286
+#: src/frogr-controller.c:2271
 #, c-format
 msgid "Authorize %s"
 msgstr "Godkend %s"
@@ -142,11 +148,11 @@ msgstr "Indtast verificeringskode:"
 msgid "Invalid verification code"
 msgstr "Ugyldig verificeringskode"
 
-#: src/frogr-controller.c:581
+#: src/frogr-controller.c:577
 msgid "Process cancelled"
 msgstr "Proces afbrudt"
 
-#: src/frogr-controller.c:586
+#: src/frogr-controller.c:582
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -154,7 +160,7 @@ msgstr ""
 "Forbindelsesfejl:\n"
 "Netværk er ikke tilgængeligt"
 
-#: src/frogr-controller.c:590
+#: src/frogr-controller.c:586
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -162,7 +168,7 @@ msgstr ""
 "Forbindelsesfejl:\n"
 "Ugyldig forespørgsel"
 
-#: src/frogr-controller.c:594
+#: src/frogr-controller.c:590
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -170,7 +176,7 @@ msgstr ""
 "Forbindelsesfejl:\n"
 "Fejl på serverside"
 
-#: src/frogr-controller.c:598
+#: src/frogr-controller.c:594
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -178,7 +184,7 @@ msgstr ""
 "Fejl under overførsel:\n"
 "Fil er ugyldig"
 
-#: src/frogr-controller.c:602
+#: src/frogr-controller.c:598
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -186,14 +192,14 @@ msgstr ""
 "Fejl under overførsel af billede:\n"
 "Kvote er overskredet"
 
-#: src/frogr-controller.c:607
+#: src/frogr-controller.c:603
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
 msgstr[0] "Kvote overskredet (begrænsning: %d video per måned)"
 msgstr[1] "Kvote overskredet (begrænsning: %d videoer per måned)"
 
-#: src/frogr-controller.c:611
+#: src/frogr-controller.c:607
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
@@ -201,7 +207,7 @@ msgstr ""
 "Fejl under overførsel af video:\n"
 "Du kan ikke overføre flere videoer med denne konto"
 
-#: src/frogr-controller.c:617
+#: src/frogr-controller.c:613
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -209,7 +215,7 @@ msgstr ""
 "Fejl:\n"
 "Billede blev ikke fundet"
 
-#: src/frogr-controller.c:621
+#: src/frogr-controller.c:617
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -217,7 +223,7 @@ msgstr ""
 "Fejl:\n"
 "Billede er allerede i billedsættet"
 
-#: src/frogr-controller.c:625
+#: src/frogr-controller.c:621
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -225,7 +231,7 @@ msgstr ""
 "Fejl:\n"
 "Billede er allerede i gruppen"
 
-#: src/frogr-controller.c:629
+#: src/frogr-controller.c:625
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -233,7 +239,7 @@ msgstr ""
 "Fejl:\n"
 "Billede er allerede i det maksimale antal grupper"
 
-#: src/frogr-controller.c:633
+#: src/frogr-controller.c:629
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -241,7 +247,7 @@ msgstr ""
 "Fejl:\n"
 "Gruppebegrænsning er allerede nået"
 
-#: src/frogr-controller.c:637
+#: src/frogr-controller.c:633
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -249,7 +255,7 @@ msgstr ""
 "Fejl:\n"
 "Billede er tilføjet gruppens kø"
 
-#: src/frogr-controller.c:641
+#: src/frogr-controller.c:637
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -257,7 +263,7 @@ msgstr ""
 "Fejl:\n"
 "Billede er allerede tilføjet gruppens kø"
 
-#: src/frogr-controller.c:645
+#: src/frogr-controller.c:641
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -265,7 +271,7 @@ msgstr ""
 "Fejl:\n"
 "Indhold er ikke tilladt for denne gruppe"
 
-#: src/frogr-controller.c:649
+#: src/frogr-controller.c:645
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -273,7 +279,7 @@ msgstr ""
 "Godkendelse mislykkedes.\n"
 "Prøv venligst igen"
 
-#: src/frogr-controller.c:655
+#: src/frogr-controller.c:651
 #, c-format
 msgid ""
 "Error\n"
@@ -284,7 +290,7 @@ msgstr ""
 "%s er ikke korrekt godkendt til at overføre billeder til Flickr.\n"
 "Godkend venligst igen"
 
-#: src/frogr-controller.c:660
+#: src/frogr-controller.c:656
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
@@ -292,7 +298,7 @@ msgstr ""
 "Kunne ikke godkende i Flickr\n"
 "Prøv venligst igen."
 
-#: src/frogr-controller.c:664
+#: src/frogr-controller.c:660
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -301,7 +307,7 @@ msgstr ""
 "Du har endnu ikke godkendt %s på korrekt vis.\n"
 "Prøv venligst igen."
 
-#: src/frogr-controller.c:669
+#: src/frogr-controller.c:665
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
@@ -309,7 +315,7 @@ msgstr ""
 "Ugyldig verificeringskode.\n"
 "Prøv venligst igen."
 
-#: src/frogr-controller.c:673
+#: src/frogr-controller.c:669
 msgid ""
 "Error:\n"
 "Service not available"
@@ -318,62 +324,62 @@ msgstr ""
 "Tjeneste er ikke tilgængelig"
 
 #. General error: just dump the raw error description
-#: src/frogr-controller.c:678
+#: src/frogr-controller.c:674
 #, c-format
 msgid "An error happened: %s."
 msgstr "Der opstod en fejl: %s."
 
-#: src/frogr-controller.c:883
+#: src/frogr-controller.c:879
 msgid "Authorization failed (timed out)"
 msgstr "Godkendelse mislykkedes (tidsudløb)"
 
-#: src/frogr-controller.c:931
+#: src/frogr-controller.c:927
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Prøver at overføre igen (forsøg %d/%d) …"
 
-#: src/frogr-controller.c:936
+#: src/frogr-controller.c:932
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Overfører \"%s\"…"
 
-#: src/frogr-controller.c:2242
+#: src/frogr-controller.c:2227
 msgid "Updating credentials…"
 msgstr "Opdaterer akkreditiver …"
 
-#: src/frogr-controller.c:2247
+#: src/frogr-controller.c:2232
 msgid "Retrieving data for authorization…"
 msgstr "Henter data for godkendelse …"
 
-#: src/frogr-controller.c:2252
+#: src/frogr-controller.c:2237
 msgid "Finishing authorization…"
 msgstr "Afslutter godkendelse …"
 
-#: src/frogr-controller.c:2257
+#: src/frogr-controller.c:2242
 msgid "Retrieving list of sets…"
 msgstr "Henter liste af sæt …"
 
-#: src/frogr-controller.c:2262
+#: src/frogr-controller.c:2247
 msgid "Retrieving list of groups…"
 msgstr "Henter liste af grupper …"
 
-#: src/frogr-controller.c:2267
+#: src/frogr-controller.c:2252
 msgid "Retrieving list of tags…"
 msgstr "Henter liste af mærker …"
 
-#: src/frogr-controller.c:2292
+#: src/frogr-controller.c:2277
 msgid "Fetching information"
 msgstr "Henter information"
 
-#: src/frogr-controller.c:2398
+#: src/frogr-controller.c:2383
 msgid "No sets found"
 msgstr "Ingen sæt fundet"
 
-#: src/frogr-controller.c:2423
+#: src/frogr-controller.c:2408
 msgid "No groups found"
 msgstr "Ingen grupper fundet"
 
-#: src/frogr-controller.c:2984
+#: src/frogr-controller.c:2969
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -382,15 +388,15 @@ msgstr ""
 "Du skal på passende vis godkende %s, før du overfører billeder til Flickr.\n"
 "Godkend venligst igen."
 
-#: src/frogr-controller.c:2994
+#: src/frogr-controller.c:2979
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Du skal være tilsluttet før du overfører billeder til Flickr."
 
-#: src/frogr-controller.c:3012
+#: src/frogr-controller.c:2997
 msgid "Uploading Pictures"
 msgstr "Overfører billeder"
 
-#: src/frogr-controller.c:3057
+#: src/frogr-controller.c:3042
 msgid "Error opening project file"
 msgstr "Der opstod en fejl under åbning af projektfil"
 
