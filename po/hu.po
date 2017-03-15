@@ -1,17 +1,18 @@
 # Hungarian translation for frogr.
-# Copyright (C) 2013-2016 Free Software Foundation, Inc.
+# Copyright (C) 2013-2017 Free Software Foundation, Inc.
 # This file is distributed under the same license as the frogr package.
 #
 # paradigma <mezi.zoltan at gmail dot com>, 2013.
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2014.
 # Attila Hammer <hammera at pickup dot hu>, 2014.
-# Balázs Úr <urbalazs at gmail dot com>, 2013, 2014, 2015, 2016.
+# Balázs Úr <urbalazs at gmail dot com>, 2013, 2014, 2015, 2016, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
-"PO-Revision-Date: 2016-03-04 22:25+0100\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=frogr&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-03-06 22:31+0000\n"
+"PO-Revision-Date: 2017-03-15 17:25+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at gmail dot com>\n"
 "Language: hu\n"
@@ -21,8 +22,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 1.2\n"
 
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
+#: data/frogr.desktop.in.in:16
 msgid "frogr"
 msgstr "frogr"
 
@@ -52,13 +54,14 @@ msgstr "A frogr képernyőképe"
 
 #: data/frogr.appdata.xml.in:29
 msgid "Mario Sanchez Prada"
-msgstr ""
+msgstr "Mario Sanchez Prada"
 
 #: data/frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Fényképek feltöltése és rendszerezése a Flickr fiókjában"
 
-#: data/frogr.desktop.in.in:8
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;kép;fénykép;fotó;videó;video;feltöltő;"
 
@@ -124,7 +127,7 @@ msgstr ""
 "és fejezze be a folyamatot."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
-#: src/frogr-controller.c:2286
+#: src/frogr-controller.c:2271
 #, c-format
 msgid "Authorize %s"
 msgstr "%s felhatalmazása"
@@ -133,6 +136,7 @@ msgstr "%s felhatalmazása"
 msgid "_Close"
 msgstr "_Bezárás"
 
+#. Description label
 #: src/frogr-auth-dialog.c:167
 msgid "Enter verification code:"
 msgstr "Írja be az ellenőrző kódot:"
@@ -141,11 +145,11 @@ msgstr "Írja be az ellenőrző kódot:"
 msgid "Invalid verification code"
 msgstr "Érvénytelen ellenőrző kód"
 
-#: src/frogr-controller.c:581
+#: src/frogr-controller.c:577
 msgid "Process cancelled"
 msgstr "Folyamat megszakítva"
 
-#: src/frogr-controller.c:586
+#: src/frogr-controller.c:582
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -153,7 +157,7 @@ msgstr ""
 "Csatlakozási hiba:\n"
 "A hálózat nem érhető el"
 
-#: src/frogr-controller.c:590
+#: src/frogr-controller.c:586
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -161,7 +165,7 @@ msgstr ""
 "Csatlakozási hiba:\n"
 "Hibás kérés"
 
-#: src/frogr-controller.c:594
+#: src/frogr-controller.c:590
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -169,7 +173,7 @@ msgstr ""
 "Csatlakozási hiba:\n"
 "Kiszolgáló-oldali hiba"
 
-#: src/frogr-controller.c:598
+#: src/frogr-controller.c:594
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -177,7 +181,7 @@ msgstr ""
 "Hiba a feltöltéskor:\n"
 "A fájl érvénytelen"
 
-#: src/frogr-controller.c:602
+#: src/frogr-controller.c:598
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -185,14 +189,14 @@ msgstr ""
 "Hiba a kép feltöltése közben:\n"
 "A kvóta elérve"
 
-#: src/frogr-controller.c:607
+#: src/frogr-controller.c:603
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
 msgstr[0] "A kvótát túllépte: %d videó/hónap"
 msgstr[1] "A kvótát túllépte: %d videó/hónap"
 
-#: src/frogr-controller.c:611
+#: src/frogr-controller.c:607
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
@@ -200,7 +204,7 @@ msgstr ""
 "Hiba a videó feltöltésekor:\n"
 "Több videó feltöltése ezzel a fiókkal nem lehetséges"
 
-#: src/frogr-controller.c:617
+#: src/frogr-controller.c:613
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -208,7 +212,7 @@ msgstr ""
 "Hiba:\n"
 "A fénykép nem található"
 
-#: src/frogr-controller.c:621
+#: src/frogr-controller.c:617
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -216,7 +220,7 @@ msgstr ""
 "Hiba:\n"
 "A fénykép már az albumban van"
 
-#: src/frogr-controller.c:625
+#: src/frogr-controller.c:621
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -224,7 +228,7 @@ msgstr ""
 "Hiba:\n"
 "A fénykép már a csoportban van"
 
-#: src/frogr-controller.c:629
+#: src/frogr-controller.c:625
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -232,7 +236,7 @@ msgstr ""
 "Hiba:\n"
 "A fénykép már a lehetséges maximális számú csoportban van"
 
-#: src/frogr-controller.c:633
+#: src/frogr-controller.c:629
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -240,7 +244,7 @@ msgstr ""
 "Hiba:\n"
 "A csoport határa már elérve"
 
-#: src/frogr-controller.c:637
+#: src/frogr-controller.c:633
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -248,7 +252,7 @@ msgstr ""
 "Hiba:\n"
 "A fénykép hozzáadva a csoport várólistájához"
 
-#: src/frogr-controller.c:641
+#: src/frogr-controller.c:637
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -256,7 +260,7 @@ msgstr ""
 "Hiba:\n"
 "A fénykép már hozzá van adva a csoport várólistájához"
 
-#: src/frogr-controller.c:645
+#: src/frogr-controller.c:641
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -264,7 +268,7 @@ msgstr ""
 "Hiba:\n"
 "A tartalom nem engedélyezett ebben a csoportban"
 
-#: src/frogr-controller.c:649
+#: src/frogr-controller.c:645
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -272,7 +276,7 @@ msgstr ""
 "A hitelesítés meghiúsult.\n"
 "Kérjük próbálja újra"
 
-#: src/frogr-controller.c:655
+#: src/frogr-controller.c:651
 #, c-format
 msgid ""
 "Error\n"
@@ -284,7 +288,7 @@ msgstr ""
 "történő feltöltéséhez.\n"
 "Próbálja meg újra felhatalmazni."
 
-#: src/frogr-controller.c:660
+#: src/frogr-controller.c:656
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
@@ -292,7 +296,7 @@ msgstr ""
 "A Flickr oldalon nem lehetséges a hitelesítés\n"
 "Próbálja meg újra."
 
-#: src/frogr-controller.c:664
+#: src/frogr-controller.c:660
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -301,7 +305,7 @@ msgstr ""
 "Még nem hatalmazta fel megfelelően ezt: %s.\n"
 "Próbálja meg újra."
 
-#: src/frogr-controller.c:669
+#: src/frogr-controller.c:665
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
@@ -309,7 +313,7 @@ msgstr ""
 "Érvénytelen ellenőrző kód.\n"
 "Próbálja újra."
 
-#: src/frogr-controller.c:673
+#: src/frogr-controller.c:669
 msgid ""
 "Error:\n"
 "Service not available"
@@ -317,62 +321,63 @@ msgstr ""
 "Hiba:\n"
 "A szolgáltatás nem érhető el"
 
-#: src/frogr-controller.c:678
+#. General error: just dump the raw error description
+#: src/frogr-controller.c:674
 #, c-format
 msgid "An error happened: %s."
 msgstr "Hiba történt: %s."
 
-#: src/frogr-controller.c:883
+#: src/frogr-controller.c:879
 msgid "Authorization failed (timed out)"
 msgstr "A hitelesítés meghiúsult (időtúllépés)"
 
-#: src/frogr-controller.c:931
+#: src/frogr-controller.c:927
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Feltöltés újrapróbálása (%d/%d kísérlet)…"
 
-#: src/frogr-controller.c:936
+#: src/frogr-controller.c:932
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "„%s” feltöltése…"
 
-#: src/frogr-controller.c:2242
+#: src/frogr-controller.c:2227
 msgid "Updating credentials…"
 msgstr "Hitelesítési adatok frissítése…"
 
-#: src/frogr-controller.c:2247
+#: src/frogr-controller.c:2232
 msgid "Retrieving data for authorization…"
 msgstr "Adatok letöltése a hitelesítéshez…"
 
-#: src/frogr-controller.c:2252
+#: src/frogr-controller.c:2237
 msgid "Finishing authorization…"
 msgstr "Hitelesítés befejezése…"
 
-#: src/frogr-controller.c:2257
+#: src/frogr-controller.c:2242
 msgid "Retrieving list of sets…"
 msgstr "Albumok listájának lekérése…"
 
-#: src/frogr-controller.c:2262
+#: src/frogr-controller.c:2247
 msgid "Retrieving list of groups…"
 msgstr "Csoportok listájának lekérése…"
 
-#: src/frogr-controller.c:2267
+#: src/frogr-controller.c:2252
 msgid "Retrieving list of tags…"
 msgstr "Címkék listájának lekérése…"
 
-#: src/frogr-controller.c:2292
+#: src/frogr-controller.c:2277
 msgid "Fetching information"
 msgstr "Információk lekérése"
 
-#: src/frogr-controller.c:2398
+#: src/frogr-controller.c:2383
 msgid "No sets found"
 msgstr "Nem találhatók albumok"
 
-#: src/frogr-controller.c:2423
+#: src/frogr-controller.c:2408
 msgid "No groups found"
 msgstr "Nem találhatók csoportok"
 
-#: src/frogr-controller.c:2984
+#: src/frogr-controller.c:2969
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -382,18 +387,19 @@ msgstr ""
 "szükséges.\n"
 "Próbálja meg újra felhatalmazni."
 
-#: src/frogr-controller.c:2994
+#: src/frogr-controller.c:2979
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Csatlakoznia kell, mielőtt bármilyen képet töltene fel a Flickr-be."
 
-#: src/frogr-controller.c:3012
+#: src/frogr-controller.c:2997
 msgid "Uploading Pictures"
 msgstr "Képek feltöltése"
 
-#: src/frogr-controller.c:3057
+#: src/frogr-controller.c:3042
 msgid "Error opening project file"
 msgstr "Hiba a projektfájl megnyitásakor"
 
+#. This shows a dialog notifying the problem to the user
 #: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
 msgid "Missing data required"
 msgstr "Hiányoznak a szükséges adatok"
@@ -534,6 +540,7 @@ msgstr "_Földrajzi helyzet információk beállítása"
 msgid "Replace 'Date Posted' with 'Date Taken'"
 msgstr "A „Feltöltési dátum” cseréje a „Készítés dátumával”"
 
+#. Visually indicate how many pictures are being edited
 #: src/frogr-details-dialog.c:475
 #, c-format
 msgid "(%d Picture)"
@@ -576,6 +583,9 @@ msgstr ""
 "A(z) %s videó nem tölthető be\n"
 "Kérjük ellenőrizze, hogy a megfelelő kodek telepítve van-e"
 
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
 #: src/frogr-file-loader.c:636
 #, c-format
 msgid ""
@@ -585,6 +595,7 @@ msgstr ""
 "Nem tölthető be a(z) %s fájl:\n"
 "A fájl mérete nagyobb, mint amelyet ez a fiók maximálisan megenged (%s)"
 
+#. First create the left side buttons
 #: src/frogr-main-view.c:630 src/frogr-main-view.c:726
 msgid "Open"
 msgstr "Megnyitás"
@@ -617,6 +628,7 @@ msgstr "Feltöltés"
 msgid "Upload All"
 msgstr "Összes feltöltése"
 
+#. Save project item
 #: src/frogr-main-view.c:666 src/frogr-main-view.c:727
 msgid "Save"
 msgstr "Mentés"
@@ -634,10 +646,12 @@ msgstr "_Névjegy"
 msgid "_Quit"
 msgstr "_Kilépés"
 
+#. Create the submenu and insert it in the right section
 #: src/frogr-main-view.c:1070
 msgid "Accounts"
 msgstr "Fiókok"
 
+#. String showind the date and time a picture was taken
 #: src/frogr-main-view.c:1410
 #, c-format
 msgid "Taken: %s"
@@ -701,6 +715,7 @@ msgstr "Először ki kell választania néhány képet"
 msgid "Not connected to Flickr"
 msgstr "Nincs kapcsolódva a Flickr-hez"
 
+#. Login string, showing the user is PRO (second '%s') if so.
 #: src/frogr-main-view.c:2118
 #, c-format
 msgid "Connected as %s%s"
@@ -710,11 +725,19 @@ msgstr "Kapcsolódva mint %s%s"
 msgid " (PRO account)"
 msgstr " (PRO fiók)"
 
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
 #: src/frogr-main-view.c:2143
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - %s / %s van hátra"
 
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
 #: src/frogr-main-view.c:2169
 #, c-format
 msgid " - %d file to upload (%s)"
@@ -762,6 +785,7 @@ msgstr "Á_ltalános"
 msgid "Proxy Settings"
 msgstr "Proxy beállítások"
 
+#. Enable proxy
 #: src/frogr-settings-dialog.c:353
 msgid "_Enable HTTP Proxy"
 msgstr "HTTP Proxy _engedélyezése"
@@ -770,14 +794,17 @@ msgstr "HTTP Proxy _engedélyezése"
 msgid "_Host:"
 msgstr "_Gép:"
 
+#. Proxy port
 #: src/frogr-settings-dialog.c:376
 msgid "_Port:"
 msgstr "_Port:"
 
+#. Proxy username
 #: src/frogr-settings-dialog.c:389
 msgid "U_sername:"
 msgstr "_Felhasználónév:"
 
+#. Proxy password
 #: src/frogr-settings-dialog.c:402
 msgid "Pass_word:"
 msgstr "_Jelszó:"
@@ -922,11 +949,3 @@ msgstr "_Fordított sorrend"
 msgid "Enable _Tooltips"
 msgstr "_Buboréksúgó engedélyezése"
 
-#~ msgid "Set 'Taken Date' as 'Posted Date'"
-#~ msgstr "A „Készítés dátumának” beállítása „Feltöltési dátumként”"
-
-#~ msgid "Visible to _Family"
-#~ msgstr "Látható a _család számára"
-
-#~ msgid "Visible to F_riends"
-#~ msgstr "Látható a _barátok számára"
