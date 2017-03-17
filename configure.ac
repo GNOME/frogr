@@ -45,6 +45,22 @@ FROGR_CFLAGS="$FROGR_CFLAGS $JSON_GLIB_CFLAGS"
 FROGR_LIBS="$FROGR_LIBS $JSON_GLIB_LIBS"
 
 LIBGCRYPT_MIN_VERSION=1.5.0
+PKG_CHECK_MODULES(LIBGCRYPT, libgcrypt >= $LIBGCRYPT_MIN_VERSION,
+                             [found_gcrypt="yes"], [found_gcrypt="no"])
+
+# libgcrypt might not have a .pc file installed
+if test "x$found_crypt" = "xno"; then
+   AM_PATH_LIBGCRYPT($LIBGCRYPT_MIN_VERSION, HAVE_GCRYPT=yes, HAVE_GCRYPT=no)
+   if test "x$HAVE_GCRYPT" = "xno"; then
+      AC_MSG_ERROR([libgcrypt not found, please install it])
+   fi
+fi
+
+AC_DEFINE_UNQUOTED([LIBGCRYPT_MIN_VERSION], ["$LIBGCRYPT_MIN_VERSION"], [Minimum supported gcrypt version])
+FROGR_CFLAGS="$FROGR_CFLAGS $LIBGCRYPT_CFLAGS"
+FROGR_LIBS="$FROGR_LIBS $LIBGCRYPT_LIBS"
+
+
 # libgcrypt does not provide a .pc file
 AM_PATH_LIBGCRYPT($LIBGCRYPT_MIN_VERSION, HAVE_GCRYPT=yes, HAVE_GCRYPT=no)
 if test "x$HAVE_GCRYPT" = "xno"; then
