@@ -49,21 +49,21 @@ ACLOCAL_AMFLAGS=-I m4
 pixmapdir = $(datadir)/pixmaps
 pixmap_DATA = data/pixmaps/frogr.xpm
 icon16dir = $(datadir)/icons/hicolor/16x16/apps
-icon16_DATA = data/icons/hicolor/16x16/apps/frogr.png
+icon16_DATA = data/icons/hicolor/16x16/apps/org.gnome.frogr.png
 icon24dir = $(datadir)/icons/hicolor/24x24/apps
-icon24_DATA = data/icons/hicolor/24x24/apps/frogr.png
+icon24_DATA = data/icons/hicolor/24x24/apps/org.gnome.frogr.png
 icon32dir = $(datadir)/icons/hicolor/32x32/apps
-icon32_DATA = data/icons/hicolor/32x32/apps/frogr.png
+icon32_DATA = data/icons/hicolor/32x32/apps/org.gnome.frogr.png
 icon48dir = $(datadir)/icons/hicolor/48x48/apps
-icon48_DATA = data/icons/hicolor/48x48/apps/frogr.png
+icon48_DATA = data/icons/hicolor/48x48/apps/org.gnome.frogr.png
 icon64dir = $(datadir)/icons/hicolor/64x64/apps
-icon64_DATA = data/icons/hicolor/64x64/apps/frogr.png
+icon64_DATA = data/icons/hicolor/64x64/apps/org.gnome.frogr.png
 icon128dir = $(datadir)/icons/hicolor/128x128/apps
-icon128_DATA = data/icons/hicolor/128x128/apps/frogr.png
+icon128_DATA = data/icons/hicolor/128x128/apps/org.gnome.frogr.png
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
 iconscalable_DATA = \
-  data/icons/hicolor/scalable/apps/frogr.svg  \
-  data/icons/hicolor/scalable/apps/frogr-symbolic.svg
+  data/icons/hicolor/scalable/apps/org.gnome.frogr.svg  \
+  data/icons/hicolor/scalable/apps/org.gnome.frogr-symbolic.svg
 
 imagesdir = $(datadir)/frogr/images
 images_DATA = data/images/mpictures.png

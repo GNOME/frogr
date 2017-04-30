@@ -27,7 +27,7 @@
 #include <glib/gi18n.h>
 
 /* Path relative to the icons dir */
-#define ABOUT_DIALOG_ICON "/hicolor/48x48/apps/frogr.png"
+#define ABOUT_DIALOG_ICON "/hicolor/48x48/apps/" APP_ID ".png"
 
 static const gchar *authors[] = {
   "Mario Sanchez Prada <msanchez@gnome.org>",

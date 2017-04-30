@@ -7,7 +7,6 @@
     "command": "frogr",
     "rename-appdata-file": "frogr.appdata.xml",
     "rename-desktop-file": "frogr.desktop",
-    "rename-icon": "frogr",
     "finish-args": [
         /* X11 + XShm access */
         "--share=ipc", "--socket=x11",

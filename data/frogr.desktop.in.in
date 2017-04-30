@@ -12,7 +12,7 @@ Terminal=false
 Categories=GNOME;GTK;Graphics;
 StartupNotify=true
 # Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-Icon=frogr
+Icon=org.gnome.frogr
 X-Icon-path=@PIXMAPDIR@
 X-Window-Icon=frogr
 MimeType=image/jpg;image/jpeg;image/png;image/bmp;image/gif;video/mpeg;video/mp4;video/quicktime;video/x-msvideo;video/ogg;video/x-ms-wmv;video/3gpp;video/m2ts;video/avchd-stream;video/mp2t;video/vnd.dlna.mpeg-tts;application/ogg;text/plain;text/html;

@@ -37,7 +37,7 @@
 #include <glib/gi18n.h>
 
 /* Paths relative to the icons dir */
-#define ICON_PATH_FORMAT_STRING "%s/hicolor/%s/apps/frogr.png"
+#define ICON_PATH_FORMAT_STRING "%s/hicolor/%s/apps/" APP_ID ".png"
 
 #define MENU_BUTTON_ICON "open-menu-symbolic"
 #define MENU_BUTTON_ICON_FALLBACK "emblem-system-symbolic"

@@ -6,7 +6,6 @@
     "command": "frogr",
     "rename-appdata-file": "frogr.appdata.xml",
     "rename-desktop-file": "frogr.desktop",
-    "rename-icon": "frogr",
     "tags": ["nightly"],
     "desktop-file-name-prefix": "(Nightly) ",
     "finish-args": [
