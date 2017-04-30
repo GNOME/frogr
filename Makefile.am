@@ -22,9 +22,9 @@ MAINTAINERCLEANFILES = \
 	config.h.in~ \
 	config.sub \
 	configure \
-	data/frogr.appdata.xml \
-	data/frogr.desktop \
-	data/frogr.desktop.in \
+	data/org.gnome.frogr.appdata.xml \
+	data/org.gnome.frogr.desktop \
+	data/org.gnome.frogr.desktop.in \
 	debian/files \
 	debian/stamp-autotools-files \
 	debian/stamp-makefile-build \

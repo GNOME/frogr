@@ -4,8 +4,6 @@
     "runtime-version": "master",
     "sdk": "org.gnome.Sdk",
     "command": "frogr",
-    "rename-appdata-file": "frogr.appdata.xml",
-    "rename-desktop-file": "frogr.desktop",
     "tags": ["nightly"],
     "desktop-file-name-prefix": "(Nightly) ",
     "finish-args": [
