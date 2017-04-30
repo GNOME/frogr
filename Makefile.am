@@ -31,11 +31,7 @@ MAINTAINERCLEANFILES = \
 	missing \
 	mkinstalldirs
 
-SUBDIRS = src data po
-
-if !PLATFORM_MAC
-SUBDIRS += help
-endif
+SUBDIRS = src data po help
 
 ACLOCAL_AMFLAGS=-I m4
 

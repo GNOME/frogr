@@ -82,14 +82,6 @@
 #define ACTION_SORT_IN_REVERSE_ORDER "sort-in-reverse-order"
 #define ACTION_ENABLE_TOOLTIPS "enable-tooltips"
 
-/* This should map to Control in X11 and to Command in OS X */
-#ifdef PLATFORM_MAC
-#define GDK_PRIMARY_MASK GDK_MOD2_MASK
-#else
-#define GDK_PRIMARY_MASK GDK_CONTROL_MASK
-#endif
-
-
 struct _FrogrMainView {
   GtkApplicationWindow parent;
 
@@ -151,7 +143,6 @@ typedef enum {
 /* Prototypes */
 
 static void _initialize_ui (FrogrMainView *self);
-static gboolean _initialize_app_menu (FrogrMainView *self);
 
 #if USE_HEADER_BAR
 static void _initialize_header_bar (FrogrMainView *self);
@@ -172,10 +163,6 @@ static void _on_toggle_menu_item_activated (GSimpleAction *action, GVariant *par
 static void _on_toggle_menu_item_changed (GSimpleAction *action, GVariant *parameter, gpointer data);
 
 static void _quit_application (FrogrMainView *self);
-
-#ifdef PLATFORM_MAC
-static void _tweak_app_menu_for_mac (FrogrMainView *self);
-#endif
 
 static void _populate_accounts_submenu (FrogrMainView *self);
 
@@ -517,28 +504,9 @@ _initialize_ui (FrogrMainView *self)
   /* Show the auth dialog, if needed, on idle */
   gdk_threads_add_idle ((GSourceFunc) _maybe_show_auth_dialog_on_idle, self);
 
-#ifdef PLATFORM_MAC
-  /* FIXME: This is an UGLY hack that helps avoiding the race condition
-     but probably does not prevent it completely. Needs to check it more
-     carefully and fix it properly in the future when I have more time. */
-  gdk_threads_add_timeout (1000, (GSourceFunc) _initialize_app_menu, self);
-#else
-  _initialize_app_menu (self);
-#endif
-
-  gtk_widget_show (GTK_WIDGET (self));
-}
-
-static gboolean
-_initialize_app_menu (FrogrMainView *self)
-{
   _populate_accounts_submenu (self);
 
-#ifdef PLATFORM_MAC
-  _tweak_app_menu_for_mac (self);
-#endif
-
-  return FALSE;
+  gtk_widget_show (GTK_WIDGET (self));
 }
 
 #if USE_HEADER_BAR
@@ -1001,27 +969,6 @@ _quit_application (FrogrMainView *self)
   g_application_quit (G_APPLICATION (self->gtk_app));
 }
 
-#ifdef PLATFORM_MAC
-static void
-_tweak_app_menu_for_mac (FrogrMainView *self)
-{
-  GMenuModel *menu = NULL;
-
-  /* Hide the Section including the 'Help' menu item */
-  g_menu_remove (G_MENU (self->app_menu), 2);
-
-  /* The section removed contained the 'About' and 'Quit' items, so
-     create new ones and place them in their right places */
-  menu = G_MENU_MODEL (g_menu_new ());
-  g_menu_append_item (G_MENU (menu), g_menu_item_new (_("_About"), "app.about"));
-  g_menu_insert_section (G_MENU (self->app_menu), 0, NULL, menu);
-
-  menu = G_MENU_MODEL (g_menu_new ());
-  g_menu_append_item (G_MENU (menu), g_menu_item_new (_("_Quit"), "app.quit"));
-  g_menu_insert_section (G_MENU (self->app_menu), 3, NULL, menu);
-}
-#endif
-
 static void
 _populate_accounts_submenu (FrogrMainView *self)
 {
@@ -1179,7 +1126,7 @@ _handle_selection_for_button_event_and_path (FrogrMainView *self,
                                              GdkEventButton *event,
                                              GtkTreePath *path)
 {
-  gboolean using_primary_key = event->state & GDK_PRIMARY_MASK;
+  gboolean using_primary_key = event->state & GDK_CONTROL_MASK;
   gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
   gboolean is_single_click = event->type == GDK_BUTTON_PRESS;
   gboolean is_double_click = event->type == GDK_2BUTTON_PRESS;
@@ -1286,7 +1233,7 @@ _on_icon_view_button_press_event (GtkWidget *widget,
                                   gpointer data)
 {
   FrogrMainView *self = FROGR_MAIN_VIEW (data);
-  gboolean using_primary_key = event->state & GDK_PRIMARY_MASK;
+  gboolean using_primary_key = event->state & GDK_CONTROL_MASK;
   gboolean using_shift_key = event->state & GDK_SHIFT_MASK;
   GtkTreePath *new_path = NULL;
 

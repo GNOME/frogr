@@ -31,11 +31,7 @@ frogr_CPPFLAGS = \
 	-DGETTEXT_PACKAGE=\"$(GETTEXT_PACKAGE)\"        \
 	-DLOCALEDIR=\"$(localedir)\"
 
-if PLATFORM_MAC
-frogr_CFLAGS += -DPLATFORM_MAC
-else
 frogr_LDFLAGS = -export-dynamic
-endif
 
 frogr_SOURCES = \
 	frogr-about-dialog.c \

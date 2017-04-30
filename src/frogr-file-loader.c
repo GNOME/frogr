@@ -329,7 +329,6 @@ _is_video_file (GFile *file)
   GError *error = NULL;
   gboolean is_video = FALSE;
 
-  /* Use mime types when not in the Mac */
   file_info = g_file_query_info (file,
                                  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
                                  G_FILE_QUERY_INFO_NONE,

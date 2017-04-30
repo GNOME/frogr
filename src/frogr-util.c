@@ -68,27 +68,11 @@ _spawn_command (const gchar* cmd)
 }
 
 const gchar *
-_get_data_dir (void)
-{
-#ifdef PLATFORM_MAC
-  /* For MacOSX, we return the value of the environment value set by
-     the wrapper script running the application */
-  static gchar *xdg_data_dir = NULL;
-  if (!xdg_data_dir)
-    xdg_data_dir = g_strdup (g_getenv("XDG_DATA_DIRS"));
-  return (const gchar *) xdg_data_dir;
-#else
-  /* For GNOME, we just return DATA_DIR */
-  return DATA_DIR;
-#endif
-}
-
-const gchar *
 frogr_util_get_app_data_dir (void)
 {
   static gchar *app_data_dir = NULL;
   if (!app_data_dir)
-    app_data_dir = g_strdup_printf ("%s/frogr", _get_data_dir ());
+    app_data_dir = g_strdup_printf ("%s/frogr", DATA_DIR);
 
   return (const gchar *) app_data_dir;
 }
@@ -98,29 +82,9 @@ frogr_util_get_icons_dir (void)
 {
   static gchar *icons_dir = NULL;
   if (!icons_dir)
-    icons_dir = g_strdup_printf ("%s/icons", _get_data_dir ());
+    icons_dir = g_strdup_printf ("%s/icons", DATA_DIR);
 
   return (const gchar *) icons_dir;
-}
-
-const gchar *
-frogr_util_get_locale_dir (void)
-{
-  static const gchar *locale_dir = NULL;
-  if (!locale_dir)
-    {
-#ifndef PLATFORM_MAC
-      /* If not in MacOSX, we trust the defined variable better */
-      locale_dir = g_strdup (LOCALEDIR);
-#endif
-
-      /* Fallback for MacOSX and cases where FROGR_LOCALE_DIR was not
-	 defined yet because of any reason */
-      if (!locale_dir)
-	locale_dir = g_strdup_printf ("%s/locale", _get_data_dir ());
-    }
-
-  return (const gchar *) locale_dir;
 }
 
 gchar *
@@ -162,13 +126,7 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
       gchar *uris = NULL;
 
       uris = _get_uris_string_from_list (uris_list);
-
-#ifdef PLATFORM_MAC
-      /* In MacOSX use 'open' instead of 'xdg-open' */
-      command = g_strdup_printf ("open %s", uris);
-#else
       command = g_strdup_printf ("gvfs-open %s", uris);
-#endif
       _spawn_command (command);
 
       if (error)
@@ -195,7 +153,6 @@ frogr_util_open_uri (const gchar *uri)
   if (!uri)
     return;
 
-#ifndef PLATFORM_MAC
   /* Supported network URIs */
   if (g_str_has_prefix (uri, "http:") || g_str_has_prefix (uri, "https:"))
     app_info = g_app_info_get_default_for_uri_scheme ("http");
@@ -203,7 +160,6 @@ frogr_util_open_uri (const gchar *uri)
   /* Supported help URIs */
   if (g_str_has_prefix (uri, "help:"))
     app_info = g_app_info_get_default_for_uri_scheme ("help");
-#endif
 
   uris_list = g_list_append (uris_list, g_strdup (uri));
   _open_uris_with_app_info (uris_list, app_info);

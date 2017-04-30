@@ -71,15 +71,6 @@ else
    FROGR_LIBS="$FROGR_LIBS $LIBGCRYPT_LIBS"
 fi
 
-# Select target platform to make platform-dependant decisions
-GTK_CHECK_BACKEND([quartz], [3.0], [osx=yes], [osx=no])
-if test "x$osx" = "xyes"; then
-   platform=MacOSX
-else
-   platform=GNOME
-fi
-AM_CONDITIONAL([PLATFORM_MAC],[test "x$osx" = "xyes"])
-
 # Enable GtkHeaderBar (requires GTK+ 3.10)
 AC_MSG_CHECKING([Checking whether to enable the GtkHeaderBar])
 AC_ARG_ENABLE(header-bar,
@@ -188,10 +179,7 @@ echo "*** frogr is ready to be compiled ***"
 echo "*************************************"
 echo ""
 echo "Build configuration:"
-echo "  Platform              : $platform"
 echo "  Debug symbols         : $enable_debug"
-echo ""
-echo "Optional features:"
 echo "  Use GtkHeaderBar      : $header_bar_feature"
 echo "  Enable video uploads  : $video_feature"
 echo ""

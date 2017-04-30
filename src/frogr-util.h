@@ -29,8 +29,6 @@ const gchar *frogr_util_get_app_data_dir (void);
 
 const gchar *frogr_util_get_icons_dir (void);
 
-const gchar *frogr_util_get_locale_dir (void);
-
 void frogr_util_open_uri (const gchar *uri);
 
 void frogr_util_open_pictures_in_viewer (GSList *pictures);
