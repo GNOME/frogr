@@ -23,12 +23,6 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:16
-msgid "frogr"
-msgstr "frogr"
-
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "frogr: oddaljeni usklajevalnik GNOME za Flickr"

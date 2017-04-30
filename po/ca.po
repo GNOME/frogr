@@ -19,12 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
-#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
-#, fuzzy
-msgid "frogr"
-msgstr "Frogr"
-
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr ""

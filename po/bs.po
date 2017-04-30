@@ -20,12 +20,6 @@ msgstr ""
 "X-Generator: Launchpad (build 17341)\n"
 "X-Launchpad-Export-Date: 2015-02-15 06:14+0000\n"
 
-#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
-#, fuzzy
-msgid "frogr"
-msgstr "Frogr"
-
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
 #, fuzzy
 msgid "frogr: a Flickr Remote Organizer for GNOME"

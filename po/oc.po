@@ -18,11 +18,6 @@ msgstr ""
 "X-Generator: Virtaal 0.7.1\n"
 "X-Project-Style: gnome\n"
 
-#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
-msgid "frogr"
-msgstr "frogr"
-
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "frogr : un gestionari Flickr a distància per GNOME"

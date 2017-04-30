@@ -20,11 +20,6 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Project-Style: gnome\n"
 
-#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
-msgid "frogr"
-msgstr "Frogr"
-
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "Frogr: um organizador remoto do Flickr para o GNOME"

@@ -18,12 +18,6 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
-#, fuzzy
-msgid "frogr"
-msgstr "Frogr"
-
 #: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
 #, fuzzy
 msgid "frogr: a Flickr Remote Organizer for GNOME"
