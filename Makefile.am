@@ -25,13 +25,6 @@ MAINTAINERCLEANFILES = \
 	data/org.gnome.frogr.appdata.xml \
 	data/org.gnome.frogr.desktop \
 	data/org.gnome.frogr.desktop.in \
-	debian/files \
-	debian/stamp-autotools-files \
-	debian/stamp-makefile-build \
-	debian/frogr.debhelper.log \
-	debian/frogr.postinst.debhelper \
-	debian/frogr.postrm.debhelper \
-	debian/frogr.substvars \
 	depcomp \
 	install-sh \
 	ltmain.sh \
