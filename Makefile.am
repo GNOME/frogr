@@ -82,7 +82,6 @@ EXTRA_DIST = \
 	MAINTAINERS \
 	TRANSLATORS \
 	autogen.sh \
-	org.gnome.frogr.json \
 	src/flicksoup/COPYING \
 	m4 \
 	$(pixmap_DATA) \
