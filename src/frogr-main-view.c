@@ -1096,8 +1096,17 @@ _on_icon_view_key_press_event (GtkWidget *widget,
       && self->n_selected_pictures > 0)
     {
       GtkMenu *menu = GTK_MENU (self->pictures_ctxt_menu);
+
+#if GTK_CHECK_VERSION (3, 22, 0)
+      gtk_menu_popup_at_widget (menu,
+                                widget,
+                                GDK_GRAVITY_CENTER,
+                                GDK_GRAVITY_CENTER,
+                                (GdkEvent *) event);
+#else
       gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
                       0, gtk_get_current_event_time ());
+#endif
     }
 
   return FALSE;
@@ -1272,10 +1281,15 @@ _on_icon_view_button_press_event (GtkWidget *widget,
       else if (!is_primary_btn && is_single_click)
         {
           /* Show contextual menu */
+#if GTK_CHECK_VERSION (3, 22, 0)
+          gtk_menu_popup_at_pointer (GTK_MENU (self->pictures_ctxt_menu),
+                                     (GdkEvent *) event);
+#else
           gtk_menu_popup (GTK_MENU (self->pictures_ctxt_menu),
               NULL, NULL, NULL, NULL,
               event->button,
               gtk_get_current_event_time ());
+#endif
         }
 
       /* Free */
