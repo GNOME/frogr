@@ -8,22 +8,26 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-06 22:31+0000\n"
-"PO-Revision-Date: 2017-03-20 19:05+0700\n"
-"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"POT-Creation-Date: 2017-04-30 22:18+0000\n"
+"PO-Revision-Date: 2017-05-02 12:33+0700\n"
+"Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 1.8.11\n"
 
-#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
+#: data/org.gnome.frogr.appdata.xml.in:5 data/org.gnome.frogr.desktop.in.in:5
+msgid "frogr"
+msgstr "frogr"
+
+#: data/org.gnome.frogr.appdata.xml.in:6 data/org.gnome.frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "frogr: Pengorganisasi Remote Flickr bagi GNOME"
 
-#: data/frogr.appdata.xml.in:8
+#: data/org.gnome.frogr.appdata.xml.in:8
 msgid ""
 "frogr is a small application for the GNOME desktop that allows users to "
 "manage their accounts in the Flickr image hosting website."
@@ -31,7 +35,7 @@ msgstr ""
 "frogr adalah aplikasi kecil bagi desktop GNOME yang memungkinkan pengguna "
 "mengelola akun mereka dalam situs web hosting citra Flickr."
 
-#: data/frogr.appdata.xml.in:13
+#: data/org.gnome.frogr.appdata.xml.in:13
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
@@ -39,22 +43,27 @@ msgstr ""
 "Ini mendukung semua fitur Flickr dasar, termasuk mengunggah gambar, menambah "
 "deskripsi, menata tag, dan mengelola pool set dan grup."
 
-#: data/frogr.appdata.xml.in:24
+#: data/org.gnome.frogr.appdata.xml.in:24
 msgid "Screenshot of frogr"
 msgstr "Cuplikan layar frogr"
 
-#: data/frogr.appdata.xml.in:29
+#: data/org.gnome.frogr.appdata.xml.in:29
 msgid "Mario Sanchez Prada"
 msgstr "Mario Sanchez Prada"
 
-#: data/frogr.desktop.in.in:7
+#: data/org.gnome.frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Unggah dan kelola foto dalam akun Flickr"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/frogr.desktop.in.in:9
+#: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Citra;Gambar;Foto;Video;Pengunggah;"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.frogr.desktop.in.in:16
+msgid "org.gnome.frogr"
+msgstr "org.gnome.frogr"
 
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
@@ -62,7 +71,9 @@ msgstr "Suatu Pengorganisasi Remote Flickr bagi GNOME\n"
 
 #: src/frogr-about-dialog.c:72
 msgid "translator-credits"
-msgstr "Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017"
+msgstr ""
+"Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017.\n"
+"Kukuh Syafaat <syafaatkukuh@gmail.com>, 2017."
 
 #: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
 #: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
