@@ -9,10 +9,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-01-18 21:49+0000\n"
-"PO-Revision-Date: 2017-01-18 23:39+0100\n"
+"POT-Creation-Date: 2017-04-30 22:18+0000\n"
+"PO-Revision-Date: 2017-05-07 09:35+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -22,11 +22,15 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
+#: data/org.gnome.frogr.appdata.xml.in:5 data/org.gnome.frogr.desktop.in.in:5
+msgid "frogr"
+msgstr "frogr"
+
+#: data/org.gnome.frogr.appdata.xml.in:6 data/org.gnome.frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "frogr: zdalny organizator zdjęć w serwisie Flickr dla środowiska GNOME"
 
-#: data/frogr.appdata.xml.in:8
+#: data/org.gnome.frogr.appdata.xml.in:8
 msgid ""
 "frogr is a small application for the GNOME desktop that allows users to "
 "manage their accounts in the Flickr image hosting website."
@@ -34,7 +38,7 @@ msgstr ""
 "frogr to mały program dla środowiska GNOME, umożliwiający użytkownikom "
 "zarządzanie swoimi kontami w serwisie zdjęć Flickr."
 
-#: data/frogr.appdata.xml.in:13
+#: data/org.gnome.frogr.appdata.xml.in:13
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
@@ -43,23 +47,28 @@ msgstr ""
 "zdjęć, dodawanie opisów, ustawianie etykiet oraz zarządzanie zestawami "
 "i grupami."
 
-#: data/frogr.appdata.xml.in:24
+#: data/org.gnome.frogr.appdata.xml.in:24
 msgid "Screenshot of frogr"
 msgstr "Zrzut ekranu programu frogr"
 
-#: data/frogr.appdata.xml.in:29
+#: data/org.gnome.frogr.appdata.xml.in:29
 msgid "Mario Sanchez Prada"
 msgstr "Mario Sanchez Prada"
 
-#: data/frogr.desktop.in.in:7
+#: data/org.gnome.frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Organizowanie i przesyłanie zdjęć w serwisie Flickr"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/frogr.desktop.in.in:9
+#: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr ""
 "Flickr;Obraz;Obrazek;Zdjęcie;Film;Filmik;Wideo;Video;Wysyłanie;Przesyłanie;"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.frogr.desktop.in.in:16
+msgid "org.gnome.frogr"
+msgstr "org.gnome.frogr"
 
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
@@ -232,7 +241,7 @@ msgid ""
 "Photo already in the maximum number of groups possible"
 msgstr ""
 "Błąd:\n"
-"Obraz znajduje się już w maksymalnej ilości grup"
+"Obraz znajduje się już w maksymalnej liczbie grup"
 
 #: src/frogr-controller.c:629
 msgid ""
@@ -240,7 +249,7 @@ msgid ""
 "Group limit already reached"
 msgstr ""
 "Błąd:\n"
-"Ograniczenie ilości grup zostało już osiągnięte"
+"Ograniczenie liczby grup zostało już osiągnięte"
 
 #: src/frogr-controller.c:633
 msgid ""
@@ -331,7 +340,7 @@ msgstr "Upoważnienie się nie powiodło (przekroczono czas oczekiwania)"
 #: src/frogr-controller.c:927
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
-msgstr "Ponawianie wysyłania (próba %d/%d)…"
+msgstr "Ponawianie wysyłania (%d. próba z %d)…"
 
 #: src/frogr-controller.c:932
 #, c-format
