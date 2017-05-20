@@ -1,5 +1,5 @@
-1.3 (??)
-========
+1.3 (20 May 2017)
+=================
 
   * Fixed issues resulting in broken flatpak installations.
   * Search for gcrypt using pkg-config if a .pc file is available.
