@@ -1,7 +1,7 @@
 {
     "app-id": "org.gnome.frogr",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "3.22",
+    "runtime-version": "3.24",
     "branch": "stable",
     "sdk": "org.gnome.Sdk",
     "command": "frogr",
@@ -37,7 +37,7 @@
                 {
                     "type": "git",
                     "url": "git://git.gnome.org/frogr",
-                    "branch": "73083899ab1dbda3b420a27c0b6cf974963e378d"
+                    "branch": "RELEASE_1.3"
                 }
             ]
         }
