@@ -1,7 +1,7 @@
 /*
  * frogr-file-loader.c -- Asynchronous file loader in frogr
  *
- * Copyright (C) 2009-2012 Mario Sanchez Prada
+ * Copyright (C) 2009-2017 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>
  *
  * Some parts of this file were based on source code from tracker,
