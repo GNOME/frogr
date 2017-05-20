@@ -1,6 +1,24 @@
 1.3 (??)
 ========
 
+  * Fixed issues resulting in broken flatpak installations.
+  * Search for gcrypt using pkg-config if a .pc file is available.
+  * Don't use the deprecated gtk_menu_popup() for GTK+ >= 3.22.
+
+New and updated translations:
+
+  * cs (Marek Černocký)
+  * da (Alan Mortensen)
+  * de (Mario Blättermann)
+  * gl (Fran Dieguez)
+  * hu (Balázs Úr)
+  * id (Andika Triwidada, Kukuh Syafaat)
+  * pl (Piotr Drąg)
+  * pt_BR (Enrico Nicoletto, Rafael Fontenelle)
+  * sl (Matej Urbančič)
+  * sr (Мирослав Николић)
+  * sv (Anders Jonsson, Josef Andersson)
+  * tr (Muhammet Kara)
 
 1.2 (5 Oct 2016)
 ================
