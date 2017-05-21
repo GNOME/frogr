@@ -35,8 +35,6 @@ SUBDIRS = src data po help
 
 ACLOCAL_AMFLAGS=-I m4
 
-pixmapdir = $(datadir)/pixmaps
-pixmap_DATA = data/pixmaps/frogr.xpm
 icon16dir = $(datadir)/icons/hicolor/16x16/apps
 icon16_DATA = data/icons/hicolor/16x16/apps/org.gnome.frogr.png
 icon24dir = $(datadir)/icons/hicolor/24x24/apps
@@ -73,7 +71,6 @@ EXTRA_DIST = \
 	autogen.sh \
 	src/flicksoup/COPYING \
 	m4 \
-	$(pixmap_DATA) \
 	$(icon16_DATA) \
 	$(icon24_DATA) \
 	$(icon32_DATA) \

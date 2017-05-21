@@ -2,7 +2,7 @@ desktopdir = $(datadir)/applications
 desktop_in_files = org.gnome.frogr.desktop.in.in
 desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 
-edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(datadir)\/pixmaps,g'
+edit = sed -e 's,@BINDIR\@,$(bindir),g'
 org.gnome.frogr.desktop.in: org.gnome.frogr.desktop.in.in
 	$(edit) $(srcdir)/org.gnome.frogr.desktop.in.in > $(builddir)/org.gnome.frogr.desktop.in
 
