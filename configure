@@ -55,6 +55,7 @@ sanitycheck() {
 sanitycheck MESON 'meson'
 sanitycheck NINJA 'ninja' 'ninja-build'
 
+build_type='release'
 enable_header_bar='-Denable-header-bar=true'
 enable_video='-Denable-video=true'
 
@@ -70,6 +71,7 @@ while (($# > 0)); do
 	--libdir) read_arg libdir "$@" || shift;;
 	--mandir) read_arg mandir "$@" || shift;;
 	--includedir) read_arg includedir "$@" || shift;;
+	--buildtype) read_arg build_type "$@" || shift;;
 	--enable-header-bar) enable_header_bar='-Denable-header-bar=true';;
 	--disable-header-bar) enable_header_bar='-Denable-header-bar=false';;
 	--enable-video) enable_video='-Denable-video=true';;
@@ -124,6 +126,7 @@ END
 echo "Summary:"
 echo "  meson:....... ${MESON}"
 echo "  ninja:....... ${NINJA}"
+echo "  build type:.. ${build_type}"
 echo "  prefix:...... ${prefix}"
 echo "  bindir:...... ${bindir}"
 echo "  sbindir:..... ${sbindir}"
@@ -138,18 +141,19 @@ echo "  additional:.."
 echo "    - ${enable_header_bar} ${enable_video}"
 
 exec ${MESON} \
-	--prefix=${prefix} \
-	--libdir=${libdir} \
-	--libexecdir=${libexecdir} \
-	--datadir=${datadir} \
-	--sysconfdir=${sysconfdir} \
-	--bindir=${bindir} \
-	--includedir=${includedir} \
-	--mandir=${mandir} \
-	--default-library shared \
-	${enable_header_bar} \
-	${enable_video} \
-	${builddir} \
-	${srcdir}
+     --buildtype=${build_type} \
+     --prefix=${prefix} \
+     --libdir=${libdir} \
+     --libexecdir=${libexecdir} \
+     --datadir=${datadir} \
+     --sysconfdir=${sysconfdir} \
+     --bindir=${bindir} \
+     --includedir=${includedir} \
+     --mandir=${mandir} \
+     --default-library shared \
+     ${enable_header_bar} \
+     ${enable_video} \
+     ${builddir} \
+     ${srcdir}
 
 # vim: ai ts=8 noet sts=2 ft=sh
