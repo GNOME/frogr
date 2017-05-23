@@ -1,13 +1,19 @@
 Compiling from source code
 ==========================
 
-To compile and try the application you can just do this:
+To compile and try the application you need to have meson and ninja
+installed, but you can still use the usual commands defined by
+the build API (see https://github.com/cgwalters/build-api):
 
- $ ./autogen.sh
+ $ ./configure
  $ make
- $ sudo make install
- $ frogr
+ $ make install
 
-To uninstall just do:
+To use meson and ninja, instead of using the wrapper configure script:
 
- $ sudo make uninstall
+ $ meson . BUILD
+ $ ninja -C BUILD
+ $ ninja -C BUILD install
+
+...and then you can run it from the directory you installed it with the
+previous commands (/usr/local by default unless --prefix is used).

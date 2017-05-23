@@ -8,8 +8,9 @@ To get the source, please checkout the git repository at gnome.org:
 
     git clone git://git.gnome.org/frogr
 
-To work properly, frogr needs some libraries to be installed first:
+To be able to build frogr, you'll need some tools and libraries:
 
+ - meson, ninja and a C compiler (e.g. gcc, clang)
  - glib (version 2.44 or higher)
  - gtk+ (version 3.4 or higher)
  - json-glib (version 0.12 or higher)
