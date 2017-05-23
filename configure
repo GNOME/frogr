@@ -119,8 +119,8 @@ all:
 install:
 	DESTDIR="\$(DESTDIR)" ${NINJA} ${NINJA_OPT} install
 
-check:
-	${MESONTEST} ${NINJA_OPT}
+dist:
+	${srcdir}/make_release.sh
 END
 
 echo "Summary:"
