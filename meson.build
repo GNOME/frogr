@@ -78,6 +78,9 @@ frogr_conf.set10('HAVE_GSTREAMER', get_variable('has_video', false))
 i18n = import('i18n')
 frogr_conf.set_quoted('GETTEXT_PACKAGE', project_name)
 
+# GNOME Support (used for generating help pages for Yelp)
+gnome = import('gnome')
+
 # Generate configuration
 configure_file(output: 'config.h',
                configuration: frogr_conf)
@@ -86,4 +89,5 @@ configure_file(output: 'config.h',
 frogr_top_dir = include_directories ('.')
 subdir ('src')
 subdir ('data')
+subdir ('help')
 subdir ('po')
