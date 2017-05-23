@@ -38,13 +38,12 @@ json_glib = dependency('json-glib-1.0', version: '>=@0@'.format(json_glib_ver))
 
 # gcrypt might not provide a .pc file
 gcrypt = dependency('libgcrypt', version: '>=@0@'.format(gcrypt_ver), required: false)
-if gcrypt.found()
-    frogr_conf.set('LIBGCRYPT_MIN_VERSION', gcrypt_ver)
-else
+if not gcrypt.found()
     message('gcrypt not found via pkg-config, using meson.find_library()...')
     gcrypt = compiler.find_library('libgcrypt')
-    frogr_conf.set_quoted('LIBGCRYPT_MIN_VERSION', gcrypt_ver)
 endif
+
+frogr_conf.set_quoted('LIBGCRYPT_MIN_VERSION', gcrypt_ver)
 
 # Optional GtkHeaderBar
 if get_option('enable-header-bar')
