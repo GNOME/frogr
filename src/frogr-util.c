@@ -72,7 +72,7 @@ frogr_util_get_app_data_dir (void)
 {
   static gchar *app_data_dir = NULL;
   if (!app_data_dir)
-    app_data_dir = g_strdup_printf ("%s/frogr", DATA_DIR);
+    app_data_dir = g_strdup_printf ("%s/frogr", DATADIR);
 
   return (const gchar *) app_data_dir;
 }
@@ -82,7 +82,7 @@ frogr_util_get_icons_dir (void)
 {
   static gchar *icons_dir = NULL;
   if (!icons_dir)
-    icons_dir = g_strdup_printf ("%s/icons", DATA_DIR);
+    icons_dir = g_strdup_printf ("%s/icons", DATADIR);
 
   return (const gchar *) icons_dir;
 }

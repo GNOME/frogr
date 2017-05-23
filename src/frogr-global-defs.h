@@ -24,8 +24,8 @@
 #include <config.h>
 
 #define APP_NAME N_("Flickr Remote Organizer")
-#define APP_SHORTNAME PACKAGE
-#define APP_VERSION VERSION
+#define APP_SHORTNAME PACKAGE_NAME
+#define APP_VERSION PACKAGE_VERSION
 #define APP_ID "org.gnome.frogr"
 
 /* Max width and heigth for pictures in the icon view.
