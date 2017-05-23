@@ -27,9 +27,9 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
 #include <gst/gst.h>
-#ifdef HAVE_GSTREAMER_1_0
+#if HAVE_GSTREAMER_1_0
 #include <gst/base/gstbasesink.h>
 #endif
 #endif
@@ -40,8 +40,8 @@
 #include <libexif/exif-loader.h>
 #include <libexif/exif-tag.h>
 
-#ifdef HAVE_GSTREAMER
-#ifdef HAVE_GSTREAMER_1_0
+#if HAVE_GSTREAMER
+#if HAVE_GSTREAMER_1_0
 #define CAPS "video/x-raw,format=RGB,width=160,pixel-aspect-ratio=1/1"
 #define PREROLL_TIMEOUT (5*GST_SECOND)
 #else
@@ -336,11 +336,11 @@ _get_pixbuf_from_image_contents (const guchar *contents, gsize length, GError **
 static GdkPixbuf *
 _get_pixbuf_from_video_file (GFile *file, GError **out_error)
 {
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
   GdkPixbuf *pixbuf = NULL;
   GstElement *pipeline, *sink;
   GstStateChangeReturn ret;
-#ifdef HAVE_GSTREAMER_1_0
+#if HAVE_GSTREAMER_1_0
   GstStateChangeReturn sret;
 #else
   GstBuffer *buffer;
@@ -355,7 +355,7 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
 
   /* create a new pipeline */
   file_uri = g_file_get_uri (file);
-#ifdef HAVE_GSTREAMER_1_0
+#if HAVE_GSTREAMER_1_0
   descr = g_strdup_printf ("uridecodebin uri=%s ! videoconvert ! videoscale "
                            " ! " CAPS " ! gdkpixbufsink name=sink", file_uri);
 #else
@@ -402,7 +402,7 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
   }
 
   /* get the duration */
-#ifdef HAVE_GSTREAMER_1_0
+#if HAVE_GSTREAMER_1_0
   gst_element_query_duration (pipeline, GST_FORMAT_TIME, &duration);
 #else
   format = GST_FORMAT_TIME;
@@ -422,7 +422,7 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
   gst_element_seek_simple (pipeline, GST_FORMAT_TIME,
       GST_SEEK_FLAG_KEY_UNIT | GST_SEEK_FLAG_FLUSH, position);
 
-#ifdef HAVE_GSTREAMER_1_0
+#if HAVE_GSTREAMER_1_0
   sret = gst_element_get_state (pipeline, NULL, NULL, PREROLL_TIMEOUT);
   if (sret == GST_STATE_CHANGE_SUCCESS)
       g_object_get (sink, "last-pixbuf", &pixbuf, NULL);
@@ -564,7 +564,7 @@ frogr_util_get_supported_mimetypes (void)
     "image/png",
     "image/bmp",
     "image/gif",
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
     "video/mpeg",
     "video/mp4",
     "video/quicktime",

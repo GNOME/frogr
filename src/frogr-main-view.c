@@ -1618,7 +1618,7 @@ _load_pictures_dialog (FrogrMainView *self)
   GtkWidget *dialog;
   GtkFileFilter *all_filter;
   GtkFileFilter *image_filter;
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
   GtkFileFilter *video_filter;
 #endif
   gint i;
@@ -1635,7 +1635,7 @@ _load_pictures_dialog (FrogrMainView *self)
   /* Set images filter */
   all_filter = gtk_file_filter_new ();
   image_filter = gtk_file_filter_new ();
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
   video_filter = gtk_file_filter_new ();
 #endif
 
@@ -1644,7 +1644,7 @@ _load_pictures_dialog (FrogrMainView *self)
     {
       if (g_str_has_prefix (supported_mimetypes[i], "image"))
         gtk_file_filter_add_mime_type (image_filter, supported_mimetypes[i]);
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
       else
         gtk_file_filter_add_mime_type (video_filter, supported_mimetypes[i]);
 #endif
@@ -1658,7 +1658,7 @@ _load_pictures_dialog (FrogrMainView *self)
   gtk_file_filter_set_name (image_filter, _("Image Files"));
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), image_filter);
 
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
   gtk_file_filter_set_name (video_filter, _("Video Files"));
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), video_filter);
 #endif

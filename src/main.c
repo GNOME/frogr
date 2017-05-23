@@ -25,7 +25,7 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
 #include <gst/gst.h>
 #endif
 #include <libxml/parser.h>
@@ -42,7 +42,7 @@ main (int argc, char **argv)
 {
   FrogrController *controller = NULL;
   int status;
-#ifdef HAVE_GSTREAMER
+#if HAVE_GSTREAMER
   GError *error = NULL;
 
   /* Initialize gstreamer before using any other GLib function */
