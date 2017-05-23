@@ -1,19 +1,14 @@
 # Icons
-
 icondir = join_paths (datadir, 'icons')
 install_subdir ('icons/hicolor',
                 install_dir: icondir)
 
-
 # Images
-
 imagesdir = join_paths (datadir, project_name, 'images')
 install_data(join_paths('images', 'mpictures.png'),
              install_dir : imagesdir)
 
-
 # UI Files
-
 gtkbuilderdir = join_paths (datadir, project_name, 'gtkbuilder')
 gtkbuilder_files = [
     'gtkbuilder/frogr-main-view.ui',
@@ -30,15 +25,11 @@ foreach ui_file : gtkbuilder_files
                  install_dir : gtkbuilderdir)
 endforeach
 
-
 # Man pages
-
 mandir = join_paths (datadir, project_name, 'man')
 install_man(join_paths('manpages', 'frogr.1'))
 
-
 # Desktop file
-
 desktopdir = join_paths (datadir, 'applications')
 
 po_dir = join_paths (meson.source_root (), 'po')
@@ -48,7 +39,6 @@ data_conf.set ('BINDIR', join_paths (prefix, bindir))
 generated_desktop = configure_file(input: 'org.gnome.frogr.desktop.in',
                                    output: 'org.gnome.frogr.desktop.in',
                                    configuration: data_conf)
-
 i18n.merge_file ('desktop',
                  input: generated_desktop,
                  output: 'org.gnome.frogr.desktop',
@@ -57,8 +47,8 @@ i18n.merge_file ('desktop',
                  po_dir: po_dir,
                  type: 'desktop')
 
+# Appdata XML file
 appdatadir = join_paths (datadir, 'appdata')
-
 i18n.merge_file ('desktop',
                  input: 'org.gnome.frogr.appdata.xml.in',
                  output: 'org.gnome.frogr.appdata.xml',
