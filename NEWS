@@ -1,6 +1,7 @@
 1.4 (??)
 ========
 
+  * Migrated to the meson and ninja, removed all the autotools files.
 
 1.3 (20 May 2017)
 =================
