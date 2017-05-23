@@ -6,6 +6,7 @@ project_name = meson.project_name()
 project_version = meson.project_version()
 
 prefix = get_option ('prefix')
+bindir = get_option ('bindir')
 datadir = get_option ('datadir')
 localedir = get_option ('localedir')
 
@@ -84,4 +85,5 @@ configure_file(output: 'config.h',
 # Build frogr
 frogr_top_dir = include_directories ('.')
 subdir ('src')
+subdir ('data')
 subdir ('po')
