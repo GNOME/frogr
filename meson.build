@@ -76,3 +76,7 @@ frogr_conf.set10('HAVE_GSTREAMER', get_variable('has_video', false))
 # Generate configuration
 configure_file(output: 'config.h',
                configuration: frogr_conf)
+
+# Build frogr
+frogr_top_dir = include_directories ('.')
+subdir ('src')
