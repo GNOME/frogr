@@ -1,6 +1,10 @@
 project('frogr', 'c',
         version: '1.4',
-        license: 'GPL3')
+        license: 'GPL3',
+        default_options: [
+            'warnlevel=2',
+            'werror=true'
+        ])
 
 project_name = meson.project_name()
 project_version = meson.project_version()
@@ -16,8 +20,6 @@ frogr_conf.set_quoted('PACKAGE_VERSION', project_version)
 frogr_conf.set_quoted('PACKAGE_NAME', project_name)
 frogr_conf.set_quoted('DATADIR', join_paths(prefix, datadir))
 frogr_conf.set_quoted('LOCALEDIR', join_paths(prefix, localedir))
-
-add_global_arguments('-Wno-deprecated-declarations', language:'c')
 
 compiler = meson.get_compiler('c')
 
