@@ -2,4 +2,4 @@
 .gitignore export-ignore
 flatpak export-ignore
 frogr.doap export-ignore
-make_release.sh
+make_release.sh export-ignore
