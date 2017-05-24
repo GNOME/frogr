@@ -5,19 +5,19 @@ project('frogr', 'c',
 project_name = meson.project_name()
 project_version = meson.project_version()
 
-prefix = get_option ('prefix')
-bindir = get_option ('bindir')
-datadir = get_option ('datadir')
-localedir = get_option ('localedir')
+prefix = get_option('prefix')
+bindir = get_option('bindir')
+datadir = get_option('datadir')
+localedir = get_option('localedir')
 
 frogr_conf = configuration_data()
 frogr_conf.set_quoted('VERSION', project_version)
-frogr_conf.set_quoted ('PACKAGE_VERSION', project_version)
-frogr_conf.set_quoted ('PACKAGE_NAME', project_name)
-frogr_conf.set_quoted ('DATADIR', join_paths (prefix, datadir))
-frogr_conf.set_quoted ('LOCALEDIR', join_paths (prefix, localedir))
+frogr_conf.set_quoted('PACKAGE_VERSION', project_version)
+frogr_conf.set_quoted('PACKAGE_NAME', project_name)
+frogr_conf.set_quoted('DATADIR', join_paths(prefix, datadir))
+frogr_conf.set_quoted('LOCALEDIR', join_paths(prefix, localedir))
 
-add_global_arguments ('-Wno-deprecated-declarations', language:'c')
+add_global_arguments('-Wno-deprecated-declarations', language:'c')
 
 compiler = meson.get_compiler('c')
 
@@ -30,7 +30,7 @@ xml2_ver = '2.6.8'
 json_glib_ver = '0.12'
 gcrypt_ver = '1.5.0'
 
-glib = dependency ('glib-2.0', version: '>=@0@'.format(glib_ver))
+glib = dependency('glib-2.0', version: '>=@0@'.format(glib_ver))
 soup = dependency('libsoup-2.4', version: '>=@0@'.format(soup_ver))
 exif = dependency('libexif', version: '>=@0@'.format(exif_ver))
 xml2 = dependency('libxml-2.0', version: '>=@0@'.format(xml2_ver))
@@ -54,7 +54,7 @@ if get_option('enable-header-bar')
 endif
 
 if not get_variable('has_header_bar', false)
-     gtk = dependency('gtk+-3.0', version: '>=@0@'.format(gtk_ver))
+    gtk = dependency('gtk+-3.0', version: '>=@0@'.format(gtk_ver))
 endif
 
 frogr_conf.set10('USE_HEADER_BAR', get_variable('has_header_bar', false))
@@ -85,8 +85,9 @@ configure_file(output: 'config.h',
                configuration: frogr_conf)
 
 # Build frogr
-frogr_top_dir = include_directories ('.')
-subdir ('src')
-subdir ('data')
-subdir ('help')
-subdir ('po')
+frogr_top_dir = include_directories('.')
+
+subdir('src')
+subdir('data')
+subdir('help')
+subdir('po')
