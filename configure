@@ -55,7 +55,7 @@ sanitycheck() {
 sanitycheck MESON 'meson'
 sanitycheck NINJA 'ninja' 'ninja-build'
 
-build_type='release'
+build_type='debugoptimized'
 enable_header_bar='-Denable-header-bar=true'
 enable_video='-Denable-video=true'
 
@@ -125,8 +125,8 @@ END
 
 echo "Summary:"
 echo "  meson:....... ${MESON}"
-echo "  ninja:....... ${NINJA}"
 echo "  build type:.. ${build_type}"
+echo "  ninja:....... ${NINJA}"
 echo "  prefix:...... ${prefix}"
 echo "  bindir:...... ${bindir}"
 echo "  sbindir:..... ${sbindir}"
