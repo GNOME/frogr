@@ -34,6 +34,12 @@
     "modules": [
         {
             "name": "frogr",
+            "buildsystem": "meson",
+            "builddir": true,
+            "config-opts": [
+                /* Debug symbols will be stripped out into org.gnome.frogr.Debug */
+                "--buildtype=debugoptimized"
+            ],
             "sources": [
                 {
                     "type": "git",
