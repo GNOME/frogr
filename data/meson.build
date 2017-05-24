@@ -1,29 +1,19 @@
+frogrdir = join_paths (datadir, project_name)
+
 # Icons
 icondir = join_paths (datadir, 'icons')
 install_subdir ('icons/hicolor',
                 install_dir: icondir)
 
 # Images
-imagesdir = join_paths (datadir, project_name, 'images')
+imagesdir = join_paths (frogrdir, 'images')
 install_data(join_paths('images', 'mpictures.png'),
              install_dir : imagesdir)
 
 # UI Files
-gtkbuilderdir = join_paths (datadir, project_name, 'gtkbuilder')
-gtkbuilder_files = [
-    'gtkbuilder/frogr-main-view.ui',
-    'gtkbuilder/frogr-app-menu.ui',
-    'gtkbuilder/frogr-context-menu.ui',
-    'gtkbuilder/frogr-menu-button.ui',
-    'gtkbuilder/frogr-menu-bar.ui'
-]
-
-# We can't use install_subdir() for this because it would delete
-# the 'DATADIR/frogr' before copying, which is not what we want.
-foreach ui_file : gtkbuilder_files
-    install_data(ui_file,
-                 install_dir : gtkbuilderdir)
-endforeach
+gtkbuilderdir = join_paths (frogrdir, 'gtkbuilder')
+install_subdir ('gtkbuilder',
+                install_dir: frogrdir)
 
 # Man pages
 mandir = join_paths (datadir, project_name, 'man')
