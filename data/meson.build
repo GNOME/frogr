@@ -36,7 +36,7 @@ po_dir = join_paths (meson.source_root (), 'po')
 
 data_conf = configuration_data()
 data_conf.set ('BINDIR', join_paths (prefix, bindir))
-generated_desktop = configure_file(input: 'org.gnome.frogr.desktop.in',
+generated_desktop = configure_file(input: 'org.gnome.frogr.desktop.in.in',
                                    output: 'org.gnome.frogr.desktop.in',
                                    configuration: data_conf)
 i18n.merge_file ('desktop',
