@@ -13,8 +13,8 @@
         "--socket=wayland",
         /* Needs to talk to the network: */
         "--share=network",
-        /* Needed for frogr to access your home directory */
-        "--filesystem=home",
+        /* Needed for frogr to access your pictures */
+        "--filesystem=host",
         /* Needed for dconf to work */
         "--filesystem=xdg-run/dconf", "--filesystem=~/.config/dconf:ro",
         "--talk-name=ca.desrt.dconf", "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
