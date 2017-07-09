@@ -25,6 +25,9 @@
       <caption>Screenshot of frogr</caption>
     </screenshot>
   </screenshots>
+  <provides>
+    <id>frogr.desktop</id>
+  </provides>
   <project_license>GPL-3.0</project_license>
   <project_group>GNOME</project_group>
   <developer_name>Mario Sanchez Prada</developer_name>
