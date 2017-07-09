@@ -13,8 +13,10 @@
         "--socket=wayland",
         /* Needs to talk to the network: */
         "--share=network",
-        /* Needed for frogr to access your pictures */
-        "--filesystem=host",
+        /* Access your pictures and videos */
+        "--filesystem=xdg-pictures", "--filesystem=xdg-videos",
+        /* Access your documents is useful too (e.g. for saving and loading projects) */
+        "--filesystem=xdg-documents",
         /* Needed for dconf to work */
         "--filesystem=xdg-run/dconf", "--filesystem=~/.config/dconf:ro",
         "--talk-name=ca.desrt.dconf", "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
@@ -26,11 +28,7 @@
             "V": "1"
         }
     },
-    "cleanup": ["/include", "/lib/pkgconfig",
-                "/share/pkgconfig", "/share/aclocal",
-                "/man", "/share/man", "/share/gtk-doc",
-                "/share/dbus-1",
-                "*.la", "*.a"],
+    "cleanup": [ "/share/man" ],
     "modules": [
         {
             "name": "frogr",
