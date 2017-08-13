@@ -26,7 +26,7 @@ msgstr "frogr"
 #: data/org.gnome.frogr.appdata.xml.in:7
 #| msgid "A Flickr Remote Organizer for GNOME\n"
 msgid "A flickr uploader for GNOME"
-msgstr "Flikrov otpremač za Gnom\n"
+msgstr "Flikrov otpremač za Gnom"
 
 #: data/org.gnome.frogr.appdata.xml.in:9
 msgid ""
