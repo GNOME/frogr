@@ -788,7 +788,7 @@ msgid ""
 msgstr ""
 "Faites un clic droit sur un élément et choisissez <gui>Ajouter des "
 "étiquettes</gui>, ou cliquez sur le menu <gui>Édition</gui> puis sur "
-"<gui>Ajouter des étiquettes</gui></guiseq>, ou encore, lorsque vous modifiez "
+"<gui>Ajouter des étiquettes</gui>, ou encore, lorsque vous modifiez "
 "les informations d'un élément, vous pouvez consulter et modifier ses étiquettes."
 
 #. (itstool) path: figure/title
