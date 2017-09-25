@@ -130,7 +130,7 @@ msgid ""
 "Go to Preferences using menu <guiseq><gui>frogr</gui><gui>Preferences</gui></"
 "guiseq>."
 msgstr ""
-"Acesse as Preferências usando o menu <guiseq><gui>frogr<gui><"
+"Acesse as Preferências usando o menu <guiseq><gui>frogr</gui><"
 "gui>Preferências</gui></guiseq>."
 
 #. (itstool) path: section/title
