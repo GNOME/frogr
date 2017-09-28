@@ -19,11 +19,11 @@
     </media>
   </figure>
 
-  <section><title>Flickr</title>
+  <section id="flickr"><title>Flickr</title>
     <p><link href="http://www.flickr.com/">Flickr</link> is a website allowing hosting of both images and videos.</p>
   </section>
 
-  <section><title>Main features</title>
+  <section id="main-features"><title>Main features</title>
     <list>
       <item><p>Allow to upload pictures and videos to Flickr</p></item>
       <item><p>Allow uploading pictures located in remote machines</p></item>
@@ -34,7 +34,7 @@
     </list>
   </section>
 
-  <section><title>About</title>
+  <section id="about"><title>About</title>
     <p>You can have more information about <app>frogr</app> using the menu <guiseq><gui>frogr</gui><gui>About</gui></guiseq>.</p>
   </section>
 
