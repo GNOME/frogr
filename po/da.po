@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-13 21:48+0000\n"
+"POT-Creation-Date: 2017-10-22 13:04+0000\n"
 "PO-Revision-Date: 2017-10-18 15:12+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -348,7 +348,7 @@ msgstr "Prøver at overføre igen (forsøg %d/%d) …"
 #: src/frogr-controller.c:932
 #, c-format
 msgid "Uploading '%s'…"
-msgstr "Overfører \"%s\"…"
+msgstr "Overfører “%s” …"
 
 #: src/frogr-controller.c:2227
 msgid "Updating credentials…"
@@ -546,7 +546,7 @@ msgstr "Angiv information om geografisk placering"
 
 #: src/frogr-details-dialog.c:383
 msgid "Replace 'Date Posted' with 'Date Taken'"
-msgstr "Erstat \"Opslagsdato\" med \"Optagelsesdato\""
+msgstr "Erstat “Opslagsdato” med “Optagelsesdato”"
 
 #. Visually indicate how many pictures are being edited
 #: src/frogr-details-dialog.c:475
@@ -774,7 +774,7 @@ msgstr "Angiv information om geografisk placering for billeder"
 
 #: src/frogr-settings-dialog.c:318
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
-msgstr "Erstat \"Opslagsdato\" med \"Optagelsesdato\" for billeder"
+msgstr "Erstat “Opslagsdato” med “Optagelsesdato” for billeder"
 
 #: src/frogr-settings-dialog.c:324
 msgid "_General"
@@ -846,7 +846,7 @@ msgstr "_Godkend konto …"
 
 #: data/gtkbuilder/frogr-app-menu.ui:12
 msgid "_Preferences…"
-msgstr "_Indstillinger…"
+msgstr "_Indstillinger …"
 
 #: data/gtkbuilder/frogr-app-menu.ui:18
 msgid "_Help"
@@ -868,12 +868,12 @@ msgstr "_Rediger detaljer …"
 #: data/gtkbuilder/frogr-context-menu.ui:11
 #: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
 msgid "Add _Tags…"
-msgstr "Tilføj _mærker…"
+msgstr "Tilføj _mærker …"
 
 #: data/gtkbuilder/frogr-context-menu.ui:16
 #: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
 msgid "Add to _Group…"
-msgstr "Tilføj til _gruppe…"
+msgstr "Tilføj til _gruppe …"
 
 #: data/gtkbuilder/frogr-context-menu.ui:21
 #: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
