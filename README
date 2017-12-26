@@ -49,7 +49,7 @@ See the COPYING file for more details.
 -------------------------------------------
 
 frogr's Flickr API implementation (we call it "flicksoup", located
-under src/flicksoup) is Copyright (c) 2010-2015 Mario Sanchez Prada
+under src/flicksoup) is Copyright (c) 2010-2017 Mario Sanchez Prada
 
 Flicksoup is Free Software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 3 as
@@ -77,7 +77,7 @@ General Public License Version 2.1 (Copyright 2009, Nokia Corp.)
 -------------------------------------------
 
 Implementation of the functions extract_accels_from_menu() and
-extract_accel_from_menu_item () inside of frogr-main-view.ctaken from
+extract_accel_from_menu_item () inside of frogr-main-view.c taken from
 GTK+, licensed under the GNU Lesser General Public License Version 2+
 (Copyright 2010, Codethink Ltd and 2013, Canonical Ltd.)
 
