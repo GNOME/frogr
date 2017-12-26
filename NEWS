@@ -2,6 +2,23 @@
 ========
 
   * Migrated to the meson and ninja, removed all the autotools files.
+  * Fixed integration with GNOME Software (appstream data).
+
+New and updated translations:
+
+  * cs (Marek Černocký)
+  * da (Alan Mortensen, Ask Hjorth Larsen)
+  * de (Mario Blättermann)
+  * es (Daniel Mustieles)
+  * fr (Alexandre Franke)
+  * hu (Balázs Úr)
+  * id (Kukuh Syafaat)
+  * pl (Piotr Drąg)
+  * pt_BR (Rafael Fontenelle)
+  * sl (Matej Urbančič)
+  * sr (Мирослав Николић)
+  * sr@latin (Miroslav Nikolić)
+  * sv (Anders Jonsson)
 
 1.3 (20 May 2017)
 =================
