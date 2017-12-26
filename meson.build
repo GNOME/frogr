@@ -24,12 +24,12 @@ frogr_conf.set_quoted('LOCALEDIR', join_paths(prefix, localedir))
 compiler = meson.get_compiler('c')
 
 # Dependencies
-gtk_ver = '3.4'
+gtk_ver = '3.16'
 glib_ver = '2.44'
 soup_ver = '2.34'
 exif_ver = '0.6.14'
 xml2_ver = '2.6.8'
-json_glib_ver = '0.12'
+json_glib_ver = '1.2'
 gcrypt_ver = '1.5.0'
 
 glib = dependency('glib-2.0', version: '>=@0@'.format(glib_ver))

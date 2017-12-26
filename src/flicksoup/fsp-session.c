@@ -705,14 +705,14 @@ _get_soup_message_for_upload            (GFile       *file,
                                          gsize        length,
                                          GHashTable  *table)
 {
-  GFileInfo *file_info = NULL;
+  g_autoptr(GFileInfo) file_info = NULL;
   SoupMessage *msg = NULL;
   SoupMultipart *mpart = NULL;
   SoupBuffer *buffer = NULL;
   GHashTableIter iter;
   const gchar *key, *value;
-  gchar *mime_type = NULL;
-  gchar *fileuri = NULL;
+  g_autofree gchar *mime_type = NULL;
+  g_autofree gchar *fileuri = NULL;
   gchar *auth_header = NULL;
 
   /* Gather needed information */
@@ -724,7 +724,6 @@ _get_soup_message_for_upload            (GFile       *file,
                                  NULL);
   /* Check mimetype */
   mime_type = g_strdup (g_file_info_get_content_type (file_info));
-  g_object_unref (G_OBJECT (file_info));
 
   /* Init multipart container */
   mpart = soup_multipart_new (SOUP_FORM_MIME_TYPE_MULTIPART);
@@ -767,8 +766,6 @@ _get_soup_message_for_upload            (GFile       *file,
   /* Free */
   soup_multipart_free (mpart);
   soup_buffer_free (buffer);
-  g_free (fileuri);
-  g_free (mime_type);
 
   /* Return message */
   return msg;
@@ -782,9 +779,9 @@ _load_file_contents_cb                  (GObject      *object,
   UploadPhotoData *up_clos = NULL;
   AsyncRequestData *ard_clos = NULL;
   GHashTable *extra_params = NULL;
-  GFile *file = NULL;
+  g_autoptr(GFile) file = NULL;
   GError *error = NULL;
-  gchar *contents = NULL;
+  g_autofree gchar *contents = NULL;
   gsize length;
 
   g_return_if_fail (G_IS_FILE (object));
@@ -833,18 +830,18 @@ _load_file_contents_cb                  (GObject      *object,
 
       /* Free */
       g_hash_table_unref (extra_params);
-      g_object_unref (file);
     }
   else
     {
       /* If an error happened here, report through the async callback */
-      g_warning ("Unable to get contents for file\n");
       if (error)
-        g_error_free (error);
+        {
+          g_warning ("Unable to get contents for file: %s", error->message);
+          g_error_free (error);
+        }
       error = g_error_new (FSP_ERROR, FSP_ERROR_OTHER, "Error reading file for upload");
       _build_async_result_and_complete (ard_clos, NULL, error);
     }
-  g_free (contents);
 }
 
 static void
@@ -885,7 +882,7 @@ static gchar *
 _hmac_sha1_signature                    (const gchar *message,
                                          const gchar *signing_key)
 {
-  gchar *signature = NULL;
+  g_autofree gchar *signature = NULL;
   gchar *encoded_signature = NULL;
   gcry_md_hd_t digest_obj;
   unsigned char *hmac_digest;
@@ -905,7 +902,6 @@ _hmac_sha1_signature                    (const gchar *message,
   gcry_md_close (digest_obj);
 
   encoded_signature = _encode_uri (signature);
-  g_free(signature);
 
   return encoded_signature;
 }
@@ -958,7 +954,7 @@ _get_signed_query_with_params           (const gchar         *api_sig,
   keys = g_hash_table_get_keys (params_table);
   if (keys != NULL)
     {
-      gchar **url_params_array = NULL;
+      g_auto(GStrv) url_params_array = NULL;
       GList *k = NULL;
       gint i = 0;
 
@@ -970,13 +966,12 @@ _get_signed_query_with_params           (const gchar         *api_sig,
       for (k = keys; k; k = g_list_next (k))
         {
           gchar *key = NULL;
-          gchar *actual_value = NULL;
+          g_autofree gchar *actual_value = NULL;
 
           key = (gchar*) k->data;
           actual_value = g_strdup (g_hash_table_lookup (params_table, key));
 
           url_params_array[i++] = g_strdup_printf ("%s=%s", key, actual_value);
-          g_free (actual_value);
         }
 
       /* Add those to the params array (space previously reserved) */
@@ -987,9 +982,6 @@ _get_signed_query_with_params           (const gchar         *api_sig,
 
       /* Build the signed query */
       retval = g_strjoinv ("&", url_params_array);
-
-      /* Free */
-      g_strfreev (url_params_array);
     }
   g_list_free (keys);
   g_hash_table_unref (params_table);
@@ -1023,7 +1015,7 @@ _check_errors_on_soup_response           (SoupMessage  *msg,
                                           GError      **error)
 {
   GError *err = NULL;
-  gchar *response_str = NULL;
+  g_autofree gchar *response_str = NULL;
 
   g_assert (SOUP_IS_MESSAGE (msg));
 
@@ -1058,8 +1050,6 @@ _check_errors_on_soup_response           (SoupMessage  *msg,
                            "Network error");
     }
 
-  g_free (response_str);
-
   /* Propagate error */
   if (err != NULL)
     g_propagate_error (error, err);
@@ -1093,9 +1083,8 @@ _get_params_str_for_signature           (GHashTable          *params_table,
                                          const gchar         *signing_key,
                                          AuthorizationMethod  auth_method)
 {
-  GList *keys = NULL;
-  gchar **params_str_array = NULL;
-  gchar *params_str = NULL;
+  g_autoptr(GList) keys = NULL;
+  g_auto(GStrv) params_str_array = NULL;
   GList *k = NULL;
   gboolean old_auth_method = FALSE;
   gint i = 0;
@@ -1134,12 +1123,7 @@ _get_params_str_for_signature           (GHashTable          *params_table,
     }
   params_str_array[i] = NULL;
 
-  params_str = g_strjoinv (old_auth_method ? NULL : "&", params_str_array);
-  g_strfreev (params_str_array);
-
-  g_list_free (keys);
-
-  return params_str;
+  return g_strjoinv (old_auth_method ? NULL : "&", params_str_array);
 }
 
 static gchar *
@@ -1149,10 +1133,9 @@ _calculate_api_signature                (const gchar          *url,
                                          const gchar          *http_method,
                                          AuthorizationMethod   auth_method)
 {
-  gchar *base_string = NULL;
-  gchar *encoded_params = NULL;
-  gchar *encoded_url = NULL;
-  gchar *api_sig = NULL;
+  g_autofree gchar *base_string = NULL;
+  g_autofree gchar *encoded_params = NULL;
+  g_autofree gchar *encoded_url = NULL;
 
   if (!params_str)
     return NULL;
@@ -1165,13 +1148,8 @@ _calculate_api_signature                (const gchar          *url,
   encoded_params = _encode_uri (params_str);
   base_string = g_strdup_printf ("%s&%s&%s", http_method, encoded_url, encoded_params);
   DEBUG ("Base string for signing: %s", base_string);
-  g_free (encoded_url);
-  g_free (encoded_params);
 
-  api_sig = _hmac_sha1_signature (base_string, signing_key);
-  g_free (base_string);
-
-  return api_sig;
+  return _hmac_sha1_signature (base_string, signing_key);
 }
 
 static gchar *
@@ -1181,17 +1159,13 @@ _get_api_signature_from_hash_table      (const gchar         *url,
                                          const gchar         *http_method,
                                          AuthorizationMethod  auth_method)
 {
-  gchar *api_sig = NULL;
-  gchar *params_str = NULL;
+  g_autofree gchar *params_str = NULL;
 
   g_return_val_if_fail (params_table != NULL, NULL);
 
   /* Get the signature string and calculate the api_sig value */
   params_str = _get_params_str_for_signature (params_table, signing_key, auth_method);
-  api_sig = _calculate_api_signature (url, params_str, signing_key, http_method, auth_method);
-  g_free (params_str);
-
-  return api_sig;
+  return _calculate_api_signature (url, params_str, signing_key, http_method, auth_method);
 }
 
 static void
@@ -1199,15 +1173,14 @@ _fill_hash_table_with_oauth_params      (GHashTable  *table,
                                          const gchar *api_key,
                                          const gchar *token)
 {
+  g_autofree gchar *random_str = NULL;
   gchar *timestamp = NULL;
-  gchar *random_str = NULL;
   gchar *nonce = NULL;
 
   /* Add mandatory parameters to the hash table */
   timestamp = g_strdup_printf ("%d", (gint) time(NULL));
   random_str = g_strdup_printf ("%d_%s", g_random_int (), timestamp);
   nonce = g_compute_checksum_for_string (G_CHECKSUM_MD5, random_str, -1);
-  g_free (random_str);
 
   g_hash_table_insert (table, g_strdup ("oauth_timestamp"), timestamp);
   g_hash_table_insert (table, g_strdup ("oauth_nonce"), nonce);
@@ -1230,9 +1203,9 @@ _get_signed_url                       (FspSession          *self,
 {
   va_list args;
   GHashTable *table = NULL;
-  gchar *signing_key = NULL;
-  gchar *signed_query = NULL;
-  gchar *api_sig = NULL;
+  g_autofree gchar *signing_key = NULL;
+  g_autofree gchar *signed_query = NULL;
+  g_autofree gchar *api_sig = NULL;
   gchar *retval = NULL;
   const gchar *token = NULL;
   const gchar *token_secret = NULL;
@@ -1272,19 +1245,16 @@ _get_signed_url                       (FspSession          *self,
     }
 
   api_sig = _get_api_signature_from_hash_table (url, table, signing_key, "GET", auth_method);
-  g_free (signing_key);
 
   /* Get the signed URL with the needed params */
   if ((table != NULL) && (api_sig != NULL))
     signed_query = _get_signed_query_with_params (api_sig, table, auth_method);
 
   g_hash_table_unref (table);
-  g_free (api_sig);
 
   va_end (args);
 
   retval = g_strdup_printf ("%s?%s", url, signed_query);
-  g_free (signed_query);
 
   return retval;
 }
@@ -1388,7 +1358,7 @@ _handle_soup_response                   (SoupMessage   *msg,
   AsyncRequestData *clos = NULL;
   gpointer result = NULL;
   GError *err = NULL;
-  gchar *response_str = NULL;
+  g_autofree gchar *response_str = NULL;
   gulong response_len = 0;
 
   g_assert (SOUP_IS_MESSAGE (msg));
@@ -1412,8 +1382,6 @@ _handle_soup_response                   (SoupMessage   *msg,
 
   /* Build response and call async callback */
   _build_async_result_and_complete (clos, result, err);
-
-  g_free (response_str);
 }
 
 static void
@@ -1421,7 +1389,7 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
                                          gpointer    result,
                                          GError     *error)
 {
-  GTask *task = NULL;
+  g_autoptr(GTask) task = NULL;
   GObject *object = NULL;
   GCancellableData *cancellable_data = NULL;
   GCancellable *cancellable = NULL;
@@ -1458,8 +1426,6 @@ _build_async_result_and_complete        (AsyncRequestData *clos,
     g_task_return_error (task, error);
   else
     g_task_return_pointer (task, result, NULL);
-
-  g_object_unref (G_OBJECT (task));
 }
 
 static gpointer
@@ -1818,7 +1784,7 @@ fsp_session_get_auth_url                (FspSession          *self,
                                          GAsyncReadyCallback  cb,
                                          gpointer             data)
 {
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
@@ -1837,8 +1803,6 @@ fsp_session_get_auth_url                (FspSession          *self,
   _perform_async_request (self->soup_session, url,
                           _get_request_token_session_cb, G_OBJECT (self),
                           c, cb, fsp_session_get_auth_url, data);
-
-  g_free (url);
 }
 
 gchar *
@@ -1888,7 +1852,7 @@ fsp_session_complete_auth               (FspSession          *self,
 
   if (self->tmp_token != NULL && self->tmp_token_secret != NULL)
     {
-      gchar *url = NULL;
+      g_autofree gchar *url = NULL;
 
       /* Build the signed url */
       url = _get_signed_url (self,
@@ -1902,8 +1866,6 @@ fsp_session_complete_auth               (FspSession          *self,
       _perform_async_request (self->soup_session, url,
                               _get_access_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_complete_auth, data);
-
-      g_free (url);
     }
   else
     {
@@ -1954,7 +1916,7 @@ fsp_session_exchange_token              (FspSession          *self,
 
   if (self->token != NULL)
     {
-      gchar *url = NULL;
+      g_autofree gchar *url = NULL;
 
       /* Build the signed url */
       url = _get_signed_url (self,
@@ -1968,8 +1930,6 @@ fsp_session_exchange_token              (FspSession          *self,
       _perform_async_request (self->soup_session, url,
                               _exchange_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_exchange_token, data);
-
-      g_free (url);
     }
   else
     {
@@ -2014,7 +1974,7 @@ fsp_session_check_auth_info             (FspSession          *self,
 
   if (self->token != NULL)
     {
-      gchar *url = NULL;
+      g_autofree gchar *url = NULL;
 
       /* Build the signed url */
       url = _get_signed_url (self,
@@ -2028,8 +1988,6 @@ fsp_session_check_auth_info             (FspSession          *self,
       _perform_async_request (self->soup_session, url,
                               _check_token_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_check_auth_info, data);
-
-      g_free (url);
     }
   else
     {
@@ -2069,7 +2027,7 @@ fsp_session_get_upload_status           (FspSession          *self,
 
   if (self->token != NULL)
     {
-      gchar *url = NULL;
+      g_autofree gchar *url = NULL;
 
       /* Build the signed url */
       url = _get_signed_url (self,
@@ -2083,8 +2041,6 @@ fsp_session_get_upload_status           (FspSession          *self,
       _perform_async_request (self->soup_session, url,
                               _get_upload_status_soup_session_cb, G_OBJECT (self),
                               c, cb, fsp_session_get_upload_status, data);
-
-      g_free (url);
     }
   else
     {
@@ -2134,7 +2090,7 @@ fsp_session_upload                      (FspSession          *self,
   AsyncRequestData *ard_clos = NULL;
   UploadPhotoData *up_clos = NULL;
   GFile *file = NULL;
-  gchar *signing_key = NULL;
+  g_autofree gchar *signing_key = NULL;
   gchar *api_sig = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
@@ -2168,7 +2124,6 @@ fsp_session_upload                      (FspSession          *self,
   _decode_param_from_table_for_signature (extra_params, "tags");
 
   g_hash_table_insert (extra_params, g_strdup ("oauth_signature"), api_sig);
-  g_free (signing_key);
 
   /* Save important data for the callback */
   ard_clos = g_slice_new0 (AsyncRequestData);
@@ -2211,7 +2166,7 @@ fsp_session_get_info                    (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (photo_id != NULL);
@@ -2230,8 +2185,6 @@ fsp_session_get_info                    (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _photo_get_info_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_get_info, data);
-
-  g_free (url);
 }
 
 FspDataPhotoInfo *
@@ -2258,7 +2211,7 @@ fsp_session_get_photosets               (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
@@ -2275,8 +2228,6 @@ fsp_session_get_photosets               (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _get_photosets_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_get_photosets, data);
-
-  g_free (url);
 }
 
 GSList *
@@ -2301,7 +2252,7 @@ fsp_session_add_to_photoset             (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (photo_id != NULL);
@@ -2322,8 +2273,6 @@ fsp_session_add_to_photoset             (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _add_to_photoset_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_add_to_photoset, data);
-
-  g_free (url);
 }
 
 gboolean
@@ -2352,7 +2301,7 @@ fsp_session_create_photoset             (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (title != NULL);
@@ -2374,8 +2323,6 @@ fsp_session_create_photoset             (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _create_photoset_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_create_photoset, data);
-
-  g_free (url);
 }
 
 gchar *
@@ -2402,7 +2349,7 @@ fsp_session_get_groups                  (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
@@ -2419,8 +2366,6 @@ fsp_session_get_groups                  (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _get_groups_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_get_groups, data);
-
-  g_free (url);
 }
 
 GSList *
@@ -2445,7 +2390,7 @@ fsp_session_add_to_group                (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (photo_id != NULL);
@@ -2466,8 +2411,6 @@ fsp_session_add_to_group                (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _add_to_group_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_add_to_group, data);
-
-  g_free (url);
 }
 
 gboolean
@@ -2493,7 +2436,7 @@ fsp_session_get_tags_list               (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
 
@@ -2510,8 +2453,6 @@ fsp_session_get_tags_list               (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _get_tags_list_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_get_tags_list, data);
-
-  g_free (url);
 }
 
 GSList *
@@ -2535,8 +2476,8 @@ fsp_session_set_license                 (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *license_str = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *license_str = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (photo_id != NULL);
@@ -2551,15 +2492,12 @@ fsp_session_set_license                 (FspSession          *self,
                          "photo_id", photo_id,
                          "license_id", license_str,
                          NULL);
-  g_free (license_str);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _set_license_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_set_license, data);
-
-  g_free (url);
 }
 
 gboolean
@@ -2589,9 +2527,9 @@ fsp_session_set_location                 (FspSession          *self,
   SoupSession *soup_session = NULL;
   gchar lat_str[G_ASCII_DTOSTR_BUF_SIZE];
   gchar lon_str[G_ASCII_DTOSTR_BUF_SIZE];
-  gchar *accuracy_str = NULL;
-  gchar *context_str = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *accuracy_str = NULL;
+  g_autofree gchar *context_str = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (photo_id != NULL);
@@ -2617,16 +2555,12 @@ fsp_session_set_location                 (FspSession          *self,
                          "accuracy", accuracy_str,
                          "context", context_str,
                          NULL);
-  g_free (accuracy_str);
-  g_free (context_str);
 
   /* Perform the async request */
   soup_session = _get_soup_session (self);
   _perform_async_request (soup_session, url,
                           _set_location_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_set_location, data);
-
-  g_free (url);
 }
 
 gboolean
@@ -2653,7 +2587,7 @@ fsp_session_get_location                 (FspSession          *self,
                                           gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar *url = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (photo_id != NULL);
@@ -2671,8 +2605,6 @@ fsp_session_get_location                 (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _get_location_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_get_location, data);
-
-  g_free (url);
 }
 
 FspDataLocation *
@@ -2701,8 +2633,8 @@ fsp_session_set_date_posted             (FspSession          *self,
                                          gpointer             data)
 {
   SoupSession *soup_session = NULL;
-  gchar* date_str;
-  gchar *url = NULL;
+  g_autofree gchar* date_str = NULL;
+  g_autofree gchar *url = NULL;
 
   g_return_if_fail (FSP_IS_SESSION (self));
   g_return_if_fail (photo_id != NULL);
@@ -2726,9 +2658,6 @@ fsp_session_set_date_posted             (FspSession          *self,
   _perform_async_request (soup_session, url,
                           _set_dates_soup_session_cb, G_OBJECT (self),
                           cancellable, callback, fsp_session_set_date_posted, data);
-
-  g_free (date_str);
-  g_free (url);
 }
 
 gboolean

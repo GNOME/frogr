@@ -140,10 +140,10 @@ _add_tags_to_tags_list (FrogrPicture *self,
   /* Check if valid data is passed to the function */
   if (tags_string != NULL)
     {
-      gchar *stripped_tags = g_strstrip (g_strdup (tags_string));
+      g_autofree gchar *stripped_tags = g_strstrip (g_strdup (tags_string));
       if (!g_str_equal (stripped_tags, ""))
         {
-          gchar **tags_array = NULL;
+          g_auto(GStrv) tags_array = NULL;
           gchar *tag;
           gint i;
 
@@ -156,11 +156,7 @@ _add_tags_to_tags_list (FrogrPicture *self,
               if (!g_str_equal (tag, "") && !_tag_is_set (self, tag))
                 self->tags_list = g_slist_append (self->tags_list, tag);
             }
-
-          /* Free */
-          g_strfreev (tags_array);
         }
-      g_free (stripped_tags);
 
       /* Update internal tags string */
       _update_tags_string (self);
@@ -502,15 +498,13 @@ _frogr_picture_dispose (GObject* object)
 
   if (self->photosets)
     {
-      g_slist_foreach (self->photosets, (GFunc) g_object_unref, NULL);
-      g_slist_free (self->photosets);
+      g_slist_free_full (self->photosets, g_object_unref);
       self->photosets = NULL;
     }
 
   if (self->groups)
     {
-      g_slist_foreach (self->groups, (GFunc) g_object_unref, NULL);
-      g_slist_free (self->groups);
+      g_slist_free_full (self->groups, g_object_unref);
       self->groups = NULL;
     }
 
@@ -532,8 +526,7 @@ _frogr_picture_finalize (GObject* object)
   g_free (self->datetime);
 
   /* free GSList of tags */
-  g_slist_foreach (self->tags_list, (GFunc) g_free, NULL);
-  g_slist_free (self->tags_list);
+  g_slist_free_full (self->tags_list, g_free);
 
   /* call super class */
   G_OBJECT_CLASS (frogr_picture_parent_class)->finalize(object);
@@ -852,8 +845,7 @@ frogr_picture_set_tags (FrogrPicture *self, const gchar *tags_string)
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
   /* First remove all the previous tags list */
-  g_slist_foreach (self->tags_list, (GFunc) g_free, NULL);
-  g_slist_free (self->tags_list);
+  g_slist_free_full (self->tags_list, g_free);
   self->tags_list = NULL;
 
   /* Add to internal tags_list */
@@ -1091,9 +1083,7 @@ frogr_picture_set_photosets (FrogrPicture *self, GSList *photosets)
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
   /* First remove all the previous sets list */
-  g_slist_foreach (self->photosets, (GFunc) g_object_unref, NULL);
-  g_slist_free (self->photosets);
-
+  g_slist_free_full (self->photosets, g_object_unref);
   self->photosets = photosets;
 }
 
@@ -1143,9 +1133,7 @@ frogr_picture_set_groups (FrogrPicture *self, GSList *groups)
   g_return_if_fail(FROGR_IS_PICTURE(self));
 
   /* First remove all the previous groups list */
-  g_slist_foreach (self->groups, (GFunc) g_object_unref, NULL);
-  g_slist_free (self->groups);
-
+  g_slist_free_full (self->groups, g_object_unref);
   self->groups = groups;
 }
 
@@ -1220,8 +1208,8 @@ frogr_picture_compare_by_property (FrogrPicture *self, FrogrPicture *other,
     {
       const gchar *str1 = NULL;
       const gchar *str2 = NULL;
-      gchar *str1_cf = NULL;
-      gchar *str2_cf = NULL;
+      g_autofree gchar *str1_cf = NULL;
+      g_autofree gchar *str2_cf = NULL;
 
       /* Comparison of strings require some additional work to take
          into account the different rules for each locale */
@@ -1232,9 +1220,6 @@ frogr_picture_compare_by_property (FrogrPicture *self, FrogrPicture *other,
       str2_cf = g_utf8_casefold (str2 ? str2 : "", -1);
 
       result = g_utf8_collate (str1_cf, str2_cf);
-
-      g_free (str1_cf);
-      g_free (str2_cf);
     }
   else
     g_warning ("Unsupported type for property used for sorting");

@@ -314,7 +314,7 @@ static gboolean
 _load_project_file_on_idle (gpointer data)
 {
   FrogrController *fcontroller = NULL;
-  gchar *filepath = NULL;
+  g_autofree gchar *filepath = NULL;
 
   g_return_val_if_fail (data, FALSE);
 
@@ -322,7 +322,6 @@ _load_project_file_on_idle (gpointer data)
   filepath = (gchar *)data;
 
   frogr_controller_open_project_from_file (fcontroller, filepath);
-  g_free (filepath);
 
   return G_SOURCE_REMOVE;
 }
@@ -386,7 +385,7 @@ static void
 _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gchar *hint, gpointer data)
 {
   FrogrController *self = FROGR_CONTROLLER (data);
-  GFileInfo *file_info = NULL;
+  g_autoptr(GFileInfo) file_info = NULL;
   gboolean is_project_file = FALSE;
 
   DEBUG ("Trying to open %d files\n", n_files);
@@ -408,7 +407,6 @@ _g_application_open_files_cb (GApplication *app, GFile **files, gint n_files, gc
          normally with MIME types 'image' and 'video' */
       mime_type = g_file_info_get_content_type (file_info);
       is_project_file = g_str_has_prefix (mime_type, "text");
-      g_object_unref (file_info);
     }
 
   if (is_project_file)
@@ -566,8 +564,8 @@ static void
 _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_user)
 {
   void (* error_function) (GtkWindow *, const gchar *) = NULL;
-  gchar *msg = NULL;
-  gchar *video_quota_msg = NULL;
+  g_autofree gchar *msg = NULL;
+  g_autofree gchar *video_quota_msg = NULL;
   gint n_videos = 0;
 
   error_function = frogr_util_show_error_dialog;
@@ -606,7 +604,6 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
       msg = g_strdup_printf ("%s\n%s",
                              _("Error uploading video:\nYou can't upload more videos with this account"),
                              video_quota_msg);
-      g_free (video_quota_msg);
       break;
 
     case FSP_ERROR_PHOTO_NOT_FOUND:
@@ -678,7 +675,6 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
     error_function (GTK_WINDOW (self->mainview), msg);
 
   DEBUG ("%s", msg);
-  g_free (msg);
 }
 
 static void
@@ -733,8 +729,8 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   CancellableOperationData *co_data = NULL;
   FrogrController *self = NULL;
-  GError *error = NULL;
-  gchar *auth_url = NULL;
+  g_autoptr(GError) error = NULL;
+  g_autofree gchar *auth_url = NULL;
 
   session = FSP_SESSION (obj);
   co_data = (CancellableOperationData*) data;
@@ -743,7 +739,7 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
   auth_url = fsp_session_get_auth_url_finish (session, res, &error);
   if (auth_url != NULL && error == NULL)
     {
-      gchar *url_with_permissions = NULL;
+      g_autofree gchar *url_with_permissions = NULL;
 
       url_with_permissions = g_strdup_printf ("%s&perms=write", auth_url);
       frogr_util_open_uri (url_with_permissions);
@@ -752,16 +748,12 @@ _get_auth_url_cb (GObject *obj, GAsyncResult *res, gpointer data)
       frogr_auth_dialog_show (GTK_WINDOW (self->mainview), CONFIRM_AUTHORIZATION);
 
       DEBUG ("Auth URL: %s", url_with_permissions);
-
-      g_free (url_with_permissions);
-      g_free (auth_url);
     }
 
   if (error != NULL)
     {
       _handle_flicksoup_error (self, error, TRUE);
       DEBUG ("Error getting auth URL: %s", error->message);
-      g_error_free (error);
     }
 
   frogr_main_view_hide_progress (self->mainview);
@@ -779,7 +771,7 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
   CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
   FspDataAuthToken *auth_token = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   session = FSP_SESSION (object);
   co_data = (CancellableOperationData*) data;
@@ -814,7 +806,6 @@ _complete_auth_cb (GObject *object, GAsyncResult *result, gpointer data)
     {
       _handle_flicksoup_error (controller, error, TRUE);
       DEBUG ("Authorization failed: %s", error->message);
-      g_error_free (error);
     }
 
   frogr_main_view_hide_progress (controller->mainview);
@@ -830,7 +821,7 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
 {
   FspSession *session = NULL;
   FrogrController *controller = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   session = FSP_SESSION (object);
   controller = FROGR_CONTROLLER (data);
@@ -859,7 +850,6 @@ _exchange_token_cb (GObject *object, GAsyncResult *result, gpointer data)
     {
       _handle_flicksoup_error (controller, error, TRUE);
       DEBUG ("Authorization failed: %s", error->message);
-      g_error_free (error);
     }
 
   frogr_main_view_hide_progress (controller->mainview);
@@ -913,13 +903,13 @@ _invalidate_extra_data (FrogrController *self)
 static void
 _update_upload_progress (FrogrController *self, UploadPicturesData *up_data)
 {
-  gchar *description = NULL;
-  gchar *status_text = NULL;
+  g_autofree gchar *description = NULL;
+  g_autofree gchar *status_text = NULL;
 
   if (up_data->current)
     {
       FrogrPicture *picture = FROGR_PICTURE (up_data->current->data);
-      gchar *title = g_strdup (frogr_picture_get_title (picture));
+      g_autofree gchar *title = g_strdup (frogr_picture_get_title (picture));
 
       /* Update progress */
       if (up_data->upload_attempts > 0)
@@ -932,14 +922,9 @@ _update_upload_progress (FrogrController *self, UploadPicturesData *up_data)
           description = g_strdup_printf (_("Uploading '%s'…"), title);
         }
       status_text = g_strdup_printf ("%d / %d", up_data->index, up_data->n_pictures);
-      g_free (title);
     }
   frogr_main_view_set_progress_description(self->mainview, description);
   frogr_main_view_set_progress_status_text (self->mainview, status_text);
-
-  /* Free */
-  g_free (description);
-  g_free (status_text);
 }
 
 static void
@@ -1027,8 +1012,8 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
   UploadPicturesData *up_data = NULL;
   FrogrController *controller = NULL;
   FrogrPicture *picture = NULL;
+  g_autofree gchar *photo_id = NULL;
   GError *error = NULL;
-  gchar *photo_id = NULL;
 
   session = FSP_SESSION (object);
   uop_data = (UploadOnePictureData*) data;
@@ -1037,10 +1022,7 @@ _upload_picture_cb (GObject *object, GAsyncResult *res, gpointer data)
 
   photo_id = fsp_session_upload_finish (session, res, &error);
   if (photo_id)
-    {
-      frogr_picture_set_id (picture, photo_id);
-      g_free (photo_id);
-    }
+    frogr_picture_set_id (picture, photo_id);
 
   /* Stop reporting to the user */
   g_signal_handlers_disconnect_by_func (controller->session, _data_fraction_sent_cb, controller);
@@ -1112,10 +1094,7 @@ _finish_upload_pictures_process (FrogrController *self, UploadPicturesData *up_d
   _set_state (self, FROGR_STATE_IDLE);
 
   if (up_data->pictures)
-    {
-      g_slist_foreach (up_data->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (up_data->pictures);
-    }
+    g_slist_free_full (up_data->pictures, g_object_unref);
 
   g_slice_free (UploadPicturesData, up_data);
 }
@@ -1198,7 +1177,7 @@ static void
 _set_license_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
 {
   FrogrPicture *picture = NULL;
-  gchar *debug_msg = NULL;
+  g_autofree gchar *debug_msg = NULL;
 
   self->setting_license = TRUE;
   picture = uop_data->picture;
@@ -1214,7 +1193,6 @@ _set_license_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
                                frogr_picture_get_license (picture),
                                frogr_picture_get_title (picture));
   DEBUG ("%s", debug_msg);
-  g_free (debug_msg);
 }
 
 static void
@@ -1261,7 +1239,7 @@ _set_location_for_picture (FrogrController *self, UploadOnePictureData *uop_data
   FrogrPicture *picture = NULL;
   FrogrLocation *location = NULL;
   FspDataLocation *data_location = NULL;
-  gchar *debug_msg = NULL;
+  g_autofree gchar *debug_msg = NULL;
 
   picture = uop_data->picture;
   location = frogr_picture_get_location (picture);
@@ -1284,7 +1262,6 @@ _set_location_for_picture (FrogrController *self, UploadOnePictureData *uop_data
                                frogr_location_get_longitude (location),
                                frogr_picture_get_title (picture));
   DEBUG ("%s", debug_msg);
-  g_free (debug_msg);
 
   fsp_data_free (FSP_DATA (data_location));
 }
@@ -1334,7 +1311,7 @@ _set_replace_date_posted_for_picture (FrogrController *self, UploadOnePictureDat
   GDateTime *picture_date = NULL;
   GTimeVal picture_timeval;
   const gchar *picture_date_str = NULL;
-  gchar *debug_msg = NULL;
+  g_autofree gchar *debug_msg = NULL;
   gchar date_iso8601[20];
 
   picture = uop_data->picture;
@@ -1379,7 +1356,6 @@ _set_replace_date_posted_for_picture (FrogrController *self, UploadOnePictureDat
   debug_msg = g_strdup_printf ("Replacing 'date posted' with 'date taken' (%s) for picture %s…",
                                date_iso8601, frogr_picture_get_title (picture));
   DEBUG ("%s", debug_msg);
-  g_free (debug_msg);
 
   g_date_time_unref (picture_date);
 }
@@ -1410,7 +1386,7 @@ _create_photoset_for_picture (FrogrController *self, UploadOnePictureData *uop_d
 {
   FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
-  gchar *debug_msg = NULL;
+  g_autofree gchar *debug_msg = NULL;
 
   picture = uop_data->picture;
   set = FROGR_PHOTOSET (uop_data->photosets->data);
@@ -1430,7 +1406,6 @@ _create_photoset_for_picture (FrogrController *self, UploadOnePictureData *uop_d
                                frogr_photoset_get_title (set),
                                frogr_photoset_get_description (set));
   DEBUG ("%s", debug_msg);
-  g_free (debug_msg);
 }
 
 static void
@@ -1441,7 +1416,7 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
   FrogrController *controller = NULL;
   FrogrPhotoSet *set = NULL;
   GSList *photosets = NULL;
-  gchar *photoset_id = NULL;
+  g_autofree gchar *photoset_id = NULL;
   GError *error = NULL;
 
   session = FSP_SESSION (object);
@@ -1473,7 +1448,6 @@ _create_photoset_cb (GObject *object, GAsyncResult *res, gpointer data)
         {
           frogr_photoset_set_id (set, photoset_id);
           frogr_photoset_set_n_photos (set, frogr_photoset_get_n_photos (set) + 1);
-          g_free (photoset_id);
 
           uop_data->after_upload_attempts[AFTER_UPLOAD_OP_ADDING_TO_SET] = 0;
           uop_data->photosets = g_slist_next (photosets);
@@ -1495,7 +1469,7 @@ _add_picture_to_photoset (FrogrController *self, UploadOnePictureData *uop_data)
 {
   FrogrPicture *picture = NULL;
   FrogrPhotoSet *set = NULL;
-  gchar *debug_msg = NULL;
+  g_autofree gchar *debug_msg = NULL;
 
   picture = uop_data->picture;
   set = FROGR_PHOTOSET (uop_data->photosets->data);
@@ -1512,7 +1486,6 @@ _add_picture_to_photoset (FrogrController *self, UploadOnePictureData *uop_data)
                                frogr_picture_get_title (picture),
                                frogr_photoset_get_title (set));
   DEBUG ("%s", debug_msg);
-  g_free (debug_msg);
 }
 
 static void
@@ -1588,7 +1561,7 @@ _add_picture_to_group (FrogrController *self, UploadOnePictureData *uop_data)
 {
   FrogrPicture *picture = NULL;
   FrogrGroup *group = NULL;
-  gchar *debug_msg = NULL;
+  g_autofree gchar *debug_msg = NULL;
 
   picture = uop_data->picture;
   group = FROGR_GROUP (uop_data->groups->data);
@@ -1604,7 +1577,6 @@ _add_picture_to_group (FrogrController *self, UploadOnePictureData *uop_data)
                                frogr_picture_get_title (picture),
                                frogr_group_get_name (group));
   DEBUG ("%s", debug_msg);
-  g_free (debug_msg);
 }
 
 static void
@@ -1795,7 +1767,7 @@ _fetch_account_basic_info_cb (GObject *object, GAsyncResult *res, FetchAccountIn
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FspDataAuthToken *auth_token = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   session = FSP_SESSION (object);
   controller = frogr_controller_get_instance ();
@@ -1835,7 +1807,6 @@ _fetch_account_basic_info_cb (GObject *object, GAsyncResult *res, FetchAccountIn
         {
           DEBUG ("Fetching basic info from the account: %s", error->message);
           _handle_flicksoup_error (controller, error, FALSE);
-          g_error_free (error);
         }
       _fetch_account_info_finish (controller, data);
     }
@@ -1864,7 +1835,7 @@ _fetch_account_upload_status_cb (GObject *object, GAsyncResult *res, FetchAccoun
   FspSession *session = NULL;
   FrogrController *controller = NULL;
   FspDataUploadStatus *upload_status = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   session = FSP_SESSION (object);
   controller = frogr_controller_get_instance ();
@@ -1910,7 +1881,6 @@ _fetch_account_upload_status_cb (GObject *object, GAsyncResult *res, FetchAccoun
     {
       DEBUG ("Fetching upload status for the account: %s", error->message);
       _handle_flicksoup_error (controller, error, FALSE);
-      g_error_free (error);
     }
 
   fsp_data_free (FSP_DATA (upload_status));
@@ -1965,9 +1935,9 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
-  GSList *data_sets_list = NULL;
   GSList *sets_list = NULL;
-  GError *error = NULL;
+  g_autoptr(GSList) data_sets_list = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
@@ -1984,8 +1954,6 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
       /* If no photosets are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
         valid = TRUE;
-
-      g_error_free (error);
     }
   else
     {
@@ -2013,8 +1981,6 @@ _fetch_photosets_cb (GObject *object, GAsyncResult *res, gpointer data)
                 }
               fsp_data_free (FSP_DATA (current_data_set));
             }
-
-          g_slist_free (data_sets_list);
         }
     }
 
@@ -2057,9 +2023,9 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
   FspSession *session = NULL;
   CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
-  GSList *data_groups_list = NULL;
   GSList *groups_list = NULL;
-  GError *error = NULL;
+  g_autoptr(GSList) data_groups_list = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
@@ -2076,8 +2042,6 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
       /* If no groups are found is a valid outcome */
       if (error->code == FSP_ERROR_MISSING_DATA)
         valid = TRUE;
-
-      g_error_free (error);
     }
   else
     {
@@ -2104,8 +2068,6 @@ _fetch_groups_cb (GObject *object, GAsyncResult *res, gpointer data)
                 }
               fsp_data_free (FSP_DATA (data_group));
             }
-
-          g_slist_free (data_groups_list);
         }
     }
 
@@ -2153,7 +2115,7 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
   CancellableOperationData *co_data = NULL;
   FrogrController *controller = NULL;
   GSList *tags_list = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean valid = FALSE;
 
   session = FSP_SESSION (object);
@@ -2172,18 +2134,13 @@ _fetch_tags_cb (GObject *object, GAsyncResult *res, gpointer data)
         valid = TRUE;
 
       tags_list = NULL;
-
-      g_error_free (error);
     }
   else
     {
       /* Consider the received result valid if no previous one has arrived first */
       valid = !controller->tags_fetched;
       if (!valid)
-        {
-          g_slist_foreach (tags_list, (GFunc)g_free, NULL);
-          g_slist_free (tags_list);
-        }
+        g_slist_free_full (tags_list, g_free);
     }
 
   if (valid)
@@ -2206,8 +2163,7 @@ _dispose_slist_of_objects (GSList *objects)
     return;
 
   /* FrogrController's responsibility over this list ends here */
-  g_slist_foreach (objects, (GFunc) g_object_unref, NULL);
-  g_slist_free (objects);
+  g_slist_free_full (objects, g_object_unref);
 }
 
 static gboolean
@@ -2261,7 +2217,7 @@ _show_progress_on_idle (gpointer data)
   frogr_main_view_pulse_progress (controller->mainview);
   if (show_dialog)
     {
-      gchar *title = NULL;
+      g_autofree gchar *title = NULL;
 
       switch (activity)
         {
@@ -2282,8 +2238,6 @@ _show_progress_on_idle (gpointer data)
         }
 
       frogr_main_view_show_progress (controller->mainview, title, text);
-      g_free (title);
-
       return G_SOURCE_CONTINUE;
     }
   else
@@ -2457,8 +2411,7 @@ _frogr_controller_dispose (GObject* object)
 
   if (controller->cancellables)
     {
-      g_list_foreach (controller->cancellables, (GFunc)g_object_unref, NULL);
-      g_list_free (controller->cancellables);
+      g_list_free_full (controller->cancellables, g_object_unref);
       controller->cancellables = NULL;
     }
 
@@ -2547,7 +2500,7 @@ frogr_controller_get_instance (void)
 gint
 frogr_controller_run_app (FrogrController *self, int argc, char **argv)
 {
-  GtkApplication *app = NULL;
+  g_autoptr(GtkApplication) app = NULL;
   gint status;
 
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), -1);
@@ -2571,7 +2524,6 @@ frogr_controller_run_app (FrogrController *self, int argc, char **argv)
   g_signal_connect (app, "open", G_CALLBACK (_g_application_open_files_cb), self);
 
   status = g_application_run (G_APPLICATION (app), argc, argv);
-  g_object_unref (app);
 
   return status;
 }
@@ -2655,7 +2607,7 @@ frogr_controller_set_proxy (FrogrController *self,
     proxy_changed = fsp_session_set_custom_proxy (self->session, NULL, NULL, NULL, NULL);
     DEBUG ("%s", "Not enabling the HTTP proxy");
   } else {
-    gchar *auth_part = NULL;
+    g_autofree gchar *auth_part = NULL;
     gboolean has_username = FALSE;
     gboolean has_password = FALSE;
 
@@ -2666,7 +2618,6 @@ frogr_controller_set_proxy (FrogrController *self,
       auth_part = g_strdup_printf ("%s:%s@", username, password);
 
     DEBUG ("Using HTTP proxy: %s%s:%s", auth_part ? auth_part : "", host, port);
-    g_free (auth_part);
 
     proxy_changed = fsp_session_set_custom_proxy (self->session,
                                                   host, port,
@@ -2965,21 +2916,19 @@ frogr_controller_upload_pictures (FrogrController *self, GSList *pictures)
   /* Upload pictures */
   if (!frogr_controller_is_authorized (self))
     {
-      gchar *msg = NULL;
+      g_autofree gchar *msg = NULL;
       msg = g_strdup_printf (_("You need to properly authorize %s before"
                                " uploading any pictures to Flickr.\n"
                                "Please re-authorize it."), APP_SHORTNAME);
 
       frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
-      g_free (msg);
     }
   else if (!frogr_controller_is_connected (self))
     {
-      gchar *msg = NULL;
+      g_autofree gchar *msg = NULL;
       msg = g_strdup_printf (_("You need to be connected before"
                                " uploading any pictures to Flickr."));
       frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
-      g_free (msg);
     }
   else
     {
@@ -3025,8 +2974,8 @@ frogr_controller_cancel_ongoing_requests (FrogrController *self)
 gboolean
 frogr_controller_open_project_from_file (FrogrController *self, const gchar *path)
 {
-  JsonParser *json_parser = NULL;
-  GError *error = NULL;
+  g_autoptr(JsonParser) json_parser = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean result = FALSE;
 
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
@@ -3037,14 +2986,12 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
   json_parser_load_from_file (json_parser, path, &error);
   if (error)
     {
-      gchar *msg = NULL;
+      g_autofree gchar *msg = NULL;
 
       msg = g_strdup_printf (_("Error opening project file"));
       frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
-      g_free (msg);
 
       DEBUG ("Error loading project file: %s", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -3071,7 +3018,6 @@ frogr_controller_open_project_from_file (FrogrController *self, const gchar *pat
       frogr_model_deserialize (model, data_object);
       result = TRUE;
     }
-  g_object_unref (json_parser);
 
   return result;
 }
@@ -3080,15 +3026,15 @@ gboolean
 frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
 {
   FrogrModel *model = NULL;
-  JsonGenerator *json_gen = NULL;
-  JsonNode *root_node = NULL;
-  JsonObject *root_object = NULL;
+  g_autoptr(JsonGenerator) json_gen = NULL;
+  g_autoptr(JsonNode) root_node = NULL;
+  g_autoptr(JsonObject) root_object = NULL;
   JsonObject *serialized_model = NULL;
   gint n_pictures;
   gint n_photosets;
   gint n_groups;
   gint n_tags;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   g_return_val_if_fail(FROGR_IS_CONTROLLER (self), FALSE);
   g_return_val_if_fail(path, FALSE);
@@ -3118,23 +3064,18 @@ frogr_controller_save_project_to_file (FrogrController *self, const gchar *path)
   serialized_model = frogr_model_serialize (model);
   json_object_set_object_member (root_object, "data", serialized_model);
   json_node_set_object (root_node, root_object);
-  json_object_unref (root_object);
 
   /* Create a JsonGenerator using the JsonNode as root */
   json_gen = json_generator_new ();
   json_generator_set_root (json_gen, root_node);
-  json_node_free (root_node);
 
   /* Save to disk */
   json_generator_to_file (json_gen, path, &error);
-  g_object_unref (json_gen);
 
   if (error)
     {
       DEBUG ("Error serializing current state to %s: %s",
              path, error->message);
-      g_error_free (error);
-
       return FALSE;
     }
 

@@ -234,7 +234,7 @@ _parse_error_from_node                  (xmlNode *error_node,
   FspError error = FSP_ERROR_UNKNOWN;
   xmlChar *code_str = NULL;
   xmlChar *msg = NULL;
-  gchar *error_msg = NULL;
+  g_autofree gchar *error_msg = NULL;
   gint code;
   GError *err = NULL;
 
@@ -257,7 +257,6 @@ _parse_error_from_node                  (xmlNode *error_node,
 
   xmlFree (code_str);
   xmlFree (msg);
-  g_free (error_msg);
 
   return err;
 }
@@ -1246,8 +1245,8 @@ fsp_parser_get_request_token            (FspParser   *self,
                                          GError     **error)
 {
   FspDataAuthToken *auth_token = NULL;
-  gchar *response_str = NULL;
-  gchar **response_array = NULL;
+  g_autofree gchar *response_str = NULL;
+  g_auto(GStrv) response_array = NULL;
   gint i = 0;
 
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
@@ -1257,7 +1256,6 @@ fsp_parser_get_request_token            (FspParser   *self,
   auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
   response_str = g_strndup (buffer, buf_size);
   response_array = g_strsplit (response_str, "&", -1);
-  g_free (response_str);
 
   for (i = 0; response_array[i]; i++)
     {
@@ -1267,7 +1265,6 @@ fsp_parser_get_request_token            (FspParser   *self,
       if (g_str_has_prefix (response_array[i], "oauth_token_secret="))
         auth_token->token_secret = g_strdup (&response_array[i][19]);
     }
-  g_strfreev (response_array);
 
   /* Create the GError if needed*/
   if (!auth_token->token || !auth_token->token_secret)
@@ -1291,8 +1288,8 @@ fsp_parser_get_access_token             (FspParser   *self,
                                          GError     **error)
 {
   FspDataAuthToken *auth_token = NULL;
-  gchar *response_str = NULL;
-  gchar **response_array = NULL;
+  g_autofree gchar *response_str = NULL;
+  g_auto(GStrv) response_array = NULL;
   gint i = 0;
 
   g_return_val_if_fail (FSP_IS_PARSER (self), NULL);
@@ -1302,7 +1299,6 @@ fsp_parser_get_access_token             (FspParser   *self,
   auth_token = FSP_DATA_AUTH_TOKEN (fsp_data_new (FSP_AUTH_TOKEN));
   response_str = g_strndup (buffer, buf_size);
   response_array = g_strsplit (response_str, "&", -1);
-  g_free (response_str);
 
   for (i = 0; response_array[i]; i++)
     {
@@ -1321,7 +1317,6 @@ fsp_parser_get_access_token             (FspParser   *self,
       if (g_str_has_prefix (response_array[i], "oauth_token_secret="))
         auth_token->token_secret = g_strdup (&response_array[i][19]);
     }
-  g_strfreev (response_array);
 
   /* Create the GError if needed*/
   if (!auth_token->token || !auth_token->token_secret)

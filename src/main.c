@@ -40,18 +40,15 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 int
 main (int argc, char **argv)
 {
-  FrogrController *controller = NULL;
+  g_autoptr(FrogrController) controller = NULL;
   int status;
 #if HAVE_GSTREAMER
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   /* Initialize gstreamer before using any other GLib function */
   gst_init_check (&argc, &argv, &error);
   if (error)
-    {
-      DEBUG ("Gstreamer could not be initialized: %s", error->message);
-      g_error_free (error);
-    }
+    DEBUG ("Gstreamer could not be initialized: %s", error->message);
 #endif
 
 #if GCRYPT_VERSION_NUMBER < 0x010600
@@ -78,7 +75,6 @@ main (int argc, char **argv)
 
   controller = frogr_controller_get_instance ();
   status = frogr_controller_run_app (controller, argc, argv);
-  g_object_unref (controller);
 
   /* cleanup libxml2 library */
   xmlCleanupParser();

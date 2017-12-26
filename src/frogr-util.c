@@ -52,15 +52,12 @@
 static gboolean
 _spawn_command (const gchar* cmd)
 {
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   if (!g_spawn_command_line_async (cmd, &error))
     {
       if (error)
-        {
-          DEBUG ("Error spawning command '%s': %s", cmd, error->message);
-          g_error_free (error);
-        }
+        DEBUG ("Error spawning command '%s': %s", cmd, error->message);
 
       return FALSE;
     }
@@ -91,7 +88,7 @@ gchar *
 _get_uris_string_from_list (GList *uris_list)
 {
   GList *current_uri = NULL;
-  gchar **uris_array = NULL;
+  g_auto(GStrv) uris_array = NULL;
   gchar *uris_str = NULL;
   gint n_uris = 0;
   gint i = 0;
@@ -105,7 +102,6 @@ _get_uris_string_from_list (GList *uris_list)
     uris_array[i++] = (gchar *) (current_uri->data);
 
   uris_str = g_strjoinv (" ", uris_array);
-  g_free (uris_array);
 
   return uris_str;
 }
@@ -113,7 +109,7 @@ _get_uris_string_from_list (GList *uris_list)
 static void
 _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 {
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   /* Early return */
   if (!uris_list)
@@ -122,25 +118,18 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
   if (!app_info || !g_app_info_launch_uris (app_info, uris_list, NULL, &error))
     {
       /* The default app didn't succeed, so try 'xdg-open' / 'open' */
-      gchar *command = NULL;
-      gchar *uris = NULL;
+      g_autofree gchar *command = NULL;
+      g_autofree gchar *uris = NULL;
 
       uris = _get_uris_string_from_list (uris_list);
       command = g_strdup_printf ("gvfs-open %s", uris);
       _spawn_command (command);
 
       if (error)
-        {
-          DEBUG ("Error opening URI(s) %s: %s", uris, error->message);
-          g_error_free (error);
-        }
-
-      g_free (command);
-      g_free (uris);
+        DEBUG ("Error opening URI(s) %s: %s", uris, error->message);
     }
 
-  g_list_foreach (uris_list, (GFunc) g_free, NULL);
-  g_list_free (uris_list);
+  g_list_free_full (uris_list, g_free);
 }
 
 void
@@ -302,7 +291,7 @@ _get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height)
 static GdkPixbuf *
 _get_pixbuf_from_image_contents (const guchar *contents, gsize length, const gchar *filepath, GError **out_error)
 {
-  GdkPixbufLoader *pixbuf_loader = NULL;
+  g_autoptr(GdkPixbufLoader) pixbuf_loader = NULL;
   GdkPixbuf *pixbuf = NULL;
   GError *error = NULL;
 
@@ -335,7 +324,6 @@ _get_pixbuf_from_image_contents (const guchar *contents, gsize length, const gch
   /* Keep the pixbuf before destroying the loader */
   if (pixbuf)
     g_object_ref (pixbuf);
-  g_object_unref (pixbuf_loader);
 
   return pixbuf;
 }
@@ -358,8 +346,8 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
   gint width, height;
   gboolean res;
 #endif
-  gchar *file_uri;
-  gchar *descr;
+  g_autofree gchar *file_uri = NULL;
+  g_autofree gchar *descr = NULL;
   gint64 duration, position;
   GError *error = NULL;
 
@@ -373,10 +361,7 @@ _get_pixbuf_from_video_file (GFile *file, GError **out_error)
                            " appsink name=sink caps=\"" CAPS "\"", file_uri);
 #endif
 
-  g_free (file_uri);
-
   pipeline = gst_parse_launch (descr, &error);
-  g_free (descr);
 
   if (error != NULL) {
     DEBUG ("Could not construct pipeline: %s\n", error->message);
@@ -529,8 +514,8 @@ frogr_util_get_datasize_string (gulong datasize)
 
   if (datasize != G_MAXULONG)
     {
+      g_autofree gchar *unit_str = NULL;
       gfloat datasize_float = G_MAXFLOAT;
-      gchar *unit_str = NULL;
       int n_divisions = 0;
 
       datasize_float = datasize;
@@ -556,10 +541,7 @@ frogr_util_get_datasize_string (gulong datasize)
         }
 
       if (unit_str)
-        {
-          result = g_strdup_printf ("%.1f %s", datasize_float, unit_str);
-          g_free (unit_str);
-        }
+        result = g_strdup_printf ("%.1f %s", datasize_float, unit_str);
     }
 
   return result;

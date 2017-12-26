@@ -292,7 +292,7 @@ frogr_photoset_new_local (const gchar *title,
                           const gchar *description)
 {
   FrogrPhotoSet *new_set;
-  gchar *id;
+  g_autofree gchar *id = NULL;
 
   g_return_val_if_fail (title, NULL);
   g_return_val_if_fail (description, NULL);
@@ -302,7 +302,6 @@ frogr_photoset_new_local (const gchar *title,
   /* We always need to have an id in locally created photosets */
   id = _create_temporary_id_for_photoset ();
   frogr_photoset_set_local_id (new_set, id);
-  g_free (id);
 
   return new_set;
 }

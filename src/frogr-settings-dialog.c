@@ -332,7 +332,7 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *cbutton = NULL;
   GtkWidget *label = NULL;
   GtkWidget *entry = NULL;
-  gchar *markup = NULL;
+  g_autofree gchar *markup = NULL;
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
@@ -343,7 +343,6 @@ _add_connection_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Proxy Settings"));
   gtk_label_set_markup (GTK_LABEL (label), markup);
-  g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
@@ -432,7 +431,7 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   GtkWidget *vbox = NULL;
   GtkWidget *box = NULL;
   GtkWidget *label = NULL;
-  gchar *markup = NULL;
+  g_autofree gchar *markup = NULL;
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
@@ -443,7 +442,6 @@ _add_misc_page (FrogrSettingsDialog *self, GtkNotebook *notebook)
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Other options"));
   gtk_label_set_markup (GTK_LABEL (label), markup);
-  g_free (markup);
 
   gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);

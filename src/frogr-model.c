@@ -89,8 +89,7 @@ _remove_remote_photosets (FrogrModel *self)
         g_hash_table_remove (self->sets_table, id);
     }
 
-  g_slist_foreach (self->remote_sets, (GFunc)g_object_unref, NULL);
-  g_slist_free (self->remote_sets);
+  g_slist_free_full (self->remote_sets, g_object_unref);
   self->remote_sets = NULL;
 }
 
@@ -112,8 +111,7 @@ _remove_local_photosets (FrogrModel *self)
       g_hash_table_remove (self->sets_table, frogr_photoset_get_local_id (set));
     }
 
-  g_slist_foreach (self->local_sets, (GFunc)g_object_unref, NULL);
-  g_slist_free (self->local_sets);
+  g_slist_free_full (self->local_sets, g_object_unref);
   self->local_sets = NULL;
 }
 
@@ -163,8 +161,7 @@ _remove_groups (FrogrModel *self)
 
   if (self->groups)
     {
-      g_slist_foreach (self->groups, (GFunc)g_object_unref, NULL);
-      g_slist_free (self->groups);
+      g_slist_free_full (self->groups, g_object_unref);
       self->groups = NULL;
     }
 
@@ -180,8 +177,7 @@ _remove_remote_tags (FrogrModel *self)
   if (!self->remote_tags)
     return;
 
-  g_slist_foreach (self->remote_tags, (GFunc)g_free, NULL);
-  g_slist_free (self->remote_tags);
+  g_slist_free_full (self->remote_tags, g_free);
   self->remote_tags = NULL;
 }
 
@@ -193,8 +189,7 @@ _remove_local_tags (FrogrModel *self)
   if (!self->local_tags)
     return;
 
-  g_slist_foreach (self->local_tags, (GFunc)g_free, NULL);
-  g_slist_free (self->local_tags);
+  g_slist_free_full (self->local_tags, g_free);
   self->local_tags = NULL;
 }
 
@@ -606,9 +601,7 @@ frogr_model_remove_remote_tags (FrogrModel *self)
 {
   g_return_if_fail(FROGR_IS_MODEL (self));
 
-  g_slist_foreach (self->remote_tags, (GFunc)g_free, NULL);
-  g_slist_free (self->remote_tags);
-
+  g_slist_free_full (self->remote_tags, g_free);
   self->remote_tags = NULL;
 }
 
@@ -616,7 +609,7 @@ void
 frogr_model_add_local_tags_from_string (FrogrModel *self,
                                         const gchar *tags_string)
 {
-  gchar *stripped_tags = NULL;
+  g_autofree gchar *stripped_tags = NULL;
   gboolean added_new_tags = FALSE;
 
   g_return_if_fail(FROGR_IS_MODEL (self));
@@ -627,7 +620,7 @@ frogr_model_add_local_tags_from_string (FrogrModel *self,
   stripped_tags = g_strstrip (g_strdup (tags_string));
   if (!g_str_equal (stripped_tags, ""))
     {
-      gchar **tags_array = NULL;
+      g_auto(GStrv) tags_array = NULL;
       gchar *tag;
       gint i;
 
@@ -645,11 +638,9 @@ frogr_model_add_local_tags_from_string (FrogrModel *self,
 
           g_free (tag);
         }
-      g_strfreev (tags_array);
 
       self->local_tags = g_slist_sort (self->local_tags, (GCompareFunc)g_strcmp0);
     }
-  g_free (stripped_tags);
 
   if (added_new_tags)
     g_signal_emit (self, signals[MODEL_CHANGED], 0);

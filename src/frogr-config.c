@@ -145,7 +145,7 @@ _find_account_by_username (FrogrConfig *self, const gchar *username)
 static void
 _load_settings (FrogrConfig *self)
 {
-  gchar *xml_path = NULL;
+  g_autofree gchar *xml_path = NULL;
   xmlNodePtr node = NULL;
   xmlDocPtr xml = NULL;
 
@@ -313,8 +313,6 @@ _load_settings (FrogrConfig *self)
 
   if (xml)
     xmlFreeDoc (xml);
-
-  g_free (xml_path);
 }
 
 static void
@@ -499,7 +497,7 @@ _load_proxy_data_xml (FrogrConfig *self,
 static void
 _load_accounts (FrogrConfig *self)
 {
-  gchar *xml_path = NULL;
+  g_autofree gchar *xml_path = NULL;
   xmlNodePtr node = NULL;
   xmlDocPtr xml = NULL;
 
@@ -522,7 +520,7 @@ _load_accounts (FrogrConfig *self)
           /* Node "account" found, stop searching */
           if (!xmlStrcmp (node->name, (const xmlChar*) "account"))
             {
-              FrogrAccount *account = frogr_account_new ();
+              g_autoptr(FrogrAccount) account = frogr_account_new ();
 
               if (_load_account_xml (account, xml, node))
                 frogr_config_add_account (self, account);
@@ -536,8 +534,6 @@ _load_accounts (FrogrConfig *self)
 
                   xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1);
                 }
-
-              g_object_unref (account);
             }
         }
     }
@@ -553,8 +549,6 @@ _load_accounts (FrogrConfig *self)
 
   if (xml)
     xmlFreeDoc (xml);
-
-  g_free (xml_path);
 }
 
 static gboolean
@@ -652,7 +646,7 @@ _save_settings (FrogrConfig *self)
   xmlDocPtr xml = NULL;
   xmlNodePtr root = NULL;
   xmlNodePtr node = NULL;
-  gchar *xml_path = NULL;
+  g_autofree gchar *xml_path = NULL;
   gboolean retval = TRUE;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
@@ -714,7 +708,6 @@ _save_settings (FrogrConfig *self)
 
   /* Free */
   xmlFreeDoc (xml);
-  g_free (xml_path);
 
   return retval;
 }
@@ -726,7 +719,7 @@ _save_accounts (FrogrConfig *self)
   GSList *item = NULL;
   xmlDocPtr xml = NULL;
   xmlNodePtr root = NULL;
-  gchar *xml_path = NULL;
+  g_autofree gchar *xml_path = NULL;
   gboolean retval = TRUE;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
@@ -751,7 +744,6 @@ _save_accounts (FrogrConfig *self)
 
   /* Free */
   xmlFreeDoc (xml);
-  g_free (xml_path);
 
   return retval;
 }
@@ -788,11 +780,10 @@ static xmlNodePtr
 _xml_add_int_child (xmlNodePtr parent, const gchar *xml_name, gint value)
 {
   xmlNodePtr result = NULL;
-  gchar *int_str = NULL;
+  g_autofree gchar *int_str = NULL;
 
   int_str = g_strdup_printf ("%d", value);
   result = _xml_add_string_child (parent, xml_name, int_str);
-  g_free (int_str);
 
   return result;
 }
@@ -801,11 +792,10 @@ static xmlNodePtr
 _xml_add_bool_child (xmlNodePtr parent, const gchar *xml_name, gboolean value)
 {
   xmlNodePtr result = NULL;
-  gchar *bool_str = NULL;
+  g_autofree gchar *bool_str = NULL;
 
   bool_str = g_strdup_printf ("%d", value ? 1 : 0);
   result = _xml_add_string_child (parent, xml_name, bool_str);
-  g_free (bool_str);
 
   return result;
 }
@@ -817,7 +807,7 @@ _xml_add_string_child (xmlNodePtr   parent,
 {
   xmlNodePtr node = NULL;
   xmlChar *enc = NULL;
-  gchar *actual_content = NULL;
+  g_autofree gchar *actual_content = NULL;
 
   g_return_val_if_fail (parent != NULL, NULL);
   g_return_val_if_fail (xml_name != NULL, NULL);
@@ -832,7 +822,6 @@ _xml_add_string_child (xmlNodePtr   parent,
   xmlNodeSetContent (node, enc);
 
   xmlFree (enc);
-  g_free (actual_content);
 
   xmlAddChild (parent, node);
 
@@ -875,8 +864,7 @@ _dispose (GObject *object)
 
   if (config->accounts)
     {
-      g_slist_foreach (config->accounts, (GFunc)g_object_unref, NULL);
-      g_slist_free (config->accounts);
+      g_slist_free_full (config->accounts, g_object_unref);
       config->accounts = NULL;
     }
 
@@ -934,7 +922,7 @@ frogr_config_class_init (FrogrConfigClass *klass)
 static void
 frogr_config_init (FrogrConfig *self)
 {
-  gchar *config_dir = NULL;
+  g_autofree gchar *config_dir = NULL;
 
   self->config_dir = NULL;
   self->active_account = NULL;
@@ -992,8 +980,6 @@ frogr_config_init (FrogrConfig *self)
       g_warning ("Could not create config directory '%s' (%s)",
                  config_dir, strerror (errno));
     }
-
-  g_free (config_dir);
 }
 
 FrogrConfig*
@@ -1080,7 +1066,7 @@ frogr_config_get_active_account (FrogrConfig *self)
 gboolean
 frogr_config_remove_account (FrogrConfig *self, const gchar *username)
 {
-  FrogrAccount *found_account = NULL;
+  g_autoptr(FrogrAccount) found_account = NULL;
 
   g_return_val_if_fail (FROGR_IS_CONFIG (self), FALSE);
   g_return_val_if_fail (username != NULL, FALSE);
@@ -1090,8 +1076,6 @@ frogr_config_remove_account (FrogrConfig *self, const gchar *username)
   if (found_account)
     {
       self->accounts = g_slist_remove (self->accounts, found_account);
-      g_object_unref (found_account);
-
       return TRUE;
     }
 

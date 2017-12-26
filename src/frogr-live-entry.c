@@ -87,11 +87,11 @@ _entry_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
                              GtkTreeIter *iter, gpointer data)
 {
   FrogrLiveEntry *self = NULL;
-  gchar *stripped_entry_text = NULL;
+  g_autofree gchar *stripped_entry_text = NULL;
+  g_autofree gchar *entry = NULL;
+  g_autofree gchar *lc_basetext = NULL;
+  g_autofree gchar *lc_entry = NULL;
   gchar *basetext = NULL;
-  gchar *entry = NULL;
-  gchar *lc_basetext = NULL;
-  gchar *lc_entry = NULL;
   gint cursor_pos = 0;
   gboolean matches = FALSE;
 
@@ -122,11 +122,6 @@ _entry_list_completion_func (GtkEntryCompletion *completion, const gchar *key,
   if (g_str_has_prefix (lc_entry, lc_basetext))
     matches = TRUE;
 
-  g_free (stripped_entry_text);
-  g_free (entry);
-  g_free (lc_basetext);
-  g_free (lc_entry);
-
   return matches;
 }
 
@@ -135,11 +130,11 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
                                GtkTreeIter *iter, gpointer data)
 {
   FrogrLiveEntry *self = NULL;
-  gchar *entry = NULL;
+  g_autofree gchar *entry = NULL;
+  g_autofree gchar *base_text = NULL;
+  g_autofree gchar *new_text = NULL;
   const gchar *entry_text = NULL;
   const gchar *matching_text = NULL;
-  gchar *base_text = NULL;
-  gchar *new_text = NULL;
   glong entry_text_len = 0;
   glong matching_text_len = 0;
 
@@ -161,10 +156,6 @@ _completion_match_selected_cb (GtkEntryCompletion *widget, GtkTreeModel *model,
 
   gtk_entry_set_text (GTK_ENTRY (self), new_text);
   gtk_editable_set_position (GTK_EDITABLE (self), -1);
-
-  g_free (entry);
-  g_free (base_text);
-  g_free (new_text);
 
   return TRUE;
 }

@@ -50,7 +50,7 @@ static void
 _ask_for_authorization (GtkWindow *parent)
 {
   GtkWidget *dialog = NULL;
-  gchar *title = NULL;
+  g_autofree gchar *title = NULL;
 
   dialog = gtk_message_dialog_new (parent,
                                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -62,7 +62,6 @@ _ask_for_authorization (GtkWindow *parent)
 
   title = g_strdup_printf (_("Authorize %s"), APP_SHORTNAME);
   gtk_window_set_title (GTK_WINDOW (dialog), title);
-  g_free (title);
 
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_ask_for_authorization_response_cb), NULL);
@@ -144,7 +143,7 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   GtkWidget *vbox = NULL;
   GtkWidget *ver_code_entry = NULL;
   GtkWidget *label = NULL;
-  gchar *title = NULL;
+  g_autofree gchar *title = NULL;
 
   title = g_strdup_printf (_("Authorize %s"), APP_SHORTNAME);
   dialog = gtk_dialog_new_with_buttons (title,
@@ -156,7 +155,6 @@ _ask_for_auth_confirmation (GtkWindow *parent)
                                         GTK_RESPONSE_CLOSE,
                                         NULL);
   gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-  g_free (title);
 
   /* Fill action area */
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
@@ -203,7 +201,7 @@ _ask_for_auth_confirmation_response_cb (GtkDialog *dialog, gint response, gpoint
       const gchar *vercode_part1 = NULL;
       const gchar *vercode_part2 = NULL;
       const gchar *vercode_part3 = NULL;
-      gchar *vercode_full = NULL;
+      g_autofree gchar *vercode_full = NULL;
 
       vercode_part1 = _get_entry_code_for_dialog (dialog, "vercode-1");
       vercode_part2 = _get_entry_code_for_dialog (dialog, "vercode-2");
@@ -219,8 +217,6 @@ _ask_for_auth_confirmation_response_cb (GtkDialog *dialog, gint response, gpoint
         }
       else
         frogr_util_show_error_dialog (GTK_WINDOW (dialog), _("Invalid verification code"));
-
-      g_free (vercode_full);
     }
 
   if (response == GTK_RESPONSE_CANCEL || valid)

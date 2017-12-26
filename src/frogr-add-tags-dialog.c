@@ -70,7 +70,7 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
   if (response == GTK_RESPONSE_ACCEPT)
     {
       FrogrAddTagsDialog *self = NULL;
-      gchar *tags = NULL;
+      g_autofree gchar *tags = NULL;
 
       self = FROGR_ADD_TAGS_DIALOG (dialog);
 
@@ -98,9 +98,6 @@ _dialog_response_cb (GtkDialog *dialog, gint response, gpointer data)
           model = frogr_controller_get_model (frogr_controller_get_instance ());
           frogr_model_add_local_tags_from_string (model, tags);
         }
-
-      /* Free */
-      g_free (tags);
     }
 
   /* Destroy the dialog */
@@ -150,8 +147,7 @@ _frogr_add_tags_dialog_dispose (GObject *object)
 
   if (dialog->pictures)
     {
-      g_slist_foreach (dialog->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (dialog->pictures);
+      g_slist_free_full (dialog->pictures, g_object_unref);
       dialog->pictures = NULL;
     }
 

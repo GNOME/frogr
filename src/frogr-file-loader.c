@@ -135,7 +135,7 @@ static void _finish_task_and_self_destruct (FrogrFileLoader *self);
 static void
 _update_status_and_progress (FrogrFileLoader *self)
 {
-  gchar *status_text = NULL;
+  g_autofree gchar *status_text = NULL;
 
   /* Update progress */
   if (self->current_uri || self->current_picture)
@@ -143,9 +143,6 @@ _update_status_and_progress (FrogrFileLoader *self)
                                    self->index, self->n_files);
 
   frogr_main_view_set_status_text (self->mainview, status_text);
-
-  /* Free */
-  g_free (status_text);
 }
 
 static void
@@ -176,12 +173,13 @@ _load_current_file (FrogrFileLoader *self)
 
   if (file_uri)
     {
-      GFile *gfile = g_file_new_for_uri (file_uri);
-      GFileInfo *file_info;
+      GFile *gfile = NULL;
+      g_autoptr(GFileInfo) file_info = NULL;
       gboolean valid_mime = TRUE;
 
       /* Get file info (from this point on, use (file_info != NULL) as
          a reliable way to know whether the file exists or not */
+      gfile = g_file_new_for_uri (file_uri);
       file_info = g_file_query_info (gfile,
                                      G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
                                      G_FILE_QUERY_INFO_NONE,
@@ -210,8 +208,6 @@ _load_current_file (FrogrFileLoader *self)
                 }
               DEBUG ("Mime detected: %s", mime_type);
             }
-
-          g_object_unref (file_info);
         }
 
       /* Asynchronously load the file if mime is valid */
@@ -244,9 +240,9 @@ _load_current_file_cb (GObject *object,
 {
   FrogrFileLoader *self = NULL;
   FrogrPicture *picture = NULL;
-  GFile *file = NULL;
-  GError *error = NULL;
-  gchar *contents = NULL;
+  g_autoptr(GFile) file = NULL;
+  g_autoptr(GError) error = NULL;
+  g_autofree gchar *contents = NULL;
   gsize length = 0;
   gboolean keep_going = FALSE;
 
@@ -255,7 +251,7 @@ _load_current_file_cb (GObject *object,
   file = G_FILE (object);
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
-      GdkPixbuf *pixbuf = NULL;
+      g_autoptr(GdkPixbuf) pixbuf = NULL;
       gboolean is_video = FALSE;
 
       /* Load the pixbuf for the video or the image */
@@ -278,23 +274,16 @@ _load_current_file_cb (GObject *object,
 	      picture = _create_new_picture (self, file, pixbuf, is_video);
 	      _update_picture_with_exif_data (self, contents, length, picture);
 	    }
-
-	  g_object_unref (pixbuf);
 	}
     }
   else
     {
       /* Not able to load contents */
-      gchar *file_name = g_file_get_basename (file);
+      g_autofree gchar *file_name = g_file_get_basename (file);
       g_warning ("Not able to read contents from %s: %s",
                  file_name,
                  error->message);
-      g_error_free (error);
-      g_free (file_name);
     }
-
-  g_free (contents);
-  g_object_unref (file);
 
   /* Update internal status */
   _advance_to_next_file (self);
@@ -355,27 +344,20 @@ _try_get_pixbuf_for_image (FrogrFileLoader *self,
 			   gsize length)
 {
   GdkPixbuf *pixbuf = NULL;
-  gchar *path = NULL;
-  GError *error = NULL;
+  g_autofree gchar *path = NULL;
+  g_autoptr(GError) error = NULL;
 
   path = g_file_get_path (file);
   pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
 						      IV_THUMB_WIDTH, IV_THUMB_HEIGHT, path, &error);
-  g_free (path);
-
   if (error)
     {
-      gchar *file_name = NULL;
-      gchar *msg = NULL;
+      g_autofree gchar *file_name = NULL;
+      g_autofree gchar *msg = NULL;
 
       file_name = g_file_get_basename (file);
       msg = g_strdup_printf (_("Unable to load picture %s:\n%s"), file_name, error->message);
-      g_free (file_name);
-
       frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
-      g_free (msg);
-
-      g_error_free (error);
     }
 
   return pixbuf;
@@ -388,13 +370,13 @@ _try_get_pixbuf_for_video (FrogrFileLoader *self,
 			   gsize length)
 {
   GdkPixbuf *pixbuf = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   pixbuf = frogr_util_get_pixbuf_for_video_file (file, IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
   if (!pixbuf)
     {
-      gchar *file_name = NULL;
-      gchar *msg = NULL;
+      g_autofree gchar *file_name = NULL;
+      g_autofree gchar *msg = NULL;
 
       /* FIXME: We should integrate with gstreamer's codec
 	 installer instead of just showing an error message to
@@ -402,13 +384,7 @@ _try_get_pixbuf_for_video (FrogrFileLoader *self,
       file_name = g_file_get_basename (file);
       msg = g_strdup_printf (_("Unable to load video %s\n"
 			       "Please check that you have the right codec installed"), file_name);
-      g_free (file_name);
-
       frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
-      g_free (msg);
-
-      if (error)
-        g_error_free (error);
     }
 
   return pixbuf;
@@ -492,11 +468,11 @@ static FrogrPicture*
 _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboolean is_video)
 {
   FrogrPicture *picture = NULL;
-  GFileInfo* file_info = NULL;
-  gchar *file_name = NULL;
-  gchar *file_uri = NULL;
+  g_autoptr(GFileInfo) file_info = NULL;
+  g_autofree gchar *file_name = NULL;
+  g_autofree gchar *file_uri = NULL;
   guint64 filesize = 0;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   /* Gather needed information */
   file_info = g_file_query_info (file,
@@ -512,7 +488,6 @@ _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboo
   else
     {
       g_warning ("Not able to read file information: %s", error->message);
-      g_error_free (error);
 
       /* Fallback if g_file_query_info() failed */
       file_name = g_file_get_basename (file);
@@ -548,12 +523,6 @@ _create_new_picture (FrogrFileLoader *self, GFile *file, GdkPixbuf *pixbuf, gboo
   /* FrogrPicture stores the size in KB */
   frogr_picture_set_filesize (picture, filesize / 1024);
 
-  if (file_info)
-    g_object_unref (file_info);
-
-  g_free (file_uri);
-  g_free (file_name);
-
   return picture;
 }
 
@@ -573,7 +542,7 @@ _update_picture_with_exif_data (FrogrFileLoader *self,
   exif_data = exif_loader_get_data (exif_loader);
   if (exif_data)
     {
-      FrogrLocation *location = NULL;
+      g_autoptr(FrogrLocation) location = NULL;
       ExifEntry *exif_entry = NULL;
 
       /* Date and time for picture taken */
@@ -582,11 +551,10 @@ _update_picture_with_exif_data (FrogrFileLoader *self,
         {
           if (exif_entry->format == EXIF_FORMAT_ASCII)
             {
-              gchar *value = g_new0 (char, 20);
+              g_autofree gchar *value = g_new0 (char, 20);
               exif_entry_get_value (exif_entry, value, 20);
 
               frogr_picture_set_datetime (picture, value);
-              g_free (value);
             }
           else
             g_warning ("Found DateTime exif tag of invalid type");
@@ -595,14 +563,11 @@ _update_picture_with_exif_data (FrogrFileLoader *self,
       /* Import tags from XMP metadata, if required */
       if (self->import_tags)
         {
-          gchar *imported_tags = NULL;
+          g_autofree gchar *imported_tags = NULL;
 
           imported_tags = import_tags_from_xmp_keywords (contents, length);
           if (imported_tags)
-            {
-              frogr_picture_set_tags (picture, imported_tags);
-              g_free (imported_tags);
-            }
+            frogr_picture_set_tags (picture, imported_tags);
         }
 
       /* GPS coordinates */
@@ -611,7 +576,6 @@ _update_picture_with_exif_data (FrogrFileLoader *self,
         {
           /* frogr_picture_set_location takes ownership of location */
           frogr_picture_set_location (picture, location);
-          g_object_unref (location);
         }
       exif_data_unref (exif_data);
     }
@@ -631,7 +595,7 @@ _check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture)
 
   if (picture_filesize > max_filesize)
     {
-      gchar *msg = NULL;
+      g_autofree gchar *msg = NULL;
 
       /* First %s is the title of the picture (filename of the file by
          default). Second %s is the max allowed size for a picture to be
@@ -642,7 +606,6 @@ _check_filesize_limits (FrogrFileLoader *self, FrogrPicture *picture)
                              frogr_util_get_datasize_string (max_filesize));
 
       frogr_util_show_error_dialog (GTK_WINDOW (self->mainview), msg);
-      g_free (msg);
 
       keep_going = FALSE;
     }
@@ -677,7 +640,7 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
 {
   const gchar *keywords_start = NULL;
   const gchar *keywords_end = NULL;
-  gchar *keywords_string = NULL;
+  g_autofree gchar *keywords_string = NULL;
   gchar *start = NULL;
   gchar *end = NULL;
   gchar *result = NULL;
@@ -709,7 +672,7 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
   end = g_strrstr (keywords_string, "</rdf:li>");
   if (start && end)
     {
-      gchar **keywords = NULL;
+      g_auto(GStrv) keywords = NULL;
       gchar *keyword = NULL;
 
       /* Get an array of strings with all the keywords */
@@ -726,10 +689,7 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
         }
 
       result = g_strjoinv (" ", keywords);
-      g_strfreev (keywords);
     }
-
-  g_free (keywords_string);
 
   return result;
 }
@@ -756,8 +716,7 @@ _frogr_file_loader_finalize (GObject* object)
   FrogrFileLoader *self = FROGR_FILE_LOADER (object);
 
   /* Free */
-  g_slist_foreach (self->file_uris, (GFunc)g_free, NULL);
-  g_slist_free (self->file_uris);
+  g_slist_free_full (self->file_uris, g_free);
 
   G_OBJECT_CLASS (frogr_file_loader_parent_class)->finalize(object);
 }

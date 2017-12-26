@@ -47,15 +47,13 @@ static const gchar *website = "http://wiki.gnome.org/Apps/Frogr";
 void
 frogr_about_dialog_show (GtkWindow *parent)
 {
-  GdkPixbuf *logo = NULL;
-  gchar *version = NULL;
-  gchar *icon_full_path = NULL;
+  g_autoptr(GdkPixbuf) logo = NULL;
+  g_autofree gchar *version = NULL;
+  g_autofree gchar *icon_full_path = NULL;
 
   icon_full_path = g_strdup_printf ("%s/" ABOUT_DIALOG_ICON,
 				    frogr_util_get_icons_dir ());
   logo = gdk_pixbuf_new_from_file (icon_full_path, NULL);
-  g_free (icon_full_path);
-
   version = g_strdup_printf ("%s~unreleased", PACKAGE_VERSION);
 
   /* Show about dialog */
@@ -72,7 +70,4 @@ frogr_about_dialog_show (GtkWindow *parent)
                          "translator-credits", _("translator-credits"),
                          "modal", TRUE,
                          NULL);
-
-  g_object_unref (logo);
-  g_free (version);
 }

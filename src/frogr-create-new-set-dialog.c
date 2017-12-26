@@ -104,14 +104,13 @@ _on_button_toggled (GtkToggleButton *button, gpointer data)
 static gboolean
 _validate_dialog_data (FrogrCreateNewSetDialog *self)
 {
-  gchar *title = NULL;
+  g_autofree gchar *title = NULL;
   gboolean result = TRUE;
 
   /* Validate set's title */
   title = g_strdup (gtk_entry_get_text (GTK_ENTRY (self->title_entry)));
   if ((title == NULL) || g_str_equal (g_strstrip (title), ""))
     result = FALSE;
-  g_free (title);
 
   return result;
 }
@@ -121,8 +120,8 @@ _save_data (FrogrCreateNewSetDialog *self)
 {
   GtkTextIter start;
   GtkTextIter end;
-  gchar *title = NULL;
-  gchar *description = NULL;
+  g_autofree gchar *title = NULL;
+  g_autofree gchar *description = NULL;
   gboolean result = FALSE;
 
   /* Save data */
@@ -142,10 +141,6 @@ _save_data (FrogrCreateNewSetDialog *self)
   else
     frogr_util_show_error_dialog (GTK_WINDOW (self), _("Missing data required"));
 
-  /* free */
-  g_free (title);
-  g_free (description);
-
   /* Return result */
   return result;
 }
@@ -157,7 +152,7 @@ _update_model (FrogrCreateNewSetDialog *self,
 {
   FrogrController *controller = NULL;
   FrogrModel *model = NULL;
-  FrogrPhotoSet *new_set = NULL;
+  g_autoptr(FrogrPhotoSet) new_set = NULL;
   FrogrPicture *picture = NULL;
   GSList *item = NULL;
 
@@ -181,7 +176,6 @@ _update_model (FrogrCreateNewSetDialog *self,
           frogr_picture_set_description (picture, description);
         }
     }
-  g_object_unref (new_set);
 
   frogr_model_notify_changes_in_pictures (model);
 }
@@ -249,15 +243,13 @@ _frogr_create_new_set_dialog_dispose (GObject *object)
 
   if (dialog->pictures)
     {
-      g_slist_foreach (dialog->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (dialog->pictures);
+      g_slist_free_full (dialog->pictures, g_object_unref);
       dialog->pictures = NULL;
     }
 
   if (dialog->photosets)
     {
-      g_slist_foreach (dialog->photosets, (GFunc)g_object_unref, NULL);
-      g_slist_free (dialog->photosets);
+      g_slist_free_full (dialog->photosets, g_object_unref);
       dialog->photosets = NULL;
     }
 

@@ -77,7 +77,7 @@ upload_cb                               (GObject      *object,
                                          gpointer      source_func)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   g_free (uploaded_photo_id);
   uploaded_photo_id = fsp_session_upload_finish (session, res, &error);
@@ -85,7 +85,6 @@ upload_cb                               (GObject      *object,
   if (error != NULL)
     {
       g_print ("Error uploading picture: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -130,14 +129,13 @@ added_to_group_cb                       (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean result = FALSE;
 
   result = fsp_session_add_to_group_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error creating group: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -152,14 +150,13 @@ get_groups_cb                           (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
-  GSList *groups_list = NULL;
+  g_autoptr(GError) error = NULL;
+  g_autoptr(GSList) groups_list = NULL;
 
   groups_list = fsp_session_get_groups_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error getting groups: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -203,8 +200,6 @@ get_groups_cb                           (GObject      *object,
                           FSP_SEARCH_SCOPE_NONE,
                           NULL, upload_cb,
                           (gpointer) get_groups_cb);
-
-      g_slist_free (groups_list);
     }
 }
 
@@ -214,14 +209,13 @@ added_to_photoset_cb                    (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean result = FALSE;
 
   result = fsp_session_add_to_photoset_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error adding to photoset: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -245,14 +239,13 @@ photoset_created_cb                     (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   created_photoset_id =
     fsp_session_create_photoset_finish (session, res, &error);
 
   if (error != NULL)
     {
       g_print ("Error creating photoset: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -285,14 +278,13 @@ get_photosets_cb                        (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
-  GSList *photosets_list =
+  g_autoptr(GError) error = NULL;
+  g_autoptr(GSList) photosets_list =
     fsp_session_get_photosets_finish (session, res, &error);
 
   if (error != NULL)
     {
       g_print ("Error getting photosets: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -325,7 +317,6 @@ get_photosets_cb                        (GObject      *object,
                                    "Photoset's description\nasdasda",
                                    uploaded_photo_id,
                                    NULL, photoset_created_cb, NULL);
-      g_slist_free (photosets_list);
     }
 }
 
@@ -335,14 +326,13 @@ photo_get_info_cb                       (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   FspDataPhotoInfo *photo_info =
     fsp_session_get_info_finish (session, res, &error);
 
   if (error != NULL)
     {
       g_print ("Error uploading picture: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -387,14 +377,13 @@ set_date_posted_cb                      (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean result = FALSE;
 
   result = fsp_session_set_date_posted_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error setting the date posted: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -418,20 +407,19 @@ get_location_cb                         (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   FspDataLocation *location = NULL;
 
   location = fsp_session_get_location_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error getting location: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
       GDateTime *date_now = NULL;
       GDateTime *date = NULL;
-      gchar* date_str = NULL;
+      g_autofree gchar* date_str = NULL;
 
       g_print ("[get_location_cb]::Success! Location got:\n");
       g_print ("[get_location_cb]::\tLatitude: %g\n", location->latitude);
@@ -450,7 +438,6 @@ get_location_cb                         (GObject      *object,
       fsp_session_set_date_posted (session, uploaded_photo_id, date, NULL,
                                    set_date_posted_cb, NULL);
 
-      g_free (date_str);
       g_date_time_unref (date);
       g_date_time_unref (date_now);
 
@@ -465,14 +452,13 @@ set_location_cb                         (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean result = FALSE;
 
   result = fsp_session_set_location_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error setting location: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -496,14 +482,13 @@ set_license_cb                          (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession *session = FSP_SESSION (object);
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   gboolean result = FALSE;
 
   result = fsp_session_set_license_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error setting license: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -538,14 +523,13 @@ void
 get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused)
 {
   FspSession* session = FSP_SESSION (object);
-  GSList *tags_list = NULL;
-  GError *error = NULL;
+  g_autoptr(GSList) tags_list = NULL;
+  g_autoptr(GError) error = NULL;
 
   tags_list = fsp_session_get_tags_list_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error retrieving tags: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -561,7 +545,6 @@ get_tags_list_cb (GObject *object, GAsyncResult *res, gpointer unused)
           g_print ("[get_tags_list_cb]::\tTag: %s\n", tag);
           g_free (tag);
         }
-      g_slist_free (tags_list);
 
       /* Make a pause before continuing */
       g_print ("Press ENTER to continue...\n\n");
@@ -594,13 +577,12 @@ get_upload_status_cb (GObject *object, GAsyncResult *res, gpointer unused)
 {
   FspSession* session = FSP_SESSION (object);
   FspDataUploadStatus *upload_status = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   upload_status = fsp_session_get_upload_status_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error retrieving upload status: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -639,13 +621,12 @@ check_auth_info_cb (GObject *object, GAsyncResult *res, gpointer unused)
 {
   FspSession* session = FSP_SESSION (object);
   FspDataAuthToken *auth_token = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   auth_token = fsp_session_check_auth_info_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error checking authorization information: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -677,13 +658,12 @@ complete_auth_cb                        (GObject      *object,
 {
   FspSession* session = FSP_SESSION (object);
   FspDataAuthToken *auth_token = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   auth_token = fsp_session_complete_auth_finish (session, res, &error);
   if (error != NULL)
     {
       g_print ("Error completing authorization: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -715,13 +695,12 @@ get_auth_url_cb                         (GObject      *object,
                                          gpointer      user_data)
 {
   FspSession* session = FSP_SESSION (object);
-  GError *error = NULL;
-  gchar *auth_url = fsp_session_get_auth_url_finish (session, res, &error);
+  g_autoptr(GError) error = NULL;
+  g_autofree gchar *auth_url = fsp_session_get_auth_url_finish (session, res, &error);
 
   if (error != NULL)
     {
       g_print ("Error getting auth URL: %s\n", error->message);
-      g_error_free (error);
     }
   else
     {
@@ -734,19 +713,16 @@ get_auth_url_cb                         (GObject      *object,
       g_print ("\nEnter the verification code and press ENTER to continue: ");
       if (fgets(buffer, 12, stdin))
         {
-          gchar *verifier = NULL;
+          g_autofree gchar *verifier = NULL;
 
           verifier = encode_uri (buffer);
 
           /* Continue finishing the authorization */
           g_print ("Finishing authorization...\n");
           fsp_session_complete_auth (session, verifier, NULL, complete_auth_cb, NULL);
-          g_free (verifier);
         }
       else
         g_print ("Authorization failed. Can't continue.\n");
-
-      g_free (auth_url);
     }
 }
 

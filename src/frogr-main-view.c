@@ -345,8 +345,7 @@ _initialize_ui (FrogrMainView *self)
     }
 
   gtk_window_set_default_icon_list (icons);
-  g_list_foreach (icons, (GFunc) g_object_unref, NULL);
-  g_list_free (icons);
+  g_list_free_full (icons, g_object_unref);
 
   /* Get widgets from GtkBuilder */
   builder = gtk_builder_new ();
@@ -585,7 +584,7 @@ static void _initialize_header_bar (FrogrMainView *self)
   GtkWidget *menu = NULL;
   GtkWidget *menu_image = NULL;
   GtkIconTheme *icon_theme = NULL;
-  gchar *full_path = NULL;
+  g_autofree gchar *full_path = NULL;
 
   self->header_bar = gtk_header_bar_new ();
 
@@ -604,7 +603,6 @@ static void _initialize_header_bar (FrogrMainView *self)
 
   full_path = g_strdup_printf ("%s/" UI_MENU_BUTTON_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (self->builder, full_path, NULL);
-  g_free (full_path);
 
   menu_model = G_MENU_MODEL (gtk_builder_get_object (self->builder, "menu-button"));
   extract_accels_from_menu (menu_model, self->gtk_app);
@@ -671,13 +669,12 @@ static void _initialize_menubar_and_toolbar (FrogrMainView *self)
 {
   GtkWidget *toolbar = NULL;
   GtkToolItem *toolbar_items[7];
-  gchar *full_path = NULL;
+  g_autofree gchar *full_path = NULL;
   gint i;
 
   /* Menu bar */
   full_path = g_strdup_printf ("%s/" UI_MENU_BAR_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (self->builder, full_path, NULL);
-  g_free (full_path);
 
   g_action_map_add_action_entries (G_ACTION_MAP (self),
                                    win_entries, G_N_ELEMENTS (win_entries),
@@ -755,9 +752,9 @@ _update_project_path (FrogrMainView *self, const gchar *path)
     }
   else
     {
-      GFile *file = NULL;
-      GFile *dir = NULL;
-      GFileInfo *file_info = NULL;
+      g_autoptr(GFile) file = NULL;
+      g_autoptr(GFile) dir = NULL;
+      g_autoptr(GFileInfo) file_info = NULL;
       gchar *dir_path = NULL;
       const gchar *home_dir = NULL;
 
@@ -776,19 +773,15 @@ _update_project_path (FrogrMainView *self, const gchar *path)
       home_dir = g_get_home_dir ();
       if (g_str_has_prefix (dir_path, home_dir))
         {
-          gchar *tmp_path = NULL;
+          g_autofree gchar *tmp_path = NULL;
 
           tmp_path = dir_path;
           dir_path = g_strdup_printf ("~%s", &dir_path[g_utf8_strlen (home_dir, -1)]);
-          g_free (tmp_path);
         }
       self->project_dir = dir_path;
 
       /* Finally, store the raw path too */
       self->project_filepath = g_strdup (path);
-
-      g_object_unref (file);
-      g_object_unref (dir);
     }
 }
 
@@ -796,8 +789,8 @@ static void
 _update_window_title (FrogrMainView *self, gboolean dirty)
 {
 #if USE_HEADER_BAR
-  gchar *title = NULL;
-  gchar *subtitle = NULL;
+  g_autofree gchar *title = NULL;
+  g_autofree gchar *subtitle = NULL;
 
   title = self->project_name
     ? g_strdup_printf ("%s%s", (dirty ? "*" : ""), self->project_name)
@@ -810,13 +803,10 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
   gtk_header_bar_set_title (GTK_HEADER_BAR (self->header_bar), title);
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (self->header_bar), subtitle);
 
-  g_free (subtitle);
-  g_free (title);
-
 #else /* !USE_HEADER_BAR */
 
-  gchar *session_string = NULL;
-  gchar *window_title = NULL;
+  g_autofree gchar *session_string = NULL;
+  g_autofree gchar *window_title = NULL;
 
   session_string = self->project_name
     ? g_strdup_printf ("%s%s (%s) - ", (dirty ? "*" : ""),
@@ -824,10 +814,7 @@ _update_window_title (FrogrMainView *self, gboolean dirty)
     : g_strdup("");
 
   window_title = g_strdup_printf ("%s%s", session_string, APP_SHORTNAME);
-  g_free (session_string);
-
   gtk_window_set_title (GTK_WINDOW (self), window_title);
-  g_free (window_title);
 #endif
 }
 
@@ -1041,7 +1028,7 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
   FrogrMainView *self = NULL;
   GdkAtom target;
   GSList *fileuris_list = NULL;
-  gchar **fileuris_array = NULL;
+  g_auto(GStrv) fileuris_array = NULL;
   gint i;
 
   self = FROGR_MAIN_VIEW (data);
@@ -1067,9 +1054,6 @@ _on_icon_view_drag_data_received (GtkWidget *widget,
 
   /* Finish drag and drop */
   gtk_drag_finish (context, TRUE, FALSE, time);
-
-  /* Free */
-  g_strfreev (fileuris_array);
 }
 
 gboolean
@@ -1340,13 +1324,13 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
                                                      x, y, &bw_x, &bw_y);
   if (gtk_icon_view_get_item_at_pos (GTK_ICON_VIEW (icon_view), bw_x, bw_y, &path, NULL))
     {
-      FrogrPicture *picture;
+      g_autoptr(FrogrPicture) picture = NULL;
       GtkTreeIter iter;
-      gchar *tooltip_str = NULL;
-      gchar *filesize = NULL;
-      gchar *filesize_str = NULL;
-      gchar *filesize_markup = NULL;
-      gchar *datetime_markup = NULL;
+      g_autofree gchar *tooltip_str = NULL;
+      g_autofree gchar *filesize = NULL;
+      g_autofree gchar *filesize_str = NULL;
+      g_autofree gchar *filesize_markup = NULL;
+      g_autofree gchar *datetime_markup = NULL;
       const gchar *datetime = NULL;
 
       /* Get needed information */
@@ -1365,12 +1349,11 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
       datetime = frogr_picture_get_datetime (picture);
       if (datetime)
         {
-          gchar *datetime_str = NULL;
+          g_autofree gchar *datetime_str = NULL;
 
           /* String showind the date and time a picture was taken */
           datetime_str = g_strdup_printf (_("Taken: %s"), datetime);
           datetime_markup = g_strdup_printf ("\n<i>%s</i>", datetime_str);
-          g_free (datetime_str);
         }
 
       filesize_str = g_strdup_printf (_("File size: %s"), filesize);
@@ -1385,12 +1368,6 @@ _on_icon_view_query_tooltip (GtkWidget *icon_view,
 
       /* Free memory */
       gtk_tree_path_free (path);
-      g_object_unref (picture);
-      g_free (tooltip_str);
-      g_free (filesize);
-      g_free (filesize_str);
-      g_free (filesize_markup);
-      g_free (datetime_markup);
       return TRUE;
     }
 
@@ -1410,9 +1387,7 @@ _on_icon_view_selection_changed (GtkWidget *icon_view, gpointer data)
     gtk_icon_view_get_selected_items (GTK_ICON_VIEW (self->icon_view));
 
   len = g_list_length (selected_pictures);
-
-  g_list_foreach (selected_pictures, (GFunc)gtk_tree_path_free, NULL);
-  g_list_free (selected_pictures);
+  g_list_free_full (selected_pictures, (GDestroyNotify)gtk_tree_path_free);
 
   self->n_selected_pictures = len;
 
@@ -1477,7 +1452,7 @@ _open_project_dialog_response_cb (GtkDialog *dialog,
 
   if (response == GTK_RESPONSE_ACCEPT)
     {
-      gchar *filename = NULL;
+      g_autofree gchar *filename = NULL;
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
       if (filename != NULL)
@@ -1485,7 +1460,6 @@ _open_project_dialog_response_cb (GtkDialog *dialog,
           /* Load from disk and update project's path */
           if (frogr_controller_open_project_from_file (self->controller, filename))
             _update_window_title (self, FALSE);
-          g_free (filename);
         }
     }
 
@@ -1547,21 +1521,19 @@ _save_project_as_dialog_response_cb (GtkDialog *dialog, gint response, gpointer 
 
   if (response == GTK_RESPONSE_ACCEPT)
     {
-      gchar *filename = NULL;
+      g_autofree gchar *filename = NULL;
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
       if (filename != NULL)
         {
-          gchar *actual_filename = NULL;
+          g_autofree gchar *actual_filename = NULL;
 
           /* Add the '.frogr' extension if not present */
           actual_filename = g_str_has_suffix (filename, ".frogr")
             ? g_strdup (filename)
             : g_strdup_printf ("%s.frogr", filename);
-          g_free (filename);
 
           _save_project_to_file (self, actual_filename);
-          g_free (actual_filename);
         }
     }
 
@@ -1766,8 +1738,7 @@ _open_pictures_in_external_viewer (FrogrMainView *self)
 
   pictures = _get_selected_pictures (self);
   frogr_util_open_pictures_in_viewer (pictures);
-  g_slist_foreach (pictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (pictures);
+  g_slist_free_full (pictures, g_object_unref);
 }
 
 static void
@@ -1791,8 +1762,7 @@ _remove_selected_pictures (FrogrMainView *self)
   _update_ui (self);
 
   /* Free */
-  g_slist_foreach (selected_pictures, (GFunc)g_object_unref, NULL);
-  g_slist_free (selected_pictures);
+  g_slist_free_full (selected_pictures, g_object_unref);
 }
 
 static void
@@ -1815,13 +1785,12 @@ static void
 _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean reversed)
 {
   GSList *list_as_loaded = NULL;
-  GSList *current_list = NULL;
   GSList *current_item = NULL;
-  gint *new_order = 0;
+  g_autoptr(GSList) current_list = NULL;
+  g_autofree gchar *property_name = NULL;
+  g_autofree gint *new_order = 0;
   gint current_pos = 0;
   gint new_pos = 0;
-
-  gchar *property_name = NULL;
 
   self->sorting_criteria = criteria;
   self->sorting_reversed = reversed;
@@ -1865,10 +1834,7 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
                                              (gchar*)property_name);
   /* Update the list of pictures */
   if (self->sorted_pictures)
-    {
-      g_slist_foreach (self->sorted_pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (self->sorted_pictures);
-    }
+    g_slist_free_full (self->sorted_pictures, g_object_unref);
   self->sorted_pictures = list_as_loaded;
   g_slist_foreach (self->sorted_pictures, (GFunc)g_object_ref, NULL);
 
@@ -1884,10 +1850,6 @@ _reorder_pictures (FrogrMainView *self, SortingCriteria criteria, gboolean rever
       new_order[new_pos] = current_pos++;
     }
   gtk_list_store_reorder (GTK_LIST_STORE (self->tree_model), new_order);
-
-  g_slist_free (current_list);
-  g_free (new_order);
-  g_free (property_name);
 }
 
 static void
@@ -1997,7 +1959,7 @@ _model_picture_removed (FrogrController *controller,
       gboolean found = FALSE;
       do
         {
-          FrogrPicture *picture_from_ui;
+          g_autoptr(FrogrPicture) picture_from_ui = NULL;
 
           /* Get needed information */
           gtk_tree_model_get (self->tree_model,
@@ -2016,7 +1978,6 @@ _model_picture_removed (FrogrController *controller,
 
               found = TRUE;
             }
-          g_object_unref (picture_from_ui);
         }
       while (!found && gtk_tree_model_iter_next (tree_model, &iter));
     }
@@ -2058,9 +2019,9 @@ _craft_state_description (FrogrMainView *self)
   guint n_pictures = 0;
   const gchar *login = NULL;
   gchar *description = NULL;
-  gchar *login_str = NULL;
-  gchar *bandwidth_str = NULL;
-  gchar *upload_size_str = NULL;
+  g_autofree gchar *login_str = NULL;
+  g_autofree gchar *bandwidth_str = NULL;
+  g_autofree gchar *upload_size_str = NULL;
   gboolean is_pro = FALSE;
 
   account = frogr_controller_get_active_account (self->controller);
@@ -2083,8 +2044,8 @@ _craft_state_description (FrogrMainView *self)
      permanently show that they have 2.0 GB / 2.0 GB remaining */
   if (!is_pro)
     {
-      gchar *remaining_bw_str = NULL;
-      gchar *max_bw_str = NULL;
+      g_autofree gchar *remaining_bw_str = NULL;
+      g_autofree gchar *max_bw_str = NULL;
       gulong remaining_bw;
       gulong max_bw;
 
@@ -2105,9 +2066,6 @@ _craft_state_description (FrogrMainView *self)
                                            remaining_bw_str,
                                            max_bw_str);
         }
-
-      g_free (remaining_bw_str);
-      g_free (max_bw_str);
     }
 
   /* Check size of the loaded pictures, if any */
@@ -2117,7 +2075,7 @@ _craft_state_description (FrogrMainView *self)
     {
       GSList *item = NULL;
       gulong total_size = 0;
-      gchar *total_size_str = NULL;
+      g_autofree gchar *total_size_str = NULL;
 
       for (item = pictures; item; item = g_slist_next (item))
         total_size += frogr_picture_get_filesize (FROGR_PICTURE (item->data));
@@ -2131,7 +2089,6 @@ _craft_state_description (FrogrMainView *self)
                                                    " - %d files to upload (%s)",
                                                    n_pictures),
                                          n_pictures, total_size_str);
-      g_free (total_size_str);
     }
 
   /* Build the final string */
@@ -2139,10 +2096,6 @@ _craft_state_description (FrogrMainView *self)
                                  login_str,
                                  (bandwidth_str ? bandwidth_str : ""),
                                  (upload_size_str ? upload_size_str : ""));
-  g_free (login_str);
-  g_free (bandwidth_str);
-  g_free (upload_size_str);
-
   return description;
 }
 
@@ -2179,7 +2132,7 @@ _update_sensitiveness (FrogrMainView *self)
   /* gboolean has_accounts = FALSE; */
   gboolean has_pics = FALSE;
   gint n_selected_pics = 0;
-  gchar **action_names = NULL;
+  g_auto(GStrv) action_names = NULL;
   gint i = 0;
 
   /* Set sensitiveness */
@@ -2191,7 +2144,6 @@ _update_sensitiveness (FrogrMainView *self)
       action_names = g_action_group_list_actions (G_ACTION_GROUP (self));
       for (i = 0; action_names[i]; i++)
         _update_sensitiveness_for_action (self, action_names[i], FALSE);
-      g_strfreev (action_names);
       break;
 
     case FROGR_STATE_IDLE:
@@ -2253,8 +2205,7 @@ _frogr_main_view_dispose (GObject *object)
 
   if (self->sorted_pictures)
     {
-      g_slist_foreach (self->sorted_pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (self->sorted_pictures);
+      g_slist_free_full (self->sorted_pictures, g_object_unref);
       self->sorted_pictures = NULL;
     }
 

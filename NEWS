@@ -4,6 +4,7 @@
   * Migrated to the meson and ninja, removed all the autotools files.
   * Fixed integration with GNOME Software (appstream data).
   * Fixed errors loading images from certain cameras / phones (#768639, #678241).
+  * Raised versions for GTK+ (to 3.16) and JSON-GLib (to 1.2), for g_autoptr.
 
 New and updated translations:
 

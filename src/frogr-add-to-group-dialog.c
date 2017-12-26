@@ -225,8 +225,8 @@ _tree_iter_compare_n_elements_func (GtkTreeModel *model,
                                     GtkTreeIter *b,
                                     gpointer data)
 {
-  gchar *a_str = NULL;
-  gchar *b_str = NULL;
+  g_autofree gchar *a_str = NULL;
+  g_autofree gchar *b_str = NULL;
   gint a_value = 0;
   gint b_value = 0;
 
@@ -237,9 +237,6 @@ _tree_iter_compare_n_elements_func (GtkTreeModel *model,
 
   a_value = g_ascii_strtoll (a_str, NULL, 10);
   b_value = g_ascii_strtoll (b_str, NULL, 10);
-
-  g_free (a_str);
-  g_free (b_str);
 
   return (a_value - b_value);
 }
@@ -289,7 +286,7 @@ _fill_dialog_with_data (FrogrAddToGroupDialog *self)
   gtk_tree_model_get_iter_first (self->treemodel, &iter);
   do
     {
-      FrogrGroup *group = NULL;
+      g_autoptr(FrogrGroup) group = NULL;
       GSList *p_item = NULL;
       gboolean do_check = TRUE;
 
@@ -307,7 +304,6 @@ _fill_dialog_with_data (FrogrAddToGroupDialog *self)
               break;
             }
         }
-      g_object_unref (group);
 
       gtk_list_store_set (GTK_LIST_STORE (self->treemodel), &iter,
                           CHECKBOX_COL, do_check, -1);
@@ -463,15 +459,13 @@ _frogr_add_to_group_dialog_dispose (GObject *object)
 
   if (dialog->pictures)
     {
-      g_slist_foreach (dialog->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (dialog->pictures);
+      g_slist_free_full (dialog->pictures, g_object_unref);
       dialog->pictures = NULL;
     }
 
    if (dialog->groups)
     {
-      g_slist_foreach (dialog->groups, (GFunc)g_object_unref, NULL);
-      g_slist_free (dialog->groups);
+      g_slist_free_full (dialog->groups, g_object_unref);
       dialog->groups = NULL;
     }
 

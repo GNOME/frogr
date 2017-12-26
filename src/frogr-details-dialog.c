@@ -454,18 +454,17 @@ _load_picture_from_disk (FrogrDetailsDialog *self)
   n_pictures = g_slist_length (self->pictures);
   if (n_pictures > 1)
     {
-      gchar *mpictures_str = NULL;
+      g_autofree gchar *mpictures_str = NULL;
 
       /* Get the 'multiple pictures pixbuf' if not got yet (lazy approach) */
       if (!self->mpictures_pixbuf)
         {
-          gchar *mpictures_full_path = NULL;
+          g_autofree gchar *mpictures_full_path = NULL;
 
           /* Set the image for editing multiple pictures */
           mpictures_full_path = g_strdup_printf ("%s/" MPICTURES_IMAGE,
                                                  frogr_util_get_app_data_dir ());
           self->mpictures_pixbuf = gdk_pixbuf_new_from_file (mpictures_full_path, NULL);
-          g_free (mpictures_full_path);
         }
 
       /* Just set the pixbuf in the image */
@@ -474,7 +473,6 @@ _load_picture_from_disk (FrogrDetailsDialog *self)
       /* Visually indicate how many pictures are being edited */
       mpictures_str = g_strdup_printf (ngettext ("(%d Picture)", "(%d Pictures)", n_pictures), n_pictures);
       gtk_label_set_text (GTK_LABEL (self->mpictures_label), mpictures_str);
-      g_free (mpictures_str);
 
       /* No need to spawn any async operation, show the dialog now */
       _place_picture_in_dialog_and_show (self);
@@ -482,11 +480,11 @@ _load_picture_from_disk (FrogrDetailsDialog *self)
   else
     {
       FrogrPicture *picture = NULL;
-      gchar *file_uri = NULL;
+      const gchar *file_uri = NULL;
       GFile *gfile = NULL;
 
       picture = FROGR_PICTURE (self->pictures->data);
-      file_uri = (gchar *)frogr_picture_get_fileuri (picture);
+      file_uri = frogr_picture_get_fileuri (picture);
       gfile = g_file_new_for_uri (file_uri);
 
       /* Asynchronously load the picture */
@@ -501,15 +499,15 @@ _load_picture_from_disk_cb (GObject *object,
 {
   FrogrDetailsDialog *self = FROGR_DETAILS_DIALOG (data);
   GFile *file = NULL;
-  GError *error = NULL;
-  gchar *contents = NULL;
+  g_autoptr(GError) error = NULL;
+  g_autofree gchar *contents = NULL;
   gsize length = 0;
 
   file = G_FILE (object);
   if (g_file_load_contents_finish (file, res, &contents, &length, NULL, &error))
     {
       FrogrPicture *picture = NULL;
-      GdkPixbuf *pixbuf = NULL;
+      g_autoptr(GdkPixbuf) pixbuf = NULL;
 
       picture = FROGR_PICTURE (self->pictures->data);
       if (frogr_picture_is_video (picture))
@@ -518,45 +516,35 @@ _load_picture_from_disk_cb (GObject *object,
         }
       else
         {
-          gchar *path = NULL;
+          g_autofree gchar *path = NULL;
 
           path = g_file_get_path (file);
           pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
                                                               PICTURE_WIDTH, PICTURE_HEIGHT, path, &error);
-          g_free (path);
         }
 
       if (pixbuf)
-        {
-          gtk_image_set_from_pixbuf (GTK_IMAGE (self->picture_img), pixbuf);
-          g_object_unref (pixbuf);
-        }
+        gtk_image_set_from_pixbuf (GTK_IMAGE (self->picture_img), pixbuf);
 
       /* Everything should be fine by now, show it */
       _place_picture_in_dialog_and_show (self);
-
-      g_free (contents);
     }
 
   /* Show error to the user and finalize dialog if needed */
   if (error)
     {
       GtkWindow *parent_window = NULL;
-      gchar *error_msg = NULL;
+      g_autofree gchar *error_msg = NULL;
 
       parent_window = gtk_window_get_transient_for (GTK_WINDOW (self));
       gtk_widget_destroy (GTK_WIDGET (self));
 
       if (error)
-        {
-          error_msg = g_strdup (error->message);
-          g_error_free (error);
-        }
+        error_msg = g_strdup (error->message);
       else
         error_msg = g_strdup (_("An error happened trying to load the picture"));
 
       frogr_util_show_error_dialog (parent_window, error_msg);
-      g_free (error_msg);
     }
 }
 
@@ -853,13 +841,11 @@ _validate_dialog_data (FrogrDetailsDialog *self)
   /* Mandatory fields (only if editing a single picture) */
   if (g_slist_length (self->pictures) <= 1)
     {
-      gchar *title =
+      g_autofree gchar *title =
         g_strdup (gtk_entry_get_text (GTK_ENTRY (self->title_entry)));
 
       if ((title == NULL) || g_str_equal (g_strstrip (title), ""))
         result = FALSE;
-
-      g_free (title);
     }
 
   /* Validated if reached */
@@ -871,9 +857,9 @@ _save_data (FrogrDetailsDialog *self)
 {
   GtkTextIter start;
   GtkTextIter end;
-  gchar *title = NULL;
-  gchar *description = NULL;
-  gchar *tags = NULL;
+  g_autofree gchar *title = NULL;
+  g_autofree gchar *description = NULL;
+  g_autofree gchar *tags = NULL;
   gboolean is_public;
   gboolean is_friend;
   gboolean is_family;
@@ -1009,11 +995,6 @@ _save_data (FrogrDetailsDialog *self)
       frogr_util_show_error_dialog (GTK_WINDOW (self), _("Missing data required"));
     }
 
-  /* free */
-  g_free (title);
-  g_free (description);
-  g_free (tags);
-
   /* Return result */
   return result;
 }
@@ -1123,8 +1104,7 @@ _frogr_details_dialog_dispose (GObject *object)
 
   if (dialog->pictures)
     {
-      g_slist_foreach (dialog->pictures, (GFunc)g_object_unref, NULL);
-      g_slist_free (dialog->pictures);
+      g_slist_free_full (dialog->pictures, g_object_unref);
       dialog->pictures = NULL;
     }
 
