@@ -30,21 +30,6 @@ help_media = [
     'figures/preferences-misc.png'
 ]
 
-help_languages = [
-    'cs',
-    'de',
-    'el',
-    'en_GB',
-    'es',
-    'fr',
-    'gl',
-    'pt_BR',
-    'ru',
-    'sl',
-    'sv'
-]
-
 gnome.yelp('frogr',
            sources: help_pages,
-           media: help_media,
-           languages: help_languages)
+           media: help_media)
