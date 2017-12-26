@@ -513,10 +513,18 @@ _load_picture_from_disk_cb (GObject *object,
 
       picture = FROGR_PICTURE (self->pictures->data);
       if (frogr_picture_is_video (picture))
-        pixbuf = frogr_util_get_pixbuf_for_video_file (file, PICTURE_WIDTH, PICTURE_HEIGHT, &error);
+        {
+          pixbuf = frogr_util_get_pixbuf_for_video_file (file, PICTURE_WIDTH, PICTURE_HEIGHT, &error);
+        }
       else
-        pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
-                                                            PICTURE_WIDTH, PICTURE_HEIGHT, &error);
+        {
+          gchar *path = NULL;
+
+          path = g_file_get_path (file);
+          pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
+                                                              PICTURE_WIDTH, PICTURE_HEIGHT, path, &error);
+          g_free (path);
+        }
 
       if (pixbuf)
         {

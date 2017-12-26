@@ -300,7 +300,7 @@ _get_corrected_pixbuf (GdkPixbuf *pixbuf, gint max_width, gint max_height)
 }
 
 static GdkPixbuf *
-_get_pixbuf_from_image_contents (const guchar *contents, gsize length, GError **out_error)
+_get_pixbuf_from_image_contents (const guchar *contents, gsize length, const gchar *filepath, GError **out_error)
 {
   GdkPixbufLoader *pixbuf_loader = NULL;
   GdkPixbuf *pixbuf = NULL;
@@ -314,6 +314,16 @@ _get_pixbuf_from_image_contents (const guchar *contents, gsize length, GError **
     {
       gdk_pixbuf_loader_close (pixbuf_loader, NULL);
       pixbuf = gdk_pixbuf_loader_get_pixbuf (pixbuf_loader);
+    }
+
+  /* Silly workaround to deal with what seems to be an obscure problem in
+   * GdkPixbufLoader. See https://bugzilla.gnome.org/show_bug.cgi?id=768639 */
+  if (error && filepath)
+    {
+      g_warning ("Not able to read image from %s: %s. Trying fallback...", filepath, error->message);
+      g_clear_error (&error);
+
+      pixbuf = gdk_pixbuf_new_from_file (filepath, &error);
     }
 
   if (error)
@@ -496,11 +506,11 @@ frogr_util_get_pixbuf_for_video_file (GFile *file, gint max_width, gint max_heig
 }
 
 GdkPixbuf *
-frogr_util_get_pixbuf_from_image_contents (const guchar *contents, gsize length, gint max_width, gint max_height, GError **error)
+frogr_util_get_pixbuf_from_image_contents (const guchar *contents, gsize length, gint max_width, gint max_height, const gchar *filepath, GError **error)
 {
   GdkPixbuf *pixbuf = NULL;
 
-  pixbuf = _get_pixbuf_from_image_contents (contents, length, error);
+  pixbuf = _get_pixbuf_from_image_contents (contents, length, filepath, error);
   if (pixbuf)
     {
       GdkPixbuf *c_pixbuf = NULL;

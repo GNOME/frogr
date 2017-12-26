@@ -355,10 +355,14 @@ _try_get_pixbuf_for_image (FrogrFileLoader *self,
 			   gsize length)
 {
   GdkPixbuf *pixbuf = NULL;
+  gchar *path = NULL;
   GError *error = NULL;
 
+  path = g_file_get_path (file);
   pixbuf = frogr_util_get_pixbuf_from_image_contents ((const guchar *)contents, length,
-						      IV_THUMB_WIDTH, IV_THUMB_HEIGHT, &error);
+						      IV_THUMB_WIDTH, IV_THUMB_HEIGHT, path, &error);
+  g_free (path);
+
   if (error)
     {
       gchar *file_name = NULL;
