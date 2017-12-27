@@ -117,12 +117,16 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 
   if (!app_info || !g_app_info_launch_uris (app_info, uris_list, NULL, &error))
     {
-      /* The default app didn't succeed, so try 'xdg-open' / 'open' */
+      /* The default app didn't succeed, so try 'gio open' */
       g_autofree gchar *command = NULL;
       g_autofree gchar *uris = NULL;
 
       uris = _get_uris_string_from_list (uris_list);
+#if GLIB_CHECK_VERSION (2, 50, 0)
+      command = g_strdup_printf ("gio open %s", uris);
+#else
       command = g_strdup_printf ("gvfs-open %s", uris);
+#endif
       _spawn_command (command);
 
       if (error)
