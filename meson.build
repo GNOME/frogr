@@ -1,5 +1,5 @@
 project('frogr', 'c',
-        version: '1.4',
+        version: '1.5',
         license: 'GPL3',
         default_options: [
             'warnlevel=2',
