@@ -1,5 +1,5 @@
-1.4 (??)
-========
+1.4 (28 Dec 2017)
+=================
 
   * Migrated to the meson and ninja, removed all the autotools files.
   * Fixed integration with GNOME Software (appstream data).
