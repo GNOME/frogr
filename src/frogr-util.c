@@ -99,7 +99,7 @@ _get_uris_string_from_list (GList *uris_list)
 
   uris_array = g_new0 (gchar*, n_uris + 1);
   for (current_uri = uris_list; current_uri; current_uri = g_list_next (current_uri))
-    uris_array[i++] = (gchar *) (current_uri->data);
+    uris_array[i++] = g_strdup (current_uri->data);
 
   uris_str = g_strjoinv (" ", uris_array);
 
@@ -111,9 +111,7 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
 {
   g_autoptr(GError) error = NULL;
 
-  /* Early return */
-  if (!uris_list)
-    return;
+  g_return_if_fail (uris_list != NULL);
 
   if (!app_info || !g_app_info_launch_uris (app_info, uris_list, NULL, &error))
     {
@@ -132,8 +130,6 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
       if (error)
         DEBUG ("Error opening URI(s) %s: %s", uris, error->message);
     }
-
-  g_list_free_full (uris_list, g_free);
 }
 
 void
@@ -142,9 +138,7 @@ frogr_util_open_uri (const gchar *uri)
   GAppInfo *app_info = NULL;
   GList *uris_list = NULL;
 
-  /* Early return */
-  if (!uri)
-    return;
+  g_return_if_fail (uri != NULL);
 
   /* Supported network URIs */
   if (g_str_has_prefix (uri, "http:") || g_str_has_prefix (uri, "https:"))
@@ -156,6 +150,7 @@ frogr_util_open_uri (const gchar *uri)
 
   uris_list = g_list_append (uris_list, g_strdup (uri));
   _open_uris_with_app_info (uris_list, app_info);
+  g_list_free_full (uris_list, g_free);
 }
 
 void
@@ -166,9 +161,7 @@ frogr_util_open_pictures_in_viewer (GSList *pictures)
   GSList *current_pic = NULL;
   FrogrPicture *picture = NULL;
 
-  /* Early return */
-  if (!pictures)
-    return;
+  g_return_if_fail (pictures != NULL);
 
   for (current_pic = pictures; current_pic; current_pic = g_slist_next (current_pic))
     {
@@ -186,6 +179,7 @@ frogr_util_open_pictures_in_viewer (GSList *pictures)
 
   /* uris_list will be freed inside of the function */
   _open_uris_with_app_info (uris_list, app_info);
+  g_list_free_full (uris_list, g_free);
 }
 
 static void
