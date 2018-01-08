@@ -3,3 +3,4 @@
 flatpak export-ignore
 frogr.doap export-ignore
 make_release.sh export-ignore
+configure export-ignore
