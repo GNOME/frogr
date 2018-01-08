@@ -38,7 +38,7 @@ i18n.merge_file('desktop',
                 type: 'desktop')
 
 # Appdata XML file
-appdatadir = join_paths(datadir, 'appdata')
+appdatadir = join_paths(datadir, 'metainfo')
 i18n.merge_file('desktop',
                 input: 'org.gnome.frogr.appdata.xml.in',
                 output: 'org.gnome.frogr.appdata.xml',
