@@ -1,18 +1,18 @@
 # Polish translation for frogr.
-# Copyright © 2011-2017 the frogr authors.
+# Copyright © 2011-2018 the frogr authors.
 # This file is distributed under the same license as the frogr package.
 # Łukasz Jernaś <deejay1@srem.org>, 2011.
 # Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>, 2012.
-# Piotr Drąg <piotrdrag@gmail.com>, 2012-2017.
-# Aviary.pl <community-poland@mozilla.org>, 2011-2017.
+# Piotr Drąg <piotrdrag@gmail.com>, 2012-2018.
+# Aviary.pl <community-poland@mozilla.org>, 2011-2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-05-21 08:22+0000\n"
-"PO-Revision-Date: 2017-05-21 16:53+0200\n"
+"POT-Creation-Date: 2017-08-13 21:48+0000\n"
+"PO-Revision-Date: 2018-01-21 23:49+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Zrzut ekranu programu frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:30
+#: data/org.gnome.frogr.appdata.xml.in:33
 msgid "Mario Sanchez Prada"
 msgstr "Mario Sanchez Prada"
 
@@ -83,8 +83,8 @@ msgid "translator-credits"
 msgstr ""
 "Łukasz Jernaś <deejay1@srem.org>, 2011\n"
 "Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>, 2012\n"
-"Piotr Drąg <piotrdrag@gmail.com>, 2012-2017\n"
-"Aviary.pl <community-poland@mozilla.org>, 2011-2017"
+"Piotr Drąg <piotrdrag@gmail.com>, 2012-2018\n"
+"Aviary.pl <community-poland@mozilla.org>, 2011-2018"
 
 #: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
 #: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
@@ -277,7 +277,7 @@ msgid ""
 "Content not allowed for this group"
 msgstr ""
 "Błąd:\n"
-"Ten typ zawartości nie jest dozwolony dla tej grupy"
+"Ten typ treści nie jest dozwolony dla tej grupy"
 
 #: src/frogr-controller.c:645
 msgid ""
@@ -426,7 +426,7 @@ msgstr "Opis:"
 
 #: src/frogr-create-new-set-dialog.c:356
 msgid "Fill Pictures Details with Title and Description"
-msgstr "Wypełnienie szczegółów obrazów jako tytuł i opis"
+msgstr "Wypełnienie informacji o obrazie jako tytuł i opis"
 
 #: src/frogr-create-new-set-dialog.c:381
 msgid "Create New Set"
@@ -498,11 +498,11 @@ msgstr "_Rodzina"
 
 #: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
 msgid "F_riends"
-msgstr "P_rzyjaciele"
+msgstr "_Znajomi"
 
 #: src/frogr-details-dialog.c:288
 msgid "Content Type"
-msgstr "Typ zawartości"
+msgstr "Typ treści"
 
 #: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
 msgid "P_hoto"
@@ -571,7 +571,7 @@ msgstr "_Edycja"
 
 #: src/frogr-details-dialog.c:1197
 msgid "Edit Picture Details"
-msgstr "Modyfikowanie szczegółów obrazu"
+msgstr "Modyfikowanie informacji o obrazie"
 
 #: src/frogr-file-loader.c:142
 #, c-format
@@ -756,7 +756,7 @@ msgstr "Domyślna widoczność"
 
 #: src/frogr-settings-dialog.c:224
 msgid "Default Content Type"
-msgstr "Domyślny typ zawartości"
+msgstr "Domyślny typ treści"
 
 #: src/frogr-settings-dialog.c:250
 msgid "Default Safety Level"
@@ -869,7 +869,7 @@ msgstr "Za_kończ"
 #: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
 #: data/gtkbuilder/frogr-menu-button.ui:18
 msgid "_Edit Details…"
-msgstr "Modyfikuj _szczegóły…"
+msgstr "_Modyfikuj informacje…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:11
 #: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
