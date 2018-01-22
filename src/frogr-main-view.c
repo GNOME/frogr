@@ -602,8 +602,8 @@ static void _initialize_header_bar (FrogrMainView *self)
   /* First create the left side buttons */
 
   _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.open-project", "document-open-symbolic", _("Open"), _("Open Existing Project"), "<Primary>o");
-  _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.add-pictures", "list-add-symbolic", _("Add"), _("Add Elements"), "<Primary>l");
-  _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.remove-pictures", "list-remove-symbolic", _("Remove"), _("Remove Elements"), "Delete");
+  _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.add-pictures", "list-add-symbolic", _("Add"), _("Add"), "<Primary>l");
+  _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.remove-pictures", "list-remove-symbolic", _("Remove"), _("Remove"), "Delete");
   _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.upload-all", "document-send-symbolic", _("Upload"), _("Upload All"), "<Primary>u");
 
   /* Menu button and its associated menu */
@@ -698,8 +698,8 @@ static void _initialize_menubar_and_toolbar (FrogrMainView *self)
   toolbar_items[0] = _create_toolbar_item ("win.open-project", "document-open", _("Open"), _("Open Existing Project"));
   toolbar_items[1] = _create_toolbar_item ("win.save-project", "document-save", _("Save"), _("Save Current Project"));
   toolbar_items[2] = gtk_separator_tool_item_new ();
-  toolbar_items[3] = _create_toolbar_item ("win.add-pictures", "list-add", _("Add"), _("Add Elements"));
-  toolbar_items[4] = _create_toolbar_item ("win.remove-pictures", "list-remove", _("Remove"), _("Remove Elements"));
+  toolbar_items[3] = _create_toolbar_item ("win.add-pictures", "list-add", _("Add"), _("Add"));
+  toolbar_items[4] = _create_toolbar_item ("win.remove-pictures", "list-remove", _("Remove"), _("Remove"));
   toolbar_items[5] = gtk_separator_tool_item_new ();
   toolbar_items[6] = _create_toolbar_item ("win.upload-all", "go-up", _("Upload"), _("Upload All"));
 
