@@ -105,6 +105,9 @@ struct _FrogrMainView {
 #if USE_HEADER_BAR
   GtkWidget *header_bar;
 #endif
+  GtkWidget *main_stack;
+  GtkWidget *scrolled_window;
+  GtkWidget *empty_state_vbox;
   GtkWidget *icon_view;
   GtkWidget *status_bar;
 
@@ -379,6 +382,10 @@ _initialize_ui (FrogrMainView *self)
   _initialize_menubar_and_toolbar (self);
   gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (self), TRUE);
 #endif
+
+  self->main_stack = GTK_WIDGET (gtk_builder_get_object (builder, "main_stack"));
+  self->scrolled_window = GTK_WIDGET (gtk_builder_get_object (builder, "scrolled_window"));
+  self->empty_state_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "empty_state_vbox"));
 
   icon_view = GTK_WIDGET (gtk_builder_get_object (builder, "icon_view"));
   self->icon_view = icon_view;
@@ -1989,8 +1996,16 @@ _model_picture_removed (FrogrController *controller,
 static void
 _model_changed (FrogrController *controller, gpointer data)
 {
+  FrogrMainView *self = FROGR_MAIN_VIEW (data);
+
   /* Reflect that the current state is 'dirty' in the title */
-  _update_window_title (FROGR_MAIN_VIEW (data), TRUE);
+  _update_window_title (self, TRUE);
+
+  /* Select the right page of the stack */
+  if (frogr_model_n_pictures (self->model) > 0)
+    gtk_stack_set_visible_child (GTK_STACK (self->main_stack), self->scrolled_window);
+  else
+    gtk_stack_set_visible_child (GTK_STACK (self->main_stack), self->empty_state_vbox);
 }
 
 static void
