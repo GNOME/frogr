@@ -34,7 +34,7 @@
       </section>
       <section>
         <item>
-          <attribute name="label" translatable="yes">_Upload All</attribute>
+          <attribute name="label" translatable="yes">_Upload</attribute>
           <attribute name="action">win.upload-all</attribute>
           <attribute name="accel">&lt;Primary&gt;u</attribute>
         </item>

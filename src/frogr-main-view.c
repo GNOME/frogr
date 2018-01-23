@@ -604,7 +604,7 @@ static void _initialize_header_bar (FrogrMainView *self)
   _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.open-project", "document-open-symbolic", _("Open"), _("Open Existing Project"), "<Primary>o");
   _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.add-pictures", "list-add-symbolic", _("Add"), _("Add"), "<Primary>l");
   _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.remove-pictures", "list-remove-symbolic", _("Remove"), _("Remove"), "Delete");
-  _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.upload-all", "document-send-symbolic", _("Upload"), _("Upload All"), "<Primary>u");
+  _add_item_to_header_bar (self, HEADER_BAR_POSITION_START, "win.upload-all", "document-send-symbolic", _("Upload"), _("Upload"), "<Primary>u");
 
   /* Menu button and its associated menu */
 
@@ -701,7 +701,7 @@ static void _initialize_menubar_and_toolbar (FrogrMainView *self)
   toolbar_items[3] = _create_toolbar_item ("win.add-pictures", "list-add", _("Add"), _("Add"));
   toolbar_items[4] = _create_toolbar_item ("win.remove-pictures", "list-remove", _("Remove"), _("Remove"));
   toolbar_items[5] = gtk_separator_tool_item_new ();
-  toolbar_items[6] = _create_toolbar_item ("win.upload-all", "go-up", _("Upload"), _("Upload All"));
+  toolbar_items[6] = _create_toolbar_item ("win.upload-all", "go-up", _("Upload"), _("Upload"));
 
   for (i = 0; i < G_N_ELEMENTS (toolbar_items); ++i)
     gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar_items[i], i);
