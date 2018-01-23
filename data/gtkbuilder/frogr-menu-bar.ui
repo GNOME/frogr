@@ -22,12 +22,12 @@
       </section>
       <section>
         <item>
-          <attribute name="label" translatable="yes">A_dd Elements…</attribute>
+          <attribute name="label" translatable="yes">A_dd…</attribute>
           <attribute name="action">win.add-pictures</attribute>
           <attribute name="accel">&lt;Primary&gt;l</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">_Remove Elements</attribute>
+          <attribute name="label" translatable="yes">_Remove</attribute>
           <attribute name="action">win.remove-pictures</attribute>
           <attribute name="accel">Delete</attribute>
         </item>
