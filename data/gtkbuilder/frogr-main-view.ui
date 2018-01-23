@@ -64,7 +64,7 @@
               <object class="GtkLabel" id="empty_state_subtitle">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">To upload pictures to flickr, first you need to load them here by clicking on the &lt;b&gt;"Add"&lt;/b&gt; button from the toolbar.</property>
+                <property name="label" translatable="yes">Press the &lt;b&gt;"Add"&lt;/b&gt; button on the toolbar to upload pictures to Flickr.</property>
                 <property name="use_markup">True</property>
                 <property name="wrap">True</property>
                 <property name="width_chars">35</property>
