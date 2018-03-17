@@ -10,6 +10,7 @@ src/frogr-controller.c
 src/frogr-create-new-set-dialog.c
 src/frogr-details-dialog.c
 src/frogr-file-loader.c
+src/frogr-global-defs.h
 src/frogr-main-view.c
 src/frogr-settings-dialog.c
 data/gtkbuilder/frogr-app-menu.ui
