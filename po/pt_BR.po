@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=frogr&"
 "keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-03-05 15:35+0000\n"
-"PO-Revision-Date: 2018-03-11 02:21-0200\n"
+"POT-Creation-Date: 2018-03-17 23:54+0000\n"
+"PO-Revision-Date: 2018-03-24 15:38-0200\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -612,6 +612,11 @@ msgstr ""
 "Não foi possível carregar arquivo %s:\n"
 "Tamanho do arquivo é maior que o máximo permitido por esta conta (%s)"
 
+#: src/frogr-global-defs.h:26
+#| msgid "A Flickr Remote Organizer for GNOME\n"
+msgid "Flickr Remote Organizer"
+msgstr "Organizador remoto do Flickr"
+
 #. First create the left side buttons
 #: src/frogr-main-view.c:604 src/frogr-main-view.c:698
 msgid "Open"
@@ -929,17 +934,14 @@ msgid "Save _As…"
 msgstr "Salvar _como…"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:25
-#| msgid "A_dd Elements…"
 msgid "A_dd…"
 msgstr "A_dicionar…"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:30
-#| msgid "Remove"
 msgid "_Remove"
 msgstr "_Remover"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:37
-#| msgid "Upload"
 msgid "_Upload"
 msgstr "_Enviar"
 
