@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-01-26 16:00+0000\n"
-"PO-Revision-Date: 2018-02-07 08:07+0100\n"
+"POT-Creation-Date: 2018-03-17 23:54+0000\n"
+"PO-Revision-Date: 2018-03-25 08:54+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -604,6 +604,10 @@ msgstr ""
 "Nelze načíst soubor %s:\n"
 "Velikost souboru je větší než povolené maximum pro tento účet (%s)"
 
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Vzdálená správa služeb Flickr"
+
 #. First create the left side buttons
 #: src/frogr-main-view.c:604 src/frogr-main-view.c:698
 msgid "Open"
@@ -908,14 +912,6 @@ msgid ""
 msgstr ""
 "Až budete připraveni, zmáčkněte tlačítko <b>„Nahrát“</b> a obrázky se "
 "nahrají na Flickr."
-
-#: data/gtkbuilder/frogr-main-view.ui:98
-msgid "page1"
-msgstr ""
-
-#: data/gtkbuilder/frogr-main-view.ui:118
-msgid "page0"
-msgstr ""
 
 #: data/gtkbuilder/frogr-menu-bar.ui:5
 msgid "_File"
