@@ -1,16 +1,16 @@
 # Indonesian translation for frogr.
 # Copyright (C) 2012 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017.
+# Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-01-26 16:00+0000\n"
-"PO-Revision-Date: 2018-02-09 16:23+0700\n"
-"Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
+"POT-Creation-Date: 2018-03-17 23:54+0000\n"
+"PO-Revision-Date: 2018-03-26 20:03+0700\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr "Suatu Pengorganisasi Remote Flickr bagi GNOME\n"
 #: src/frogr-about-dialog.c:70
 msgid "translator-credits"
 msgstr ""
-"Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017.\n"
+"Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017, 2018.\n"
 "Kukuh Syafaat <syafaatkukuh@gmail.com>, 2017, 2018."
 
 #: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
@@ -602,6 +602,10 @@ msgstr ""
 "Tak bisa memuat berkas %s:\n"
 "Ukuran berkas lebih dari maksimum yang diijinkan bagi akun ini (%s)"
 
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Pengorganisasi Remote Flickr"
+
 #. First create the left side buttons
 #: src/frogr-main-view.c:604 src/frogr-main-view.c:698
 msgid "Open"
@@ -796,7 +800,7 @@ msgstr "Sa_ndi:"
 
 #: src/frogr-settings-dialog.c:425
 msgid "Connec_tion"
-msgstr "Konek_si:"
+msgstr "Konek_si"
 
 #: src/frogr-settings-dialog.c:443
 msgid "Other options"
@@ -883,7 +887,7 @@ msgstr "Buka di Penampil E_ksternal"
 
 #: data/gtkbuilder/frogr-context-menu.ui:45
 msgid "_Remove Elements"
-msgstr "_Hapus Elemen…"
+msgstr "_Hapus Elemen"
 
 #: data/gtkbuilder/frogr-main-view.ui:51
 msgid "No pictures loaded"
@@ -904,14 +908,6 @@ msgid ""
 msgstr ""
 "Setelah Anda siap, tekan tombol <b>\"Unggah\"</b> untuk mengunggah gambar "
 "Anda ke Flickr."
-
-#: data/gtkbuilder/frogr-main-view.ui:98
-msgid "page1"
-msgstr "halaman1"
-
-#: data/gtkbuilder/frogr-main-view.ui:118
-msgid "page0"
-msgstr "halaman0"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:5
 msgid "_File"
@@ -972,15 +968,3 @@ msgstr "Balik U_rutan"
 #: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "Enable _Tooltips"
 msgstr "Fungsikan _Tooltips"
-
-#~ msgid "Add Elements"
-#~ msgstr "Tambah Elemen"
-
-#~ msgid "Remove Elements"
-#~ msgstr "Hapus Elemen"
-
-#~ msgid "Upload All"
-#~ msgstr "Unggah Semua"
-
-#~ msgid "_Upload All"
-#~ msgstr "_Unggah Semua"
