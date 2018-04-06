@@ -42,7 +42,7 @@ json_glib = dependency('json-glib-1.0', version: '>=@0@'.format(json_glib_ver))
 gcrypt = dependency('libgcrypt', version: '>=@0@'.format(gcrypt_ver), required: false)
 if not gcrypt.found()
     message('gcrypt not found via pkg-config, using meson.find_library()...')
-    gcrypt = compiler.find_library('libgcrypt')
+    gcrypt = compiler.find_library('gcrypt')
 endif
 
 frogr_conf.set_quoted('LIBGCRYPT_MIN_VERSION', gcrypt_ver)
