@@ -26,8 +26,8 @@
 
   <repository>
     <GitRepository>
-      <browse rdf:resource="https://git.gnome.org/browse/frogr/"/>
-      <location rdf:resource="git://git.gnome.org/frogr"/>
+      <browse rdf:resource="https://gitlab.gnome.org/GNOME/frogr"/>
+      <location rdf:resource="https://gitlab.gnome.org/GNOME/frogr.git"/>
     </GitRepository>
   </repository>
 

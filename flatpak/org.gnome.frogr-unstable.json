@@ -41,7 +41,7 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "git://git.gnome.org/frogr"
+                    "url": "https://gitlab.gnome.org/GNOME/frogr.git"
                 }
             ]
         }

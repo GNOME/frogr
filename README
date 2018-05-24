@@ -6,7 +6,7 @@ flickr account from the desktop.
 
 To get the source, please checkout the git repository at gnome.org:
 
-    git clone git://git.gnome.org/frogr
+    git clone https://gitlab.gnome.org/GNOME/frogr.git
 
 To be able to build frogr, you'll need some tools and libraries:
 
@@ -24,7 +24,7 @@ To be able to build frogr, you'll need some tools and libraries:
 
 Website: https://wiki.gnome.org/Apps/Frogr
 
-Source: git://git.gnome.org/frogr
+Source: https://gitlab.gnome.org/GNOME/frogr.git
 
 Mailing list: http://mail.gnome.org/mailman/listinfo/frogr-list
 
