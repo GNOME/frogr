@@ -9,10 +9,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=frogr&"
-"keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-03-17 23:54+0000\n"
-"PO-Revision-Date: 2018-03-24 15:38-0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2018-06-10 14:15+0000\n"
+"PO-Revision-Date: 2018-07-04 16:28-0200\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -23,21 +22,21 @@ msgstr ""
 "X-Generator: Virtaal 1.0.0-beta1\n"
 "X-Project-Style: gnome\n"
 
-#: data/org.gnome.frogr.appdata.xml.in:6 data/org.gnome.frogr.desktop.in.in:5
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
 msgstr "frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:7
+#: data/org.gnome.frogr.appdata.xml.in:8
 msgid "A flickr uploader for GNOME"
 msgstr "Um atualizador do flickr para GNOME"
 
-#: data/org.gnome.frogr.appdata.xml.in:9
+#: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
-"frogr is a small application for the GNOME desktop that allows users to "
-"manage their accounts in the Flickr image hosting website."
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
 msgstr ""
-"Frogr é um pequeno aplicativo para o ambiente do GNOME que permite que "
-"usuários gerenciem suas contas no site de hospedagem de imagens Flickr."
+"frogr permite que usuários gerenciem suas contas no serviço de hospedagem de "
+"fotos Flickr com uma interface simples e direta."
 
 #: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
@@ -52,7 +51,7 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Captura de tela do frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:33
+#: data/org.gnome.frogr.appdata.xml.in:32
 msgid "Mario Sanchez Prada"
 msgstr "Mario Sanchez Prada"
 
@@ -296,7 +295,7 @@ msgid ""
 msgstr ""
 "Erro\n"
 "%s não está devidamente autorizado a enviar imagens para o Flickr.\n"
-"Por favor, reautorize-o."
+"Por favor, reautorize-o"
 
 #: src/frogr-controller.c:653
 #, c-format
@@ -613,7 +612,6 @@ msgstr ""
 "Tamanho do arquivo é maior que o máximo permitido por esta conta (%s)"
 
 #: src/frogr-global-defs.h:26
-#| msgid "A Flickr Remote Organizer for GNOME\n"
 msgid "Flickr Remote Organizer"
 msgstr "Organizador remoto do Flickr"
 
@@ -724,7 +722,7 @@ msgstr "Conectado como %s%s"
 
 #: src/frogr-main-view.c:2056
 msgid " (PRO account)"
-msgstr "(conta PRO)"
+msgstr " (conta PRO)"
 
 #. Will show in the status bar the amount of data (in KB, MB
 #. or GB) the user is currently allowed to upload to flicker
@@ -969,7 +967,7 @@ msgstr "Pelo _título"
 #: data/gtkbuilder/frogr-menu-bar.ui:107
 #: data/gtkbuilder/frogr-menu-button.ui:68
 msgid "By _Size"
-msgstr "Por _tamanho:"
+msgstr "Por _tamanho"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:114
 #: data/gtkbuilder/frogr-menu-button.ui:75
@@ -980,6 +978,13 @@ msgstr "_Ordem inversa"
 #: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "Enable _Tooltips"
 msgstr "Habilitar _dicas"
+
+#~ msgid ""
+#~ "frogr is a small application for the GNOME desktop that allows users to "
+#~ "manage their accounts in the Flickr image hosting website."
+#~ msgstr ""
+#~ "Frogr é um pequeno aplicativo para o ambiente do GNOME que permite que "
+#~ "usuários gerenciem suas contas no site de hospedagem de imagens Flickr."
 
 #~ msgid "Add Elements"
 #~ msgstr "Adicionar elementos"
