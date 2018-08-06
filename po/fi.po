@@ -7,10 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-02-07 07:17+0000\n"
-"PO-Revision-Date: 2018-02-10 18:59+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2018-06-10 14:15+0000\n"
+"PO-Revision-Date: 2018-08-06 19:19+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -18,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
-#: data/org.gnome.frogr.appdata.xml.in:6 data/org.gnome.frogr.desktop.in.in:5
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
 msgstr "frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:7
+#: data/org.gnome.frogr.appdata.xml.in:8
 msgid "A flickr uploader for GNOME"
 msgstr "Flickr-lähetyssovellus Gnome-työpöydälle"
 
-#: data/org.gnome.frogr.appdata.xml.in:9
+#: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
-"frogr is a small application for the GNOME desktop that allows users to "
-"manage their accounts in the Flickr image hosting website."
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
 msgstr ""
-"Frogr on pieni sovellus, joka mahdollistaa käyttäjien hallita tilejään "
-"Flickr-kuvapalvelussa."
+"frogr mahdollistaa käyttäjien hallita tilejään Flickr-kuvapalvelussa selkeän "
+"käyttöliittymän avulla."
 
 #: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
@@ -49,7 +48,7 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Kuvakaappaus frogrista"
 
-#: data/org.gnome.frogr.appdata.xml.in:33
+#: data/org.gnome.frogr.appdata.xml.in:32
 msgid "Mario Sanchez Prada"
 msgstr "Mario Sanchez Prada"
 
@@ -603,6 +602,10 @@ msgstr ""
 "Tiedoston %s lataaminen ei onnistu:\n"
 "Tiedoston koko on suurempi kuin tämän tilin enimmäisraja (%s)"
 
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Flickrin etähallinta"
+
 #. First create the left side buttons
 #: src/frogr-main-view.c:604 src/frogr-main-view.c:698
 msgid "Open"
@@ -966,6 +969,13 @@ msgstr "K_äänteinen järjestys"
 #: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "Enable _Tooltips"
 msgstr "Kä_ytä työkaluvihjeitä"
+
+#~ msgid ""
+#~ "frogr is a small application for the GNOME desktop that allows users to "
+#~ "manage their accounts in the Flickr image hosting website."
+#~ msgstr ""
+#~ "Frogr on pieni sovellus, joka mahdollistaa käyttäjien hallita tilejään "
+#~ "Flickr-kuvapalvelussa."
 
 #~ msgid "Add Elements"
 #~ msgstr "Lisää elementtejä"
