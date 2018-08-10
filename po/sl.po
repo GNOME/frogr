@@ -8,10 +8,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-03-27 21:34+0000\n"
-"PO-Revision-Date: 2018-04-10 21:59+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2018-08-06 16:20+0000\n"
+"PO-Revision-Date: 2018-08-10 20:26+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -23,21 +22,21 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 2.0.6\n"
 
-#: data/org.gnome.frogr.appdata.xml.in:6 data/org.gnome.frogr.desktop.in.in:5
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
 msgstr "frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:7
+#: data/org.gnome.frogr.appdata.xml.in:8
 msgid "A flickr uploader for GNOME"
 msgstr "Usklajevalnik Flickr za GNOME"
 
-#: data/org.gnome.frogr.appdata.xml.in:9
+#: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
-"frogr is a small application for the GNOME desktop that allows users to "
-"manage their accounts in the Flickr image hosting website."
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
 msgstr ""
-"Program frogr za namizje GNOME omogoča uporabnikom upravljanje računov na "
-"spletišču Flickr."
+"Program frogr omogoča uporabnikom upravljanje z računi Flickr prek "
+"enostavnega in preglednega vmesnika."
 
 #: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
@@ -51,7 +50,7 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Zaslonska slika programa frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:33
+#: data/org.gnome.frogr.appdata.xml.in:32
 msgid "Mario Sanchez Prada"
 msgstr "Mario Sanchez Prada"
 
@@ -981,6 +980,13 @@ msgstr "_Obrnjen vrstni red"
 #: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "Enable _Tooltips"
 msgstr "Omogoči _orodne namige"
+
+#~ msgid ""
+#~ "frogr is a small application for the GNOME desktop that allows users to "
+#~ "manage their accounts in the Flickr image hosting website."
+#~ msgstr ""
+#~ "Program frogr za namizje GNOME omogoča uporabnikom upravljanje računov na "
+#~ "spletišču Flickr."
 
 #~ msgid "Add Elements"
 #~ msgstr "Dodajanje predmetov"
