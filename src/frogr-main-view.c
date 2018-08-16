@@ -1501,7 +1501,7 @@ _open_project_dialog (FrogrMainView *self)
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 static void
@@ -1570,7 +1570,7 @@ _save_project_as_dialog (FrogrMainView *self)
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 static void
@@ -1651,7 +1651,7 @@ _load_pictures_dialog (FrogrMainView *self)
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 static gboolean
@@ -2378,7 +2378,7 @@ frogr_main_view_show_progress (FrogrMainView *self, const gchar *title, const gc
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (self->progress_bar), 0.0);
   gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (self->progress_bar), FALSE);
 
-  gtk_widget_show_all (GTK_WIDGET (self->progress_dialog));
+  gtk_widget_show (GTK_WIDGET (self->progress_dialog));
   gtk_window_present (GTK_WINDOW (self->progress_dialog));
 }
 

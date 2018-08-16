@@ -386,5 +386,5 @@ frogr_create_new_set_dialog_show (GtkWindow *parent,
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_dialog_response_cb), NULL);
 
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }

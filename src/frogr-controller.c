@@ -693,7 +693,7 @@ _show_auth_failed_dialog (GtkWindow *parent, const gchar *message, gboolean auto
                     G_CALLBACK (_auth_failed_dialog_response_cb),
                     GINT_TO_POINTER ((gint)auto_retry));
 
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 static void

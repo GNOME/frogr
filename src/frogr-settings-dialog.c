@@ -977,5 +977,5 @@ frogr_settings_dialog_show (GtkWindow *parent)
     }
 
   _fill_dialog_with_data(_instance);
-  gtk_widget_show_all (GTK_WIDGET (_instance));
+  gtk_widget_show (GTK_WIDGET (_instance));
 }

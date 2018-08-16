@@ -432,7 +432,7 @@ _create_widgets (FrogrDetailsDialog *self)
                     G_CALLBACK (_on_radio_button_clicked), self);
 
   /* Show widgets */
-  gtk_widget_show_all (main_vbox);
+  gtk_widget_show (main_vbox);
 }
 
 static void
@@ -562,7 +562,7 @@ _place_picture_in_dialog_and_show (FrogrDetailsDialog *self)
                       G_CALLBACK (_on_picture_button_clicked),
                       self);
 
-  gtk_widget_show_all (GTK_WIDGET (self));
+  gtk_widget_show (GTK_WIDGET (self));
 }
 
 static void

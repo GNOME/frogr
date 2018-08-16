@@ -66,7 +66,7 @@ _ask_for_authorization (GtkWindow *parent)
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_ask_for_authorization_response_cb), NULL);
 
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 static void
@@ -178,7 +178,7 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 
   gtk_window_set_default_size (GTK_WINDOW (dialog), 200, -1);
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 static const gchar*

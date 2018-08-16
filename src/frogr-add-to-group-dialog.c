@@ -588,5 +588,5 @@ frogr_add_to_group_dialog_show (GtkWindow *parent,
   _populate_treemodel_with_groups (self);
   _fill_dialog_with_data (self);
 
-  gtk_widget_show_all (GTK_WIDGET (self));
+  gtk_widget_show (GTK_WIDGET (self));
 }

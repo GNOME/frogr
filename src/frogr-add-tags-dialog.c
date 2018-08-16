@@ -239,5 +239,5 @@ frogr_add_tags_dialog_show (GtkWindow *parent, const GSList *pictures, const GSL
       frogr_live_entry_set_auto_completion (FROGR_LIVE_ENTRY (dialog->entry), tags);
     }
 
-  gtk_widget_show_all (GTK_WIDGET (new));
+  gtk_widget_show (GTK_WIDGET (new));
 }
