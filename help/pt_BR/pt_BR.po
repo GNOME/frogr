@@ -1,26 +1,25 @@
 # Brazilian Portuguese translation for frogr.
-# Copyright (C) 2016 frogr's COPYRIGHT HOLDER
+# Copyright (C) 2018 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Rafael Fontenelle <rffontenelle@gmail.com>, 2013, 2016.
-#
+# Rafael Fontenelle <rafaelff@gnome.org>, 2013, 2016, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
-"POT-Creation-Date: 2015-12-15 07:02+0000\n"
-"PO-Revision-Date: 2016-01-07 13:22-0200\n"
-"Last-Translator: Rafael Fontenelle <rffontenelle@gmail.com>\n"
+"POT-Creation-Date: 2018-06-10 14:15+0000\n"
+"PO-Revision-Date: 2018-09-08 00:33-0200\n"
+"Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Virtaal 1.0.0-beta1\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
 msgid "translator-credits"
-msgstr "Rafael Fontenelle <rffontenelle@gmail.com>, 2013, 2016"
+msgstr "Rafael Fontenelle <rafaelff@gnome.org>, 2013, 2016, 2018"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
@@ -41,176 +40,109 @@ msgstr ""
 "gui><gui>Adicionar elementos</gui></guiseq>. Os elementos carregados serão "
 "exibidos e postos à disposição para transferência para o Flickr."
 
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/group-pictures.page:17
-msgctxt "_"
-msgid ""
-"external ref='figures/add-to-groups.png' "
-"md5='a65107ee59c5b86730b660b77782aa41'"
-msgstr ""
-"external ref='figures/add-to-groups.png' "
-"md5='a65107ee59c5b86730b660b77782aa41'"
-
-#. (itstool) path: info/desc
-#: C/group-pictures.page:9
-msgid "Group elements"
-msgstr "Agrupe elementos"
-
-#. (itstool) path: page/title
-#: C/group-pictures.page:12
-msgid "Add to groups"
-msgstr "Adicionando aos grupos"
-
-#. (itstool) path: page/p
-#: C/group-pictures.page:13
-msgid "You may add pictures and videos to an already defined group."
-msgstr "Você pode adicionar imagens e vídeos a um grupo já definido."
-
-#. (itstool) path: figure/title
-#. (itstool) path: figure/desc
-#: C/group-pictures.page:15 C/group-pictures.page:16
-msgid "Adding elements to groups"
-msgstr "Adicionando elementos a grupos"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/preferences.page:21
-msgctxt "_"
-msgid ""
-"external ref='figures/preferences-general.png' "
-"md5='4fdb5481893123f61347dde744236a2b'"
-msgstr ""
-"external ref='figures/preferences-general.png' "
-"md5='4fdb5481893123f61347dde744236a2b'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/preferences.page:33
-msgctxt "_"
-msgid ""
-"external ref='figures/preferences-connection.png' "
-"md5='1830543cba33afb5e2434d11ff408264'"
-msgstr ""
-"external ref='figures/preferences-connection.png' "
-"md5='1830543cba33afb5e2434d11ff408264'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/preferences.page:44
-msgctxt "_"
-msgid ""
-"external ref='figures/preferences-misc.png' "
-"md5='a2587009a97ec5f2554dfd5af36aa358'"
-msgstr ""
-"external ref='figures/preferences-misc.png' "
-"md5='a2587009a97ec5f2554dfd5af36aa358'"
-
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
-#: C/preferences.page:9 C/preferences.page:12
-msgid "Preferences"
-msgstr "Preferências"
+#: C/create-account.page:8 C/create-account.page:11
+msgid "How to create your account"
+msgstr "Como você pode criar sua conta"
 
 #. (itstool) path: page/p
-#: C/preferences.page:14
+#: C/create-account.page:12
+msgid "First create an Account"
+msgstr "Primeiro crie uma conta"
+
+#. (itstool) path: page/p
+#: C/create-account.page:13
 msgid ""
-"Go to Preferences using menu <guiseq><gui>frogr</gui><gui>Preferences</gui></"
-"guiseq>."
+"When you first run <app>frogr</app>, it displays a window explaining you'll "
+"have to create an account."
 msgstr ""
-"Acesse as Preferências usando o menu <guiseq><gui>frogr</gui><"
-"gui>Preferências</gui></guiseq>."
-
-#. (itstool) path: section/title
-#: C/preferences.page:17
-msgid "General preferences"
-msgstr "Preferências gerais"
+"Quando você executar <app>frogr</app> pela primeira vez, será mostrada uma "
+"janela explicando que você deve criar uma conta."
 
 #. (itstool) path: figure/title
-#: C/preferences.page:19
-msgid "<gui>frogr</gui> general preferences"
-msgstr "Preferências gerais do <gui>frogr</gui>"
+#: C/create-account.page:15 C/create-account.page:23
+msgid "Authorizing frogr"
+msgstr "Autorizando frogr"
 
 #. (itstool) path: figure/desc
-#: C/preferences.page:20
-msgid "<app>frogr</app> general preferences"
-msgstr "Preferências gerais do <app>frogr</app>"
+#: C/create-account.page:16
+msgid "Authorizing frogr. Requesting a verification code"
+msgstr "Autorização do frogr. Requisitando um código de verificação"
 
-#. (itstool) path: media/p
-#: C/preferences.page:22
-msgid "<app>frogr</app> general preferences."
-msgstr "Preferências gerais do <app>frogr</app>."
-
-#. (itstool) path: section/title
-#: C/preferences.page:28
-msgid "Connection preferences"
-msgstr "Preferências de conexão"
-
-#. (itstool) path: section/p
-#: C/preferences.page:29
-msgid "This tab allows you to set up a proxy."
-msgstr "Essa aba permite que você configure um proxy."
-
-#. (itstool) path: figure/title
-#: C/preferences.page:31
-msgid "<gui>frogr </gui> connection preferences"
-msgstr "Preferências de conexão do <gui>frogr</gui>"
-
-#. (itstool) path: figure/desc
-#: C/preferences.page:32
-msgid "<app>frogr</app> connection preferences"
-msgstr "Preferências de conexão do <app>frogr</app>"
-
-#. (itstool) path: media/p
-#: C/preferences.page:34 C/introduction.page:18
-msgid "<app>frogr</app> main window."
-msgstr "Janela principal do <app>frogr</app>."
-
-#. (itstool) path: section/title
-#: C/preferences.page:40
-msgid "Miscellaneous preferences"
-msgstr "Preferências miscelâneas"
-
-#. (itstool) path: figure/title
-#: C/preferences.page:42
-msgid "<gui>frogr </gui> misc preferences window"
-msgstr "Janela de preferências miscelâneas do <gui>frogr</gui>"
-
-#. (itstool) path: figure/desc
-#: C/preferences.page:43
-msgid "<app>frogr</app> misc preferences window"
-msgstr "Janela de preferências miscelâneas do <app>frogr</app>"
-
-#. (itstool) path: media/p
-#: C/preferences.page:45
-msgid "<app>frogr</app> misc preferences window."
-msgstr "Janela de preferências miscelâneas do <app>frogr</app>."
-
-#. (itstool) path: media
+#. (itstool) path: figure/media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/edit-pictures.page:17
+#: C/create-account.page:17
 msgctxt "_"
 msgid ""
-"external ref='figures/edit-picture-details.png' "
-"md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
+"external ref='figures/auth-dialog-step1.png' "
+"md5='4a5a05a788f09eff146f379812dad604'"
 msgstr ""
-"external ref='figures/edit-picture-details.png' "
-"md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
+"external ref='figures/auth-dialog-step1.png' "
+"md5='4a5a05a788f09eff146f379812dad604'"
+
+#. (itstool) path: page/p
+#: C/create-account.page:20
+msgid ""
+"Click Ok, it will run your default web browser. On your default web browser, "
+"either create a Flickr account or log in to an existing account."
+msgstr ""
+"Clique em Ok e você será levado a executar o seu navegador web padrão. "
+"Neste, crie uma conta no Flickr ou se autentique em uma conta existente."
+
+#. (itstool) path: page/p
+#: C/create-account.page:21
+msgid ""
+"Then, authorize <app>frogr</app> to access to this account. You may now go "
+"back to <app>frogr</app> window, enter the verification code and use the "
+"application to upload any picture!"
+msgstr ""
+"Então, autorize o <app>frogr</app> acessar esta conta. Agora, você pode "
+"voltar para a janela do <app>frogr</app>, digitar o código de verificação e "
+"usar o aplicativo para enviar qualquer imagem!"
+
+#. (itstool) path: figure/desc
+#: C/create-account.page:24
+msgid "Authorizing frogr. Finishing the process"
+msgstr "Autorização do frogr. Finalizando o processo"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/create-account.page:25
+msgctxt "_"
+msgid ""
+"external ref='figures/auth-dialog-step2.png' "
+"md5='cd9a1f0cb20fec024f7b9bb7f037187e'"
+msgstr ""
+"external ref='figures/auth-dialog-step2.png' "
+"md5='cd9a1f0cb20fec024f7b9bb7f037187e'"
+
+#. (itstool) path: info/desc
+#: C/display.page:9
+msgid "Amending view"
+msgstr "Corrija uma visão"
+
+#. (itstool) path: page/title
+#: C/display.page:12
+msgid "Sort elements"
+msgstr "Organizando elementos"
+
+#. (itstool) path: page/p
+#: C/display.page:13
+msgid ""
+"You can sort elements by title, by date, by size or as loaded. Click on the "
+"menu <gui>View</gui> and select the proper way to sort. You may also use "
+"reversed ordering."
+msgstr ""
+"Você pode organizar elementos por título, por data, por tamanho ou como "
+"carregados. Clique no menu <gui>Ver</gui> e selecione a forma apropriada de "
+"organizar. Você também pode usar organização inversa."
 
 #. (itstool) path: info/desc
 #: C/edit-pictures.page:9
@@ -224,9 +156,13 @@ msgstr "Editando detalhes"
 
 #. (itstool) path: page/p
 #: C/edit-pictures.page:13
+#| msgid ""
+#| "To edit the details of a picture or a video, right-click on an element "
+#| "and choose <gui>Edit Details</gui>.Until you edit the details, these will "
+#| "use the default details."
 msgid ""
 "To edit the details of a picture or a video, right-click on an element and "
-"choose <gui>Edit Details</gui>.Until you edit the details, these will use "
+"choose <gui>Edit Details</gui>. Until you edit the details, these will use "
 "the default details."
 msgstr ""
 "Para editar os detalhes de uma imagem ou um vídeo, clique com o botão "
@@ -242,6 +178,20 @@ msgstr "Editando detalhes da imagem"
 #: C/edit-pictures.page:16
 msgid "Amend the details of the picture."
 msgstr "Corrija os detalhes da imagem."
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/edit-pictures.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/edit-picture-details.png' "
+"md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
+msgstr ""
+"external ref='figures/edit-picture-details.png' "
+"md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
 
 #. (itstool) path: item/title
 #: C/edit-pictures.page:22
@@ -349,7 +299,7 @@ msgstr ""
 #. (itstool) path: item/title
 #: C/edit-pictures.page:31
 msgid "Replace 'date posted' with 'date taken'"
-msgstr "Substituir \"Data postada\" com \"Data tirada\""
+msgstr "Substituir “Data postada” com “Data tirada”"
 
 #. (itstool) path: item/p
 #: C/edit-pictures.page:31
@@ -376,6 +326,41 @@ msgstr ""
 "direito em alguma imagem e, então, escolha <gui>Abrir em um visualizador "
 "externo</gui>."
 
+#. (itstool) path: info/desc
+#: C/group-pictures.page:9
+msgid "Group elements"
+msgstr "Agrupe elementos"
+
+#. (itstool) path: page/title
+#: C/group-pictures.page:12
+msgid "Add to groups"
+msgstr "Adicionando aos grupos"
+
+#. (itstool) path: page/p
+#: C/group-pictures.page:13
+msgid "You may add pictures and videos to an already defined group."
+msgstr "Você pode adicionar imagens e vídeos a um grupo já definido."
+
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/group-pictures.page:15 C/group-pictures.page:16
+msgid "Adding elements to groups"
+msgstr "Adicionando elementos a grupos"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/group-pictures.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/add-to-groups.png' "
+"md5='a65107ee59c5b86730b660b77782aa41'"
+msgstr ""
+"external ref='figures/add-to-groups.png' "
+"md5='a65107ee59c5b86730b660b77782aa41'"
+
 #. (itstool) path: page/title
 #: C/index.page:8
 msgid "frogr help"
@@ -400,120 +385,6 @@ msgstr "Organizando e ordenando suas imagens"
 #: C/index.page:23
 msgid "Set up frogr"
 msgstr "Configurando o Frogr"
-
-#. (itstool) path: info/desc
-#. (itstool) path: page/title
-#: C/remove-pictures.page:9 C/remove-pictures.page:12
-msgid "Remove elements"
-msgstr "Removendo elementos"
-
-#. (itstool) path: page/p
-#: C/remove-pictures.page:13
-msgid ""
-"You can remove a picture or a video using the toolbar <gui>Minus</gui> "
-"button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove "
-"Elements</gui></guiseq>."
-msgstr ""
-"Você pode remover uma imagem ou um vídeo usando o botão <gui>Menos</gui> da "
-"barra de ferramentas. Ou você pode usar o menu <guiseq><gui>Arquivo</"
-"gui><gui>Remover elementos</gui></guiseq>."
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/create-account.page:17
-msgctxt "_"
-msgid ""
-"external ref='figures/auth-dialog-step1.png' "
-"md5='4a5a05a788f09eff146f379812dad604'"
-msgstr ""
-"external ref='figures/auth-dialog-step1.png' "
-"md5='4a5a05a788f09eff146f379812dad604'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/create-account.page:25
-msgctxt "_"
-msgid ""
-"external ref='figures/auth-dialog-step2.png' "
-"md5='cd9a1f0cb20fec024f7b9bb7f037187e'"
-msgstr ""
-"external ref='figures/auth-dialog-step2.png' "
-"md5='cd9a1f0cb20fec024f7b9bb7f037187e'"
-
-#. (itstool) path: info/desc
-#. (itstool) path: page/title
-#: C/create-account.page:8 C/create-account.page:11
-msgid "How to create your account"
-msgstr "Como você pode criar sua conta"
-
-#. (itstool) path: page/p
-#: C/create-account.page:12
-msgid "First create an Account"
-msgstr "Primeiro crie uma conta"
-
-#. (itstool) path: page/p
-#: C/create-account.page:13
-msgid ""
-"When you first run <app>frogr</app>, it displays a window explaining you'll "
-"have to create an account."
-msgstr ""
-"Quando você executar <app>frogr</app> pela primeira vez, será mostrada uma "
-"janela explicando que você deve criar uma conta."
-
-#. (itstool) path: figure/title
-#: C/create-account.page:15 C/create-account.page:23
-msgid "Authorizing frogr"
-msgstr "Autorizando frogr"
-
-#. (itstool) path: figure/desc
-#: C/create-account.page:16
-msgid "Authorizing frogr. Requesting a verification code"
-msgstr "Autorização do frogr. Requisitando um código de verificação"
-
-#. (itstool) path: page/p
-#: C/create-account.page:20
-msgid ""
-"Click Ok, it will run your default web browser. On your default web browser, "
-"either create a Flickr account or log in to an existing account."
-msgstr ""
-"Clique em Ok e você será levado a executar o seu navegador web padrão. "
-"Neste, crie uma conta no Flickr ou se autentique em uma conta existente."
-
-#. (itstool) path: page/p
-#: C/create-account.page:21
-msgid ""
-"Then, authorize <app>frogr</app> to access to this account. You may now go "
-"back to <app>frogr</app> window, enter the verification code and use the "
-"application to upload any picture!"
-msgstr ""
-"Então, autorize o <app>frogr</app> acessar esta conta. Agora, você pode "
-"voltar para a janela do <app>frogr</app>, digitar o código de verificação e "
-"usar o aplicativo para enviar qualquer imagem!"
-
-#. (itstool) path: figure/desc
-#: C/create-account.page:24
-msgid "Authorizing frogr. Finishing the process"
-msgstr "Autorização do frogr. Finalizando o processo"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/introduction.page:17
-msgctxt "_"
-msgid ""
-"external ref='figures/frogr-remote-organizer.png' "
-"md5='409cc7c292ff84a6ebc910c18ef2293e'"
-msgstr ""
-"external ref='figures/frogr-remote-organizer.png' "
-"md5='409cc7c292ff84a6ebc910c18ef2293e'"
 
 #. (itstool) path: info/desc
 #: C/introduction.page:8
@@ -547,6 +418,25 @@ msgstr "Janela do <gui>frogr</gui>"
 #: C/introduction.page:16
 msgid "<app>frogr</app> main window"
 msgstr "Janela principal do <app>frogr</app>"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/introduction.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/frogr-remote-organizer.png' "
+"md5='409cc7c292ff84a6ebc910c18ef2293e'"
+msgstr ""
+"external ref='figures/frogr-remote-organizer.png' "
+"md5='409cc7c292ff84a6ebc910c18ef2293e'"
+
+#. (itstool) path: media/p
+#: C/introduction.page:18 C/preferences.page:34
+msgid "<app>frogr</app> main window."
+msgstr "Janela principal do <app>frogr</app>."
 
 #. (itstool) path: section/title
 #: C/introduction.page:22
@@ -615,31 +505,164 @@ msgstr ""
 "Você pode ter mais informações sobre o <app>frogr</app> usando o menu "
 "<guiseq><gui>frogr</gui><gui>Sobre</gui></guiseq>."
 
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/set-pictures.page:18
-msgctxt "_"
-msgid ""
-"external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
-msgstr ""
-"external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/organize.page:8 C/organize.page:11
+msgid "Organize"
+msgstr "Organizando"
 
-#. (itstool) path: media
+#. (itstool) path: info/desc
+#: C/pictures.page:9
+msgid "Add, remove and upload pictures and videos"
+msgstr "Adicione, remova e envie imagens e vídeos"
+
+#. (itstool) path: page/title
+#: C/pictures.page:12
+msgid "Transfer elements"
+msgstr "Transferindo elementos"
+
+#. (itstool) path: page/p
+#: C/pictures.page:13
+msgid ""
+"You first have to add elements (pictures or videos) into frogr before being "
+"able to upload them."
+msgstr ""
+"Você deve primeiro adicionar elementos (imagens ou vídeos) ao frogr antes de "
+"poder enviá-los."
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/preferences.page:9 C/preferences.page:12
+msgid "Preferences"
+msgstr "Preferências"
+
+#. (itstool) path: page/p
+#: C/preferences.page:14
+msgid ""
+"Go to Preferences using menu <guiseq><gui>frogr</gui><gui>Preferences</gui></"
+"guiseq>."
+msgstr ""
+"Acesse as Preferências usando o menu <guiseq><gui>frogr</"
+"gui><gui>Preferências</gui></guiseq>."
+
+#. (itstool) path: section/title
+#: C/preferences.page:17
+msgid "General preferences"
+msgstr "Preferências gerais"
+
+#. (itstool) path: figure/title
+#: C/preferences.page:19
+msgid "<gui>frogr</gui> general preferences"
+msgstr "Preferências gerais do <gui>frogr</gui>"
+
+#. (itstool) path: figure/desc
+#: C/preferences.page:20
+msgid "<app>frogr</app> general preferences"
+msgstr "Preferências gerais do <app>frogr</app>"
+
+#. (itstool) path: figure/media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/set-pictures.page:25
+#: C/preferences.page:21
 msgctxt "_"
 msgid ""
-"external ref='figures/create-new-set.png' "
-"md5='760f5dd0865302be33f2bf9898597917'"
+"external ref='figures/preferences-general.png' "
+"md5='4fdb5481893123f61347dde744236a2b'"
 msgstr ""
-"external ref='figures/create-new-set.png' "
-"md5='760f5dd0865302be33f2bf9898597917'"
+"external ref='figures/preferences-general.png' "
+"md5='4fdb5481893123f61347dde744236a2b'"
+
+#. (itstool) path: media/p
+#: C/preferences.page:22
+msgid "<app>frogr</app> general preferences."
+msgstr "Preferências gerais do <app>frogr</app>."
+
+#. (itstool) path: section/title
+#: C/preferences.page:28
+msgid "Connection preferences"
+msgstr "Preferências de conexão"
+
+#. (itstool) path: section/p
+#: C/preferences.page:29
+msgid "This tab allows you to set up a proxy."
+msgstr "Essa aba permite que você configure um proxy."
+
+#. (itstool) path: figure/title
+#: C/preferences.page:31
+msgid "<gui>frogr </gui> connection preferences"
+msgstr "Preferências de conexão do <gui>frogr</gui>"
+
+#. (itstool) path: figure/desc
+#: C/preferences.page:32
+msgid "<app>frogr</app> connection preferences"
+msgstr "Preferências de conexão do <app>frogr</app>"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/preferences.page:33
+msgctxt "_"
+msgid ""
+"external ref='figures/preferences-connection.png' "
+"md5='1830543cba33afb5e2434d11ff408264'"
+msgstr ""
+"external ref='figures/preferences-connection.png' "
+"md5='1830543cba33afb5e2434d11ff408264'"
+
+#. (itstool) path: section/title
+#: C/preferences.page:40
+msgid "Miscellaneous preferences"
+msgstr "Preferências miscelâneas"
+
+#. (itstool) path: figure/title
+#: C/preferences.page:42
+msgid "<gui>frogr </gui> misc preferences window"
+msgstr "Janela de preferências miscelâneas do <gui>frogr</gui>"
+
+#. (itstool) path: figure/desc
+#: C/preferences.page:43
+msgid "<app>frogr</app> misc preferences window"
+msgstr "Janela de preferências miscelâneas do <app>frogr</app>"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/preferences.page:44
+msgctxt "_"
+msgid ""
+"external ref='figures/preferences-misc.png' "
+"md5='a2587009a97ec5f2554dfd5af36aa358'"
+msgstr ""
+"external ref='figures/preferences-misc.png' "
+"md5='a2587009a97ec5f2554dfd5af36aa358'"
+
+#. (itstool) path: media/p
+#: C/preferences.page:45
+msgid "<app>frogr</app> misc preferences window."
+msgstr "Janela de preferências miscelâneas do <app>frogr</app>."
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/remove-pictures.page:9 C/remove-pictures.page:12
+msgid "Remove elements"
+msgstr "Removendo elementos"
+
+#. (itstool) path: page/p
+#: C/remove-pictures.page:13
+msgid ""
+"You can remove a picture or a video using the toolbar <gui>Minus</gui> "
+"button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove "
+"Elements</gui></guiseq>."
+msgstr ""
+"Você pode remover uma imagem ou um vídeo usando o botão <gui>Menos</gui> da "
+"barra de ferramentas. Ou você pode usar o menu <guiseq><gui>Arquivo</"
+"gui><gui>Remover elementos</gui></guiseq>."
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
@@ -671,6 +694,18 @@ msgstr ""
 msgid "Adding elements to existing sets"
 msgstr "Adicionando elementos a conjuntos existentes"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/set-pictures.page:18
+msgctxt "_"
+msgid ""
+"external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
+msgstr ""
+"external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
+
 #. (itstool) path: figure/title
 #: C/set-pictures.page:23
 msgid "Creating new sets to add elements to"
@@ -683,48 +718,21 @@ msgid ""
 "description for every selected element too"
 msgstr ""
 "Criação de novos conjuntos para adicionar elementos. Você pode usar o título "
-"e a descrição do conjunto para cada elemento selecionado também."
+"e a descrição do conjunto para cada elemento selecionado também"
 
-#. (itstool) path: info/desc
-#: C/display.page:9
-msgid "Amending view"
-msgstr "Corrija uma visão"
-
-#. (itstool) path: page/title
-#: C/display.page:12
-msgid "Sort elements"
-msgstr "Organizando elementos"
-
-#. (itstool) path: page/p
-#: C/display.page:13
-msgid ""
-"You can sort elements by title, by date, by size or as loaded. Click on the "
-"menu <gui>View</gui> and select the proper way to sort. You may also use "
-"reversed ordering."
-msgstr ""
-"Você pode organizar elementos por título, por data, por tamanho ou como "
-"carregados. Clique no menu <gui>Ver</gui> e selecione a forma apropriada de "
-"organizar. Você também pode usar organização inversa."
-
-#. (itstool) path: info/desc
-#. (itstool) path: page/title
-#: C/organize.page:8 C/organize.page:11
-msgid "Organize"
-msgstr "Organizando"
-
-#. (itstool) path: media
+#. (itstool) path: figure/media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/tag.page:18
+#: C/set-pictures.page:25
 msgctxt "_"
 msgid ""
-"external ref='figures/add-tags-dialog.png' "
-"md5='d6c0a23671166602f4f4f27aee990745'"
+"external ref='figures/create-new-set.png' "
+"md5='760f5dd0865302be33f2bf9898597917'"
 msgstr ""
-"external ref='figures/add-tags-dialog.png' "
-"md5='d6c0a23671166602f4f4f27aee990745'"
+"external ref='figures/create-new-set.png' "
+"md5='760f5dd0865302be33f2bf9898597917'"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
@@ -739,7 +747,7 @@ msgid ""
 "own tags. It allows you to easily find any element you did upload."
 msgstr ""
 "Você pode atribuir várias tags para cada elemento. Flickr permite que você "
-"defina suas próprias tags. ele permite que você encontre facilmente qualquer "
+"defina suas próprias tags. Ele permite que você encontre facilmente qualquer "
 "elemento que você enviou."
 
 #. (itstool) path: page/p
@@ -752,7 +760,7 @@ msgstr ""
 "Clique com o botão direito em um elemento e escolha <gui>Adicionar tags</"
 "gui>. Ou clique no menu <gui>Editar</gui> e escolha <gui>Adicionar tags</"
 "gui>. Ou quando você estiver editando o detalhe do elemento, você pode ver e "
-"editar as tags."
+"editar as tags"
 
 #. (itstool) path: figure/title
 #. (itstool) path: figure/desc
@@ -760,24 +768,19 @@ msgstr ""
 msgid "Adding tags to elements"
 msgstr "Adicionando tags aos elementos"
 
-#. (itstool) path: info/desc
-#: C/pictures.page:9
-msgid "Add, remove and upload pictures and videos"
-msgstr "Adicione, remova e envie imagens e vídeos"
-
-#. (itstool) path: page/title
-#: C/pictures.page:12
-msgid "Transfer elements"
-msgstr "Transferindo elementos"
-
-#. (itstool) path: page/p
-#: C/pictures.page:13
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/tag.page:18
+msgctxt "_"
 msgid ""
-"You first have to add elements (pictures or videos) into frogr before being "
-"able to upload them."
+"external ref='figures/add-tags-dialog.png' "
+"md5='d6c0a23671166602f4f4f27aee990745'"
 msgstr ""
-"Você deve primeiro adicionar elementos (imagens ou vídeos) ao frogr antes de "
-"poder enviá-los."
+"external ref='figures/add-tags-dialog.png' "
+"md5='d6c0a23671166602f4f4f27aee990745'"
 
 #. (itstool) path: info/desc
 #. (itstool) path: page/title
