@@ -41,7 +41,7 @@ msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
 msgstr ""
-"És compatible amb totes les característiques bàsiques de Flickr, incloent pujada de "
+"És compatible amb totes les característiques bàsiques de Flickr, incloent pujada d'"
 "imatges, addició de descripcions, configuració d'etiquetes i la gestió de "
 "col·leccions i grups de fons."
 
@@ -97,7 +97,7 @@ msgstr "_Afegeix"
 
 #: src/frogr-add-tags-dialog.c:198
 msgid "Enter a spaces separated list of tags:"
-msgstr "Entreu una llista d'etiquetes separada per espais"
+msgstr "Introduïu una llista d'etiquetes separada per espais"
 
 #: src/frogr-add-tags-dialog.c:224
 msgid "Add Tags"
@@ -144,7 +144,7 @@ msgstr "Tan_ca"
 #. Description label
 #: src/frogr-auth-dialog.c:165
 msgid "Enter verification code:"
-msgstr "Entreu el codi de verificació:"
+msgstr "Introduïu el codi de verificació:"
 
 #: src/frogr-auth-dialog.c:219
 msgid "Invalid verification code"
@@ -223,7 +223,7 @@ msgid ""
 "Photo already in photoset"
 msgstr ""
 "Error:\n"
-"La foto ja és troba a la col·lecció de fotos"
+"La foto ja es troba a la col·lecció de fotos"
 
 #: src/frogr-controller.c:618
 msgid ""
@@ -231,7 +231,7 @@ msgid ""
 "Photo already in group"
 msgstr ""
 "Error:\n"
-"La foto ja és troba al grup"
+"La foto ja es troba al grup"
 
 #: src/frogr-controller.c:622
 msgid ""
@@ -239,7 +239,7 @@ msgid ""
 "Photo already in the maximum number of groups possible"
 msgstr ""
 "Error:\n"
-"La foto ja és troba al nombre màxim de grups possible"
+"La foto ja es troba al nombre màxim de grups possible"
 
 #: src/frogr-controller.c:626
 msgid ""
@@ -425,7 +425,7 @@ msgstr "Descripció:"
 
 #: src/frogr-create-new-set-dialog.c:348
 msgid "Fill Pictures Details with Title and Description"
-msgstr "Ompliu el detalls de les imatges amb el títol i la descripció"
+msgstr "Ompliu els detalls de les imatges amb el títol i la descripció"
 
 #: src/frogr-create-new-set-dialog.c:373
 msgid "Create New Set"
