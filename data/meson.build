@@ -39,7 +39,7 @@ i18n.merge_file('desktop',
 
 # Appdata XML file
 appdatadir = join_paths(datadir, 'metainfo')
-i18n.merge_file('desktop',
+i18n.merge_file('appdata',
                 input: 'org.gnome.frogr.appdata.xml.in',
                 output: 'org.gnome.frogr.appdata.xml',
                 install: true,
