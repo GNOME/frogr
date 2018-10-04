@@ -197,7 +197,7 @@ _show_message_dialog (GtkWindow *parent, const gchar *message, GtkMessageType ty
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (gtk_widget_destroy), dialog);
 
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 void

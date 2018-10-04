@@ -159,23 +159,28 @@ _create_widgets (FrogrDetailsDialog *self)
 
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 18);
   gtk_widget_set_margin_bottom (hbox, 6);
+  gtk_widget_show (hbox);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  gtk_widget_show (vbox);
 
   /* Left side (image, radio buttons, checkboxes...) */
 
   grid = gtk_grid_new ();
   gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
   gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+  gtk_widget_show (grid);
 
   widget = gtk_button_new ();
   gtk_widget_set_tooltip_text (widget, _("Open with image viewer"));
   gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
+  gtk_widget_show (widget);
   self->picture_button = widget;
 
   picture_frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (picture_frame), GTK_SHADOW_NONE);
   gtk_widget_set_halign (GTK_WIDGET (picture_frame), GTK_ALIGN_CENTER);
+  gtk_widget_show (picture_frame);
 
   gtk_grid_attach (GTK_GRID (grid), picture_frame, 1, 0, 1, 1);
   self->picture_container = picture_frame;
@@ -184,28 +189,33 @@ _create_widgets (FrogrDetailsDialog *self)
   widget = gtk_label_new (NULL);
   gtk_widget_set_margin_bottom (widget, 6);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 1, 1, 1);
+  gtk_widget_show (widget);
   self->mpictures_label = widget;
   self->mpictures_pixbuf = NULL;
 
   label = gtk_label_new_with_mnemonic (_("_Title:"));
   gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
+  gtk_widget_show (label);
 
   widget = gtk_entry_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 2, 1, 1);
+  gtk_widget_show (widget);
   self->title_entry = widget;
 
   label = gtk_label_new_with_mnemonic (_("_Description:"));
   gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
   gtk_widget_set_valign (GTK_WIDGET (label), GTK_ALIGN_START);
   gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
+  gtk_widget_show (label);
 
   widget = gtk_text_view_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
   gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (widget), FALSE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (widget), GTK_WRAP_WORD);
+  gtk_widget_show (widget);
 
   scroller = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
@@ -217,6 +227,7 @@ _create_widgets (FrogrDetailsDialog *self)
   gtk_widget_set_hexpand (GTK_WIDGET (scroller), TRUE);
   gtk_widget_set_vexpand (GTK_WIDGET (scroller), TRUE);
   gtk_grid_attach (GTK_GRID (grid), scroller, 1, 3, 1, 1);
+  gtk_widget_show (scroller);
   self->desc_tview = widget;
   self->text_buffer =
     gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->desc_tview));
@@ -224,11 +235,13 @@ _create_widgets (FrogrDetailsDialog *self)
   label = gtk_label_new_with_mnemonic (_("Ta_gs:"));
   gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (grid), label, 0, 4, 1, 1);
+  gtk_widget_show (label);
 
   widget = frogr_live_entry_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 4, 1, 1);
+  gtk_widget_show (widget);
   self->tags_entry = widget;
 
   gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
@@ -238,10 +251,12 @@ _create_widgets (FrogrDetailsDialog *self)
   /* Right side (text fields) */
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
+  gtk_widget_show (vbox);
 
   /* Visibility */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_show (section_vbox);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Visibility"));
@@ -251,24 +266,32 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_widget_set_halign (widget, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("_Private"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->private_rb = widget;
 
   widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->private_rb), _("P_ublic"));
   gtk_box_pack_start (GTK_BOX (internal_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->public_rb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), internal_hbox, FALSE, FALSE, 0);
+  gtk_widget_show (internal_hbox);
 
   internal_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  gtk_widget_show (internal_hbox);
+
   private_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_widget_show (private_hbox);
 
   widget = gtk_check_button_new_with_mnemonic (_("_Family"));
   gtk_box_pack_start (GTK_BOX (private_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->family_cb = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("F_riends"));
@@ -282,7 +305,10 @@ _create_widgets (FrogrDetailsDialog *self)
   /* Content type */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_show (section_vbox);
+
   content_type_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_widget_show (content_type_hbox);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Content Type"));
@@ -292,17 +318,21 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_widget_set_halign (widget, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("P_hoto"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->photo_content_rb = widget;
 
   widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->photo_content_rb), _("Scree_nshot"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->sshot_content_rb = widget;
 
   widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->photo_content_rb), _("Oth_er"));
   gtk_box_pack_start (GTK_BOX (content_type_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->other_content_rb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), content_type_hbox, FALSE, FALSE, 0);
@@ -311,7 +341,10 @@ _create_widgets (FrogrDetailsDialog *self)
   /* Safety level */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_show (section_vbox);
+
   safety_level_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_widget_show (safety_level_hbox);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Safety Level"));
@@ -321,17 +354,21 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_widget_set_halign (widget, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 
   widget = gtk_radio_button_new_with_mnemonic (NULL, _("S_afe"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->safe_rb = widget;
 
   widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->safe_rb), _("_Moderate"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->moderate_rb = widget;
 
   widget = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (self->safe_rb), _("Restr_icted"));
   gtk_box_pack_start (GTK_BOX (safety_level_hbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->restricted_rb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), safety_level_hbox, FALSE, FALSE, 0);
@@ -340,6 +377,7 @@ _create_widgets (FrogrDetailsDialog *self)
   /* License type */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_show (section_vbox);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("License Type"));
@@ -349,11 +387,13 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_widget_set_halign (widget, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 
   widget = gtk_combo_box_text_new ();
   for (i = 0; license_descriptions[i]; i++)
     gtk_combo_box_text_insert (GTK_COMBO_BOX_TEXT (widget), i, NULL, _(license_descriptions[i]));
 
+  gtk_widget_show (widget);
   self->license_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
@@ -362,6 +402,7 @@ _create_widgets (FrogrDetailsDialog *self)
   /* Other properties */
 
   section_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_show (section_vbox);
 
   markup = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>",
                                     _("Other Properties"));
@@ -371,17 +412,21 @@ _create_widgets (FrogrDetailsDialog *self)
 
   gtk_widget_set_halign (widget, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 
   widget = gtk_check_button_new_with_mnemonic (_("_Show Up in Global Search Results"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->show_in_search_cb = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("Set Geo_location Information"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->send_location_cb = widget;
 
   widget = gtk_check_button_new_with_mnemonic (_("Replace 'Date Posted' with 'Date Taken'"));
   gtk_box_pack_start (GTK_BOX (section_vbox), widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
   self->replace_date_posted_cb = widget;
 
   gtk_box_pack_start (GTK_BOX (vbox), section_vbox, FALSE, FALSE, 0);
@@ -432,7 +477,7 @@ _create_widgets (FrogrDetailsDialog *self)
                     G_CALLBACK (_on_radio_button_clicked), self);
 
   /* Show widgets */
-  gtk_widget_show_all (main_vbox);
+  gtk_widget_show (main_vbox);
 }
 
 static void
@@ -562,7 +607,7 @@ _place_picture_in_dialog_and_show (FrogrDetailsDialog *self)
                       G_CALLBACK (_on_picture_button_clicked),
                       self);
 
-  gtk_widget_show_all (GTK_WIDGET (self));
+  gtk_widget_show (GTK_WIDGET (self));
 }
 
 static void
@@ -1186,6 +1231,7 @@ frogr_details_dialog_show (GtkWindow *parent,
 #if GTK_CHECK_VERSION (3, 12, 0)
                       "use-header-bar", USE_HEADER_BAR,
 #endif
+                      "visible", TRUE,
                       NULL);
 
   /* Initialize values for widgets based on the data (pictures) passed */

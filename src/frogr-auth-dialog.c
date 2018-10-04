@@ -66,7 +66,7 @@ _ask_for_authorization (GtkWindow *parent)
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_ask_for_authorization_response_cb), NULL);
 
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 static void
@@ -117,6 +117,7 @@ _build_verification_code_entry_widget (GtkWidget *dialog)
       gtk_entry_set_width_chars (GTK_ENTRY (entry), 3);
       gtk_entry_set_alignment (GTK_ENTRY (entry), 0.5);
       gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, FALSE, 6);
+      gtk_widget_show (entry);
 
       entry_key = g_strdup_printf ("vercode-%d", i + 1);
       g_object_set_data (G_OBJECT (dialog), entry_key, entry);
@@ -129,9 +130,11 @@ _build_verification_code_entry_widget (GtkWidget *dialog)
         {
           separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
           gtk_box_pack_start (GTK_BOX (hbox), separator, TRUE, TRUE, 0);
+          gtk_widget_show (separator);
         }
     }
 
+  gtk_widget_show (hbox);
   return hbox;
 }
 
@@ -160,16 +163,20 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_widget_set_margin_bottom (vbox, 6);
+  gtk_widget_show (vbox);
 
   /* Description label */
   label = gtk_label_new (_("Enter verification code:"));
   gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
 
   /* Entry widgets for the verification code */
   ver_code_entry = _build_verification_code_entry_widget (dialog);
   gtk_box_pack_start (GTK_BOX (vbox), ver_code_entry, FALSE, FALSE, 0);
+  gtk_widget_show (ver_code_entry);
 
+  gtk_widget_show (content_area);
   gtk_container_add (GTK_CONTAINER (content_area), vbox);
 
   g_signal_connect (G_OBJECT (dialog), "response",
@@ -178,7 +185,7 @@ _ask_for_auth_confirmation (GtkWindow *parent)
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 
   gtk_window_set_default_size (GTK_WINDOW (dialog), 200, -1);
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
 
 static const gchar*

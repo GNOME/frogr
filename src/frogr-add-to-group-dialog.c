@@ -535,9 +535,11 @@ frogr_add_to_group_dialog_init (FrogrAddToGroupDialog *self)
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (widget),
                                        GTK_SHADOW_ETCHED_IN);
   gtk_box_pack_start (GTK_BOX (vbox), widget, TRUE, TRUE, 6);
+  gtk_widget_show (widget);
 
   self->treeview = _create_tree_view (self);
   gtk_container_add (GTK_CONTAINER (widget), self->treeview);
+  gtk_widget_show (self->treeview);
 
   self->treemodel =
     GTK_TREE_MODEL (gtk_list_store_new (4, G_TYPE_BOOLEAN,
@@ -588,5 +590,5 @@ frogr_add_to_group_dialog_show (GtkWindow *parent,
   _populate_treemodel_with_groups (self);
   _fill_dialog_with_data (self);
 
-  gtk_widget_show_all (GTK_WIDGET (self));
+  gtk_widget_show (GTK_WIDGET (self));
 }

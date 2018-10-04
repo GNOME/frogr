@@ -306,28 +306,32 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
                           NULL);
   gtk_container_set_border_width (GTK_CONTAINER (self), 6);
 
-  content_area = gtk_dialog_get_content_area (GTK_DIALOG (self));
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_widget_set_margin_bottom (vbox, 12);
+  gtk_widget_show (vbox);
 
   grid = gtk_grid_new ();
   gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
   gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
   gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
+  gtk_widget_show (grid);
 
   widget = gtk_label_new (_("Title:"));
   gtk_widget_set_halign (GTK_WIDGET (widget), GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (grid), widget, 0, 0, 1, 1);
+  gtk_widget_show (widget);
 
   widget = gtk_entry_new ();
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 0, 1, 1);
   self->title_entry = widget;
+  gtk_widget_show (widget);
 
   widget = gtk_label_new (_("Description:"));
   gtk_widget_set_halign (GTK_WIDGET (widget), GTK_ALIGN_END);
   gtk_widget_set_valign (GTK_WIDGET (widget), GTK_ALIGN_START);
   gtk_grid_attach (GTK_GRID (grid), widget, 0, 1, 1, 1);
+  gtk_widget_show (widget);
 
   widget = gtk_text_view_new ();
   scroller = gtk_scrolled_window_new (NULL, NULL);
@@ -336,11 +340,14 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroller),
                                        GTK_SHADOW_ETCHED_IN);
   gtk_container_add (GTK_CONTAINER (scroller), widget);
+  gtk_widget_show (widget);
+
   gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW (widget), FALSE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (widget), GTK_WRAP_WORD);
   gtk_widget_set_hexpand (GTK_WIDGET (scroller), TRUE);
   gtk_widget_set_vexpand (GTK_WIDGET (scroller), TRUE);
   gtk_grid_attach (GTK_GRID (grid), scroller, 1, 1, 1, 1);
+  gtk_widget_show (scroller);
 
   self->description_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
   self->description_tv = widget;
@@ -348,9 +355,12 @@ frogr_create_new_set_dialog_init (FrogrCreateNewSetDialog *self)
   widget = gtk_check_button_new_with_mnemonic (_("Fill Pictures Details with Title and Description"));
   gtk_widget_set_hexpand (GTK_WIDGET (widget), TRUE);
   gtk_grid_attach (GTK_GRID (grid), widget, 1, 2, 1, 1);
+  gtk_widget_show (widget);
   self->copy_to_pictures_cb = widget;
 
+  content_area = gtk_dialog_get_content_area (GTK_DIALOG (self));
   gtk_container_add (GTK_CONTAINER (content_area), vbox);
+  gtk_widget_show (content_area);
 
   g_signal_connect (G_OBJECT (self->copy_to_pictures_cb), "toggled",
                     G_CALLBACK (_on_button_toggled),
@@ -386,5 +396,5 @@ frogr_create_new_set_dialog_show (GtkWindow *parent,
   g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK (_dialog_response_cb), NULL);
 
-  gtk_widget_show_all (dialog);
+  gtk_widget_show (dialog);
 }
