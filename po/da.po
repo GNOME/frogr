@@ -9,10 +9,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=frogr&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-03-05 15:35+0000\n"
-"PO-Revision-Date: 2018-03-08 10:10+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2018-06-10 14:15+0000\n"
+"PO-Revision-Date: 2018-09-07 19:17+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -20,23 +19,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
-#: data/org.gnome.frogr.appdata.xml.in:6 data/org.gnome.frogr.desktop.in.in:5
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
 msgstr "frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:7
+#: data/org.gnome.frogr.appdata.xml.in:8
 msgid "A flickr uploader for GNOME"
 msgstr "Overførsel til flickr i GNOME"
 
-#: data/org.gnome.frogr.appdata.xml.in:9
+#: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
-"frogr is a small application for the GNOME desktop that allows users to "
-"manage their accounts in the Flickr image hosting website."
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
 msgstr ""
-"frogr er et lille program til GNOME-skrivebordet, som tillader brugere at "
-"håndtere deres konti på billeddelingstjenesten Flickr."
+"frogr lader brugere administrere deres konti på fotodelingstjenesten Flickr "
+"med en enkel og direkte grænseflade."
 
 #: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
@@ -51,7 +50,7 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Skærmbillede af frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:33
+#: data/org.gnome.frogr.appdata.xml.in:32
 msgid "Mario Sanchez Prada"
 msgstr "Mario Sanchez Prada"
 
@@ -610,6 +609,10 @@ msgstr ""
 "Kan ikke indlæse fil %s:\n"
 "Filens størrelse er større end det tilladte maksimum for denne konto (%s)"
 
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Fjernhåndtering af Flickr"
+
 #. First create the left side buttons
 #: src/frogr-main-view.c:604 src/frogr-main-view.c:698
 msgid "Open"
@@ -903,8 +906,8 @@ msgid ""
 "Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
 "window."
 msgstr ""
-"Tryk på knappen <b>“Tilføj”</b> i værktøjslinjen for at indlæse billeder "
-"i dette vindue."
+"Tryk på knappen <b>“Tilføj”</b> i værktøjslinjen for at indlæse billeder i "
+"dette vindue."
 
 #: data/gtkbuilder/frogr-main-view.ui:83
 msgid ""
@@ -974,6 +977,13 @@ msgstr "_Omvendt rækkefølge"
 #: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "Enable _Tooltips"
 msgstr "Aktiver _værktøjsfif"
+
+#~ msgid ""
+#~ "frogr is a small application for the GNOME desktop that allows users to "
+#~ "manage their accounts in the Flickr image hosting website."
+#~ msgstr ""
+#~ "frogr er et lille program til GNOME-skrivebordet, som tillader brugere at "
+#~ "håndtere deres konti på billeddelingstjenesten Flickr."
 
 #~ msgid "Add Elements"
 #~ msgstr "Tilføj elementer"
