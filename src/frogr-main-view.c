@@ -47,7 +47,6 @@
 
 /* Path relative to the application data dir */
 #define UI_MAIN_VIEW_FILE "/gtkbuilder/frogr-main-view.ui"
-#define UI_APP_MENU_FILE "/gtkbuilder/frogr-app-menu.ui"
 #define UI_CONTEXT_MENU_FILE "/gtkbuilder/frogr-context-menu.ui"
 #if USE_HEADER_BAR
 #define UI_MENU_BUTTON_FILE "/gtkbuilder/frogr-menu-button.ui"
@@ -123,7 +122,7 @@ struct _FrogrMainView {
   guint sb_context_id;
 
   GtkBuilder *builder;
-  GMenuModel *app_menu;
+  GMenuModel *menu_model;
 };
 
 G_DEFINE_TYPE (FrogrMainView, frogr_main_view, GTK_TYPE_APPLICATION_WINDOW)
@@ -361,18 +360,11 @@ _initialize_ui (FrogrMainView *self)
   main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main_window_vbox"));
   gtk_container_add (GTK_CONTAINER (self), main_vbox);
 
-  /* App menu */
-  full_path = g_strdup_printf ("%s/" UI_APP_MENU_FILE, frogr_util_get_app_data_dir ());
-  gtk_builder_add_from_file (builder, full_path, NULL);
-  g_free (full_path);
-
+  /* Load app menu entries */
   self->gtk_app = gtk_window_get_application (GTK_WINDOW (self));
   g_action_map_add_action_entries (G_ACTION_MAP (self->gtk_app),
                                    app_entries, G_N_ELEMENTS (app_entries),
                                    self);
-  self->app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"));
-  gtk_application_set_app_menu (self->gtk_app, self->app_menu);
-
 #if USE_HEADER_BAR
   /* Header_Bar and main vertical box below*/
   _initialize_header_bar (self);
@@ -586,7 +578,6 @@ extract_accels_from_menu (GMenuModel     *model,
 
 static void _initialize_header_bar (FrogrMainView *self)
 {
-  GMenuModel *menu_model = NULL;
   GtkWidget *toolbar = NULL;
   GtkWidget *header_item = NULL;
   GtkWidget *menu = NULL;
@@ -612,10 +603,10 @@ static void _initialize_header_bar (FrogrMainView *self)
   full_path = g_strdup_printf ("%s/" UI_MENU_BUTTON_FILE, frogr_util_get_app_data_dir ());
   gtk_builder_add_from_file (self->builder, full_path, NULL);
 
-  menu_model = G_MENU_MODEL (gtk_builder_get_object (self->builder, "menu-button"));
-  extract_accels_from_menu (menu_model, self->gtk_app);
+  self->menu_model = G_MENU_MODEL (gtk_builder_get_object (self->builder, "menu-button"));
+  extract_accels_from_menu (self->menu_model, self->gtk_app);
 
-  menu = gtk_menu_new_from_model (menu_model);
+  menu = gtk_menu_new_from_model (self->menu_model);
   gtk_widget_set_halign (menu, GTK_ALIGN_END);
 
   g_action_map_add_action_entries (G_ACTION_MAP (self),
@@ -688,8 +679,8 @@ static void _initialize_menubar_and_toolbar (FrogrMainView *self)
                                    win_entries, G_N_ELEMENTS (win_entries),
                                    self);
 
-  gtk_application_set_menubar (gtk_window_get_application (GTK_WINDOW (self)),
-                               G_MENU_MODEL (gtk_builder_get_object (self->builder, "menu-bar")));
+  self->menu_model = G_MENU_MODEL (gtk_builder_get_object (self->builder, "menu-bar"));
+  gtk_application_set_menubar (gtk_window_get_application (GTK_WINDOW (self)), self->menu_model);
   gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (self), TRUE);
 
   /* Toolbar */
@@ -970,7 +961,10 @@ _populate_accounts_submenu (FrogrMainView *self)
   FrogrAccount *account = NULL;
   GMenuItem *accounts_menu;
   GMenuItem *menu_item = NULL;
-  GMenuModel *submenu = NULL;
+#if !USE_HEADER_BAR
+  GMenuModel *file_submenu = NULL;
+#endif
+  GMenuModel *accounts_submenu = NULL;
   GMenuModel *section = NULL;
   GSList *accounts = NULL;
   GSList *item = NULL;
@@ -978,7 +972,13 @@ _populate_accounts_submenu (FrogrMainView *self)
   gchar *action_str = NULL;
 
   /* Remove a previous submenu if present (it will be regenerated later) */
-  section = g_menu_model_get_item_link (self->app_menu, 0, G_MENU_LINK_SECTION);
+#if USE_HEADER_BAR
+  section = g_menu_model_get_item_link (self->menu_model, 0, G_MENU_LINK_SECTION);
+#else
+  file_submenu = g_menu_model_get_item_link (self->menu_model, 0, G_MENU_LINK_SUBMENU);
+  section = g_menu_model_get_item_link (file_submenu, 0, G_MENU_LINK_SECTION);
+#endif
+
   if (g_menu_model_get_n_items (G_MENU_MODEL (section)) > 1)
     g_menu_remove (G_MENU (section), 1);
 
@@ -986,7 +986,7 @@ _populate_accounts_submenu (FrogrMainView *self)
   if (!g_slist_length (accounts))
     return;
 
-  submenu = G_MENU_MODEL (g_menu_new ());
+  accounts_submenu = G_MENU_MODEL (g_menu_new ());
   for (item = accounts; item; item = g_slist_next (item))
     {
       account = FROGR_ACCOUNT (item->data);
@@ -997,7 +997,7 @@ _populate_accounts_submenu (FrogrMainView *self)
       username = frogr_account_get_username (account);
       action_str = g_strdup_printf ("app.login-as::%s", username);
       menu_item = g_menu_item_new (username, action_str);;
-      g_menu_append_item (G_MENU (submenu), menu_item);
+      g_menu_append_item (G_MENU (accounts_submenu), menu_item);
       g_free (action_str);
 
       if (frogr_account_is_active (account))
@@ -1009,7 +1009,7 @@ _populate_accounts_submenu (FrogrMainView *self)
     }
 
   /* Create the submenu and insert it in the right section */
-  accounts_menu = g_menu_item_new_submenu (_("Accounts"), submenu);
+  accounts_menu = g_menu_item_new_submenu (_("Accounts"), accounts_submenu);
   g_menu_insert_item (G_MENU (section), 1, accounts_menu);
 }
 

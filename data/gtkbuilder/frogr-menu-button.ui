@@ -3,6 +3,12 @@
   <menu id="menu-button">
       <section>
         <item>
+          <attribute name="label" translatable="yes">Aut_horize Account…</attribute>
+          <attribute name="action">app.authorize</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
           <attribute name="label" translatable="yes">_Save</attribute>
           <attribute name="action">win.save-project</attribute>
           <attribute name="accel">&lt;Primary&gt;s</attribute>
@@ -91,9 +97,17 @@
       </section>
       <section>
         <item>
-          <attribute name="label" translatable="yes">_Quit</attribute>
-          <attribute name="action">app.quit</attribute>
-          <attribute name="accel">&lt;Primary&gt;q</attribute>
+          <attribute name="label" translatable="yes">_Preferences…</attribute>
+          <attribute name="action">app.preferences</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Help</attribute>
+          <attribute name="action">app.help</attribute>
+          <attribute name="accel">F1</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_About frogr</attribute>
+          <attribute name="action">app.about</attribute>
         </item>
       </section>
   </menu>

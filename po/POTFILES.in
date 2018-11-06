@@ -13,7 +13,6 @@ src/frogr-file-loader.c
 src/frogr-global-defs.h
 src/frogr-main-view.c
 src/frogr-settings-dialog.c
-data/gtkbuilder/frogr-app-menu.ui
 data/gtkbuilder/frogr-context-menu.ui
 data/gtkbuilder/frogr-main-view.ui
 data/gtkbuilder/frogr-menu-bar.ui
