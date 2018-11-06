@@ -9,13 +9,11 @@ before_script:
 build-frogr:
   stage: build
   script:
-    - meson --prefix /usr -Denable-header-bar=true _build .
+    - meson --prefix /usr _build .
     - cd _build
     - ninja
-    - meson test
     - desktop-file-validate data/org.gnome.frogr.desktop
     - appstream-util validate data/org.gnome.frogr.appdata.xml
-
   except:
     - tags
   artifacts:
@@ -23,6 +21,28 @@ build-frogr:
     name: "frogr-${CI_COMMIT_REF_NAME}"
     paths:
       - "${CI_PROJECT_DIR}/_build/meson-logs"
+
+build-frogr-no-header-bar:
+  stage: build
+  script:
+    - meson --prefix /usr -Denable-header-bar=false _build .
+    - cd _build
+    - ninja
+    - desktop-file-validate data/org.gnome.frogr.desktop
+    - appstream-util validate data/org.gnome.frogr.appdata.xml
+  except:
+    - tags
+
+build-frogr-no-video:
+  stage: build
+  script:
+    - meson --prefix /usr -Denable-video=false _build .
+    - cd _build
+    - ninja
+    - desktop-file-validate data/org.gnome.frogr.desktop
+    - appstream-util validate data/org.gnome.frogr.appdata.xml
+  except:
+    - tags
 
 dist-frogr:
   stage: build
