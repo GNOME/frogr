@@ -853,8 +853,8 @@ msgid "_Help"
 msgstr "Aj_uda"
 
 #: data/gtkbuilder/frogr-app-menu.ui:23
-msgid "_About"
-msgstr "_Sobre"
+msgid "_About frogr"
+msgstr "_Sobre frogr"
 
 #: data/gtkbuilder/frogr-app-menu.ui:27 data/gtkbuilder/frogr-menu-button.ui:94
 msgid "_Quit"

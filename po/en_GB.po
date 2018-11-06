@@ -622,8 +622,8 @@ msgid "Save Current Project"
 msgstr "Save Current Project"
 
 #: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
-msgid "_About"
-msgstr "_About"
+msgid "_About frogr"
+msgstr "_About frogr"
 
 #: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
 #: data/gtkbuilder/frogr-menu-button.ui:94
