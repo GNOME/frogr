@@ -4,7 +4,7 @@ stages:
   - build
 
 before_script:
-  - dnf install -y meson ninja-build gcc glib2-devel libsoup-devel libexif-devel libxml2-devel json-glib-devel libgcrypt-devel gtk3-devel gstreamer1-devel yelp-tools gettext libgcrypt-devel itstool desktop-file-utils appstream-util
+  - dnf install -y meson ninja-build gcc glib2-devel libsoup-devel libexif-devel libxml2-devel json-glib-devel libgcrypt-devel gtk3-devel gstreamer1-devel yelp-tools gettext libgcrypt-devel itstool desktop-file-utils libappstream-glib
 
 build-frogr:
   stage: build
@@ -13,6 +13,9 @@ build-frogr:
     - cd _build
     - ninja
     - meson test
+    - desktop-file-validate data/org.gnome.frogr.desktop
+    - appstream-util validate data/org.gnome.frogr.appdata.xml
+
   except:
     - tags
   artifacts:
