@@ -1,0 +1,951 @@
+# Icelandic translation for frogr.
+# Copyright (C) 2018 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+#
+# Sveinn í Felli <sv1@fellsnet.is>, 2018.
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2018-11-06 21:58+0000\n"
+"PO-Revision-Date: 2018-11-07 16:28+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic <is@li.org>\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 !="
+" 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n "
+"% 100 != 81 && n % 100 != 91);\n"
+"X-Generator: Lokalize 2.0\n"
+
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
+msgid "frogr"
+msgstr "frogr"
+
+#: data/org.gnome.frogr.appdata.xml.in:8
+msgid "A flickr uploader for GNOME"
+msgstr "Innsendiforrit á Flickr fyrir GNOME"
+
+#: data/org.gnome.frogr.appdata.xml.in:10
+msgid ""
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
+msgstr ""
+
+#: data/org.gnome.frogr.appdata.xml.in:14
+msgid ""
+"It supports all the basic Flickr features, including uploading pictures, "
+"adding descriptions, setting tags and managing sets and groups pools."
+msgstr ""
+
+#: data/org.gnome.frogr.appdata.xml.in:25
+msgid "Screenshot of frogr"
+msgstr "Skjámynd af frogr"
+
+#: data/org.gnome.frogr.appdata.xml.in:32
+msgid "Mario Sanchez Prada"
+msgstr "Mario Sanchez Prada"
+
+#: data/org.gnome.frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "frogr: Fjartengt skipulagningarforrit á Flickr fyrir GNOME"
+
+#: data/org.gnome.frogr.desktop.in.in:7
+msgid "Upload and organize photos in Flickr accounts"
+msgstr "Senda inn og skipuleggja myndir á Flickr vefþjónustu"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.frogr.desktop.in.in:9
+msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
+msgstr "Flickr;Mynd;Ljósmynd;Myndskeið;Innsendiforrit;"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.frogr.desktop.in.in:16
+msgid "org.gnome.frogr"
+msgstr "org.gnome.frogr"
+
+#: src/frogr-about-dialog.c:43
+msgid "A Flickr Remote Organizer for GNOME\n"
+msgstr "Skipulagningarforrit á Flickr fyrir GNOME\n"
+
+#: src/frogr-about-dialog.c:70
+msgid "translator-credits"
+msgstr "Sveinn í Felli, sv1@fellsnet.is"
+
+#: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
+#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
+#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1201
+#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
+#: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
+msgid "_Cancel"
+msgstr "_Hætta við"
+
+#: src/frogr-add-tags-dialog.c:189 src/frogr-add-to-group-dialog.c:524
+#: src/frogr-add-to-set-dialog.c:525 src/frogr-create-new-set-dialog.c:304
+msgid "_Add"
+msgstr "Bæt_a við"
+
+#: src/frogr-add-tags-dialog.c:199
+msgid "Enter a spaces separated list of tags:"
+msgstr "Settu inn kommu-aðgreindan lista yfir merki:"
+
+#: src/frogr-add-tags-dialog.c:227
+msgid "Add Tags"
+msgstr "Bæta við merkjum"
+
+#: src/frogr-add-to-group-dialog.c:147
+msgid "Name"
+msgstr "Heiti"
+
+#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
+msgid "Elements"
+msgstr "Færslur"
+
+#: src/frogr-add-to-group-dialog.c:577
+msgid "Add to Groups"
+msgstr "Bæta í hópa"
+
+#: src/frogr-add-to-set-dialog.c:148
+msgid "Title"
+msgstr "Titill"
+
+#: src/frogr-add-to-set-dialog.c:578
+msgid "Add to Sets"
+msgstr "Bæta í sett"
+
+#: src/frogr-auth-dialog.c:59
+#, c-format
+msgid ""
+"Please press the button to authorize %s and then come back to complete the "
+"process."
+msgstr ""
+
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
+#: src/frogr-controller.c:2227
+#, c-format
+msgid "Authorize %s"
+msgstr "Heimila %s"
+
+#: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
+msgid "_Close"
+msgstr "_Loka"
+
+#. Description label
+#: src/frogr-auth-dialog.c:169
+msgid "Enter verification code:"
+msgstr "Settu inn sannvottunarkóða:"
+
+#: src/frogr-auth-dialog.c:226
+msgid "Invalid verification code"
+msgstr "Ógildur sannvottunarkóði"
+
+#: src/frogr-controller.c:575
+msgid "Process cancelled"
+msgstr "Hætt við ferli"
+
+#: src/frogr-controller.c:580
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+"Villa í tengingu:\n"
+"Netkerfi ekki tiltækt"
+
+#: src/frogr-controller.c:584
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+"Villa í tengingu:\n"
+"Gölluð beiðni"
+
+#: src/frogr-controller.c:588
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+"Villa í tengingu:\n"
+"Villa hjá þjóni"
+
+#: src/frogr-controller.c:592
+msgid ""
+"Error uploading:\n"
+"File invalid"
+msgstr ""
+"Villa við innsendingu:\n"
+"Ógild skrá"
+
+#: src/frogr-controller.c:596
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+"Villa við innsendingu myndar:\n"
+"Kvóti fullnýttur"
+
+#: src/frogr-controller.c:601
+#, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frogr-controller.c:605
+msgid ""
+"Error uploading video:\n"
+"You can't upload more videos with this account"
+msgstr ""
+
+#: src/frogr-controller.c:610
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+"Villa:\n"
+"Mynd fannst ekki"
+
+#: src/frogr-controller.c:614
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+"Villa:\n"
+"Mynd er þegar í myndasetti"
+
+#: src/frogr-controller.c:618
+msgid ""
+"Error:\n"
+"Photo already in group"
+msgstr ""
+"Villa:\n"
+"Mynd er þegar í hópi"
+
+#: src/frogr-controller.c:622
+msgid ""
+"Error:\n"
+"Photo already in the maximum number of groups possible"
+msgstr ""
+"Villa:\n"
+"Mynd er þegar í leyfilegum hámarksfjölda hópa"
+
+#: src/frogr-controller.c:626
+msgid ""
+"Error:\n"
+"Group limit already reached"
+msgstr ""
+
+#: src/frogr-controller.c:630
+msgid ""
+"Error:\n"
+"Photo added to group's queue"
+msgstr ""
+
+#: src/frogr-controller.c:634
+msgid ""
+"Error:\n"
+"Photo already added to group's queue"
+msgstr ""
+
+#: src/frogr-controller.c:638
+msgid ""
+"Error:\n"
+"Content not allowed for this group"
+msgstr ""
+
+#: src/frogr-controller.c:642
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"Auðkenning brást.\n"
+"Reyndu aftur"
+
+#: src/frogr-controller.c:648
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to Flickr.\n"
+"Please re-authorize it"
+msgstr ""
+
+#: src/frogr-controller.c:653
+#, c-format
+msgid ""
+"Unable to authenticate in Flickr\n"
+"Please try again."
+msgstr ""
+
+#: src/frogr-controller.c:657
+#, c-format
+msgid ""
+"You have not properly authorized %s yet.\n"
+"Please try again."
+msgstr ""
+
+#: src/frogr-controller.c:662
+#, c-format
+msgid ""
+"Invalid verification code.\n"
+"Please try again."
+msgstr ""
+"Sannvottunarkóðinn stemmdi ekki.\n"
+"Prófaðu aftur."
+
+#: src/frogr-controller.c:666
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"Villa:\n"
+"Þjónusta ekki til staðar"
+
+#. General error: just dump the raw error description
+#: src/frogr-controller.c:671
+#, c-format
+msgid "An error happened: %s."
+msgstr "Villa kom upp: %s."
+
+#: src/frogr-controller.c:869
+msgid "Authorization failed (timed out)"
+msgstr "Auðkenning brást (féll á tímamörkum)"
+
+#: src/frogr-controller.c:917
+#, c-format
+msgid "Retrying Upload (attempt %d/%d)…"
+msgstr "Reyni aftur við innsendingu (tilraun %d/%d)…"
+
+#: src/frogr-controller.c:922
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Sendi inn '%s'…"
+
+#: src/frogr-controller.c:2183
+msgid "Updating credentials…"
+msgstr "Uppfæri auðkenni…"
+
+#: src/frogr-controller.c:2188
+msgid "Retrieving data for authorization…"
+msgstr ""
+
+#: src/frogr-controller.c:2193
+msgid "Finishing authorization…"
+msgstr "Lýk auðkenningu…"
+
+#: src/frogr-controller.c:2198
+msgid "Retrieving list of sets…"
+msgstr ""
+
+#: src/frogr-controller.c:2203
+msgid "Retrieving list of groups…"
+msgstr ""
+
+#: src/frogr-controller.c:2208
+msgid "Retrieving list of tags…"
+msgstr ""
+
+#: src/frogr-controller.c:2233
+#, c-format
+msgid "Fetching information"
+msgstr "Næ í upplýsingar"
+
+#: src/frogr-controller.c:2337
+msgid "No sets found"
+msgstr "Engin myndasett fundust"
+
+#: src/frogr-controller.c:2362
+msgid "No groups found"
+msgstr "Engir hópar fundust"
+
+#: src/frogr-controller.c:2920
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to Flickr.\n"
+"Please re-authorize it."
+msgstr ""
+
+#: src/frogr-controller.c:2929
+#, c-format
+msgid "You need to be connected before uploading any pictures to Flickr."
+msgstr ""
+
+#: src/frogr-controller.c:2946
+msgid "Uploading Pictures"
+msgstr "Sendi inn myndir"
+
+#: src/frogr-controller.c:2991
+#, c-format
+msgid "Error opening project file"
+msgstr "Villa við að opna verkefnisskrá"
+
+#. This shows a dialog notifying the problem to the user
+#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
+msgid "Missing data required"
+msgstr "Nauðsynleg gögn vantar"
+
+#: src/frogr-create-new-set-dialog.c:319
+msgid "Title:"
+msgstr "Titill:"
+
+#: src/frogr-create-new-set-dialog.c:330
+msgid "Description:"
+msgstr "Lýsing:"
+
+#: src/frogr-create-new-set-dialog.c:355
+msgid "Fill Pictures Details with Title and Description"
+msgstr ""
+
+#: src/frogr-create-new-set-dialog.c:383
+msgid "Create New Set"
+msgstr "Búa til nýtt myndasett"
+
+#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
+msgid "Default (as specified in Flickr)"
+msgstr ""
+
+#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
+msgid "All rights reserved"
+msgstr "Öll réttindi áskilin"
+
+#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
+msgid "CC Attribution-NonCommercial-ShareAlike"
+msgstr ""
+"Creative Commons BY-NC-SA - Höfundar getið, Ekki í hagnaðarskyni, Deilist "
+"áfram"
+
+#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
+msgid "CC Attribution-NonCommercial"
+msgstr "Creative Commons BY-NC - Höfundar getið, Ekki í hagnaðarskyni"
+
+#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
+msgid "CC Attribution-NonCommercial-NoDerivs"
+msgstr ""
+"Creative Commons BY-NC-ND - Höfundar getið, Ekki í hagnaðarskyni, Engar "
+"afleiður"
+
+#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
+msgid "CC Attribution"
+msgstr "Creative Commons BY - Höfundar getið"
+
+#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
+msgid "CC Attribution-ShareAlike"
+msgstr "Creative Commons BY-SA - Höfundar getið, Deilist áfram"
+
+#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
+msgid "CC Attribution-NoDerivs"
+msgstr "Creative Commons BY-ND - Höfundar getið, Engar afleiður"
+
+#: src/frogr-details-dialog.c:175
+msgid "Open with image viewer"
+msgstr "Opna með myndaskoðara"
+
+#: src/frogr-details-dialog.c:196
+msgid "_Title:"
+msgstr "_Titill:"
+
+#: src/frogr-details-dialog.c:208
+msgid "_Description:"
+msgstr "_Lýsing:"
+
+#: src/frogr-details-dialog.c:235
+msgid "Ta_gs:"
+msgstr "_Merki:"
+
+#: src/frogr-details-dialog.c:262
+msgid "Visibility"
+msgstr "Sýnileiki"
+
+#: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
+msgid "_Private"
+msgstr "Ein_ka"
+
+#: src/frogr-details-dialog.c:278 src/frogr-settings-dialog.c:207
+msgid "P_ublic"
+msgstr "_Opinbert"
+
+#: src/frogr-details-dialog.c:292 src/frogr-settings-dialog.c:218
+msgid "_Family"
+msgstr "_Fjölskylda"
+
+#: src/frogr-details-dialog.c:297 src/frogr-settings-dialog.c:220
+msgid "F_riends"
+msgstr "Vini_r"
+
+#: src/frogr-details-dialog.c:314
+msgid "Content Type"
+msgstr "Gerð efnis"
+
+#: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
+msgid "P_hoto"
+msgstr "L_jósmynd"
+
+#: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
+msgid "Scree_nshot"
+msgstr "Skjámy_nd"
+
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
+msgid "Oth_er"
+msgstr "_Annað"
+
+#: src/frogr-details-dialog.c:350
+msgid "Safety Level"
+msgstr "Öryggisstig"
+
+#: src/frogr-details-dialog.c:359 src/frogr-settings-dialog.c:277
+msgid "S_afe"
+msgstr "Öru_ggt"
+
+#: src/frogr-details-dialog.c:364 src/frogr-settings-dialog.c:279
+msgid "_Moderate"
+msgstr "_Miðlungs"
+
+#: src/frogr-details-dialog.c:369 src/frogr-settings-dialog.c:281
+msgid "Restr_icted"
+msgstr "_Takmarkað"
+
+#: src/frogr-details-dialog.c:383
+msgid "License Type"
+msgstr "Gerð notkunarleyfis"
+
+#: src/frogr-details-dialog.c:408
+msgid "Other Properties"
+msgstr "Aðrir eiginleikar"
+
+#: src/frogr-details-dialog.c:417
+msgid "_Show Up in Global Search Results"
+msgstr ""
+
+#: src/frogr-details-dialog.c:422
+msgid "Set Geo_location Information"
+msgstr ""
+
+#: src/frogr-details-dialog.c:427
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr ""
+
+#. Visually indicate how many pictures are being edited
+#: src/frogr-details-dialog.c:519
+#, c-format
+msgid "(%d Picture)"
+msgid_plural "(%d Pictures)"
+msgstr[0] "(%d mynd)"
+msgstr[1] "(%d myndir)"
+
+#: src/frogr-details-dialog.c:590
+msgid "An error happened trying to load the picture"
+msgstr "Villa átti sér stað við hlaða inn myndinni"
+
+#: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
+msgid "_Edit"
+msgstr "Br_eyta"
+
+#: src/frogr-details-dialog.c:1230
+msgid "Edit Picture Details"
+msgstr "Breyta nánari upplýsingum myndar"
+
+#: src/frogr-file-loader.c:142
+#, c-format
+msgid "Loading files %d / %d"
+msgstr "Hleð skrám %d / %d"
+
+#: src/frogr-file-loader.c:359
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
+msgstr ""
+"Tókst ekki að hlaða inn mynd %s:\n"
+"%s"
+
+#: src/frogr-file-loader.c:385
+#, c-format
+msgid ""
+"Unable to load video %s\n"
+"Please check that you have the right codec installed"
+msgstr ""
+
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: src/frogr-file-loader.c:603
+#, c-format
+msgid ""
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
+msgstr ""
+
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr ""
+
+#. First create the left side buttons
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
+msgid "Open"
+msgstr "Opna"
+
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
+msgid "Open Existing Project"
+msgstr "Opnar fyrirliggjandi verkefni"
+
+#: src/frogr-main-view.c:597 src/frogr-main-view.c:693
+msgid "Add"
+msgstr "Bæta við"
+
+#: src/frogr-main-view.c:598 src/frogr-main-view.c:694
+msgid "Remove"
+msgstr "Fjarlægja"
+
+#: src/frogr-main-view.c:599 src/frogr-main-view.c:696
+msgid "Upload"
+msgstr "Senda inn"
+
+#. Save project item
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
+msgid "Save"
+msgstr "Vista"
+
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
+msgid "Save Current Project"
+msgstr "Vista núverandi verkefni"
+
+#. Create the submenu and insert it in the right section
+#: src/frogr-main-view.c:1012
+msgid "Accounts"
+msgstr "Aðgangar"
+
+#. String showind the date and time a picture was taken
+#: src/frogr-main-view.c:1363
+#, c-format
+msgid "Taken: %s"
+msgstr "Myndataka: %s"
+
+#: src/frogr-main-view.c:1367
+#, c-format
+msgid "File size: %s"
+msgstr "Skráarstærð: %s"
+
+#: src/frogr-main-view.c:1483
+msgid "Select File"
+msgstr "Veldu skrá"
+
+#: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
+msgid "_Open"
+msgstr "_Opna"
+
+#: src/frogr-main-view.c:1496
+msgid "Frogr Project Files"
+msgstr "Frogr verkefnaskrár"
+
+#: src/frogr-main-view.c:1556
+msgid "Select Destination"
+msgstr "Veldu móttökumöppu"
+
+#: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
+#: data/gtkbuilder/frogr-menu-button.ui:12
+msgid "_Save"
+msgstr "_Vista"
+
+#: src/frogr-main-view.c:1563
+msgid "Untitled Project.frogr"
+msgstr "Ónefnt verkefni.frogr"
+
+#: src/frogr-main-view.c:1608
+msgid "Select a Picture"
+msgstr "Veldu mynd"
+
+#: src/frogr-main-view.c:1635
+msgid "All Files"
+msgstr "Allar skrár"
+
+#: src/frogr-main-view.c:1638
+msgid "Image Files"
+msgstr "Myndskrár"
+
+#: src/frogr-main-view.c:1642
+msgid "Video Files"
+msgstr "Myndskeiðasskrár"
+
+#: src/frogr-main-view.c:1664
+msgid "You don't have any picture added yet"
+msgstr ""
+
+#: src/frogr-main-view.c:1677
+msgid "You need to select some pictures first"
+msgstr ""
+
+#: src/frogr-main-view.c:2046
+msgid "Not connected to Flickr"
+msgstr "Ekki tengt við Flickr"
+
+#. Login string, showing the user is PRO (second '%s') if so.
+#: src/frogr-main-view.c:2056
+#, c-format
+msgid "Connected as %s%s"
+msgstr "Tengd/ur sem %s%s"
+
+#: src/frogr-main-view.c:2057
+msgid " (PRO account)"
+msgstr " (PRO-aðgangur)"
+
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: src/frogr-main-view.c:2081
+#, c-format
+msgid " - %s / %s remaining"
+msgstr " - %s / %s eftir"
+
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: src/frogr-main-view.c:2104
+#, c-format
+msgid " - %d file to upload (%s)"
+msgid_plural " - %d files to upload (%s)"
+msgstr[0] " - %d skrá til að senda inn (%s)"
+msgstr[1] " - %d skrár til að senda inn (%s)"
+
+#: src/frogr-settings-dialog.c:189
+msgid "Default Visibility"
+msgstr "Sjálfgefinn sýnileiki"
+
+#: src/frogr-settings-dialog.c:236
+msgid "Default Content Type"
+msgstr "Sjálfgefin gerð efnis"
+
+#: src/frogr-settings-dialog.c:265
+msgid "Default Safety Level"
+msgstr "Sjálfgefið öryggisstig"
+
+#: src/frogr-settings-dialog.c:294
+msgid "Default License"
+msgstr "Sjálfgefið notkunarleyfi"
+
+#: src/frogr-settings-dialog.c:323
+msgid "Other Defaults"
+msgstr "Önnur sjálfgefin gildi"
+
+#: src/frogr-settings-dialog.c:335
+msgid "_Show Pictures in Global Search Results"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:338
+msgid "Set Geo_location Information for Pictures"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:341
+msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:347
+msgid "_General"
+msgstr "_Almennt"
+
+#: src/frogr-settings-dialog.c:368
+msgid "Proxy Settings"
+msgstr "Stillingar milliþjóns (proxy)"
+
+#. Enable proxy
+#: src/frogr-settings-dialog.c:377
+msgid "_Enable HTTP Proxy"
+msgstr "Virkja _HTTP-milliþjón"
+
+#: src/frogr-settings-dialog.c:389
+msgid "_Host:"
+msgstr "_Hýsilvél:"
+
+#. Proxy port
+#: src/frogr-settings-dialog.c:404
+msgid "_Port:"
+msgstr "_Gátt:"
+
+#. Proxy username
+#: src/frogr-settings-dialog.c:419
+msgid "U_sername:"
+msgstr "_Notandanafn:"
+
+#. Proxy password
+#: src/frogr-settings-dialog.c:434
+msgid "Pass_word:"
+msgstr "_Lykilorð:"
+
+#: src/frogr-settings-dialog.c:460
+msgid "Connec_tion"
+msgstr "_Tenging"
+
+#: src/frogr-settings-dialog.c:479
+msgid "Other options"
+msgstr "Aðrir valkostir"
+
+#: src/frogr-settings-dialog.c:490
+msgid "Ena_ble Tags Auto-Completion"
+msgstr "Virk_ja sjálfvirka útfyllingu merkja"
+
+#: src/frogr-settings-dialog.c:493
+msgid "_Import Tags from Pictures Metadata"
+msgstr "Flytja _inn merki úr lýsigögnum mynda"
+
+#: src/frogr-settings-dialog.c:497
+msgid "Use _Dark GTK Theme"
+msgstr "Nota _dökkt GTK-þema"
+
+#: src/frogr-settings-dialog.c:501
+msgid "_Keep File Extensions in Titles when Loading"
+msgstr ""
+
+#: src/frogr-settings-dialog.c:507
+msgid "_Misc"
+msgstr "Ý_mislegt"
+
+#: src/frogr-settings-dialog.c:1009
+msgid "Preferences"
+msgstr "Kjörstillingar"
+
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
+#: data/gtkbuilder/frogr-menu-button.ui:24
+msgid "_Edit Details…"
+msgstr "Br_eyta upplýsingum…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
+msgid "Add _Tags…"
+msgstr "Bæ_ta við merkjum…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
+msgid "Add to _Group…"
+msgstr "Bæta í hó_p…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
+msgid "Add to _Photoset"
+msgstr "Bæta við m_yndasett"
+
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
+msgid "_Add to Existing Photoset…"
+msgstr "Bæt_a við fyrirliggjandi myndasett…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
+msgid "_Create New Photoset…"
+msgstr "_Búa til nýtt myndasett…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:103
+#: data/gtkbuilder/frogr-menu-button.ui:93
+msgid "_Open in External Viewer"
+msgstr "_Opna með utanaðkomandi skoðara"
+
+#: data/gtkbuilder/frogr-context-menu.ui:45
+msgid "_Remove Elements"
+msgstr "Fja_rlægja færslur"
+
+#: data/gtkbuilder/frogr-main-view.ui:51
+msgid "No pictures loaded"
+msgstr "Engar myndir fundust"
+
+#: data/gtkbuilder/frogr-main-view.ui:67
+msgid ""
+"Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
+"window."
+msgstr ""
+
+#: data/gtkbuilder/frogr-main-view.ui:83
+msgid ""
+"Once you're ready, press the <b>\"Upload\"</b> button to upload your "
+"pictures to Flickr."
+msgstr ""
+
+#: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
+msgid "Aut_horize Account…"
+msgstr "Auðkenndu notandaaðgang…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:11
+msgid "_File"
+msgstr "_Skrá"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:14
+msgid "_Open…"
+msgstr "_Opna…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
+msgid "Save _As…"
+msgstr "Vist_a sem..."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:31
+msgid "A_dd…"
+msgstr "_Bæta við…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:36
+msgid "_Remove"
+msgstr "Fja_rlægja"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:41
+msgid "_Upload"
+msgstr "Sen_da inn"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:48
+#: data/gtkbuilder/frogr-menu-button.ui:100
+msgid "_Preferences…"
+msgstr "_Kjörstillingar…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:52
+#: data/gtkbuilder/frogr-menu-button.ui:104
+msgid "_Help"
+msgstr "_Hjálp"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:57
+#: data/gtkbuilder/frogr-menu-button.ui:109
+msgid "_About frogr"
+msgstr "_Um hugbúnaðinn"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:61
+msgid "_Quit"
+msgstr "_Hætta"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:110
+msgid "_View"
+msgstr "S_koða"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:113
+#: data/gtkbuilder/frogr-menu-button.ui:56
+msgid "_Sort Elements"
+msgstr "_Raða færslum"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:116
+#: data/gtkbuilder/frogr-menu-button.ui:59
+msgid "As _Loaded"
+msgstr "Eftir hvenær _lesið inn"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:121
+#: data/gtkbuilder/frogr-menu-button.ui:64
+msgid "By _Date Taken"
+msgstr "Eftir töku_degi"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:126
+#: data/gtkbuilder/frogr-menu-button.ui:69
+msgid "By _Title"
+msgstr "Eftir _titli"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:131
+#: data/gtkbuilder/frogr-menu-button.ui:74
+msgid "By _Size"
+msgstr "Eftir _stærð"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:138
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "_Reversed Order"
+msgstr "Öfug _röðun"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:146
+#: data/gtkbuilder/frogr-menu-button.ui:87
+msgid "Enable _Tooltips"
+msgstr "Virkja á_bendingar"
+
+
