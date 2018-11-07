@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2018-06-10 14:15+0000\n"
-"PO-Revision-Date: 2018-09-05 14:00+0200\n"
+"POT-Creation-Date: 2018-11-06 10:51+0000\n"
+"PO-Revision-Date: 2018-11-07 19:17+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 "X-Project-Style: gnome\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -83,10 +83,10 @@ msgstr ""
 "Josef Andersson <josef.andersson@fripost.org>"
 
 #: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
-#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:152
-#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1156
-#: src/frogr-main-view.c:1485 src/frogr-main-view.c:1558
-#: src/frogr-main-view.c:1610 src/frogr-settings-dialog.c:928
+#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
+#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1201
+#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
+#: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
 msgid "_Cancel"
 msgstr "_Avbryt"
 
@@ -95,11 +95,11 @@ msgstr "_Avbryt"
 msgid "_Add"
 msgstr "_Lägg till"
 
-#: src/frogr-add-tags-dialog.c:198
+#: src/frogr-add-tags-dialog.c:199
 msgid "Enter a spaces separated list of tags:"
 msgstr "Ange en mellanslagsseparerad tagglista:"
 
-#: src/frogr-add-tags-dialog.c:224
+#: src/frogr-add-tags-dialog.c:227
 msgid "Add Tags"
 msgstr "Lägg till taggar"
 
@@ -111,7 +111,7 @@ msgstr "Namn"
 msgid "Elements"
 msgstr "Objekt"
 
-#: src/frogr-add-to-group-dialog.c:575
+#: src/frogr-add-to-group-dialog.c:577
 msgid "Add to Groups"
 msgstr "Lägg till i grupper"
 
@@ -119,7 +119,7 @@ msgstr "Lägg till i grupper"
 msgid "Title"
 msgstr "Titel"
 
-#: src/frogr-add-to-set-dialog.c:576
+#: src/frogr-add-to-set-dialog.c:578
 msgid "Add to Sets"
 msgstr "Lägg till i samlingar"
 
@@ -132,22 +132,22 @@ msgstr ""
 "Tryck på knappen för att auktorisera %s och gå sedan tillbaka för att "
 "färdigställa processen."
 
-#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:148
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
 #: src/frogr-controller.c:2227
 #, c-format
 msgid "Authorize %s"
 msgstr "Auktorisera %s"
 
-#: src/frogr-auth-dialog.c:154 src/frogr-settings-dialog.c:930
+#: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
 msgid "_Close"
 msgstr "_Stäng"
 
 #. Description label
-#: src/frogr-auth-dialog.c:165
+#: src/frogr-auth-dialog.c:169
 msgid "Enter verification code:"
 msgstr "Ange verifikationskod:"
 
-#: src/frogr-auth-dialog.c:219
+#: src/frogr-auth-dialog.c:226
 msgid "Invalid verification code"
 msgstr "Ogiltig verifikationskod"
 
@@ -413,23 +413,23 @@ msgid "Error opening project file"
 msgstr "Fel vid öppnandet av fil"
 
 #. This shows a dialog notifying the problem to the user
-#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:995
+#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
 msgid "Missing data required"
 msgstr "Kräver saknad data"
 
-#: src/frogr-create-new-set-dialog.c:318
+#: src/frogr-create-new-set-dialog.c:319
 msgid "Title:"
 msgstr "Titel:"
 
-#: src/frogr-create-new-set-dialog.c:327
+#: src/frogr-create-new-set-dialog.c:330
 msgid "Description:"
 msgstr "Beskrivning:"
 
-#: src/frogr-create-new-set-dialog.c:348
+#: src/frogr-create-new-set-dialog.c:355
 msgid "Fill Pictures Details with Title and Description"
 msgstr "Fyll i bilddetaljer med titel och beskrivning"
 
-#: src/frogr-create-new-set-dialog.c:373
+#: src/frogr-create-new-set-dialog.c:383
 msgid "Create New Set"
 msgstr "Skapa ny samling"
 
@@ -465,111 +465,111 @@ msgstr "CC Attribution-ShareAlike"
 msgid "CC Attribution-NoDerivs"
 msgstr "CC Attribution-NoDerivs"
 
-#: src/frogr-details-dialog.c:172
+#: src/frogr-details-dialog.c:175
 msgid "Open with image viewer"
 msgstr "Öppna med bildvisare"
 
-#: src/frogr-details-dialog.c:190
+#: src/frogr-details-dialog.c:196
 msgid "_Title:"
 msgstr "_Titel:"
 
-#: src/frogr-details-dialog.c:200
+#: src/frogr-details-dialog.c:208
 msgid "_Description:"
 msgstr "_Beskrivning:"
 
-#: src/frogr-details-dialog.c:224
+#: src/frogr-details-dialog.c:235
 msgid "Ta_gs:"
 msgstr "Ta_ggar:"
 
-#: src/frogr-details-dialog.c:247
+#: src/frogr-details-dialog.c:262
 msgid "Visibility"
 msgstr "Synlighet"
 
-#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
+#: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
 msgid "_Private"
 msgstr "_Privat"
 
-#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
+#: src/frogr-details-dialog.c:278 src/frogr-settings-dialog.c:207
 msgid "P_ublic"
 msgstr "O_ffentlig"
 
-#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
+#: src/frogr-details-dialog.c:292 src/frogr-settings-dialog.c:218
 msgid "_Family"
 msgstr "_Familj"
 
-#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
+#: src/frogr-details-dialog.c:297 src/frogr-settings-dialog.c:220
 msgid "F_riends"
 msgstr "V_änner"
 
-#: src/frogr-details-dialog.c:288
+#: src/frogr-details-dialog.c:314
 msgid "Content Type"
 msgstr "Innehållstyp"
 
-#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
+#: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
 msgid "P_hoto"
 msgstr "F_oto"
 
-#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
+#: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
 msgid "Scree_nshot"
 msgstr "Skär_mbild"
 
-#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
 msgid "Oth_er"
 msgstr "And_ra"
 
-#: src/frogr-details-dialog.c:317
+#: src/frogr-details-dialog.c:350
 msgid "Safety Level"
 msgstr "Säkerhetsnivå"
 
-#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
+#: src/frogr-details-dialog.c:359 src/frogr-settings-dialog.c:277
 msgid "S_afe"
 msgstr "S_äker"
 
-#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
+#: src/frogr-details-dialog.c:364 src/frogr-settings-dialog.c:279
 msgid "_Moderate"
 msgstr "_Måttlig"
 
-#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
+#: src/frogr-details-dialog.c:369 src/frogr-settings-dialog.c:281
 msgid "Restr_icted"
 msgstr "Begrän_sad"
 
-#: src/frogr-details-dialog.c:345
+#: src/frogr-details-dialog.c:383
 msgid "License Type"
 msgstr "Licenstyp"
 
-#: src/frogr-details-dialog.c:367
+#: src/frogr-details-dialog.c:408
 msgid "Other Properties"
 msgstr "Andra egenskaper"
 
-#: src/frogr-details-dialog.c:375
+#: src/frogr-details-dialog.c:417
 msgid "_Show Up in Global Search Results"
 msgstr "_Visa i globala sökresultat"
 
-#: src/frogr-details-dialog.c:379
+#: src/frogr-details-dialog.c:422
 msgid "Set Geo_location Information"
 msgstr "Visa pla_tsinformation"
 
-#: src/frogr-details-dialog.c:383
+#: src/frogr-details-dialog.c:427
 msgid "Replace 'Date Posted' with 'Date Taken'"
 msgstr "Ersätt ”Datum postat” med ”Datum taget”"
 
 #. Visually indicate how many pictures are being edited
-#: src/frogr-details-dialog.c:474
+#: src/frogr-details-dialog.c:519
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
 msgstr[0] "(%d bild)"
 msgstr[1] "(%d bilder)"
 
-#: src/frogr-details-dialog.c:545
+#: src/frogr-details-dialog.c:590
 msgid "An error happened trying to load the picture"
 msgstr "Ett fel inträffade då bilden försökte läsas in"
 
-#: src/frogr-details-dialog.c:1157 data/gtkbuilder/frogr-menu-bar.ui:44
+#: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: src/frogr-details-dialog.c:1185
+#: src/frogr-details-dialog.c:1230
 msgid "Edit Picture Details"
 msgstr "Redigera bilddetaljer"
 
@@ -613,111 +613,111 @@ msgid "Flickr Remote Organizer"
 msgstr "Flickr-fjärrhanterare"
 
 #. First create the left side buttons
-#: src/frogr-main-view.c:604 src/frogr-main-view.c:698
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open"
 msgstr "Öppna"
 
-#: src/frogr-main-view.c:604 src/frogr-main-view.c:698
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open Existing Project"
 msgstr "Öppna befintligt projekt"
 
-#: src/frogr-main-view.c:605 src/frogr-main-view.c:701
+#: src/frogr-main-view.c:597 src/frogr-main-view.c:693
 msgid "Add"
 msgstr "Lägg till"
 
-#: src/frogr-main-view.c:606 src/frogr-main-view.c:702
+#: src/frogr-main-view.c:598 src/frogr-main-view.c:694
 msgid "Remove"
 msgstr "Ta bort"
 
-#: src/frogr-main-view.c:607 src/frogr-main-view.c:704
+#: src/frogr-main-view.c:599 src/frogr-main-view.c:696
 msgid "Upload"
 msgstr "Skicka upp"
 
 #. Save project item
-#: src/frogr-main-view.c:639 src/frogr-main-view.c:699
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save"
 msgstr "Spara"
 
-#: src/frogr-main-view.c:639 src/frogr-main-view.c:699
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save Current Project"
 msgstr "Spara aktuellt projekt"
 
 #. Create the submenu and insert it in the right section
-#: src/frogr-main-view.c:1011
+#: src/frogr-main-view.c:1012
 msgid "Accounts"
 msgstr "Konton"
 
 #. String showind the date and time a picture was taken
-#: src/frogr-main-view.c:1362
+#: src/frogr-main-view.c:1363
 #, c-format
 msgid "Taken: %s"
 msgstr "Taget: %s"
 
-#: src/frogr-main-view.c:1366
+#: src/frogr-main-view.c:1367
 #, c-format
 msgid "File size: %s"
 msgstr "Filstorlek: %s"
 
-#: src/frogr-main-view.c:1482
+#: src/frogr-main-view.c:1483
 msgid "Select File"
 msgstr "Välj fil"
 
-#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1611
+#: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
 msgid "_Open"
 msgstr "_Öppna"
 
-#: src/frogr-main-view.c:1495
+#: src/frogr-main-view.c:1496
 msgid "Frogr Project Files"
 msgstr "Frogr-projektfiler"
 
-#: src/frogr-main-view.c:1555
+#: src/frogr-main-view.c:1556
 msgid "Select Destination"
 msgstr "Välj målplats"
 
-#: src/frogr-main-view.c:1559 data/gtkbuilder/frogr-menu-bar.ui:13
-#: data/gtkbuilder/frogr-menu-button.ui:6
+#: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
+#: data/gtkbuilder/frogr-menu-button.ui:12
 msgid "_Save"
 msgstr "_Spara"
 
-#: src/frogr-main-view.c:1562
+#: src/frogr-main-view.c:1563
 msgid "Untitled Project.frogr"
 msgstr "Namnlöst projekt.frogr"
 
-#: src/frogr-main-view.c:1607
+#: src/frogr-main-view.c:1608
 msgid "Select a Picture"
 msgstr "Välj en bild"
 
-#: src/frogr-main-view.c:1634
+#: src/frogr-main-view.c:1635
 msgid "All Files"
 msgstr "Alla filer"
 
-#: src/frogr-main-view.c:1637
+#: src/frogr-main-view.c:1638
 msgid "Image Files"
 msgstr "Bildfiler"
 
-#: src/frogr-main-view.c:1641
+#: src/frogr-main-view.c:1642
 msgid "Video Files"
 msgstr "Videofiler"
 
-#: src/frogr-main-view.c:1663
+#: src/frogr-main-view.c:1664
 msgid "You don't have any picture added yet"
 msgstr "Du har inte lagt till bilder än"
 
-#: src/frogr-main-view.c:1676
+#: src/frogr-main-view.c:1677
 msgid "You need to select some pictures first"
 msgstr "Du måste välja några bilder först"
 
-#: src/frogr-main-view.c:2045
+#: src/frogr-main-view.c:2046
 msgid "Not connected to Flickr"
 msgstr "Inte ansluten till Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
-#: src/frogr-main-view.c:2055
+#: src/frogr-main-view.c:2056
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Ansluten som %s%s"
 
-#: src/frogr-main-view.c:2056
+#: src/frogr-main-view.c:2057
 msgid " (PRO account)"
 msgstr " (PRO-konto)"
 
@@ -726,7 +726,7 @@ msgstr " (PRO-konto)"
 #. till the end of the month, in a CURRENT / MAX fashion.
 #. The '-' at the beginning is just a separator, since more
 #. blocks of text will be shown in the status bar too.
-#: src/frogr-main-view.c:2080
+#: src/frogr-main-view.c:2081
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " - %s / %s återstående"
@@ -734,161 +734,142 @@ msgstr " - %s / %s återstående"
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
 #. sizes for every picture loaded in the application
-#: src/frogr-main-view.c:2103
+#: src/frogr-main-view.c:2104
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
 msgstr[0] " - %d fil att skicka upp (%s)"
 msgstr[1] " - %d filer att skicka upp (%s)"
 
-#: src/frogr-settings-dialog.c:185
+#: src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
 msgstr "Standardsynlighet"
 
-#: src/frogr-settings-dialog.c:224
+#: src/frogr-settings-dialog.c:236
 msgid "Default Content Type"
 msgstr "Standardinnehållstyp"
 
-#: src/frogr-settings-dialog.c:250
+#: src/frogr-settings-dialog.c:265
 msgid "Default Safety Level"
 msgstr "Standardsäkerhetsnivå"
 
-#: src/frogr-settings-dialog.c:276
+#: src/frogr-settings-dialog.c:294
 msgid "Default License"
 msgstr "Standardlicens"
 
-#: src/frogr-settings-dialog.c:302
+#: src/frogr-settings-dialog.c:323
 msgid "Other Defaults"
 msgstr "Andra standardvärden"
 
-#: src/frogr-settings-dialog.c:312
+#: src/frogr-settings-dialog.c:335
 msgid "_Show Pictures in Global Search Results"
 msgstr "_Visa bilder i globala sökresultat"
 
-#: src/frogr-settings-dialog.c:315
+#: src/frogr-settings-dialog.c:338
 msgid "Set Geo_location Information for Pictures"
 msgstr "Ange _platsinformation för bilder"
 
-#: src/frogr-settings-dialog.c:318
+#: src/frogr-settings-dialog.c:341
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
 msgstr "Ersätt ”Datum postat” med ”Datum taget” för bilder"
 
-#: src/frogr-settings-dialog.c:324
+#: src/frogr-settings-dialog.c:347
 msgid "_General"
 msgstr "_Allmänt"
 
-#: src/frogr-settings-dialog.c:344
+#: src/frogr-settings-dialog.c:368
 msgid "Proxy Settings"
 msgstr "Proxyinställningar"
 
 #. Enable proxy
-#: src/frogr-settings-dialog.c:352
+#: src/frogr-settings-dialog.c:377
 msgid "_Enable HTTP Proxy"
 msgstr "A_ktivera HTTP-proxyserver"
 
-#: src/frogr-settings-dialog.c:362
+#: src/frogr-settings-dialog.c:389
 msgid "_Host:"
 msgstr "_Värd:"
 
 #. Proxy port
-#: src/frogr-settings-dialog.c:375
+#: src/frogr-settings-dialog.c:404
 msgid "_Port:"
 msgstr "_Port:"
 
 #. Proxy username
-#: src/frogr-settings-dialog.c:388
+#: src/frogr-settings-dialog.c:419
 msgid "U_sername:"
 msgstr "An_vändarnamn:"
 
 #. Proxy password
-#: src/frogr-settings-dialog.c:401
+#: src/frogr-settings-dialog.c:434
 msgid "Pass_word:"
 msgstr "Lös_enord:"
 
-#: src/frogr-settings-dialog.c:425
+#: src/frogr-settings-dialog.c:460
 msgid "Connec_tion"
 msgstr "Anslu_tning"
 
-#: src/frogr-settings-dialog.c:443
+#: src/frogr-settings-dialog.c:479
 msgid "Other options"
 msgstr "Andra alternativ"
 
-#: src/frogr-settings-dialog.c:452
+#: src/frogr-settings-dialog.c:490
 msgid "Ena_ble Tags Auto-Completion"
 msgstr "Akti_vera autokomplettering för taggar"
 
-#: src/frogr-settings-dialog.c:455
+#: src/frogr-settings-dialog.c:493
 msgid "_Import Tags from Pictures Metadata"
 msgstr "_Importera taggar från bildmetadata"
 
-#: src/frogr-settings-dialog.c:459
+#: src/frogr-settings-dialog.c:497
 msgid "Use _Dark GTK Theme"
 msgstr "Använd GTK-temat _mörk"
 
-#: src/frogr-settings-dialog.c:463
+#: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr "_Behåll filändelser i titlar vid inläsning"
 
-#: src/frogr-settings-dialog.c:469
+#: src/frogr-settings-dialog.c:507
 msgid "_Misc"
 msgstr "_Övrigt"
 
-#: src/frogr-settings-dialog.c:970
+#: src/frogr-settings-dialog.c:1009
 msgid "Preferences"
 msgstr "Inställningar"
 
-#: data/gtkbuilder/frogr-app-menu.ui:6
-msgid "Aut_horize Account…"
-msgstr "Auktor_isera konto…"
-
-#: data/gtkbuilder/frogr-app-menu.ui:12
-msgid "_Preferences…"
-msgstr "_Inställningar…"
-
-#: data/gtkbuilder/frogr-app-menu.ui:18
-msgid "_Help"
-msgstr "_Hjälp"
-
-#: data/gtkbuilder/frogr-app-menu.ui:23
-msgid "_About"
-msgstr "_Om"
-
-#: data/gtkbuilder/frogr-app-menu.ui:27 data/gtkbuilder/frogr-menu-button.ui:94
-msgid "_Quit"
-msgstr "A_vsluta"
-
-#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
-#: data/gtkbuilder/frogr-menu-button.ui:18
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
+#: data/gtkbuilder/frogr-menu-button.ui:24
 msgid "_Edit Details…"
 msgstr "Redigera _detaljer…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:11
-#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+#: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
 msgid "Add _Tags…"
 msgstr "Lägg till _taggar…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:16
-#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+#: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
 msgid "Add to _Group…"
 msgstr "Lägg till i _grupp…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:21
-#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+#: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
 msgid "Add to _Photoset"
 msgstr "Lägg till i _fotosamling"
 
 #: data/gtkbuilder/frogr-context-menu.ui:24
-#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
 msgid "_Add to Existing Photoset…"
 msgstr "Lägg till i _befintlig fotosamling…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:29
-#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+#: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
 msgid "_Create New Photoset…"
 msgstr "_Skapa ny fotosamling…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:38
-#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+#: data/gtkbuilder/frogr-menu-bar.ui:103
+#: data/gtkbuilder/frogr-menu-button.ui:93
 msgid "_Open in External Viewer"
 msgstr "_Öppna i extern visare"
 
@@ -916,65 +897,94 @@ msgstr ""
 "När du är klar trycker du ned knappen <b>\"Skicka upp\"</b> för att skicka "
 "upp dina bilder till Flickr."
 
-#: data/gtkbuilder/frogr-menu-bar.ui:5
+#: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
+msgid "Aut_horize Account…"
+msgstr "Auktor_isera konto…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:11
 msgid "_File"
 msgstr "_Arkiv"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:8
+#: data/gtkbuilder/frogr-menu-bar.ui:14
 msgid "_Open…"
 msgstr "_Öppna…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
 msgid "Save _As…"
 msgstr "Spara _som…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:25
+#: data/gtkbuilder/frogr-menu-bar.ui:31
 msgid "A_dd…"
 msgstr "_Lägg till…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:30
+#: data/gtkbuilder/frogr-menu-bar.ui:36
 msgid "_Remove"
 msgstr "_Ta bort"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:37
+#: data/gtkbuilder/frogr-menu-bar.ui:41
 msgid "_Upload"
 msgstr "Skicka _upp"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:86
+#: data/gtkbuilder/frogr-menu-bar.ui:48
+#: data/gtkbuilder/frogr-menu-button.ui:100
+msgid "_Preferences…"
+msgstr "_Inställningar…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:52
+#: data/gtkbuilder/frogr-menu-button.ui:104
+msgid "_Help"
+msgstr "_Hjälp"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:57
+#: data/gtkbuilder/frogr-menu-button.ui:109
+msgid "_About frogr"
+msgstr "_Om frogr"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:61
+msgid "_Quit"
+msgstr "A_vsluta"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:110
 msgid "_View"
 msgstr "_Visa"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+#: data/gtkbuilder/frogr-menu-bar.ui:113
+#: data/gtkbuilder/frogr-menu-button.ui:56
 msgid "_Sort Elements"
 msgstr "_Sortera objekt"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+#: data/gtkbuilder/frogr-menu-bar.ui:116
+#: data/gtkbuilder/frogr-menu-button.ui:59
 msgid "As _Loaded"
 msgstr "Som i_nläst"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+#: data/gtkbuilder/frogr-menu-bar.ui:121
+#: data/gtkbuilder/frogr-menu-button.ui:64
 msgid "By _Date Taken"
 msgstr "Efter _datum taget"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:102
-#: data/gtkbuilder/frogr-menu-button.ui:63
+#: data/gtkbuilder/frogr-menu-bar.ui:126
+#: data/gtkbuilder/frogr-menu-button.ui:69
 msgid "By _Title"
 msgstr "Efter _titel"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:107
-#: data/gtkbuilder/frogr-menu-button.ui:68
+#: data/gtkbuilder/frogr-menu-bar.ui:131
+#: data/gtkbuilder/frogr-menu-button.ui:74
 msgid "By _Size"
 msgstr "Efter _storlek"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:114
-#: data/gtkbuilder/frogr-menu-button.ui:75
+#: data/gtkbuilder/frogr-menu-bar.ui:138
+#: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "_Reversed Order"
 msgstr "_Omvänd ordning"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:122
-#: data/gtkbuilder/frogr-menu-button.ui:81
+#: data/gtkbuilder/frogr-menu-bar.ui:146
+#: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "Aktivera _inforutor"
+
+#~ msgid "_About"
+#~ msgstr "_Om"
 
 #~ msgid ""
 #~ "frogr is a small application for the GNOME desktop that allows users to "
@@ -1028,9 +1038,6 @@ msgstr "Aktivera _inforutor"
 
 #~ msgid "_Sort Pictures"
 #~ msgstr "_Sortera bilder"
-
-#~ msgid "_About frogr..."
-#~ msgstr "_Om Frogr..."
 
 #~ msgid "images"
 #~ msgstr "bilder"
