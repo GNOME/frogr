@@ -5,86 +5,104 @@
 #
 # Arvis Lācis <arvis.lacis@gmail.com>, 2012.
 # Anita Reitere <nitalynx@gmail.com>, 2012.
-# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2012, 2013.
+# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2012, 2013, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
-"PO-Revision-Date: 2013-10-03 15:29+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2018-11-06 10:51+0000\n"
+"PO-Revision-Date: 2018-11-18 12:10+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
-"2);\n"
-"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 :"
+" 2);\n"
+"X-Generator: Lokalize 2.0\n"
 
-#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
-#, fuzzy
-msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr "Frogr — Flickr attālinātais organizētājs GNOME darbvirsmai"
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
+#| msgid "Frogr"
+msgid "frogr"
+msgstr "frogr"
 
-#: data/frogr.appdata.xml.in:8
+#: data/org.gnome.frogr.appdata.xml.in:8
+msgid "A flickr uploader for GNOME"
+msgstr "Flickr augšupielādētājs GNOME darbvirsmai"
+
+#: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
-"frogr is a small application for the GNOME desktop that allows users to "
-"manage their accounts in the Flickr image hosting website."
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
 msgstr ""
+"frogr ļauj lietotājiem pārvaldīt kontus Flickr fotogrāfiju izvietošanas"
+" pakalpojumā, izmantojot vienkāršu un tiešu saskarni."
 
-#: data/frogr.appdata.xml.in:13
+#: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
 msgstr ""
+"Tas atbalsta visas pamata Flickr iespējas, tai skaitā attēlu"
+" augšupielādēšanu, aprakstu pievienošanu, tagu iestatīšanu un grupas."
 
-#: data/frogr.appdata.xml.in:24
-#, fuzzy
+#: data/org.gnome.frogr.appdata.xml.in:25
 msgid "Screenshot of frogr"
-msgstr "Ekrānuzņē_mums"
+msgstr "frogr ekrānuzņēmums"
 
-#: data/frogr.appdata.xml.in:29
+#: data/org.gnome.frogr.appdata.xml.in:32
 msgid "Mario Sanchez Prada"
-msgstr ""
+msgstr "Mario Sanchez Prada"
 
-#: data/frogr.desktop.in.in:7
+#: data/org.gnome.frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "frogr — Flickr attālinātais organizētājs GNOME darbvirsmai"
+
+#: data/org.gnome.frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Augšupielādēt un organizēt fotogrāfijas Flickr kontos"
 
-#: data/frogr.desktop.in.in:8
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Attēls;Bilde;Fotogrāfija;Video;Augšupielādētājs;"
 
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.frogr.desktop.in.in:16
+msgid "org.gnome.frogr"
+msgstr "org.gnome.frogr"
+
 #: src/frogr-about-dialog.c:43
-#, fuzzy
 msgid "A Flickr Remote Organizer for GNOME\n"
 msgstr "Flickr attālinātais organizētājs GNOME darbvirsmai\n"
 
-#: src/frogr-about-dialog.c:72
+#: src/frogr-about-dialog.c:70
 msgid "translator-credits"
-msgstr "Arvis Lācis"
+msgstr ""
+"Arvis Lācis "
+"Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>"
 
-#: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
-#: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
-#: src/frogr-create-new-set-dialog.c:310 src/frogr-details-dialog.c:1168
-#: src/frogr-main-view.c:1543 src/frogr-main-view.c:1618
-#: src/frogr-main-view.c:1670 src/frogr-settings-dialog.c:930
+#: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
+#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
+#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1201
+#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
+#: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
 msgid "_Cancel"
-msgstr ""
+msgstr "At_celt"
 
-#: src/frogr-add-tags-dialog.c:193 src/frogr-add-to-group-dialog.c:530
-#: src/frogr-add-to-set-dialog.c:531 src/frogr-create-new-set-dialog.c:312
+#: src/frogr-add-tags-dialog.c:189 src/frogr-add-to-group-dialog.c:524
+#: src/frogr-add-to-set-dialog.c:525 src/frogr-create-new-set-dialog.c:304
 msgid "_Add"
-msgstr ""
+msgstr "_Pievienot"
 
-#: src/frogr-add-tags-dialog.c:202
+#: src/frogr-add-tags-dialog.c:199
 msgid "Enter a spaces separated list of tags:"
-msgstr "Ievadiet ar atstarpi atdalītu birku sarakstu:"
+msgstr "Ievadiet ar atstarpi atdalītu tagu sarakstu:"
 
-#: src/frogr-add-tags-dialog.c:228
+#: src/frogr-add-tags-dialog.c:227
 msgid "Add Tags"
-msgstr "Pievienot birkas"
+msgstr "Pievienot tagus"
 
 #: src/frogr-add-to-group-dialog.c:147
 msgid "Name"
@@ -94,7 +112,7 @@ msgstr "Nosaukums"
 msgid "Elements"
 msgstr "Elementi"
 
-#: src/frogr-add-to-group-dialog.c:581
+#: src/frogr-add-to-group-dialog.c:577
 msgid "Add to Groups"
 msgstr "Pievienot grupām"
 
@@ -102,7 +120,7 @@ msgstr "Pievienot grupām"
 msgid "Title"
 msgstr "Nosaukums"
 
-#: src/frogr-add-to-set-dialog.c:582
+#: src/frogr-add-to-set-dialog.c:578
 msgid "Add to Sets"
 msgstr "Pievienot kolekcijām"
 
@@ -115,53 +133,54 @@ msgstr ""
 "Lūdzu, nospiediet pogu, lai pilnvarotu %s, un tad atgriezieties, lai "
 "pabeigtu procesu."
 
-#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
-#: src/frogr-controller.c:2286
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
+#: src/frogr-controller.c:2227
 #, c-format
 msgid "Authorize %s"
 msgstr "Pilnvarot %s"
 
-#: src/frogr-auth-dialog.c:155 src/frogr-settings-dialog.c:932
+#: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
 msgid "_Close"
-msgstr ""
+msgstr "Ai_zvērt"
 
-#: src/frogr-auth-dialog.c:167
+#. Description label
+#: src/frogr-auth-dialog.c:169
 msgid "Enter verification code:"
 msgstr "Ievadiet verifikācijas kodu:"
 
-#: src/frogr-auth-dialog.c:221
+#: src/frogr-auth-dialog.c:226
 msgid "Invalid verification code"
 msgstr "Nederīgs verifikācijas kods"
 
-#: src/frogr-controller.c:581
+#: src/frogr-controller.c:575
 msgid "Process cancelled"
-msgstr "Process atcelts"
+msgstr "Process ir atcelts"
 
-#: src/frogr-controller.c:586
+#: src/frogr-controller.c:580
 msgid ""
 "Connection error:\n"
 "Network not available"
 msgstr ""
-"Savienojuma kļūda —\n"
+"Savienojuma kļūda:\n"
 "Tīkls nav pieejams"
 
-#: src/frogr-controller.c:590
+#: src/frogr-controller.c:584
 msgid ""
 "Connection error:\n"
 "Bad request"
 msgstr ""
-"Savienojuma kļūda —\n"
+"Savienojuma kļūda:\n"
 "Nederīgs pieprasījums"
 
-#: src/frogr-controller.c:594
+#: src/frogr-controller.c:588
 msgid ""
 "Connection error:\n"
 "Server-side error"
 msgstr ""
-"Savienojuma kļūda —\n"
+"Savienojuma kļūda:\n"
 "Servera puses kļūda"
 
-#: src/frogr-controller.c:598
+#: src/frogr-controller.c:592
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -169,7 +188,7 @@ msgstr ""
 "Kļūda, augšupielādējot:\n"
 "Nederīga datne"
 
-#: src/frogr-controller.c:602
+#: src/frogr-controller.c:596
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -177,7 +196,7 @@ msgstr ""
 "Kļūda, augšupielādējot attēlu:\n"
 "Pārsniegta kvota"
 
-#: src/frogr-controller.c:607
+#: src/frogr-controller.c:601
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
@@ -185,7 +204,7 @@ msgstr[0] "Pārsniegta kvota (limits — %d video mēnesī)"
 msgstr[1] "Pārsniegta kvota (limits — %d video mēnesī)"
 msgstr[2] "Pārsniegta kvota (limits — %d video mēnesī)"
 
-#: src/frogr-controller.c:611
+#: src/frogr-controller.c:605
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
@@ -193,7 +212,7 @@ msgstr ""
 "Kļūda, augšupielādējot video:\n"
 "Ar šo kontu nevar augšupielādēt vairāk video"
 
-#: src/frogr-controller.c:617
+#: src/frogr-controller.c:610
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -201,7 +220,7 @@ msgstr ""
 "Kļūda:\n"
 "Fotogrāfija nav atrasta"
 
-#: src/frogr-controller.c:621
+#: src/frogr-controller.c:614
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -209,7 +228,7 @@ msgstr ""
 "Kļūda:\n"
 "Fotogrāfija jau ir kolekcijā"
 
-#: src/frogr-controller.c:625
+#: src/frogr-controller.c:618
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -217,7 +236,7 @@ msgstr ""
 "Kļūda:\n"
 "Fotogrāfija jau ir grupā"
 
-#: src/frogr-controller.c:629
+#: src/frogr-controller.c:622
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -225,7 +244,7 @@ msgstr ""
 "Kļūda:\n"
 "Fotogrāfija jau ir maksimāli pieļaujamajā skaitā grupu"
 
-#: src/frogr-controller.c:633
+#: src/frogr-controller.c:626
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -233,7 +252,7 @@ msgstr ""
 "Kļūda:\n"
 "Jau sasniegts grupas limits"
 
-#: src/frogr-controller.c:637
+#: src/frogr-controller.c:630
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -241,7 +260,7 @@ msgstr ""
 "Kļūda:\n"
 "Fotogrāfija pievienota grupas rindai"
 
-#: src/frogr-controller.c:641
+#: src/frogr-controller.c:634
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -249,7 +268,7 @@ msgstr ""
 "Kļūda:\n"
 "Fotogrāfija jau ir pievienota grupas rindai"
 
-#: src/frogr-controller.c:645
+#: src/frogr-controller.c:638
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -257,7 +276,8 @@ msgstr ""
 "Kļūda:\n"
 "Saturs nav atļauts šai grupai"
 
-#: src/frogr-controller.c:649
+#: src/frogr-controller.c:642
+#, c-format
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -265,7 +285,7 @@ msgstr ""
 "Pilnvarošana neizdevās.\n"
 "Lūdzu, mēģiniet vēlreiz"
 
-#: src/frogr-controller.c:655
+#: src/frogr-controller.c:648
 #, c-format
 msgid ""
 "Error\n"
@@ -273,10 +293,11 @@ msgid ""
 "Please re-authorize it"
 msgstr ""
 "Kļūda\n"
-"%s nav pareizi pilnvarots, lai augšupielādētu attēlus Flickr.\n"
+"%s nav pareizi pilnvarots, lai augšupielādētu attēlus Flickr vietnē.\n"
 "Lūdzu, atkārtoti pilnvarojiet to"
 
-#: src/frogr-controller.c:660
+#: src/frogr-controller.c:653
+#, c-format
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
@@ -284,7 +305,7 @@ msgstr ""
 "Neizdevās pilnvaroties Flickr\n"
 "Lūdzu, mēģiniet vēlreiz."
 
-#: src/frogr-controller.c:664
+#: src/frogr-controller.c:657
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -293,7 +314,8 @@ msgstr ""
 "%s vēl nav pareizi pilnvarots.\n"
 "Lūdzu, mēģiniet vēlreiz."
 
-#: src/frogr-controller.c:669
+#: src/frogr-controller.c:662
+#, c-format
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
@@ -301,71 +323,73 @@ msgstr ""
 "Nederīgs verifikācijas kods.\n"
 "Lūdzu, mēģiniet vēlreiz."
 
-#: src/frogr-controller.c:673
+#: src/frogr-controller.c:666
+#, c-format
 msgid ""
 "Error:\n"
 "Service not available"
 msgstr ""
-"Kļūda —\n"
+"Kļūda:\n"
 "Pakalpojums nav pieejams"
 
-#: src/frogr-controller.c:678
+#. General error: just dump the raw error description
+#: src/frogr-controller.c:671
 #, c-format
 msgid "An error happened: %s."
 msgstr "Gadījās kļūda — %s."
 
-#: src/frogr-controller.c:883
+#: src/frogr-controller.c:869
 msgid "Authorization failed (timed out)"
 msgstr "Pilnvarošana neizdevās (iestājās noildze)"
 
-#: src/frogr-controller.c:931
+#: src/frogr-controller.c:917
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Atkal mēģina augšupielādēt (mēģinājums %d/%d)…"
 
-#: src/frogr-controller.c:936
+#: src/frogr-controller.c:922
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Augšupielādē “%s”…"
 
-#: src/frogr-controller.c:2242
+#: src/frogr-controller.c:2183
 msgid "Updating credentials…"
 msgstr "Atjaunina pieteikšanās datus…"
 
-#: src/frogr-controller.c:2247
+#: src/frogr-controller.c:2188
 msgid "Retrieving data for authorization…"
 msgstr "Saņem pilnvarošanas datus…"
 
-#: src/frogr-controller.c:2252
+#: src/frogr-controller.c:2193
 msgid "Finishing authorization…"
 msgstr "Pabeidz pilnvarošanu…"
 
-#: src/frogr-controller.c:2257
+#: src/frogr-controller.c:2198
 msgid "Retrieving list of sets…"
 msgstr "Saņem kolekciju sarakstu…"
 
-#: src/frogr-controller.c:2262
+#: src/frogr-controller.c:2203
 msgid "Retrieving list of groups…"
 msgstr "Saņem grupu sarakstu…"
 
-#: src/frogr-controller.c:2267
+#: src/frogr-controller.c:2208
 msgid "Retrieving list of tags…"
-msgstr "Saņem birku sarakstu…"
+msgstr "Saņem tagu sarakstu…"
 
-#: src/frogr-controller.c:2292
-#, fuzzy
+#: src/frogr-controller.c:2233
+#, c-format
 msgid "Fetching information"
-msgstr "Iestatīt ģeo_lokācijas informāciju"
+msgstr "Iegūst informāciju"
 
-#: src/frogr-controller.c:2398
+#: src/frogr-controller.c:2337
 msgid "No sets found"
 msgstr "Kolekcijas nav atrastas"
 
-#: src/frogr-controller.c:2423
+#: src/frogr-controller.c:2362
 msgid "No groups found"
 msgstr "Grupas nav atrastas"
 
-#: src/frogr-controller.c:2984
+#: src/frogr-controller.c:2920
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -374,36 +398,38 @@ msgstr ""
 "Jums ir pareizi jāpilnvaro %s, lai varētu augšupielādēt attēlus Flickr.\n"
 "Lūdzu, atkārtoti pilnvarojiet to."
 
-#: src/frogr-controller.c:2994
+#: src/frogr-controller.c:2929
+#, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Jums ir jāsavienojas, pirms augšupielādēt attēlus uz Flickr."
 
-#: src/frogr-controller.c:3012
-#, fuzzy
+#: src/frogr-controller.c:2946
 msgid "Uploading Pictures"
-msgstr "Ie_lādēt attēlus..."
+msgstr "Augšupielādē attēlus"
 
-#: src/frogr-controller.c:3057
+#: src/frogr-controller.c:2991
+#, c-format
 msgid "Error opening project file"
 msgstr "Kļūda, atverot projekta datni"
 
-#: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
+#. This shows a dialog notifying the problem to the user
+#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
 msgid "Missing data required"
 msgstr "Trūkst nepieciešamo datu"
 
-#: src/frogr-create-new-set-dialog.c:326
+#: src/frogr-create-new-set-dialog.c:319
 msgid "Title:"
 msgstr "Nosaukums:"
 
-#: src/frogr-create-new-set-dialog.c:335
+#: src/frogr-create-new-set-dialog.c:330
 msgid "Description:"
 msgstr "Apraksts:"
 
-#: src/frogr-create-new-set-dialog.c:356
+#: src/frogr-create-new-set-dialog.c:355
 msgid "Fill Pictures Details with Title and Description"
 msgstr "Aizpildīt attēlu informāciju ar nosaukumu un aprakstu"
 
-#: src/frogr-create-new-set-dialog.c:381
+#: src/frogr-create-new-set-dialog.c:383
 msgid "Create New Set"
 msgstr "Izveidot jaunu kolekciju"
 
@@ -439,95 +465,96 @@ msgstr "CC Attribution-ShareAlike"
 msgid "CC Attribution-NoDerivs"
 msgstr "CC Attribution-NoDerivs"
 
-#: src/frogr-details-dialog.c:172
+#: src/frogr-details-dialog.c:175
 msgid "Open with image viewer"
 msgstr "Atvērt ar attēlu skatītāju"
 
-#: src/frogr-details-dialog.c:190
+#: src/frogr-details-dialog.c:196
 msgid "_Title:"
 msgstr "_Nosaukums:"
 
-#: src/frogr-details-dialog.c:200
+#: src/frogr-details-dialog.c:208
 msgid "_Description:"
 msgstr "_Apraksts:"
 
-#: src/frogr-details-dialog.c:224
+#: src/frogr-details-dialog.c:235
 msgid "Ta_gs:"
-msgstr "Bir_kas:"
+msgstr "Ta_gi:"
 
-#: src/frogr-details-dialog.c:247
+#: src/frogr-details-dialog.c:262
 msgid "Visibility"
 msgstr "Redzamība"
 
-#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
+#: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
 msgid "_Private"
 msgstr "_Privāts"
 
-#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
+#: src/frogr-details-dialog.c:278 src/frogr-settings-dialog.c:207
 msgid "P_ublic"
 msgstr "P_ublisks"
 
-#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
+#: src/frogr-details-dialog.c:292 src/frogr-settings-dialog.c:218
 msgid "_Family"
 msgstr "Ģ_imene"
 
-#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
+#: src/frogr-details-dialog.c:297 src/frogr-settings-dialog.c:220
 msgid "F_riends"
 msgstr "D_raugi"
 
-#: src/frogr-details-dialog.c:288
+#: src/frogr-details-dialog.c:314
 msgid "Content Type"
 msgstr "Satura veids"
 
-#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
+#: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
 msgid "P_hoto"
 msgstr "_Fotogrāfija"
 
-#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
+#: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
 msgid "Scree_nshot"
 msgstr "Ekrānuzņē_mums"
 
-#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
 msgid "Oth_er"
 msgstr "_Cits"
 
-#: src/frogr-details-dialog.c:317
+#: src/frogr-details-dialog.c:350
 msgid "Safety Level"
 msgstr "Drošuma līmenis"
 
-#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
+#: src/frogr-details-dialog.c:359 src/frogr-settings-dialog.c:277
 msgid "S_afe"
 msgstr "_Drošs"
 
-#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
+#: src/frogr-details-dialog.c:364 src/frogr-settings-dialog.c:279
 msgid "_Moderate"
 msgstr "_Mērens"
 
-#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
+#: src/frogr-details-dialog.c:369 src/frogr-settings-dialog.c:281
 msgid "Restr_icted"
 msgstr "_Ierobežots"
 
-#: src/frogr-details-dialog.c:345
+#: src/frogr-details-dialog.c:383
 msgid "License Type"
 msgstr "Licences veids"
 
-#: src/frogr-details-dialog.c:367
+#: src/frogr-details-dialog.c:408
 msgid "Other Properties"
 msgstr "Citas īpašības"
 
-#: src/frogr-details-dialog.c:375
+#: src/frogr-details-dialog.c:417
 msgid "_Show Up in Global Search Results"
 msgstr "Rādīt globālajo_s meklēšanas rezultātos"
 
-#: src/frogr-details-dialog.c:379
+#: src/frogr-details-dialog.c:422
 msgid "Set Geo_location Information"
 msgstr "Iestatīt ģeo_lokācijas informāciju"
 
-#: src/frogr-details-dialog.c:383
+#: src/frogr-details-dialog.c:427
 msgid "Replace 'Date Posted' with 'Date Taken'"
-msgstr ""
+msgstr "Aizstāt “Publicēšanas datums” ar “Uzņemšanas datums”"
 
-#: src/frogr-details-dialog.c:475
+#. Visually indicate how many pictures are being edited
+#: src/frogr-details-dialog.c:519
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
@@ -535,15 +562,15 @@ msgstr[0] "(%d attēls)"
 msgstr[1] "(%d attēli)"
 msgstr[2] "(%d attēlu)"
 
-#: src/frogr-details-dialog.c:548
+#: src/frogr-details-dialog.c:590
 msgid "An error happened trying to load the picture"
 msgstr "Gadījās kļūda, mēģinot ielādēt attēlu"
 
-#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
+#: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
 msgid "_Edit"
 msgstr "R_ediģēt"
 
-#: src/frogr-details-dialog.c:1197
+#: src/frogr-details-dialog.c:1230
 msgid "Edit Picture Details"
 msgstr "Rediģēt attēla informāciju"
 
@@ -552,7 +579,7 @@ msgstr "Rediģēt attēla informāciju"
 msgid "Loading files %d / %d"
 msgstr "Ielādē datnes %d / %d"
 
-#: src/frogr-file-loader.c:369
+#: src/frogr-file-loader.c:359
 #, c-format
 msgid ""
 "Unable to load picture %s:\n"
@@ -561,7 +588,7 @@ msgstr ""
 "Neizdevās ielādēt attēlu %s:\n"
 "%s"
 
-#: src/frogr-file-loader.c:400
+#: src/frogr-file-loader.c:385
 #, c-format
 msgid ""
 "Unable to load video %s\n"
@@ -570,7 +597,10 @@ msgstr ""
 "Nevar ielādēt video %s\n"
 "Lūdzu, pārliecinieties, ka ir uzinstalēts pareizais kodeks"
 
-#: src/frogr-file-loader.c:636
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: src/frogr-file-loader.c:603
 #, c-format
 msgid ""
 "Can't load file %s:\n"
@@ -579,138 +609,133 @@ msgstr ""
 "Nevar ielādēt datni %s:\n"
 "Datnes izmērs ir lielāks nekā maksimāli atļautais šim kontam (%s)"
 
-#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Flickr attālinātais organizētājs"
+
+#. First create the left side buttons
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open"
 msgstr "Atvērt"
 
-#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open Existing Project"
 msgstr "Atvērt esošu projektu"
 
-#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
+#: src/frogr-main-view.c:597 src/frogr-main-view.c:693
 msgid "Add"
 msgstr "Pievienot"
 
-#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
-msgid "Add Elements"
-msgstr "Pievienot elementus"
-
-#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
+#: src/frogr-main-view.c:598 src/frogr-main-view.c:694
 msgid "Remove"
 msgstr "Izņemt"
 
-#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
-msgid "Remove Elements"
-msgstr "Izņemt elementus"
-
-#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
+#: src/frogr-main-view.c:599 src/frogr-main-view.c:696
 msgid "Upload"
 msgstr "Augšupielādēt"
 
-#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
-msgid "Upload All"
-msgstr "Augšupielādēt visus"
-
-#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+#. Save project item
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save"
 msgstr "Saglabāt"
 
-#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save Current Project"
 msgstr "Saglabāt šo projektu"
 
-#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
-msgid "_About"
-msgstr "P_ar"
-
-#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
-#: data/gtkbuilder/frogr-menu-button.ui:94
-msgid "_Quit"
-msgstr "_Iziet"
-
-#: src/frogr-main-view.c:1070
+#. Create the submenu and insert it in the right section
+#: src/frogr-main-view.c:1012
 msgid "Accounts"
 msgstr "Konti"
 
-#: src/frogr-main-view.c:1410
+#. String showind the date and time a picture was taken
+#: src/frogr-main-view.c:1363
 #, c-format
 msgid "Taken: %s"
 msgstr "Uzņemts: %s"
 
-#: src/frogr-main-view.c:1415
+#: src/frogr-main-view.c:1367
 #, c-format
 msgid "File size: %s"
 msgstr "Datnes izmērs: %s"
 
-#: src/frogr-main-view.c:1540
+#: src/frogr-main-view.c:1483
 msgid "Select File"
 msgstr "Izvēlieties datni"
 
-#: src/frogr-main-view.c:1544 src/frogr-main-view.c:1671
-#, fuzzy
+#: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
 msgid "_Open"
-msgstr "Atvērt"
+msgstr "_Atvērt"
 
-#: src/frogr-main-view.c:1553
+#: src/frogr-main-view.c:1496
 msgid "Frogr Project Files"
 msgstr "Frogr projekta datnes"
 
-#: src/frogr-main-view.c:1615
+#: src/frogr-main-view.c:1556
 msgid "Select Destination"
 msgstr "Izvēlieties mērķi"
 
-#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
-#: data/gtkbuilder/frogr-menu-button.ui:6
+#: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
+#: data/gtkbuilder/frogr-menu-button.ui:12
 msgid "_Save"
 msgstr "_Saglabāt"
 
-#: src/frogr-main-view.c:1622
+#: src/frogr-main-view.c:1563
 msgid "Untitled Project.frogr"
 msgstr "Nenosaukts projekts.frogr"
 
-#: src/frogr-main-view.c:1667
+#: src/frogr-main-view.c:1608
 msgid "Select a Picture"
 msgstr "Izvēlieties attēlu"
 
-#: src/frogr-main-view.c:1694
+#: src/frogr-main-view.c:1635
 msgid "All Files"
 msgstr "Visas datnes"
 
-#: src/frogr-main-view.c:1697
+#: src/frogr-main-view.c:1638
 msgid "Image Files"
 msgstr "Attēlu datnes"
 
-#: src/frogr-main-view.c:1701
+#: src/frogr-main-view.c:1642
 msgid "Video Files"
 msgstr "Video datnes"
 
-#: src/frogr-main-view.c:1723
+#: src/frogr-main-view.c:1664
 msgid "You don't have any picture added yet"
 msgstr "Vēl nav pievienota neviena bilde"
 
-#: src/frogr-main-view.c:1736
+#: src/frogr-main-view.c:1677
 msgid "You need to select some pictures first"
 msgstr "Vispirms jāizvēlas attēli"
 
-#: src/frogr-main-view.c:2108
+#: src/frogr-main-view.c:2046
 msgid "Not connected to Flickr"
 msgstr "Nav savienots ar Flickr"
 
-#: src/frogr-main-view.c:2118
+#. Login string, showing the user is PRO (second '%s') if so.
+#: src/frogr-main-view.c:2056
 #, c-format
 msgid "Connected as %s%s"
 msgstr "Savienojies kā %s%s"
 
-#: src/frogr-main-view.c:2119
+#: src/frogr-main-view.c:2057
 msgid " (PRO account)"
-msgstr "(PRO konts)"
+msgstr " (PRO konts)"
 
-#: src/frogr-main-view.c:2143
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: src/frogr-main-view.c:2081
 #, c-format
 msgid " - %s / %s remaining"
 msgstr " — %s / %s atlikuši"
 
-#: src/frogr-main-view.c:2169
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: src/frogr-main-view.c:2104
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
@@ -718,215 +743,265 @@ msgstr[0] " — %d datne, ko augšupielādēt (%s)"
 msgstr[1] " — %d datnes, ko augšupielādēt (%s)"
 msgstr[2] " — %d datņu, ko augšupielādēt (%s)"
 
-#: src/frogr-settings-dialog.c:185
+#: src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
 msgstr "Noklusējuma redzamība"
 
-#: src/frogr-settings-dialog.c:224
+#: src/frogr-settings-dialog.c:236
 msgid "Default Content Type"
 msgstr "Noklusējuma satura veids"
 
-#: src/frogr-settings-dialog.c:250
+#: src/frogr-settings-dialog.c:265
 msgid "Default Safety Level"
 msgstr "Noklusējuma drošības līmenis"
 
-#: src/frogr-settings-dialog.c:276
+#: src/frogr-settings-dialog.c:294
 msgid "Default License"
 msgstr "Noklusējuma licence"
 
-#: src/frogr-settings-dialog.c:302
+#: src/frogr-settings-dialog.c:323
 msgid "Other Defaults"
 msgstr "Citi noklusējumi"
 
-#: src/frogr-settings-dialog.c:312
+#: src/frogr-settings-dialog.c:335
 msgid "_Show Pictures in Global Search Results"
 msgstr "Rādīt attēlu_s globālajos meklēšanas rezultātos"
 
-#: src/frogr-settings-dialog.c:315
+#: src/frogr-settings-dialog.c:338
 msgid "Set Geo_location Information for Pictures"
 msgstr "Iestatīt ģeo_lokācijas informāciju attēliem"
 
-#: src/frogr-settings-dialog.c:318
+#: src/frogr-settings-dialog.c:341
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
-msgstr ""
+msgstr "Attēliem aizstāt “Publicēšanas datums” ar “Uzņemšanas datums”"
 
-#: src/frogr-settings-dialog.c:324
+#: src/frogr-settings-dialog.c:347
 msgid "_General"
 msgstr "_Vispārīgi"
 
-#: src/frogr-settings-dialog.c:344
+#: src/frogr-settings-dialog.c:368
 msgid "Proxy Settings"
 msgstr "Starpniekservera iestatījumi"
 
-#: src/frogr-settings-dialog.c:353
+#. Enable proxy
+#: src/frogr-settings-dialog.c:377
 msgid "_Enable HTTP Proxy"
-msgstr "Aktivēt HTTP starpni_ekserveri"
+msgstr "I_eslēgt HTTP starpniekserveri"
 
-#: src/frogr-settings-dialog.c:363
+#: src/frogr-settings-dialog.c:389
 msgid "_Host:"
 msgstr "_Serveris:"
 
-#: src/frogr-settings-dialog.c:376
+#. Proxy port
+#: src/frogr-settings-dialog.c:404
 msgid "_Port:"
 msgstr "_Ports:"
 
-#: src/frogr-settings-dialog.c:389
+#. Proxy username
+#: src/frogr-settings-dialog.c:419
 msgid "U_sername:"
 msgstr "_Lietotājvārds:"
 
-#: src/frogr-settings-dialog.c:402
+#. Proxy password
+#: src/frogr-settings-dialog.c:434
 msgid "Pass_word:"
 msgstr "Pa_role:"
 
-#: src/frogr-settings-dialog.c:426
+#: src/frogr-settings-dialog.c:460
 msgid "Connec_tion"
 msgstr "Savieno_jums"
 
-#: src/frogr-settings-dialog.c:444
+#: src/frogr-settings-dialog.c:479
 msgid "Other options"
 msgstr "Citas opcijas"
 
-#: src/frogr-settings-dialog.c:454
+#: src/frogr-settings-dialog.c:490
 msgid "Ena_ble Tags Auto-Completion"
-msgstr "Aktivēt _birku automātisku pabeigšanu"
+msgstr "Ieslēgt tagu automātisku pa_beigšanu"
 
-#: src/frogr-settings-dialog.c:457
+#: src/frogr-settings-dialog.c:493
 msgid "_Import Tags from Pictures Metadata"
-msgstr "_Importēt birkas no attēlu metadatiem"
+msgstr "_Importēt tagus no attēlu metadatiem"
 
-#: src/frogr-settings-dialog.c:461
+#: src/frogr-settings-dialog.c:497
 msgid "Use _Dark GTK Theme"
 msgstr "Izmantot _tumšo GTK motīvu"
 
-#: src/frogr-settings-dialog.c:465
+#: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr "Saglabāt datņu paplašinājumus nosau_kumos, kad ielādē"
 
-#: src/frogr-settings-dialog.c:471
+#: src/frogr-settings-dialog.c:507
 msgid "_Misc"
 msgstr "_Citi"
 
-#: src/frogr-settings-dialog.c:972
+#: src/frogr-settings-dialog.c:1009
 msgid "Preferences"
 msgstr "Iestatījumi"
 
-#: data/gtkbuilder/frogr-app-menu.ui:6
-msgid "Aut_horize Account…"
-msgstr "Piln_varot kontu..."
-
-#: data/gtkbuilder/frogr-app-menu.ui:12
-msgid "_Preferences…"
-msgstr "_Iestatījumi..."
-
-#: data/gtkbuilder/frogr-app-menu.ui:18
-msgid "_Help"
-msgstr "_Palīdzība"
-
-#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
-#: data/gtkbuilder/frogr-menu-button.ui:18
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
+#: data/gtkbuilder/frogr-menu-button.ui:24
 msgid "_Edit Details…"
 msgstr "R_ediģēt informāciju…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:11
-#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+#: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
 msgid "Add _Tags…"
-msgstr "Pievieno_t birkas…"
+msgstr "Pievienot _tagus…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:16
-#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+#: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
 msgid "Add to _Group…"
 msgstr "Pievienot _grupai…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:21
-#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+#: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
 msgid "Add to _Photoset"
 msgstr "Pievienot _foto kolekcijai"
 
 #: data/gtkbuilder/frogr-context-menu.ui:24
-#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
 msgid "_Add to Existing Photoset…"
 msgstr "Pievienot esoš_ai foto kolekcijai…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:29
-#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+#: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
 msgid "_Create New Photoset…"
 msgstr "Izveidot jaunu foto kolek_ciju…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:38
-#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+#: data/gtkbuilder/frogr-menu-bar.ui:103
+#: data/gtkbuilder/frogr-menu-button.ui:93
 msgid "_Open in External Viewer"
 msgstr "Atvērt ārē_jā skatītājā"
 
 #: data/gtkbuilder/frogr-context-menu.ui:45
-#: data/gtkbuilder/frogr-menu-bar.ui:30
 msgid "_Remove Elements"
 msgstr "_Izņemt elementus"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:5
+#: data/gtkbuilder/frogr-main-view.ui:51
+msgid "No pictures loaded"
+msgstr "Nav ielādētu attēlu"
+
+#: data/gtkbuilder/frogr-main-view.ui:67
+msgid ""
+"Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
+"window."
+msgstr ""
+"Spiediet rīkjoslas pogu <b>“Pievienot”</b>, lai šajā loga ielādētu attēlus."
+
+#: data/gtkbuilder/frogr-main-view.ui:83
+msgid ""
+"Once you're ready, press the <b>\"Upload\"</b> button to upload your "
+"pictures to Flickr."
+msgstr ""
+"Kad esat gatavs, spiediet pogu <b>“Augšupielādēt”</b>, lai augšupielādētu"
+" savus attēlus uz Flickr."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
+msgid "Aut_horize Account…"
+msgstr "Piln_varot kontu…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:11
 msgid "_File"
 msgstr "_Datne"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:8
+#: data/gtkbuilder/frogr-menu-bar.ui:14
 msgid "_Open…"
-msgstr "Atvērt…"
+msgstr "_Atvērt…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
 msgid "Save _As…"
 msgstr "S_aglabāt kā..."
 
-#: data/gtkbuilder/frogr-menu-bar.ui:25
-msgid "A_dd Elements…"
-msgstr "Pie_vienot elementus…"
+#: data/gtkbuilder/frogr-menu-bar.ui:31
+#| msgid "A_dd Elements…"
+msgid "A_dd…"
+msgstr "Pie_vienot…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:37
-msgid "_Upload All"
-msgstr "A_ugšupielādet visus"
+#: data/gtkbuilder/frogr-menu-bar.ui:36
+#| msgid "Remove"
+msgid "_Remove"
+msgstr "_Izņemt"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:86
+#: data/gtkbuilder/frogr-menu-bar.ui:41
+#| msgid "Upload"
+msgid "_Upload"
+msgstr "_Augšupielādēt"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:48
+#: data/gtkbuilder/frogr-menu-button.ui:100
+msgid "_Preferences…"
+msgstr "_Iestatījumi…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:52
+#: data/gtkbuilder/frogr-menu-button.ui:104
+msgid "_Help"
+msgstr "_Palīdzība"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:57
+#: data/gtkbuilder/frogr-menu-button.ui:109
+#| msgid "_About"
+msgid "_About frogr"
+msgstr "P_ar frogr"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:61
+msgid "_Quit"
+msgstr "_Iziet"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:110
 msgid "_View"
 msgstr "_Skats"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+#: data/gtkbuilder/frogr-menu-bar.ui:113
+#: data/gtkbuilder/frogr-menu-button.ui:56
 msgid "_Sort Elements"
 msgstr "Kārtot elementu_s"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+#: data/gtkbuilder/frogr-menu-bar.ui:116
+#: data/gtkbuilder/frogr-menu-button.ui:59
 msgid "As _Loaded"
 msgstr "Ie_lādes secībā"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+#: data/gtkbuilder/frogr-menu-bar.ui:121
+#: data/gtkbuilder/frogr-menu-button.ui:64
 msgid "By _Date Taken"
 msgstr "Pēc uzņemšanas _datuma"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:102
-#: data/gtkbuilder/frogr-menu-button.ui:63
+#: data/gtkbuilder/frogr-menu-bar.ui:126
+#: data/gtkbuilder/frogr-menu-button.ui:69
 msgid "By _Title"
 msgstr "Pēc _nosaukuma"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:107
-#: data/gtkbuilder/frogr-menu-button.ui:68
+#: data/gtkbuilder/frogr-menu-bar.ui:131
+#: data/gtkbuilder/frogr-menu-button.ui:74
 msgid "By _Size"
 msgstr "Pēc _izmēra"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:114
-#: data/gtkbuilder/frogr-menu-button.ui:75
+#: data/gtkbuilder/frogr-menu-bar.ui:138
+#: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "_Reversed Order"
 msgstr "Apg_rieztā secībā"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:122
-#: data/gtkbuilder/frogr-menu-button.ui:81
+#: data/gtkbuilder/frogr-menu-bar.ui:146
+#: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
-msgstr "Aktivē_t paskaidres"
+msgstr "Ieslēg_t paskaidres"
 
-#~| msgid "_Frogr"
-#~ msgid "Frogr"
-#~ msgstr "Frogr"
+#~ msgid "Add Elements"
+#~ msgstr "Pievienot elementus"
+
+#~ msgid "Remove Elements"
+#~ msgstr "Izņemt elementus"
+
+#~ msgid "Upload All"
+#~ msgstr "Augšupielādēt visus"
+
+#~ msgid "_Upload All"
+#~ msgstr "A_ugšupielādet visus"
 
 #~ msgid "_Use GNOME General Proxy Settings"
 #~ msgstr "Izmantot GNOME vispārīgos starpniekservera iestatījum_us"
-
-#~ msgid "Flickr Remote Organizer"
-#~ msgstr "Flickr attālinātais organizētājs"
 
 #~ msgid "Setting license for picture…"
 #~ msgstr "Iestata licenci attēlam..."
