@@ -1,5 +1,10 @@
+1.6 (??)
+========
+
+
 1.5 (24 Nov 2018)
 =================
+
   * Introduced "empty" initial state for when no pictures have been loaded yet.
   * Fixed issues with the content and installation of the AppData file.
   * Stopped installing frogr as a MIME handler for text/plain and text/html.
