@@ -1,7 +1,7 @@
 /*
  * frogr-main-view.c -- Main view for the application
  *
- * Copyright (C) 2009-2017 Mario Sanchez Prada
+ * Copyright (C) 2009-2018 Mario Sanchez Prada
  *           (C) 2011 Joaquim Rocha
  * Authors:
  *   Joaquim Rocha <jrocha@igalia.com>

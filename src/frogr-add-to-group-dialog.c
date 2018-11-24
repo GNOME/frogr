@@ -1,7 +1,7 @@
 /*
  * frogr-add-to-group-dialog.c -- 'Add to group' dialog
  *
- * Copyright (C) 2010-2015 Mario Sanchez Prada
+ * Copyright (C) 2010-2018 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>
  *
  * This program is free software; you can redistribute it and/or
