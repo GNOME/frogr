@@ -1,6 +1,33 @@
 1.5 (??)
 ========
+  * Introduced "empty" initial state for when no pictures have been loaded yet.
+  * Fixed issues with the content and installation of the AppData file.
+  * Stopped installing frogr as a MIME handler for text/plain and text/html.
+  * Stopped using gtk_widget_show_all(), use gtk_widget_show only instead.
+  * Removed the application menu, moved functionality to hamburguer menu.
 
+New and updated translations:
+
+  * ca (Carles Ferrando Garcia, Jordi Mas)
+  * cs (Marek Černocký)
+  * da (Alan Mortensen)
+  * de (Florian Heiser, Mario Blättermann)
+  * en_GB (David King)
+  * es (Daniel Mustieles)
+  * fi (Jiri Grönroos)
+  * fr (Alexandre Franke)
+  * gl (Fran Dieguez)
+  * hu (Balázs Úr)
+  * id (Andika Triwidada, Kukuh Syafaat)
+  * is (Sveinn í Felli)
+  * lv (Rūdolfs Mazurs)
+  * pl (Piotr Drąg)
+  * pt_BR (Rafael Fontenelle)
+  * pt (Tiago Santos)
+  * sl (Matej Urbančič)
+  * sr (Мирослав Николић)
+  * sr@latin (Miroslav Nikolić)
+  * sv (Anders Jonsson)
 
 1.4 (28 Dec 2017)
 =================
