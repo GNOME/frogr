@@ -1,17 +1,17 @@
 # Polish translation for frogr.
-# Copyright © 2011-2018 the frogr authors.
+# Copyright © 2011-2019 the frogr authors.
 # This file is distributed under the same license as the frogr package.
 # Łukasz Jernaś <deejay1@srem.org>, 2011.
 # Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>, 2012.
-# Piotr Drąg <piotrdrag@gmail.com>, 2012-2018.
-# Aviary.pl <community-poland@mozilla.org>, 2011-2018.
+# Piotr Drąg <piotrdrag@gmail.com>, 2012-2019.
+# Aviary.pl <community-poland@mozilla.org>, 2011-2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2018-11-06 10:51+0000\n"
-"PO-Revision-Date: 2018-11-07 12:42+0100\n"
+"POT-Creation-Date: 2018-11-07 11:43+0000\n"
+"PO-Revision-Date: 2019-02-21 17:25+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -82,8 +82,8 @@ msgid "translator-credits"
 msgstr ""
 "Łukasz Jernaś <deejay1@srem.org>, 2011\n"
 "Mateusz Kacprzak <mateusz.kacprzak@yandex.ru>, 2012\n"
-"Piotr Drąg <piotrdrag@gmail.com>, 2012-2018\n"
-"Aviary.pl <community-poland@mozilla.org>, 2011-2018"
+"Piotr Drąg <piotrdrag@gmail.com>, 2012-2019\n"
+"Aviary.pl <community-poland@mozilla.org>, 2011-2019"
 
 #: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
 #: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
@@ -830,7 +830,7 @@ msgstr "_Importowanie etykiet z metadanych obrazów"
 
 #: src/frogr-settings-dialog.c:497
 msgid "Use _Dark GTK Theme"
-msgstr "_Ciemny motyw GTK+"
+msgstr "_Ciemny motyw biblioteki GTK"
 
 #: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
