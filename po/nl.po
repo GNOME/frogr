@@ -1,0 +1,983 @@
+# Dutch translation for frogr.
+# Copyright (C) 2019 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# Nathan Follens <nthn@unseen.is>, 2019.
+#
+# picture = afbeelding, of toch eerder foto gezien de context?
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2019-02-23 07:32+0000\n"
+"PO-Revision-Date: 2019-03-05 12:07+0100\n"
+"Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: Nathan Follens <nthn@unseen.is>\n"
+"X-Generator: Poedit 2.2.1\n"
+
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
+msgid "frogr"
+msgstr "frogr"
+
+#: data/org.gnome.frogr.appdata.xml.in:8
+msgid "A flickr uploader for GNOME"
+msgstr "Een Flickr-uploader voor Gnome"
+
+#: data/org.gnome.frogr.appdata.xml.in:10
+msgid ""
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
+msgstr ""
+"frogr biedt gebruikers de mogelijkheid om hun accounts op de Flickr-"
+"fotohostingsdienst te beheren aan de hand van een eenvoudige interface."
+
+#: data/org.gnome.frogr.appdata.xml.in:14
+msgid ""
+"It supports all the basic Flickr features, including uploading pictures, "
+"adding descriptions, setting tags and managing sets and groups pools."
+msgstr ""
+"Het biedt ondersteuning voor alle basisfuncties van Flickr, zoals het "
+"uploaden van afbeeldingen, toevoegen van beschrijvingen, instellen van tags "
+"en beheren van sets en groepen."
+
+#: data/org.gnome.frogr.appdata.xml.in:25
+msgid "Screenshot of frogr"
+msgstr "Schermafdruk van frogr"
+
+#: data/org.gnome.frogr.appdata.xml.in:32
+msgid "Mario Sanchez Prada"
+msgstr "Mario Sanchez Prada"
+
+#: data/org.gnome.frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "frogr: een externe Flickr-organiseerder voor Gnome"
+
+#: data/org.gnome.frogr.desktop.in.in:7
+msgid "Upload and organize photos in Flickr accounts"
+msgstr "Upload en organiseer foto’s in Flickr-accounts"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.frogr.desktop.in.in:9
+msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
+msgstr "Flickr;Image;Picture;Photo;Video;Uploader;Foto;Afbeelding;"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.frogr.desktop.in.in:16
+msgid "org.gnome.frogr"
+msgstr "org.gnome.frogr"
+
+#: src/frogr-about-dialog.c:43
+msgid "A Flickr Remote Organizer for GNOME\n"
+msgstr "Een externe Flickr-organiseerder voor Gnome\n"
+
+#: src/frogr-about-dialog.c:70
+msgid "translator-credits"
+msgstr ""
+"Nathan Follens <nthn@unseen.is>\n"
+"\n"
+"Meer info over Gnome-NL http://nl.gnome.org"
+
+#: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
+#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
+#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1201
+#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
+#: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
+msgid "_Cancel"
+msgstr "_Annuleren"
+
+#: src/frogr-add-tags-dialog.c:189 src/frogr-add-to-group-dialog.c:524
+#: src/frogr-add-to-set-dialog.c:525 src/frogr-create-new-set-dialog.c:304
+msgid "_Add"
+msgstr "_Toevoegen"
+
+#: src/frogr-add-tags-dialog.c:199
+msgid "Enter a spaces separated list of tags:"
+msgstr "Voer een lijst van tags in, gescheiden door spaties:"
+
+#: src/frogr-add-tags-dialog.c:227
+msgid "Add Tags"
+msgstr "Tags toevoegen"
+
+#: src/frogr-add-to-group-dialog.c:147
+msgid "Name"
+msgstr "Naam"
+
+#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
+msgid "Elements"
+msgstr "Elementen"
+
+#: src/frogr-add-to-group-dialog.c:577
+msgid "Add to Groups"
+msgstr "Toevoegen aan groepen"
+
+#: src/frogr-add-to-set-dialog.c:148
+msgid "Title"
+msgstr "Titel"
+
+#: src/frogr-add-to-set-dialog.c:578
+msgid "Add to Sets"
+msgstr "Toevoegen aan sets"
+
+#: src/frogr-auth-dialog.c:59
+#, c-format
+msgid ""
+"Please press the button to authorize %s and then come back to complete the "
+"process."
+msgstr ""
+"Klik op de knop om %s te autoriseren, en keer vervolgens terug om het proces "
+"te voltooien."
+
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
+#: src/frogr-controller.c:2227
+#, c-format
+msgid "Authorize %s"
+msgstr "%s autoriseren"
+
+#: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
+msgid "_Close"
+msgstr "Sl_uiten"
+
+#. Description label
+#: src/frogr-auth-dialog.c:169
+msgid "Enter verification code:"
+msgstr "Voer de verificatiecode in:"
+
+#: src/frogr-auth-dialog.c:226
+msgid "Invalid verification code"
+msgstr "Ongeldige verificatiecode"
+
+#: src/frogr-controller.c:575
+msgid "Process cancelled"
+msgstr "Proces geannuleerd"
+
+#: src/frogr-controller.c:580
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+"Verbindingsfout:\n"
+"Netwerk niet beschikbaar"
+
+#: src/frogr-controller.c:584
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+"Verbindingsfout:\n"
+"Onjuiste aanvraag"
+
+#: src/frogr-controller.c:588
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+"Verbindingsfout:\n"
+"Serverfout"
+
+#: src/frogr-controller.c:592
+msgid ""
+"Error uploading:\n"
+"File invalid"
+msgstr ""
+"Fout bij uploaden:\n"
+"Ongeldig bestand"
+
+#: src/frogr-controller.c:596
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+"Fout bij uploaden van afbeelding:\n"
+"Quota overschreden"
+
+#: src/frogr-controller.c:601
+#, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] "Quota overschreden (limiet: %d video per maand)"
+msgstr[1] "Quota overschreden (limiet: %d video’s per maand)"
+
+#: src/frogr-controller.c:605
+msgid ""
+"Error uploading video:\n"
+"You can't upload more videos with this account"
+msgstr ""
+"Fout bij uploaden van video:\n"
+"U kunt niet nog meer video’s uploaden met deze account"
+
+#: src/frogr-controller.c:610
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+"Fout:\n"
+"Foto niet gevonden"
+
+#: src/frogr-controller.c:614
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+"Fout:\n"
+"Foto reeds in fotoset"
+
+#: src/frogr-controller.c:618
+msgid ""
+"Error:\n"
+"Photo already in group"
+msgstr ""
+"Fout:\n"
+"Foto reeds in groep"
+
+#: src/frogr-controller.c:622
+msgid ""
+"Error:\n"
+"Photo already in the maximum number of groups possible"
+msgstr ""
+"Fout:\n"
+"Foto reeds in maximaal aantal groepen"
+
+#: src/frogr-controller.c:626
+msgid ""
+"Error:\n"
+"Group limit already reached"
+msgstr ""
+"Fout:\n"
+"Groepslimiet reeds bereikt"
+
+#: src/frogr-controller.c:630
+msgid ""
+"Error:\n"
+"Photo added to group's queue"
+msgstr ""
+"Fout:\n"
+"Foto toegevoegd aan groepswachtrij"
+
+#: src/frogr-controller.c:634
+msgid ""
+"Error:\n"
+"Photo already added to group's queue"
+msgstr ""
+"Fout:\n"
+"Foto reeds toegevoegd aan groepswachtrij"
+
+#: src/frogr-controller.c:638
+msgid ""
+"Error:\n"
+"Content not allowed for this group"
+msgstr ""
+"Fout:\n"
+"Inhoud niet toegestaan in deze groep"
+
+#: src/frogr-controller.c:642
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"Autorisatie mislukt.\n"
+"Probeer het opnieuw"
+
+#: src/frogr-controller.c:648
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to Flickr.\n"
+"Please re-authorize it"
+msgstr ""
+"Fout\n"
+"%s is niet correct geautoriseerd om afbeeldingen te uploaden naar Flickr.\n"
+"Gelieve opnieuw te autoriseren"
+
+#: src/frogr-controller.c:653
+#, c-format
+msgid ""
+"Unable to authenticate in Flickr\n"
+"Please try again."
+msgstr ""
+"Kan niet aanmelden bij Flickr\n"
+"Probeer het opnieuw."
+
+#: src/frogr-controller.c:657
+#, c-format
+msgid ""
+"You have not properly authorized %s yet.\n"
+"Please try again."
+msgstr ""
+"U heeft %s nog niet correct geautoriseerd.\n"
+"Probeer het opnieuw."
+
+#: src/frogr-controller.c:662
+#, c-format
+msgid ""
+"Invalid verification code.\n"
+"Please try again."
+msgstr ""
+"Ongeldige verificatiecode.\n"
+"Probeer het opnieuw."
+
+#: src/frogr-controller.c:666
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"Fout:\n"
+"Dienst niet beschikbaar"
+
+#. General error: just dump the raw error description
+#: src/frogr-controller.c:671
+#, c-format
+msgid "An error happened: %s."
+msgstr "Er is een fout opgetreden: %s."
+
+#: src/frogr-controller.c:869
+msgid "Authorization failed (timed out)"
+msgstr "Autorisatie mislukt (time-out)"
+
+#: src/frogr-controller.c:917
+#, c-format
+msgid "Retrying Upload (attempt %d/%d)…"
+msgstr "Uploaden opnieuw proberen (poging %d/%d)…"
+
+#: src/frogr-controller.c:922
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "Bezig met uploaden van ‘%s’…"
+
+#: src/frogr-controller.c:2183
+msgid "Updating credentials…"
+msgstr "Bezig met bijwerken van gebruikersreferenties…"
+
+#: src/frogr-controller.c:2188
+msgid "Retrieving data for authorization…"
+msgstr "Gegevens voor autorisatie worden verkregen…"
+
+#: src/frogr-controller.c:2193
+msgid "Finishing authorization…"
+msgstr "Autorisatie wordt afgerond…"
+
+#: src/frogr-controller.c:2198
+msgid "Retrieving list of sets…"
+msgstr "Lijst van sets wordt verkregen…"
+
+#: src/frogr-controller.c:2203
+msgid "Retrieving list of groups…"
+msgstr "Lijst van groepen wordt verkregen…"
+
+#: src/frogr-controller.c:2208
+msgid "Retrieving list of tags…"
+msgstr "Lijst van tags wordt verkregen…"
+
+#: src/frogr-controller.c:2233
+#, c-format
+msgid "Fetching information"
+msgstr "Informatie wordt opgehaald"
+
+#: src/frogr-controller.c:2337
+msgid "No sets found"
+msgstr "Geen sets gevonden"
+
+#: src/frogr-controller.c:2362
+msgid "No groups found"
+msgstr "Geen groepen gevonden"
+
+#: src/frogr-controller.c:2920
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to Flickr.\n"
+"Please re-authorize it."
+msgstr ""
+"U dient %s correct te autoriseren om afbeeldingen te uploaden naar Flickr.\n"
+"Gelieven het opnieuw te autoriseren."
+
+#: src/frogr-controller.c:2929
+#, c-format
+msgid "You need to be connected before uploading any pictures to Flickr."
+msgstr "U dient verbonden te zijn om afbeeldingen te uploaden naar Flickr."
+
+#: src/frogr-controller.c:2946
+msgid "Uploading Pictures"
+msgstr "Afbeeldingen uploaden"
+
+#: src/frogr-controller.c:2991
+#, c-format
+msgid "Error opening project file"
+msgstr "Fout bij openen van projectbestand"
+
+#. This shows a dialog notifying the problem to the user
+#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
+msgid "Missing data required"
+msgstr "Vereiste gegevens ontbreken"
+
+#: src/frogr-create-new-set-dialog.c:319
+msgid "Title:"
+msgstr "Titel:"
+
+#: src/frogr-create-new-set-dialog.c:330
+msgid "Description:"
+msgstr "Beschrijving:"
+
+#: src/frogr-create-new-set-dialog.c:355
+msgid "Fill Pictures Details with Title and Description"
+msgstr "Afbeeldingsgegevens aanvullen met titel en beschrijving"
+
+#: src/frogr-create-new-set-dialog.c:383
+msgid "Create New Set"
+msgstr "Nieuwe set aanmaken"
+
+#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
+msgid "Default (as specified in Flickr)"
+msgstr "Standaard (zoals aangegeven in Flickr)"
+
+#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
+msgid "All rights reserved"
+msgstr "Alle rechten voorbehouden"
+
+#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
+msgid "CC Attribution-NonCommercial-ShareAlike"
+msgstr "Naamsvermelding-NietCommercieel-GelijkDelen"
+
+#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
+msgid "CC Attribution-NonCommercial"
+msgstr "CC Naamsvermelding-NietCommercieel"
+
+#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
+msgid "CC Attribution-NonCommercial-NoDerivs"
+msgstr "Naamsvermelding-NietCommercieel-GeenAfgeleideWerken"
+
+#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
+msgid "CC Attribution"
+msgstr "CC Naamsvermelding"
+
+#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
+msgid "CC Attribution-ShareAlike"
+msgstr "CC Naamsvermelding-GelijkDelen"
+
+#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
+msgid "CC Attribution-NoDerivs"
+msgstr "CC Naamsvermelding-GeenAfgeleideWerken"
+
+#: src/frogr-details-dialog.c:175
+msgid "Open with image viewer"
+msgstr "Openen met afbeeldingsweergave"
+
+#: src/frogr-details-dialog.c:196
+msgid "_Title:"
+msgstr "_Titel:"
+
+#: src/frogr-details-dialog.c:208
+msgid "_Description:"
+msgstr "_Beschrijving:"
+
+#: src/frogr-details-dialog.c:235
+msgid "Ta_gs:"
+msgstr "Ta_gs:"
+
+#: src/frogr-details-dialog.c:262
+msgid "Visibility"
+msgstr "Zichtbaarheid"
+
+#: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
+msgid "_Private"
+msgstr "_Privé"
+
+#: src/frogr-details-dialog.c:278 src/frogr-settings-dialog.c:207
+msgid "P_ublic"
+msgstr "Op_enbaar"
+
+#: src/frogr-details-dialog.c:292 src/frogr-settings-dialog.c:218
+msgid "_Family"
+msgstr "_Familie"
+
+#: src/frogr-details-dialog.c:297 src/frogr-settings-dialog.c:220
+msgid "F_riends"
+msgstr "V_rienden"
+
+#: src/frogr-details-dialog.c:314
+msgid "Content Type"
+msgstr "Inhoudstype"
+
+#: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
+msgid "P_hoto"
+msgstr "_Foto"
+
+#: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
+msgid "Scree_nshot"
+msgstr "Scher_mafdruk"
+
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
+msgid "Oth_er"
+msgstr "Ov_erige"
+
+#: src/frogr-details-dialog.c:350
+msgid "Safety Level"
+msgstr "Veiligheidsniveau"
+
+#: src/frogr-details-dialog.c:359 src/frogr-settings-dialog.c:277
+msgid "S_afe"
+msgstr "_Veilig"
+
+#: src/frogr-details-dialog.c:364 src/frogr-settings-dialog.c:279
+msgid "_Moderate"
+msgstr "Ge_middeld"
+
+#: src/frogr-details-dialog.c:369 src/frogr-settings-dialog.c:281
+msgid "Restr_icted"
+msgstr "Bep_erkt"
+
+#: src/frogr-details-dialog.c:383
+msgid "License Type"
+msgstr "Licentietype"
+
+#: src/frogr-details-dialog.c:408
+msgid "Other Properties"
+msgstr "Overige eigenschappen"
+
+#: src/frogr-details-dialog.c:417
+msgid "_Show Up in Global Search Results"
+msgstr "_Tonen in globale zoekresultaten"
+
+#: src/frogr-details-dialog.c:422
+msgid "Set Geo_location Information"
+msgstr "Geo_locatie-informatie instellen"
+
+#: src/frogr-details-dialog.c:427
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr "‘Datum geplaatst’ vervangen door ‘Datum genomen’"
+
+#. Visually indicate how many pictures are being edited
+#: src/frogr-details-dialog.c:519
+#, c-format
+msgid "(%d Picture)"
+msgid_plural "(%d Pictures)"
+msgstr[0] "(%d afbeelding)"
+msgstr[1] "(%d afbeeldingen)"
+
+#: src/frogr-details-dialog.c:590
+msgid "An error happened trying to load the picture"
+msgstr "Er is een fout opgetreden bij het laden van de afbeelding"
+
+#: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
+msgid "_Edit"
+msgstr "B_ewerken"
+
+#: src/frogr-details-dialog.c:1230
+msgid "Edit Picture Details"
+msgstr "Afbeeldingsgegevens bewerken"
+
+#: src/frogr-file-loader.c:142
+#, c-format
+msgid "Loading files %d / %d"
+msgstr "Laden van bestanden %d / %d"
+
+#: src/frogr-file-loader.c:359
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
+msgstr ""
+"Kan afbeelding %s niet laden:\n"
+"%s"
+
+#: src/frogr-file-loader.c:385
+#, c-format
+msgid ""
+"Unable to load video %s\n"
+"Please check that you have the right codec installed"
+msgstr ""
+"Kan video %s niet laden\n"
+"Controleer of u de juiste codec geïnstalleerd heeft"
+
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: src/frogr-file-loader.c:603
+#, c-format
+msgid ""
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
+msgstr ""
+"Kan bestand %s niet laden:\n"
+"Grootte van bestand is groter dan het maximum toegestaan voor deze account "
+"(%s)"
+
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Externe Flickr-organiseerder"
+
+#. First create the left side buttons
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
+msgid "Open"
+msgstr "Openen"
+
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
+msgid "Open Existing Project"
+msgstr "Bestaand project openen"
+
+#: src/frogr-main-view.c:597 src/frogr-main-view.c:693
+msgid "Add"
+msgstr "Toevoegen"
+
+#: src/frogr-main-view.c:598 src/frogr-main-view.c:694
+msgid "Remove"
+msgstr "Verwijderen"
+
+#: src/frogr-main-view.c:599 src/frogr-main-view.c:696
+msgid "Upload"
+msgstr "Uploaden"
+
+#. Save project item
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
+msgid "Save"
+msgstr "Opslaan"
+
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
+msgid "Save Current Project"
+msgstr "Huidig project opslaan"
+
+#. Create the submenu and insert it in the right section
+#: src/frogr-main-view.c:1012
+msgid "Accounts"
+msgstr "Accounts"
+
+#. String showind the date and time a picture was taken
+#: src/frogr-main-view.c:1363
+#, c-format
+msgid "Taken: %s"
+msgstr "Genomen op: %s"
+
+#: src/frogr-main-view.c:1367
+#, c-format
+msgid "File size: %s"
+msgstr "Bestandsgrootte: %s"
+
+#: src/frogr-main-view.c:1483
+msgid "Select File"
+msgstr "Kies bestand"
+
+#: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
+msgid "_Open"
+msgstr "_Openen"
+
+#: src/frogr-main-view.c:1496
+msgid "Frogr Project Files"
+msgstr "Frogr-projectbestanden"
+
+#: src/frogr-main-view.c:1556
+msgid "Select Destination"
+msgstr "Selecteer bestemming"
+
+#: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
+#: data/gtkbuilder/frogr-menu-button.ui:12
+msgid "_Save"
+msgstr "Op_slaan"
+
+#: src/frogr-main-view.c:1563
+msgid "Untitled Project.frogr"
+msgstr "Naamloos project.frogr"
+
+#: src/frogr-main-view.c:1608
+msgid "Select a Picture"
+msgstr "Selecteer een afbeelding"
+
+#: src/frogr-main-view.c:1635
+msgid "All Files"
+msgstr "Alle bestanden"
+
+#: src/frogr-main-view.c:1638
+msgid "Image Files"
+msgstr "Afbeeldingsbestanden"
+
+#: src/frogr-main-view.c:1642
+msgid "Video Files"
+msgstr "Videobestanden"
+
+#: src/frogr-main-view.c:1664
+msgid "You don't have any picture added yet"
+msgstr "U heeft nog geen afbeeldingen toegevoegd"
+
+#: src/frogr-main-view.c:1677
+msgid "You need to select some pictures first"
+msgstr "U dient eerst enkele afbeeldingen te selecteren"
+
+#: src/frogr-main-view.c:2046
+msgid "Not connected to Flickr"
+msgstr "Niet verbonden met Flickr"
+
+#. Login string, showing the user is PRO (second '%s') if so.
+#: src/frogr-main-view.c:2056
+#, c-format
+msgid "Connected as %s%s"
+msgstr "Verbonden als %s%s"
+
+#: src/frogr-main-view.c:2057
+msgid " (PRO account)"
+msgstr " (PRO-account)"
+
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: src/frogr-main-view.c:2081
+#, c-format
+msgid " - %s / %s remaining"
+msgstr " - %s / %s resterend"
+
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: src/frogr-main-view.c:2104
+#, c-format
+msgid " - %d file to upload (%s)"
+msgid_plural " - %d files to upload (%s)"
+msgstr[0] " - %d bestand te uploaden (%s)"
+msgstr[1] " - %d bestanden te uploaden (%s)"
+
+#: src/frogr-settings-dialog.c:189
+msgid "Default Visibility"
+msgstr "Standaardzichtbaarheid"
+
+#: src/frogr-settings-dialog.c:236
+msgid "Default Content Type"
+msgstr "Standaardinhoudstype"
+
+#: src/frogr-settings-dialog.c:265
+msgid "Default Safety Level"
+msgstr "Standaardveiligheidsniveau"
+
+#: src/frogr-settings-dialog.c:294
+msgid "Default License"
+msgstr "Standaardlicentie"
+
+#: src/frogr-settings-dialog.c:323
+msgid "Other Defaults"
+msgstr "Overige standaardwaarden"
+
+#: src/frogr-settings-dialog.c:335
+msgid "_Show Pictures in Global Search Results"
+msgstr "_Afbeeldingen tonen in globale zoekresultaten"
+
+#: src/frogr-settings-dialog.c:338
+msgid "Set Geo_location Information for Pictures"
+msgstr "Geo_locatie-informatie instellen voor afbeeldingen"
+
+#: src/frogr-settings-dialog.c:341
+msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
+msgstr "‘Datum geplaatst’ vervangen door ‘Datum genomen’ voor afbeeldingen"
+
+#: src/frogr-settings-dialog.c:347
+msgid "_General"
+msgstr "Al_gemeen"
+
+#: src/frogr-settings-dialog.c:368
+msgid "Proxy Settings"
+msgstr "Proxy-instellingen"
+
+#. Enable proxy
+#: src/frogr-settings-dialog.c:377
+msgid "_Enable HTTP Proxy"
+msgstr "HTTP-proxy inschak_elen"
+
+#: src/frogr-settings-dialog.c:389
+msgid "_Host:"
+msgstr "_Host:"
+
+#. Proxy port
+#: src/frogr-settings-dialog.c:404
+msgid "_Port:"
+msgstr "_Poort:"
+
+#. Proxy username
+#: src/frogr-settings-dialog.c:419
+msgid "U_sername:"
+msgstr "Gebruiker_snaam:"
+
+#. Proxy password
+#: src/frogr-settings-dialog.c:434
+msgid "Pass_word:"
+msgstr "_Wachtwoord:"
+
+#: src/frogr-settings-dialog.c:460
+msgid "Connec_tion"
+msgstr "Ver_binding"
+
+#: src/frogr-settings-dialog.c:479
+msgid "Other options"
+msgstr "Overige instellingen"
+
+#: src/frogr-settings-dialog.c:490
+msgid "Ena_ble Tags Auto-Completion"
+msgstr "_Tags automatisch aanvullen"
+
+#: src/frogr-settings-dialog.c:493
+msgid "_Import Tags from Pictures Metadata"
+msgstr "Tags _importeren uit metadata van afbeeldingen"
+
+#: src/frogr-settings-dialog.c:497
+msgid "Use _Dark GTK Theme"
+msgstr "_Donker GTK-thema gebruiken"
+
+#: src/frogr-settings-dialog.c:501
+msgid "_Keep File Extensions in Titles when Loading"
+msgstr "Bestandsextensies in titels _behouden tijdens laden"
+
+#: src/frogr-settings-dialog.c:507
+msgid "_Misc"
+msgstr "_Allerlei"
+
+#: src/frogr-settings-dialog.c:1009
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
+#: data/gtkbuilder/frogr-menu-button.ui:24
+msgid "_Edit Details…"
+msgstr "G_egevens bewerken…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
+msgid "Add _Tags…"
+msgstr "_Tags toevoegen…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
+msgid "Add to _Group…"
+msgstr "Toevoegen aan _groep…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
+msgid "Add to _Photoset"
+msgstr "Toevoegen aan _fotoset"
+
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
+msgid "_Add to Existing Photoset…"
+msgstr "Toevoegen aan _bestaande fotoset…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
+msgid "_Create New Photoset…"
+msgstr "Nieuwe fotoset _aanmaken…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:103
+#: data/gtkbuilder/frogr-menu-button.ui:93
+msgid "_Open in External Viewer"
+msgstr "_Openen in externe weergave"
+
+#: data/gtkbuilder/frogr-context-menu.ui:45
+msgid "_Remove Elements"
+msgstr "Elementen ve_rwijderen"
+
+#: data/gtkbuilder/frogr-main-view.ui:51
+msgid "No pictures loaded"
+msgstr "Geen afbeeldingen geladen"
+
+#: data/gtkbuilder/frogr-main-view.ui:67
+msgid ""
+"Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
+"window."
+msgstr ""
+"Klik op de knop <b>‘Toevoegen’</b> in de werkbalk om afbeeldingen in dit "
+"venster te laden."
+
+#: data/gtkbuilder/frogr-main-view.ui:83
+msgid ""
+"Once you're ready, press the <b>\"Upload\"</b> button to upload your "
+"pictures to Flickr."
+msgstr ""
+"Klik, wanneer u klaar bent, op de knop <b>‘Uploaden’</b> om uw afbeeldingen "
+"te uploaden naar Flickr."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
+msgid "Aut_horize Account…"
+msgstr "_Account autoriseren…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:11
+msgid "_File"
+msgstr "_Bestand"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:14
+msgid "_Open…"
+msgstr "_Openen…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
+msgid "Save _As…"
+msgstr "Opslaan _als…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:31
+msgid "A_dd…"
+msgstr "_Toevoegen…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:36
+msgid "_Remove"
+msgstr "Ve_rwijderen"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:41
+msgid "_Upload"
+msgstr "_Uploaden"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:48
+#: data/gtkbuilder/frogr-menu-button.ui:100
+msgid "_Preferences…"
+msgstr "_Voorkeuren…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:52
+#: data/gtkbuilder/frogr-menu-button.ui:104
+msgid "_Help"
+msgstr "_Hulp"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:57
+#: data/gtkbuilder/frogr-menu-button.ui:109
+msgid "_About frogr"
+msgstr "_Over frogr"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:61
+msgid "_Quit"
+msgstr "_Afsluiten"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:110
+msgid "_View"
+msgstr "_Beeld"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:113
+#: data/gtkbuilder/frogr-menu-button.ui:56
+msgid "_Sort Elements"
+msgstr "Elementen _sorteren"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:116
+#: data/gtkbuilder/frogr-menu-button.ui:59
+msgid "As _Loaded"
+msgstr "Zoals ge_laden"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:121
+#: data/gtkbuilder/frogr-menu-button.ui:64
+msgid "By _Date Taken"
+msgstr "Op _datum genomen"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:126
+#: data/gtkbuilder/frogr-menu-button.ui:69
+msgid "By _Title"
+msgstr "Op _titel"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:131
+#: data/gtkbuilder/frogr-menu-button.ui:74
+msgid "By _Size"
+msgstr "Op _grootte"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:138
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "_Reversed Order"
+msgstr "Omgekee_rde volgorde"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:146
+#: data/gtkbuilder/frogr-menu-button.ui:87
+msgid "Enable _Tooltips"
+msgstr "Zwevende _tips inschakelen"
