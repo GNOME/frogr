@@ -2,13 +2,13 @@
 # Copyright (C) 2012 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
 # Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017, 2018.
-#
+# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017, 2018, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2018-11-06 10:51+0000\n"
-"PO-Revision-Date: 2018-11-15 19:58+0700\n"
+"POT-Creation-Date: 2018-11-15 13:00+0000\n"
+"PO-Revision-Date: 2019-05-22 14:13+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
@@ -295,7 +295,7 @@ msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
 msgstr ""
-"Tak bisa mengotentikasi dalam Flickr\n"
+"Tak bisa mengautentikasi dalam Flickr\n"
 "Harap coba lagi."
 
 #: src/frogr-controller.c:657
