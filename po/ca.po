@@ -493,7 +493,7 @@ msgstr "_Públic"
 
 #: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
 msgid "_Family"
-msgstr "_Familia"
+msgstr "_Família"
 
 #: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
 msgid "F_riends"
