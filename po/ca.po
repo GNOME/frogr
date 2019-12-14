@@ -97,7 +97,7 @@ msgstr "_Afegeix"
 
 #: src/frogr-add-tags-dialog.c:198
 msgid "Enter a spaces separated list of tags:"
-msgstr "Introduïu una llista d'etiquetes separada per espais"
+msgstr "Introduïu una llista d'etiquetes separada per espais:"
 
 #: src/frogr-add-tags-dialog.c:224
 msgid "Add Tags"
@@ -121,7 +121,7 @@ msgstr "Títol"
 
 #: src/frogr-add-to-set-dialog.c:576
 msgid "Add to Sets"
-msgstr "Afegeix a les col·leccions "
+msgstr "Afegeix a les col·leccions"
 
 #: src/frogr-auth-dialog.c:59
 #, c-format
@@ -291,7 +291,7 @@ msgid ""
 msgstr ""
 "Error\n"
 "%s no està correctament autoritzat a pujar imatges a Flickr.\n"
-"Torneu-lo a autoritzar."
+"Torneu-lo a autoritzar"
 
 #: src/frogr-controller.c:653
 #, c-format
@@ -604,7 +604,7 @@ msgid ""
 "Size of file is bigger than the maximum allowed for this account (%s)"
 msgstr ""
 "No es pot carregar el fitxer %s: \n"
-"La mida del fitxer és superior al màxim permès per aquest compte (%s)."
+"La mida del fitxer és superior al màxim permès per aquest compte (%s)"
 
 #: src/frogr-global-defs.h:26
 msgid "Flickr Remote Organizer"
@@ -717,7 +717,7 @@ msgstr "Connectat com %s%s"
 
 #: src/frogr-main-view.c:2056
 msgid " (PRO account)"
-msgstr "(compte PRO)"
+msgstr " (compte PRO)"
 
 #. Will show in the status bar the amount of data (in KB, MB
 #. or GB) the user is currently allowed to upload to flicker
@@ -736,8 +736,8 @@ msgstr " - %s / %s restants"
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
-msgstr[0] "- %d del fitxer per pujar (%s)"
-msgstr[1] "- %d dels fitxers per pujar (%s)"
+msgstr[0] " - %d del fitxer per pujar (%s)"
+msgstr[1] " - %d dels fitxers per pujar (%s)"
 
 #: src/frogr-settings-dialog.c:185
 msgid "Default Visibility"
@@ -904,8 +904,8 @@ msgid ""
 "Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
 "window."
 msgstr ""
-"Prem el botó <b> «Afegeix» </b> a la barra d'eines per carregar imatges en "
-"aquest finestra."
+"Premeu el botó <b>«Afegeix»</b> a la barra d'eines per carregar imatges en "
+"aquesta finestra."
 
 #: data/gtkbuilder/frogr-main-view.ui:83
 msgid ""
