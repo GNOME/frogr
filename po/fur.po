@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
 "POT-Creation-Date: 2019-12-14 20:00+0000\n"
-"PO-Revision-Date: 2020-01-08 13:49+0100\n"
+"PO-Revision-Date: 2020-01-09 12:26+0100\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
@@ -546,12 +546,12 @@ msgstr ""
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "(%d Figure)"
+msgstr[1] "(%d Figuris)"
 
 #: src/frogr-details-dialog.c:590
 msgid "An error happened trying to load the picture"
-msgstr ""
+msgstr "Si è verificât un erôr tal cirî di vierzi la figure"
 
 #: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
 msgid "_Edit"
@@ -572,6 +572,8 @@ msgid ""
 "Unable to load picture %s:\n"
 "%s"
 msgstr ""
+"Impussibil cjariâ la figure %s:\n"
+"%s"
 
 #: src/frogr-file-loader.c:385
 #, c-format
@@ -579,6 +581,8 @@ msgid ""
 "Unable to load video %s\n"
 "Please check that you have the right codec installed"
 msgstr ""
+"Impussibil cjariâ il video %s\n"
+"Controle di vê il just codec instalât"
 
 #. First %s is the title of the picture (filename of the file by
 #. default). Second %s is the max allowed size for a picture to be
@@ -589,119 +593,122 @@ msgid ""
 "Can't load file %s:\n"
 "Size of file is bigger than the maximum allowed for this account (%s)"
 msgstr ""
+"Impussibil cjariâ il file %s:\n"
+"La dimension dal file e je plui grande di chê massime consintude par chest "
+"account (%s)"
 
 #: src/frogr-global-defs.h:26
 msgid "Flickr Remote Organizer"
-msgstr ""
+msgstr "Organizadôr rimot di Flickr"
 
 #. First create the left side buttons
 #: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open"
-msgstr ""
+msgstr "Vierç"
 
 #: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open Existing Project"
-msgstr ""
+msgstr "Vierç progjet esistent"
 
 #: src/frogr-main-view.c:597 src/frogr-main-view.c:693
 msgid "Add"
-msgstr ""
+msgstr "Zonte"
 
 #: src/frogr-main-view.c:598 src/frogr-main-view.c:694
 msgid "Remove"
-msgstr ""
+msgstr "Gjave"
 
 #: src/frogr-main-view.c:599 src/frogr-main-view.c:696
 msgid "Upload"
-msgstr ""
+msgstr "Invie"
 
 #. Save project item
 #: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save"
-msgstr ""
+msgstr "Salve"
 
 #: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save Current Project"
-msgstr ""
+msgstr "Salve progjet atuâl"
 
 #. Create the submenu and insert it in the right section
 #: src/frogr-main-view.c:1012
 msgid "Accounts"
-msgstr ""
+msgstr "Account"
 
 #. String showind the date and time a picture was taken
 #: src/frogr-main-view.c:1363
 #, c-format
 msgid "Taken: %s"
-msgstr ""
+msgstr "Scatade: %s"
 
 #: src/frogr-main-view.c:1367
 #, c-format
 msgid "File size: %s"
-msgstr ""
+msgstr "Dimension file: %s"
 
 #: src/frogr-main-view.c:1483
 msgid "Select File"
-msgstr ""
+msgstr "Selezione file"
 
 #: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
 msgid "_Open"
-msgstr ""
+msgstr "_Vierç"
 
 #: src/frogr-main-view.c:1496
 msgid "Frogr Project Files"
-msgstr ""
+msgstr "File progjet di Frogr"
 
 #: src/frogr-main-view.c:1556
 msgid "Select Destination"
-msgstr ""
+msgstr "Selezione destinazion"
 
 #: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
 #: data/gtkbuilder/frogr-menu-button.ui:12
 msgid "_Save"
-msgstr ""
+msgstr "_Salve"
 
 #: src/frogr-main-view.c:1563
 msgid "Untitled Project.frogr"
-msgstr ""
+msgstr "Project.frogr cence titul"
 
 #: src/frogr-main-view.c:1608
 msgid "Select a Picture"
-msgstr ""
+msgstr "Selezione une figure"
 
 #: src/frogr-main-view.c:1635
 msgid "All Files"
-msgstr ""
+msgstr "Ducj i file"
 
 #: src/frogr-main-view.c:1638
 msgid "Image Files"
-msgstr ""
+msgstr "File imagjin"
 
 #: src/frogr-main-view.c:1642
 msgid "Video Files"
-msgstr ""
+msgstr "File video"
 
 #: src/frogr-main-view.c:1664
 msgid "You don't have any picture added yet"
-msgstr ""
+msgstr "No si à zontât ancjemò nissun file"
 
 #: src/frogr-main-view.c:1677
 msgid "You need to select some pictures first"
-msgstr ""
+msgstr "Tu scugnis selezionâ cualchi figure prime"
 
 #: src/frogr-main-view.c:2046
 msgid "Not connected to Flickr"
-msgstr ""
+msgstr "No conetût a Flickr"
 
 #. Login string, showing the user is PRO (second '%s') if so.
 #: src/frogr-main-view.c:2056
 #, c-format
 msgid "Connected as %s%s"
-msgstr ""
+msgstr "Conetût come %s %s"
 
 #: src/frogr-main-view.c:2057
 msgid " (PRO account)"
-msgstr ""
+msgstr " (account PRO)"
 
 #. Will show in the status bar the amount of data (in KB, MB
 #. or GB) the user is currently allowed to upload to flicker
@@ -711,7 +718,7 @@ msgstr ""
 #: src/frogr-main-view.c:2081
 #, c-format
 msgid " - %s / %s remaining"
-msgstr ""
+msgstr " - a mancjin %s / %s"
 
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
@@ -720,92 +727,92 @@ msgstr ""
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " - %d file di trasmeti (%s)"
+msgstr[1] " - %d file di trasmeti (%s)"
 
 #: src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
-msgstr ""
+msgstr "Visibilitât predefinide"
 
 #: src/frogr-settings-dialog.c:236
 msgid "Default Content Type"
-msgstr ""
+msgstr "Gjenar di contignût predefinît"
 
 #: src/frogr-settings-dialog.c:265
 msgid "Default Safety Level"
-msgstr ""
+msgstr "Nivel di sigurece predefinît"
 
 #: src/frogr-settings-dialog.c:294
 msgid "Default License"
-msgstr ""
+msgstr "Licence predefinide"
 
 #: src/frogr-settings-dialog.c:323
 msgid "Other Defaults"
-msgstr ""
+msgstr "Altre robe predefinide"
 
 #: src/frogr-settings-dialog.c:335
 msgid "_Show Pictures in Global Search Results"
-msgstr ""
+msgstr "_Mostre lis figuris intai risultâts des ricercjis globâls"
 
 #: src/frogr-settings-dialog.c:338
 msgid "Set Geo_location Information for Pictures"
-msgstr ""
+msgstr "Stabilìs lis informazions di gjeo_localizazion pes figuris"
 
 #: src/frogr-settings-dialog.c:341
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
-msgstr ""
+msgstr "Sostituìs 'Date di publicazion' cun 'Date dal scat' pes figuris"
 
 #: src/frogr-settings-dialog.c:347
 msgid "_General"
-msgstr ""
+msgstr "_Gjenerâl"
 
 #: src/frogr-settings-dialog.c:368
 msgid "Proxy Settings"
-msgstr ""
+msgstr "Impostazions proxy"
 
 #. Enable proxy
 #: src/frogr-settings-dialog.c:377
 msgid "_Enable HTTP Proxy"
-msgstr ""
+msgstr "_Abilite proxy HTTP"
 
 #: src/frogr-settings-dialog.c:389
 msgid "_Host:"
-msgstr ""
+msgstr "_Host:"
 
 #. Proxy port
 #: src/frogr-settings-dialog.c:404
 msgid "_Port:"
-msgstr ""
+msgstr "_Puarte:"
 
 #. Proxy username
 #: src/frogr-settings-dialog.c:419
 msgid "U_sername:"
-msgstr ""
+msgstr "Non _utent:"
 
 #. Proxy password
 #: src/frogr-settings-dialog.c:434
 msgid "Pass_word:"
-msgstr ""
+msgstr "Pass_word:"
 
 #: src/frogr-settings-dialog.c:460
 msgid "Connec_tion"
-msgstr ""
+msgstr "Cones_sion"
 
 #: src/frogr-settings-dialog.c:479
 msgid "Other options"
-msgstr ""
+msgstr "Altris opzions"
 
 #: src/frogr-settings-dialog.c:490
 msgid "Ena_ble Tags Auto-Completion"
-msgstr ""
+msgstr "Abi_lite completament automatic etichetis"
 
 #: src/frogr-settings-dialog.c:493
 msgid "_Import Tags from Pictures Metadata"
-msgstr ""
+msgstr "_Impuarte etichetis dai metadâts des figuris"
 
 #: src/frogr-settings-dialog.c:497
 msgid "Use _Dark GTK Theme"
-msgstr ""
+msgstr "Dopre teme GTK _scûr"
 
 #: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
