@@ -3,7 +3,7 @@ project('frogr', 'c',
         license: 'GPL3',
         default_options: [
             'warnlevel=2',
-            'werror=false'
+            'werror=true'
         ])
 
 project_name = meson.project_name()
