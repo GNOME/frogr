@@ -64,4 +64,186 @@
     <content_attribute id="money-purchasing">none</content_attribute>
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
+  <releases>
+    <release version="1.5" date="2018-11-24">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/1.5/frogr-1.5.tar.xz</location>
+          <checksum type="sha256">874fab2cde9c56519c1675af377d5bd95b21fb7db686723b50da47e8f01907b1</checksum>
+          <size type="download">2233600</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="1.4" date="2017-12-28">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/1.4/frogr-1.4.tar.xz</location>
+          <checksum type="sha256">ace4c9e60364fa5e183384a3e25a0c4ee77c77c59f4bb33f8980ba57317ae68e</checksum>
+          <size type="download">2225148</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="1.3" date="2017-05-20">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/1.3/frogr-1.3.tar.xz</location>
+          <checksum type="sha256">94cc6a7ab2553e00cc8e0c2435a1c2610de0fc59ce51e78fe0d758f34d5c7a36</checksum>
+          <size type="download">2552456</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="1.2" date="2016-10-05">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/1.2/frogr-1.2.tar.xz</location>
+          <checksum type="sha256">6cd491f2a723201bac3cb9f68e015c534d561b75c4a4b32b2e1b37477d2e82f8</checksum>
+          <size type="download">2548328</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="1.1" date="2016-10-04">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/1.1/frogr-1.1.tar.xz</location>
+          <checksum type="sha256">fe3e2360b704114e88347849420154d71f668fc621f3c2e82cc75cec8a3b1129</checksum>
+          <size type="download">2548312</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="1.0" date="2015-12-30">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/1.0/frogr-1.0.tar.xz</location>
+          <checksum type="sha256">1e35552d3e04e79fa513c29426988a64b6040f7a06f95eaa18d4615fe124aeae</checksum>
+          <size type="download">2952564</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.11" date="2015-01-07">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.11/frogr-0.11.tar.xz</location>
+          <checksum type="sha256">1a9d258ccaa3ebce31811af5263828808ccd8fc913e4d3fac5fe17e95e8235e9</checksum>
+          <size type="download">2943396</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.10" date="2014-06-17">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.10/frogr-0.10.tar.xz</location>
+          <checksum type="sha256">45b797bc03c233920cf2883cbfa3ba186064a2479e157c9c9ecf816fc7bb6bf5</checksum>
+          <size type="download">3049948</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.9" date="2014-01-17">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.9/frogr-0.9.tar.xz</location>
+          <checksum type="sha256">7ab2af5936c51d0f37fec04101e20faba288e6df92f723c4671b163e9e689a9f</checksum>
+          <size type="download">3064848</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.8" date="2012-12-29">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.8/frogr-0.8.tar.xz</location>
+          <checksum type="sha256">de4ec9a713181ee53f8c81ca58463e3fafd096a220b53baeb01bf782789507d0</checksum>
+          <size type="download">2864292</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.7" date="2012-05-22">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.7/frogr-0.7.tar.xz</location>
+          <checksum type="sha256">29f98e0db06b22cd93df6e764eec2f53d4fe0de1cb45772859fbca8c83a4e1f0</checksum>
+          <size type="download">2600752</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.6.1" date="2011-08-19">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.6/frogr-0.6.1.tar.bz2</location>
+          <checksum type="sha256">2ef99647d07f2c5236cb5101a130712f312d33aad14cfc651aa198f8b67e0d2b</checksum>
+          <size type="download">2269713</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.6" date="2011-08-13">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.6/frogr-0.6.tar.bz2</location>
+          <checksum type="sha256">ca2b3ff4c1d20555815b29d97b0c404a06a6d37b680218bda9c1f8e70699857c</checksum>
+          <size type="download">2268296</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.5" date="2011-05-27">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.5/frogr-0.5.tar.bz2</location>
+          <checksum type="sha256">fbec495cf363d86b2cbb9abda1a685df6c2e0242f9b3064f22ef70d57dec4ed1</checksum>
+          <size type="download">326869</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.4" date="2011-02-05">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.4/frogr-0.4.tar.bz2</location>
+          <checksum type="sha256">506009925da60e34a05504e2b2826652ba7c55af7edb781f7acaa655d1467029</checksum>
+          <size type="download">279277</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.3" date="2010-11-24">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.3/frogr-0.3.tar.bz2</location>
+          <checksum type="sha256">d6263782cac3f99e5d869f0642257b09e2e1b0bd7b0659d316ffb22722b6bfcc</checksum>
+          <size type="download">226057</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.2" date="2009-10-13">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.2/frogr-0.2.tar.bz2</location>
+          <checksum type="sha256">2ac31e6f6da54cca072b2c3e79b34de970b1d68cec0c62745326f5bbcff7662e</checksum>
+          <size type="download">179884</size>
+        </artifact>
+      </artifacts>
+    </release>
+    <release version="0.1.1" date="2009-08-22">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/0.1.1/frogr-0.1.1.tar.bz2</location>
+          <checksum type="sha256">93a83e3ada377766d19ec2839104978520ccf4df59231d3d454257df84acc61c</checksum>
+          <size type="download">157588</size>
+        </artifact>
+      </artifacts>
+    </release>
+  </releases>
 </component>
