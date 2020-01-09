@@ -1308,8 +1308,7 @@ static void
 _set_replace_date_posted_for_picture (FrogrController *self, UploadOnePictureData *uop_data)
 {
   FrogrPicture *picture = NULL;
-  GDateTime *picture_date = NULL;
-  GTimeVal picture_timeval;
+  g_autoptr(GDateTime) picture_date = NULL;
   const gchar *picture_date_str = NULL;
   g_autofree gchar *debug_msg = NULL;
   gchar date_iso8601[20];
@@ -1329,18 +1328,7 @@ _set_replace_date_posted_for_picture (FrogrController *self, UploadOnePictureDat
   date_iso8601[7] = '-';
   date_iso8601[19] = '\0';
 
-  if (!g_time_val_from_iso8601 (date_iso8601, &picture_timeval))
-    return;
-
-  /* It's not correct to just do this because the date extracted from the EXIF information might
-     not have been stored in UTC. However, it seems there's no a much better solution since many
-     cameras don't use the TimeZoneOffset EXIF tag, so we can't rely on that either. And even if
-     it exists, I could not find any picture with that field in the EXIF information so I guess
-     that, all in all, using the 'date taken' as 'posted' as if it was UTC (regardless of whether
-     it's actually UTC) is probably fine anyway. After all, it's not supposed to be shown in
-     flickr and would serve most of the times just to have the photostream sorted by 'date
-     taken', and for that, using the date as UTC would be good enough .*/
-  picture_date = g_date_time_new_from_timeval_utc (&picture_timeval);
+  picture_date = g_date_time_new_from_iso8601 (date_iso8601, g_time_zone_new_utc ());
   if (!picture_date)
     return;
 
@@ -1356,8 +1344,6 @@ _set_replace_date_posted_for_picture (FrogrController *self, UploadOnePictureDat
   debug_msg = g_strdup_printf ("Replacing 'date posted' with 'date taken' (%s) for picture %s…",
                                date_iso8601, frogr_picture_get_title (picture));
   DEBUG ("%s", debug_msg);
-
-  g_date_time_unref (picture_date);
 }
 
 static gboolean

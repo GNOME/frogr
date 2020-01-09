@@ -67,14 +67,15 @@ _create_temporary_id_for_photoset (void)
      "good enough" */
   static guint serial = 0;
   gchar* key;
-  guint t, ut, p, u;
+  gint64 tv, t, ut;
+  pid_t p;
+  uid_t u;
   guint32 r;
-  GTimeVal tv;
 
-  g_get_current_time(&tv);
+  tv = g_get_real_time ();
 
-  t = tv.tv_sec;
-  ut = tv.tv_usec;
+  t = tv / G_USEC_PER_SEC;
+  ut = tv;
 
   p = getpid();
   u = getuid();
@@ -87,7 +88,7 @@ _create_temporary_id_for_photoset (void)
 
   /* The letters may increase uniqueness by preventing "melds"
      i.e. 01t01k01 and 0101t0k1 are not the same */
-  key = g_strdup_printf("%ut%uut%uu%up%ur%uk%u",
+  key = g_strdup_printf("%ut%liut%liu%up%ir%uk%u",
                         /* Duplicate keys must be generated
                            by two different program instances */
                         serial,
