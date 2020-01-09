@@ -1,17 +1,9 @@
 Compiling from source code
 ==========================
 
-To compile and try the application you need to have meson and ninja
-installed, but you can still use the usual commands defined by
-the build API (see https://github.com/cgwalters/build-api):
+To compile and try the application you need to have meson and ninja:
 
- $ ./configure
- $ make
- $ make install
-
-To use meson and ninja, instead of using the wrapper configure script:
-
- $ meson . BUILD
+ $ meson --prefix /local/install/path . BUILD
  $ ninja -C BUILD
  $ ninja -C BUILD install
 
