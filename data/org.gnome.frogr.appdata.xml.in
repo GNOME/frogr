@@ -65,6 +65,16 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.6" date="2020-01-10">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/1.6/frogr-1.6.tar.xz</location>
+          <checksum type="sha256">3f0065faf4f3b8ce0c1fc9d59b229a8ac16f96f5e86a1280f6d9fe8cebb82ed3</checksum>
+          <size type="download">2240748</size>
+        </artifact>
+      </artifacts>
+    </release>
     <release version="1.5" date="2018-11-24">
       <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
       <artifacts>
