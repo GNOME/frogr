@@ -16,7 +16,7 @@
         /* Access your pictures and videos */
         "--filesystem=xdg-pictures", "--filesystem=xdg-videos",
         /* Access your documents is useful too (e.g. for saving and loading projects) */
-        "--filesystem=xdg-documents",
+        "--filesystem=xdg-documents"
     ],
     "cleanup": [ "/share/man" ],
     "modules": [
