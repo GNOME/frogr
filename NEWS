@@ -1,6 +1,22 @@
-1.6 (??)
-========
+1.6 (10 Jan 2020)
+=================
 
+  * Remove deprecated use of GTimeVal
+
+New and updated translations:
+
+  * ca (Carles Ferrando Garcia, Jordi Mas)
+  * cs (Marek Černocký)
+  * da (Alan Mortensen)
+  * eu (Asier Sarasua Garmendia)
+  * fur (Fabio Tomat)
+  * hu (Balázs Úr)
+  * id (Kukuh Syafaat)
+  * nl (Nathan Follens)
+  * pl (Piotr Drąg)
+  * sl (Matej Urbančič)
+  * sr (Марко М. Костић)
+  * tr (Emin Tufan Çetin, Sabri Ünal)
 
 1.5 (24 Nov 2018)
 =================

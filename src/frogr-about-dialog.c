@@ -1,7 +1,7 @@
 /*
  * frogr-about-dialog.c -- About dialog
  *
- * Copyright (C) 2009-2018 Mario Sanchez Prada
+ * Copyright (C) 2009-2020 Mario Sanchez Prada
  * Authors: Mario Sanchez Prada <msanchez@gnome.org>
  *
  * This program is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ static const gchar *artists[] = {
 };
 
 static const gchar *appdescr = N_("A Flickr Remote Organizer for GNOME\n");
-static const gchar *copyright = "(c) 2009-2017 Mario Sanchez Prada";
+static const gchar *copyright = "(c) 2009-2020 Mario Sanchez Prada";
 static const gchar *website = "http://wiki.gnome.org/Apps/Frogr";
 
 void
@@ -54,7 +54,7 @@ frogr_about_dialog_show (GtkWindow *parent)
   icon_full_path = g_strdup_printf ("%s/" ABOUT_DIALOG_ICON,
 				    frogr_util_get_icons_dir ());
   logo = gdk_pixbuf_new_from_file (icon_full_path, NULL);
-  version = g_strdup_printf ("%s~unreleased", PACKAGE_VERSION);
+  version = g_strdup_printf ("%s", PACKAGE_VERSION);
 
   /* Show about dialog */
   gtk_show_about_dialog (GTK_WINDOW (parent),
