@@ -24,8 +24,8 @@ frogr_conf.set_quoted('LOCALEDIR', join_paths(prefix, localedir))
 compiler = meson.get_compiler('c')
 
 # Dependencies
-gtk_ver = '3.16'
 glib_ver = '2.44'
+gtk_ver = '3.16'
 soup_ver = '2.34'
 exif_ver = '0.6.14'
 xml2_ver = '2.6.8'
@@ -33,6 +33,7 @@ json_glib_ver = '1.2'
 gcrypt_ver = '1.5.0'
 
 glib = dependency('glib-2.0', version: '>=@0@'.format(glib_ver))
+gtk = dependency('gtk+-3.0', version: '>=@0@'.format(gtk_ver))
 soup = dependency('libsoup-2.4', version: '>=@0@'.format(soup_ver))
 exif = dependency('libexif', version: '>=@0@'.format(exif_ver))
 xml2 = dependency('libxml-2.0', version: '>=@0@'.format(xml2_ver))
@@ -49,14 +50,7 @@ frogr_conf.set_quoted('LIBGCRYPT_MIN_VERSION', gcrypt_ver)
 
 # Optional GtkHeaderBar
 if get_option('enable-header-bar')
-    gtk = dependency('gtk+-3.0', version: '>=3.12', required: false)
-    if gtk.found()
-        has_header_bar = true
-    endif
-endif
-
-if not get_variable('has_header_bar', false)
-    gtk = dependency('gtk+-3.0', version: '>=@0@'.format(gtk_ver))
+    has_header_bar = true
 endif
 
 frogr_conf.set10('USE_HEADER_BAR', get_variable('has_header_bar', false))
