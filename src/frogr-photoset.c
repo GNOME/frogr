@@ -88,7 +88,13 @@ _create_temporary_id_for_photoset (void)
 
   /* The letters may increase uniqueness by preventing "melds"
      i.e. 01t01k01 and 0101t0k1 are not the same */
-  key = g_strdup_printf("%ut%liut%liu%up%ir%uk%u",
+  key = g_strdup_printf("%" G_GUINT32_FORMAT "t"
+                        "%" G_GINT64_FORMAT "ut"
+                        "%" G_GINT64_FORMAT "u"
+                        "%" G_GUINT32_FORMAT "p"
+                        "%" G_GINT32_FORMAT "r"
+                        "%" G_GUINT32_FORMAT "k"
+                        "%" G_GUINT32_FORMAT,
                         /* Duplicate keys must be generated
                            by two different program instances */
                         serial,
