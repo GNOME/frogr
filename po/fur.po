@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
 "POT-Creation-Date: 2019-12-14 20:00+0000\n"
-"PO-Revision-Date: 2020-01-09 12:26+0100\n"
+"PO-Revision-Date: 2020-01-16 12:49+0100\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
@@ -173,7 +173,7 @@ msgid ""
 "Error uploading:\n"
 "File invalid"
 msgstr ""
-"Erôr tal cjariâ:\n"
+"Erôr tal inviâ:\n"
 "File no valit"
 
 #: src/frogr-controller.c:596
@@ -181,7 +181,7 @@ msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
 msgstr ""
-"Erôr tal cjariâ la figure:\n"
+"Erôr tal inviâ la figure:\n"
 "Cuote superade"
 
 #: src/frogr-controller.c:601
@@ -196,7 +196,7 @@ msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
 msgstr ""
-"Erôr tal cjariâ il video:\n"
+"Erôr tal inviâ il video:\n"
 "Impussibil cjariâ ancjemò videos cun chest account"
 
 #: src/frogr-controller.c:610
@@ -337,7 +337,7 @@ msgstr "Si torne a provâ a cjariâ (tentatîf %d/%d)…"
 #: src/frogr-controller.c:922
 #, c-format
 msgid "Uploading '%s'…"
-msgstr "Daûr a cjariâ '%s'…"
+msgstr "Daûr a inviâ '%s'…"
 
 #: src/frogr-controller.c:2183
 msgid "Updating credentials…"
@@ -820,118 +820,122 @@ msgstr ""
 
 #: src/frogr-settings-dialog.c:507
 msgid "_Misc"
-msgstr ""
+msgstr "_Variis"
 
 #: src/frogr-settings-dialog.c:1009
 msgid "Preferences"
-msgstr ""
+msgstr "Preferencis"
 
 #: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
 #: data/gtkbuilder/frogr-menu-button.ui:24
 msgid "_Edit Details…"
-msgstr ""
+msgstr "_Modifiche detais…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:11
 #: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
 msgid "Add _Tags…"
-msgstr ""
+msgstr "Zonte e_tichetis…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:16
 #: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
 msgid "Add to _Group…"
-msgstr ""
+msgstr "Zonte al _grup…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:21
 #: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
 msgid "Add to _Photoset"
-msgstr ""
+msgstr "Zonte ae c_olezion fotos"
 
 #: data/gtkbuilder/frogr-context-menu.ui:24
 #: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
 msgid "_Add to Existing Photoset…"
-msgstr ""
+msgstr "_Zonte a colezion fotos esistente…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:29
 #: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
 msgid "_Create New Photoset…"
-msgstr ""
+msgstr "_Cree gnove colezion fotos…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:38
 #: data/gtkbuilder/frogr-menu-bar.ui:103
 #: data/gtkbuilder/frogr-menu-button.ui:93
 msgid "_Open in External Viewer"
-msgstr ""
+msgstr "_Vierç tal visualizadôr esterni"
 
 #: data/gtkbuilder/frogr-context-menu.ui:45
 msgid "_Remove Elements"
-msgstr ""
+msgstr "_Gjave elements"
 
 #: data/gtkbuilder/frogr-main-view.ui:51
 msgid "No pictures loaded"
-msgstr ""
+msgstr "Nissune figure cjariade"
 
 #: data/gtkbuilder/frogr-main-view.ui:67
 msgid ""
 "Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
 "window."
 msgstr ""
+"Frache il boton <b>\"Zonte\"</b> te sbare dai struments par cjariâ lis "
+"figuris in chest barcon."
 
 #: data/gtkbuilder/frogr-main-view.ui:83
 msgid ""
 "Once you're ready, press the <b>\"Upload\"</b> button to upload your "
 "pictures to Flickr."
 msgstr ""
+"Une volte pront, frache il boton <b>\"Invie\"</b> par cjariâ lis tôs figuris "
+"su Flickr."
 
 #: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
 msgid "Aut_horize Account…"
-msgstr ""
+msgstr "Aut_orize account…"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:11
 msgid "_File"
-msgstr ""
+msgstr "_File"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:14
 msgid "_Open…"
-msgstr ""
+msgstr "_Vierç…"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
 msgid "Save _As…"
-msgstr ""
+msgstr "S_alve Come..."
 
 #: data/gtkbuilder/frogr-menu-bar.ui:31
 msgid "A_dd…"
-msgstr ""
+msgstr "Zo_nte…"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:36
 msgid "_Remove"
-msgstr ""
+msgstr "_Gjave"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:41
 msgid "_Upload"
-msgstr ""
+msgstr "_Invie"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:48
 #: data/gtkbuilder/frogr-menu-button.ui:100
 msgid "_Preferences…"
-msgstr ""
+msgstr "_Preferencis…"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:52
 #: data/gtkbuilder/frogr-menu-button.ui:104
 msgid "_Help"
-msgstr ""
+msgstr "_Jutori"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:57
 #: data/gtkbuilder/frogr-menu-button.ui:109
 msgid "_About frogr"
-msgstr ""
+msgstr "_Informazions su frogr"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:61
 msgid "_Quit"
-msgstr ""
+msgstr "_Jes"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:110
 msgid "_View"
-msgstr ""
+msgstr "_Visualize"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:113
 #: data/gtkbuilder/frogr-menu-button.ui:56
