@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
 "POT-Creation-Date: 2019-12-14 20:00+0000\n"
-"PO-Revision-Date: 2020-01-16 12:49+0100\n"
+"PO-Revision-Date: 2020-01-21 10:38+0100\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
@@ -531,7 +531,7 @@ msgstr "Altris proprietâts"
 
 #: src/frogr-details-dialog.c:417
 msgid "_Show Up in Global Search Results"
-msgstr ""
+msgstr "_Mostre intai risultâts des ricercjis globâls"
 
 #: src/frogr-details-dialog.c:422
 msgid "Set Geo_location Information"
@@ -539,7 +539,7 @@ msgstr "Stabilìs informazions gjeo_localizazion"
 
 #: src/frogr-details-dialog.c:427
 msgid "Replace 'Date Posted' with 'Date Taken'"
-msgstr ""
+msgstr "Sostituìs 'Date di publicazion' cun 'Date dal scat'"
 
 #. Visually indicate how many pictures are being edited
 #: src/frogr-details-dialog.c:519
@@ -816,7 +816,7 @@ msgstr "Dopre teme GTK _scûr"
 
 #: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
-msgstr ""
+msgstr "_Manten estensions dai file tai titui al cjariament"
 
 #: src/frogr-settings-dialog.c:507
 msgid "_Misc"
@@ -940,34 +940,34 @@ msgstr "_Visualize"
 #: data/gtkbuilder/frogr-menu-bar.ui:113
 #: data/gtkbuilder/frogr-menu-button.ui:56
 msgid "_Sort Elements"
-msgstr ""
+msgstr "_Ordene elements"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:116
 #: data/gtkbuilder/frogr-menu-button.ui:59
 msgid "As _Loaded"
-msgstr ""
+msgstr "Come _cjariâts"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:121
 #: data/gtkbuilder/frogr-menu-button.ui:64
 msgid "By _Date Taken"
-msgstr ""
+msgstr "Par _date dal scat"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:126
 #: data/gtkbuilder/frogr-menu-button.ui:69
 msgid "By _Title"
-msgstr ""
+msgstr "Par _titul"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:131
 #: data/gtkbuilder/frogr-menu-button.ui:74
 msgid "By _Size"
-msgstr ""
+msgstr "Par di_mension"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:138
 #: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "_Reversed Order"
-msgstr ""
+msgstr "Ordin _invertît"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:146
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
-msgstr ""
+msgstr "Abilite _sugjeriments"
