@@ -889,7 +889,7 @@ msgid ""
 "Once you're ready, press the <b>\"Upload\"</b> button to upload your "
 "pictures to Flickr."
 msgstr ""
-"En canto estea listo, prema o botón <b>«Subir»» para subir as súas fotos a "
+"En canto estea listo, prema o botón <b>«Subir»</b> para subir as súas fotos a "
 "Flickr."
 
 #: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
