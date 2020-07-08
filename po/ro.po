@@ -6,81 +6,95 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
-"PO-Revision-Date: 2014-12-08 20:11+0200\n"
-"Last-Translator: Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2020-03-26 17:33+0000\n"
+"PO-Revision-Date: 2020-07-08 15:32+0300\n"
+"Last-Translator: Florentina Mușat <florentina.musat.28@gmail.com>\n"
 "Language-Team: Gnome Romanian Translation Team\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
-"20)) ? 1 : 2);;\n"
-"X-Generator: Virtaal 0.7.1\n"
+"20)) ? 1 : 2);\n"
+"X-Generator: Poedit 2.3.1\n"
 "X-Project-Style: gnome\n"
 
-#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
-#, fuzzy
-msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr "Frogr: un organizator Flickr la distanță pentru GNOME"
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
+msgid "frogr"
+msgstr "frogr"
 
-#: data/frogr.appdata.xml.in:8
+#: data/org.gnome.frogr.appdata.xml.in:8
+msgid "A flickr uploader for GNOME"
+msgstr "Un încărcător flickr pentru GNOME"
+
+#: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
-"frogr is a small application for the GNOME desktop that allows users to "
-"manage their accounts in the Flickr image hosting website."
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
 msgstr ""
+"frogr permite utilizatorilor să-și gestioneze conturile de pe serviciul de "
+"găzduire a fotografiilor Flickr cu o interfață simplă și directă."
 
-#: data/frogr.appdata.xml.in:13
+#: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
 msgstr ""
+"Suportă toate funcționalitățile de bază ale Flickr, inclusiv încărcarea de "
+"poze, adăugarea de descrieri, configurarea etichetelor și gestionarea "
+"grupurilor de seturi și de grupuri."
 
-#: data/frogr.appdata.xml.in:24
-#, fuzzy
+#: data/org.gnome.frogr.appdata.xml.in:25
 msgid "Screenshot of frogr"
-msgstr "Captură de ecra_n"
+msgstr "Captură de ecran a frogr"
 
-#: data/frogr.appdata.xml.in:29
+#: data/org.gnome.frogr.appdata.xml.in:32
 msgid "Mario Sanchez Prada"
-msgstr ""
+msgstr "Mario Sanchez Prada"
 
-#: data/frogr.desktop.in.in:7
+#: data/org.gnome.frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "frogr: un organizator Flickr de la distanță pentru GNOME"
+
+#: data/org.gnome.frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Încarcă și organizează fotografiile în conturile Flickr"
 
-#: data/frogr.desktop.in.in:8
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr ""
+"Flickr;Image;Picture;Photo;Video;Uploader;Imagine;Poză;Fotografie;Încărcător;"
 
 #: src/frogr-about-dialog.c:43
-#, fuzzy
 msgid "A Flickr Remote Organizer for GNOME\n"
-msgstr "Un organizator de Flickr la distanță pentru GNOME\n"
+msgstr "Un organizator Flickr de la distanță pentru GNOME\n"
 
-#: src/frogr-about-dialog.c:72
+#: src/frogr-about-dialog.c:70
 msgid "translator-credits"
-msgstr "Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>"
+msgstr ""
+"Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
+"Florentina Mușat <florentina [dot] musat [dot] 28 [at] gmail [dot] com>, 2020"
 
-#: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
-#: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
-#: src/frogr-create-new-set-dialog.c:310 src/frogr-details-dialog.c:1168
-#: src/frogr-main-view.c:1543 src/frogr-main-view.c:1618
-#: src/frogr-main-view.c:1670 src/frogr-settings-dialog.c:930
+#: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
+#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
+#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1201
+#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
+#: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
 msgid "_Cancel"
-msgstr ""
+msgstr "_Anulează"
 
-#: src/frogr-add-tags-dialog.c:193 src/frogr-add-to-group-dialog.c:530
-#: src/frogr-add-to-set-dialog.c:531 src/frogr-create-new-set-dialog.c:312
+#: src/frogr-add-tags-dialog.c:189 src/frogr-add-to-group-dialog.c:524
+#: src/frogr-add-to-set-dialog.c:525 src/frogr-create-new-set-dialog.c:304
 msgid "_Add"
-msgstr ""
+msgstr "_Adaugă"
 
-#: src/frogr-add-tags-dialog.c:202
+#: src/frogr-add-tags-dialog.c:199
 msgid "Enter a spaces separated list of tags:"
 msgstr "Introduceți o listă de etichete separate prin spații:"
 
-#: src/frogr-add-tags-dialog.c:228
+#: src/frogr-add-tags-dialog.c:227
 msgid "Add Tags"
 msgstr "Adaugă etichete"
 
@@ -92,7 +106,7 @@ msgstr "Nume"
 msgid "Elements"
 msgstr "Elemente"
 
-#: src/frogr-add-to-group-dialog.c:581
+#: src/frogr-add-to-group-dialog.c:577
 msgid "Add to Groups"
 msgstr "Adaugă în grupuri"
 
@@ -100,43 +114,43 @@ msgstr "Adaugă în grupuri"
 msgid "Title"
 msgstr "Titlu"
 
-#: src/frogr-add-to-set-dialog.c:582
+#: src/frogr-add-to-set-dialog.c:578
 msgid "Add to Sets"
 msgstr "Adaugă la seturi"
 
 #: src/frogr-auth-dialog.c:59
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Please press the button to authorize %s and then come back to complete the "
 "process."
 msgstr ""
-"Apăsați butonul pentru a autoriza %s și apoi reveniți la acest ecran pentru "
-"a completa procesul."
+"Apăsați butonul pentru a autoriza %s și apoi reveniți pentru a completa "
+"procesul."
 
-#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
-#: src/frogr-controller.c:2286
-#, fuzzy, c-format
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
+#: src/frogr-controller.c:2213
+#, c-format
 msgid "Authorize %s"
-msgstr "Autorizează _frogr"
+msgstr "Autorizează %s"
 
-#: src/frogr-auth-dialog.c:155 src/frogr-settings-dialog.c:932
+#: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
 msgid "_Close"
-msgstr ""
+msgstr "În_chide"
 
-#: src/frogr-auth-dialog.c:167
+#. Description label
+#: src/frogr-auth-dialog.c:169
 msgid "Enter verification code:"
-msgstr ""
+msgstr "Introduceți codul de verificare:"
 
-#: src/frogr-auth-dialog.c:221
+#: src/frogr-auth-dialog.c:226
 msgid "Invalid verification code"
-msgstr ""
+msgstr "Cod de verificare nevalid"
 
-#: src/frogr-controller.c:581
-#, fuzzy
+#: src/frogr-controller.c:575
 msgid "Process cancelled"
-msgstr "Proces anulat de utilizator"
+msgstr "Proces anulat"
 
-#: src/frogr-controller.c:586
+#: src/frogr-controller.c:580
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -144,7 +158,7 @@ msgstr ""
 "Eroare de conexiune:\n"
 "Rețeaua nu este disponibilă"
 
-#: src/frogr-controller.c:590
+#: src/frogr-controller.c:584
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -152,8 +166,7 @@ msgstr ""
 "Eroare de conexiune:\n"
 "Cerere greșită"
 
-#: src/frogr-controller.c:594
-#, fuzzy
+#: src/frogr-controller.c:588
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -161,16 +174,15 @@ msgstr ""
 "Eroare de conexiune:\n"
 "Eroare din partea serverului"
 
-#: src/frogr-controller.c:598
-#, fuzzy
+#: src/frogr-controller.c:592
 msgid ""
 "Error uploading:\n"
 "File invalid"
 msgstr ""
-"Eroare la încărcarea imaginii:\n"
+"Eroare la încărcare:\n"
 "Fișier nevalid"
 
-#: src/frogr-controller.c:602
+#: src/frogr-controller.c:596
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -178,21 +190,23 @@ msgstr ""
 "Eroare la încărcarea imaginii:\n"
 "Cota a fost depășită"
 
-#: src/frogr-controller.c:607
+#: src/frogr-controller.c:601
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Cotă depășită (limită: %d video pe lună)"
+msgstr[1] "Cotă depășită (limită: %d video-uri pe lună)"
+msgstr[2] "Cotă depășită (limită: %d de video-uri pe lună)"
 
-#: src/frogr-controller.c:611
+#: src/frogr-controller.c:605
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
 msgstr ""
+"Eroare la încărcarea video-ului:\n"
+"Nu mai puteți încărca video-uri cu acest cont"
 
-#: src/frogr-controller.c:617
+#: src/frogr-controller.c:610
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -200,7 +214,7 @@ msgstr ""
 "Eroare:\n"
 "Fotografia nu a fost găsită"
 
-#: src/frogr-controller.c:621
+#: src/frogr-controller.c:614
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -208,7 +222,7 @@ msgstr ""
 "Eroare:\n"
 "Fotografia există deja în setul de fotografii"
 
-#: src/frogr-controller.c:625
+#: src/frogr-controller.c:618
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -216,7 +230,7 @@ msgstr ""
 "Eroare:\n"
 "Fotografia există deja în grup"
 
-#: src/frogr-controller.c:629
+#: src/frogr-controller.c:622
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -224,7 +238,7 @@ msgstr ""
 "Eroare:\n"
 "Fotografia există deja în numărul maxim de grupuri posibile"
 
-#: src/frogr-controller.c:633
+#: src/frogr-controller.c:626
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -232,7 +246,7 @@ msgstr ""
 "Eroare:\n"
 "Limita grupului a fost atinsă deja"
 
-#: src/frogr-controller.c:637
+#: src/frogr-controller.c:630
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -240,7 +254,7 @@ msgstr ""
 "Eroare:\n"
 "Fotografia a fost adăugată la coada grupului"
 
-#: src/frogr-controller.c:641
+#: src/frogr-controller.c:634
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -248,7 +262,7 @@ msgstr ""
 "Eroare:\n"
 "Fotografia a fost adăugată deja la coada grupului"
 
-#: src/frogr-controller.c:645
+#: src/frogr-controller.c:638
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -256,7 +270,8 @@ msgstr ""
 "Eroare:\n"
 "Conținutul nu este permis pentru acest grup"
 
-#: src/frogr-controller.c:649
+#: src/frogr-controller.c:642
+#, c-format
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -264,46 +279,46 @@ msgstr ""
 "Autorizarea a eșuat.\n"
 "Reîncercați"
 
-#: src/frogr-controller.c:655
-#, fuzzy, c-format
+#: src/frogr-controller.c:648
+#, c-format
 msgid ""
 "Error\n"
 "%s is not properly authorized to upload pictures to Flickr.\n"
 "Please re-authorize it"
 msgstr ""
 "Eroare\n"
-"%s nu este autorizat corespunzător pentru a încărca imagini la flickr.\n"
-"Re-autorizați-l"
+"%s nu este autorizat corespunzător pentru a încărca poze la Flickr.\n"
+"Autorizați-l"
 
-#: src/frogr-controller.c:660
-#, fuzzy
+#: src/frogr-controller.c:653
+#, c-format
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
 msgstr ""
-"Autorizarea a eșuat.\n"
-"Reîncercați"
+"Nu se poate autentifica la Flickr\n"
+"Încercați din nou."
 
-#: src/frogr-controller.c:664
-#, fuzzy, c-format
+#: src/frogr-controller.c:657
+#, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
 "Please try again."
 msgstr ""
-"Trebuie să autorizați %s în mod corespunzător înainte să încărcați "
-"fotografii la flickr.\n"
-"Re-autorizați-l."
+"Nu ați autorizat corespunzător %s încă.\n"
+"Încercați din nou."
 
-#: src/frogr-controller.c:669
-#, fuzzy
+#: src/frogr-controller.c:662
+#, c-format
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
 msgstr ""
-"Autorizarea a eșuat.\n"
-"Reîncercați"
+"Cod de verificare nevalid.\n"
+"Încercați din nou."
 
-#: src/frogr-controller.c:673
+#: src/frogr-controller.c:666
+#, c-format
 msgid ""
 "Error:\n"
 "Service not available"
@@ -311,645 +326,676 @@ msgstr ""
 "Eroare:\n"
 "Serviciul nu este disponibil"
 
-#: src/frogr-controller.c:678
-#, fuzzy, c-format
+#. General error: just dump the raw error description
+#: src/frogr-controller.c:671
+#, c-format
 msgid "An error happened: %s."
-msgstr "S-a produs o eroare în timpul încărcării unei imagini: %s."
+msgstr "A apărut o eroare: %s."
 
-#: src/frogr-controller.c:883
-#, fuzzy
+#: src/frogr-controller.c:869
 msgid "Authorization failed (timed out)"
-msgstr ""
-"Autorizarea a eșuat.\n"
-"Reîncercați"
+msgstr "Autorizarea a eșuat (limită de timp depășită)"
 
-#: src/frogr-controller.c:931
+#: src/frogr-controller.c:917
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
-msgstr ""
+msgstr "Se reîncearcă încărcarea (încercarea %d/%d)…"
 
-#: src/frogr-controller.c:936
+#: src/frogr-controller.c:922
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Se încarcă „%s”…"
 
-#: src/frogr-controller.c:2242
+#: src/frogr-controller.c:2169
 msgid "Updating credentials…"
-msgstr ""
+msgstr "Se încarcă certificările…"
 
-#: src/frogr-controller.c:2247
-#, fuzzy
+#: src/frogr-controller.c:2174
 msgid "Retrieving data for authorization…"
-msgstr "Se preia lista etichetelor…"
+msgstr "Se obțin datele pentru autorizare…"
 
-#: src/frogr-controller.c:2252
+#: src/frogr-controller.c:2179
 msgid "Finishing authorization…"
-msgstr ""
+msgstr "Se termină autorizarea…"
 
-#: src/frogr-controller.c:2257
+#: src/frogr-controller.c:2184
 msgid "Retrieving list of sets…"
 msgstr "Se preia lista seturilor…"
 
-#: src/frogr-controller.c:2262
+#: src/frogr-controller.c:2189
 msgid "Retrieving list of groups…"
 msgstr "Se preia lista grupurilor…"
 
-#: src/frogr-controller.c:2267
+#: src/frogr-controller.c:2194
 msgid "Retrieving list of tags…"
 msgstr "Se preia lista etichetelor…"
 
-#: src/frogr-controller.c:2292
+#: src/frogr-controller.c:2219
+#, c-format
 msgid "Fetching information"
-msgstr ""
+msgstr "Se aduc informațiile"
 
-#: src/frogr-controller.c:2398
+#: src/frogr-controller.c:2323
 msgid "No sets found"
 msgstr "Nu au fost găsite seturi"
 
-#: src/frogr-controller.c:2423
+#: src/frogr-controller.c:2348
 msgid "No groups found"
 msgstr "Nu au fost găsite grupuri"
 
-#: src/frogr-controller.c:2984
-#, fuzzy, c-format
+#: src/frogr-controller.c:2906
+#, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
 "Please re-authorize it."
 msgstr ""
-"Trebuie să autorizați %s în mod corespunzător înainte să încărcați "
-"fotografii la flickr.\n"
-"Re-autorizați-l."
+"Aveți nevoie să autorizați corespunzător %s înainte de a încărca orice poze "
+"la Flickr.\n"
+"Autorizați-l."
 
-#: src/frogr-controller.c:2994
-#, fuzzy
+#: src/frogr-controller.c:2915
+#, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
-msgstr ""
-"Trebuie să autorizați %s în mod corespunzător înainte să încărcați "
-"fotografii la flickr.\n"
-"Re-autorizați-l."
+msgstr "Trebuie să fiți conectat înainte de a încărca orice poze la Flickr."
 
-#: src/frogr-controller.c:3012
-#, fuzzy
+#: src/frogr-controller.c:2932
 msgid "Uploading Pictures"
-msgstr "Se încarcă imaginile %d / %d"
+msgstr "Se încarcă pozele"
 
-#: src/frogr-controller.c:3057
+#: src/frogr-controller.c:2977
+#, c-format
 msgid "Error opening project file"
-msgstr ""
+msgstr "Eroare la deschiderea fișierului proiectului"
 
-#: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
+#. This shows a dialog notifying the problem to the user
+#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
 msgid "Missing data required"
 msgstr "Sunt necesare datele lipsă"
 
-#: src/frogr-create-new-set-dialog.c:326
-#, fuzzy
+#: src/frogr-create-new-set-dialog.c:319
 msgid "Title:"
-msgstr "_Titlu:"
+msgstr "Titlu:"
 
-#: src/frogr-create-new-set-dialog.c:335
-#, fuzzy
+#: src/frogr-create-new-set-dialog.c:330
 msgid "Description:"
-msgstr "_Descriere:"
+msgstr "Descriere:"
 
-#: src/frogr-create-new-set-dialog.c:356
+#: src/frogr-create-new-set-dialog.c:355
 msgid "Fill Pictures Details with Title and Description"
-msgstr ""
+msgstr "Completează detaliile pozelor cu titlul și descrierea"
 
-#: src/frogr-create-new-set-dialog.c:381
-#, fuzzy
+#: src/frogr-create-new-set-dialog.c:383
 msgid "Create New Set"
 msgstr "Creează un set nou"
 
 #: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
 msgid "Default (as specified in Flickr)"
-msgstr ""
+msgstr "Implicit (așa cum este specificat în Flickr)"
 
 #: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
 msgid "All rights reserved"
-msgstr ""
+msgstr "Toate drepturile rezervate"
 
 #: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
 msgid "CC Attribution-NonCommercial-ShareAlike"
-msgstr ""
+msgstr "CC Atribuire-Necomercială-ÎmpărțireEgală"
 
 #: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
 msgid "CC Attribution-NonCommercial"
-msgstr ""
+msgstr "CC Atribuire-Necomercială"
 
 #: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
 msgid "CC Attribution-NonCommercial-NoDerivs"
-msgstr ""
+msgstr "CC Atribuire-Necomercială-FărăDerivate"
 
 #: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
 msgid "CC Attribution"
-msgstr ""
+msgstr "CC Atribuire"
 
 #: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
 msgid "CC Attribution-ShareAlike"
-msgstr ""
+msgstr "CC Atribuire-ÎmpărțireEgală"
 
 #: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
 msgid "CC Attribution-NoDerivs"
-msgstr ""
+msgstr "CC Atribuire-FărăDerivate"
 
-#: src/frogr-details-dialog.c:172
+#: src/frogr-details-dialog.c:175
 msgid "Open with image viewer"
-msgstr ""
+msgstr "Deschide cu vizualizatorul de imagine"
 
-#: src/frogr-details-dialog.c:190
+#: src/frogr-details-dialog.c:196
 msgid "_Title:"
 msgstr "_Titlu:"
 
-#: src/frogr-details-dialog.c:200
+#: src/frogr-details-dialog.c:208
 msgid "_Description:"
 msgstr "_Descriere:"
 
-#: src/frogr-details-dialog.c:224
+#: src/frogr-details-dialog.c:235
 msgid "Ta_gs:"
 msgstr "Etic_hete:"
 
-#: src/frogr-details-dialog.c:247
+#: src/frogr-details-dialog.c:262
 msgid "Visibility"
 msgstr "Vizibilitate"
 
-#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
+#: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
 msgid "_Private"
 msgstr "_Privat"
 
-#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
+#: src/frogr-details-dialog.c:278 src/frogr-settings-dialog.c:207
 msgid "P_ublic"
 msgstr "P_ublic"
 
-#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
+#: src/frogr-details-dialog.c:292 src/frogr-settings-dialog.c:218
 msgid "_Family"
-msgstr ""
+msgstr "_Familie"
 
-#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
+#: src/frogr-details-dialog.c:297 src/frogr-settings-dialog.c:220
 msgid "F_riends"
-msgstr ""
+msgstr "P_rieteni"
 
-#: src/frogr-details-dialog.c:288
-#, fuzzy
+#: src/frogr-details-dialog.c:314
 msgid "Content Type"
-msgstr "Tipul conținutului"
+msgstr "Tip de conținut"
 
-#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
+#: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
 msgid "P_hoto"
 msgstr "_Fotografie"
 
-#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
+#: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
 msgid "Scree_nshot"
 msgstr "Captură de ecra_n"
 
-#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
 msgid "Oth_er"
 msgstr "Altele"
 
-#: src/frogr-details-dialog.c:317
-#, fuzzy
+#: src/frogr-details-dialog.c:350
 msgid "Safety Level"
 msgstr "Nivel de siguranță"
 
-#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
+#: src/frogr-details-dialog.c:359 src/frogr-settings-dialog.c:277
 msgid "S_afe"
 msgstr "S_igur"
 
-#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
+#: src/frogr-details-dialog.c:364 src/frogr-settings-dialog.c:279
 msgid "_Moderate"
 msgstr "_Moderat"
 
-#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
+#: src/frogr-details-dialog.c:369 src/frogr-settings-dialog.c:281
 msgid "Restr_icted"
 msgstr "Restr_icționat"
 
-#: src/frogr-details-dialog.c:345
-msgid "License Type"
-msgstr ""
-
-#: src/frogr-details-dialog.c:367
-msgid "Other Properties"
-msgstr ""
-
-#: src/frogr-details-dialog.c:375
-#, fuzzy
-msgid "_Show Up in Global Search Results"
-msgstr "Afișea_ză în rezultatele căutării globale"
-
-#: src/frogr-details-dialog.c:379
-msgid "Set Geo_location Information"
-msgstr ""
-
 #: src/frogr-details-dialog.c:383
-msgid "Replace 'Date Posted' with 'Date Taken'"
-msgstr ""
+msgid "License Type"
+msgstr "Tip de licență"
 
-#: src/frogr-details-dialog.c:475
-#, fuzzy, c-format
+#: src/frogr-details-dialog.c:408
+msgid "Other Properties"
+msgstr "Alte proprietăți"
+
+#: src/frogr-details-dialog.c:417
+msgid "_Show Up in Global Search Results"
+msgstr "_Afișează în rezultatele de căutare globale"
+
+#: src/frogr-details-dialog.c:422
+msgid "Set Geo_location Information"
+msgstr "Stabilește informațiile de geo_locație"
+
+#: src/frogr-details-dialog.c:427
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr "Înlocuiește „Data postării” cu „Data fotografierii”"
+
+#. Visually indicate how many pictures are being edited
+#: src/frogr-details-dialog.c:519
+#, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
-msgstr[0] "_Adaugă imaginile"
-msgstr[1] "_Adaugă imaginile"
-msgstr[2] "_Adaugă imaginile"
+msgstr[0] "(%d poză)"
+msgstr[1] "(%d poze)"
+msgstr[2] "(%d de poze)"
 
-#: src/frogr-details-dialog.c:548
-#, fuzzy
+#: src/frogr-details-dialog.c:590
 msgid "An error happened trying to load the picture"
-msgstr "S-a produs o eroare în timpul încărcării unei imagini: %s."
+msgstr "A apărut o eroare la încercarea de a încărca poza"
 
-#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
+#: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
 msgid "_Edit"
-msgstr ""
+msgstr "_Editează"
 
-#: src/frogr-details-dialog.c:1197
+#: src/frogr-details-dialog.c:1230
 msgid "Edit Picture Details"
 msgstr "Modifică detaliile imaginii"
 
 #: src/frogr-file-loader.c:142
-#, fuzzy, c-format
+#, c-format
 msgid "Loading files %d / %d"
-msgstr "Se încarcă imaginile %d / %d"
+msgstr "Se încarcă fișierele %d / %d"
 
-#: src/frogr-file-loader.c:369
+#: src/frogr-file-loader.c:359
 #, c-format
 msgid ""
 "Unable to load picture %s:\n"
 "%s"
 msgstr ""
+"Nu se poate încărca poza %s:\n"
+"%s"
 
-#: src/frogr-file-loader.c:400
+#: src/frogr-file-loader.c:385
 #, c-format
 msgid ""
 "Unable to load video %s\n"
 "Please check that you have the right codec installed"
 msgstr ""
+"Nu se poate încărca video-ul %s\n"
+"Verificați dacă aveți codecul corect instalat"
 
-#: src/frogr-file-loader.c:636
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: src/frogr-file-loader.c:603
 #, c-format
 msgid ""
 "Can't load file %s:\n"
 "Size of file is bigger than the maximum allowed for this account (%s)"
 msgstr ""
+"Nu se poate încărca fișierul %s:\n"
+"Dimensiunea fișierului este mai mare decât maximul permis pentru acest cont "
+"(%s)"
 
-#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Organizator Flickr la distanță"
+
+#. First create the left side buttons
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open"
-msgstr ""
+msgstr "Deschide"
 
-#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open Existing Project"
-msgstr ""
+msgstr "Deschide un proiect existent"
 
-#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
+#: src/frogr-main-view.c:597 src/frogr-main-view.c:693
 msgid "Add"
 msgstr "Adaugă"
 
-#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
-#, fuzzy
-msgid "Add Elements"
-msgstr "Elemente"
-
-#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
+#: src/frogr-main-view.c:598 src/frogr-main-view.c:694
 msgid "Remove"
 msgstr "Elimină"
 
-#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
-#, fuzzy
-msgid "Remove Elements"
-msgstr "Elemente"
-
-#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
+#: src/frogr-main-view.c:599 src/frogr-main-view.c:696
 msgid "Upload"
 msgstr "Încarcă"
 
-#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
-#, fuzzy
-msgid "Upload All"
-msgstr "Încarcă _tot"
-
-#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+#. Save project item
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save"
-msgstr ""
+msgstr "Salvează"
 
-#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save Current Project"
-msgstr ""
+msgstr "Salvează proiectul curent"
 
-#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
-msgid "_About"
-msgstr "_Despre"
-
-#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
-#: data/gtkbuilder/frogr-menu-button.ui:94
-msgid "_Quit"
-msgstr "_Ieșire"
-
-#: src/frogr-main-view.c:1070
-#, fuzzy
+#. Create the submenu and insert it in the right section
+#: src/frogr-main-view.c:1012
 msgid "Accounts"
-msgstr "Co_nturi"
+msgstr "Conturi"
 
-#: src/frogr-main-view.c:1410
+#. String showind the date and time a picture was taken
+#: src/frogr-main-view.c:1363
 #, c-format
 msgid "Taken: %s"
-msgstr ""
+msgstr "Fotografiat: %s"
 
-#: src/frogr-main-view.c:1415
+#: src/frogr-main-view.c:1367
 #, c-format
 msgid "File size: %s"
-msgstr ""
+msgstr "Dimensiune fișier: %s"
 
-#: src/frogr-main-view.c:1540
-#, fuzzy
+#: src/frogr-main-view.c:1483
 msgid "Select File"
-msgstr "Selectează o imagine"
+msgstr "Selectează fișierul"
 
-#: src/frogr-main-view.c:1544 src/frogr-main-view.c:1671
+#: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
 msgid "_Open"
-msgstr ""
+msgstr "_Deschide"
 
-#: src/frogr-main-view.c:1553
+#: src/frogr-main-view.c:1496
 msgid "Frogr Project Files"
-msgstr ""
+msgstr "Fișiere de proiect frogr"
 
-#: src/frogr-main-view.c:1615
-#, fuzzy
+#: src/frogr-main-view.c:1556
 msgid "Select Destination"
-msgstr "Descrierea setului:"
+msgstr "Selectează destinația"
 
-#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
-#: data/gtkbuilder/frogr-menu-button.ui:6
+#: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
+#: data/gtkbuilder/frogr-menu-button.ui:12
 msgid "_Save"
-msgstr ""
+msgstr "_Salvează"
 
-#: src/frogr-main-view.c:1622
+#: src/frogr-main-view.c:1563
 msgid "Untitled Project.frogr"
-msgstr ""
+msgstr "Proiect fără titlu.frogr"
 
-#: src/frogr-main-view.c:1667
+#: src/frogr-main-view.c:1608
 msgid "Select a Picture"
 msgstr "Selectează o imagine"
 
-#: src/frogr-main-view.c:1694
+#: src/frogr-main-view.c:1635
 msgid "All Files"
-msgstr ""
+msgstr "Toate fișierele"
 
-#: src/frogr-main-view.c:1697
+#: src/frogr-main-view.c:1638
 msgid "Image Files"
-msgstr ""
+msgstr "Fișiere imagine"
 
-#: src/frogr-main-view.c:1701
+#: src/frogr-main-view.c:1642
 msgid "Video Files"
-msgstr ""
+msgstr "Fișiere video"
 
-#: src/frogr-main-view.c:1723
+#: src/frogr-main-view.c:1664
 msgid "You don't have any picture added yet"
-msgstr ""
+msgstr "Nu aveți adăugate poze încă"
 
-#: src/frogr-main-view.c:1736
+#: src/frogr-main-view.c:1677
 msgid "You need to select some pictures first"
 msgstr "Trebuie să selectați câteva imagini mai întâi"
 
-#: src/frogr-main-view.c:2108
-#, fuzzy
+#: src/frogr-main-view.c:2046
 msgid "Not connected to Flickr"
-msgstr "Nu sunteți conectat la flickr"
+msgstr "Nu sunteți conectat la Flickr"
 
-#: src/frogr-main-view.c:2118
-#, fuzzy, c-format
+#. Login string, showing the user is PRO (second '%s') if so.
+#: src/frogr-main-view.c:2056
+#, c-format
 msgid "Connected as %s%s"
-msgstr "Conectat ca"
+msgstr "Conectat ca %s%s"
 
-#: src/frogr-main-view.c:2119
+#: src/frogr-main-view.c:2057
 msgid " (PRO account)"
 msgstr " (cont PRO)"
 
-#: src/frogr-main-view.c:2143
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: src/frogr-main-view.c:2081
 #, c-format
 msgid " - %s / %s remaining"
-msgstr ""
+msgstr " - %s / %s rămas"
 
-#: src/frogr-main-view.c:2169
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: src/frogr-main-view.c:2104
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] " - %d fișier de încărcat (%s)"
+msgstr[1] " - %d fișiere de încărcat (%s)"
+msgstr[2] " - %d de fișiere de încărcat (%s)"
 
-#: src/frogr-settings-dialog.c:185
+#: src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
 msgstr "Vizibilitate implicită"
 
-#: src/frogr-settings-dialog.c:224
+#: src/frogr-settings-dialog.c:236
 msgid "Default Content Type"
 msgstr "Tip de conexiune implicit"
 
-#: src/frogr-settings-dialog.c:250
+#: src/frogr-settings-dialog.c:265
 msgid "Default Safety Level"
 msgstr "Nivel de securitate implicit"
 
-#: src/frogr-settings-dialog.c:276
-#, fuzzy
+#: src/frogr-settings-dialog.c:294
 msgid "Default License"
-msgstr "Tip de conexiune implicit"
+msgstr "Licență implicită"
 
-#: src/frogr-settings-dialog.c:302
+#: src/frogr-settings-dialog.c:323
 msgid "Other Defaults"
-msgstr ""
+msgstr "Alte implicite"
 
-#: src/frogr-settings-dialog.c:312
-#, fuzzy
+#: src/frogr-settings-dialog.c:335
 msgid "_Show Pictures in Global Search Results"
-msgstr "Afișea_ză în rezultatele căutării globale"
+msgstr "_Arată pozele în rezultatele de căutare globale"
 
-#: src/frogr-settings-dialog.c:315
+#: src/frogr-settings-dialog.c:338
 msgid "Set Geo_location Information for Pictures"
-msgstr ""
+msgstr "Stabilește informațiile de geo_locație pentru poze"
 
-#: src/frogr-settings-dialog.c:318
+#: src/frogr-settings-dialog.c:341
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
-msgstr ""
+msgstr "Înlocuiește „Data postării” cu „Data fotografierii” pentru poze"
 
-#: src/frogr-settings-dialog.c:324
+#: src/frogr-settings-dialog.c:347
 msgid "_General"
 msgstr "_Generale"
 
-#: src/frogr-settings-dialog.c:344
+#: src/frogr-settings-dialog.c:368
 msgid "Proxy Settings"
-msgstr ""
+msgstr "Configurări proxy"
 
-#: src/frogr-settings-dialog.c:353
-#, fuzzy
+#. Enable proxy
+#: src/frogr-settings-dialog.c:377
 msgid "_Enable HTTP Proxy"
-msgstr "_Utilizează proxy HTTP"
+msgstr "Activ_ează proxy-ul HTTP"
 
-#: src/frogr-settings-dialog.c:363
+#: src/frogr-settings-dialog.c:389
 msgid "_Host:"
 msgstr "_Gazdă:"
 
-#: src/frogr-settings-dialog.c:376
+#. Proxy port
+#: src/frogr-settings-dialog.c:404
 msgid "_Port:"
 msgstr "_Port:"
 
-#: src/frogr-settings-dialog.c:389
+#. Proxy username
+#: src/frogr-settings-dialog.c:419
 msgid "U_sername:"
 msgstr "_Utilizator:"
 
-#: src/frogr-settings-dialog.c:402
+#. Proxy password
+#: src/frogr-settings-dialog.c:434
 msgid "Pass_word:"
 msgstr "Paro_lă:"
 
-#: src/frogr-settings-dialog.c:426
+#: src/frogr-settings-dialog.c:460
 msgid "Connec_tion"
 msgstr "Cone_xiune"
 
-#: src/frogr-settings-dialog.c:444
+#: src/frogr-settings-dialog.c:479
 msgid "Other options"
-msgstr ""
+msgstr "Alte opțiuni"
 
-#: src/frogr-settings-dialog.c:454
+#: src/frogr-settings-dialog.c:490
 msgid "Ena_ble Tags Auto-Completion"
-msgstr ""
+msgstr "Activ_ează auto-completarea etichetelor"
 
-#: src/frogr-settings-dialog.c:457
+#: src/frogr-settings-dialog.c:493
 msgid "_Import Tags from Pictures Metadata"
-msgstr ""
+msgstr "_Importă etichetele de la datele meta ale pozelor"
 
-#: src/frogr-settings-dialog.c:461
+#: src/frogr-settings-dialog.c:497
 msgid "Use _Dark GTK Theme"
-msgstr ""
+msgstr "Utilizează tema GTK întunec_ată"
 
-#: src/frogr-settings-dialog.c:465
+#: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
-msgstr ""
+msgstr "_Păstrează extensiile de fișier în titlu când se încarcă"
 
-#: src/frogr-settings-dialog.c:471
+#: src/frogr-settings-dialog.c:507
 msgid "_Misc"
-msgstr ""
+msgstr "_Diverse"
 
-#: src/frogr-settings-dialog.c:972
+#: src/frogr-settings-dialog.c:1009
 msgid "Preferences"
 msgstr "Preferințe"
 
-#: data/gtkbuilder/frogr-app-menu.ui:6
-#, fuzzy
-msgid "Aut_horize Account…"
-msgstr "Autorizează _frogr"
-
-#: data/gtkbuilder/frogr-app-menu.ui:12
-msgid "_Preferences…"
-msgstr "_Preferințe…"
-
-#: data/gtkbuilder/frogr-app-menu.ui:18
-msgid "_Help"
-msgstr "_Ajutor"
-
-#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
-#: data/gtkbuilder/frogr-menu-button.ui:18
-#, fuzzy
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
+#: data/gtkbuilder/frogr-menu-button.ui:24
 msgid "_Edit Details…"
-msgstr "Modifică _detalii…"
+msgstr "_Editează detaliile…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:11
-#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+#: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
 msgid "Add _Tags…"
 msgstr "Adaugă e_tichete…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:16
-#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+#: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
 msgid "Add to _Group…"
 msgstr "Adaugă _grupului…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:21
-#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
-#, fuzzy
+#: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
 msgid "Add to _Photoset"
-msgstr "Adaugă _setului"
+msgstr "Adaugă la setul de _fotografii"
 
 #: data/gtkbuilder/frogr-context-menu.ui:24
-#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
-#, fuzzy
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
 msgid "_Add to Existing Photoset…"
-msgstr "Adaugă setului _existent…"
+msgstr "_Adaugă la setul de fotografii existent…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:29
-#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
-#, fuzzy
+#: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
 msgid "_Create New Photoset…"
-msgstr "_Creează un set nou…"
+msgstr "_Creează un set de fotografii nou…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:38
-#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+#: data/gtkbuilder/frogr-menu-bar.ui:103
+#: data/gtkbuilder/frogr-menu-button.ui:93
 msgid "_Open in External Viewer"
-msgstr ""
+msgstr "_Deschide în vizualizatorul extern"
 
 #: data/gtkbuilder/frogr-context-menu.ui:45
-#: data/gtkbuilder/frogr-menu-bar.ui:30
-#, fuzzy
 msgid "_Remove Elements"
-msgstr "Elemente"
+msgstr "_Elimină elementele"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:5
+#: data/gtkbuilder/frogr-main-view.ui:51
+msgid "No pictures loaded"
+msgstr "Nu au fost încărcate poze"
+
+#: data/gtkbuilder/frogr-main-view.ui:67
+msgid ""
+"Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
+"window."
+msgstr ""
+"Apăsați butonul <b>„Adaugă”</b> de pe bara de unelte pentru a încărca poze "
+"în această fereastră."
+
+#: data/gtkbuilder/frogr-main-view.ui:83
+msgid ""
+"Once you're ready, press the <b>\"Upload\"</b> button to upload your "
+"pictures to Flickr."
+msgstr ""
+"Odată ce sunteți gata, apăsați butonul <b>„Încarcă”</b> pentru a încărca "
+"pozele la Flickr."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
+msgid "Aut_horize Account…"
+msgstr "Autori_zează contul…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:11
 msgid "_File"
 msgstr "_Fișier"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:8
+#: data/gtkbuilder/frogr-menu-bar.ui:14
 msgid "_Open…"
-msgstr ""
+msgstr "_Deschide…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
 msgid "Save _As…"
-msgstr ""
+msgstr "Salvează c_a…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:25
-#, fuzzy
-msgid "A_dd Elements…"
-msgstr "Elemente"
+#: data/gtkbuilder/frogr-menu-bar.ui:31
+msgid "A_dd…"
+msgstr "A_daugă…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:37
-#, fuzzy
-msgid "_Upload All"
-msgstr "Încarcă _tot"
+#: data/gtkbuilder/frogr-menu-bar.ui:36
+msgid "_Remove"
+msgstr "_Elimină"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:86
+#: data/gtkbuilder/frogr-menu-bar.ui:41
+msgid "_Upload"
+msgstr "Î_ncarcă"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:48
+#: data/gtkbuilder/frogr-menu-button.ui:100
+msgid "_Preferences…"
+msgstr "_Preferințe…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:52
+#: data/gtkbuilder/frogr-menu-button.ui:104
+msgid "_Help"
+msgstr "_Ajutor"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:57
+#: data/gtkbuilder/frogr-menu-button.ui:109
+msgid "_About frogr"
+msgstr "_Despre frogr"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:61
+msgid "_Quit"
+msgstr "_Ieșire"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:110
 msgid "_View"
-msgstr ""
+msgstr "_Vizualizează"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
-#, fuzzy
+#: data/gtkbuilder/frogr-menu-bar.ui:113
+#: data/gtkbuilder/frogr-menu-button.ui:56
 msgid "_Sort Elements"
-msgstr "Elemente"
+msgstr "_Sortează elementele"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+#: data/gtkbuilder/frogr-menu-bar.ui:116
+#: data/gtkbuilder/frogr-menu-button.ui:59
 msgid "As _Loaded"
-msgstr ""
+msgstr "Ca și î_ncărcate"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+#: data/gtkbuilder/frogr-menu-bar.ui:121
+#: data/gtkbuilder/frogr-menu-button.ui:64
 msgid "By _Date Taken"
-msgstr ""
+msgstr "După _data fotografierii"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:102
-#: data/gtkbuilder/frogr-menu-button.ui:63
-#, fuzzy
+#: data/gtkbuilder/frogr-menu-bar.ui:126
+#: data/gtkbuilder/frogr-menu-button.ui:69
 msgid "By _Title"
-msgstr "_Titlu:"
+msgstr "După _titlu"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:107
-#: data/gtkbuilder/frogr-menu-button.ui:68
+#: data/gtkbuilder/frogr-menu-bar.ui:131
+#: data/gtkbuilder/frogr-menu-button.ui:74
 msgid "By _Size"
-msgstr ""
+msgstr "După dimen_siune"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:114
-#: data/gtkbuilder/frogr-menu-button.ui:75
-msgid "_Reversed Order"
-msgstr ""
-
-#: data/gtkbuilder/frogr-menu-bar.ui:122
+#: data/gtkbuilder/frogr-menu-bar.ui:138
 #: data/gtkbuilder/frogr-menu-button.ui:81
-msgid "Enable _Tooltips"
-msgstr ""
+msgid "_Reversed Order"
+msgstr "Ordine inve_rsată"
 
-#~ msgid "Flickr Remote Organizer"
-#~ msgstr "Organizator Flickr la distanță"
+#: data/gtkbuilder/frogr-menu-bar.ui:146
+#: data/gtkbuilder/frogr-menu-button.ui:87
+msgid "Enable _Tooltips"
+msgstr "Activează _indiciile"
+
+#, fuzzy
+#~ msgid "Add Elements"
+#~ msgstr "Elemente"
+
+#, fuzzy
+#~ msgid "Remove Elements"
+#~ msgstr "Elemente"
+
+#, fuzzy
+#~ msgid "Upload All"
+#~ msgstr "Încarcă _tot"
+
+#, fuzzy
+#~ msgid "_Upload All"
+#~ msgstr "Încarcă _tot"
 
 #~ msgid ""
 #~ "Press the button to start using %s once you've authorized it in your "
