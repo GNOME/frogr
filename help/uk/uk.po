@@ -1,0 +1,810 @@
+# Ukrainian translation for frogr.
+# Copyright (C) 2020 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+#
+# Yuri Chornoivan <yurchor@ukr.net>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"POT-Creation-Date: 2020-03-26 17:33+0000\n"
+"PO-Revision-Date: 2020-07-15 10:14+0300\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Lokalize 20.07.70\n"
+
+#. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
+msgctxt "_"
+msgid "translator-credits"
+msgstr "Юрій Чорноіван <yurchor@ukr.net>, 2020"
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/add-pictures.page:9 C/add-pictures.page:12
+msgid "Add elements"
+msgstr "Додавання елементів"
+
+#. (itstool) path: page/p
+#: C/add-pictures.page:13
+msgid ""
+"You can add a picture or a video using the toolbar <gui>Plus</gui> button. "
+"Or, you can use the menu <guiseq><gui>File</gui><gui>Add Elements</gui></"
+"guiseq>. The loaded elements will be displayed and available for transfer to "
+"Flickr."
+msgstr ""
+"Додати зображення або відео можна за допомогою кнопки панелі інструментів <"
+"gui>+</gui>. Ви також можете скористатися пунктом меню <guiseq><gui>Файл</gui"
+"><gui>Додати елементи</gui></"
+"guiseq>. Завантажені елементи буде показано — ви зможете перенести їх на"
+" Flickr."
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/create-account.page:8 C/create-account.page:11
+msgid "How to create your account"
+msgstr "Як створити ваш обліковий запис"
+
+#. (itstool) path: page/p
+#: C/create-account.page:12
+msgid "First create an Account"
+msgstr "Спочатку створіть обліковий запис"
+
+#. (itstool) path: page/p
+#: C/create-account.page:13
+msgid ""
+"When you first run <app>frogr</app>, it displays a window explaining you'll "
+"have to create an account."
+msgstr ""
+"Після першого запуску <app>frogr</app> програма покаже вікно зі поясненням"
+" щодо того, що вам слід створити обліковий запис."
+
+#. (itstool) path: figure/title
+#: C/create-account.page:15 C/create-account.page:23
+msgid "Authorizing frogr"
+msgstr "Уповноваження frogr"
+
+#. (itstool) path: figure/desc
+#: C/create-account.page:16
+msgid "Authorizing frogr. Requesting a verification code"
+msgstr "Уповноваження frogr. Надсилання запиту щодо коду перевірки"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/create-account.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/auth-dialog-step1.png' "
+"md5='4a5a05a788f09eff146f379812dad604'"
+msgstr ""
+"external ref='figures/auth-dialog-step1.png' "
+"md5='4a5a05a788f09eff146f379812dad604'"
+
+#. (itstool) path: page/p
+#: C/create-account.page:20
+msgid ""
+"Click Ok, it will run your default web browser. On your default web browser, "
+"either create a Flickr account or log in to an existing account."
+msgstr ""
+"Натисніть кнопку «Гаразд», і програма запустить типову програму для перегляду"
+" інтернету. У вікні типової програми для перегляду інтернету або створіть"
+" обліковий запис Flickr, або увійдіть до наявного облікового запису."
+
+#. (itstool) path: page/p
+#: C/create-account.page:21
+msgid ""
+"Then, authorize <app>frogr</app> to access to this account. You may now go "
+"back to <app>frogr</app> window, enter the verification code and use the "
+"application to upload any picture!"
+msgstr ""
+"Далі, уповноважте <app>frogr</app> на доступ до цього облікового запису."
+" Після цього можете повернутися до вікна <app>frogr</app>, ввести код"
+" перевірки і скористатися програмою для вивантаження будь-якого зображення!"
+
+#. (itstool) path: figure/desc
+#: C/create-account.page:24
+msgid "Authorizing frogr. Finishing the process"
+msgstr "Уповноваження frogr. Завершення процедури"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/create-account.page:25
+msgctxt "_"
+msgid ""
+"external ref='figures/auth-dialog-step2.png' "
+"md5='cd9a1f0cb20fec024f7b9bb7f037187e'"
+msgstr ""
+"external ref='figures/auth-dialog-step2.png' "
+"md5='cd9a1f0cb20fec024f7b9bb7f037187e'"
+
+#. (itstool) path: info/desc
+#: C/display.page:9
+msgid "Amending view"
+msgstr "Зміна параметрів перегляду"
+
+#. (itstool) path: page/title
+#: C/display.page:12
+msgid "Sort elements"
+msgstr "Упорядковування елементів"
+
+#. (itstool) path: page/p
+#: C/display.page:13
+msgid ""
+"You can sort elements by title, by date, by size or as loaded. Click on the "
+"menu <gui>View</gui> and select the proper way to sort. You may also use "
+"reversed ordering."
+msgstr ""
+"Ви можете упорядковувати елементи за заголовком, датою, розміром або часом"
+" завантаження. Натисніть пункт меню <gui>Перегляд</gui> і виберіть належний"
+" спосіб упорядковування. Ви також можете скористатися оберненим"
+" упорядкуванням."
+
+#. (itstool) path: info/desc
+#: C/edit-pictures.page:9
+msgid "Amend pictures"
+msgstr "Зміна параметрів зображень"
+
+#. (itstool) path: page/title
+#: C/edit-pictures.page:12
+msgid "Edit details"
+msgstr "Редагування подробиць"
+
+#. (itstool) path: page/p
+#: C/edit-pictures.page:13
+msgid ""
+"To edit the details of a picture or a video, right-click on an element and "
+"choose <gui>Edit Details</gui>. Until you edit the details, these will use "
+"the default details."
+msgstr ""
+"Щоб змінити подробиці щодо зображення або відео, клацніть правою кнопкою на"
+" елементі і виберіть пункт <gui>Змінити подробиці</gui>. Якщо ви не"
+" змінюватимете подробиці, для них буде збережено типові значення."
+
+#. (itstool) path: figure/title
+#: C/edit-pictures.page:15
+msgid "Edit picture details"
+msgstr "Змінити подробиці про зображення"
+
+#. (itstool) path: figure/desc
+#: C/edit-pictures.page:16
+msgid "Amend the details of the picture."
+msgstr "Зміна подробиць щодо зображення."
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/edit-pictures.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/edit-picture-details.png' "
+"md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
+msgstr ""
+"external ref='figures/edit-picture-details.png' "
+"md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:22
+msgid "Title"
+msgstr "Заголовок"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:22
+msgid "Use this box to amend the title"
+msgstr "Скористайтеся цим пунктом для зміни заголовка"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:23
+msgid "Description"
+msgstr "Опис"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:23
+msgid "Add some description the element"
+msgstr "Додайте якийсь опис елемента"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:24
+msgid "Tags"
+msgstr "Мітки"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:24
+msgid "Add some tags to better categorize the element"
+msgstr "Додайте мітки для удосконалення категоризації елемента"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:25
+msgid "Visibility"
+msgstr "Видимість"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:25
+msgid "Choose whether the element is public or private."
+msgstr "Виберіть, є елемент загальнодоступним чи конфіденційним."
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:26
+msgid "Content type"
+msgstr "Тип вмісту"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:26
+msgid ""
+"You can specify whether the element is a photo, a screenshot or something "
+"else"
+msgstr ""
+"Ви можете вказати, є елемент фотографією, знімком вікна чи іншим зображенням"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:27
+msgid "Safety level"
+msgstr "Рівень безпеки"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:27
+msgid "You can rate the kind of element you're uploading"
+msgstr "Ви можете вказати тип елемента, який ви вивантажуєте"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:28
+msgid "License"
+msgstr "Ліцензування"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:28
+msgid "You can change the license, or just use the default one set on Flickr"
+msgstr ""
+"Ви можете змінити умови ліцензування або просто скористатися типовими для"
+" Flickr"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:29
+msgid "Geolocation data"
+msgstr "Дані геопозиціювання"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:29
+msgid ""
+"You can let frogr set the geolocation information for a picture on Flickr "
+"based on its EXIF information"
+msgstr ""
+"Ви можете дозволити frogr встановити дані щодо геопозиціювання для зображення"
+" уset the geolocation information for a picture on Flickr на основі даних"
+" EXIF самого зображення"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:30
+msgid "Show in global search results"
+msgstr "Показувати у загальних результатах пошуку"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:30
+msgid ""
+"You can specify whether it should be possible to find your picture or video "
+"using Flickr's search engine"
+msgstr ""
+"Ви можете вказати, чи можна буде знайти ваше зображення чи відео за допомогою"
+" рушія пошуку Flickr"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:31
+msgid "Replace 'date posted' with 'date taken'"
+msgstr "Замінити «Дату оприлюднення» на «Дату створення»"
+
+#. (itstool) path: item/p
+#: C/edit-pictures.page:31
+msgid "It affects how your pictures are sorted in your photostream"
+msgstr "Впливає на те, як зображення упорядковуються у потоці фотографій"
+
+#. (itstool) path: info/desc
+#: C/external-viewer.page:9
+msgid "Open element in external application"
+msgstr "Відкриття елемента у зовнішній програмі"
+
+#. (itstool) path: page/title
+#: C/external-viewer.page:12
+msgid "External viewer"
+msgstr "Зовнішній переглядач"
+
+#. (itstool) path: page/p
+#: C/external-viewer.page:13
+msgid ""
+"You can display pictures or videos in external applications. Right-click on "
+"some picture then choose <gui>Open in external viewer</gui>."
+msgstr ""
+"Ви можете переглядати зображення і відео у зовнішніх програмах. Клацніть"
+" правою кнопкою на зображенні і виберіть у контекстному меню пункт <gui"
+">Відкрити у зовнішньому переглядачі</gui>."
+
+#. (itstool) path: info/desc
+#: C/group-pictures.page:9
+msgid "Group elements"
+msgstr "Групування елементів"
+
+#. (itstool) path: page/title
+#: C/group-pictures.page:12
+msgid "Add to groups"
+msgstr "Додати до груп"
+
+#. (itstool) path: page/p
+#: C/group-pictures.page:13
+msgid "You may add pictures and videos to an already defined group."
+msgstr "Ви можете додавати зображення і відео до вже визначеної групи."
+
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/group-pictures.page:15 C/group-pictures.page:16
+msgid "Adding elements to groups"
+msgstr "Додавання елементів до груп"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/group-pictures.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/add-to-groups.png' "
+"md5='a65107ee59c5b86730b660b77782aa41'"
+msgstr ""
+"external ref='figures/add-to-groups.png' "
+"md5='a65107ee59c5b86730b660b77782aa41'"
+
+#. (itstool) path: page/title
+#: C/index.page:8
+msgid "frogr help"
+msgstr "Довідка з frogr"
+
+#. (itstool) path: section/title
+#: C/index.page:11
+msgid "Managing your flickr account"
+msgstr "Керування вашим обліковим записом flickr"
+
+#. (itstool) path: section/title
+#: C/index.page:15
+msgid "Managing your pictures"
+msgstr "Керування вашими зображеннями"
+
+#. (itstool) path: section/title
+#: C/index.page:19
+msgid "Organize and sort your pictures"
+msgstr "Упорядкування та сортування ваших зображень"
+
+#. (itstool) path: section/title
+#: C/index.page:23
+msgid "Set up frogr"
+msgstr "Налаштовування frogr"
+
+#. (itstool) path: info/desc
+#: C/introduction.page:8
+msgid "Introduction to <app>frogr</app>."
+msgstr "Вступ до <app>frogr</app>."
+
+#. (itstool) path: page/title
+#: C/introduction.page:12
+msgid "frogr introduction"
+msgstr "Вступ до frogr"
+
+#. (itstool) path: page/p
+#: C/introduction.page:13
+msgid ""
+"<app>frogr</app> is a <link href=\"http://www.flickr.com/\">Flickr</link> "
+"Remote Organizer. <app>frogr</app> is a small application for the GNOME "
+"desktop that allows users to manage their accounts in the Flickr image "
+"hosting website."
+msgstr ""
+"<app>frogr</app> — скорочення від <link href=\"http://www.flickr.com/\""
+">Flickr</link> "
+"Remote Organizer (віддалений органайзер Flickr). <app>frogr</app> — невеличка"
+" програма для стільничного середовища GNOME, за допомогою якої користувачі"
+" можуть керувати власними обліковими записами на сайті зберігання зображень"
+" Flickr."
+
+#. (itstool) path: figure/title
+#: C/introduction.page:15
+msgid "<gui>frogr</gui> window"
+msgstr "Вікно <gui>frogr</gui>"
+
+#. (itstool) path: figure/desc
+#: C/introduction.page:16
+msgid "<app>frogr</app> main window"
+msgstr "Головне вікно <app>frogr</app>"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/introduction.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/frogr-remote-organizer.png' "
+"md5='409cc7c292ff84a6ebc910c18ef2293e'"
+msgstr ""
+"external ref='figures/frogr-remote-organizer.png' "
+"md5='409cc7c292ff84a6ebc910c18ef2293e'"
+
+#. (itstool) path: media/p
+#: C/introduction.page:18 C/preferences.page:34
+msgid "<app>frogr</app> main window."
+msgstr "Головне вікно <app>frogr</app>."
+
+#. (itstool) path: section/title
+#: C/introduction.page:22
+msgid "Flickr"
+msgstr "Flickr"
+
+#. (itstool) path: section/p
+#: C/introduction.page:23
+msgid ""
+"<link href=\"http://www.flickr.com/\">Flickr</link> is a website allowing "
+"hosting of both images and videos."
+msgstr ""
+"<link href=\"http://www.flickr.com/\">Flickr</link> — сайт для зберігання"
+" зображень і відео."
+
+#. (itstool) path: section/title
+#: C/introduction.page:26
+msgid "Main features"
+msgstr "Основні можливості"
+
+#. (itstool) path: item/p
+#: C/introduction.page:28
+msgid "Allow to upload pictures and videos to Flickr"
+msgstr "Можливість вивантаження зображень та відео на Flickr"
+
+#. (itstool) path: item/p
+#: C/introduction.page:29
+msgid "Allow uploading pictures located in remote machines"
+msgstr ""
+"Можливість вивантаження зображень, які зберігаються на віддалених комп'ютерах"
+
+#. (itstool) path: item/p
+#: C/introduction.page:30
+msgid "Allow adding tags to pictures"
+msgstr "Можливість додавання міток до зображень"
+
+#. (itstool) path: item/p
+#: C/introduction.page:31
+msgid ""
+"Allow specifying sets and group pools for the pictures to be added to after "
+"the upload process."
+msgstr ""
+"Можливість визначення наборів та групових буферів для зображень, до яких буде"
+" додано зображення після вивантаження."
+
+#. (itstool) path: item/p
+#: C/introduction.page:32
+msgid "Support for handling multiple Flickr accounts."
+msgstr "Підтримка роботи із декількома обліковими записами Flickr."
+
+#. (itstool) path: item/p
+#: C/introduction.page:33
+msgid "Support for saving and loading projects."
+msgstr "Підтримка збереження та завантаження проєктів."
+
+#. (itstool) path: section/title
+#: C/introduction.page:37
+msgid "About"
+msgstr "Про програму"
+
+#. (itstool) path: section/p
+#: C/introduction.page:38
+msgid ""
+"You can have more information about <app>frogr</app> using the menu "
+"<guiseq><gui>frogr</gui><gui>About</gui></guiseq>."
+msgstr ""
+"Дізнатися більше про <app>frogr</app> можна за допомогою пункту меню <guiseq"
+"><gui>frogr</gui><gui>Про програму</gui></guiseq>."
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/organize.page:8 C/organize.page:11
+msgid "Organize"
+msgstr "Впорядкувати"
+
+#. (itstool) path: info/desc
+#: C/pictures.page:9
+msgid "Add, remove and upload pictures and videos"
+msgstr "Додавання, вилучення та вивантаження зображень та відео"
+
+#. (itstool) path: page/title
+#: C/pictures.page:12
+msgid "Transfer elements"
+msgstr "Передавання елементів"
+
+#. (itstool) path: page/p
+#: C/pictures.page:13
+msgid ""
+"You first have to add elements (pictures or videos) into frogr before being "
+"able to upload them."
+msgstr ""
+"Перш ніж мати змогу вивантажувати елементи (зображення або відео), їх слід"
+" додати до frogr."
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/preferences.page:9 C/preferences.page:12
+msgid "Preferences"
+msgstr "Параметри"
+
+#. (itstool) path: page/p
+#: C/preferences.page:14
+msgid ""
+"Go to Preferences using menu <guiseq><gui>frogr</gui><gui>Preferences</gui></"
+"guiseq>."
+msgstr ""
+"Перейти до параметрів можна за допомогою пункту меню <guiseq><gui>frogr</gui"
+"><gui>Параметри</gui></"
+"guiseq>."
+
+#. (itstool) path: section/title
+#: C/preferences.page:17
+msgid "General preferences"
+msgstr "Загальні параметри"
+
+#. (itstool) path: figure/title
+#: C/preferences.page:19
+msgid "<gui>frogr</gui> general preferences"
+msgstr "Загальні параметри <gui>frogr</gui>"
+
+#. (itstool) path: figure/desc
+#: C/preferences.page:20
+msgid "<app>frogr</app> general preferences"
+msgstr "Загальні параметри <app>frogr</app>"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/preferences.page:21
+msgctxt "_"
+msgid ""
+"external ref='figures/preferences-general.png' "
+"md5='4fdb5481893123f61347dde744236a2b'"
+msgstr ""
+"external ref='figures/preferences-general.png' "
+"md5='4fdb5481893123f61347dde744236a2b'"
+
+#. (itstool) path: media/p
+#: C/preferences.page:22
+msgid "<app>frogr</app> general preferences."
+msgstr "Загальні параметри <app>frogr</app>."
+
+#. (itstool) path: section/title
+#: C/preferences.page:28
+msgid "Connection preferences"
+msgstr "Параметри з'єднання"
+
+#. (itstool) path: section/p
+#: C/preferences.page:29
+msgid "This tab allows you to set up a proxy."
+msgstr "За допомогою цієї вкладки можна налаштувати проксі-сервер."
+
+#. (itstool) path: figure/title
+#: C/preferences.page:31
+msgid "<gui>frogr </gui> connection preferences"
+msgstr "Параметри з'єднання <gui>frogr</gui>"
+
+#. (itstool) path: figure/desc
+#: C/preferences.page:32
+msgid "<app>frogr</app> connection preferences"
+msgstr "Параметри з'єднання <app>frogr</app>"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/preferences.page:33
+msgctxt "_"
+msgid ""
+"external ref='figures/preferences-connection.png' "
+"md5='1830543cba33afb5e2434d11ff408264'"
+msgstr ""
+"external ref='figures/preferences-connection.png' "
+"md5='1830543cba33afb5e2434d11ff408264'"
+
+#. (itstool) path: section/title
+#: C/preferences.page:40
+msgid "Miscellaneous preferences"
+msgstr "Інші параметри"
+
+#. (itstool) path: figure/title
+#: C/preferences.page:42
+msgid "<gui>frogr </gui> misc preferences window"
+msgstr "Вікно інших параметрів <gui>frogr</gui>"
+
+#. (itstool) path: figure/desc
+#: C/preferences.page:43
+msgid "<app>frogr</app> misc preferences window"
+msgstr "Вікно інших параметрів <app>frogr</app>"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/preferences.page:44
+msgctxt "_"
+msgid ""
+"external ref='figures/preferences-misc.png' "
+"md5='a2587009a97ec5f2554dfd5af36aa358'"
+msgstr ""
+"external ref='figures/preferences-misc.png' "
+"md5='a2587009a97ec5f2554dfd5af36aa358'"
+
+#. (itstool) path: media/p
+#: C/preferences.page:45
+msgid "<app>frogr</app> misc preferences window."
+msgstr "Вікно інших параметрів <app>frogr</app>."
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/remove-pictures.page:9 C/remove-pictures.page:12
+msgid "Remove elements"
+msgstr "Вилучення елементів"
+
+#. (itstool) path: page/p
+#: C/remove-pictures.page:13
+msgid ""
+"You can remove a picture or a video using the toolbar <gui>Minus</gui> "
+"button. Or, you can use the menu <guiseq><gui>File</gui><gui>Remove "
+"Elements</gui></guiseq>."
+msgstr ""
+"Вилучити зображення або відео можна за допомогою кнопки <gui>-</gui> на"
+" панелі інструментів. Крім того, ви можете скористатися пунктом меню <guiseq"
+"><gui>Файл</gui><gui>Вилучити елементи</gui></guiseq>."
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/set-pictures.page:9 C/set-pictures.page:12
+msgid "Adding elements to sets"
+msgstr "Додавання елементів до наборів"
+
+#. (itstool) path: page/p
+#: C/set-pictures.page:13
+msgid ""
+"You can add pictures and videos to sets in Flickr. A set is a category. Set "
+"do not imply hierarchical view."
+msgstr ""
+"У Flickr ви можете додавати зображення і відео до наборів. Набір є"
+" категорією. Набір не передбачає ієрархічного перегляду."
+
+#. (itstool) path: page/p
+#: C/set-pictures.page:14
+msgid ""
+"Right-click on one or more elements and choose <gui>Add to set</gui>. You "
+"may choose to add to an already existing set or create a new one."
+msgstr ""
+"Клацніть правою кнопкою на одному або декількох елементах і виберіть у"
+" контекстному меню пункт <gui>Додати до набору</gui>. Ви можете додавати"
+" елементи до наявного набору або створити набір і додати елементи до нього."
+
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/set-pictures.page:16 C/set-pictures.page:17
+msgid "Adding elements to existing sets"
+msgstr "Додавання елементів до наявних наборів"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/set-pictures.page:18
+msgctxt "_"
+msgid ""
+"external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
+msgstr ""
+"external ref='figures/add-to-sets.png' md5='92b90c27c6cb29424f590ee24ddea9c2'"
+
+#. (itstool) path: figure/title
+#: C/set-pictures.page:23
+msgid "Creating new sets to add elements to"
+msgstr "Створення наборів для додавання елементів"
+
+#. (itstool) path: figure/desc
+#: C/set-pictures.page:24
+msgid ""
+"Creating new sets to add elements to. You can use the set's title and "
+"description for every selected element too"
+msgstr ""
+"Створення нових наборів для додавання елементів. Ви можете скористатися"
+" заголовком і описом набору для усіх позначених елементів"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/set-pictures.page:25
+msgctxt "_"
+msgid ""
+"external ref='figures/create-new-set.png' "
+"md5='760f5dd0865302be33f2bf9898597917'"
+msgstr ""
+"external ref='figures/create-new-set.png' "
+"md5='760f5dd0865302be33f2bf9898597917'"
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/tag.page:9 C/tag.page:12
+msgid "Tag elements"
+msgstr "Елементи міток"
+
+#. (itstool) path: page/p
+#: C/tag.page:13
+msgid ""
+"You can assign several tags to any element. Flickr allows you to define your "
+"own tags. It allows you to easily find any element you did upload."
+msgstr ""
+"Із будь-яким елементом можна пов'язати декілька міток. У Flickr передбачено"
+" можливість визначення власних міток. За допомогою міток можна без проблем"
+" знаходити будь-які вивантажені вами елементи."
+
+#. (itstool) path: page/p
+#: C/tag.page:14
+msgid ""
+"Right-click on a element, and choose <gui>Add tags</gui>. Or click on the "
+"menu <gui>Edit</gui>, and choose <gui>Add tags</gui>. Or, when you're "
+"editing element's detail, you can see and edit the tags"
+msgstr ""
+"Клацніть правою кнопкою миші на елементі і виберіть у контекстному меню пункт"
+" <gui>Додати мітки</gui>. Крім того, можете вибрати у меню <gui>Edit</gui>"
+" пункт <gui>Додати мітки</gui>. Також ви можете переглядати і редагувати"
+" мітки під час редагування подробиць щодо елемента."
+
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/tag.page:16 C/tag.page:17
+msgid "Adding tags to elements"
+msgstr "Додавання міток до елементів"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/tag.page:18
+msgctxt "_"
+msgid ""
+"external ref='figures/add-tags-dialog.png' "
+"md5='d6c0a23671166602f4f4f27aee990745'"
+msgstr ""
+"external ref='figures/add-tags-dialog.png' "
+"md5='d6c0a23671166602f4f4f27aee990745'"
+
+#. (itstool) path: info/desc
+#. (itstool) path: page/title
+#: C/upload-pictures.page:9 C/upload-pictures.page:12
+msgid "Upload elements"
+msgstr "Вивантаження елементів"
+
+#. (itstool) path: page/p
+#: C/upload-pictures.page:13
+msgid ""
+"You can upload pictures and videos using the toolbar <gui>arrow</gui> "
+"button. Or, you can use the menu <guiseq><gui>File</gui><gui>Upload All</"
+"gui></guiseq>. The uploaded pictures will disappear from the list. You may "
+"remove some pictures before to upload all the remaining ones."
+msgstr ""
+"Ви можете вивантажити зображення і відео за допомогою кнопки <gui>стрілка<"
+"/gui> на панелі інструментів. Крім того, ви можете скористатися пунктом меню"
+" <guiseq><gui>Файл</gui><gui>Вивантажити</gui></guiseq>. Вивантажені елементи"
+" зникнуть зі списку. Ви можете вилучити небажані зображення, а потім"
+" вивантажити решту."
