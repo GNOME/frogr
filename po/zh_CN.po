@@ -8,36 +8,35 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: msanchez@gnome.org\n"
-"POT-Creation-Date: 2016-08-14 11:32+0100\n"
-"PO-Revision-Date: 2014-01-25 10:42+0800\n"
-"Last-Translator: YunQiang Su <wzssyqa@gmail.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
+"POT-Creation-Date: 2020-07-15 07:15+0000\n"
+"PO-Revision-Date: 2020-09-07 13:06-0400\n"
+"Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.4.1\n"
 
-#: data/frogr.appdata.xml.in:5 data/frogr.desktop.in.in:5
-#: data/frogr.desktop.in.in:14
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
 msgstr "frogr"
 
-#: data/frogr.appdata.xml.in:6 data/frogr.desktop.in.in:6
-#, fuzzy
-msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr "Frogr：一个 GNOME 下的 Flickr 远程整理器"
+#: data/org.gnome.frogr.appdata.xml.in:8
+msgid "A flickr uploader for GNOME"
+msgstr "GNOME 下的 Flickr 远程管理器"
 
-#: data/frogr.appdata.xml.in:8
-#, fuzzy
+#: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
-"frogr is a small application for the GNOME desktop that allows users to "
-"manage their accounts in the Flickr image hosting website."
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
 msgstr ""
-"Frogr 是 GNOME 桌面的一个小型程序，允许用户管理其 Flickr 相片托管网站的帐号。"
+"frogr 能帮助用户管理 Flickr 相片托管服务上的帐户，并提供一个简单而直观的界"
+"面。"
 
-#: data/frogr.appdata.xml.in:13
+#: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
@@ -45,54 +44,57 @@ msgstr ""
 "其支持 Flickr 的基本功能，包括上传相片，添加描述，设置标记和管理相片集和群"
 "组。"
 
-#: data/frogr.appdata.xml.in:24
-#, fuzzy
+#: data/org.gnome.frogr.appdata.xml.in:25
 msgid "Screenshot of frogr"
-msgstr "截屏(_N)"
+msgstr "Frogr 的屏幕截图"
 
-#: data/frogr.appdata.xml.in:29
+#: data/org.gnome.frogr.appdata.xml.in:32
 msgid "Mario Sanchez Prada"
-msgstr ""
+msgstr "Mario Sanchez Prada"
 
-#: data/frogr.desktop.in.in:7
+#: data/org.gnome.frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "frogr：GNOME 下的 Flickr 远程整理器"
+
+#: data/org.gnome.frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "上传和整理 Flickr 账户中的相片"
 
-#: data/frogr.desktop.in.in:8
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr ""
 "Flickr;Image;Picture;Photo;Video;Uploader;图像;照片;相片;图片;视频;上传;"
 
 #: src/frogr-about-dialog.c:43
-#, fuzzy
 msgid "A Flickr Remote Organizer for GNOME\n"
-msgstr "一个 GNOME 下的 Flickr 远程管理器\n"
+msgstr "GNOME 下的 Flickr 远程管理器\n"
 
-#: src/frogr-about-dialog.c:72
+#: src/frogr-about-dialog.c:70
 msgid "translator-credits"
 msgstr ""
 "Wylmer Wang <wantinghard@gmail.com>, 2011, 2013.\n"
 "tuhaihe <1132321739qq@gmail.com>, 2012.\n"
 "YunQiang Su <wzssyqa@gmail.com>, 2014."
 
-#: src/frogr-add-tags-dialog.c:191 src/frogr-add-to-group-dialog.c:528
-#: src/frogr-add-to-set-dialog.c:529 src/frogr-auth-dialog.c:153
-#: src/frogr-create-new-set-dialog.c:310 src/frogr-details-dialog.c:1168
-#: src/frogr-main-view.c:1543 src/frogr-main-view.c:1618
-#: src/frogr-main-view.c:1670 src/frogr-settings-dialog.c:930
+#: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
+#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
+#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1201
+#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
+#: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
 msgid "_Cancel"
 msgstr "取消(_C)"
 
-#: src/frogr-add-tags-dialog.c:193 src/frogr-add-to-group-dialog.c:530
-#: src/frogr-add-to-set-dialog.c:531 src/frogr-create-new-set-dialog.c:312
+#: src/frogr-add-tags-dialog.c:189 src/frogr-add-to-group-dialog.c:524
+#: src/frogr-add-to-set-dialog.c:525 src/frogr-create-new-set-dialog.c:304
 msgid "_Add"
 msgstr "添加(_A)"
 
-#: src/frogr-add-tags-dialog.c:202
+#: src/frogr-add-tags-dialog.c:199
 msgid "Enter a spaces separated list of tags:"
 msgstr "输入一系列标签，以逗号分隔："
 
-#: src/frogr-add-tags-dialog.c:228
+#: src/frogr-add-tags-dialog.c:227
 msgid "Add Tags"
 msgstr "添加标签"
 
@@ -104,7 +106,7 @@ msgstr "名称"
 msgid "Elements"
 msgstr "元素"
 
-#: src/frogr-add-to-group-dialog.c:581
+#: src/frogr-add-to-group-dialog.c:577
 msgid "Add to Groups"
 msgstr "添加到群组"
 
@@ -112,7 +114,7 @@ msgstr "添加到群组"
 msgid "Title"
 msgstr "标题"
 
-#: src/frogr-add-to-set-dialog.c:582
+#: src/frogr-add-to-set-dialog.c:578
 msgid "Add to Sets"
 msgstr "添加到相片集"
 
@@ -123,29 +125,30 @@ msgid ""
 "process."
 msgstr "请按下该按钮对 %s 进行认证，然后返回以完成此过程。"
 
-#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:149
-#: src/frogr-controller.c:2286
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
+#: src/frogr-controller.c:2213
 #, c-format
 msgid "Authorize %s"
 msgstr "认证 %s"
 
-#: src/frogr-auth-dialog.c:155 src/frogr-settings-dialog.c:932
+#: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
 msgid "_Close"
 msgstr "关闭(_C)"
 
-#: src/frogr-auth-dialog.c:167
+#. Description label
+#: src/frogr-auth-dialog.c:169
 msgid "Enter verification code:"
 msgstr "输入验证码："
 
-#: src/frogr-auth-dialog.c:221
+#: src/frogr-auth-dialog.c:226
 msgid "Invalid verification code"
 msgstr "无效的验证码"
 
-#: src/frogr-controller.c:581
+#: src/frogr-controller.c:575
 msgid "Process cancelled"
 msgstr "操作已取消"
 
-#: src/frogr-controller.c:586
+#: src/frogr-controller.c:580
 msgid ""
 "Connection error:\n"
 "Network not available"
@@ -153,7 +156,7 @@ msgstr ""
 "连接错误：\n"
 "网络不可用"
 
-#: src/frogr-controller.c:590
+#: src/frogr-controller.c:584
 msgid ""
 "Connection error:\n"
 "Bad request"
@@ -161,7 +164,7 @@ msgstr ""
 "连接错误：\n"
 "无效请求"
 
-#: src/frogr-controller.c:594
+#: src/frogr-controller.c:588
 msgid ""
 "Connection error:\n"
 "Server-side error"
@@ -169,7 +172,7 @@ msgstr ""
 "连接错误：\n"
 "服务器端错误"
 
-#: src/frogr-controller.c:598
+#: src/frogr-controller.c:592
 msgid ""
 "Error uploading:\n"
 "File invalid"
@@ -177,7 +180,7 @@ msgstr ""
 "上传出错：\n"
 "文件无效"
 
-#: src/frogr-controller.c:602
+#: src/frogr-controller.c:596
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
@@ -185,13 +188,13 @@ msgstr ""
 "上传相片出错：\n"
 "超出限额"
 
-#: src/frogr-controller.c:607
+#: src/frogr-controller.c:601
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
 msgstr[0] "超出限额(限额：每月 %d 段视频)"
 
-#: src/frogr-controller.c:611
+#: src/frogr-controller.c:605
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
@@ -199,7 +202,7 @@ msgstr ""
 "上传视频出错：\n"
 "您这个帐户不能再上传更多视频了"
 
-#: src/frogr-controller.c:617
+#: src/frogr-controller.c:610
 msgid ""
 "Error:\n"
 "Photo not found"
@@ -207,7 +210,7 @@ msgstr ""
 "错误：\n"
 "找不到相片"
 
-#: src/frogr-controller.c:621
+#: src/frogr-controller.c:614
 msgid ""
 "Error:\n"
 "Photo already in photoset"
@@ -215,7 +218,7 @@ msgstr ""
 "错误：\n"
 "相片已在相片集中"
 
-#: src/frogr-controller.c:625
+#: src/frogr-controller.c:618
 msgid ""
 "Error:\n"
 "Photo already in group"
@@ -223,7 +226,7 @@ msgstr ""
 "错误：\n"
 "相片已在群组中"
 
-#: src/frogr-controller.c:629
+#: src/frogr-controller.c:622
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
@@ -231,7 +234,7 @@ msgstr ""
 "错误：\n"
 "相片所在的群组数已达上限"
 
-#: src/frogr-controller.c:633
+#: src/frogr-controller.c:626
 msgid ""
 "Error:\n"
 "Group limit already reached"
@@ -239,7 +242,7 @@ msgstr ""
 "错误：\n"
 "已经达到群组限制"
 
-#: src/frogr-controller.c:637
+#: src/frogr-controller.c:630
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
@@ -247,7 +250,7 @@ msgstr ""
 "错误：\n"
 "相片已添加到群组队列中"
 
-#: src/frogr-controller.c:641
+#: src/frogr-controller.c:634
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
@@ -255,7 +258,7 @@ msgstr ""
 "错误：\n"
 "相片已经添加到群组队列中"
 
-#: src/frogr-controller.c:645
+#: src/frogr-controller.c:638
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
@@ -263,7 +266,8 @@ msgstr ""
 "错误：\n"
 "此群组不允许此类内容"
 
-#: src/frogr-controller.c:649
+#: src/frogr-controller.c:642
+#, c-format
 msgid ""
 "Authorization failed.\n"
 "Please try again"
@@ -271,7 +275,7 @@ msgstr ""
 "认证失败。\n"
 "请重试"
 
-#: src/frogr-controller.c:655
+#: src/frogr-controller.c:648
 #, c-format
 msgid ""
 "Error\n"
@@ -282,7 +286,8 @@ msgstr ""
 "%s 未经过正确认证，无法上传相片到 flickr。\n"
 "请重新对它进行认证"
 
-#: src/frogr-controller.c:660
+#: src/frogr-controller.c:653
+#, c-format
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
@@ -290,7 +295,7 @@ msgstr ""
 "无法在 Flickr 上认证\n"
 "请重试。"
 
-#: src/frogr-controller.c:664
+#: src/frogr-controller.c:657
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
@@ -299,7 +304,8 @@ msgstr ""
 "您还没有正确认证 %s。\n"
 "请重试。"
 
-#: src/frogr-controller.c:669
+#: src/frogr-controller.c:662
+#, c-format
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
@@ -307,7 +313,8 @@ msgstr ""
 "无效的验证码。\n"
 "请重试。"
 
-#: src/frogr-controller.c:673
+#: src/frogr-controller.c:666
+#, c-format
 msgid ""
 "Error:\n"
 "Service not available"
@@ -315,63 +322,64 @@ msgstr ""
 "错误：\n"
 "服务不可用"
 
-#: src/frogr-controller.c:678
+#. General error: just dump the raw error description
+#: src/frogr-controller.c:671
 #, c-format
 msgid "An error happened: %s."
 msgstr "发生错误：%s。"
 
-#: src/frogr-controller.c:883
+#: src/frogr-controller.c:869
 msgid "Authorization failed (timed out)"
 msgstr "认证失败(超时)"
 
-#: src/frogr-controller.c:931
+#: src/frogr-controller.c:917
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
-msgstr "正在重新尝试上传(第 %d/%d 次)..."
+msgstr "正在重新尝试上传(第 %d/%d 次)…"
 
-#: src/frogr-controller.c:936
+#: src/frogr-controller.c:922
 #, c-format
 msgid "Uploading '%s'…"
-msgstr "正在上传“%s”..."
+msgstr "正在上传“%s”…"
 
-#: src/frogr-controller.c:2242
+#: src/frogr-controller.c:2169
 msgid "Updating credentials…"
-msgstr "正在更新凭证..."
+msgstr "正在更新凭证…"
 
-#: src/frogr-controller.c:2247
+#: src/frogr-controller.c:2174
 msgid "Retrieving data for authorization…"
-msgstr "正在获取认证数据..."
+msgstr "正在获取认证数据…"
 
-#: src/frogr-controller.c:2252
+#: src/frogr-controller.c:2179
 msgid "Finishing authorization…"
-msgstr "正在完成认证..."
+msgstr "正在完成认证…"
 
-#: src/frogr-controller.c:2257
+#: src/frogr-controller.c:2184
 msgid "Retrieving list of sets…"
-msgstr "正在获取相片集列表..."
+msgstr "正在获取相片集列表…"
 
-#: src/frogr-controller.c:2262
+#: src/frogr-controller.c:2189
 msgid "Retrieving list of groups…"
-msgstr "正在获取群组列表..."
+msgstr "正在获取群组列表…"
 
-#: src/frogr-controller.c:2267
+#: src/frogr-controller.c:2194
 msgid "Retrieving list of tags…"
-msgstr "正在获取标签列表..."
+msgstr "正在获取标签列表…"
 
-#: src/frogr-controller.c:2292
-#, fuzzy
+#: src/frogr-controller.c:2219
+#, c-format
 msgid "Fetching information"
-msgstr "设置地理位置信息(_L)"
+msgstr "正在获取信息"
 
-#: src/frogr-controller.c:2398
+#: src/frogr-controller.c:2323
 msgid "No sets found"
 msgstr "未找到相片集"
 
-#: src/frogr-controller.c:2423
+#: src/frogr-controller.c:2348
 msgid "No groups found"
 msgstr "未找到群组"
 
-#: src/frogr-controller.c:2984
+#: src/frogr-controller.c:2906
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -380,36 +388,38 @@ msgstr ""
 "您需要对 %s 进行正确认证才能向 Flickr 上传相片。\n"
 "请重新对它进行认证。"
 
-#: src/frogr-controller.c:2994
+#: src/frogr-controller.c:2915
+#, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "您要先联网才能向 Flickr 上传相片。"
 
-#: src/frogr-controller.c:3012
-#, fuzzy
+#: src/frogr-controller.c:2932
 msgid "Uploading Pictures"
-msgstr "加载相片(_L)..."
+msgstr "正在上传图片"
 
-#: src/frogr-controller.c:3057
+#: src/frogr-controller.c:2977
+#, c-format
 msgid "Error opening project file"
 msgstr "打开项目文件出错"
 
-#: src/frogr-create-new-set-dialog.c:143 src/frogr-details-dialog.c:1001
+#. This shows a dialog notifying the problem to the user
+#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
 msgid "Missing data required"
 msgstr "需要缺少的数据"
 
-#: src/frogr-create-new-set-dialog.c:326
+#: src/frogr-create-new-set-dialog.c:319
 msgid "Title:"
 msgstr "标题："
 
-#: src/frogr-create-new-set-dialog.c:335
+#: src/frogr-create-new-set-dialog.c:330
 msgid "Description:"
 msgstr "描述："
 
-#: src/frogr-create-new-set-dialog.c:356
+#: src/frogr-create-new-set-dialog.c:355
 msgid "Fill Pictures Details with Title and Description"
 msgstr "填写相片的标题和描述细节"
 
-#: src/frogr-create-new-set-dialog.c:381
+#: src/frogr-create-new-set-dialog.c:383
 msgid "Create New Set"
 msgstr "创建新相片集"
 
@@ -445,109 +455,110 @@ msgstr "CC署名 - 相同方式共享"
 msgid "CC Attribution-NoDerivs"
 msgstr "CC署名 - 禁止演绎"
 
-#: src/frogr-details-dialog.c:172
+#: src/frogr-details-dialog.c:175
 msgid "Open with image viewer"
 msgstr "使用图像查看器打开"
 
-#: src/frogr-details-dialog.c:190
+#: src/frogr-details-dialog.c:196
 msgid "_Title:"
 msgstr "标题(_T)："
 
-#: src/frogr-details-dialog.c:200
+#: src/frogr-details-dialog.c:208
 msgid "_Description:"
 msgstr "描述(_D)："
 
-#: src/frogr-details-dialog.c:224
+#: src/frogr-details-dialog.c:235
 msgid "Ta_gs:"
 msgstr "标签(_G)："
 
-#: src/frogr-details-dialog.c:247
+#: src/frogr-details-dialog.c:262
 msgid "Visibility"
 msgstr "可见性"
 
-#: src/frogr-details-dialog.c:257 src/frogr-settings-dialog.c:196
+#: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
 msgid "_Private"
 msgstr "私有(_P)"
 
-#: src/frogr-details-dialog.c:261 src/frogr-settings-dialog.c:199
+#: src/frogr-details-dialog.c:278 src/frogr-settings-dialog.c:207
 msgid "P_ublic"
 msgstr "公开(_U)"
 
-#: src/frogr-details-dialog.c:270 src/frogr-settings-dialog.c:207
+#: src/frogr-details-dialog.c:292 src/frogr-settings-dialog.c:218
 msgid "_Family"
 msgstr "家庭(_F)"
 
-#: src/frogr-details-dialog.c:274 src/frogr-settings-dialog.c:209
+#: src/frogr-details-dialog.c:297 src/frogr-settings-dialog.c:220
 msgid "F_riends"
 msgstr "朋友(_R)"
 
-#: src/frogr-details-dialog.c:288
+#: src/frogr-details-dialog.c:314
 msgid "Content Type"
 msgstr "内容类型"
 
-#: src/frogr-details-dialog.c:296 src/frogr-settings-dialog.c:234
+#: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
 msgid "P_hoto"
 msgstr "相片(_H)"
 
-#: src/frogr-details-dialog.c:300 src/frogr-settings-dialog.c:236
+#: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
 msgid "Scree_nshot"
 msgstr "截屏(_N)"
 
-#: src/frogr-details-dialog.c:304 src/frogr-settings-dialog.c:238
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
 msgid "Oth_er"
 msgstr "其他(_E)"
 
-#: src/frogr-details-dialog.c:317
+#: src/frogr-details-dialog.c:350
 msgid "Safety Level"
 msgstr "安全级别"
 
-#: src/frogr-details-dialog.c:325 src/frogr-settings-dialog.c:260
+#: src/frogr-details-dialog.c:359 src/frogr-settings-dialog.c:277
 msgid "S_afe"
 msgstr "安全(_A)"
 
-#: src/frogr-details-dialog.c:329 src/frogr-settings-dialog.c:262
+#: src/frogr-details-dialog.c:364 src/frogr-settings-dialog.c:279
 msgid "_Moderate"
 msgstr "中等(_M)"
 
-#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:264
+#: src/frogr-details-dialog.c:369 src/frogr-settings-dialog.c:281
 msgid "Restr_icted"
 msgstr "严格(_I)"
 
-#: src/frogr-details-dialog.c:345
+#: src/frogr-details-dialog.c:383
 msgid "License Type"
 msgstr "许可证类型"
 
-#: src/frogr-details-dialog.c:367
+#: src/frogr-details-dialog.c:408
 msgid "Other Properties"
 msgstr "其他属性"
 
-#: src/frogr-details-dialog.c:375
+#: src/frogr-details-dialog.c:417
 msgid "_Show Up in Global Search Results"
 msgstr "显示在全局搜索结果中(_S)"
 
-#: src/frogr-details-dialog.c:379
+#: src/frogr-details-dialog.c:422
 msgid "Set Geo_location Information"
 msgstr "设置地理位置信息(_L)"
 
-#: src/frogr-details-dialog.c:383
+#: src/frogr-details-dialog.c:427
 msgid "Replace 'Date Posted' with 'Date Taken'"
-msgstr ""
+msgstr "将“发布日期”替换为“拍摄日期”"
 
-#: src/frogr-details-dialog.c:475
+#. Visually indicate how many pictures are being edited
+#: src/frogr-details-dialog.c:519
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
 msgstr[0] "(%d 张相片)"
 
-#: src/frogr-details-dialog.c:548
+#: src/frogr-details-dialog.c:590
 msgid "An error happened trying to load the picture"
 msgstr "尝试加载相片时发生错误"
 
-#: src/frogr-details-dialog.c:1169 data/gtkbuilder/frogr-menu-bar.ui:44
+#: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
 msgid "_Edit"
 msgstr "编辑(_E)"
 
-#: src/frogr-details-dialog.c:1197
+#: src/frogr-details-dialog.c:1230
 msgid "Edit Picture Details"
 msgstr "编辑相片细节"
 
@@ -556,7 +567,7 @@ msgstr "编辑相片细节"
 msgid "Loading files %d / %d"
 msgstr "正在加载文件 %d / %d"
 
-#: src/frogr-file-loader.c:369
+#: src/frogr-file-loader.c:359
 #, c-format
 msgid ""
 "Unable to load picture %s:\n"
@@ -565,7 +576,7 @@ msgstr ""
 "无法加载相片 %s：\n"
 "%s"
 
-#: src/frogr-file-loader.c:400
+#: src/frogr-file-loader.c:385
 #, c-format
 msgid ""
 "Unable to load video %s\n"
@@ -574,7 +585,10 @@ msgstr ""
 "无法加载视频 %s\n"
 "请检查是否安装了正确的编解码器"
 
-#: src/frogr-file-loader.c:636
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: src/frogr-file-loader.c:603
 #, c-format
 msgid ""
 "Can't load file %s:\n"
@@ -583,341 +597,398 @@ msgstr ""
 "无法加载文件 %s：\n"
 "文件尺寸大于此帐户的最大允许值(%s)"
 
-#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Flickr 远程整理器"
+
+#. First create the left side buttons
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open"
 msgstr "打开"
 
-#: src/frogr-main-view.c:630 src/frogr-main-view.c:726
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open Existing Project"
 msgstr "打开现有的项目"
 
-#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
+#: src/frogr-main-view.c:597 src/frogr-main-view.c:693
 msgid "Add"
 msgstr "添加"
 
-#: src/frogr-main-view.c:631 src/frogr-main-view.c:729
-msgid "Add Elements"
-msgstr "添加元素"
-
-#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
+#: src/frogr-main-view.c:598 src/frogr-main-view.c:694
 msgid "Remove"
 msgstr "移除"
 
-#: src/frogr-main-view.c:632 src/frogr-main-view.c:730
-msgid "Remove Elements"
-msgstr "移除元素"
-
-#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
+#: src/frogr-main-view.c:599 src/frogr-main-view.c:696
 msgid "Upload"
 msgstr "上传"
 
-#: src/frogr-main-view.c:633 src/frogr-main-view.c:732
-msgid "Upload All"
-msgstr "全部上传"
-
-#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+#. Save project item
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save"
 msgstr "保存"
 
-#: src/frogr-main-view.c:666 src/frogr-main-view.c:727
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
 msgid "Save Current Project"
 msgstr "保存当前项目"
 
-#: src/frogr-main-view.c:1016 data/gtkbuilder/frogr-app-menu.ui:23
-msgid "_About"
-msgstr "关于(_A)"
-
-#: src/frogr-main-view.c:1020 data/gtkbuilder/frogr-app-menu.ui:27
-#: data/gtkbuilder/frogr-menu-button.ui:94
-msgid "_Quit"
-msgstr "退出(_Q)"
-
-#: src/frogr-main-view.c:1070
+#. Create the submenu and insert it in the right section
+#: src/frogr-main-view.c:1012
 msgid "Accounts"
 msgstr "账户"
 
-#: src/frogr-main-view.c:1410
+#. String showind the date and time a picture was taken
+#: src/frogr-main-view.c:1363
 #, c-format
 msgid "Taken: %s"
 msgstr "拍摄于：%s"
 
-#: src/frogr-main-view.c:1415
+#: src/frogr-main-view.c:1367
 #, c-format
 msgid "File size: %s"
 msgstr "文件大小：%s"
 
-#: src/frogr-main-view.c:1540
+#: src/frogr-main-view.c:1483
 msgid "Select File"
 msgstr "选择文件"
 
-#: src/frogr-main-view.c:1544 src/frogr-main-view.c:1671
+#: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
 msgid "_Open"
 msgstr "打开(_O)"
 
-#: src/frogr-main-view.c:1553
+#: src/frogr-main-view.c:1496
 msgid "Frogr Project Files"
 msgstr "Frogr 项目文件"
 
-#: src/frogr-main-view.c:1615
+#: src/frogr-main-view.c:1556
 msgid "Select Destination"
 msgstr "选择目标位置"
 
-#: src/frogr-main-view.c:1619 data/gtkbuilder/frogr-menu-bar.ui:13
-#: data/gtkbuilder/frogr-menu-button.ui:6
+#: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
+#: data/gtkbuilder/frogr-menu-button.ui:12
 msgid "_Save"
 msgstr "保存(_S)"
 
-#: src/frogr-main-view.c:1622
+#: src/frogr-main-view.c:1563
 msgid "Untitled Project.frogr"
 msgstr "无标题项目.frogr"
 
-#: src/frogr-main-view.c:1667
+#: src/frogr-main-view.c:1608
 msgid "Select a Picture"
 msgstr "选择一张相片"
 
-#: src/frogr-main-view.c:1694
+#: src/frogr-main-view.c:1635
 msgid "All Files"
 msgstr "所有文件"
 
-#: src/frogr-main-view.c:1697
+#: src/frogr-main-view.c:1638
 msgid "Image Files"
 msgstr "图像文件"
 
-#: src/frogr-main-view.c:1701
+#: src/frogr-main-view.c:1642
 msgid "Video Files"
 msgstr "视频文件"
 
-#: src/frogr-main-view.c:1723
+#: src/frogr-main-view.c:1664
 msgid "You don't have any picture added yet"
 msgstr "您还没有添加任何相片"
 
-#: src/frogr-main-view.c:1736
+#: src/frogr-main-view.c:1677
 msgid "You need to select some pictures first"
 msgstr "您需要先选择一些相片"
 
-#: src/frogr-main-view.c:2108
+#: src/frogr-main-view.c:2046
 msgid "Not connected to Flickr"
 msgstr "未连接到 Flickr"
 
-#: src/frogr-main-view.c:2118
+#. Login string, showing the user is PRO (second '%s') if so.
+#: src/frogr-main-view.c:2056
 #, c-format
 msgid "Connected as %s%s"
 msgstr "连接为 %s%s"
 
-#: src/frogr-main-view.c:2119
+#: src/frogr-main-view.c:2057
 msgid " (PRO account)"
 msgstr " (专业账户)"
 
-#: src/frogr-main-view.c:2143
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: src/frogr-main-view.c:2081
 #, c-format
 msgid " - %s / %s remaining"
-msgstr " - 剩余 %s / %s "
+msgstr " - 剩余 %s / %s"
 
-#: src/frogr-main-view.c:2169
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: src/frogr-main-view.c:2104
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
 msgstr[0] " - %d 个文件待上传(%s)"
 
-#: src/frogr-settings-dialog.c:185
+#: src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
 msgstr "默认可见性"
 
-#: src/frogr-settings-dialog.c:224
+#: src/frogr-settings-dialog.c:236
 msgid "Default Content Type"
 msgstr "默认内容类型"
 
-#: src/frogr-settings-dialog.c:250
+#: src/frogr-settings-dialog.c:265
 msgid "Default Safety Level"
 msgstr "默认安全级别"
 
-#: src/frogr-settings-dialog.c:276
+#: src/frogr-settings-dialog.c:294
 msgid "Default License"
 msgstr "默认许可协议"
 
-#: src/frogr-settings-dialog.c:302
+#: src/frogr-settings-dialog.c:323
 msgid "Other Defaults"
 msgstr "其他默认值"
 
-#: src/frogr-settings-dialog.c:312
+#: src/frogr-settings-dialog.c:335
 msgid "_Show Pictures in Global Search Results"
 msgstr "显示在全局搜索结果中(_S)"
 
-#: src/frogr-settings-dialog.c:315
+#: src/frogr-settings-dialog.c:338
 msgid "Set Geo_location Information for Pictures"
 msgstr "设置相片的地理位置信息(_L)"
 
-#: src/frogr-settings-dialog.c:318
+#: src/frogr-settings-dialog.c:341
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
-msgstr ""
+msgstr "将相片中的“发布日期”替换为“拍摄日期”"
 
-#: src/frogr-settings-dialog.c:324
+#: src/frogr-settings-dialog.c:347
 msgid "_General"
 msgstr "常规(_G)"
 
-#: src/frogr-settings-dialog.c:344
+#: src/frogr-settings-dialog.c:368
 msgid "Proxy Settings"
 msgstr "代理设置"
 
-#: src/frogr-settings-dialog.c:353
+#. Enable proxy
+#: src/frogr-settings-dialog.c:377
 msgid "_Enable HTTP Proxy"
 msgstr "使用 HTTP 代理(_E)"
 
-#: src/frogr-settings-dialog.c:363
+#: src/frogr-settings-dialog.c:389
 msgid "_Host:"
 msgstr "主机(_H)："
 
-#: src/frogr-settings-dialog.c:376
+#. Proxy port
+#: src/frogr-settings-dialog.c:404
 msgid "_Port:"
 msgstr "端口(_P)："
 
-#: src/frogr-settings-dialog.c:389
+#. Proxy username
+#: src/frogr-settings-dialog.c:419
 msgid "U_sername:"
 msgstr "用户名(_S)："
 
-#: src/frogr-settings-dialog.c:402
+#. Proxy password
+#: src/frogr-settings-dialog.c:434
 msgid "Pass_word:"
 msgstr "密码(_W)："
 
-#: src/frogr-settings-dialog.c:426
+#: src/frogr-settings-dialog.c:460
 msgid "Connec_tion"
 msgstr "连接(_T)"
 
-#: src/frogr-settings-dialog.c:444
+#: src/frogr-settings-dialog.c:479
 msgid "Other options"
 msgstr "其他选项"
 
-#: src/frogr-settings-dialog.c:454
+#: src/frogr-settings-dialog.c:490
 msgid "Ena_ble Tags Auto-Completion"
 msgstr "启用标签自动补全(_B)"
 
-#: src/frogr-settings-dialog.c:457
+#: src/frogr-settings-dialog.c:493
 msgid "_Import Tags from Pictures Metadata"
 msgstr "从相片元数据导入标签(_I)"
 
-#: src/frogr-settings-dialog.c:461
+#: src/frogr-settings-dialog.c:497
 msgid "Use _Dark GTK Theme"
 msgstr "使用深色 GTK 主题(_D)"
 
-#: src/frogr-settings-dialog.c:465
+#: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
 msgstr "加载时保留标题中的文件扩展名(_K)"
 
-#: src/frogr-settings-dialog.c:471
+#: src/frogr-settings-dialog.c:507
 msgid "_Misc"
 msgstr "杂项(_M)"
 
-#: src/frogr-settings-dialog.c:972
+#: src/frogr-settings-dialog.c:1009
 msgid "Preferences"
 msgstr "首选项"
 
-#: data/gtkbuilder/frogr-app-menu.ui:6
-msgid "Aut_horize Account…"
-msgstr "认证账户(_H)..."
-
-#: data/gtkbuilder/frogr-app-menu.ui:12
-msgid "_Preferences…"
-msgstr "首选项(_P)..."
-
-#: data/gtkbuilder/frogr-app-menu.ui:18
-msgid "_Help"
-msgstr "帮助(_H)"
-
-#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:47
-#: data/gtkbuilder/frogr-menu-button.ui:18
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
+#: data/gtkbuilder/frogr-menu-button.ui:24
 msgid "_Edit Details…"
-msgstr "编辑详细信息(_E)..."
+msgstr "编辑详细信息(_E)…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:11
-#: data/gtkbuilder/frogr-menu-bar.ui:52 data/gtkbuilder/frogr-menu-button.ui:23
+#: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
 msgid "Add _Tags…"
-msgstr "添加标签(_T)..."
+msgstr "添加标签(_T)…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:16
-#: data/gtkbuilder/frogr-menu-bar.ui:57 data/gtkbuilder/frogr-menu-button.ui:28
+#: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
 msgid "Add to _Group…"
-msgstr "添加到群组(_G)..."
+msgstr "添加到群组(_G)…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:21
-#: data/gtkbuilder/frogr-menu-bar.ui:62 data/gtkbuilder/frogr-menu-button.ui:33
+#: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
 msgid "Add to _Photoset"
 msgstr "添加到相片集(_P)"
 
 #: data/gtkbuilder/frogr-context-menu.ui:24
-#: data/gtkbuilder/frogr-menu-bar.ui:65 data/gtkbuilder/frogr-menu-button.ui:36
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
 msgid "_Add to Existing Photoset…"
-msgstr "添加到已有相片集(_A)..."
+msgstr "添加到已有相片集(_A)…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:29
-#: data/gtkbuilder/frogr-menu-bar.ui:70 data/gtkbuilder/frogr-menu-button.ui:41
+#: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
 msgid "_Create New Photoset…"
-msgstr "创建新相片集(_C)..."
+msgstr "创建新相片集(_C)…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:38
-#: data/gtkbuilder/frogr-menu-bar.ui:79 data/gtkbuilder/frogr-menu-button.ui:87
+#: data/gtkbuilder/frogr-menu-bar.ui:103
+#: data/gtkbuilder/frogr-menu-button.ui:93
 msgid "_Open in External Viewer"
 msgstr "在外部查看器中打开(_O)"
 
 #: data/gtkbuilder/frogr-context-menu.ui:45
-#: data/gtkbuilder/frogr-menu-bar.ui:30
 msgid "_Remove Elements"
 msgstr "移除元素(_R)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:5
+#: data/gtkbuilder/frogr-main-view.ui:51
+msgid "No pictures loaded"
+msgstr "无加载的图片"
+
+#: data/gtkbuilder/frogr-main-view.ui:67
+msgid ""
+"Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
+"window."
+msgstr "按下工具栏中的<b>“添加”</b>按钮以将相片加载至本窗口中。"
+
+#: data/gtkbuilder/frogr-main-view.ui:83
+msgid ""
+"Once you're ready, press the <b>\"Upload\"</b> button to upload your "
+"pictures to Flickr."
+msgstr "准备好后，按下<b>“上传”</b>按钮以将您的相片上传至 Flickr。"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
+msgid "Aut_horize Account…"
+msgstr "认证账户(_H)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:11
 msgid "_File"
 msgstr "文件(_F)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:8
+#: data/gtkbuilder/frogr-menu-bar.ui:14
 msgid "_Open…"
-msgstr "打开(_O)..."
+msgstr "打开(_O)…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:18 data/gtkbuilder/frogr-menu-button.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
 msgid "Save _As…"
-msgstr "保存为(_A)..."
+msgstr "保存为(_A)…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:25
-msgid "A_dd Elements…"
-msgstr "添加元素(_D)..."
+#: data/gtkbuilder/frogr-menu-bar.ui:31
+msgid "A_dd…"
+msgstr "添加(_D)…"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:37
-msgid "_Upload All"
-msgstr "全部上传(_U)"
+#: data/gtkbuilder/frogr-menu-bar.ui:36
+msgid "_Remove"
+msgstr "移除(_R)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:86
+#: data/gtkbuilder/frogr-menu-bar.ui:41
+msgid "_Upload"
+msgstr "上传(_U)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:48
+#: data/gtkbuilder/frogr-menu-button.ui:100
+msgid "_Preferences…"
+msgstr "首选项(_P)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:52
+#: data/gtkbuilder/frogr-menu-button.ui:104
+msgid "_Help"
+msgstr "帮助(_H)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:57
+#: data/gtkbuilder/frogr-menu-button.ui:109
+msgid "_About frogr"
+msgstr "关于 frogr(_A)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:61
+msgid "_Quit"
+msgstr "退出(_Q)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:110
 msgid "_View"
 msgstr "查看(_V)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:50
+#: data/gtkbuilder/frogr-menu-bar.ui:113
+#: data/gtkbuilder/frogr-menu-button.ui:56
 msgid "_Sort Elements"
 msgstr "排序元素(_S)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+#: data/gtkbuilder/frogr-menu-bar.ui:116
+#: data/gtkbuilder/frogr-menu-button.ui:59
 msgid "As _Loaded"
 msgstr "同载入时(_L)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
+#: data/gtkbuilder/frogr-menu-bar.ui:121
+#: data/gtkbuilder/frogr-menu-button.ui:64
 msgid "By _Date Taken"
 msgstr "按拍摄日期(_D)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:102
-#: data/gtkbuilder/frogr-menu-button.ui:63
+#: data/gtkbuilder/frogr-menu-bar.ui:126
+#: data/gtkbuilder/frogr-menu-button.ui:69
 msgid "By _Title"
 msgstr "按标题(_T)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:107
-#: data/gtkbuilder/frogr-menu-button.ui:68
+#: data/gtkbuilder/frogr-menu-bar.ui:131
+#: data/gtkbuilder/frogr-menu-button.ui:74
 msgid "By _Size"
 msgstr "按大小(_S)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:114
-#: data/gtkbuilder/frogr-menu-button.ui:75
+#: data/gtkbuilder/frogr-menu-bar.ui:138
+#: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "_Reversed Order"
 msgstr "逆序(_R)"
 
-#: data/gtkbuilder/frogr-menu-bar.ui:122
-#: data/gtkbuilder/frogr-menu-button.ui:81
+#: data/gtkbuilder/frogr-menu-bar.ui:146
+#: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "启用工具提示(_T)"
+
+#, fuzzy
+#~ msgid ""
+#~ "frogr is a small application for the GNOME desktop that allows users to "
+#~ "manage their accounts in the Flickr image hosting website."
+#~ msgstr ""
+#~ "Frogr 是 GNOME 桌面的一个小型程序，允许用户管理其 Flickr 相片托管网站的帐"
+#~ "号。"
+
+#~ msgid "Add Elements"
+#~ msgstr "添加元素"
+
+#~ msgid "Remove Elements"
+#~ msgstr "移除元素"
+
+#~ msgid "Upload All"
+#~ msgstr "全部上传"
+
+#~ msgid "_About"
+#~ msgstr "关于(_A)"
+
+#~ msgid "_Upload All"
+#~ msgstr "全部上传(_U)"
 
 #~ msgid "Frogr"
 #~ msgstr "Frogr"
@@ -927,9 +998,6 @@ msgstr "启用工具提示(_T)"
 
 #~ msgid "Visible to F_riends"
 #~ msgstr "朋友可见(_R)"
-
-#~ msgid "Flickr Remote Organizer"
-#~ msgstr "Flickr 远程整理器"
 
 #~ msgid "Setting license for picture…"
 #~ msgstr "正在设置图片许可协议..."
@@ -968,9 +1036,6 @@ msgstr "启用工具提示(_T)"
 
 #~ msgid "Set's title:"
 #~ msgstr "相片集标题："
-
-#~ msgid "_About frogr..."
-#~ msgstr "关于 frogr(_A)..."
 
 #~ msgid "remaining for the current month"
 #~ msgstr "本月余量"
