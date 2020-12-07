@@ -2,7 +2,7 @@ project('frogr', 'c',
         version: '1.7',
         license: 'GPL3',
         default_options: [
-            'warnlevel=2',
+            'warning_level=2',
             'werror=false'
         ])
 
