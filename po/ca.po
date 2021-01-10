@@ -41,9 +41,9 @@ msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
 msgstr ""
-"És compatible amb totes les característiques bàsiques de Flickr, incloent pujada d'"
-"imatges, addició de descripcions, configuració d'etiquetes i la gestió de "
-"col·leccions i grups de fons."
+"És compatible amb totes les característiques bàsiques de Flickr, incloent "
+"pujada d'imatges, addició de descripcions, configuració d'etiquetes i la "
+"gestió de col·leccions i grups de fons."
 
 #: data/org.gnome.frogr.appdata.xml.in:25
 msgid "Screenshot of frogr"
@@ -61,12 +61,14 @@ msgstr "Frogr: un organitzador remot de Flickr per a GNOME"
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Puja i organitza fotos al compte de Flickr"
 
-#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#. Translators: Search terms to find this application. Do NOT translate or
+#. localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Imatge;Foto;Video;Carregador;"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#. Translators: Do NOT translate or transliterate this text (this is an icon
+#. file name)!
 #: data/org.gnome.frogr.desktop.in.in:16
 msgid "org.gnome.frogr"
 msgstr "org.gnome.frogr"
@@ -129,7 +131,7 @@ msgid ""
 "Please press the button to authorize %s and then come back to complete the "
 "process."
 msgstr ""
-"Premeu el botó per autoritzar a %s i llavors torneu a completar el procés."
+"Premeu el botó per a autoritzar a %s i llavors torneu a completar el procés."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:148
 #: src/frogr-controller.c:2227
@@ -736,8 +738,8 @@ msgstr " - %s / %s restants"
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
-msgstr[0] " - %d del fitxer per pujar (%s)"
-msgstr[1] " - %d dels fitxers per pujar (%s)"
+msgstr[0] " - %d del fitxer per a pujar (%s)"
+msgstr[1] " - %d dels fitxers per a pujar (%s)"
 
 #: src/frogr-settings-dialog.c:185
 msgid "Default Visibility"
@@ -904,7 +906,7 @@ msgid ""
 "Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
 "window."
 msgstr ""
-"Premeu el botó <b>«Afegeix»</b> a la barra d'eines per carregar imatges en "
+"Premeu el botó <b>«Afegeix»</b> a la barra d'eines per a carregar imatges en "
 "aquesta finestra."
 
 #: data/gtkbuilder/frogr-main-view.ui:83
@@ -912,8 +914,8 @@ msgid ""
 "Once you're ready, press the <b>\"Upload\"</b> button to upload your "
 "pictures to Flickr."
 msgstr ""
-"Quan estigueu preparat, premeu el botó <b> «Puja» </b> per carregar fotos a "
-"Flickr."
+"Quan estigueu preparat, premeu el botó <b> «Puja» </b> per a carregar fotos "
+"a Flickr."
 
 #: data/gtkbuilder/frogr-menu-bar.ui:5
 msgid "_File"
