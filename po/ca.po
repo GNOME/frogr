@@ -26,7 +26,7 @@ msgstr "Frogr"
 
 #: data/org.gnome.frogr.appdata.xml.in:8
 msgid "A flickr uploader for GNOME"
-msgstr "Un carregador de Flickr per a GNOME"
+msgstr "Una aplicació de pujades a Flickr per a GNOME"
 
 #: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
@@ -41,9 +41,9 @@ msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
 msgstr ""
-"És compatible amb totes les característiques bàsiques de Flickr, incloent "
-"pujada d'imatges, addició de descripcions, configuració d'etiquetes i la "
-"gestió de col·leccions i grups de fons."
+"És compatible amb totes les funcionalitats bàsiques de Flickr, incloent-hi "
+"pujada d'imatges, afegir-hi descripcions, configuració d'etiquetes i la "
+"gestió de col·leccions i grups."
 
 #: data/org.gnome.frogr.appdata.xml.in:25
 msgid "Screenshot of frogr"
@@ -65,7 +65,7 @@ msgstr "Puja i organitza fotos al compte de Flickr"
 #. localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
-msgstr "Flickr;Imatge;Foto;Video;Carregador;"
+msgstr "Flickr;Imatge;Foto;Vídeo;Carregador;"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon
 #. file name)!
@@ -547,7 +547,7 @@ msgstr "Mo_stra en els resultats de cerca globals"
 
 #: src/frogr-details-dialog.c:379
 msgid "Set Geo_location Information"
-msgstr "Configura la informació de geolocalització"
+msgstr "_Configura la informació de geolocalització"
 
 #: src/frogr-details-dialog.c:383
 msgid "Replace 'Date Posted' with 'Date Taken'"
@@ -576,7 +576,7 @@ msgstr "Edita els detalls de la imatge"
 #: src/frogr-file-loader.c:142
 #, c-format
 msgid "Loading files %d / %d"
-msgstr "S'estan carregant fitxers  %d / %d"
+msgstr "S'estan carregant fitxers %d / %d"
 
 #: src/frogr-file-loader.c:359
 #, c-format
@@ -767,7 +767,7 @@ msgstr "_Mostra imatges en els resultats de cerca globals"
 
 #: src/frogr-settings-dialog.c:315
 msgid "Set Geo_location Information for Pictures"
-msgstr "Configura la informació de geolocalització a les imatges"
+msgstr "C_onfigura la informació de geolocalització a les imatges"
 
 #: src/frogr-settings-dialog.c:318
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
@@ -840,7 +840,7 @@ msgstr "Preferències"
 
 #: data/gtkbuilder/frogr-app-menu.ui:6
 msgid "Aut_horize Account…"
-msgstr "_Autoritza compte..."
+msgstr "_Autoritza el compte..."
 
 #: data/gtkbuilder/frogr-app-menu.ui:12
 msgid "_Preferences…"
@@ -950,8 +950,9 @@ msgid "_Sort Elements"
 msgstr "_Ordena elements"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:92 data/gtkbuilder/frogr-menu-button.ui:53
+# N.T. Fa refèrncia als elements
 msgid "As _Loaded"
-msgstr "Com s'ha _carregat"
+msgstr "Com s'han _carregat"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:97 data/gtkbuilder/frogr-menu-button.ui:58
 msgid "By _Date Taken"
