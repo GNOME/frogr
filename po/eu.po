@@ -1,14 +1,14 @@
 # Basque translation for frogr.
 # Copyright (C) 2019 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Asier Sarasua Garmendia <asier.sarasua@gmail.com>, 2019.
+# Asier Sarasua Garmendia <asiersarasua@ni.eus>, 2019, 2021.
 #
 msgid ""
 msgstr "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2019-09-15 14:27+0000\n"
-"PO-Revision-Date: 2019-10-5 10:00+0000\n"
-"Last-Translator: Asier Sarasua Garmendia <asier.sarasua@gmail.com>\n"
+"POT-Creation-Date: 2020-07-15 07:15+0000\n"
+"PO-Revision-Date: 2021-04-03 10:00+0100\n"
+"Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
@@ -22,19 +22,19 @@ msgstr "frogr"
 
 #: data/org.gnome.frogr.appdata.xml.in:8
 msgid "A flickr uploader for GNOME"
-msgstr "Flickr igotzaile bat FNOMErako"
+msgstr "Flickr zerbitzura argazkiak igotzeko aplikazio bat GNOMErako"
 
 #: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
 "frogr allows users to manage their accounts on the Flickr photo hosting "
 "service with a simple and direct interface."
-msgstr ""
+msgstr "Frogr aplikazioari esker, Flickr zerbitzuan kontua dutenek modu erraz eta zuzenean kudeatu ditzakete beren argazkiak."
 
 #: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
-msgstr ""
+msgstr "Oinarrizko Flickr eginbide guztiak onartzen ditu: irudiak igotzea, deskribapenak gehitzea, etiketak ezartzea eta argazkien multzoak eta taldeak kudeatzea."
 
 #: data/org.gnome.frogr.appdata.xml.in:25
 msgid "Screenshot of frogr"
@@ -46,24 +46,24 @@ msgstr "Mario Sanchez Prada"
 
 #: data/org.gnome.frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
-msgstr ""
+msgstr "frogr: Flickr zerbitzua urrunetik antolatzeko aplikazioa GNOMErako"
 
 #: data/org.gnome.frogr.desktop.in.in:7
 msgid "Upload and organize photos in Flickr accounts"
-msgstr ""
+msgstr "Igo eta antolatu argazkiak Flickr kontuetan"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
-msgstr ""
+msgstr "Flickr;Irudia;Argazkia;Bideoa;Igotzailea;"
 
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
-msgstr ""
+msgstr "Flickr zerbitzua urrunetik antolatzeko aplikazioa GNOMErako\n"
 
 #: src/frogr-about-dialog.c:70
 msgid "translator-credits"
-msgstr "Asier Sarasua Garmendia <asier.sarasua@gmail.com>"
+msgstr "translator-credits"
 
 #: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
 #: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
@@ -80,7 +80,7 @@ msgstr "_Gehitu"
 
 #: src/frogr-add-tags-dialog.c:199
 msgid "Enter a spaces separated list of tags:"
-msgstr ""
+msgstr "Sartu zuriunez bereizitako etiketen zerrenda bat:"
 
 #: src/frogr-add-tags-dialog.c:227
 msgid "Add Tags"
@@ -111,10 +111,10 @@ msgstr "Gehitu multzoei"
 msgid ""
 "Please press the button to authorize %s and then come back to complete the "
 "process."
-msgstr ""
+msgstr "Sakatu botoia %s erabiltzaileari baimena emateko eta gero itzuli hona prozesua osatzeko."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
-#: src/frogr-controller.c:2227
+#: src/frogr-controller.c:2213
 #, c-format
 msgid "Authorize %s"
 msgstr "Baimendu %s"
@@ -126,58 +126,64 @@ msgstr "It_xi"
 #. Description label
 #: src/frogr-auth-dialog.c:169
 msgid "Enter verification code:"
-msgstr ""
+msgstr "Sartu egiaztapen-kodea:"
 
 #: src/frogr-auth-dialog.c:226
 msgid "Invalid verification code"
-msgstr ""
+msgstr "Egiaztapen-kode baliogabea"
 
 #: src/frogr-controller.c:575
 msgid "Process cancelled"
-msgstr ""
+msgstr "Prozesua bertan behera utzi da"
 
 #: src/frogr-controller.c:580
 msgid ""
 "Connection error:\n"
 "Network not available"
-msgstr ""
+msgstr "Konexio-errorea:\n"
+"Sarea ez dago erabilgarri"
 
 #: src/frogr-controller.c:584
 msgid ""
 "Connection error:\n"
 "Bad request"
-msgstr ""
+msgstr "Konexio-errorea:\n"
+"Eskaera okerra"
 
 #: src/frogr-controller.c:588
 msgid ""
 "Connection error:\n"
 "Server-side error"
-msgstr ""
+msgstr "Konexio-errorea:\n"
+"Errorea zerbitzariaren aldean"
 
 #: src/frogr-controller.c:592
 msgid ""
 "Error uploading:\n"
 "File invalid"
-msgstr ""
+msgstr "Errorea igotzean:\n"
+"Fitxategi baliogabea"
 
 #: src/frogr-controller.c:596
 msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
-msgstr ""
+msgstr "Errorea irudia igotzean:\n"
+"Kuota gainditu da"
 
 #: src/frogr-controller.c:601
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Kuota gainditu da (muga: bideo %d hilabeteko)"
+msgstr[1] "Kuota gainditu da (muga: %d bideo hilabeteko)"
 
 #: src/frogr-controller.c:605
 msgid ""
 "Error uploading video:\n"
 "You can't upload more videos with this account"
-msgstr ""
+msgstr "Errorea bideoa igotzean:\n"
+"Ezin duzu bideo gehiagorik igo kontu honekin"
 
 #: src/frogr-controller.c:610
 msgid ""
@@ -190,50 +196,58 @@ msgstr "Errorea:\n"
 msgid ""
 "Error:\n"
 "Photo already in photoset"
-msgstr ""
+msgstr "Errorea:\n"
+"Argazkia badago lehendik argazki multzoan"
 
 #: src/frogr-controller.c:618
 msgid ""
 "Error:\n"
 "Photo already in group"
-msgstr ""
+msgstr "Errorea:\n"
+"Argazkia badago lehendik taldean"
 
 #: src/frogr-controller.c:622
 msgid ""
 "Error:\n"
 "Photo already in the maximum number of groups possible"
-msgstr ""
+msgstr "Errorea:\n"
+"Argazkia badago lehendik gehieneko talde kopuruan"
 
 #: src/frogr-controller.c:626
 msgid ""
 "Error:\n"
 "Group limit already reached"
-msgstr ""
+msgstr "Errorea:\n"
+"Talde-mugak bete dira"
 
 #: src/frogr-controller.c:630
 msgid ""
 "Error:\n"
 "Photo added to group's queue"
-msgstr ""
+msgstr "Errorea:\n"
+"Argazkia taldearen ilaran gehitu da"
 
 #: src/frogr-controller.c:634
 msgid ""
 "Error:\n"
 "Photo already added to group's queue"
-msgstr ""
+msgstr "Errorea:\n"
+"Argazkia taldearen ilaran gehitu da jadanik"
 
 #: src/frogr-controller.c:638
 msgid ""
 "Error:\n"
 "Content not allowed for this group"
-msgstr ""
+msgstr "Errorea:\n"
+"Edukia ez da onartzen talde honetarako"
 
 #: src/frogr-controller.c:642
 #, c-format
 msgid ""
 "Authorization failed.\n"
 "Please try again"
-msgstr ""
+msgstr "Baimenak huts egin du.\n"
+"Saiatu berriro"
 
 #: src/frogr-controller.c:648
 #, c-format
@@ -241,118 +255,123 @@ msgid ""
 "Error\n"
 "%s is not properly authorized to upload pictures to Flickr.\n"
 "Please re-authorize it"
-msgstr ""
+msgstr "Errorea:\n"
+"%s ez dago baimenduta argazkiak Flickr-era igotzeko.\n"
+"Eman baimena berriro."
 
 #: src/frogr-controller.c:653
 #, c-format
 msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
-msgstr ""
+msgstr "Ezin izan da Flickr-en autentifikatu.\n"
+"Saiatu berriro."
 
 #: src/frogr-controller.c:657
 #, c-format
 msgid ""
 "You have not properly authorized %s yet.\n"
 "Please try again."
-msgstr ""
+msgstr "Ez duzu %s oraindik baimendu.\n"
+"Saiatu berriro."
 
 #: src/frogr-controller.c:662
 #, c-format
 msgid ""
 "Invalid verification code.\n"
 "Please try again."
-msgstr ""
+msgstr "Egiaztapen-kode baliogabea."
 
 #: src/frogr-controller.c:666
 #, c-format
 msgid ""
 "Error:\n"
 "Service not available"
-msgstr ""
+msgstr "Saiatu berriro."
 
 #. General error: just dump the raw error description
 #: src/frogr-controller.c:671
 #, c-format
 msgid "An error happened: %s."
-msgstr ""
+msgstr "Errorea gertatu da: %s."
 
 #: src/frogr-controller.c:869
 msgid "Authorization failed (timed out)"
-msgstr ""
+msgstr "Baimenak huts egin du (denbora agortu da)"
 
 #: src/frogr-controller.c:917
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
-msgstr ""
+msgstr "Igoera berriro saiatzean (saialdia: %d/%d)…"
 
 #: src/frogr-controller.c:922
 #, c-format
 msgid "Uploading '%s'…"
-msgstr ""
+msgstr "'%s' igotzean…"
 
-#: src/frogr-controller.c:2183
+#: src/frogr-controller.c:2169
 msgid "Updating credentials…"
-msgstr ""
+msgstr "Kredentzialak eguneratzen…"
 
-#: src/frogr-controller.c:2188
+#: src/frogr-controller.c:2174
 msgid "Retrieving data for authorization…"
-msgstr ""
+msgstr "Baimenerako datuak atzitzen…"
 
-#: src/frogr-controller.c:2193
+#: src/frogr-controller.c:2179
 msgid "Finishing authorization…"
 msgstr "Baimena amaitzen…"
 
-#: src/frogr-controller.c:2198
+#: src/frogr-controller.c:2184
 msgid "Retrieving list of sets…"
-msgstr ""
+msgstr "Multzoen zerrenda atzitzen…"
 
-#: src/frogr-controller.c:2203
+#: src/frogr-controller.c:2189
 msgid "Retrieving list of groups…"
-msgstr ""
+msgstr "Taldeen zerrenda atzitzen…"
 
-#: src/frogr-controller.c:2208
+#: src/frogr-controller.c:2194
 msgid "Retrieving list of tags…"
-msgstr ""
+msgstr "Etiketen zerrenda atzitzen…"
 
-#: src/frogr-controller.c:2233
+#: src/frogr-controller.c:2219
 #, c-format
 msgid "Fetching information"
-msgstr ""
+msgstr "Informazioa atzitzen"
 
-#: src/frogr-controller.c:2337
+#: src/frogr-controller.c:2323
 msgid "No sets found"
 msgstr "Ez da multzorik aurkitu"
 
-#: src/frogr-controller.c:2362
+#: src/frogr-controller.c:2348
 msgid "No groups found"
 msgstr "Ez da talderik aurkitu"
 
-#: src/frogr-controller.c:2920
+#: src/frogr-controller.c:2906
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
 "Please re-authorize it."
-msgstr ""
+msgstr "%s baimendu behar duzu Flickr-era edozein argazki igo baino lehen.\n"
+"Eman baimena berriro."
 
-#: src/frogr-controller.c:2929
+#: src/frogr-controller.c:2915
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
-msgstr ""
+msgstr "Konektatuta egon behar duzu Flicrk-era edozein argazki igo baino lehen."
 
-#: src/frogr-controller.c:2946
+#: src/frogr-controller.c:2932
 msgid "Uploading Pictures"
-msgstr "Argazkiak kargatzen"
+msgstr "Argazkiak igotzen"
 
-#: src/frogr-controller.c:2991
+#: src/frogr-controller.c:2977
 #, c-format
 msgid "Error opening project file"
-msgstr ""
+msgstr "Errorea proiektu-fitxategia irekitzean"
 
 #. This shows a dialog notifying the problem to the user
 #: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
 msgid "Missing data required"
-msgstr ""
+msgstr "Datuak falta dira"
 
 #: src/frogr-create-new-set-dialog.c:319
 msgid "Title:"
@@ -364,47 +383,47 @@ msgstr "Azalpena:"
 
 #: src/frogr-create-new-set-dialog.c:355
 msgid "Fill Pictures Details with Title and Description"
-msgstr ""
+msgstr "Bete irudien xehetasunak izenburuarekin eta deskribapenarekin"
 
 #: src/frogr-create-new-set-dialog.c:383
 msgid "Create New Set"
-msgstr ""
+msgstr "Sortu multzo berria"
 
 #: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
 msgid "Default (as specified in Flickr)"
-msgstr ""
+msgstr "Lehenetsia (Flicrk-en zehaztuta dagoen moduan)"
 
 #: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
 msgid "All rights reserved"
-msgstr ""
+msgstr "Eskubide guztiak erreserbatuta"
 
 #: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
 msgid "CC Attribution-NonCommercial-ShareAlike"
-msgstr ""
+msgstr "CC Aitortu-EzKomertziala-PartekatuBerdin"
 
 #: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
 msgid "CC Attribution-NonCommercial"
-msgstr ""
+msgstr "CC Aitortu-EzKomertziala"
 
 #: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
 msgid "CC Attribution-NonCommercial-NoDerivs"
-msgstr ""
+msgstr "CC Aitortu-EzKomertziala-LanEratorririkGabe"
 
 #: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
 msgid "CC Attribution"
-msgstr ""
+msgstr "CC Aitortu"
 
 #: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
 msgid "CC Attribution-ShareAlike"
-msgstr ""
+msgstr "CC Aitortu-PartekatuBerdin"
 
 #: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
 msgid "CC Attribution-NoDerivs"
-msgstr ""
+msgstr "CC Aitortu-LanEratorririkGabe"
 
 #: src/frogr-details-dialog.c:175
 msgid "Open with image viewer"
-msgstr ""
+msgstr "Ireki irudi-ikustailearekin"
 
 #: src/frogr-details-dialog.c:196
 msgid "_Title:"
@@ -480,27 +499,27 @@ msgstr "Beste propietate batzuk"
 
 #: src/frogr-details-dialog.c:417
 msgid "_Show Up in Global Search Results"
-msgstr ""
+msgstr "_Erakutsi bilaketa globalen emaitzetan"
 
 #: src/frogr-details-dialog.c:422
 msgid "Set Geo_location Information"
-msgstr ""
+msgstr "Ezarri _geokokapeneko informazioa"
 
 #: src/frogr-details-dialog.c:427
 msgid "Replace 'Date Posted' with 'Date Taken'"
-msgstr ""
+msgstr "'Argitaratutako data' aukeraren ordez, erabili 'Hartutako data'"
 
 #. Visually indicate how many pictures are being edited
 #: src/frogr-details-dialog.c:519
 #, c-format
 msgid "(%d Picture)"
 msgid_plural "(%d Pictures)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "(Irudi %d)"
+msgstr[1] "(%d irudi)"
 
 #: src/frogr-details-dialog.c:590
 msgid "An error happened trying to load the picture"
-msgstr ""
+msgstr "Errorea gertatu da irudia igotzen saiatzean"
 
 #: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
 msgid "_Edit"
@@ -520,14 +539,16 @@ msgstr "%d / %d fitxategi kargatzen"
 msgid ""
 "Unable to load picture %s:\n"
 "%s"
-msgstr ""
+msgstr "Ezin izan da %s irudia igo:\n"
+"%s"
 
 #: src/frogr-file-loader.c:385
 #, c-format
 msgid ""
 "Unable to load video %s\n"
 "Please check that you have the right codec installed"
-msgstr ""
+msgstr "Ezin izan da %s bideoa igo:\n"
+"Egiaztatu kodek zuzena instalatuta duzula"
 
 #. First %s is the title of the picture (filename of the file by
 #. default). Second %s is the max allowed size for a picture to be
@@ -537,11 +558,12 @@ msgstr ""
 msgid ""
 "Can't load file %s:\n"
 "Size of file is bigger than the maximum allowed for this account (%s)"
-msgstr ""
+msgstr "Ezin izan da %s fitxategia igo:\n"
+"Fitxategiaren tamaina kontu honetarako onartzen dena baino handiagoa da (%s)"
 
 #: src/frogr-global-defs.h:26
 msgid "Flickr Remote Organizer"
-msgstr ""
+msgstr "Flicrk urruneko antolatzailea"
 
 #. First create the left side buttons
 #: src/frogr-main-view.c:596 src/frogr-main-view.c:690
@@ -550,7 +572,7 @@ msgstr "Ireki"
 
 #: src/frogr-main-view.c:596 src/frogr-main-view.c:690
 msgid "Open Existing Project"
-msgstr ""
+msgstr "Ireki lehendik dagoen proiektua"
 
 #: src/frogr-main-view.c:597 src/frogr-main-view.c:693
 msgid "Add"
@@ -582,12 +604,12 @@ msgstr "Kontuak"
 #: src/frogr-main-view.c:1363
 #, c-format
 msgid "Taken: %s"
-msgstr ""
+msgstr "Hartze-data: %s"
 
 #: src/frogr-main-view.c:1367
 #, c-format
 msgid "File size: %s"
-msgstr ""
+msgstr "Fitxategi-tamaina: %s"
 
 #: src/frogr-main-view.c:1483
 msgid "Select File"
@@ -599,11 +621,11 @@ msgstr "_Ireki"
 
 #: src/frogr-main-view.c:1496
 msgid "Frogr Project Files"
-msgstr ""
+msgstr "Frogr proiektu-fitxategiak"
 
 #: src/frogr-main-view.c:1556
 msgid "Select Destination"
-msgstr ""
+msgstr "Hautatu helburua"
 
 #: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
 #: data/gtkbuilder/frogr-menu-button.ui:12
@@ -612,7 +634,7 @@ msgstr "_Gorde"
 
 #: src/frogr-main-view.c:1563
 msgid "Untitled Project.frogr"
-msgstr ""
+msgstr "Izenik gabea.frogr"
 
 #: src/frogr-main-view.c:1608
 msgid "Select a Picture"
@@ -632,25 +654,25 @@ msgstr "Bideo-fitxategiak"
 
 #: src/frogr-main-view.c:1664
 msgid "You don't have any picture added yet"
-msgstr ""
+msgstr "Ez duzu irudik gehitu oraindik"
 
 #: src/frogr-main-view.c:1677
 msgid "You need to select some pictures first"
-msgstr ""
+msgstr "Zenbait irudi hautatu behar duzu hasteko"
 
 #: src/frogr-main-view.c:2046
 msgid "Not connected to Flickr"
-msgstr ""
+msgstr "Ez da Flickr-ekin konektatu"
 
 #. Login string, showing the user is PRO (second '%s') if so.
 #: src/frogr-main-view.c:2056
 #, c-format
 msgid "Connected as %s%s"
-msgstr ""
+msgstr "%s%s gisa konektatuta"
 
 #: src/frogr-main-view.c:2057
 msgid " (PRO account)"
-msgstr ""
+msgstr " (PRO kontua)"
 
 #. Will show in the status bar the amount of data (in KB, MB
 #. or GB) the user is currently allowed to upload to flicker
@@ -660,7 +682,7 @@ msgstr ""
 #: src/frogr-main-view.c:2081
 #, c-format
 msgid " - %s / %s remaining"
-msgstr ""
+msgstr " - %s / %s faltan"
 
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
@@ -669,8 +691,8 @@ msgstr ""
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " - Fitxategi %d igotzea (%s)"
+msgstr[1] " - %d fitxategi igotzeko (%s)"
 
 #: src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
@@ -694,15 +716,15 @@ msgstr "Beste balio lehenetsi batzuk"
 
 #: src/frogr-settings-dialog.c:335
 msgid "_Show Pictures in Global Search Results"
-msgstr ""
+msgstr "E_rakutsi irudiak bilaketa globalen emaitzetan"
 
 #: src/frogr-settings-dialog.c:338
 msgid "Set Geo_location Information for Pictures"
-msgstr ""
+msgstr "Ezarri _geokokapeneko informazioa irudietarako"
 
 #: src/frogr-settings-dialog.c:341
 msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
-msgstr ""
+msgstr "'Argitaratutako data' aukeraren ordez, erabili 'Hartutako data' irudiekin"
 
 #: src/frogr-settings-dialog.c:347
 msgid "_General"
@@ -710,12 +732,12 @@ msgstr "_Orokorra"
 
 #: src/frogr-settings-dialog.c:368
 msgid "Proxy Settings"
-msgstr ""
+msgstr "Proxyaren ezarpenak"
 
 #. Enable proxy
 #: src/frogr-settings-dialog.c:377
 msgid "_Enable HTTP Proxy"
-msgstr ""
+msgstr "Gaitu _HTTP proxya"
 
 #: src/frogr-settings-dialog.c:389
 msgid "_Host:"
@@ -746,19 +768,19 @@ msgstr "Bestelako aukerak"
 
 #: src/frogr-settings-dialog.c:490
 msgid "Ena_ble Tags Auto-Completion"
-msgstr ""
+msgstr "Gaitu etiketen _osatze automatikoa"
 
 #: src/frogr-settings-dialog.c:493
 msgid "_Import Tags from Pictures Metadata"
-msgstr ""
+msgstr "_Inportatu etiketak irudien metadatuetatik"
 
 #: src/frogr-settings-dialog.c:497
 msgid "Use _Dark GTK Theme"
-msgstr ""
+msgstr "Erabili _GTK gai iluna"
 
 #: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
-msgstr ""
+msgstr "_Mantendu fitxategi-luzapenak izenburuetan irudiak igotzean"
 
 #: src/frogr-settings-dialog.c:507
 msgid "_Misc"
@@ -781,52 +803,52 @@ msgstr "Gehitu _etiketak…"
 #: data/gtkbuilder/frogr-context-menu.ui:16
 #: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
 msgid "Add to _Group…"
-msgstr ""
+msgstr "Gehitu _taldeari…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:21
 #: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
 msgid "Add to _Photoset"
-msgstr ""
+msgstr "Gehitu argazki _multzoari"
 
 #: data/gtkbuilder/frogr-context-menu.ui:24
 #: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
 msgid "_Add to Existing Photoset…"
-msgstr ""
+msgstr "_Gehitu lehendik dagoen argazki multzoari…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:29
 #: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
 msgid "_Create New Photoset…"
-msgstr ""
+msgstr "_Sortu argazki multzo berria…"
 
 #: data/gtkbuilder/frogr-context-menu.ui:38
 #: data/gtkbuilder/frogr-menu-bar.ui:103
 #: data/gtkbuilder/frogr-menu-button.ui:93
 msgid "_Open in External Viewer"
-msgstr ""
+msgstr "_Ireki kanpoko ikustailearekin"
 
 #: data/gtkbuilder/frogr-context-menu.ui:45
 msgid "_Remove Elements"
-msgstr ""
+msgstr "_Kendu elementuak"
 
 #: data/gtkbuilder/frogr-main-view.ui:51
 msgid "No pictures loaded"
-msgstr ""
+msgstr "Ez da irudirik igo"
 
 #: data/gtkbuilder/frogr-main-view.ui:67
 msgid ""
 "Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
 "window."
-msgstr ""
+msgstr "Sakatu tresna-barrako <b>\"Gehitu\"</b> botoia argazkiak leiho honetan kargatzeko."
 
 #: data/gtkbuilder/frogr-main-view.ui:83
 msgid ""
 "Once you're ready, press the <b>\"Upload\"</b> button to upload your "
 "pictures to Flickr."
-msgstr ""
+msgstr "Prest dagoenean, sakatu <b>\"Igo\"</b> botoia irudiak Flicrk zerbitzura igotzeko."
 
 #: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
 msgid "Aut_horize Account…"
-msgstr ""
+msgstr "_baimendu kontua…"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:11
 msgid "_File"
@@ -883,12 +905,12 @@ msgstr "_Ordenatu elementuak"
 #: data/gtkbuilder/frogr-menu-bar.ui:116
 #: data/gtkbuilder/frogr-menu-button.ui:59
 msgid "As _Loaded"
-msgstr ""
+msgstr "I_go diren moduan"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:121
 #: data/gtkbuilder/frogr-menu-button.ui:64
 msgid "By _Date Taken"
-msgstr ""
+msgstr "_Hartutako dataren arabera"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:126
 #: data/gtkbuilder/frogr-menu-button.ui:69
@@ -898,14 +920,14 @@ msgstr "_Tituluaren arabera"
 #: data/gtkbuilder/frogr-menu-bar.ui:131
 #: data/gtkbuilder/frogr-menu-button.ui:74
 msgid "By _Size"
-msgstr ""
+msgstr "T_amainaren arabera"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:138
 #: data/gtkbuilder/frogr-menu-button.ui:81
 msgid "_Reversed Order"
-msgstr ""
+msgstr "A_lderantzizko ordena"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:146
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
-msgstr ""
+msgstr "Gaitu a_rgibideak"
