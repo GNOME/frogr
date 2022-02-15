@@ -29,8 +29,7 @@ data_conf.set('BINDIR', join_paths(prefix, bindir))
 generated_desktop = configure_file(input: 'org.gnome.frogr.desktop.in.in',
                                    output: 'org.gnome.frogr.desktop.in',
                                    configuration: data_conf)
-i18n.merge_file(
-                input: generated_desktop,
+i18n.merge_file(input: generated_desktop,
                 output: 'org.gnome.frogr.desktop',
                 install: true,
                 install_dir: desktopdir,
@@ -39,8 +38,7 @@ i18n.merge_file(
 
 # Appdata XML file
 appdatadir = join_paths(datadir, 'metainfo')
-i18n.merge_file(
-                input: 'org.gnome.frogr.appdata.xml.in',
+i18n.merge_file(input: 'org.gnome.frogr.appdata.xml.in',
                 output: 'org.gnome.frogr.appdata.xml',
                 install: true,
                 install_dir: appdatadir,
