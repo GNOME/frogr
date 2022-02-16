@@ -54,7 +54,7 @@ frogr_about_dialog_show (GtkWindow *parent)
   icon_full_path = g_strdup_printf ("%s/" ABOUT_DIALOG_ICON,
 				    frogr_util_get_icons_dir ());
   logo = gdk_pixbuf_new_from_file (icon_full_path, NULL);
-  version = g_strdup_printf ("%s", PACKAGE_VERSION);
+  version = g_strdup_printf ("%s~unreleased", PACKAGE_VERSION);
 
   /* Show about dialog */
   gtk_show_about_dialog (GTK_WINDOW (parent),
