@@ -1,5 +1,16 @@
-1.7 (??)
-========
+1.7 (16 Feb 2022)
+=================
+
+  * Fixed build error with Meson 0.61.
+
+New and updated translations:
+
+  * ca (Jordi Mas)
+  * eu (Asier Sarasua Garmendia)
+  * fur (Fabio Tomat)
+  * ro (Florentina Mușat)
+  * uk (Yuri Chornoivan)
+  * zh_CN (Boyuan Yang)
 
 1.6 (10 Jan 2020)
 =================
