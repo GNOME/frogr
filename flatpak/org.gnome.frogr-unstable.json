@@ -1,7 +1,7 @@
 {
     "app-id": "org.gnome.frogr",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "40",
+    "runtime-version": "master",
     "sdk": "org.gnome.Sdk",
     "command": "frogr",
     "tags": ["nightly"],
@@ -31,7 +31,7 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "file:///home/mario/work/frogr/frogr"
+                    "url": "https://gitlab.gnome.org/GNOME/frogr.git"
                 }
             ]
         }
