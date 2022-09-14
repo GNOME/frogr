@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2018-12-12 14:45+0000\n"
+"POT-Creation-Date: 2020-07-15 07:15+0000\n"
 "PO-Revision-Date: 2019-02-23 10:31+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
@@ -66,11 +66,6 @@ msgstr "Flickr hesaplarına fotoğraf yükleyin ve düzenleyin"
 #: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Görüntü;Resim;Fotoğraf;Video;Karşıya Yükleyici;"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.frogr.desktop.in.in:16
-msgid "org.gnome.frogr"
-msgstr "org.gnome.frogr"
 
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
@@ -131,7 +126,7 @@ msgstr ""
 "gelin."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
-#: src/frogr-controller.c:2227
+#: src/frogr-controller.c:2213
 #, c-format
 msgid "Authorize %s"
 msgstr "%sʼi Yetkilendir"
@@ -347,44 +342,44 @@ msgstr "Yükleme Yeniden Deneniyor (girişim %d/%d)…"
 msgid "Uploading '%s'…"
 msgstr "'%s' karşıya yükleniyor…"
 
-#: src/frogr-controller.c:2183
+#: src/frogr-controller.c:2169
 msgid "Updating credentials…"
 msgstr "Kimlik bilgileri güncelleniyor…"
 
-#: src/frogr-controller.c:2188
+#: src/frogr-controller.c:2174
 msgid "Retrieving data for authorization…"
 msgstr "Yetkilendirme için veri alınıyor…"
 
-#: src/frogr-controller.c:2193
+#: src/frogr-controller.c:2179
 msgid "Finishing authorization…"
 msgstr "Yetkilendirme sonlandırılıyor…"
 
-#: src/frogr-controller.c:2198
+#: src/frogr-controller.c:2184
 msgid "Retrieving list of sets…"
 msgstr "Küme listesi alınıyor…"
 
-#: src/frogr-controller.c:2203
+#: src/frogr-controller.c:2189
 msgid "Retrieving list of groups…"
 msgstr "Grup listesi alınıyor…"
 
-#: src/frogr-controller.c:2208
+#: src/frogr-controller.c:2194
 msgid "Retrieving list of tags…"
 msgstr "Etiket listesi alınıyor…"
 
-#: src/frogr-controller.c:2233
+#: src/frogr-controller.c:2219
 #, c-format
 msgid "Fetching information"
 msgstr "Bilgiler alınıyor"
 
-#: src/frogr-controller.c:2337
+#: src/frogr-controller.c:2323
 msgid "No sets found"
 msgstr "Küme bulunamadı"
 
-#: src/frogr-controller.c:2362
+#: src/frogr-controller.c:2348
 msgid "No groups found"
 msgstr "Grup bulunamadı"
 
-#: src/frogr-controller.c:2920
+#: src/frogr-controller.c:2906
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -394,16 +389,16 @@ msgstr ""
 "yetkilendirmelisiniz.\n"
 "Lütfen yeniden yetkilendirin."
 
-#: src/frogr-controller.c:2929
+#: src/frogr-controller.c:2915
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Flickrʼa herhangi bir resim yüklemeden önce bağlanmış olmalısınız."
 
-#: src/frogr-controller.c:2946
+#: src/frogr-controller.c:2932
 msgid "Uploading Pictures"
 msgstr "Resimler Karşıya Yükleniyor"
 
-#: src/frogr-controller.c:2991
+#: src/frogr-controller.c:2977
 #, c-format
 msgid "Error opening project file"
 msgstr "Proje dosyası açılırken hata"
@@ -849,7 +844,7 @@ msgstr "_Gruba Ekle…"
 #: data/gtkbuilder/frogr-context-menu.ui:21
 #: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
 msgid "Add to _Photoset"
-msgstr "Fotoğraf kümesine _Ekle"
+msgstr "Fotoğraf Kümesine _Ekle"
 
 #: data/gtkbuilder/frogr-context-menu.ui:24
 #: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
@@ -976,63 +971,3 @@ msgstr "Te_rs Sırada"
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "_İpuçlarını Etkinleştir"
-
-#~ msgid ""
-#~ "frogr is a small application for the GNOME desktop that allows users to "
-#~ "manage their accounts in the Flickr image hosting website."
-#~ msgstr ""
-#~ "frogr; GNOME masaüstü için hazırlanmış küçük bir uygulamadır ve "
-#~ "kullanıcıların Flickr resim barındırma web sitesindeki hesaplarını "
-#~ "yönetmelerine olanak tanır."
-
-#~ msgid "Add Elements"
-#~ msgstr "Öğeler Ekle"
-
-#~ msgid "Remove Elements"
-#~ msgstr "Öğeleri Kaldır"
-
-#~ msgid "Upload All"
-#~ msgstr "Tümünü Karşıya Yükle"
-
-#~ msgid "_About"
-#~ msgstr "_Hakkında"
-
-#~ msgid "_Upload All"
-#~ msgstr "T_ümünü Karşıya Yükle"
-
-#~ msgid ""
-#~ "Press the button to start using %s once you've authorized it in your "
-#~ "flickr account."
-#~ msgstr ""
-#~ "Flickr hesabınızda yetkilendirdikten sonra %s'i kullanmaya başlamak için "
-#~ "bu düğmeye basın."
-
-#~ msgid "Creating new photosets…"
-#~ msgstr "Yeni fotoğraf kümeleri oluşturuluyor..."
-
-#~ msgid "Adding picture to photosets…"
-#~ msgstr "Resim, fotoğraf kümelerine ekleniyor..."
-
-#~ msgid "Adding picture to groups…"
-#~ msgstr "Resim, gruplara ekleniyor..."
-
-#~ msgid "Set's title:"
-#~ msgstr "Küme başlığı:"
-
-#~ msgid "Visible to _Family"
-#~ msgstr "_Aileye Görünür"
-
-#~ msgid "Visible to F_riends"
-#~ msgstr "A_rkadaşlara Görünür"
-
-#~ msgid "_Remove Pictures"
-#~ msgstr "Resim _Çıkar"
-
-#~ msgid "A_ctions"
-#~ msgstr "E_yemler"
-
-#~ msgid "_Sort Pictures"
-#~ msgstr "Resimleri _Sırala"
-
-#~ msgid "images"
-#~ msgstr "görüntüler"
