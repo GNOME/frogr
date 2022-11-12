@@ -23,6 +23,13 @@ frogr_conf.set_quoted('LOCALEDIR', join_paths(prefix, localedir))
 
 compiler = meson.get_compiler('c')
 
+# Disable noisy warnings
+add_project_arguments('-Wno-cast-function-type',
+                      '-Wno-missing-field-initializers',
+                      '-Wno-unused-parameter',
+                      '-Wno-pedantic',
+                      language : 'c')
+
 # Dependencies
 glib_ver = '2.44'
 gtk_ver = '3.16'
