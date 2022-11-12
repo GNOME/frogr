@@ -644,7 +644,7 @@ import_tags_from_xmp_keywords (const char *buffer, size_t len)
   gchar *start = NULL;
   gchar *end = NULL;
   gchar *result = NULL;
-  int i;
+  size_t i;
 
   /* Look for the beginning of the XMP data interesting for as if
      present, that is, the keywords (aka the 'tags') */

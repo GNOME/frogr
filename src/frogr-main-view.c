@@ -334,7 +334,7 @@ _initialize_ui (FrogrMainView *self)
   GList *icons = NULL;
   GAction *action = NULL;
   GVariant *action_parameter = NULL;
-  gint i = 0;
+  size_t i = 0;
 
   /* Provide a default icon list in several sizes */
 
@@ -2149,7 +2149,7 @@ _update_sensitiveness (FrogrMainView *self)
   gboolean has_pics = FALSE;
   gint n_selected_pics = 0;
   g_auto(GStrv) action_names = NULL;
-  gint i = 0;
+  size_t i = 0;
 
   /* Set sensitiveness */
   switch (frogr_controller_get_state (self->controller))
