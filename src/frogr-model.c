@@ -273,6 +273,7 @@ _deserialize_list_from_json_array (JsonArray *array, GType g_type)
 static void
 _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrModel *self)
 {
+  g_return_if_fail (FROGR_IS_FILE_LOADER (loader));
   g_return_if_fail (FROGR_IS_MODEL (self));
   frogr_model_add_picture (self, picture);
 }
@@ -280,6 +281,7 @@ _on_file_loaded (FrogrFileLoader *loader, FrogrPicture *picture, FrogrModel *sel
 static void
 _on_files_loaded (FrogrFileLoader *loader, FrogrModel *self)
 {
+  g_return_if_fail (FROGR_IS_FILE_LOADER (loader));
   g_signal_emit (self, signals[MODEL_DESERIALIZED], 0);
 }
 
