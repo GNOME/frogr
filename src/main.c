@@ -48,7 +48,9 @@ main (int argc, char **argv)
   /* Initialize gstreamer before using any other GLib function */
   gst_init_check (&argc, &argv, &error);
   if (error)
-    DEBUG ("Gstreamer could not be initialized: %s", error->message);
+    {
+      DEBUG ("Gstreamer could not be initialized: %s", error->message);
+    }
 #endif
 
 #if GCRYPT_VERSION_NUMBER < 0x010600

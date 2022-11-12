@@ -156,9 +156,13 @@ _load_settings (FrogrConfig *self)
     xml = xmlParseFile (xml_path);
 
   if (xml)
-    node = xmlDocGetRootElement (xml);
+    {
+      node = xmlDocGetRootElement (xml);
+    }
   else
-    DEBUG ("Could not load '%s/%s'", self->config_dir, SETTINGS_FILENAME);
+    {
+      DEBUG ("Could not load '%s/%s'", self->config_dir, SETTINGS_FILENAME);
+    }
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "settings"))
     {
@@ -508,9 +512,13 @@ _load_accounts (FrogrConfig *self)
     xml = xmlParseFile (xml_path);
 
   if (xml)
-    node = xmlDocGetRootElement (xml);
+    {
+      node = xmlDocGetRootElement (xml);
+    }
   else
-    DEBUG ("Could not load '%s/%s'", self->config_dir, ACCOUNTS_FILENAME);
+    {
+      DEBUG ("Could not load '%s/%s'", self->config_dir, ACCOUNTS_FILENAME);
+    }
 
   if (node && node->name && !xmlStrcmp (node->name, (const xmlChar*) "accounts"))
     {

@@ -927,10 +927,14 @@ _get_params_table_from_valist           (const gchar *first_param,
 
       /* Ignore parameter with no value */
       if (v != NULL)
-        /* Values should be always encoded */
-        g_hash_table_insert (table, g_strdup (p), _encode_uri (v));
+        {
+          /* Values should be always encoded */
+          g_hash_table_insert (table, g_strdup (p), _encode_uri (v));
+        }
       else
-        DEBUG ("Missing value for %s. Ignoring parameter.", p);
+        {
+          DEBUG ("Missing value for %s. Ignoring parameter.", p);
+        }
     }
 
   return table;
@@ -1374,7 +1378,9 @@ _handle_soup_response                   (SoupMessage   *msg,
   response_str = g_strndup (msg->response_body->data, msg->response_body->length);
   response_len = (gulong) msg->response_body->length;
   if (response_str)
-    DEBUG ("\nResponse got:\n%s\n", response_str);
+    {
+      DEBUG ("\nResponse got:\n%s\n", response_str);
+    }
 
   /* Get value from response */
   if (!_check_errors_on_soup_response (msg, &err))

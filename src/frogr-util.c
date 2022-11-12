@@ -57,7 +57,9 @@ _spawn_command (const gchar* cmd)
   if (!g_spawn_command_line_async (cmd, &error))
     {
       if (error)
-        DEBUG ("Error spawning command '%s': %s", cmd, error->message);
+        {
+          DEBUG ("Error spawning command '%s': %s", cmd, error->message);
+        }
 
       return FALSE;
     }
@@ -128,7 +130,9 @@ _open_uris_with_app_info (GList *uris_list, GAppInfo *app_info)
       _spawn_command (command);
 
       if (error)
-        DEBUG ("Error opening URI(s) %s: %s", uris, error->message);
+        {
+          DEBUG ("Error opening URI(s) %s: %s", uris, error->message);
+        }
     }
 }
 
