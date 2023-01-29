@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<page xmlns="http://projectmallard.org/1.0/" xmlns:e="http://projectmallard.org/experimental/" type="guide" id="index" xml:lang="en_GB">
+<page xmlns="http://projectmallard.org/1.0/"
+      xmlns:e="http://projectmallard.org/experimental/"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      type="guide" id="index" xml:lang="en_GB">
 
   <info>
+    <title type="link" role="trail">frogr help</title>
+    <title type="link">frogr help</title>
+    <title type="text">frogr help</title>
     <revision pkgversion="0" version="0.7" date="2012-04-12" status="draft"/>
   </info>
 
-  <title>frogr help</title>
+  <title>
+    <media type="image" its:translate="no" width="48px" height="48px"
+      src="figures/frogr.svg" /> frogr help
+  </title>
 
   <section id="account">
     <title>Managing your flickr account</title>
