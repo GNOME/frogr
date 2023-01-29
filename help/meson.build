@@ -24,6 +24,7 @@ help_media = [
     'figures/auth-dialog-step2.png',
     'figures/create-new-set.png',
     'figures/edit-picture-details.png',
+    'figures/frogr.svg',
     'figures/frogr-remote-organizer.png',
     'figures/preferences-connection.png',
     'figures/preferences-general.png',
