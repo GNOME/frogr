@@ -12,7 +12,7 @@
   <programming-language>C</programming-language>
 
   <homepage rdf:resource="https://wiki.gnome.org/Apps/Frogr" />
-  <mailing-list rdf:resource="https://discourse.gnome.org/c/applications" />
+  <support-forum rdf:resource="https://discourse.gnome.org/c/applications" />
   <download-page rdf:resource="https://download.gnome.org/sources/frogr/" />
   <bug-database rdf:resource="https://gitlab.gnome.org/GNOME/frogr/issues/" />
 
