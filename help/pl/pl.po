@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr-help\n"
-"POT-Creation-Date: 2018-01-08 13:44+0000\n"
+"POT-Creation-Date: 2023-04-28 14:16+0000\n"
 "PO-Revision-Date: 2018-01-21 23:45+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
@@ -193,7 +193,7 @@ msgstr ""
 "external ref='figures/edit-picture-details.png' "
 "md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:22
 msgid "Title"
 msgstr "Tytuł"
@@ -203,7 +203,7 @@ msgstr "Tytuł"
 msgid "Use this box to amend the title"
 msgstr "Użyj tego pola, aby poprawić tytuł"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:23
 msgid "Description"
 msgstr "Opis"
@@ -213,7 +213,7 @@ msgstr "Opis"
 msgid "Add some description the element"
 msgstr "Opisz element"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:24
 msgid "Tags"
 msgstr "Etykiety"
@@ -223,7 +223,7 @@ msgstr "Etykiety"
 msgid "Add some tags to better categorize the element"
 msgstr "Dodaj etykiety, aby lepiej dopasować kategorie elementu"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:25
 msgid "Visibility"
 msgstr "Widoczność"
@@ -233,7 +233,7 @@ msgstr "Widoczność"
 msgid "Choose whether the element is public or private."
 msgstr "Wybierz, czy element jest publiczny lub prywatny"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:26
 msgid "Content type"
 msgstr "Typ treści"
@@ -246,7 +246,7 @@ msgid ""
 msgstr ""
 "Można określić, czy element jest zdjęciem, zrzutem ekranu lub czymś innym"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:27
 msgid "Safety level"
 msgstr "Poziom bezpieczeństwa"
@@ -256,7 +256,7 @@ msgstr "Poziom bezpieczeństwa"
 msgid "You can rate the kind of element you're uploading"
 msgstr "Można ocenić rodzaj wysyłanego elementu"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:28
 msgid "License"
 msgstr "Licencja"
@@ -266,7 +266,7 @@ msgstr "Licencja"
 msgid "You can change the license, or just use the default one set on Flickr"
 msgstr "Można zmienić licencję lub użyć domyślnie ustawionej w serwisie Flickr"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:29
 msgid "Geolocation data"
 msgstr "Dane geolokalizacji"
@@ -280,7 +280,7 @@ msgstr ""
 "Można umożliwić programowi frogr ustawić informacje geolokalizacji dla "
 "zdjęcia w serwisie Flickr na podstawie jego informacji EXIF"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:30
 msgid "Show in global search results"
 msgstr "Wyświetlanie w globalnych wynikach wyszukiwania"
@@ -294,7 +294,7 @@ msgstr ""
 "Można określić, czy zdjęcie lub film będzie dostępny w wyszukiwarce serwisu "
 "Flickr"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:31
 msgid "Replace 'date posted' with 'date taken'"
 msgstr "Zastępowanie „daty opublikowania” „datą wykonania”"
@@ -359,28 +359,46 @@ msgstr ""
 "external ref='figures/add-to-groups.png' "
 "md5='a65107ee59c5b86730b660b77782aa41'"
 
-#. (itstool) path: page/title
+#. (itstool) path: info/title
 #: C/index.page:8
+msgctxt "link:trail"
 msgid "frogr help"
 msgstr "frogr"
 
+#. (itstool) path: info/title
+#: C/index.page:9
+msgctxt "link"
+msgid "frogr help"
+msgstr "frogr"
+
+#. (itstool) path: info/title
+#: C/index.page:10
+msgctxt "text"
+msgid "frogr help"
+msgstr "frogr"
+
+#. (itstool) path: page/title
+#: C/index.page:14
+msgid "<_:media-1/> frogr help"
+msgstr "<_:media-1/> frogr"
+
 #. (itstool) path: section/title
-#: C/index.page:11
+#: C/index.page:20
 msgid "Managing your flickr account"
 msgstr "Zarządzanie kontem w serwisie Flickr"
 
 #. (itstool) path: section/title
-#: C/index.page:15
+#: C/index.page:24
 msgid "Managing your pictures"
 msgstr "Zarządzanie zdjęciami"
 
 #. (itstool) path: section/title
-#: C/index.page:19
+#: C/index.page:28
 msgid "Organize and sort your pictures"
 msgstr "Organizowanie i porządkowanie zdjęć"
 
 #. (itstool) path: section/title
-#: C/index.page:23
+#: C/index.page:32
 msgid "Set up frogr"
 msgstr "Konfiguracja programu frogr"
 
