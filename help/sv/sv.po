@@ -1,13 +1,14 @@
 # Swedish translation for Frogr help
-# Copyright © 2015 Frogr's COPYRIGHT HOLDER
+# Copyright © 2015-2023 Frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the Frogr package.
 # Josef Andersson <josef.andersson@fripost.org>, 2015.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"POT-Creation-Date: 2017-09-28 17:38+0000\n"
-"PO-Revision-Date: 2017-09-28 22:20+0200\n"
+"POT-Creation-Date: 2023-04-28 14:16+0000\n"
+"PO-Revision-Date: 2023-05-25 11:26+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -15,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -191,7 +192,7 @@ msgstr ""
 "external ref='figures/edit-picture-details.png' "
 "md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:22
 msgid "Title"
 msgstr "Titel"
@@ -201,7 +202,7 @@ msgstr "Titel"
 msgid "Use this box to amend the title"
 msgstr "Använd denna box för att ändra titeln"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:23
 msgid "Description"
 msgstr "Beskrivning"
@@ -211,7 +212,7 @@ msgstr "Beskrivning"
 msgid "Add some description the element"
 msgstr "Lägg till en beskrivning till objektet"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:24
 msgid "Tags"
 msgstr "Taggar"
@@ -221,7 +222,7 @@ msgstr "Taggar"
 msgid "Add some tags to better categorize the element"
 msgstr "Lägg till några taggar för att enklare kunna kategorisera objektet"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:25
 msgid "Visibility"
 msgstr "Synlighet"
@@ -231,7 +232,7 @@ msgstr "Synlighet"
 msgid "Choose whether the element is public or private."
 msgstr "Välj huruvida objektet är offentligt eller privat."
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:26
 msgid "Content type"
 msgstr "Innehållstyp"
@@ -244,7 +245,7 @@ msgid ""
 msgstr ""
 "Du kan ange huruvida objektet är ett foto, en skärmdump eller något annat"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:27
 msgid "Safety level"
 msgstr "Säkerhetsnivå"
@@ -254,7 +255,7 @@ msgstr "Säkerhetsnivå"
 msgid "You can rate the kind of element you're uploading"
 msgstr "Du kan betygsätta typen av objekt du skickar upp"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:28
 msgid "License"
 msgstr "Licens"
@@ -264,7 +265,7 @@ msgstr "Licens"
 msgid "You can change the license, or just use the default one set on Flickr"
 msgstr "Du kan ändra licensen eller bara använda Flickrs standardlicens"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:29
 msgid "Geolocation data"
 msgstr "Platsdata"
@@ -278,7 +279,7 @@ msgstr ""
 "Du kan låta Frogr ange platsinformation för en bild på Flickr baserat på "
 "dess EXIF-information."
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:30
 msgid "Show in global search results"
 msgstr "Visa i globala sökresultat"
@@ -292,7 +293,7 @@ msgstr ""
 "Du kan ange huruvida det ska vara möjligt att hitta din bild eller video "
 "genom sökmotorn i Flickr"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:31
 msgid "Replace 'date posted' with 'date taken'"
 msgstr "Ersätt ”datum postat” med ”datum taget”"
@@ -356,28 +357,46 @@ msgstr ""
 "external ref='figures/add-to-groups.png' "
 "md5='a65107ee59c5b86730b660b77782aa41'"
 
-#. (itstool) path: page/title
+#. (itstool) path: info/title
 #: C/index.page:8
+msgctxt "link:trail"
 msgid "frogr help"
-msgstr "frogr hjälp"
+msgstr "Hjälp för frogr"
+
+#. (itstool) path: info/title
+#: C/index.page:9
+msgctxt "link"
+msgid "frogr help"
+msgstr "Hjälp för frogr"
+
+#. (itstool) path: info/title
+#: C/index.page:10
+msgctxt "text"
+msgid "frogr help"
+msgstr "Hjälp för frogr"
+
+#. (itstool) path: page/title
+#: C/index.page:14
+msgid "<_:media-1/> frogr help"
+msgstr "<_:media-1/> Hjälp för frogr"
 
 #. (itstool) path: section/title
-#: C/index.page:11
+#: C/index.page:20
 msgid "Managing your flickr account"
 msgstr "Hantera ditt flickr-konto"
 
 #. (itstool) path: section/title
-#: C/index.page:15
+#: C/index.page:24
 msgid "Managing your pictures"
 msgstr "Hantera dina bilder"
 
 #. (itstool) path: section/title
-#: C/index.page:19
+#: C/index.page:28
 msgid "Organize and sort your pictures"
 msgstr "Organisera och sortera dina bilder"
 
 #. (itstool) path: section/title
-#: C/index.page:23
+#: C/index.page:32
 msgid "Set up frogr"
 msgstr "Ställ in frogr"
 
