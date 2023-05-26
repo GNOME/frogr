@@ -1,6 +1,7 @@
 # Turkish translation for frogr.
-# Copyright (C) 2011 frogr's COPYRIGHT HOLDER
+# Copyright (C) 2011-2023 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
+#
 # İşbaran Akçayır <isbaran@gmail.com>, 2015.
 # Muhammet Kara <muhammetk@gmail.com>, 2011, 2014, 2015, 2016.
 # Emin Tufan Çetin <etcetin@gmail.com>, 2019.
@@ -9,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2020-07-15 07:15+0000\n"
+"POT-Creation-Date: 2023-05-06 12:07+0000\n"
 "PO-Revision-Date: 2019-02-23 10:31+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
-"Language-Team: Türkçe <gnome-turk@gnome.org>\n"
+"Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr "frogr"
 
 #: data/org.gnome.frogr.appdata.xml.in:8
 msgid "A flickr uploader for GNOME"
-msgstr "GNOME için Flickr karşıya yükleyici"
+msgstr "GNOME için Flickr karşıya yükleyici"
 
 #: data/org.gnome.frogr.appdata.xml.in:10
 msgid ""
@@ -69,7 +70,7 @@ msgstr "Flickr;Görüntü;Resim;Fotoğraf;Video;Karşıya Yükleyici;"
 
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
-msgstr "GNOME için Flickr Uzaktan Düzenleyicisi\n"
+msgstr "GNOME için Flickr Uzaktan Düzenleyicisi\n"
 
 #: src/frogr-about-dialog.c:70
 msgid "translator-credits"
@@ -185,7 +186,7 @@ msgid ""
 "Error uploading picture:\n"
 "Quota exceeded"
 msgstr ""
-"Resim karşıya yüklenirken hata:\n"
+"Resim karşıya yüklenirken hata:\n"
 "Kota aşıldı"
 
 #: src/frogr-controller.c:601
@@ -474,7 +475,7 @@ msgstr "Et_iketler:"
 
 #: src/frogr-details-dialog.c:262
 msgid "Visibility"
-msgstr "Görünürlük"
+msgstr "Görünürlük"
 
 #: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
 msgid "_Private"
@@ -494,7 +495,7 @@ msgstr "A_rkadaşlar"
 
 #: src/frogr-details-dialog.c:314
 msgid "Content Type"
-msgstr "İçerik Türü"
+msgstr "İçerik Türü"
 
 #: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
 msgid "P_hoto"
@@ -557,7 +558,7 @@ msgstr "Resim yüklenirken hata oluştu"
 
 #: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
 msgid "_Edit"
-msgstr "Düz_enle"
+msgstr "Düz_enle"
 
 #: src/frogr-details-dialog.c:1230
 msgid "Edit Picture Details"
@@ -617,7 +618,7 @@ msgstr "Ekle"
 
 #: src/frogr-main-view.c:598 src/frogr-main-view.c:694
 msgid "Remove"
-msgstr "Çıkar"
+msgstr "Çıkar"
 
 #: src/frogr-main-view.c:599 src/frogr-main-view.c:696
 msgid "Upload"
@@ -883,8 +884,8 @@ msgid ""
 "Once you're ready, press the <b>\"Upload\"</b> button to upload your "
 "pictures to Flickr."
 msgstr ""
-"Hazır olduğunuzda, fotoğraflarınızı Flickr٬a yüklemek için <b>\"Karşıya Yükle"
-"\"</b> düğmesine basınız."
+"Hazır olduğunuzda, fotoğraflarınızı Flickr٬a yüklemek için <b>\"Karşıya "
+"Yükle\"</b> düğmesine basınız."
 
 #: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
 msgid "Aut_horize Account…"
