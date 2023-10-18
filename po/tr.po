@@ -10,16 +10,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2023-05-06 12:07+0000\n"
-"PO-Revision-Date: 2019-02-23 10:31+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"POT-Creation-Date: 2023-05-26 22:49+0000\n"
+"PO-Revision-Date: 2023-10-17 01:24+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Gtranslator 3.30.1\n"
+"X-Generator: Poedit 3.4\n"
 "X-POOTLE-MTIME: 1425026434.000000\n"
 
 #: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
@@ -82,7 +82,7 @@ msgstr "Muhammet Kara <muhammetk@gmail.com>"
 #: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
 #: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
 msgid "_Cancel"
-msgstr "_Vazgeç"
+msgstr "İ_ptal"
 
 #: src/frogr-add-tags-dialog.c:189 src/frogr-add-to-group-dialog.c:524
 #: src/frogr-add-to-set-dialog.c:525 src/frogr-create-new-set-dialog.c:304
