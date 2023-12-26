@@ -494,13 +494,7 @@ fsp_session_init                        (FspSession *self)
 
   /* Early gcrypt initialization */
   _init_gcrypt ();
-
-#ifdef SOUP_VERSION_2_42
-  /* soup_session_async_new() deprecated in lisoup 2.42 */
   self->soup_session = soup_session_new ();
-#else
-  self->soup_session = soup_session_async_new ();
-#endif
 }
 
 static void
