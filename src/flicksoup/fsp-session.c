@@ -185,7 +185,7 @@ _load_file_contents_cb                  (GObject      *object,
 
 static void
 _wrote_body_data_cb                     (SoupMessage *msg,
-                                         SoupBuffer  *buffer,
+                                         guint        chunk_size,
                                          gpointer     data);
 
 static gchar *
@@ -705,7 +705,7 @@ _get_soup_message_for_upload            (GFile       *file,
   g_autoptr(GFileInfo) file_info = NULL;
   SoupMessage *msg = NULL;
   SoupMultipart *mpart = NULL;
-  SoupBuffer *buffer = NULL;
+  GBytes *buffer = NULL;
   GHashTableIter iter;
   const gchar *key, *value;
   g_autofree gchar *mime_type = NULL;
@@ -749,7 +749,7 @@ _get_soup_message_for_upload            (GFile       *file,
     }
 
   /* Append the content of the file */
-  buffer = soup_buffer_new (SOUP_MEMORY_TEMPORARY, contents, length);
+  buffer = g_bytes_new (contents, length);
   soup_multipart_append_form_file (mpart, "photo", fileuri,
                                    mime_type, buffer);
 
@@ -762,7 +762,7 @@ _get_soup_message_for_upload            (GFile       *file,
 
   /* Free */
   soup_multipart_free (mpart);
-  soup_buffer_free (buffer);
+  g_bytes_unref (buffer);
 
   /* Return message */
   return msg;
@@ -843,27 +843,25 @@ _load_file_contents_cb                  (GObject      *object,
 
 static void
 _wrote_body_data_cb                     (SoupMessage *msg,
-                                         SoupBuffer  *buffer,
+                                         guint        chunk_size,
                                          gpointer     data)
 {
   FspSession *self = NULL;
   AsyncRequestData *clos = NULL;
 
   goffset msg_len = 0;
-  gsize buffer_len = 0;
   gdouble fraction = 0.0;
 
   /* Sanity check */
-  if (!buffer || !msg || !msg->request_body)
+  if (!msg || !msg->request_body)
     return;
 
   msg_len = msg->request_body->length;
-  buffer_len = buffer->length;
 
   clos = (AsyncRequestData *) data;
   self = FSP_SESSION (clos->object);
 
-  fraction = (msg_len > 0) ? (double)buffer_len / msg_len : 0.0;
+  fraction = (msg_len > 0) ? (double)chunk_size / msg_len : 0.0;
   clos->progress += fraction;
 
   g_signal_emit (self, signals[DATA_FRACTION_SENT], 0, clos->progress);
