@@ -136,25 +136,25 @@ static SoupSession *
 _get_soup_session                       (FspSession *self);
 
 static void
-_get_request_token_session_cb           (SoupSession *session,
-                                         SoupMessage *msg,
+_get_request_token_session_cb           (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 static void
-_get_access_token_soup_session_cb       (SoupSession *session,
-                                         SoupMessage *msg,
+_get_access_token_soup_session_cb       (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 static void
-_check_token_soup_session_cb            (SoupSession *session,
-                                         SoupMessage *msg,
+_check_token_soup_session_cb            (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer data);
 static void
-_exchange_token_soup_session_cb         (SoupSession *session,
-                                         SoupMessage *msg,
+_exchange_token_soup_session_cb         (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static void
-_get_upload_status_soup_session_cb      (SoupSession *session,
-                                         SoupMessage *msg,
+_get_upload_status_soup_session_cb      (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static GHashTable *
@@ -212,8 +212,9 @@ static gboolean
 _disconnect_cancellable_on_idle (GCancellableData *clos);
 
 static gboolean
-_check_errors_on_soup_response           (SoupMessage  *msg,
-                                          GError      **error);
+_check_errors_on_response               (const gchar        *response_str,
+                                         AsyncRequestData   *clos,
+                                         GError           **error);
 
 static gboolean
 _check_async_errors_on_finish           (GObject       *object,
@@ -259,7 +260,7 @@ _clear_temporary_token                  (FspSession *self);
 static void
 _perform_async_request                  (SoupSession         *soup_session,
                                          const gchar         *url,
-                                         SoupSessionCallback  request_cb,
+                                         GAsyncReadyCallback  request_cb,
                                          GObject             *source_object,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
@@ -271,14 +272,14 @@ _soup_session_cancelled_cb              (GCancellable *cancellable,
                                          gpointer      data);
 
 static void
-_handle_soup_response                   (SoupMessage   *msg,
+_handle_soup_response                   (GAsyncResult  *res,
                                          FspParserFunc  parserFunc,
                                          gpointer       data);
 
 static void
 _build_async_result_and_complete        (AsyncRequestData *clos,
-                                         gpointer    result,
-                                         GError     *error);
+                                         gpointer          result,
+                                         GError           *error);
 
 static gpointer
 _finish_async_request                   (GObject       *object,
@@ -287,63 +288,63 @@ _finish_async_request                   (GObject       *object,
                                          GError       **error);
 
 static void
-_photo_upload_soup_session_cb           (SoupSession *session,
-                                         SoupMessage *msg,
+_photo_upload_soup_session_cb           (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      data);
+
+static void
+_photo_get_info_soup_session_cb         (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static void
-_photo_get_info_soup_session_cb         (SoupSession *session,
-                                         SoupMessage *msg,
+_get_photosets_soup_session_cb          (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static void
-_get_photosets_soup_session_cb          (SoupSession *session,
-                                         SoupMessage *msg,
+_add_to_photoset_soup_session_cb        (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static void
-_add_to_photoset_soup_session_cb        (SoupSession *session,
-                                         SoupMessage *msg,
+_create_photoset_soup_session_cb        (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static void
-_create_photoset_soup_session_cb        (SoupSession *session,
-                                         SoupMessage *msg,
+_get_groups_soup_session_cb             (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static void
-_get_groups_soup_session_cb             (SoupSession *session,
-                                         SoupMessage *msg,
+_add_to_group_soup_session_cb           (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static void
-_add_to_group_soup_session_cb           (SoupSession *session,
-                                         SoupMessage *msg,
-                                         gpointer     data);
-
-static void
-_get_tags_list_soup_session_cb           (SoupSession *session,
-                                          SoupMessage *msg,
+_get_tags_list_soup_session_cb           (GObject      *object,
+                                         GAsyncResult *res,
                                           gpointer     data);
 
 static void
-_set_license_soup_session_cb            (SoupSession *session,
-                                         SoupMessage *msg,
+_set_license_soup_session_cb            (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 static void
-_set_location_soup_session_cb            (SoupSession *session,
-                                          SoupMessage *msg,
+_set_location_soup_session_cb            (GObject      *object,
+                                         GAsyncResult *res,
                                           gpointer     data);
 
 static void
-_get_location_soup_session_cb            (SoupSession *session,
-                                          SoupMessage *msg,
+_get_location_soup_session_cb            (GObject      *object,
+                                         GAsyncResult *res,
                                           gpointer     data);
 
 static void
-_set_dates_soup_session_cb              (SoupSession *session,
-                                         SoupMessage *msg,
+_set_dates_soup_session_cb              (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data);
 
 /* Private API */
@@ -543,71 +544,66 @@ _get_soup_session                       (FspSession *self)
 }
 
 static void
-_get_request_token_session_cb           (SoupSession *session,
-                                         SoupMessage *msg,
+_get_request_token_session_cb           (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_request_token,
                          data);
 }
 
 static void
-_get_access_token_soup_session_cb       (SoupSession *session,
-                                         SoupMessage *msg,
+_get_access_token_soup_session_cb       (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_access_token,
                          data);
 }
 
 static void
-_check_token_soup_session_cb            (SoupSession *session,
-                                         SoupMessage *msg,
+_check_token_soup_session_cb            (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_check_token,
                          data);
 }
 
 static void
-_exchange_token_soup_session_cb         (SoupSession *session,
-                                         SoupMessage *msg,
+_exchange_token_soup_session_cb         (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_exchange_token,
                          data);
 }
 
 static void
-_get_upload_status_soup_session_cb      (SoupSession *session,
-                                         SoupMessage *msg,
+_get_upload_status_soup_session_cb      (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_upload_status,
                          data);
 }
@@ -828,8 +824,11 @@ _load_file_contents_cb                  (GObject      *object,
                         ard_clos);
 
       /* Perform the async request */
-      soup_session_queue_message (soup_session, msg,
-                                  _photo_upload_soup_session_cb, ard_clos);
+      soup_session_send_and_read_async (soup_session, msg,
+                                        G_PRIORITY_DEFAULT,
+                                        ard_clos->cancellable,
+                                        _photo_upload_soup_session_cb,
+                                        ard_clos);
 
       DEBUG ("\nRequested URL:\n%s\n", FLICKR_API_UPLOAD_URL);
 
@@ -1016,38 +1015,42 @@ _disconnect_cancellable_on_idle (GCancellableData *clos)
 }
 
 static gboolean
-_check_errors_on_soup_response           (SoupMessage  *msg,
-                                          GError      **error)
+_check_errors_on_response               (const gchar        *response_str,
+                                         AsyncRequestData   *clos,
+                                         GError           **error)
 {
   GError *err = NULL;
-  g_autofree gchar *response_str = NULL;
+  SoupStatus status = soup_message_get_status(clos->soup_message);
 
-  g_assert (SOUP_IS_MESSAGE (msg));
-
-  /* First check it's not an OAuth problem */
-  response_str = g_strndup (msg->response_body->data, msg->response_body->length);
-  if (response_str && g_str_has_prefix (response_str, "oauth_problem="))
+  if (g_cancellable_is_cancelled (clos->cancellable))
     {
-      if (!g_strcmp0 (&response_str[14], "token_rejected"))
+      /* First check it's a CANCELLED BY USER situation */
+      err = g_error_new (FSP_ERROR, FSP_ERROR_CANCELLED,
+                         "Cancelled by user");
+    }
+  else if (response_str && g_str_has_prefix (response_str, "oauth_problem="))
+    {
+      /* Second check if it's not an OAuth problem */
+      if (g_str_has_prefix (&response_str[14], "token_rejected"))
         err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET,
                            "[OAuth]: The access token has been rejected");
-      else if (!g_strcmp0 (&response_str[14], "verifier_invalid"))
+      else if (g_str_has_prefix (&response_str[14], "verifier_invalid"))
         err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_VERIFIER_INVALID,
                            "[OAuth] The verification code is invalid");
+      else if (g_str_has_prefix (&response_str[14], "signature_invalid"))
+        err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_SIGNATURE_INVALID,
+                           "[OAuth] The signature is invalid");
       else
         err = g_error_new (FSP_ERROR, FSP_ERROR_OAUTH_UNKNOWN_ERROR,
                            "[OAuth] unknown error");
     }
-  else if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
+  else if (!SOUP_STATUS_IS_SUCCESSFUL (status))
     {
-      /* Check non-succesful SoupMessage's only */
-      if (msg->status_code == SOUP_STATUS_CANCELLED)
-        err = g_error_new (FSP_ERROR, FSP_ERROR_CANCELLED,
-                           "Cancelled by user");
-      else if (SOUP_STATUS_IS_CLIENT_ERROR (msg->status_code))
+      /* Last check other non-succesful SoupMessages */
+      if (SOUP_STATUS_IS_CLIENT_ERROR (status))
         err = g_error_new (FSP_ERROR, FSP_ERROR_CLIENT_ERROR,
                            "Bad request");
-      else if (SOUP_STATUS_IS_SERVER_ERROR (msg->status_code))
+      else if (SOUP_STATUS_IS_SERVER_ERROR (status))
         err = g_error_new (FSP_ERROR, FSP_ERROR_SERVER_ERROR,
                            "Server error");
       else
@@ -1285,7 +1288,7 @@ _clear_temporary_token                  (FspSession *self)
 static void
 _perform_async_request                  (SoupSession         *soup_session,
                                          const gchar         *url,
-                                         SoupSessionCallback  request_cb,
+                                         GAsyncReadyCallback  request_cb,
                                          GObject             *source_object,
                                          GCancellable        *cancellable,
                                          GAsyncReadyCallback  callback,
@@ -1331,7 +1334,11 @@ _perform_async_request                  (SoupSession         *soup_session,
                     clos);
 
   /* Queue the message */
-  soup_session_queue_message (soup_session, msg, request_cb, clos);
+  soup_session_send_and_read_async (soup_session, msg,
+                                    G_PRIORITY_DEFAULT,
+                                    clos->cancellable,
+                                    request_cb,
+                                    clos);
 
   DEBUG ("\nRequested URL:\n%s\n", url);
 }
@@ -1340,52 +1347,50 @@ static void
 _soup_session_cancelled_cb              (GCancellable *cancellable,
                                          gpointer      data)
 {
-  AsyncRequestData *clos = NULL;
-  SoupSession *session = NULL;
-  SoupMessage *message = NULL;
-
-  clos = (AsyncRequestData *) data;
-
-  /* Get data from closure, and free it */
-  session = clos->soup_session;
-  message = clos->soup_message;
-
-  soup_session_cancel_message (session, message, SOUP_STATUS_CANCELLED);
+  AsyncRequestData *clos = (AsyncRequestData *) data;
+  g_cancellable_cancel (clos->cancellable);
 
   DEBUG ("%s", "Remote request cancelled!");
 }
 
 static void
-_handle_soup_response                   (SoupMessage   *msg,
+_handle_soup_response                   (GAsyncResult  *res,
                                          FspParserFunc  parserFunc,
                                          gpointer       data)
 {
   FspParser *parser = NULL;
   AsyncRequestData *clos = NULL;
   gpointer result = NULL;
+  GBytes *response_bytes = NULL;
   GError *err = NULL;
   g_autofree gchar *response_str = NULL;
-  gulong response_len = 0;
+  gsize response_len = 0;
 
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (parserFunc != NULL);
   g_assert (data != NULL);
 
   parser = fsp_parser_get_instance ();
   clos = (AsyncRequestData *) data;
+  g_assert (SOUP_IS_MESSAGE (clos->soup_message));
 
   /* Stop reporting progress */
-  g_signal_handlers_disconnect_by_func (msg, _wrote_body_data_cb, clos);
+  g_signal_handlers_disconnect_by_func (clos->soup_message,
+                                        _wrote_body_data_cb, clos);
 
-  response_str = g_strndup (msg->response_body->data, msg->response_body->length);
-  response_len = (gulong) msg->response_body->length;
-  if (response_str)
+  response_bytes = soup_session_send_and_read_finish (clos->soup_session,
+                                                      res, NULL);
+  if (response_bytes != NULL)
     {
+      GString *tmp_string = NULL;
+      response_len = g_bytes_get_size (response_bytes);
+      tmp_string = g_string_new_len (g_bytes_get_data (response_bytes, NULL),
+                                     response_len);
+      response_str = g_string_free_and_steal (tmp_string);
       DEBUG ("\nResponse got:\n%s\n", response_str);
     }
 
   /* Get value from response */
-  if (!_check_errors_on_soup_response (msg, &err))
+  if (!_check_errors_on_response (response_str, clos, &err))
     result = parserFunc (parser, response_str, response_len, &err);
 
   /* Build response and call async callback */
@@ -1394,8 +1399,8 @@ _handle_soup_response                   (SoupMessage   *msg,
 
 static void
 _build_async_result_and_complete        (AsyncRequestData *clos,
-                                         gpointer    result,
-                                         GError     *error)
+                                         gpointer          result,
+                                         GError           *error)
 {
   g_autoptr(GTask) task = NULL;
   GObject *object = NULL;
@@ -1454,174 +1459,163 @@ _finish_async_request                   (GObject       *object,
 }
 
 static void
-_photo_upload_soup_session_cb           (SoupSession *session,
-                                         SoupMessage *msg,
-                                         gpointer     data)
+_photo_upload_soup_session_cb           (GObject      *object,
+                                         GAsyncResult *res,
+                                         gpointer      data)
 {
   AsyncRequestData *ard_clos = NULL;
 
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
-
   ard_clos = (AsyncRequestData *) data;
-  g_signal_handlers_disconnect_by_func (msg, _wrote_body_data_cb, ard_clos->object);
+
+  g_assert (SOUP_IS_MESSAGE (ard_clos->soup_message));
+  g_signal_handlers_disconnect_by_func (ard_clos->soup_message, _wrote_body_data_cb, ard_clos->object);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_upload_result,
                          data);
 }
 
 static void
-_photo_get_info_soup_session_cb         (SoupSession *session,
-                                         SoupMessage *msg,
+_photo_get_info_soup_session_cb         (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_photo_info,
                          data);
 }
 
 static void
-_get_photosets_soup_session_cb          (SoupSession *session,
-                                         SoupMessage *msg,
+_get_photosets_soup_session_cb          (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_photosets_list,
                          data);
 }
 
 static void
-_add_to_photoset_soup_session_cb        (SoupSession *session,
-                                         SoupMessage *msg,
+_add_to_photoset_soup_session_cb        (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_added_to_photoset,
                          data);
 }
 
 static void
-_create_photoset_soup_session_cb        (SoupSession *session,
-                                         SoupMessage *msg,
+_create_photoset_soup_session_cb        (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_photoset_created,
                          data);
 }
 
 static void
-_get_groups_soup_session_cb             (SoupSession *session,
-                                         SoupMessage *msg,
+_get_groups_soup_session_cb             (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_groups_list,
                          data);
 }
 
 static void
-_add_to_group_soup_session_cb           (SoupSession *session,
-                                         SoupMessage *msg,
+_add_to_group_soup_session_cb           (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_added_to_group,
                          data);
 }
 
 static void
-_get_tags_list_soup_session_cb           (SoupSession *session,
-                                          SoupMessage *msg,
+_get_tags_list_soup_session_cb           (GObject      *object,
+                                         GAsyncResult *res,
                                           gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_tags_list,
                          data);
 }
 
 static void
-_set_license_soup_session_cb            (SoupSession *session,
-                                         SoupMessage *msg,
+_set_license_soup_session_cb            (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_set_license,
                          data);
 }
 
 static void
-_set_location_soup_session_cb            (SoupSession *session,
-                                          SoupMessage *msg,
+_set_location_soup_session_cb            (GObject      *object,
+                                         GAsyncResult *res,
                                           gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_set_location,
                          data);
 }
 
 static void
-_get_location_soup_session_cb            (SoupSession *session,
-                                          SoupMessage *msg,
+_get_location_soup_session_cb            (GObject      *object,
+                                         GAsyncResult *res,
                                           gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_get_location,
                          data);
 }
 
 static void
-_set_dates_soup_session_cb              (SoupSession *session,
-                                         SoupMessage *msg,
+_set_dates_soup_session_cb              (GObject      *object,
+                                         GAsyncResult *res,
                                          gpointer     data)
 {
-  g_assert (SOUP_IS_MESSAGE (msg));
   g_assert (data != NULL);
 
   /* Handle message with the right parser */
-  _handle_soup_response (msg,
+  _handle_soup_response (res,
                          (FspParserFunc) fsp_parser_set_dates,
                          data);
 }

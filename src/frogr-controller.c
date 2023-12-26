@@ -662,6 +662,10 @@ _handle_flicksoup_error (FrogrController *self, GError *error, gboolean notify_u
       msg = g_strdup_printf (_("Invalid verification code.\nPlease try again."));
       break;
 
+    case FSP_ERROR_OAUTH_SIGNATURE_INVALID:
+      msg = g_strdup_printf (_("Invalid signature.\nPlease try again."));
+      break;
+
     case FSP_ERROR_SERVICE_UNAVAILABLE:
       msg = g_strdup_printf (_("Error:\nService not available"));
       break;

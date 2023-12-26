@@ -83,6 +83,7 @@ typedef enum {
   /* Errors from flicksoup only */
   FSP_ERROR_OAUTH_NOT_AUTHORIZED_YET,
   FSP_ERROR_OAUTH_VERIFIER_INVALID,
+  FSP_ERROR_OAUTH_SIGNATURE_INVALID,
   FSP_ERROR_OAUTH_UNKNOWN_ERROR,
 
   /* Default fallback for other kind of errors */
