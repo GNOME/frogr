@@ -754,7 +754,7 @@ _get_soup_message_for_upload            (GFile       *file,
                                    mime_type, buffer);
 
   /* Get the associated message */
-  msg = soup_form_request_new_from_multipart (FLICKR_API_UPLOAD_URL, mpart);
+  msg = soup_message_new_from_multipart (FLICKR_API_UPLOAD_URL, mpart);
 
   /* Append the Authorization header */
   soup_message_headers_append (msg->request_headers, "Authorization", auth_header);
