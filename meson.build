@@ -33,7 +33,7 @@ add_project_arguments('-Wno-cast-function-type',
 # Dependencies
 glib_ver = '2.44'
 gtk_ver = '3.16'
-soup_ver = '2.34'
+soup_ver = '3.0'
 exif_ver = '0.6.14'
 xml2_ver = '2.6.8'
 json_glib_ver = '1.2'
@@ -41,7 +41,7 @@ gcrypt_ver = '1.5.0'
 
 glib = dependency('glib-2.0', version: '>=@0@'.format(glib_ver))
 gtk = dependency('gtk+-3.0', version: '>=@0@'.format(gtk_ver))
-soup = dependency('libsoup-2.4', version: '>=@0@'.format(soup_ver))
+soup = dependency('libsoup-3.0', version: '>=@0@'.format(soup_ver))
 exif = dependency('libexif', version: '>=@0@'.format(exif_ver))
 xml2 = dependency('libxml-2.0', version: '>=@0@'.format(xml2_ver))
 json_glib = dependency('json-glib-1.0', version: '>=@0@'.format(json_glib_ver))
