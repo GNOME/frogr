@@ -68,7 +68,7 @@ gboolean do_work (gpointer unused);
 static gchar *
 encode_uri                             (const gchar *uri)
 {
-  return soup_uri_encode (uri, "%!*'();:@&=+$,/?#[] ");
+  return g_uri_escape_string (uri, NULL, FALSE);
 }
 
 void

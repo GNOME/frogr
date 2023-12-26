@@ -1303,13 +1303,16 @@ fsp_parser_get_access_token             (FspParser   *self,
   for (i = 0; response_array[i]; i++)
     {
       if (g_str_has_prefix (response_array[i], "fullname="))
-        auth_token->fullname = soup_uri_decode (&response_array[i][9]);
+        auth_token->fullname = g_uri_unescape_string (&response_array[i][9],
+                                                      NULL);
 
       if (g_str_has_prefix (response_array[i], "username="))
-        auth_token->username = soup_uri_decode (&response_array[i][9]);
+        auth_token->username = g_uri_unescape_string (&response_array[i][9],
+                                                      NULL);
 
       if (g_str_has_prefix (response_array[i], "user_nsid="))
-        auth_token->nsid = soup_uri_decode (&response_array[i][10]);
+        auth_token->nsid = g_uri_unescape_string (&response_array[i][10],
+                                                  NULL);
 
       if (g_str_has_prefix (response_array[i], "oauth_token="))
         auth_token->token = g_strdup (&response_array[i][12]);

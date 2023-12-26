@@ -691,7 +691,7 @@ _decode_param_from_table_for_signature  (GHashTable *table,
   current = g_hash_table_lookup (table, key);
   if (current != NULL)
     {
-      new = soup_uri_decode (current);
+      new = g_uri_unescape_string (current, NULL);
       g_hash_table_replace (table, g_strdup (key), new);
     }
 }
@@ -872,7 +872,7 @@ _wrote_body_data_cb                     (SoupMessage *msg,
 static gchar *
 _encode_uri                             (const gchar *uri)
 {
-  return soup_uri_encode (uri, "%!*'();:@&=+$,/?#[] ");
+  return g_uri_escape_string (uri, NULL, FALSE);
 }
 
 static gchar *
