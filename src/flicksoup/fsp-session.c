@@ -89,6 +89,7 @@ typedef struct
   GAsyncReadyCallback  callback;
   gpointer             source_tag;
   gpointer             data;
+  goffset              body_size;
   gdouble              progress;
 } AsyncRequestData;
 
@@ -799,6 +800,7 @@ _load_file_contents_cb                  (GObject      *object,
       self = FSP_SESSION (ard_clos->object);
       msg = _get_soup_message_for_upload (file, contents, length, extra_params);
       ard_clos->soup_message = msg;
+      ard_clos->body_size = length;
 
       soup_session = _get_soup_session (self);
 
@@ -847,17 +849,15 @@ _wrote_body_data_cb                     (SoupMessage *msg,
   FspSession *self = NULL;
   AsyncRequestData *clos = NULL;
 
-  goffset msg_len = 0;
   gdouble fraction = 0.0;
 
   /* Sanity check */
-  if (!msg || !msg->request_body)
+  if (!msg || !data)
     return;
-
-  msg_len = msg->request_body->length;
 
   clos = (AsyncRequestData *) data;
   self = FSP_SESSION (clos->object);
+  goffset msg_len = clos->body_size;
 
   fraction = (msg_len > 0) ? (double)chunk_size / msg_len : 0.0;
   clos->progress += fraction;
@@ -1304,6 +1304,7 @@ _perform_async_request                  (SoupSession         *soup_session,
   clos->callback = callback;
   clos->source_tag = source_tag;
   clos->data = data;
+  clos->body_size = 0;
   clos->progress = 0.0;
 
   /* Connect to the "cancelled" signal thread safely */
@@ -2136,6 +2137,8 @@ fsp_session_upload                      (FspSession          *self,
   ard_clos->callback = callback;
   ard_clos->source_tag = fsp_session_upload;
   ard_clos->data = data;
+  ard_clos->body_size = 0;
+  ard_clos->progress = 0.0;
 
   /* Save important data for the upload process itself */
   up_clos = g_slice_new0 (UploadPhotoData);
