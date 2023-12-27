@@ -753,7 +753,9 @@ _get_soup_message_for_upload            (GFile       *file,
   msg = soup_message_new_from_multipart (FLICKR_API_UPLOAD_URL, mpart);
 
   /* Append the Authorization header */
-  soup_message_headers_append (msg->request_headers, "Authorization", auth_header);
+  soup_message_headers_append (soup_message_get_request_headers(msg),
+                               "Authorization",
+                               auth_header);
   g_free (auth_header);
 
   /* Free */
