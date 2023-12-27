@@ -28,6 +28,8 @@
 #include <config.h>
 #include <errno.h>
 #include <gcrypt.h>
+#include <gio/gio.h>
+#include <glib.h>
 #include <libsoup/soup.h>
 #include <pthread.h>
 #include <stdarg.h>
@@ -63,7 +65,7 @@ struct _FspSession
   gchar *tmp_token_secret;
 
   gboolean using_default_proxy;
-  SoupURI *proxy_uri;
+  GUri *proxy_uri;
   SoupSession *soup_session;
 };
 
@@ -416,7 +418,7 @@ fsp_session_dispose                     (GObject* object)
 
   if (self->proxy_uri)
     {
-      soup_uri_free (self->proxy_uri);
+      g_uri_unref (self->proxy_uri);
       self->proxy_uri = NULL;
     }
 
@@ -1638,7 +1640,7 @@ fsp_session_set_default_proxy           (FspSession *self,
 
   /* Ensure we clean the URI of a custom proxy, if present */
   if (self->proxy_uri)
-    soup_uri_free (self->proxy_uri);
+    g_uri_unref (self->proxy_uri);
   self->proxy_uri = NULL;
 
   /* Explicitly enable or disable the feature in the session */
@@ -1655,7 +1657,7 @@ fsp_session_set_custom_proxy            (FspSession *self,
                                          const char *host, const char *port,
                                          const char *username, const char *password)
 {
-  SoupURI *proxy_uri = NULL;
+  GUri *proxy_uri = NULL;
   gboolean was_using_default_proxy = FALSE;
 
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
@@ -1681,14 +1683,17 @@ fsp_session_set_custom_proxy            (FspSession *self,
       /* We need a numeric port */
       actual_port = (guint) g_ascii_strtoll ((gchar *) port, NULL, 10);
 
-      /* Build the actual SoupURI object */
-      proxy_uri = soup_uri_new (NULL);
-      soup_uri_set_scheme (proxy_uri, SOUP_URI_SCHEME_HTTP);
-      soup_uri_set_host (proxy_uri, host);
-      soup_uri_set_port (proxy_uri, actual_port);
-      soup_uri_set_user (proxy_uri, actual_user);
-      soup_uri_set_password (proxy_uri, actual_password);
-      soup_uri_set_path (proxy_uri, "");
+      /* Build the actual GUri object */
+      proxy_uri = g_uri_build_with_user(G_URI_FLAGS_PARSE_RELAXED,
+                                        "https",
+                                        actual_user,
+                                        actual_password,
+                                        NULL,  /* auth_params */
+                                        host,
+                                        actual_port,
+                                        "",    /* path */
+                                        NULL,  /* query */
+                                        NULL); /* fragment*/
     }
 
   /* Set the custom proxy (even if no valid data was provided) */
@@ -1708,7 +1713,7 @@ fsp_session_set_custom_proxy            (FspSession *self,
     {
       /* Save internal reference to the proxy */
       if (self->proxy_uri)
-        soup_uri_free (self->proxy_uri);
+        g_uri_unref (self->proxy_uri);
 
       self->proxy_uri = proxy_uri;
 
