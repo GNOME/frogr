@@ -65,7 +65,8 @@ struct _FspSession
   gchar *tmp_token_secret;
 
   gboolean using_default_proxy;
-  GUri *proxy_uri;
+  GProxyResolver *proxy_resolver;
+  gchar *proxy_uri;
   SoupSession *soup_session;
 };
 
@@ -417,9 +418,15 @@ fsp_session_dispose                     (GObject* object)
       self->soup_session = NULL;
     }
 
+  if (self->proxy_resolver)
+    {
+      g_object_unref (self->proxy_resolver);
+      self->proxy_resolver = NULL;
+    }
+
   if (self->proxy_uri)
     {
-      g_uri_unref (self->proxy_uri);
+      g_free (self->proxy_uri);
       self->proxy_uri = NULL;
     }
 
@@ -493,6 +500,7 @@ fsp_session_init                        (FspSession *self)
   self->tmp_token = NULL;
   self->tmp_token_secret = NULL;
   self->using_default_proxy = TRUE;
+  self->proxy_resolver = NULL;
   self->proxy_uri = NULL;
 
   /* Early gcrypt initialization */
@@ -1642,15 +1650,19 @@ fsp_session_set_default_proxy           (FspSession *self,
   g_return_if_fail (FSP_IS_SESSION (self));
 
   /* Ensure we clean the URI of a custom proxy, if present */
+  if (self->proxy_resolver)
+    g_object_unref (self->proxy_resolver);
+  self->proxy_resolver = NULL;
+
   if (self->proxy_uri)
-    g_uri_unref (self->proxy_uri);
+    g_free (self->proxy_uri);
   self->proxy_uri = NULL;
 
   /* Explicitly enable or disable the feature in the session */
   if (enabled)
-    soup_session_add_feature_by_type (self->soup_session, SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
+    soup_session_set_proxy_resolver (self->soup_session, g_proxy_resolver_get_default());
   else
-    soup_session_remove_feature_by_type (self->soup_session, SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
+    soup_session_set_proxy_resolver (self->soup_session, NULL);
 
   self->using_default_proxy = enabled;
 }
@@ -1660,7 +1672,8 @@ fsp_session_set_custom_proxy            (FspSession *self,
                                          const char *host, const char *port,
                                          const char *username, const char *password)
 {
-  GUri *proxy_uri = NULL;
+  GProxyResolver *proxy_resolver = NULL;
+  gchar *proxy_uri = NULL;
   gboolean was_using_default_proxy = FALSE;
 
   g_return_val_if_fail (FSP_IS_SESSION (self), FALSE);
@@ -1686,24 +1699,22 @@ fsp_session_set_custom_proxy            (FspSession *self,
       /* We need a numeric port */
       actual_port = (guint) g_ascii_strtoll ((gchar *) port, NULL, 10);
 
-      /* Build the actual GUri object */
-      proxy_uri = g_uri_build_with_user(G_URI_FLAGS_PARSE_RELAXED,
-                                        "https",
-                                        actual_user,
-                                        actual_password,
-                                        NULL,  /* auth_params */
-                                        host,
-                                        actual_port,
-                                        "",    /* path */
-                                        NULL,  /* query */
-                                        NULL); /* fragment*/
+      /* Create a custom proxy resolver */
+      proxy_uri = g_uri_join_with_user(G_URI_FLAGS_PARSE_RELAXED,
+                                       "https",
+                                       actual_user,
+                                       actual_password,
+                                       NULL,  /* auth_params */
+                                       host,
+                                       actual_port,
+                                       "",    /* path */
+                                       NULL,  /* query */
+                                       NULL); /* fragment*/
+      proxy_resolver = g_simple_proxy_resolver_new (proxy_uri, NULL);
     }
 
   /* Set the custom proxy (even if no valid data was provided) */
-  g_object_set (G_OBJECT (self->soup_session),
-                SOUP_SESSION_PROXY_URI,
-                proxy_uri,
-                NULL);
+  soup_session_set_proxy_resolver (self->soup_session, proxy_resolver);
 
   was_using_default_proxy = self->using_default_proxy;
   self->using_default_proxy = FALSE;
@@ -1712,12 +1723,15 @@ fsp_session_set_custom_proxy            (FspSession *self,
   if (was_using_default_proxy
       || (!self->proxy_uri && proxy_uri)
       || (self->proxy_uri && !proxy_uri)
-      || (self->proxy_uri && proxy_uri && !soup_uri_equal (self->proxy_uri, proxy_uri)))
+      || (self->proxy_uri && proxy_uri && !g_str_equal (self->proxy_uri, proxy_uri)))
     {
-      /* Save internal reference to the proxy */
+      /* Save internal references to the proxy */
+      if (self->proxy_resolver)
+        g_object_unref (self->proxy_resolver);
       if (self->proxy_uri)
-        g_uri_unref (self->proxy_uri);
+        g_free (self->proxy_uri);
 
+      self->proxy_resolver = proxy_resolver;
       self->proxy_uri = proxy_uri;
 
       /* Proxy configuration actually changed */
