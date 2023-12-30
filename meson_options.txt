@@ -1,2 +1,3 @@
 option('enable-header-bar', type: 'boolean', value: true, description: 'Enable GtkHeaderBar')
 option('enable-video', type: 'boolean', value: true, description: 'Enable video uploads')
+option('with-libsoup2', type: 'boolean', value: false, description: 'Build with libsoup-2.4')
