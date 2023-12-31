@@ -47,11 +47,8 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 #define OAUTH_SIGNATURE_METHOD "HMAC-SHA1"
 #define OAUTH_VERSION "1.0"
 
-#if DEBUG_ENABLED
-#define DEBUG(...) g_debug (__VA_ARGS__)
-#else
-#define DEBUG(...)
-#endif
+/* Use G_MESSAGES_DEBUG=all to enable these */
+#define DEBUG(...) g_debug (__VA_ARGS__);
 
 struct _FspSession
 {

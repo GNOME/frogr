@@ -40,10 +40,7 @@
 /* Padding to be used in the icon view */
 #define IV_THUMB_PADDING 4
 
-#if DEBUG_ENABLED
+/* Use G_MESSAGES_DEBUG=all to enable these */
 #define DEBUG(...) g_debug (__VA_ARGS__);
-#else
-#define DEBUG(...)
-#endif
 
 #endif
