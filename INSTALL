@@ -3,7 +3,7 @@ Compiling from source code
 
 To compile and try the application you need to have meson and ninja:
 
- $ meson --prefix /local/install/path . BUILD
+ $ meson setup --prefix /local/install/path . BUILD
  $ ninja -C BUILD
  $ ninja -C BUILD install
 
