@@ -1,5 +1,16 @@
-1.8 (??)
-========
+1.8 (1 Jan 2023)
+================
+  * Updated to libsoup3 (still possible to build with libsoup2).
+  * Added frogr icon to help documentation.
+
+New and updated translations:
+
+  * nn (Kjartan Maraas)
+  * pl (Piotr Drąg)
+  * ru (Sergej A)
+  * sv (Anders Jonsson)
+  * tr (Sabri Ünal)
+  * uk (Yuri Chornoivan)
 
 1.7 (16 Feb 2022)
 =================
