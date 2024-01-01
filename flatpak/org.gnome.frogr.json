@@ -1,0 +1,37 @@
+{
+    "app-id": "org.gnome.frogr",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "45",
+    "sdk": "org.gnome.Sdk",
+    "command": "frogr",
+    "finish-args": [
+        /* X11 + XShm access */
+        "--share=ipc", "--socket=x11",
+        /* Wayland access */
+        "--socket=wayland",
+        /* Needs to talk to the network: */
+        "--share=network",
+        /* Access your pictures and videos */
+        "--filesystem=xdg-pictures", "--filesystem=xdg-videos",
+        /* Access your documents is useful too (e.g. for saving and loading projects) */
+        "--filesystem=xdg-documents"
+    ],
+    "cleanup": [ "/share/man" ],
+    "modules": [
+        {
+            "name": "frogr",
+            "buildsystem": "meson",
+            "builddir": true,
+            "config-opts": [
+                /* Debug symbols will be stripped out into org.gnome.frogr.Debug */
+                "--buildtype=release"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/GNOME/frogr.git"
+                }
+            ]
+        }
+    ]
+}
