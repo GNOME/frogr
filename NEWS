@@ -1,3 +1,6 @@
+1.9 (??)
+========
+
 1.8 (1 Jan 2023)
 ================
   * Updated to libsoup3 (still possible to build with libsoup2).
