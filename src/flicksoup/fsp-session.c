@@ -245,15 +245,15 @@ _fill_hash_table_with_oauth_params      (GHashTable  *table,
                                          const gchar *token);
 
 static gchar *
-_get_signed_url                       (FspSession          *self,
-                                       const gchar         *url,
-                                       AuthorizationMethod  auth_method,
-                                       TokenType            token_type,
-                                       const gchar         *first_param,
-                                       ... );
+_get_signed_url                         (FspSession          *self,
+                                         const gchar         *url,
+                                         AuthorizationMethod  auth_method,
+                                         TokenType            token_type,
+                                         const gchar         *first_param,
+                                         ... );
 
 static void
-_clear_temporary_token                (FspSession *self);
+_clear_temporary_token                  (FspSession *self);
 
 static void
 _perform_async_request                  (SoupSession         *soup_session,
@@ -1198,12 +1198,12 @@ _fill_hash_table_with_oauth_params      (GHashTable  *table,
 }
 
 static gchar *
-_get_signed_url                       (FspSession          *self,
-                                       const gchar         *url,
-                                       AuthorizationMethod  auth_method,
-                                       TokenType            token_type,
-                                       const gchar         *first_param,
-                                       ... )
+_get_signed_url                         (FspSession          *self,
+                                        const gchar         *url,
+                                        AuthorizationMethod  auth_method,
+                                        TokenType            token_type,
+                                        const gchar         *first_param,
+                                        ... )
 {
   va_list args;
   GHashTable *table = NULL;
@@ -1264,7 +1264,7 @@ _get_signed_url                       (FspSession          *self,
 }
 
 static void
-_clear_temporary_token                (FspSession *self)
+_clear_temporary_token                  (FspSession *self)
 {
   g_return_if_fail (FSP_IS_SESSION (self));
 
