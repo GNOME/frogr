@@ -35,7 +35,7 @@ glib_ver = '2.56'
 gtk_ver = '3.16'
 exif_ver = '0.6.14'
 xml2_ver = '2.6.8'
-json_glib_ver = '1.2'
+json_glib_ver = '1.1.2'
 gcrypt_ver = '1.5.0'
 
 # Allow building with libsoup2 if set with -Dwith-libsoup2=true
