@@ -40,7 +40,7 @@ gcrypt_ver = '1.5.0'
 
 # Allow building with libsoup2 if set with -Dwith-libsoup2=true
 if get_option('with-libsoup2')
-  soup_ver = '2.34'
+  soup_ver = '2.42'
   soup_name = 'libsoup-2.4'
   frogr_conf.set10('WITH_LIBSOUP2', true)
 else
