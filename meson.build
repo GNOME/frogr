@@ -31,7 +31,7 @@ add_project_arguments('-Wno-cast-function-type',
                       language : 'c')
 
 # Dependencies
-glib_ver = '2.44'
+glib_ver = '2.56'
 gtk_ver = '3.16'
 exif_ver = '0.6.14'
 xml2_ver = '2.6.8'

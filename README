@@ -11,7 +11,7 @@ To get the source, please checkout the git repository at gnome.org:
 To be able to build frogr, you'll need some tools and libraries:
 
  - meson, ninja and a C compiler (e.g. gcc, clang)
- - glib (version 2.44 or higher)
+ - glib (version 2.56 or higher)
  - gtk+ (version 3.16 or higher)
  - json-glib (version 1.2 or higher)
  - libexif (version 0.6.14 or higher)
