@@ -1463,7 +1463,7 @@ _handle_soup_response                   (SoupResponseHandlerParam  param,
       response_len = g_bytes_get_size (response_bytes);
       tmp_string = g_string_new_len (g_bytes_get_data (response_bytes, NULL),
                                      response_len);
-      response_str = g_string_free_and_steal (tmp_string);
+      response_str = g_string_free (tmp_string, FALSE);
     }
 
   soup_status = soup_message_get_status(clos->soup_message);
