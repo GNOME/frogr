@@ -32,7 +32,7 @@
   <developer_name>Mario Sanchez Prada</developer_name>
   <update_contact>msanchez@gnome.org</update_contact>
   <url type="homepage">https://wiki.gnome.org/Apps/Frogr</url>
-  <url type="bugtracker">https://bugzilla.gnome.org/enter_bug.cgi?product=frogr</url>
+  <url type="bugtracker">https://gitlab.gnome.org/GNOME/frogr/-/issues</url>
   <url type="donation">http://www.gnome.org/friends</url>
   <translation type="gettext">frogr</translation>
   <content_rating type="oars-1.1">
