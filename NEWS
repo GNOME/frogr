@@ -1,5 +1,16 @@
-1.9 (??)
-========
+1.8.1 (3 Jan 2024)
+==================
+
+  * Fix build with libsoup3 and GLib < 2.76.
+  * Updated real requirements for GLib (> 2.56).
+  * Updated real requirements for libsoup2 (> 2.42).
+  * Updated real requirements for meson and ninja.
+  * Fix AppStream-related errors in AppData XML file.
+  * Fix wrong version number for flatpak builds.
+
+New and updated translations:
+
+  * uk (Yuri Chornoivan)
 
 1.8 (1 Jan 2024)
 ================
