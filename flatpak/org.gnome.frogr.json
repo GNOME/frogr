@@ -23,13 +23,13 @@
             "buildsystem": "meson",
             "builddir": true,
             "config-opts": [
-                /* Debug symbols will be stripped out into org.gnome.frogr.Debug */
                 "--buildtype=release"
             ],
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://gitlab.gnome.org/GNOME/frogr.git"
+                    "url": "https://gitlab.gnome.org/GNOME/frogr.git",
+                    "commit": "76fea0eba0ca73beb435867826600cd736680cfc"
                 }
             ]
         }
