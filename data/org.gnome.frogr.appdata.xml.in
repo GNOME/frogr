@@ -33,7 +33,7 @@
   <update_contact>msanchez@gnome.org</update_contact>
   <url type="homepage">https://wiki.gnome.org/Apps/Frogr</url>
   <url type="bugtracker">https://gitlab.gnome.org/GNOME/frogr/-/issues</url>
-  <url type="donation">http://www.gnome.org/friends</url>
+  <url type="donation">https://www.gnome.org/donate</url>
   <translation type="gettext">frogr</translation>
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
@@ -65,6 +65,16 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.8.1" date="2024-01-03">
+      <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
+      <artifacts>
+        <artifact type="source">
+          <location>https://download.gnome.org/sources/frogr/1.8/frogr-1.8.1.tar.xz</location>
+          <checksum type="sha256">046dd28bfd741a4b89e4e2c39da4f66370a76ab2e8225da4ddf26ca4c2fb6066</checksum>
+          <size type="download">2250676</size>
+        </artifact>
+      </artifacts>
+    </release>
     <release version="1.8" date="2024-01-01">
       <url>https://gitlab.gnome.org/GNOME/frogr/blob/master/NEWS</url>
       <artifacts>
