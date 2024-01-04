@@ -4,7 +4,7 @@ stages:
   - build
 
 before_script:
-  - dnf install -y meson ninja-build git gcc glib2-devel libsoup-devel libexif-devel libxml2-devel json-glib-devel libgcrypt-devel gtk3-devel gstreamer1-devel yelp-tools gettext libgcrypt-devel itstool desktop-file-utils libappstream-glib
+  - dnf install -y meson ninja-build git gcc glib2-devel libsoup-devel libsoup3-devel libexif-devel libxml2-devel json-glib-devel libgcrypt-devel gtk3-devel gstreamer1-devel yelp-tools gettext libgcrypt-devel itstool desktop-file-utils libappstream-glib
 
 build-frogr:
   stage: build
@@ -21,6 +21,22 @@ build-frogr:
     name: "frogr-${CI_COMMIT_REF_NAME}"
     paths:
       - "${CI_PROJECT_DIR}/_build/meson-logs"
+
+build-frogr-libsoup2:
+  stage: build
+  script:
+    - meson -Dwith-libsoup2=true --prefix /usr _build-libsoup2 .
+    - cd _build-libsoup2
+    - ninja
+    - desktop-file-validate data/org.gnome.frogr.desktop
+    - appstream-util validate data/org.gnome.frogr.appdata.xml
+  except:
+    - tags
+  artifacts:
+    when: on_failure
+    name: "frogr-${CI_COMMIT_REF_NAME}"
+    paths:
+      - "${CI_PROJECT_DIR}/_build-libsoup2/meson-logs"
 
 build-frogr-no-header-bar:
   stage: build
