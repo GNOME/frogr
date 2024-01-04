@@ -1,4 +1,4 @@
-image: fedora:31
+image: fedora:36
 
 stages:
   - build
@@ -25,8 +25,8 @@ build-frogr:
 build-frogr-libsoup2:
   stage: build
   script:
-    - meson -Dwith-libsoup2=true --prefix /usr _build-libsoup2 .
-    - cd _build-libsoup2
+    - meson -Dwith-libsoup2=true --prefix /usr _build .
+    - cd _build
     - ninja
     - desktop-file-validate data/org.gnome.frogr.desktop
     - appstream-util validate data/org.gnome.frogr.appdata.xml
@@ -36,7 +36,7 @@ build-frogr-libsoup2:
     when: on_failure
     name: "frogr-${CI_COMMIT_REF_NAME}"
     paths:
-      - "${CI_PROJECT_DIR}/_build-libsoup2/meson-logs"
+      - "${CI_PROJECT_DIR}/_build/meson-logs"
 
 build-frogr-no-header-bar:
   stage: build
