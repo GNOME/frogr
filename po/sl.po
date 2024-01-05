@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2018-11-25 00:26+0000\n"
-"PO-Revision-Date: 2018-12-04 20:21+0100\n"
-"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
+"POT-Creation-Date: 2024-01-01 15:44+0000\n"
+"PO-Revision-Date: 2024-01-05 10:42+0100\n"
+"Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
@@ -66,11 +66,6 @@ msgstr "Pošiljanje in organiziranje slik na računih Flickr"
 #: data/org.gnome.frogr.desktop.in.in:9
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;slika;fotografija;foto;video;pošiljalnik;video;photo;"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.frogr.desktop.in.in:16
-msgid "org.gnome.frogr"
-msgstr "org.gnome.frogr"
 
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
@@ -133,7 +128,7 @@ msgstr ""
 "opravila."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
-#: src/frogr-controller.c:2227
+#: src/frogr-controller.c:2217
 #, c-format
 msgid "Authorize %s"
 msgstr "Pooblasti %s"
@@ -326,6 +321,15 @@ msgstr ""
 #: src/frogr-controller.c:666
 #, c-format
 msgid ""
+"Invalid signature.\n"
+"Please try again."
+msgstr ""
+"Neveljaven podpis.\n"
+"Poskusite znova."
+
+#: src/frogr-controller.c:670
+#, c-format
+msgid ""
 "Error:\n"
 "Service not available"
 msgstr ""
@@ -333,63 +337,63 @@ msgstr ""
 "storitev ni na voljo."
 
 #. General error: just dump the raw error description
-#: src/frogr-controller.c:671
+#: src/frogr-controller.c:675
 #, c-format
 msgid "An error happened: %s."
 msgstr "Prišlo je do napake: %s."
 
-#: src/frogr-controller.c:869
+#: src/frogr-controller.c:873
 msgid "Authorization failed (timed out)"
 msgstr "Overitev je spodletela (zakasnela)"
 
-#: src/frogr-controller.c:917
+#: src/frogr-controller.c:921
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Ponovno prejemanje (poskus %d/%d) ..."
 
-#: src/frogr-controller.c:922
+#: src/frogr-controller.c:926
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Pošiljanje '%s'..."
 
-#: src/frogr-controller.c:2183
+#: src/frogr-controller.c:2173
 msgid "Updating credentials…"
 msgstr "Posodabljanje poveril ..."
 
-#: src/frogr-controller.c:2188
+#: src/frogr-controller.c:2178
 msgid "Retrieving data for authorization…"
 msgstr "Pridobivanje podatkov za overitev ..."
 
-#: src/frogr-controller.c:2193
+#: src/frogr-controller.c:2183
 msgid "Finishing authorization…"
 msgstr "Zaključevanje overitve ..."
 
-#: src/frogr-controller.c:2198
+#: src/frogr-controller.c:2188
 msgid "Retrieving list of sets…"
 msgstr "Pridobivanje seznama naborov ..."
 
-#: src/frogr-controller.c:2203
+#: src/frogr-controller.c:2193
 msgid "Retrieving list of groups…"
 msgstr "Pridobivanje seznama skupin ..."
 
-#: src/frogr-controller.c:2208
+#: src/frogr-controller.c:2198
 msgid "Retrieving list of tags…"
 msgstr "Pridobivanje seznama oznak ..."
 
-#: src/frogr-controller.c:2233
+#: src/frogr-controller.c:2223
 #, c-format
 msgid "Fetching information"
 msgstr "Pridobivanje podrobnosti"
 
-#: src/frogr-controller.c:2337
+#: src/frogr-controller.c:2327
 msgid "No sets found"
 msgstr "Ni najdenih naborov"
 
-#: src/frogr-controller.c:2362
+#: src/frogr-controller.c:2352
 msgid "No groups found"
 msgstr "Ni najdenih skupin"
 
-#: src/frogr-controller.c:2920
+#: src/frogr-controller.c:2910
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -398,16 +402,16 @@ msgstr ""
 "%s mora biti pred pošiljanjem na Flickr overjen.\n"
 "Dovoljenje je treba znova preveriti."
 
-#: src/frogr-controller.c:2929
+#: src/frogr-controller.c:2919
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Pred pošiljanjem slik na Flickr mora biti račun overjen."
 
-#: src/frogr-controller.c:2946
+#: src/frogr-controller.c:2936
 msgid "Uploading Pictures"
 msgstr "Pošiljanje slik"
 
-#: src/frogr-controller.c:2991
+#: src/frogr-controller.c:2981
 #, c-format
 msgid "Error opening project file"
 msgstr "Napaka med odpiranjem datoteke projekta"
@@ -987,98 +991,3 @@ msgstr "_Obrnjen vrstni red"
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "Omogoči _orodne namige"
-
-#~ msgid ""
-#~ "frogr is a small application for the GNOME desktop that allows users to "
-#~ "manage their accounts in the Flickr image hosting website."
-#~ msgstr ""
-#~ "Program frogr za namizje GNOME omogoča uporabnikom upravljanje računov na "
-#~ "spletišču Flickr."
-
-#~ msgid "Add Elements"
-#~ msgstr "Dodajanje predmetov"
-
-#~ msgid "Remove Elements"
-#~ msgstr "Odstranjevanje predmetov"
-
-#~ msgid "Upload All"
-#~ msgstr "Pošlji vse"
-
-#~ msgid "_Upload All"
-#~ msgstr "Pošlji _vse"
-
-#~ msgid ""
-#~ "Frogr is a small application for the GNOME desktop that allows users to "
-#~ "manage their accounts in the Flickr image hosting website."
-#~ msgstr ""
-#~ "Frogr je program namizja Gnome, ki omogoča urejanje uporabniških računov "
-#~ "spletišča Flickr."
-
-#~ msgid "Frogr"
-#~ msgstr "Frogr"
-
-#~ msgid "Frogr: a Flickr Remote Organizer for GNOME"
-#~ msgstr "Frogr: oddaljeni organizator slik za GNOME Flickr"
-
-#~ msgid "A Flickr remote organizer for GNOME\n"
-#~ msgstr "Oddaljeni organizator slik GNOME Flickr\n"
-
-#~ msgid "_Use GNOME General Proxy Settings"
-#~ msgstr "Uporabi _splošne nastavitve posredovanja"
-
-#~ msgid "Visible to _Family"
-#~ msgstr "Vidno _družini"
-
-#~ msgid "Visible to F_riends"
-#~ msgstr "Vidno _prijateljem"
-
-#~ msgid "Text Files"
-#~ msgstr "Besedilne datoteke"
-
-#~ msgid "_Remove Pictures"
-#~ msgstr "_Odstrani slike"
-
-#~ msgid "Add Pictures"
-#~ msgstr "Dodaj slike"
-
-#~ msgid "Remove Pictures"
-#~ msgstr "Odstrani slike"
-
-#~ msgid "_Load Project…"
-#~ msgstr "_Naloži projekt ..."
-
-#~ msgid "_Save Project"
-#~ msgstr "_Shrani projekt"
-
-#~ msgid "_Load Pictures…"
-#~ msgstr "_Naloži slike ..."
-
-#~ msgid "Load Project"
-#~ msgstr "Naloži projekt"
-
-#~ msgid "A_ctions"
-#~ msgstr "_Dejanja"
-
-#~ msgid "_Sort Pictures"
-#~ msgstr "_Razvrsti slike"
-
-#~ msgid "All"
-#~ msgstr "Vse"
-
-#~ msgid " - %d pictures to upload (%s)"
-#~ msgstr " - slike %d za pošiljanje (%s)"
-
-#~ msgid "Setting license for picture…"
-#~ msgstr "Določanje dovoljenja za sliko ..."
-
-#~ msgid "Setting geolocation for picture…"
-#~ msgstr "Nastavljanje geomesta za sliko ..."
-
-#~ msgid "Creating new photosets…"
-#~ msgstr "Ustvarjanje novega nabora ..."
-
-#~ msgid "Adding picture to photosets…"
-#~ msgstr "Dodajanje slik v nabore slik ..."
-
-#~ msgid "Adding picture to groups…"
-#~ msgstr "Dodajanje slik v skupine ..."
