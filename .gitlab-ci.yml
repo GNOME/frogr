@@ -12,8 +12,6 @@ build-frogr:
     - meson --prefix /usr _build .
     - cd _build
     - ninja
-    - desktop-file-validate data/org.gnome.frogr.desktop
-    - appstream-util validate data/org.gnome.frogr.appdata.xml
   except:
     - tags
   artifacts:
@@ -28,8 +26,6 @@ build-frogr-libsoup2:
     - meson -Dwith-libsoup2=true --prefix /usr _build .
     - cd _build
     - ninja
-    - desktop-file-validate data/org.gnome.frogr.desktop
-    - appstream-util validate data/org.gnome.frogr.appdata.xml
   except:
     - tags
   artifacts:
@@ -44,8 +40,6 @@ build-frogr-no-header-bar:
     - meson --prefix /usr -Denable-header-bar=false _build .
     - cd _build
     - ninja
-    - desktop-file-validate data/org.gnome.frogr.desktop
-    - appstream-util validate data/org.gnome.frogr.appdata.xml
   except:
     - tags
 
@@ -55,17 +49,31 @@ build-frogr-no-video:
     - meson --prefix /usr -Denable-video=false _build .
     - cd _build
     - ninja
-    - desktop-file-validate data/org.gnome.frogr.desktop
-    - appstream-util validate data/org.gnome.frogr.appdata.xml
   except:
     - tags
+
+test-frogr:
+  stage: build
+  only:
+    - tags
+  script:
+    - meson --prefix /usr --buildtype release _build .
+    - cd _build
+    - ninja test
+  except:
+    - tags
+  artifacts:
+    when: on_failure
+    name: "frogr-${CI_COMMIT_REF_NAME}"
+    paths:
+      - "${CI_PROJECT_DIR}/_build/meson-logs"
 
 dist-frogr:
   stage: build
   only:
     - tags
   script:
-    - meson --prefix /usr --buildtype release -Denable-header-bar=true _build .
+    - meson --prefix /usr --buildtype release _build .
     - cd _build
     - ninja dist
   artifacts:
