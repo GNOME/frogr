@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2009-2020 Mario Sanchez Prada <msanchez@gnome.org> -->
 <component type="desktop">
-  <id>org.gnome.frogr.desktop</id>
+  <id>org.gnome.frogr</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <name>frogr</name>
@@ -26,6 +26,7 @@
     </screenshot>
   </screenshots>
   <provides>
+    <id>org.gnome.frogr.desktop</id>
     <id>frogr.desktop</id>
   </provides>
   <project_group>GNOME</project_group>
