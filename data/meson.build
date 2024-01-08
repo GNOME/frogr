@@ -29,19 +29,37 @@ data_conf.set('BINDIR', join_paths(prefix, bindir))
 generated_desktop = configure_file(input: 'org.gnome.frogr.desktop.in.in',
                                    output: 'org.gnome.frogr.desktop.in',
                                    configuration: data_conf)
-i18n.merge_file(input: generated_desktop,
+desktop_file = i18n.merge_file(input: generated_desktop,
                 output: 'org.gnome.frogr.desktop',
                 install: true,
                 install_dir: desktopdir,
                 po_dir: po_dir,
                 type: 'desktop')
 
+
+desktop_utils = find_program('desktop-file-validate', required: false)
+if desktop_utils.found()
+  test('Validate desktop file', desktop_utils,
+    args: [desktop_file]
+  )
+endif
+
 # Appdata XML file
 appdatadir = join_paths(datadir, 'metainfo')
-i18n.merge_file(input: 'org.gnome.frogr.appdata.xml.in',
+appdata_file = i18n.merge_file(input: 'org.gnome.frogr.appdata.xml.in',
                 output: 'org.gnome.frogr.appdata.xml',
                 install: true,
                 install_dir: appdatadir,
                 po_dir: po_dir,
                 type: 'xml')
+
+# Validate Appdata
+appstreamcli = find_program('appstreamcli', required: false)
+if (appstreamcli.found())
+  test('Validate appdata file',
+    appstreamcli,
+    args: ['validate', '--no-net', '--explain', appdata_file.full_path()],
+    workdir: meson.current_build_dir()
+  )
+endif
 
