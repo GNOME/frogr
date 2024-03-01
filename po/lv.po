@@ -5,13 +5,13 @@
 #
 # Arvis Lācis <arvis.lacis@gmail.com>, 2012.
 # Anita Reitere <nitalynx@gmail.com>, 2012.
-# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2012, 2013, 2018.
+# SPDX-FileCopyrightText: 2012, 2013, 2018, 2024 Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2018-11-06 10:51+0000\n"
-"PO-Revision-Date: 2018-11-18 12:10+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues/\n"
+"POT-Creation-Date: 2024-01-08 16:31+0000\n"
+"PO-Revision-Date: 2024-03-02 00:26+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
@@ -20,10 +20,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 :"
 " 2);\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
-#| msgid "Frogr"
 msgid "frogr"
 msgstr "frogr"
 
@@ -36,24 +35,20 @@ msgid ""
 "frogr allows users to manage their accounts on the Flickr photo hosting "
 "service with a simple and direct interface."
 msgstr ""
-"frogr ļauj lietotājiem pārvaldīt kontus Flickr fotogrāfiju izvietošanas"
-" pakalpojumā, izmantojot vienkāršu un tiešu saskarni."
+"frogr ļauj lietotājiem pārvaldīt kontus Flickr fotogrāfiju izvietošanas "
+"pakalpojumā, izmantojot vienkāršu un tiešu saskarni."
 
 #: data/org.gnome.frogr.appdata.xml.in:14
 msgid ""
 "It supports all the basic Flickr features, including uploading pictures, "
 "adding descriptions, setting tags and managing sets and groups pools."
 msgstr ""
-"Tas atbalsta visas pamata Flickr iespējas, tai skaitā attēlu"
-" augšupielādēšanu, aprakstu pievienošanu, tagu iestatīšanu un grupas."
+"Tas atbalsta visas pamata Flickr iespējas, tai skaitā attēlu "
+"augšupielādēšanu, aprakstu pievienošanu, tagu iestatīšanu un grupas."
 
 #: data/org.gnome.frogr.appdata.xml.in:25
 msgid "Screenshot of frogr"
 msgstr "frogr ekrānuzņēmums"
-
-#: data/org.gnome.frogr.appdata.xml.in:32
-msgid "Mario Sanchez Prada"
-msgstr "Mario Sanchez Prada"
 
 #: data/org.gnome.frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
@@ -68,20 +63,13 @@ msgstr "Augšupielādēt un organizēt fotogrāfijas Flickr kontos"
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Attēls;Bilde;Fotogrāfija;Video;Augšupielādētājs;"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.frogr.desktop.in.in:16
-msgid "org.gnome.frogr"
-msgstr "org.gnome.frogr"
-
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
 msgstr "Flickr attālinātais organizētājs GNOME darbvirsmai\n"
 
 #: src/frogr-about-dialog.c:70
 msgid "translator-credits"
-msgstr ""
-"Arvis Lācis "
-"Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>"
+msgstr "Arvis Lācis Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>"
 
 #: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
 #: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
@@ -134,7 +122,7 @@ msgstr ""
 "pabeigtu procesu."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
-#: src/frogr-controller.c:2227
+#: src/frogr-controller.c:2217
 #, c-format
 msgid "Authorize %s"
 msgstr "Pilnvarot %s"
@@ -325,6 +313,18 @@ msgstr ""
 
 #: src/frogr-controller.c:666
 #, c-format
+#| msgid ""
+#| "Invalid verification code.\n"
+#| "Please try again."
+msgid ""
+"Invalid signature.\n"
+"Please try again."
+msgstr ""
+"Nederīgs paraksts.\n"
+"Lūdzu, mēģiniet vēlreiz."
+
+#: src/frogr-controller.c:670
+#, c-format
 msgid ""
 "Error:\n"
 "Service not available"
@@ -333,63 +333,63 @@ msgstr ""
 "Pakalpojums nav pieejams"
 
 #. General error: just dump the raw error description
-#: src/frogr-controller.c:671
+#: src/frogr-controller.c:675
 #, c-format
 msgid "An error happened: %s."
 msgstr "Gadījās kļūda — %s."
 
-#: src/frogr-controller.c:869
+#: src/frogr-controller.c:873
 msgid "Authorization failed (timed out)"
 msgstr "Pilnvarošana neizdevās (iestājās noildze)"
 
-#: src/frogr-controller.c:917
+#: src/frogr-controller.c:921
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Atkal mēģina augšupielādēt (mēģinājums %d/%d)…"
 
-#: src/frogr-controller.c:922
+#: src/frogr-controller.c:926
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Augšupielādē “%s”…"
 
-#: src/frogr-controller.c:2183
+#: src/frogr-controller.c:2173
 msgid "Updating credentials…"
 msgstr "Atjaunina pieteikšanās datus…"
 
-#: src/frogr-controller.c:2188
+#: src/frogr-controller.c:2178
 msgid "Retrieving data for authorization…"
 msgstr "Saņem pilnvarošanas datus…"
 
-#: src/frogr-controller.c:2193
+#: src/frogr-controller.c:2183
 msgid "Finishing authorization…"
 msgstr "Pabeidz pilnvarošanu…"
 
-#: src/frogr-controller.c:2198
+#: src/frogr-controller.c:2188
 msgid "Retrieving list of sets…"
 msgstr "Saņem kolekciju sarakstu…"
 
-#: src/frogr-controller.c:2203
+#: src/frogr-controller.c:2193
 msgid "Retrieving list of groups…"
 msgstr "Saņem grupu sarakstu…"
 
-#: src/frogr-controller.c:2208
+#: src/frogr-controller.c:2198
 msgid "Retrieving list of tags…"
 msgstr "Saņem tagu sarakstu…"
 
-#: src/frogr-controller.c:2233
+#: src/frogr-controller.c:2223
 #, c-format
 msgid "Fetching information"
 msgstr "Iegūst informāciju"
 
-#: src/frogr-controller.c:2337
+#: src/frogr-controller.c:2327
 msgid "No sets found"
 msgstr "Kolekcijas nav atrastas"
 
-#: src/frogr-controller.c:2362
+#: src/frogr-controller.c:2352
 msgid "No groups found"
 msgstr "Grupas nav atrastas"
 
-#: src/frogr-controller.c:2920
+#: src/frogr-controller.c:2910
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -398,16 +398,16 @@ msgstr ""
 "Jums ir pareizi jāpilnvaro %s, lai varētu augšupielādēt attēlus Flickr.\n"
 "Lūdzu, atkārtoti pilnvarojiet to."
 
-#: src/frogr-controller.c:2929
+#: src/frogr-controller.c:2919
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Jums ir jāsavienojas, pirms augšupielādēt attēlus uz Flickr."
 
-#: src/frogr-controller.c:2946
+#: src/frogr-controller.c:2936
 msgid "Uploading Pictures"
 msgstr "Augšupielādē attēlus"
 
-#: src/frogr-controller.c:2991
+#: src/frogr-controller.c:2981
 #, c-format
 msgid "Error opening project file"
 msgstr "Kļūda, atverot projekta datni"
@@ -895,8 +895,8 @@ msgid ""
 "Once you're ready, press the <b>\"Upload\"</b> button to upload your "
 "pictures to Flickr."
 msgstr ""
-"Kad esat gatavs, spiediet pogu <b>“Augšupielādēt”</b>, lai augšupielādētu"
-" savus attēlus uz Flickr."
+"Kad esat gatavs, spiediet pogu <b>“Augšupielādēt”</b>, lai augšupielādētu "
+"savus attēlus uz Flickr."
 
 #: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
 msgid "Aut_horize Account…"
@@ -915,17 +915,14 @@ msgid "Save _As…"
 msgstr "S_aglabāt kā..."
 
 #: data/gtkbuilder/frogr-menu-bar.ui:31
-#| msgid "A_dd Elements…"
 msgid "A_dd…"
 msgstr "Pie_vienot…"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:36
-#| msgid "Remove"
 msgid "_Remove"
 msgstr "_Izņemt"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:41
-#| msgid "Upload"
 msgid "_Upload"
 msgstr "_Augšupielādēt"
 
@@ -941,7 +938,6 @@ msgstr "_Palīdzība"
 
 #: data/gtkbuilder/frogr-menu-bar.ui:57
 #: data/gtkbuilder/frogr-menu-button.ui:109
-#| msgid "_About"
 msgid "_About frogr"
 msgstr "P_ar frogr"
 
@@ -987,6 +983,12 @@ msgstr "Apg_rieztā secībā"
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "Ieslēg_t paskaidres"
+
+#~ msgid "Mario Sanchez Prada"
+#~ msgstr "Mario Sanchez Prada"
+
+#~ msgid "org.gnome.frogr"
+#~ msgstr "org.gnome.frogr"
 
 #~ msgid "Add Elements"
 #~ msgstr "Pievienot elementus"
@@ -1038,3 +1040,4 @@ msgstr "Ieslēg_t paskaidres"
 
 #~ msgid "_Sort Pictures"
 #~ msgstr "Kārtot attēlu_s"
+
