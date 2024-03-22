@@ -1,0 +1,973 @@
+# Georgian translation for frogr.
+# Copyright (C) 2024 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# Ekaterine Papava <papava.e@gtu.ge>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues/\n"
+"POT-Creation-Date: 2024-03-01 22:27+0000\n"
+"PO-Revision-Date: 2024-03-22 02:02+0100\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
+"Language-Team: Georgian <ka@li.org>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
+msgid "frogr"
+msgstr "frogr"
+
+#: data/org.gnome.frogr.appdata.xml.in:8
+msgid "A flickr uploader for GNOME"
+msgstr "Flickr-ზე ამტვირთველი GNOME-სთვის"
+
+#: data/org.gnome.frogr.appdata.xml.in:10
+msgid ""
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
+msgstr ""
+"frogr მომხმარებლებს საშუალებას აძლევს, მართონ თავიანთი Flick-ის სურათების "
+"ჰოსტგის სერვისი მარტივი და პირდაპირი ინტერფეისით."
+
+#: data/org.gnome.frogr.appdata.xml.in:14
+msgid ""
+"It supports all the basic Flickr features, including uploading pictures, "
+"adding descriptions, setting tags and managing sets and groups pools."
+msgstr ""
+"მას გააჩნია Flickr-ის ყველა ძირითადი ფუნქცია სურათების ატვირთვის, აღწერების "
+"დამატების, ჭდეების დაყენების და ნაკრებებისა და ჯგუფების მართვის ჩათვლით."
+
+#: data/org.gnome.frogr.appdata.xml.in:25
+msgid "Screenshot of frogr"
+msgstr "Frogr-ის ეკრანის ანაბეჭდი"
+
+#: data/org.gnome.frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "frogr: Flickr-ის ორგანიზატორი GNOME-სთვის"
+
+#: data/org.gnome.frogr.desktop.in.in:7
+msgid "Upload and organize photos in Flickr accounts"
+msgstr "ატვირთეთ და დაალაგეთ სურათები Flickr-ის ანგარიშებში"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.frogr.desktop.in.in:9
+msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
+msgstr "Flickr;Image;Picture;Photo;Video;Uploader;ამტვირთავი;სურათი;ვიდეო;"
+
+#: src/frogr-about-dialog.c:43
+msgid "A Flickr Remote Organizer for GNOME\n"
+msgstr "Flickr-ის ორგანიზატორი GNOME-სთვის\n"
+
+#: src/frogr-about-dialog.c:70
+msgid "translator-credits"
+msgstr "მთარგმნელის შესახებ"
+
+#: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
+#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
+#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1201
+#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
+#: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
+msgid "_Cancel"
+msgstr "&გაუქმება"
+
+#: src/frogr-add-tags-dialog.c:189 src/frogr-add-to-group-dialog.c:524
+#: src/frogr-add-to-set-dialog.c:525 src/frogr-create-new-set-dialog.c:304
+msgid "_Add"
+msgstr "_დამატება"
+
+#: src/frogr-add-tags-dialog.c:199
+msgid "Enter a spaces separated list of tags:"
+msgstr "შეიყვანეთ ჭდეების მძიმით გამოყოფილი სია:"
+
+#: src/frogr-add-tags-dialog.c:227
+msgid "Add Tags"
+msgstr "ჭდეების დამატება"
+
+#: src/frogr-add-to-group-dialog.c:147
+msgid "Name"
+msgstr "სახელი"
+
+#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
+msgid "Elements"
+msgstr "ელემენტები"
+
+#: src/frogr-add-to-group-dialog.c:577
+msgid "Add to Groups"
+msgstr "ჯგუფებში ჩამატება"
+
+#: src/frogr-add-to-set-dialog.c:148
+msgid "Title"
+msgstr "სათაური"
+
+#: src/frogr-add-to-set-dialog.c:578
+msgid "Add to Sets"
+msgstr "ნაკრებებში ჩამატება"
+
+#: src/frogr-auth-dialog.c:59
+#, c-format
+msgid ""
+"Please press the button to authorize %s and then come back to complete the "
+"process."
+msgstr ""
+"დააწექით ღილაკს %s-ის ავტორიზაციისთვის, შემდეგ კი დაბრუნდით პროცესის "
+"დასასრულებლად."
+
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
+#: src/frogr-controller.c:2217
+#, c-format
+msgid "Authorize %s"
+msgstr "%s-ის ავტორიზაცია"
+
+#: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
+msgid "_Close"
+msgstr "დახურვა"
+
+#. Description label
+#: src/frogr-auth-dialog.c:169
+msgid "Enter verification code:"
+msgstr "შეიყვანეთ გადამოწმების კოდი:"
+
+#: src/frogr-auth-dialog.c:226
+msgid "Invalid verification code"
+msgstr "არასწორი გადამოწმების კოდი"
+
+#: src/frogr-controller.c:575
+msgid "Process cancelled"
+msgstr "პროცესი შეწყდა"
+
+#: src/frogr-controller.c:580
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+"მიერთების შეცდომა:\n"
+"ქსელი ხელმისაწვდომი არაა"
+
+#: src/frogr-controller.c:584
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+"მიერთების შეცდომა:\n"
+"არასწორი მოთხოვნა"
+
+#: src/frogr-controller.c:588
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+"მიერთების შეცდომა:\n"
+"შეცდომა სერვერის მხარეს"
+
+#: src/frogr-controller.c:592
+msgid ""
+"Error uploading:\n"
+"File invalid"
+msgstr ""
+"ატვირთვის შეცდომა:\n"
+"ფაილი არასწორია"
+
+#: src/frogr-controller.c:596
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+"სურათის ატვირთვის შეცდომა:\n"
+"კვოტა გადაცილებულია"
+
+#: src/frogr-controller.c:601
+#, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] "კვოტა გადაცილებულია (ზღვარი: %d ვიდეო თვეში)"
+
+#: src/frogr-controller.c:605
+msgid ""
+"Error uploading video:\n"
+"You can't upload more videos with this account"
+msgstr ""
+"ვიდეოს ატვირთვის შეცდომა:\n"
+"ამ ანგარიშზე მეტ ვიდეოს ვეღარ ატვირთავთ"
+
+#: src/frogr-controller.c:610
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+"შეცდომა:\n"
+"სურათი ვერ ვიპოვე"
+
+#: src/frogr-controller.c:614
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+"შეცდომა:\n"
+"ფოტო უკვე ნაკრებშია"
+
+#: src/frogr-controller.c:618
+msgid ""
+"Error:\n"
+"Photo already in group"
+msgstr ""
+"შეცდომა:\n"
+"ფოტო უკვე ჯგუფშია"
+
+#: src/frogr-controller.c:622
+msgid ""
+"Error:\n"
+"Photo already in the maximum number of groups possible"
+msgstr ""
+"შეცდომა:\n"
+"ფოტო, უკვე, შესაძლო ჯგუფების მაქსიმალურ რაოდენობაშია"
+
+#: src/frogr-controller.c:626
+msgid ""
+"Error:\n"
+"Group limit already reached"
+msgstr ""
+"შეცდომა:\n"
+"ჯგუფების ლიმიტი უკვე მიღწეულია"
+
+#: src/frogr-controller.c:630
+msgid ""
+"Error:\n"
+"Photo added to group's queue"
+msgstr ""
+"შეცდომა:\n"
+"სურათი დაემატა ჯგუფის რიგში"
+
+#: src/frogr-controller.c:634
+msgid ""
+"Error:\n"
+"Photo already added to group's queue"
+msgstr ""
+"შეცდომა:\n"
+"სურათი უკვეა ჯგუფი რიგში"
+
+#: src/frogr-controller.c:638
+msgid ""
+"Error:\n"
+"Content not allowed for this group"
+msgstr ""
+"შეცდომა:\n"
+"შემცველობა დაუშვებელია ამ ჯგუფისთვის"
+
+#: src/frogr-controller.c:642
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"ავტორიზაცია ჩავარდა.\n"
+"კიდევ სცადეთ"
+
+#: src/frogr-controller.c:648
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to Flickr.\n"
+"Please re-authorize it"
+msgstr ""
+"შეცდომა\n"
+"%s-ის ავტორიზაცია, რომ სურათები Flick-ზე ატვირთოს, სწორი არაა.\n"
+"მოახდინეთ თავიდან ავტორიზაცია"
+
+#: src/frogr-controller.c:653
+#, c-format
+msgid ""
+"Unable to authenticate in Flickr\n"
+"Please try again."
+msgstr ""
+"Flickr-ზე ავთენტიკაცია შეუძლებელია\n"
+"კიდევ სცადეთ."
+
+#: src/frogr-controller.c:657
+#, c-format
+msgid ""
+"You have not properly authorized %s yet.\n"
+"Please try again."
+msgstr ""
+"%s ჯერ სწორად ავტორიზებული არაა.\n"
+"კიდევ სცადეთ."
+
+#: src/frogr-controller.c:662
+#, c-format
+msgid ""
+"Invalid verification code.\n"
+"Please try again."
+msgstr ""
+"არასწორი გადამოწმების კოდი.\n"
+"კიდევ სცადეთ."
+
+#: src/frogr-controller.c:666
+#, c-format
+msgid ""
+"Invalid signature.\n"
+"Please try again."
+msgstr ""
+"არასწორი ხელმოწერა.\n"
+"კიდევ სცადეთ."
+
+#: src/frogr-controller.c:670
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"შეცდომა:\n"
+"სერვისი ხელმისაწვდომი არაა"
+
+#. General error: just dump the raw error description
+#: src/frogr-controller.c:675
+#, c-format
+msgid "An error happened: %s."
+msgstr "აღმოჩენილია შეცდომა: %s."
+
+#: src/frogr-controller.c:873
+msgid "Authorization failed (timed out)"
+msgstr "ავტორიზაცია ჩავარდა (მოლოდინის ვადა ამოიწურა)"
+
+#: src/frogr-controller.c:921
+#, c-format
+msgid "Retrying Upload (attempt %d/%d)…"
+msgstr "ატვირთვის თავიდან ცდა (მცდელობა %d/%d)…"
+
+#: src/frogr-controller.c:926
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "\"%s\"-ის ატვირთვა…"
+
+#: src/frogr-controller.c:2173
+msgid "Updating credentials…"
+msgstr "ავტორიზაციის დეტალების განახლება…"
+
+#: src/frogr-controller.c:2178
+msgid "Retrieving data for authorization…"
+msgstr "მონაცემების მიღება ავტორიზაციისთვის…"
+
+#: src/frogr-controller.c:2183
+msgid "Finishing authorization…"
+msgstr "ავტორიზაციის დასრულება…"
+
+#: src/frogr-controller.c:2188
+msgid "Retrieving list of sets…"
+msgstr "ნაკრებების სიის მიღება…"
+
+#: src/frogr-controller.c:2193
+msgid "Retrieving list of groups…"
+msgstr "ჯგუფების სიის მიღება…"
+
+#: src/frogr-controller.c:2198
+msgid "Retrieving list of tags…"
+msgstr "ჭდეების სიის მიღება…"
+
+#: src/frogr-controller.c:2223
+#, c-format
+msgid "Fetching information"
+msgstr "ინფორმაციის გამოთხოვა"
+
+#: src/frogr-controller.c:2327
+msgid "No sets found"
+msgstr "ნაკრებები ვერ ვიპოვე"
+
+#: src/frogr-controller.c:2352
+msgid "No groups found"
+msgstr "ჯგუფები ვერ ვიპოვე"
+
+#: src/frogr-controller.c:2910
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to Flickr.\n"
+"Please re-authorize it."
+msgstr ""
+"Flickr-ზე სურათების ატვირთვამდე %s-ს სწორი ავტორიზაცია სჭირდება.\n"
+"გაატარეთ მას ავტორიზაცია კიდევ ერთხელ."
+
+#: src/frogr-controller.c:2919
+#, c-format
+msgid "You need to be connected before uploading any pictures to Flickr."
+msgstr "Flickr-ზე სურათების ატვირთვამდე ინტერნეტკავშირის ქონა აუცილებელია."
+
+#: src/frogr-controller.c:2936
+msgid "Uploading Pictures"
+msgstr "მიმდინარეობს სურათების ატვირთვა"
+
+#: src/frogr-controller.c:2981
+#, c-format
+msgid "Error opening project file"
+msgstr "პროექტის ფაილის გახსნის შეცდომა"
+
+#. This shows a dialog notifying the problem to the user
+#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
+msgid "Missing data required"
+msgstr "ნაკლული მონაცემები აუცილებელია"
+
+#: src/frogr-create-new-set-dialog.c:319
+msgid "Title:"
+msgstr "სათაური:"
+
+#: src/frogr-create-new-set-dialog.c:330
+msgid "Description:"
+msgstr "აღწერა:"
+
+#: src/frogr-create-new-set-dialog.c:355
+msgid "Fill Pictures Details with Title and Description"
+msgstr "შეავსეთ სურათის დეტალები სათაურითა და აღწერით"
+
+#: src/frogr-create-new-set-dialog.c:383
+msgid "Create New Set"
+msgstr "ახალი ნაკრების შექმნა"
+
+#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
+msgid "Default (as specified in Flickr)"
+msgstr "ნაგულისხმევი (როგორც Flickr-ზე)"
+
+#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
+msgid "All rights reserved"
+msgstr "ყველა უფლება დაცულია"
+
+#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
+msgid "CC Attribution-NonCommercial-ShareAlike"
+msgstr "CC Attribution-NonCommercial-ShareAlike"
+
+#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
+msgid "CC Attribution-NonCommercial"
+msgstr "CC Attribution-NonCommercial"
+
+#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
+msgid "CC Attribution-NonCommercial-NoDerivs"
+msgstr "CC Attribution-NonCommercial-NoDerivs"
+
+#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
+msgid "CC Attribution"
+msgstr "CC Attribution"
+
+#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
+msgid "CC Attribution-ShareAlike"
+msgstr "CC Attribution-ShareAlike"
+
+#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
+msgid "CC Attribution-NoDerivs"
+msgstr "CC Attribution-NoDerivs"
+
+#: src/frogr-details-dialog.c:175
+msgid "Open with image viewer"
+msgstr "სურათების გამხსნელში გახსნა"
+
+#: src/frogr-details-dialog.c:196
+msgid "_Title:"
+msgstr "_სათაური:"
+
+#: src/frogr-details-dialog.c:208
+msgid "_Description:"
+msgstr "_აღწერა:"
+
+#: src/frogr-details-dialog.c:235
+msgid "Ta_gs:"
+msgstr "_ჭდეები:"
+
+#: src/frogr-details-dialog.c:262
+msgid "Visibility"
+msgstr "ხილვადობა"
+
+#: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
+msgid "_Private"
+msgstr "პირადი"
+
+#: src/frogr-details-dialog.c:278 src/frogr-settings-dialog.c:207
+msgid "P_ublic"
+msgstr "_საჯარო"
+
+#: src/frogr-details-dialog.c:292 src/frogr-settings-dialog.c:218
+msgid "_Family"
+msgstr "_ოჯახი"
+
+#: src/frogr-details-dialog.c:297 src/frogr-settings-dialog.c:220
+msgid "F_riends"
+msgstr "_მეგობრები"
+
+#: src/frogr-details-dialog.c:314
+msgid "Content Type"
+msgstr "შემცველობის ტიპი"
+
+#: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
+msgid "P_hoto"
+msgstr "_ფოტო"
+
+#: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
+msgid "Scree_nshot"
+msgstr "_ეკრანის ანაბეჭდი"
+
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
+msgid "Oth_er"
+msgstr "_სხვა"
+
+#: src/frogr-details-dialog.c:350
+msgid "Safety Level"
+msgstr "უსაფრთხოების დონე"
+
+#: src/frogr-details-dialog.c:359 src/frogr-settings-dialog.c:277
+msgid "S_afe"
+msgstr "_უსაფრთხო"
+
+#: src/frogr-details-dialog.c:364 src/frogr-settings-dialog.c:279
+msgid "_Moderate"
+msgstr "_საშუალო"
+
+#: src/frogr-details-dialog.c:369 src/frogr-settings-dialog.c:281
+msgid "Restr_icted"
+msgstr "შ_ეზღუდული"
+
+#: src/frogr-details-dialog.c:383
+msgid "License Type"
+msgstr "ლიცენზიის ტიპი"
+
+#: src/frogr-details-dialog.c:408
+msgid "Other Properties"
+msgstr "სხვა თვისებები"
+
+#: src/frogr-details-dialog.c:417
+msgid "_Show Up in Global Search Results"
+msgstr "_გლობალური ძებნის შედეგების ჩვენება"
+
+#: src/frogr-details-dialog.c:422
+msgid "Set Geo_location Information"
+msgstr "გეო_ლოკაციის ინფორმაციის დაყენება"
+
+#: src/frogr-details-dialog.c:427
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr "'დაპოსტისთვის თარიღის' ჩანაცვლება 'გადაღების თარიღით'"
+
+#. Visually indicate how many pictures are being edited
+#: src/frogr-details-dialog.c:519
+#, c-format
+msgid "(%d Picture)"
+msgid_plural "(%d Pictures)"
+msgstr[0] "(%d სურათი)"
+
+#: src/frogr-details-dialog.c:590
+msgid "An error happened trying to load the picture"
+msgstr "შეცდომა სურათის ჩატვირთვის მცდელობისას"
+
+#: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
+msgid "_Edit"
+msgstr "_ჩასწორება"
+
+#: src/frogr-details-dialog.c:1230
+msgid "Edit Picture Details"
+msgstr "სურათის დეტალების ჩასწორება"
+
+#: src/frogr-file-loader.c:142
+#, c-format
+msgid "Loading files %d / %d"
+msgstr "იტვირთება ფაილები %d / %d"
+
+#: src/frogr-file-loader.c:359
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
+msgstr ""
+"ვერ ჩავტვირთე სურათი: %s:\n"
+"%s"
+
+#: src/frogr-file-loader.c:385
+#, c-format
+msgid ""
+"Unable to load video %s\n"
+"Please check that you have the right codec installed"
+msgstr ""
+"ვერ ჩავტვირთე ვიდეო %s\n"
+"შეამოწმეთ, გიყენიათ თუ არა შესაბამისი კოდეკი"
+
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: src/frogr-file-loader.c:603
+#, c-format
+msgid ""
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
+msgstr ""
+"ვერ ჩავტვირთე ფაილი %s\n"
+"ფაილის ზომა ამ ანგარიშისთვის დაშვებულზე (%s) დიდია"
+
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Flickr-ის ორგანიზატორი"
+
+#. First create the left side buttons
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
+msgid "Open"
+msgstr "გახსნა"
+
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
+msgid "Open Existing Project"
+msgstr "არსებული პროექტის გახსნა"
+
+#: src/frogr-main-view.c:597 src/frogr-main-view.c:693
+msgid "Add"
+msgstr "დამატება"
+
+#: src/frogr-main-view.c:598 src/frogr-main-view.c:694
+msgid "Remove"
+msgstr "წაშლა"
+
+#: src/frogr-main-view.c:599 src/frogr-main-view.c:696
+msgid "Upload"
+msgstr "ატვირთვა"
+
+#. Save project item
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
+msgid "Save"
+msgstr "შენახვა"
+
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
+msgid "Save Current Project"
+msgstr "მიმდინარე პროექტის შენახვა"
+
+#. Create the submenu and insert it in the right section
+#: src/frogr-main-view.c:1012
+msgid "Accounts"
+msgstr "ანგარიშები"
+
+#. String showind the date and time a picture was taken
+#: src/frogr-main-view.c:1363
+#, c-format
+msgid "Taken: %s"
+msgstr "გადაღებულია: %s"
+
+#: src/frogr-main-view.c:1367
+#, c-format
+msgid "File size: %s"
+msgstr "ფაილის ზომა: %s"
+
+#: src/frogr-main-view.c:1483
+msgid "Select File"
+msgstr "აირჩიეთ ფაილი"
+
+#: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
+msgid "_Open"
+msgstr "_გახსნა"
+
+#: src/frogr-main-view.c:1496
+msgid "Frogr Project Files"
+msgstr "Frogr-ის პროექტის ფაილები"
+
+#: src/frogr-main-view.c:1556
+msgid "Select Destination"
+msgstr "აირჩიეთ სამიზნე"
+
+#: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
+#: data/gtkbuilder/frogr-menu-button.ui:12
+msgid "_Save"
+msgstr "_შენახვა"
+
+#: src/frogr-main-view.c:1563
+msgid "Untitled Project.frogr"
+msgstr "უსახელო პროექტი.frogr"
+
+#: src/frogr-main-view.c:1608
+msgid "Select a Picture"
+msgstr "აირჩიეთ სურათი"
+
+#: src/frogr-main-view.c:1635
+msgid "All Files"
+msgstr "ყველა ფაილი"
+
+#: src/frogr-main-view.c:1638
+msgid "Image Files"
+msgstr "ასლის ფაილები"
+
+#: src/frogr-main-view.c:1642
+msgid "Video Files"
+msgstr "ვიდეო ფაილები"
+
+#: src/frogr-main-view.c:1664
+msgid "You don't have any picture added yet"
+msgstr "ჯერ სურათები არ დაგიმატებიათ"
+
+#: src/frogr-main-view.c:1677
+msgid "You need to select some pictures first"
+msgstr "ჯერ სურათები უნდა აირჩიოთ"
+
+#: src/frogr-main-view.c:2046
+msgid "Not connected to Flickr"
+msgstr "Flickr-თან მიერთებული არ ბრძანდებით"
+
+#. Login string, showing the user is PRO (second '%s') if so.
+#: src/frogr-main-view.c:2056
+#, c-format
+msgid "Connected as %s%s"
+msgstr "მიერთებული, როგორც %s%s"
+
+#: src/frogr-main-view.c:2057
+msgid " (PRO account)"
+msgstr " (PRO ანგარიში)"
+
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: src/frogr-main-view.c:2081
+#, c-format
+msgid " - %s / %s remaining"
+msgstr " - %s / %s დარჩენილია"
+
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: src/frogr-main-view.c:2104
+#, c-format
+msgid " - %d file to upload (%s)"
+msgid_plural " - %d files to upload (%s)"
+msgstr[0] " - %d ასატვირთი ფაილი (%s)"
+
+#: src/frogr-settings-dialog.c:189
+msgid "Default Visibility"
+msgstr "ნაგულისხმევი ხილვადობა"
+
+#: src/frogr-settings-dialog.c:236
+msgid "Default Content Type"
+msgstr "ნაგულისხმევი შემცველობის ტიპი"
+
+#: src/frogr-settings-dialog.c:265
+msgid "Default Safety Level"
+msgstr "ნაგულისხმევი უსაფრთხოების დონე"
+
+#: src/frogr-settings-dialog.c:294
+msgid "Default License"
+msgstr "ნაგულისხმები ლიცენზია"
+
+#: src/frogr-settings-dialog.c:323
+msgid "Other Defaults"
+msgstr "სხვა ნაგულისხმევები"
+
+#: src/frogr-settings-dialog.c:335
+msgid "_Show Pictures in Global Search Results"
+msgstr "_სურათების ჩვენება გლობალური ძებნის შედეგებში"
+
+#: src/frogr-settings-dialog.c:338
+msgid "Set Geo_location Information for Pictures"
+msgstr "გეო_ლოკაციის ინფორმაციის დაყენება სურათებისთვის"
+
+#: src/frogr-settings-dialog.c:341
+msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
+msgstr "სურათებისთვის 'დაპოსტისთვის თარიღის' ჩანაცვლება 'გადაღების თარიღით'"
+
+#: src/frogr-settings-dialog.c:347
+msgid "_General"
+msgstr "ზოგადი"
+
+#: src/frogr-settings-dialog.c:368
+msgid "Proxy Settings"
+msgstr "პროქსის მორგება"
+
+#. Enable proxy
+#: src/frogr-settings-dialog.c:377
+msgid "_Enable HTTP Proxy"
+msgstr "HTTP პროქსის _ჩართვა"
+
+#: src/frogr-settings-dialog.c:389
+msgid "_Host:"
+msgstr "_ჰოსტი:"
+
+#. Proxy port
+#: src/frogr-settings-dialog.c:404
+msgid "_Port:"
+msgstr "პორტი:"
+
+#. Proxy username
+#: src/frogr-settings-dialog.c:419
+msgid "U_sername:"
+msgstr "_სახელი:"
+
+#. Proxy password
+#: src/frogr-settings-dialog.c:434
+msgid "Pass_word:"
+msgstr "პა_როლი:"
+
+#: src/frogr-settings-dialog.c:460
+msgid "Connec_tion"
+msgstr "_მიერთება"
+
+#: src/frogr-settings-dialog.c:479
+msgid "Other options"
+msgstr "სხვა პარამეტრები"
+
+#: src/frogr-settings-dialog.c:490
+msgid "Ena_ble Tags Auto-Completion"
+msgstr "ჭდეების _ავტოდასრულების ჩართვა"
+
+#: src/frogr-settings-dialog.c:493
+msgid "_Import Tags from Pictures Metadata"
+msgstr "ჭდეების შემოტანა სურათ_ის მეტამონაცემებიდან"
+
+#: src/frogr-settings-dialog.c:497
+msgid "Use _Dark GTK Theme"
+msgstr "GTK-ის _ბნელი თემის გამოყენება"
+
+#: src/frogr-settings-dialog.c:501
+msgid "_Keep File Extensions in Titles when Loading"
+msgstr "ჩატვირთვისას ფაილის გაფართოებების დატოვება _სახელებისთვის"
+
+#: src/frogr-settings-dialog.c:507
+msgid "_Misc"
+msgstr "_სხვ"
+
+#: src/frogr-settings-dialog.c:1009
+msgid "Preferences"
+msgstr "გამართვა"
+
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
+#: data/gtkbuilder/frogr-menu-button.ui:24
+msgid "_Edit Details…"
+msgstr "_დეტალების ჩასწორება…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
+msgid "Add _Tags…"
+msgstr "_ჭდეების დამატება…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
+msgid "Add to _Group…"
+msgstr "ჩამატება _ჯგუფში…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
+msgid "Add to _Photoset"
+msgstr "დამატება _ფოტოსეტში"
+
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
+msgid "_Add to Existing Photoset…"
+msgstr "_დამატება არსებულ ფოტოსეტში…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
+msgid "_Create New Photoset…"
+msgstr "_ახალი ფოტოსეტის შექმნა…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:103
+#: data/gtkbuilder/frogr-menu-button.ui:93
+msgid "_Open in External Viewer"
+msgstr "_გარე გამხსნელში გახსნა"
+
+#: data/gtkbuilder/frogr-context-menu.ui:45
+msgid "_Remove Elements"
+msgstr "_ელემენტების წაშლა"
+
+#: data/gtkbuilder/frogr-main-view.ui:51
+msgid "No pictures loaded"
+msgstr "სურათები ჩატვირთული არაა"
+
+#: data/gtkbuilder/frogr-main-view.ui:67
+msgid ""
+"Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
+"window."
+msgstr ""
+"ამ ფანჯარაში სურათების ჩასატვირთად ხელსაწყოების პანელზე დააწექით ღილაკს "
+"<b>\"დამატება\"</b>."
+
+#: data/gtkbuilder/frogr-main-view.ui:83
+msgid ""
+"Once you're ready, press the <b>\"Upload\"</b> button to upload your "
+"pictures to Flickr."
+msgstr ""
+"როცა მზად იქნებით, დააწექით ღილაკს <b>\"ატვირთვა\"</b>, რომ თქვენი სურათებ "
+"Flickr-ზე ატვირთოთ."
+
+#: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
+msgid "Aut_horize Account…"
+msgstr "ანგარიშის ავ_ტორიზაცია…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:11
+msgid "_File"
+msgstr "_ფაილი"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:14
+msgid "_Open…"
+msgstr "_გახსნა…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
+msgid "Save _As…"
+msgstr "_შენახვა, როგორც…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:31
+msgid "A_dd…"
+msgstr "_დამატება…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:36
+msgid "_Remove"
+msgstr "_წაშლა"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:41
+msgid "_Upload"
+msgstr "_ატვირთვა"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:48
+#: data/gtkbuilder/frogr-menu-button.ui:100
+msgid "_Preferences…"
+msgstr "_გამართვა…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:52
+#: data/gtkbuilder/frogr-menu-button.ui:104
+msgid "_Help"
+msgstr "_დახმარება"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:57
+#: data/gtkbuilder/frogr-menu-button.ui:109
+msgid "_About frogr"
+msgstr "Frogr-ის შეს_ახებ"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:61
+msgid "_Quit"
+msgstr "_გასვლა"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:110
+msgid "_View"
+msgstr "ხ_ედი"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:113
+#: data/gtkbuilder/frogr-menu-button.ui:56
+msgid "_Sort Elements"
+msgstr "ელემენტები_ს დალაგება"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:116
+#: data/gtkbuilder/frogr-menu-button.ui:59
+msgid "As _Loaded"
+msgstr "როგორც ჩ_აიტვირთა"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:121
+#: data/gtkbuilder/frogr-menu-button.ui:64
+msgid "By _Date Taken"
+msgstr "_გადაღების თარიღით"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:126
+#: data/gtkbuilder/frogr-menu-button.ui:69
+msgid "By _Title"
+msgstr "_სათაურით"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:131
+#: data/gtkbuilder/frogr-menu-button.ui:74
+msgid "By _Size"
+msgstr "ზომ_ის მიხედვით"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:138
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "_Reversed Order"
+msgstr "შებ_რუნებული წყობით"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:146
+#: data/gtkbuilder/frogr-menu-button.ui:87
+msgid "Enable _Tooltips"
+msgstr "_მინიშნებების ჩვენება"
