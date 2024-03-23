@@ -2,16 +2,16 @@
 # Copyright (C) 2018 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
 # Joe Hansen <joedalton2@yahoo.dk>, 2011, 2012, 2013.
-# Alan Mortensen <alanmortensen.am@gmail.com>, 2016, 2018.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2016, 2018-19, 2024.
 #
 # title -> navn   (kunne også være titel).
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2018-11-06 10:51+0000\n"
-"PO-Revision-Date: 2019-01-22 19:37+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues/\n"
+"POT-Creation-Date: 2024-01-08 16:31+0000\n"
+"PO-Revision-Date: 2024-03-16 13:28+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
@@ -50,10 +50,6 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Skærmbillede af frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:32
-msgid "Mario Sanchez Prada"
-msgstr "Mario Sanchez Prada"
-
 #: data/org.gnome.frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "frogr: Fjernhåndtering af Flickr til GNOME"
@@ -67,11 +63,6 @@ msgstr "Overfør og organiser billeder i Flickr-konti"
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Billede;Foto;Video;Uploader;"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.frogr.desktop.in.in:16
-msgid "org.gnome.frogr"
-msgstr "org.gnome.frogr"
-
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
 msgstr "Fjernhåndtering af Flickr til GNOME\n"
@@ -80,7 +71,7 @@ msgstr "Fjernhåndtering af Flickr til GNOME\n"
 msgid "translator-credits"
 msgstr ""
 "Joe Hansen, 2011, 2012, 2013.\n"
-"Alan Mortensen, 2016.\n"
+"Alan Mortensen, 2016-2024.\n"
 "\n"
 "Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
 "Mere info: http://www.dansk-gruppen.dk"
@@ -136,7 +127,7 @@ msgstr ""
 "færdigbehandle processen."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
-#: src/frogr-controller.c:2227
+#: src/frogr-controller.c:2217
 #, c-format
 msgid "Authorize %s"
 msgstr "Godkend %s"
@@ -327,6 +318,15 @@ msgstr ""
 #: src/frogr-controller.c:666
 #, c-format
 msgid ""
+"Invalid signature.\n"
+"Please try again."
+msgstr ""
+"Ugyldig underskrift.\n"
+"Prøv venligst igen."
+
+#: src/frogr-controller.c:670
+#, c-format
+msgid ""
 "Error:\n"
 "Service not available"
 msgstr ""
@@ -334,63 +334,63 @@ msgstr ""
 "Tjeneste er ikke tilgængelig"
 
 #. General error: just dump the raw error description
-#: src/frogr-controller.c:671
+#: src/frogr-controller.c:675
 #, c-format
 msgid "An error happened: %s."
 msgstr "Der opstod en fejl: %s."
 
-#: src/frogr-controller.c:869
+#: src/frogr-controller.c:873
 msgid "Authorization failed (timed out)"
 msgstr "Godkendelse mislykkedes (tidsudløb)"
 
-#: src/frogr-controller.c:917
+#: src/frogr-controller.c:921
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Prøver at overføre igen (forsøg %d/%d) …"
 
-#: src/frogr-controller.c:922
+#: src/frogr-controller.c:926
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Overfører “%s” …"
 
-#: src/frogr-controller.c:2183
+#: src/frogr-controller.c:2173
 msgid "Updating credentials…"
 msgstr "Opdaterer akkreditiver …"
 
-#: src/frogr-controller.c:2188
+#: src/frogr-controller.c:2178
 msgid "Retrieving data for authorization…"
 msgstr "Henter data for godkendelse …"
 
-#: src/frogr-controller.c:2193
+#: src/frogr-controller.c:2183
 msgid "Finishing authorization…"
 msgstr "Afslutter godkendelse …"
 
-#: src/frogr-controller.c:2198
+#: src/frogr-controller.c:2188
 msgid "Retrieving list of sets…"
 msgstr "Henter liste af sæt …"
 
-#: src/frogr-controller.c:2203
+#: src/frogr-controller.c:2193
 msgid "Retrieving list of groups…"
 msgstr "Henter liste af grupper …"
 
-#: src/frogr-controller.c:2208
+#: src/frogr-controller.c:2198
 msgid "Retrieving list of tags…"
 msgstr "Henter liste af mærker …"
 
-#: src/frogr-controller.c:2233
+#: src/frogr-controller.c:2223
 #, c-format
 msgid "Fetching information"
 msgstr "Henter information"
 
-#: src/frogr-controller.c:2337
+#: src/frogr-controller.c:2327
 msgid "No sets found"
 msgstr "Ingen sæt fundet"
 
-#: src/frogr-controller.c:2362
+#: src/frogr-controller.c:2352
 msgid "No groups found"
 msgstr "Ingen grupper fundet"
 
-#: src/frogr-controller.c:2920
+#: src/frogr-controller.c:2910
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -399,16 +399,16 @@ msgstr ""
 "Du skal på passende vis godkende %s, før du overfører billeder til Flickr.\n"
 "Godkend venligst igen."
 
-#: src/frogr-controller.c:2929
+#: src/frogr-controller.c:2919
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Du skal være tilsluttet før du overfører billeder til Flickr."
 
-#: src/frogr-controller.c:2946
+#: src/frogr-controller.c:2936
 msgid "Uploading Pictures"
 msgstr "Overfører billeder"
 
-#: src/frogr-controller.c:2991
+#: src/frogr-controller.c:2981
 #, c-format
 msgid "Error opening project file"
 msgstr "Der opstod en fejl under åbning af projektfil"
@@ -984,6 +984,12 @@ msgstr "_Omvendt rækkefølge"
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "Aktiver _værktøjsfif"
+
+#~ msgid "Mario Sanchez Prada"
+#~ msgstr "Mario Sanchez Prada"
+
+#~ msgid "org.gnome.frogr"
+#~ msgstr "org.gnome.frogr"
 
 #~ msgid ""
 #~ "frogr is a small application for the GNOME desktop that allows users to "
