@@ -1,22 +1,22 @@
 # Indonesian translation for frogr.
 # Copyright (C) 2012 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017, 2018.
+# Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017, 2018, 2024.
 # Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017, 2018, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2018-11-15 13:00+0000\n"
-"PO-Revision-Date: 2019-05-22 14:13+0700\n"
-"Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues/\n"
+"POT-Creation-Date: 2024-01-08 16:31+0000\n"
+"PO-Revision-Date: 2024-04-25 09:31+0700\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
@@ -46,10 +46,6 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Cuplikan layar frogr"
 
-#: data/org.gnome.frogr.appdata.xml.in:32
-msgid "Mario Sanchez Prada"
-msgstr "Mario Sanchez Prada"
-
 #: data/org.gnome.frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "frogr: Pengorganisasi Remote Flickr bagi GNOME"
@@ -63,11 +59,6 @@ msgstr "Unggah dan kelola foto dalam akun Flickr"
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "Flickr;Citra;Gambar;Foto;Video;Pengunggah;"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.frogr.desktop.in.in:16
-msgid "org.gnome.frogr"
-msgstr "org.gnome.frogr"
-
 #: src/frogr-about-dialog.c:43
 msgid "A Flickr Remote Organizer for GNOME\n"
 msgstr "Suatu Pengorganisasi Remote Flickr bagi GNOME\n"
@@ -75,7 +66,7 @@ msgstr "Suatu Pengorganisasi Remote Flickr bagi GNOME\n"
 #: src/frogr-about-dialog.c:70
 msgid "translator-credits"
 msgstr ""
-"Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017, 2018.\n"
+"Andika Triwidada <andika@gmail.com>, 2012, 2014, 2017, 2018, 2024.\n"
 "Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017, 2018."
 
 #: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
@@ -129,7 +120,7 @@ msgstr ""
 "menyelesaikan proses."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
-#: src/frogr-controller.c:2227
+#: src/frogr-controller.c:2217
 #, c-format
 msgid "Authorize %s"
 msgstr "Otorisasikan %s"
@@ -319,6 +310,15 @@ msgstr ""
 #: src/frogr-controller.c:666
 #, c-format
 msgid ""
+"Invalid signature.\n"
+"Please try again."
+msgstr ""
+"Tanda tangan tak valid.\n"
+"Harap coba lagi."
+
+#: src/frogr-controller.c:670
+#, c-format
+msgid ""
 "Error:\n"
 "Service not available"
 msgstr ""
@@ -326,63 +326,63 @@ msgstr ""
 "Layanan tak tersedia"
 
 #. General error: just dump the raw error description
-#: src/frogr-controller.c:671
+#: src/frogr-controller.c:675
 #, c-format
 msgid "An error happened: %s."
 msgstr "Terjadi galat: %s."
 
-#: src/frogr-controller.c:869
+#: src/frogr-controller.c:873
 msgid "Authorization failed (timed out)"
 msgstr "Otorisasi gagal (habis waktu)"
 
-#: src/frogr-controller.c:917
+#: src/frogr-controller.c:921
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Mencoba Ulang Unggah (percobaan %d/%d)…"
 
-#: src/frogr-controller.c:922
+#: src/frogr-controller.c:926
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Mengunggah '%s'…"
 
-#: src/frogr-controller.c:2183
+#: src/frogr-controller.c:2173
 msgid "Updating credentials…"
 msgstr "Memutakhirkan kredensial…"
 
-#: src/frogr-controller.c:2188
+#: src/frogr-controller.c:2178
 msgid "Retrieving data for authorization…"
 msgstr "Mengambil data untuk otorisasi…"
 
-#: src/frogr-controller.c:2193
+#: src/frogr-controller.c:2183
 msgid "Finishing authorization…"
 msgstr "Menyelesaikan otorisasi…"
 
-#: src/frogr-controller.c:2198
+#: src/frogr-controller.c:2188
 msgid "Retrieving list of sets…"
 msgstr "Mengambil daftar set…"
 
-#: src/frogr-controller.c:2203
+#: src/frogr-controller.c:2193
 msgid "Retrieving list of groups…"
 msgstr "Mengambil daftar grup…"
 
-#: src/frogr-controller.c:2208
+#: src/frogr-controller.c:2198
 msgid "Retrieving list of tags…"
 msgstr "Mengambil daftar tag…"
 
-#: src/frogr-controller.c:2233
+#: src/frogr-controller.c:2223
 #, c-format
 msgid "Fetching information"
 msgstr "Mengambil informasi"
 
-#: src/frogr-controller.c:2337
+#: src/frogr-controller.c:2327
 msgid "No sets found"
 msgstr "Tak ada set yang ditemukan"
 
-#: src/frogr-controller.c:2362
+#: src/frogr-controller.c:2352
 msgid "No groups found"
 msgstr "Tak ada grup yang ditemukan"
 
-#: src/frogr-controller.c:2920
+#: src/frogr-controller.c:2910
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -392,16 +392,16 @@ msgstr ""
 "gambar ke Flickr.\n"
 "Harap otorisasi ulang."
 
-#: src/frogr-controller.c:2929
+#: src/frogr-controller.c:2919
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Anda perlu tersambung sebelum mengunggah sebarang gambar ke Flickr."
 
-#: src/frogr-controller.c:2946
+#: src/frogr-controller.c:2936
 msgid "Uploading Pictures"
 msgstr "Mengunggah Gambar"
 
-#: src/frogr-controller.c:2991
+#: src/frogr-controller.c:2981
 #, c-format
 msgid "Error opening project file"
 msgstr "Galat saat membuka berkas projek"
@@ -974,10 +974,3 @@ msgstr "Balik U_rutan"
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "Fungsikan _Tooltips"
-
-#~ msgid ""
-#~ "frogr is a small application for the GNOME desktop that allows users to "
-#~ "manage their accounts in the Flickr image hosting website."
-#~ msgstr ""
-#~ "frogr adalah aplikasi kecil bagi desktop GNOME yang memungkinkan pengguna "
-#~ "mengelola akun mereka dalam situs web hosting citra Flickr."
