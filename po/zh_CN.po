@@ -4,21 +4,22 @@
 # Wylmer Wang <wantinghard@gmail.com>, 2011, 2013.
 # tuhaihe <1132321739qq@gmail.com>,2012.
 # YunQiang Su <wzssyqa@gmail.com>, 2014.
+# lumingzh <lumingzh@qq.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2020-07-15 07:15+0000\n"
-"PO-Revision-Date: 2020-09-07 13:06-0400\n"
-"Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues/\n"
+"POT-Creation-Date: 2024-01-08 16:31+0000\n"
+"PO-Revision-Date: 2024-05-20 20:05+0800\n"
+"Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Gtranslator 46.1\n"
 
 #: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr"
@@ -47,10 +48,6 @@ msgstr ""
 #: data/org.gnome.frogr.appdata.xml.in:25
 msgid "Screenshot of frogr"
 msgstr "Frogr 的屏幕截图"
-
-#: data/org.gnome.frogr.appdata.xml.in:32
-msgid "Mario Sanchez Prada"
-msgstr "Mario Sanchez Prada"
 
 #: data/org.gnome.frogr.desktop.in.in:6
 msgid "frogr: a Flickr Remote Organizer for GNOME"
@@ -126,7 +123,7 @@ msgid ""
 msgstr "请按下该按钮对 %s 进行认证，然后返回以完成此过程。"
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
-#: src/frogr-controller.c:2213
+#: src/frogr-controller.c:2217
 #, c-format
 msgid "Authorize %s"
 msgstr "认证 %s"
@@ -316,6 +313,15 @@ msgstr ""
 #: src/frogr-controller.c:666
 #, c-format
 msgid ""
+"Invalid signature.\n"
+"Please try again."
+msgstr ""
+"无效的签名。\n"
+"请重试。"
+
+#: src/frogr-controller.c:670
+#, c-format
+msgid ""
 "Error:\n"
 "Service not available"
 msgstr ""
@@ -323,63 +329,63 @@ msgstr ""
 "服务不可用"
 
 #. General error: just dump the raw error description
-#: src/frogr-controller.c:671
+#: src/frogr-controller.c:675
 #, c-format
 msgid "An error happened: %s."
 msgstr "发生错误：%s。"
 
-#: src/frogr-controller.c:869
+#: src/frogr-controller.c:873
 msgid "Authorization failed (timed out)"
 msgstr "认证失败(超时)"
 
-#: src/frogr-controller.c:917
+#: src/frogr-controller.c:921
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "正在重新尝试上传(第 %d/%d 次)…"
 
-#: src/frogr-controller.c:922
+#: src/frogr-controller.c:926
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "正在上传“%s”…"
 
-#: src/frogr-controller.c:2169
+#: src/frogr-controller.c:2173
 msgid "Updating credentials…"
 msgstr "正在更新凭证…"
 
-#: src/frogr-controller.c:2174
+#: src/frogr-controller.c:2178
 msgid "Retrieving data for authorization…"
 msgstr "正在获取认证数据…"
 
-#: src/frogr-controller.c:2179
+#: src/frogr-controller.c:2183
 msgid "Finishing authorization…"
 msgstr "正在完成认证…"
 
-#: src/frogr-controller.c:2184
+#: src/frogr-controller.c:2188
 msgid "Retrieving list of sets…"
 msgstr "正在获取相片集列表…"
 
-#: src/frogr-controller.c:2189
+#: src/frogr-controller.c:2193
 msgid "Retrieving list of groups…"
 msgstr "正在获取群组列表…"
 
-#: src/frogr-controller.c:2194
+#: src/frogr-controller.c:2198
 msgid "Retrieving list of tags…"
 msgstr "正在获取标签列表…"
 
-#: src/frogr-controller.c:2219
+#: src/frogr-controller.c:2223
 #, c-format
 msgid "Fetching information"
 msgstr "正在获取信息"
 
-#: src/frogr-controller.c:2323
+#: src/frogr-controller.c:2327
 msgid "No sets found"
 msgstr "未找到相片集"
 
-#: src/frogr-controller.c:2348
+#: src/frogr-controller.c:2352
 msgid "No groups found"
 msgstr "未找到群组"
 
-#: src/frogr-controller.c:2906
+#: src/frogr-controller.c:2910
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -388,16 +394,16 @@ msgstr ""
 "您需要对 %s 进行正确认证才能向 Flickr 上传相片。\n"
 "请重新对它进行认证。"
 
-#: src/frogr-controller.c:2915
+#: src/frogr-controller.c:2919
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "您要先联网才能向 Flickr 上传相片。"
 
-#: src/frogr-controller.c:2932
+#: src/frogr-controller.c:2936
 msgid "Uploading Pictures"
 msgstr "正在上传图片"
 
-#: src/frogr-controller.c:2977
+#: src/frogr-controller.c:2981
 #, c-format
 msgid "Error opening project file"
 msgstr "打开项目文件出错"
@@ -966,6 +972,9 @@ msgstr "逆序(_R)"
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "启用工具提示(_T)"
+
+#~ msgid "Mario Sanchez Prada"
+#~ msgstr "Mario Sanchez Prada"
 
 #, fuzzy
 #~ msgid ""
