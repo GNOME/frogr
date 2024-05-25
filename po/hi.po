@@ -1,0 +1,975 @@
+# Hindi translation for frogr.
+# Copyright (C) 2024 frogr's COPYRIGHT HOLDER
+# This file is distributed under the same license as the frogr package.
+# Scrambled 777 <weblate.scrambled777@simplelogin.com>, 2024.
+# Scrambled777 <weblate.scrambled777@simplelogin.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: frogr master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues/\n"
+"POT-Creation-Date: 2024-04-25 02:32+0000\n"
+"PO-Revision-Date: 2024-05-20 23:38+0530\n"
+"Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
+"Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 46.1\n"
+
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
+msgid "frogr"
+msgstr "frogr"
+
+#: data/org.gnome.frogr.appdata.xml.in:8
+msgid "A flickr uploader for GNOME"
+msgstr "GNOME के लिए एक फ़्लिकर अपलोडर"
+
+#: data/org.gnome.frogr.appdata.xml.in:10
+msgid ""
+"frogr allows users to manage their accounts on the Flickr photo hosting "
+"service with a simple and direct interface."
+msgstr ""
+"frogr उपयोक्ताओं को एक सरल और सीधे इंटरफ़ेस के साथ Flickr फोटो होस्टिंग सेवा पर अपने "
+"खाते प्रबंधित करने की अनुमति देता है।"
+
+#: data/org.gnome.frogr.appdata.xml.in:14
+msgid ""
+"It supports all the basic Flickr features, including uploading pictures, "
+"adding descriptions, setting tags and managing sets and groups pools."
+msgstr ""
+"यह सभी बुनियादी Flickr सुविधाओं का समर्थन करता है, जिसमें तस्वीरें अपलोड करना, विवरण "
+"जोड़ना, टैग निर्धारित करना और सेट और समूह पूल प्रबंधित करना शामिल है।"
+
+#: data/org.gnome.frogr.appdata.xml.in:25
+msgid "Screenshot of frogr"
+msgstr "frogr का स्क्रीनशॉट"
+
+#: data/org.gnome.frogr.desktop.in.in:6
+msgid "frogr: a Flickr Remote Organizer for GNOME"
+msgstr "frogr: GNOME के लिए फ़्लिकर रिमोट व्यवस्थापक"
+
+#: data/org.gnome.frogr.desktop.in.in:7
+msgid "Upload and organize photos in Flickr accounts"
+msgstr "Flickr खातों में Flickr अपलोड करें और व्यवस्थित करें"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.frogr.desktop.in.in:9
+msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
+msgstr "Flickr;छवि;तस्वीर;फोटो;वीडियो;अपलोडर;"
+
+#: src/frogr-about-dialog.c:43
+msgid "A Flickr Remote Organizer for GNOME\n"
+msgstr "GNOME के लिए Flickr रिमोट व्यवस्थापक\n"
+
+#: src/frogr-about-dialog.c:70
+msgid "translator-credits"
+msgstr "Scrambled777 <weblate.scrambled777@simplelogin.com>"
+
+#: src/frogr-add-tags-dialog.c:187 src/frogr-add-to-group-dialog.c:522
+#: src/frogr-add-to-set-dialog.c:523 src/frogr-auth-dialog.c:155
+#: src/frogr-create-new-set-dialog.c:302 src/frogr-details-dialog.c:1201
+#: src/frogr-main-view.c:1486 src/frogr-main-view.c:1559
+#: src/frogr-main-view.c:1611 src/frogr-settings-dialog.c:966
+msgid "_Cancel"
+msgstr "रद्द करें (_C)"
+
+#: src/frogr-add-tags-dialog.c:189 src/frogr-add-to-group-dialog.c:524
+#: src/frogr-add-to-set-dialog.c:525 src/frogr-create-new-set-dialog.c:304
+msgid "_Add"
+msgstr "जोड़ें (_A)"
+
+#: src/frogr-add-tags-dialog.c:199
+msgid "Enter a spaces separated list of tags:"
+msgstr "टैग की रिक्त स्थान से अलग सूची दर्ज करें:"
+
+#: src/frogr-add-tags-dialog.c:227
+msgid "Add Tags"
+msgstr "टैग जोड़ें"
+
+#: src/frogr-add-to-group-dialog.c:147
+msgid "Name"
+msgstr "नाम"
+
+#: src/frogr-add-to-group-dialog.c:162 src/frogr-add-to-set-dialog.c:163
+msgid "Elements"
+msgstr "तत्व"
+
+#: src/frogr-add-to-group-dialog.c:577
+msgid "Add to Groups"
+msgstr "समूहों में जोड़ें"
+
+#: src/frogr-add-to-set-dialog.c:148
+msgid "Title"
+msgstr "शीर्षक"
+
+#: src/frogr-add-to-set-dialog.c:578
+msgid "Add to Sets"
+msgstr "सेट में जोड़ें"
+
+#: src/frogr-auth-dialog.c:59
+#, c-format
+msgid ""
+"Please press the button to authorize %s and then come back to complete the "
+"process."
+msgstr ""
+"कृपया %s को अधिकृत करने के लिए बटन दबाएँ और फिर प्रक्रिया पूरी करने के लिए वापस आएँ।"
+
+#: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
+#: src/frogr-controller.c:2217
+#, c-format
+msgid "Authorize %s"
+msgstr "%s को अधिकृत करें"
+
+#: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
+msgid "_Close"
+msgstr "बंद करें (_C)"
+
+#. Description label
+#: src/frogr-auth-dialog.c:169
+msgid "Enter verification code:"
+msgstr "सत्यापन कोड दर्ज करें:"
+
+#: src/frogr-auth-dialog.c:226
+msgid "Invalid verification code"
+msgstr "अमान्य सत्यापन कोड"
+
+#: src/frogr-controller.c:575
+msgid "Process cancelled"
+msgstr "प्रक्रिया रद्द"
+
+#: src/frogr-controller.c:580
+msgid ""
+"Connection error:\n"
+"Network not available"
+msgstr ""
+"संपर्क त्रुटि:\n"
+"नेटवर्क उपलब्ध नहीं"
+
+#: src/frogr-controller.c:584
+msgid ""
+"Connection error:\n"
+"Bad request"
+msgstr ""
+"संपर्क त्रुटि:\n"
+"खराब अनुरोध"
+
+#: src/frogr-controller.c:588
+msgid ""
+"Connection error:\n"
+"Server-side error"
+msgstr ""
+"संपर्क त्रुटि:\n"
+"सर्वर-साइड त्रुटि"
+
+#: src/frogr-controller.c:592
+msgid ""
+"Error uploading:\n"
+"File invalid"
+msgstr ""
+"अपलोड करने में त्रुटि:\n"
+"फाइल अमान्य"
+
+#: src/frogr-controller.c:596
+msgid ""
+"Error uploading picture:\n"
+"Quota exceeded"
+msgstr ""
+"तस्वीर अपलोड करने में त्रुटि:\n"
+"कोटा पूरा हो गया"
+
+#: src/frogr-controller.c:601
+#, c-format
+msgid "Quota exceeded (limit: %d video per month)"
+msgid_plural "Quota exceeded (limit: %d videos per month)"
+msgstr[0] "कोटा पार हो गया (सीमा: %d वीडियो प्रति माह)"
+msgstr[1] "कोटा पार हो गया (सीमा: %d वीडियो प्रति माह)"
+
+#: src/frogr-controller.c:605
+msgid ""
+"Error uploading video:\n"
+"You can't upload more videos with this account"
+msgstr ""
+"वीडियो अपलोड करने में त्रुटि:\n"
+"आप इस खाते से अधिक वीडियो अपलोड नहीं कर सकते"
+
+#: src/frogr-controller.c:610
+msgid ""
+"Error:\n"
+"Photo not found"
+msgstr ""
+"त्रुटि:\n"
+"फोटो नहीं मिला"
+
+#: src/frogr-controller.c:614
+msgid ""
+"Error:\n"
+"Photo already in photoset"
+msgstr ""
+"त्रुटि:\n"
+"फोटो पहले से ही फोटोसेट में है"
+
+#: src/frogr-controller.c:618
+msgid ""
+"Error:\n"
+"Photo already in group"
+msgstr ""
+"त्रुटि:\n"
+"फोटो पहले से ही समूह में है"
+
+#: src/frogr-controller.c:622
+msgid ""
+"Error:\n"
+"Photo already in the maximum number of groups possible"
+msgstr ""
+"त्रुटि:\n"
+"फोटो पहले से ही यथासंभव अधिकतम संख्या में समूहों में है"
+
+#: src/frogr-controller.c:626
+msgid ""
+"Error:\n"
+"Group limit already reached"
+msgstr ""
+"त्रुटि:\n"
+"समूह की सीमा पहले ही पूरी हो चुकी है"
+
+#: src/frogr-controller.c:630
+msgid ""
+"Error:\n"
+"Photo added to group's queue"
+msgstr ""
+"त्रुटि:\n"
+"फोटो को समूह की कतार में जोड़ा गया"
+
+#: src/frogr-controller.c:634
+msgid ""
+"Error:\n"
+"Photo already added to group's queue"
+msgstr ""
+"त्रुटि:\n"
+"फोटो पहले ही समूह की कतार में जोड़ दी गई है"
+
+#: src/frogr-controller.c:638
+msgid ""
+"Error:\n"
+"Content not allowed for this group"
+msgstr ""
+"त्रुटि:\n"
+"इस समूह के लिए सामग्री की अनुमति नहीं है"
+
+#: src/frogr-controller.c:642
+#, c-format
+msgid ""
+"Authorization failed.\n"
+"Please try again"
+msgstr ""
+"प्रमाणीकरण विफल।\n"
+"कृपया पुन: प्रयास करें"
+
+#: src/frogr-controller.c:648
+#, c-format
+msgid ""
+"Error\n"
+"%s is not properly authorized to upload pictures to Flickr.\n"
+"Please re-authorize it"
+msgstr ""
+"त्रुटि\n"
+"%s Flickr पर तस्वीरें अपलोड करने के लिए उचित रूप से अधिकृत नहीं है।\n"
+"कृपया इसे पुनः अधिकृत करें"
+
+#: src/frogr-controller.c:653
+#, c-format
+msgid ""
+"Unable to authenticate in Flickr\n"
+"Please try again."
+msgstr ""
+"Flickr में प्रमाणित करने में असमर्थ\n"
+"कृपया पुन: प्रयास करें।"
+
+#: src/frogr-controller.c:657
+#, c-format
+msgid ""
+"You have not properly authorized %s yet.\n"
+"Please try again."
+msgstr ""
+"आपने अभी तक %s को ठीक से अधिकृत नहीं किया है।\n"
+"कृपया पुन: प्रयास करें।"
+
+#: src/frogr-controller.c:662
+#, c-format
+msgid ""
+"Invalid verification code.\n"
+"Please try again."
+msgstr ""
+"अवैध सत्यापन संकेत।\n"
+"कृपया पुन: प्रयास करें।"
+
+#: src/frogr-controller.c:666
+#, c-format
+msgid ""
+"Invalid signature.\n"
+"Please try again."
+msgstr ""
+"अमान्य हस्ताक्षर।\n"
+"कृपया पुन: प्रयास करें।"
+
+#: src/frogr-controller.c:670
+#, c-format
+msgid ""
+"Error:\n"
+"Service not available"
+msgstr ""
+"त्रुटि:\n"
+"सेवा उपलब्ध नहीं है"
+
+#. General error: just dump the raw error description
+#: src/frogr-controller.c:675
+#, c-format
+msgid "An error happened: %s."
+msgstr "एक त्रुटि हुई: %s।"
+
+#: src/frogr-controller.c:873
+msgid "Authorization failed (timed out)"
+msgstr "प्राधिकरण विफल (समय समाप्त)"
+
+#: src/frogr-controller.c:921
+#, c-format
+msgid "Retrying Upload (attempt %d/%d)…"
+msgstr "अपलोड का पुन: प्रयास किया जा रहा है (प्रयास %d/%d)…"
+
+#: src/frogr-controller.c:926
+#, c-format
+msgid "Uploading '%s'…"
+msgstr "'%s' अपलोड किया जा रहा है…"
+
+#: src/frogr-controller.c:2173
+msgid "Updating credentials…"
+msgstr "क्रेडेंशियल अपडेट किया जा रहा है…"
+
+#: src/frogr-controller.c:2178
+msgid "Retrieving data for authorization…"
+msgstr "प्राधिकरण के लिए डेटा पुनर्प्राप्त किया जा रहा है…"
+
+#: src/frogr-controller.c:2183
+msgid "Finishing authorization…"
+msgstr "प्राधिकरण समाप्त हो रहा है…"
+
+#: src/frogr-controller.c:2188
+msgid "Retrieving list of sets…"
+msgstr "सेट की सूची पुनर्प्राप्त की जा रही है…"
+
+#: src/frogr-controller.c:2193
+msgid "Retrieving list of groups…"
+msgstr "समूहों की सूची पुनर्प्राप्त की जा रही है…"
+
+#: src/frogr-controller.c:2198
+msgid "Retrieving list of tags…"
+msgstr "टैग की सूची पुनर्प्राप्त की जा रही है…"
+
+#: src/frogr-controller.c:2223
+#, c-format
+msgid "Fetching information"
+msgstr "जानकारी प्राप्त की जा रही है"
+
+#: src/frogr-controller.c:2327
+msgid "No sets found"
+msgstr "कोई सेट नहीं मिला"
+
+#: src/frogr-controller.c:2352
+msgid "No groups found"
+msgstr "कोई समूह नहीं मिला"
+
+#: src/frogr-controller.c:2910
+#, c-format
+msgid ""
+"You need to properly authorize %s before uploading any pictures to Flickr.\n"
+"Please re-authorize it."
+msgstr ""
+"Flickr पर कोई भी तस्वीरें अपलोड करने से पहले आपको %s को उचित रूप से अधिकृत करना "
+"होगा।\n"
+"कृपया इसे पुनः अधिकृत करें।"
+
+#: src/frogr-controller.c:2919
+#, c-format
+msgid "You need to be connected before uploading any pictures to Flickr."
+msgstr "Flickr पर कोई भी तस्वीरें अपलोड करने से पहले आपको जुड़ना होगा।"
+
+#: src/frogr-controller.c:2936
+msgid "Uploading Pictures"
+msgstr "तस्वीरें अपलोड कि जा रही हैं"
+
+#: src/frogr-controller.c:2981
+#, c-format
+msgid "Error opening project file"
+msgstr "परियोजना फाइल खोलने में त्रुटि"
+
+#. This shows a dialog notifying the problem to the user
+#: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
+msgid "Missing data required"
+msgstr "अनुपलब्ध डेटा आवश्यक"
+
+#: src/frogr-create-new-set-dialog.c:319
+msgid "Title:"
+msgstr "शीर्षक:"
+
+#: src/frogr-create-new-set-dialog.c:330
+msgid "Description:"
+msgstr "विवरण:"
+
+#: src/frogr-create-new-set-dialog.c:355
+msgid "Fill Pictures Details with Title and Description"
+msgstr "शीर्षक और विवरण के साथ तस्वीर विवरण भरें"
+
+#: src/frogr-create-new-set-dialog.c:383
+msgid "Create New Set"
+msgstr "नया सेट बनाएं"
+
+#: src/frogr-details-dialog.c:89 src/frogr-settings-dialog.c:97
+msgid "Default (as specified in Flickr)"
+msgstr "तयशुदा (जैसा कि Flickr में निर्दिष्ट है)"
+
+#: src/frogr-details-dialog.c:90 src/frogr-settings-dialog.c:98
+msgid "All rights reserved"
+msgstr "सर्वाधिकार सुरक्षित"
+
+#: src/frogr-details-dialog.c:91 src/frogr-settings-dialog.c:99
+msgid "CC Attribution-NonCommercial-ShareAlike"
+msgstr "CC Attribution-NonCommercial-ShareAlike"
+
+#: src/frogr-details-dialog.c:92 src/frogr-settings-dialog.c:100
+msgid "CC Attribution-NonCommercial"
+msgstr "CC Attribution-NonCommercial"
+
+#: src/frogr-details-dialog.c:93 src/frogr-settings-dialog.c:101
+msgid "CC Attribution-NonCommercial-NoDerivs"
+msgstr "CC Attribution-NonCommercial-NoDerivs"
+
+#: src/frogr-details-dialog.c:94 src/frogr-settings-dialog.c:102
+msgid "CC Attribution"
+msgstr "CC Attribution"
+
+#: src/frogr-details-dialog.c:95 src/frogr-settings-dialog.c:103
+msgid "CC Attribution-ShareAlike"
+msgstr "CC Attribution-ShareAlike"
+
+#: src/frogr-details-dialog.c:96 src/frogr-settings-dialog.c:104
+msgid "CC Attribution-NoDerivs"
+msgstr "CC Attribution-NoDerivs"
+
+#: src/frogr-details-dialog.c:175
+msgid "Open with image viewer"
+msgstr "छवि दर्शक के साथ खोलें"
+
+#: src/frogr-details-dialog.c:196
+msgid "_Title:"
+msgstr "शीर्षक (_T):"
+
+#: src/frogr-details-dialog.c:208
+msgid "_Description:"
+msgstr "विवरण (_D):"
+
+#: src/frogr-details-dialog.c:235
+msgid "Ta_gs:"
+msgstr "टैग (_g):"
+
+#: src/frogr-details-dialog.c:262
+msgid "Visibility"
+msgstr "दृश्यता"
+
+#: src/frogr-details-dialog.c:273 src/frogr-settings-dialog.c:204
+msgid "_Private"
+msgstr "निजी (_P)"
+
+#: src/frogr-details-dialog.c:278 src/frogr-settings-dialog.c:207
+msgid "P_ublic"
+msgstr "सार्वजनिक (_u)"
+
+#: src/frogr-details-dialog.c:292 src/frogr-settings-dialog.c:218
+msgid "_Family"
+msgstr "परिवार (_F)"
+
+#: src/frogr-details-dialog.c:297 src/frogr-settings-dialog.c:220
+msgid "F_riends"
+msgstr "दोस्त (_r)"
+
+#: src/frogr-details-dialog.c:314
+msgid "Content Type"
+msgstr "सामग्री प्रकार"
+
+#: src/frogr-details-dialog.c:323 src/frogr-settings-dialog.c:247
+msgid "P_hoto"
+msgstr "तस्वीर (_h)"
+
+#: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
+msgid "Scree_nshot"
+msgstr "स्क्रीनशॉट (_n)"
+
+#: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
+msgid "Oth_er"
+msgstr "अन्य (_e)"
+
+#: src/frogr-details-dialog.c:350
+msgid "Safety Level"
+msgstr "सुरक्षा स्तर"
+
+#: src/frogr-details-dialog.c:359 src/frogr-settings-dialog.c:277
+msgid "S_afe"
+msgstr "सुरक्षित (_a)"
+
+#: src/frogr-details-dialog.c:364 src/frogr-settings-dialog.c:279
+msgid "_Moderate"
+msgstr "मध्यम (_M)"
+
+#: src/frogr-details-dialog.c:369 src/frogr-settings-dialog.c:281
+msgid "Restr_icted"
+msgstr "प्रतिबंधित (_i)"
+
+#: src/frogr-details-dialog.c:383
+msgid "License Type"
+msgstr "लाइसेंस प्रकार"
+
+#: src/frogr-details-dialog.c:408
+msgid "Other Properties"
+msgstr "अन्य गुण"
+
+#: src/frogr-details-dialog.c:417
+msgid "_Show Up in Global Search Results"
+msgstr "वैश्विक खोज परिणामों में दिखाएँ (_S)"
+
+#: src/frogr-details-dialog.c:422
+msgid "Set Geo_location Information"
+msgstr "भू-स्थान जानकारी निर्धारित करें (_l)"
+
+#: src/frogr-details-dialog.c:427
+msgid "Replace 'Date Posted' with 'Date Taken'"
+msgstr "'पोस्ट की गई तारीख' को 'तिथि ली गई' से बदलें"
+
+#. Visually indicate how many pictures are being edited
+#: src/frogr-details-dialog.c:519
+#, c-format
+msgid "(%d Picture)"
+msgid_plural "(%d Pictures)"
+msgstr[0] "(%d तस्वीर)"
+msgstr[1] "(%d तस्वीरें)"
+
+#: src/frogr-details-dialog.c:590
+msgid "An error happened trying to load the picture"
+msgstr "तस्वीर लोड करने का प्रयास करते समय त्रुटि हुई"
+
+#: src/frogr-details-dialog.c:1202 data/gtkbuilder/frogr-menu-bar.ui:68
+msgid "_Edit"
+msgstr "संपादित करें (_E)"
+
+#: src/frogr-details-dialog.c:1230
+msgid "Edit Picture Details"
+msgstr "तस्वीर विवरण संपादित करें"
+
+#: src/frogr-file-loader.c:142
+#, c-format
+msgid "Loading files %d / %d"
+msgstr "फाइलें लोड हो रही हैं %d / %d"
+
+#: src/frogr-file-loader.c:359
+#, c-format
+msgid ""
+"Unable to load picture %s:\n"
+"%s"
+msgstr ""
+"तस्वीर %s लोड करने में असमर्थ:\n"
+"%s"
+
+#: src/frogr-file-loader.c:385
+#, c-format
+msgid ""
+"Unable to load video %s\n"
+"Please check that you have the right codec installed"
+msgstr ""
+"वीडियो %s लोड करने में असमर्थ\n"
+"कृपया जांचें कि आपके पास सही कोडेक स्थापित है"
+
+#. First %s is the title of the picture (filename of the file by
+#. default). Second %s is the max allowed size for a picture to be
+#. uploaded to flickr (different for free and PRO accounts).
+#: src/frogr-file-loader.c:603
+#, c-format
+msgid ""
+"Can't load file %s:\n"
+"Size of file is bigger than the maximum allowed for this account (%s)"
+msgstr ""
+"फाइल %s लोड नहीं कर सकता:\n"
+"फाइल का आकार इस खाते के लिए अनुमत अधिकतम सीमा से बड़ा है (%s)"
+
+#: src/frogr-global-defs.h:26
+msgid "Flickr Remote Organizer"
+msgstr "Flickr रिमोट व्यवस्थापक"
+
+#. First create the left side buttons
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
+msgid "Open"
+msgstr "खोलें"
+
+#: src/frogr-main-view.c:596 src/frogr-main-view.c:690
+msgid "Open Existing Project"
+msgstr "मौजूदा परियोजना खोलें"
+
+#: src/frogr-main-view.c:597 src/frogr-main-view.c:693
+msgid "Add"
+msgstr "जोड़ें"
+
+#: src/frogr-main-view.c:598 src/frogr-main-view.c:694
+msgid "Remove"
+msgstr "हटाएं"
+
+#: src/frogr-main-view.c:599 src/frogr-main-view.c:696
+msgid "Upload"
+msgstr "अपलोड"
+
+#. Save project item
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
+msgid "Save"
+msgstr "सहेजें"
+
+#: src/frogr-main-view.c:631 src/frogr-main-view.c:691
+msgid "Save Current Project"
+msgstr "वर्तमान परियोजना सहेजें"
+
+#. Create the submenu and insert it in the right section
+#: src/frogr-main-view.c:1012
+msgid "Accounts"
+msgstr "खाता"
+
+#. String showind the date and time a picture was taken
+#: src/frogr-main-view.c:1363
+#, c-format
+msgid "Taken: %s"
+msgstr "लिया गया: %s"
+
+#: src/frogr-main-view.c:1367
+#, c-format
+msgid "File size: %s"
+msgstr "फाइल आकार: %s"
+
+#: src/frogr-main-view.c:1483
+msgid "Select File"
+msgstr "फाइल चुनें"
+
+#: src/frogr-main-view.c:1487 src/frogr-main-view.c:1612
+msgid "_Open"
+msgstr "खोलें (_O)"
+
+#: src/frogr-main-view.c:1496
+msgid "Frogr Project Files"
+msgstr "Frogr परियोजना फाइलें"
+
+#: src/frogr-main-view.c:1556
+msgid "Select Destination"
+msgstr "गंतव्य चुनें"
+
+#: src/frogr-main-view.c:1560 data/gtkbuilder/frogr-menu-bar.ui:19
+#: data/gtkbuilder/frogr-menu-button.ui:12
+msgid "_Save"
+msgstr "सहेजें (_S)"
+
+#: src/frogr-main-view.c:1563
+msgid "Untitled Project.frogr"
+msgstr "शीर्षकहीन Project.frogr"
+
+#: src/frogr-main-view.c:1608
+msgid "Select a Picture"
+msgstr "एक तस्वीर चुनें"
+
+#: src/frogr-main-view.c:1635
+msgid "All Files"
+msgstr "सभी फाइलें"
+
+#: src/frogr-main-view.c:1638
+msgid "Image Files"
+msgstr "छवि फाइलें"
+
+#: src/frogr-main-view.c:1642
+msgid "Video Files"
+msgstr "वीडियो फाइलें"
+
+#: src/frogr-main-view.c:1664
+msgid "You don't have any picture added yet"
+msgstr "आपने अभी तक कोई तस्वीर नहीं जोड़ी है"
+
+#: src/frogr-main-view.c:1677
+msgid "You need to select some pictures first"
+msgstr "आपको पहले कुछ तस्वीरें चुननी होंगी"
+
+#: src/frogr-main-view.c:2046
+msgid "Not connected to Flickr"
+msgstr "Flickr से जुड़ा नहीं है"
+
+#. Login string, showing the user is PRO (second '%s') if so.
+#: src/frogr-main-view.c:2056
+#, c-format
+msgid "Connected as %s%s"
+msgstr "%s%s के रूप में जुड़ा हुआ"
+
+#: src/frogr-main-view.c:2057
+msgid " (PRO account)"
+msgstr " (प्रो खाता)"
+
+#. Will show in the status bar the amount of data (in KB, MB
+#. or GB) the user is currently allowed to upload to flicker
+#. till the end of the month, in a CURRENT / MAX fashion.
+#. The '-' at the beginning is just a separator, since more
+#. blocks of text will be shown in the status bar too.
+#: src/frogr-main-view.c:2081
+#, c-format
+msgid " - %s / %s remaining"
+msgstr " - %s / %s शेष"
+
+#. Will show in the status bar the amount of pictures and data
+#. (in KB, MB or GB) that would be uploaded as the sum of the
+#. sizes for every picture loaded in the application
+#: src/frogr-main-view.c:2104
+#, c-format
+msgid " - %d file to upload (%s)"
+msgid_plural " - %d files to upload (%s)"
+msgstr[0] " - अपलोड करने के लिए %d फाइल (%s)"
+msgstr[1] " - अपलोड करने के लिए %d फ़ाइलें (%s)"
+
+#: src/frogr-settings-dialog.c:189
+msgid "Default Visibility"
+msgstr "तयशुदा दृश्यता"
+
+#: src/frogr-settings-dialog.c:236
+msgid "Default Content Type"
+msgstr "तयशुदा सामग्री प्रकार"
+
+#: src/frogr-settings-dialog.c:265
+msgid "Default Safety Level"
+msgstr "तयशुदा सुरक्षा स्तर"
+
+#: src/frogr-settings-dialog.c:294
+msgid "Default License"
+msgstr "तयशुदा लाइसेंस"
+
+#: src/frogr-settings-dialog.c:323
+msgid "Other Defaults"
+msgstr "अन्य तयशुदा"
+
+#: src/frogr-settings-dialog.c:335
+msgid "_Show Pictures in Global Search Results"
+msgstr "वैश्विक खोज परिणामों में तस्वीर दिखाएं (_S)"
+
+#: src/frogr-settings-dialog.c:338
+msgid "Set Geo_location Information for Pictures"
+msgstr "तस्वीरों के लिए भू-स्थान जानकारी निर्धारित करें (_l)"
+
+#: src/frogr-settings-dialog.c:341
+msgid "Replace 'Date Posted' with 'Date Taken' for Pictures"
+msgstr "तस्वीरों के लिए 'पोस्ट की गई तारीख' को 'तिथि ली गई' से बदलें"
+
+#: src/frogr-settings-dialog.c:347
+msgid "_General"
+msgstr "सामान्य (_G)"
+
+#: src/frogr-settings-dialog.c:368
+msgid "Proxy Settings"
+msgstr "प्रॉक्सी सेटिंग"
+
+#. Enable proxy
+#: src/frogr-settings-dialog.c:377
+msgid "_Enable HTTP Proxy"
+msgstr "HTTP प्रॉक्सी सक्षम करें (_E)"
+
+#: src/frogr-settings-dialog.c:389
+msgid "_Host:"
+msgstr "होस्ट (_H):"
+
+#. Proxy port
+#: src/frogr-settings-dialog.c:404
+msgid "_Port:"
+msgstr "पोर्ट (_P):"
+
+#. Proxy username
+#: src/frogr-settings-dialog.c:419
+msgid "U_sername:"
+msgstr "उपयोक्तानाम (_s):"
+
+#. Proxy password
+#: src/frogr-settings-dialog.c:434
+msgid "Pass_word:"
+msgstr "पासवर्ड (_w):"
+
+#: src/frogr-settings-dialog.c:460
+msgid "Connec_tion"
+msgstr "कनेक्शन (_t)"
+
+#: src/frogr-settings-dialog.c:479
+msgid "Other options"
+msgstr "अन्य विकल्प"
+
+#: src/frogr-settings-dialog.c:490
+msgid "Ena_ble Tags Auto-Completion"
+msgstr "टैग स्वतः पूर्णता सक्षम करें (_b)"
+
+#: src/frogr-settings-dialog.c:493
+msgid "_Import Tags from Pictures Metadata"
+msgstr "तस्वीर मेटाडेटा से टैग आयात करें (_I)"
+
+#: src/frogr-settings-dialog.c:497
+msgid "Use _Dark GTK Theme"
+msgstr "गहरे रंग की GTK थीम का प्रयोग करें"
+
+#: src/frogr-settings-dialog.c:501
+msgid "_Keep File Extensions in Titles when Loading"
+msgstr "लोड करते समय फाइल एक्सटेंशन को शीर्षक में रखें (_K)"
+
+#: src/frogr-settings-dialog.c:507
+msgid "_Misc"
+msgstr "विभिन्न (_M)"
+
+#: src/frogr-settings-dialog.c:1009
+msgid "Preferences"
+msgstr "प्राथमिकताएं"
+
+#: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
+#: data/gtkbuilder/frogr-menu-button.ui:24
+msgid "_Edit Details…"
+msgstr "विवरण संपादित करें (_E)…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:11
+#: data/gtkbuilder/frogr-menu-bar.ui:76 data/gtkbuilder/frogr-menu-button.ui:29
+msgid "Add _Tags…"
+msgstr "टैग जोड़ें (_T)…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:16
+#: data/gtkbuilder/frogr-menu-bar.ui:81 data/gtkbuilder/frogr-menu-button.ui:34
+msgid "Add to _Group…"
+msgstr "समूह में जोड़ें (_G)…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:21
+#: data/gtkbuilder/frogr-menu-bar.ui:86 data/gtkbuilder/frogr-menu-button.ui:39
+msgid "Add to _Photoset"
+msgstr "फोटोसेट में जोड़ें (_P)"
+
+#: data/gtkbuilder/frogr-context-menu.ui:24
+#: data/gtkbuilder/frogr-menu-bar.ui:89 data/gtkbuilder/frogr-menu-button.ui:42
+msgid "_Add to Existing Photoset…"
+msgstr "मौजूदा फोटोसेट में जोड़ें (_A)…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:29
+#: data/gtkbuilder/frogr-menu-bar.ui:94 data/gtkbuilder/frogr-menu-button.ui:47
+msgid "_Create New Photoset…"
+msgstr "नया फोटोसेट बनाएं (_C)…"
+
+#: data/gtkbuilder/frogr-context-menu.ui:38
+#: data/gtkbuilder/frogr-menu-bar.ui:103
+#: data/gtkbuilder/frogr-menu-button.ui:93
+msgid "_Open in External Viewer"
+msgstr "बाहरी छवि दर्शक में खोलें (_O)"
+
+#: data/gtkbuilder/frogr-context-menu.ui:45
+msgid "_Remove Elements"
+msgstr "तत्व हटाएं (_R)"
+
+#: data/gtkbuilder/frogr-main-view.ui:51
+msgid "No pictures loaded"
+msgstr "कोई तस्वीरें लोड नहीं हुई"
+
+#: data/gtkbuilder/frogr-main-view.ui:67
+msgid ""
+"Press the <b>\"Add\"</b> button on the toolbar to load pictures into this "
+"window."
+msgstr "इस खिड़की में तस्वीरें लोड करने के लिए टूलबार पर <b>\"जोड़ें\"</b> बटन दबाएं।"
+
+#: data/gtkbuilder/frogr-main-view.ui:83
+msgid ""
+"Once you're ready, press the <b>\"Upload\"</b> button to upload your "
+"pictures to Flickr."
+msgstr ""
+"एक बार जब आप तैयार हो जाएं, तो Flickr पर अपनी तस्वीरें अपलोड करने के लिए "
+"<b>\"अपलोड\"</b> बटन दबाएं।"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:7 data/gtkbuilder/frogr-menu-button.ui:6
+msgid "Aut_horize Account…"
+msgstr "खाता अधिकृत करें (_h)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:11
+msgid "_File"
+msgstr "फाइल (_F)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:14
+msgid "_Open…"
+msgstr "खोलें (_O)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:24 data/gtkbuilder/frogr-menu-button.ui:17
+msgid "Save _As…"
+msgstr "ऐसे सहेजें (_A)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:31
+msgid "A_dd…"
+msgstr "जोड़ें (_d)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:36
+msgid "_Remove"
+msgstr "हटाएं (_R)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:41
+msgid "_Upload"
+msgstr "अपलोड (_U)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:48
+#: data/gtkbuilder/frogr-menu-button.ui:100
+msgid "_Preferences…"
+msgstr "प्राथमिकताएं (_P)…"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:52
+#: data/gtkbuilder/frogr-menu-button.ui:104
+msgid "_Help"
+msgstr "सहायता (_H)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:57
+#: data/gtkbuilder/frogr-menu-button.ui:109
+msgid "_About frogr"
+msgstr "frogr के बारे में (_A)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:61
+msgid "_Quit"
+msgstr "छोड़ें (_Q)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:110
+msgid "_View"
+msgstr "देखें (_V)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:113
+#: data/gtkbuilder/frogr-menu-button.ui:56
+msgid "_Sort Elements"
+msgstr "तत्वों को क्रमित करें (_S)s"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:116
+#: data/gtkbuilder/frogr-menu-button.ui:59
+msgid "As _Loaded"
+msgstr "जैसे लोड किया गया (_L)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:121
+#: data/gtkbuilder/frogr-menu-button.ui:64
+msgid "By _Date Taken"
+msgstr "ली गयी तिथि द्वारा (_D)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:126
+#: data/gtkbuilder/frogr-menu-button.ui:69
+msgid "By _Title"
+msgstr "शीर्षक द्वारा (_T)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:131
+#: data/gtkbuilder/frogr-menu-button.ui:74
+msgid "By _Size"
+msgstr "आकार द्वारा (_S)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:138
+#: data/gtkbuilder/frogr-menu-button.ui:81
+msgid "_Reversed Order"
+msgstr "उलटा क्रम (_R)"
+
+#: data/gtkbuilder/frogr-menu-bar.ui:146
+#: data/gtkbuilder/frogr-menu-button.ui:87
+msgid "Enable _Tooltips"
+msgstr "टूलटिप सक्षम करें (_T)"
