@@ -20,7 +20,7 @@
   <screenshots>
     <screenshot height="800" width="1280" type="default">
       <image>
-        https://wiki.gnome.org/Apps/Frogr?action=AttachFile&amp;do=get&amp;target=frogr-screenshot.png
+        https://gitlab.gnome.org/GNOME/frogr/-/raw/master/screenshots/frogr-screenshot.png
       </image>
       <caption>Screenshot of frogr</caption>
     </screenshot>
