@@ -541,6 +541,7 @@ _load_accounts (FrogrConfig *self)
                   xmlFreeNode (node);
 
                   xmlSaveFormatFileEnc (xml_path, xml, "UTF-8", 1);
+                  g_chmod (xml_path, 0600);
                 }
             }
         }
@@ -713,6 +714,7 @@ _save_settings (FrogrConfig *self)
     g_critical ("Unable to open '%s' for saving", xml_path);
     retval = FALSE;
   }
+  g_chmod (xml_path, 0600);
 
   /* Free */
   xmlFreeDoc (xml);
@@ -749,6 +751,7 @@ _save_accounts (FrogrConfig *self)
     g_critical ("Unable to open '%s' for saving", xml_path);
     retval = FALSE;
   }
+  g_chmod (xml_path, 0600);
 
   /* Free */
   xmlFreeDoc (xml);
