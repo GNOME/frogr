@@ -2,19 +2,21 @@
 # Copyright (C) 2018 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
 # Rafael Fontenelle <rafaelff@gnome.org>, 2013, 2016, 2018.
+# Álvaro Burns <>, 2025.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr\n"
-"POT-Creation-Date: 2018-06-10 14:15+0000\n"
-"PO-Revision-Date: 2018-09-08 00:33-0200\n"
-"Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
+"POT-Creation-Date: 2025-03-10 14:15+0000\n"
+"PO-Revision-Date: 2025-03-20 18:14-0300\n"
+"Last-Translator: Álvaro Burns <>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Virtaal 1.0.0-beta1\n"
+"X-Generator: Gtranslator 47.1\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -156,10 +158,6 @@ msgstr "Editando detalhes"
 
 #. (itstool) path: page/p
 #: C/edit-pictures.page:13
-#| msgid ""
-#| "To edit the details of a picture or a video, right-click on an element "
-#| "and choose <gui>Edit Details</gui>.Until you edit the details, these will "
-#| "use the default details."
 msgid ""
 "To edit the details of a picture or a video, right-click on an element and "
 "choose <gui>Edit Details</gui>. Until you edit the details, these will use "
@@ -193,7 +191,7 @@ msgstr ""
 "external ref='figures/edit-picture-details.png' "
 "md5='a97ef170cde49fca3cbd1ac9d2fedd0e'"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:22
 msgid "Title"
 msgstr "Título"
@@ -203,7 +201,7 @@ msgstr "Título"
 msgid "Use this box to amend the title"
 msgstr "Use esta caixa para corrigir o título"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:23
 msgid "Description"
 msgstr "Descrição"
@@ -213,7 +211,7 @@ msgstr "Descrição"
 msgid "Add some description the element"
 msgstr "Adicione alguma descrição ao elemento"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:24
 msgid "Tags"
 msgstr "Tags"
@@ -223,7 +221,7 @@ msgstr "Tags"
 msgid "Add some tags to better categorize the element"
 msgstr "Adicione algumas tags para categorizar melhor o elemento"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:25
 msgid "Visibility"
 msgstr "Visibilidade"
@@ -233,7 +231,7 @@ msgstr "Visibilidade"
 msgid "Choose whether the element is public or private."
 msgstr "Verifique se o elemento é público ou privado."
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:26
 msgid "Content type"
 msgstr "Tipo de conteúdo"
@@ -247,7 +245,7 @@ msgstr ""
 "Você pode especificar se o elemento é uma foto, uma captura de tela ou outra "
 "coisa"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:27
 msgid "Safety level"
 msgstr "Nível de segurança"
@@ -257,7 +255,7 @@ msgstr "Nível de segurança"
 msgid "You can rate the kind of element you're uploading"
 msgstr "Você pode classificar o tipo de elemento que você está enviando"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:28
 msgid "License"
 msgstr "Licença"
@@ -268,7 +266,7 @@ msgid "You can change the license, or just use the default one set on Flickr"
 msgstr ""
 "Você pode alterar a licença ou usar apenas a padrão, definida pelo Flickr"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:29
 msgid "Geolocation data"
 msgstr "Dados de geolocalização"
@@ -282,7 +280,7 @@ msgstr ""
 "Você pode deixar o frogr definir a informação de geolocalização de uma "
 "imagem no Flickr baseado na sua informação EXIF"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:30
 msgid "Show in global search results"
 msgstr "Exibir nos resultados da pesquisa global"
@@ -296,7 +294,7 @@ msgstr ""
 "Você pode especificar se deveria ser possível localizar sua imagem ou vídeo "
 "usando o mecanismo de pesquisa do Flickr"
 
-#. (itstool) path: item/title
+#. (itstool) path: item/p
 #: C/edit-pictures.page:31
 msgid "Replace 'date posted' with 'date taken'"
 msgstr "Substituir “Data postada” com “Data tirada”"
@@ -361,28 +359,46 @@ msgstr ""
 "external ref='figures/add-to-groups.png' "
 "md5='a65107ee59c5b86730b660b77782aa41'"
 
-#. (itstool) path: page/title
+#. (itstool) path: info/title
 #: C/index.page:8
+msgctxt "link:trail"
 msgid "frogr help"
 msgstr "Ajuda do frogr"
 
+#. (itstool) path: info/title
+#: C/index.page:9
+msgctxt "link"
+msgid "frogr help"
+msgstr "Ajuda do frogr"
+
+#. (itstool) path: info/title
+#: C/index.page:10
+msgctxt "text"
+msgid "frogr help"
+msgstr "Ajuda do frogr"
+
+#. (itstool) path: page/title
+#: C/index.page:14
+msgid "<_:media-1/> frogr help"
+msgstr "<_:media-1/> Ajuda do frogr"
+
 #. (itstool) path: section/title
-#: C/index.page:11
+#: C/index.page:20
 msgid "Managing your flickr account"
 msgstr "Gerenciando sua conta do Flickr"
 
 #. (itstool) path: section/title
-#: C/index.page:15
+#: C/index.page:24
 msgid "Managing your pictures"
 msgstr "Gerenciando suas imagens"
 
 #. (itstool) path: section/title
-#: C/index.page:19
+#: C/index.page:28
 msgid "Organize and sort your pictures"
 msgstr "Organizando e ordenando suas imagens"
 
 #. (itstool) path: section/title
-#: C/index.page:23
+#: C/index.page:32
 msgid "Set up frogr"
 msgstr "Configurando o Frogr"
 
