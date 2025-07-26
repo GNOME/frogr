@@ -2504,6 +2504,7 @@ frogr_controller_run_app (FrogrController *self, int argc, char **argv)
 
   /* Initialize and run the Gtk application */
   g_set_application_name(APP_SHORTNAME);
+  g_set_prgname(APP_ID);
   app = gtk_application_new (APP_ID,
                              G_APPLICATION_NON_UNIQUE
                              | G_APPLICATION_HANDLES_OPEN);
