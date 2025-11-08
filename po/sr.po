@@ -1,25 +1,25 @@
 # Serbian translation for frogr.
 # Copyright © 2014 frogr's COPYRIGHT HOLDER
 # This file is distributed under the same license as the frogr package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2018.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: frogr master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues\n"
-"POT-Creation-Date: 2019-05-22 07:14+0000\n"
-"PO-Revision-Date: 2019-09-15 16:26+0200\n"
-"Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/frogr/issues/\n"
+"POT-Creation-Date: 2025-10-10 18:17+0000\n"
+"PO-Revision-Date: 2025-11-08 08:47+0100\n"
+"Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : n"
-"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
+"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Project-Style: gnome\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 3.6\n"
 
-#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:5
+#: data/org.gnome.frogr.appdata.xml.in:7 data/org.gnome.frogr.desktop.in.in:4
 msgid "frogr"
 msgstr "фрогр"
 
@@ -47,20 +47,16 @@ msgstr ""
 msgid "Screenshot of frogr"
 msgstr "Снимак екрана фрогра"
 
-#: data/org.gnome.frogr.appdata.xml.in:32
-msgid "Mario Sanchez Prada"
-msgstr "Марио Санчез Прада"
-
-#: data/org.gnome.frogr.desktop.in.in:6
+#: data/org.gnome.frogr.desktop.in.in:5
 msgid "frogr: a Flickr Remote Organizer for GNOME"
 msgstr "фрогр: Фликров удаљени организатор за Гном"
 
-#: data/org.gnome.frogr.desktop.in.in:7
+#: data/org.gnome.frogr.desktop.in.in:6
 msgid "Upload and organize photos in Flickr accounts"
 msgstr "Пошаљите и организујте фотографије на Фликровим налозима"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.frogr.desktop.in.in:9
+#: data/org.gnome.frogr.desktop.in.in:8
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
 msgstr "фликр;слика;фотографија;видео;снимак;отпремник;"
 
@@ -126,7 +122,7 @@ msgstr ""
 "процес."
 
 #: src/frogr-auth-dialog.c:63 src/frogr-auth-dialog.c:151
-#: src/frogr-controller.c:2227
+#: src/frogr-controller.c:2217
 #, c-format
 msgid "Authorize %s"
 msgstr "Овласти „%s“"
@@ -319,6 +315,15 @@ msgstr ""
 #: src/frogr-controller.c:666
 #, c-format
 msgid ""
+"Invalid signature.\n"
+"Please try again."
+msgstr ""
+"Неисправан потпис.\n"
+"Покушајте опет."
+
+#: src/frogr-controller.c:670
+#, c-format
+msgid ""
 "Error:\n"
 "Service not available"
 msgstr ""
@@ -326,63 +331,63 @@ msgstr ""
 "Услуга није доступна"
 
 #. General error: just dump the raw error description
-#: src/frogr-controller.c:671
+#: src/frogr-controller.c:675
 #, c-format
 msgid "An error happened: %s."
 msgstr "Догодила се грешка: %s."
 
-#: src/frogr-controller.c:869
+#: src/frogr-controller.c:873
 msgid "Authorization failed (timed out)"
 msgstr "Није успело потврђивање идентитета (истекло је време)"
 
-#: src/frogr-controller.c:917
+#: src/frogr-controller.c:921
 #, c-format
 msgid "Retrying Upload (attempt %d/%d)…"
 msgstr "Поново покушавам отпремање (покушај %d/%d)…"
 
-#: src/frogr-controller.c:922
+#: src/frogr-controller.c:926
 #, c-format
 msgid "Uploading '%s'…"
 msgstr "Отпремам „%s“…"
 
-#: src/frogr-controller.c:2183
+#: src/frogr-controller.c:2173
 msgid "Updating credentials…"
 msgstr "Освежавам уверења…"
 
-#: src/frogr-controller.c:2188
+#: src/frogr-controller.c:2178
 msgid "Retrieving data for authorization…"
 msgstr "Преузимам податке за потврђивање идентитета…"
 
-#: src/frogr-controller.c:2193
+#: src/frogr-controller.c:2183
 msgid "Finishing authorization…"
 msgstr "Завршавам потврђивање идентитета…"
 
-#: src/frogr-controller.c:2198
+#: src/frogr-controller.c:2188
 msgid "Retrieving list of sets…"
 msgstr "Преузимам списак скупова…"
 
-#: src/frogr-controller.c:2203
+#: src/frogr-controller.c:2193
 msgid "Retrieving list of groups…"
 msgstr "Преузимам списак група…"
 
-#: src/frogr-controller.c:2208
+#: src/frogr-controller.c:2198
 msgid "Retrieving list of tags…"
 msgstr "Преузимам списак ознака…"
 
-#: src/frogr-controller.c:2233
+#: src/frogr-controller.c:2223
 #, c-format
 msgid "Fetching information"
 msgstr "Преузимам податке"
 
-#: src/frogr-controller.c:2337
+#: src/frogr-controller.c:2327
 msgid "No sets found"
 msgstr "Нисам пронашао скупове"
 
-#: src/frogr-controller.c:2362
+#: src/frogr-controller.c:2352
 msgid "No groups found"
 msgstr "Нисам пронашао групе"
 
-#: src/frogr-controller.c:2920
+#: src/frogr-controller.c:2910
 #, c-format
 msgid ""
 "You need to properly authorize %s before uploading any pictures to Flickr.\n"
@@ -391,16 +396,16 @@ msgstr ""
 "Морате исправно да овластите „%s“ пре слања било каквих слика на Фликр.\n"
 "Молим овластите га поново."
 
-#: src/frogr-controller.c:2929
+#: src/frogr-controller.c:2919
 #, c-format
 msgid "You need to be connected before uploading any pictures to Flickr."
 msgstr "Морате бити повезани да бисте слали слике на Фликр."
 
-#: src/frogr-controller.c:2946
+#: src/frogr-controller.c:2936
 msgid "Uploading Pictures"
 msgstr "Отпремам слике"
 
-#: src/frogr-controller.c:2991
+#: src/frogr-controller.c:2981
 #, c-format
 msgid "Error opening project file"
 msgstr "Грешка отварања датотеке пројекта"
@@ -724,7 +729,7 @@ msgstr " (ПРО налог)"
 #: src/frogr-main-view.c:2081
 #, c-format
 msgid " - %s / %s remaining"
-msgstr " — преостаје вам %s од %s"
+msgstr " – преостаје вам %s од %s"
 
 #. Will show in the status bar the amount of pictures and data
 #. (in KB, MB or GB) that would be uploaded as the sum of the
@@ -733,10 +738,10 @@ msgstr " — преостаје вам %s од %s"
 #, c-format
 msgid " - %d file to upload (%s)"
 msgid_plural " - %d files to upload (%s)"
-msgstr[0] " — %d датотека за отпремање (%s)"
-msgstr[1] " — %d датотеке за отпремање (%s)"
-msgstr[2] " — %d датотека за отпремање (%s)"
-msgstr[3] " — %d датотека за отпремање (%s)"
+msgstr[0] " – %d датотека за отпремање (%s)"
+msgstr[1] " – %d датотеке за отпремање (%s)"
+msgstr[2] " – %d датотека за отпремање (%s)"
+msgstr[3] " – %d датотека за отпремање (%s)"
 
 #: src/frogr-settings-dialog.c:189
 msgid "Default Visibility"
@@ -979,6 +984,9 @@ msgstr "_Обрнути редослед"
 #: data/gtkbuilder/frogr-menu-button.ui:87
 msgid "Enable _Tooltips"
 msgstr "Укључи облачиће _алата"
+
+#~ msgid "Mario Sanchez Prada"
+#~ msgstr "Марио Санчез Прада"
 
 #~ msgid ""
 #~ "frogr is a small application for the GNOME desktop that allows users to "
