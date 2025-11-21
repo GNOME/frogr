@@ -44,21 +44,21 @@ if desktop_utils.found()
   )
 endif
 
-# Appdata XML file
-appdatadir = join_paths(datadir, 'metainfo')
-appdata_file = i18n.merge_file(input: 'org.gnome.frogr.appdata.xml.in',
-                output: 'org.gnome.frogr.appdata.xml',
+# Metainfo XML file
+metainfodir = join_paths(datadir, 'metainfo')
+metainfo_file = i18n.merge_file(input: 'org.gnome.frogr.metainfo.xml.in',
+                output: 'org.gnome.frogr.metainfo.xml',
                 install: true,
-                install_dir: appdatadir,
+                install_dir: metainfodir,
                 po_dir: po_dir,
                 type: 'xml')
 
-# Validate Appdata
+# Validate Metainfo
 appstreamcli = find_program('appstreamcli', required: false)
 if (appstreamcli.found())
-  test('Validate appdata file',
+  test('Validate metainfo file',
     appstreamcli,
-    args: ['validate', '--no-net', '--explain', appdata_file.full_path()],
+    args: ['validate', '--no-net', '--explain', metainfo_file.full_path()],
     workdir: meson.current_build_dir()
   )
 endif
