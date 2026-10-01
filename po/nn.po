@@ -32,7 +32,7 @@ msgstr "Last opp og organiser bilete i Flickr-kontoar"
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.frogr.desktop.in.in:8
 msgid "Flickr;Image;Picture;Photo;Video;Uploader;"
-msgstr "Flickr;Bilete;Bilete;Foto;Video;Opplastar;"
+msgstr "Flickr;Image;Picture;Photo;Video;Uploader;Bilete;Foto;Opplastar;"
 
 #: data/org.gnome.frogr.metainfo.xml.in:8
 msgid "A flickr uploader for GNOME"
@@ -125,7 +125,7 @@ msgstr ""
 #: src/frogr-controller.c:2217
 #, c-format
 msgid "Authorize %s"
-msgstr "Stadfest %s"
+msgstr "Autoriser %s"
 
 #: src/frogr-auth-dialog.c:157 src/frogr-settings-dialog.c:968
 msgid "_Close"
@@ -182,14 +182,14 @@ msgid ""
 "Quota exceeded"
 msgstr ""
 "Feil under opplasting av bilete:\n"
-"Kvota overskriden"
+"Kvoten er overskriden"
 
 #: src/frogr-controller.c:601
 #, c-format
 msgid "Quota exceeded (limit: %d video per month)"
 msgid_plural "Quota exceeded (limit: %d videos per month)"
 msgstr[0] "Kvoten er overskriden (grense: %d video per månad)"
-msgstr[1] "Kvota er overskriden (grense: %d videoar per månad)"
+msgstr[1] "Kvoten er overskriden (grense: %d videoar per månad)"
 
 #: src/frogr-controller.c:605
 msgid ""
@@ -237,7 +237,7 @@ msgid ""
 "Group limit already reached"
 msgstr ""
 "Feil:\n"
-"Gruppelimitt er allereie nådd"
+"Grensa for grupper er alt nådd"
 
 #: src/frogr-controller.c:630
 msgid ""
@@ -289,7 +289,7 @@ msgid ""
 "Unable to authenticate in Flickr\n"
 "Please try again."
 msgstr ""
-"Klarte ikkje autorisere i Flickr\n"
+"Klarte ikkje autentisere hos Flickr\n"
 "Prøv på nytt."
 
 #: src/frogr-controller.c:657
@@ -317,7 +317,7 @@ msgid ""
 "Please try again."
 msgstr ""
 "Ugyldig signatur.\n"
-"Prøv igjen."
+"Prøv på nytt."
 
 #: src/frogr-controller.c:670
 #, c-format
@@ -406,7 +406,7 @@ msgstr "Lastar opp bilete"
 #: src/frogr-controller.c:2982
 #, c-format
 msgid "Error opening project file"
-msgstr "Klarte ikkje opna prosjektfila"
+msgstr "Klarte ikkje opne prosjektfila"
 
 #. This shows a dialog notifying the problem to the user
 #: src/frogr-create-new-set-dialog.c:142 src/frogr-details-dialog.c:1040
@@ -463,7 +463,7 @@ msgstr "CC Attribution-NoDerivs"
 
 #: src/frogr-details-dialog.c:175
 msgid "Open with image viewer"
-msgstr "Opna med biletvisar"
+msgstr "Opne med biletvisar"
 
 #: src/frogr-details-dialog.c:196
 msgid "_Title:"
@@ -507,7 +507,7 @@ msgstr "_Foto"
 
 #: src/frogr-details-dialog.c:328 src/frogr-settings-dialog.c:249
 msgid "Scree_nshot"
-msgstr "Skjermdu_mp"
+msgstr "Skjerm_bilete"
 
 #: src/frogr-details-dialog.c:333 src/frogr-settings-dialog.c:251
 msgid "Oth_er"
@@ -606,7 +606,7 @@ msgstr ""
 
 #: src/frogr-global-defs.h:26
 msgid "Flickr Remote Organizer"
-msgstr "Flickr fjernorganisator"
+msgstr "Flickr-fjernorganisator"
 
 #. First create the left side buttons
 #: src/frogr-main-view.c:596 src/frogr-main-view.c:690
@@ -823,7 +823,7 @@ msgstr "Bruk _mørkt GTK-tema"
 
 #: src/frogr-settings-dialog.c:501
 msgid "_Keep File Extensions in Titles when Loading"
-msgstr "_Hald filendingar i titlar når du lastar"
+msgstr "_Behald filendingar i titlar ved innlasting"
 
 #: src/frogr-settings-dialog.c:507
 msgid "_Misc"
@@ -831,7 +831,7 @@ msgstr "_Ymse"
 
 #: src/frogr-settings-dialog.c:1009
 msgid "Preferences"
-msgstr "Brukarval"
+msgstr "Innstillingar"
 
 #: data/gtkbuilder/frogr-context-menu.ui:6 data/gtkbuilder/frogr-menu-bar.ui:71
 #: data/gtkbuilder/frogr-menu-button.ui:24
